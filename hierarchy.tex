@@ -1,0 +1,261 @@
+\chapter{The hierarchy of homotopical complexity}
+\chaptermark{Homotopical complexity}
+Not all types have interesting higher groupoid structure. For example, we will see below that two natural numbers can only be equal in at most one way. Voevodsky articulated a useful notion to detect the homotopical complexity of types, which allows us to distinguish between contractible types (also called \emph{$(-2)$-types}), \emph{propositions} (also called \emph{$(-1)$-types}), \emph{sets} (\emph{$0$-types}), and \emph{$k$-types} for higher $k$.
+
+We will see [later] that there are types that are not $k$-types for any $k$.
+
+\section{Propositions and subtypes}
+
+\begin{defn}
+A type $A$ is said to be a \define{proposition} if there is a term of type
+\begin{equation*}
+\isprop(A)\defeq\prd{x,y:A}\iscontr(x=y).
+\end{equation*}
+\end{defn}
+
+In the following lemma we prove that in order to show that a type $A$ is a proposition, it suffices to show that any two terms of $A$ are equal.
+
+\begin{lem}\label{lem:isprop_eq}
+Let $A$ be a type. Then we have
+\begin{equation*}
+\isprop(A)\leftrightarrow \Big(\prd{x,y:A}x=y\Big).
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+Suppose $A$ is a proposition. By taking the center of contraction of $\id{x}{y}$ for each $x,y:A$ we obtain a term of type $\prd{x,y:A}\id{x}{y}$.
+
+Now suppose that $A$ is a type equipped with $H:\prd{x,y:A}\id{x}{y}$. Then we take $\ct{H(x,x)^{-1}}{H(x,y)}$ as the center of contraction of $\id{x}{y}$. To construct the contraction
+\begin{equation*}
+\prd{p:\id{x}{y}} \ct{H(x,x)^{-1}}{H(x,y)}=p
+\end{equation*}
+we proceed by path induction. Our goal is to show that
+\begin{equation*}
+\ct{H(x,x)^{-1}}{H(x,x)}=\refl{x}.
+\end{equation*}
+This is indeed the case by $\mathsf{left\usc{}inv}(H(x,x))$, which was constructed in \autoref{defn:groupoid}.
+\end{proof}
+
+\begin{cor}
+For any proposition $P$ we have $P\to\iscontr(P)$.
+\end{cor}
+
+\begin{thm}
+Let $A$ be a type and let $P:A\to\type$ be a family of propositions, in the sense that each $P(x)$ is a proposition. Furthermore, consider $\pairr{x,p},\pairr{y,q}:\sm{x:A}P(x)$. Then the map
+\begin{equation*}
+\mathsf{subtype\usc{}eq}(x,y) : (\id{\pairr{x,p}}{\pairr{y,q}})\to(\id{x}{y})
+\end{equation*}
+defined by path induction by sending $\refl{\pairr{x,p}}$ to $\refl{x}$, is an equivalence.
+\end{thm}
+
+\begin{proof}
+By \autoref{thm:id_fundamental} it suffices to show that
+\begin{equation*}
+\sm{y:A}P(y)\times(\id{x}{y})
+\end{equation*}
+is contractible, for any $x:A$ and $p:P(x)$. The center of contraction is taken to be $\pairr{x,\pairr{p,\refl{x}}}$. To construct the contraction, observe that for any $y:A$, $q:P(y)$ and $r:\id{x}{y}$, the type $P(y)$ is contractible, so we have an equivalence $\eqv{P(y)\times(\id{x}{y})}{(\id{x}{y})}$. Therefore it suffices to show that $\sm{y:A}\id{x}{y}$ is contractible, which it is.
+\end{proof}
+
+Since the equality of $\sm{x:A}P(x)$ corresponds to the equality of $A$, we call $\sm{x:A}P(x)$ a \define{subtype} of $A$.
+
+\section{Sets}
+
+\begin{defn}
+A type $A$ is said to be a \define{set} if there is a term of type
+\begin{equation*}
+\isset(A)\defeq \prd{x,y:A}\isprop(\id{x}{y}).
+\end{equation*}
+\end{defn}
+
+\begin{lem}
+A type $A$ is a set if and only if it satisfies \define{axiom K}, which asserts that
+\begin{equation*}
+\prd{x:A}{p:\id{x}{x}}\id{\refl{x}}{p}.
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+If $A$ is a set, then $\id{x}{x}$ is a proposition, so any two of its elements are equal. 
+This implies axiom $K$. 
+
+For the converse, if $A$ satisfies axiom $K$, then for any $p,q:\id{x}{y}$ we have $\id{\ct{p}{q^{-1}}}{\refl{x}}$, and hence $\id{p}{q}$. This shows that $A$ is a proposition.
+\end{proof}
+
+\begin{lem}\label{lem:prop_to_id}
+Let $A$ be a type, and let $R:A\to A\to\UU$ be a binary relation on $A$ satisfying
+\begin{enumerate}
+\item Each $R(x,y)$ is a proposition,
+\item $R$ is reflexive, as witnessed by $\rho:\prd{x:A}R(x,x)$.
+\end{enumerate}
+Then any fiberwise map
+\begin{equation*}
+\prd{x,y:A}R(x,y)\to (\id{x}{y})
+\end{equation*}
+is a fiberwise equivalence. Consequently, if there is such a fiberwise map, then $A$ is a set.
+\end{lem}
+
+\begin{proof}
+Let $f:\prd{x,y:A}R(x,y)\to(\id{x}{y})$. 
+\end{proof}
+
+\begin{thm}
+The type of natural numbers is a set.
+\end{thm}
+
+\begin{proof}
+Let $E:\nat\to\nat\to\type$ be the binary relation given by
+\begin{align*}
+E(0,0) & \defeq \unit & E(S(m),0) & \defeq \emptyt \\
+E(0,S(n)) & \defeq \emptyt & E(S(m),S(n)) & \defeq E(m,n).
+\end{align*}
+Note that this relation is reflexive, and that $E(m,n)$ is a proposition for all $m,n:\nat$, since $\emptyt$ and $\unit$ are propositions.
+
+Thus, it remains to show that
+\begin{equation*}
+\prd{m,n:\nat}E(m,n)\to (\id{m}{n}).
+\end{equation*}
+We proceed by induction om $m$. For the base case, we have to show that
+\begin{equation*}
+\prd{n:\nat}E(0,n)\to (\id{m}{n}).
+\end{equation*}
+We proceed by induction on $n:\nat$. In the base case we take $\lam{t}\refl{0}$. For the inductive step we just take the recursor $\rec{\emptyt}$ on the empty type. This completes the construction in the case $m\jdeq 0$.
+
+For the induction step, the induction hypothesis is
+\begin{equation*}
+e:\prd{n:\nat}E(m,n)\to (\id{m}{n}).
+\end{equation*}
+Our goal is to show that
+\begin{equation*}
+\prd{n:\nat}E(S(m),n)\to (\id{S(m)}{n}).
+\end{equation*}
+We proceed by induction on $n:\nat$. In the base case we take the recursor $\rec{\emptyt}$. 
+For the inductive step our goal is to show that $E(S(m),S(n))\to (\id{S(m)}{S(n)})$. Let $p:E(S(m),S(n))$. Since $E(S(m),S(n))\jdeq E(m,n)$, we obtain a term of type $\id{m}{n}$. Now we simply apply $\mapfunc{S}:(\id{m}{n})\to(\id{S(m)}{S(n)})$.
+\end{proof}
+
+\begin{comment}
+\begin{thm}[Hedberg]\label{thm:dec_eq}
+Any type with decidable equality is a set.
+\end{thm}
+
+\begin{proof}
+Let $A$ be a type, and let $d:\prd{x,y:A}(\id{x}{y})+\neg(\id{x}{y})$ be the witness that $A$ has decidable equality.
+We first construct a reflexive binary relation $E:A\to A\to\type$ such that each $E(x,y)$ is a proposition.
+For every $x,y:A$, we first define a type family $E'(x,y):((\id{x}{y})+\neg(\id{x}{y}))\to\type$ by
+\begin{align*}
+E'(x,y,\inl(p)) & \defeq \unit \\
+E'(x,y,\inr(p)) & \defeq \emptyt.
+\end{align*}
+Note that $E'(x,y,q)$ is a proposition for each $x,y:A$ and $q:(\id{x}{y})+\neg(\id{x}{y})$. 
+Now we set $E(x,y)\defeq E'(x,y,d(x,y))$. Then $E$ is clearly reflexive, and a family of propositions.
+Therefore it remains to show that $E$ implies identity. 
+
+Since $E$ is defined as an instance of $E'$, it suffices to construct a term of type
+\begin{equation*}
+\prd{x,y:A}{q:(\id{x}{y})+\neg(\id{x}{y})} E'(q)\to (\id{x}{y}). 
+\end{equation*}
+By induction of disjoint sums, it suffices to construct terms of types
+\begin{align*}
+& \prd{x,y:A}{p:\id{x}{y}} \unit\to (\id{x}{y}) \\
+& \prd{x,y:A}{p:\neg(\id{x}{y})} \emptyt\to (\id{x}{y}).
+\end{align*}
+In the first case, we take $\lam{x}{y}{p}{t}p$, and the second case is by induction on the empty type.
+\end{proof}
+\end{comment}
+
+\section{General truncation levels}
+\begin{defn}
+We define $\istrunc{} : \Z_{\geq-2}\to\UU\to\UU$ by induction on $k:\Z_{\geq -2}$, taking
+\begin{align*}
+\istrunc{-2}(A) & \defeq \iscontr(A) \\
+\istrunc{k+1}(A) & \defeq \prd{x,y:A}\istrunc{k}(\id{x}{y}).\qedhere
+\end{align*}
+For any type $A$, we say that $A$ is \define{$k$-truncated}, or a \define{$k$-type}, if there is a term of type $\istrunc{k}(A)$.
+\end{defn}
+
+%For the rest of this section, let $k:\Z_{\geq-2}$.
+
+\begin{thm}
+If $A$ is a $k$-type, then $A$ is also a $(k+1)$-type.
+\end{thm}
+
+\begin{proof}
+If $A$ is contractible with center of contraction $c$, and contraction $C$, then we have
+\begin{equation*}
+\lam{x}{y} \ct{C(x)}{C(y)^{-1}} : \prd{x,y:A}\id{x}{y}.
+\end{equation*}
+By \autoref{lem:isprop_eq} this shows that $A$ is a proposition. If any $k$-type is also a $(k+1)$-type, then any $(k+1)$-type is a $(k+2)$-type, since its identity types are $k$-types and therefore $(k+1)$-types.
+\end{proof}
+
+\begin{thm}
+If $e:\eqv{A}{B}$ is an equivalence, and $B$ is a $k$-type, then so is $A$.
+\end{thm}
+
+\begin{proof}
+We have seen in \autoref{ex:contr_equiv} that if $B$ is contractible and $e:\eqv{A}{B}$ is an equivalence, then $A$ is also contractible. This proves the base case.
+
+For the inductive step, assume that the $k$-types are stable under equivalences, and consider $e:\eqv{A}{B}$ where $B$ is a $(k+1)$-type. In \autoref{ex:emb_equiv} we have seen that
+\begin{equation*}
+\apfunc{e}:(\id{x}{y})\to(\id{e(x)}{e(y)})
+\end{equation*}
+is an equivalence for any $x,y$. Note that $\id{e(x)}{e(y)}$ is a $k$-type, so by the induction hypothesis it follows that $\id{x}{y}$ is a $k$-type. This proves that $A$ is a $(k+1)$-type.
+\end{proof}
+
+\begin{comment}
+\begin{proof}
+By \autoref{ex:contr_retr} it follows that if $A$ is a retract of a contractible type, then $A$ is contractible.
+For the inductive step, suppose that the $k$-types are closed under retracts, and consider a section-retraction pair
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"i"] & B \arrow[r,"r"] & A,
+\end{tikzcd}
+\end{equation*}
+with $H:r\circ i\htpy \idfunc$, where $B$ is a $(k+1)$-type.
+By the induction hypothesis it suffices to show that for any $x,y:A$, the function $\apfunc{i}:(\id{x}{y})\to (\id{i(x)}{i(y)})$ has a retraction.
+The retraction $\varphi:(\id{i(x)}{i(y)})\to(\id{x}{y})$ is defined as
+\begin{equation*}
+\varphi \defeq \lam{q} \ct{H(x)^{-1}}{\ap{r}{q}}{H(y)}
+\end{equation*}
+To see that $\varphi(\ap{i}{p})=p$, we have to show that the square
+\begin{equation*}
+\begin{tikzcd}
+r(i(x)) \arrow[d,equals,swap,"\ap{r}{q}"] \arrow[r,equals,"H(x)"] & x \arrow[d,equals,"p"] \\
+r(i(y)) \arrow[r,equals,swap,"H(y)"] & y
+\end{tikzcd}
+\end{equation*}
+commutes. This square commutes by the naturality of homotopies, proven in \autoref{ex:htpy_nat}.
+\end{proof}
+\end{comment}
+
+\begin{exercises}
+\item For any proposition $P$, show that $P\to\iscontr(P)$.
+\item Let $P$ and $Q$ be propositions. Show that
+\begin{equation*}
+\eqv{(P\leftrightarrow Q)}{(\eqv{P}{Q})}.
+\end{equation*}
+Conclude that any two contractible types are equivalent.
+\item Let $A$ be a type, and let $\delta_A:A\to A\times A$ be given by $\lam{x}(x,x)$. Show that
+\begin{equation*}
+\eqv{\isequiv(\delta_A)}{\isprop(A)}.
+\end{equation*}
+\item Let $P:A\to\type$ be a type family. Show that for any $n\geq-2$, if $A$ is an $n$-type, and $P(x)$ is an $n$-type for each $x:A$, then so is $\sm{x:A}P(x)$. 
+\item Show that $\bool$ is a set.
+\item Show that for any two sets $A$ and $B$, the disjoint sum $A+B$ is again a set.
+\item \label{ex:hedberg}(Hedberg's theorem) A type $A$ is said to have \define{decidable equality} if there is a term of type
+\begin{equation*}
+\prd{x,y:A} (\id{x}{y})+\neg(\id{x}{y}).
+\end{equation*}
+For any type $A$, and every $x,y:A$, consider the type family $D(x,y):((\id{x}{y})+\neg(\id{x}{y}))\to\type$ given by
+\begin{align*}
+D(x,y,\inl(p)) & \defeq \unit \\
+D(x,y,\inr(p)) & \defeq \emptyt.
+\end{align*}
+Use $D$ to show that any type with decidable equality is a set.\footnote{By following this suggestion one avoids the use of function extensionality, which is used in Theorem 7.2.5 of \cite{hottbook} to conclude that $\neg\neg(\id{x}{y})$ is a proposition.}
+\item Show that $\nat$ and $\bool$ have decidable equality, as defined in \autoref{ex:hedberg}.
+\item 
+\begin{subexenum}
+\item Let $B:A\to\type$ be a type family over $A$. Show that iff $A$ is a $k$-type, and if $B(x)$ is a $k$-type for each $x:A$, then so is $\sm{x:A}B(x)$.
+\item Show that for $k\geq -1$, any subtype of a $k$-type is again a $k$-type.
+\item Show that for any map $f:A\to B$ from a $k$-type $A$ to a $(k+1)$-type $B$, the fibers of $f$ are also $k$-types.
+\end{subexenum}
+\item Use \autoref{ex:contr_retr,ex:retr_id} to show that if $A$ is a retract of a $k$-type $B$, then $A$ is also a $k$-type.
+\end{exercises}

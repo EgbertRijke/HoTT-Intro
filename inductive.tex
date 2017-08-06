@@ -1,0 +1,109 @@
+\chapter{Inductive types}
+
+\section{The type of natural numbers}
+The archetypal example of an inductive type is the type of natural numbers, which is specified by a term $0$ and a successor function. To prove properties about the natural numbers, one uses its induction principle. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{sections} of dependent types over the natural numbers. 
+
+\begin{defn}
+We define $\nat$ to be a type equipped with
+\begin{align*}
+0 & : \nat \\
+S & : \nat \to\nat,
+\end{align*}
+satisfying the induction principle, that for any type family $P:\nat\to\type$ there is a term
+\begin{equation*}
+\ind{\nat}:P(0)\to \Big(\prd{n:\nat}P(n)\to P(S(n))\Big)\to \prd{n:\nat}P(n),
+\end{equation*}
+for which the computation rules
+\begin{align*}
+\ind{\nat}(p_0,p_S,0) & \jdeq p_0 \\
+\ind{\nat}(p_0,p_S,S(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
+\end{align*}
+hold.
+\end{defn}
+
+\section{Other basic inductive types}
+Many other types can also be specified as inductive types, similar to the natural numbers. The unit type, the empty type, and the booleans are the simplest examples of this way of defining types. Just like the type of natural numbers, other inductive types are also specified by their \emph{constructors}, an \emph{induction principle}, and their \emph{computation rules}: 
+\begin{enumerate}
+\item The constructors tell what structure the inductive type comes equipped with. There may be multiple constructors, or no constructors at all in the specification of an inductive type. 
+\item The induction principle specifies the data that should be provided in order to construct a section of an arbitrary dependent type over the inductive type. 
+\item The computation rules assert that the inductively defined section agrees on the constructors with the data that was used to define the section. Thus, there is a computation rule for every constructor.
+\end{enumerate}
+For a more general treatment of inductive types, we refer to Chapter 5 of \cite{hottbook}.
+\begin{defn}
+We define the \define{unit type} to be a type $\unit$ equipped with
+\begin{equation*}
+\ttt:\unit,
+\end{equation*}
+satisfying the induction principle that for any type family $P:\unit\to\type$, there is a term
+\begin{equation*}
+\ind{\unit} : P(\ttt)\to\prd{x:\unit}P(x)
+\end{equation*}
+for which the computation rule
+\begin{equation*}
+\ind{\unit}(p_{\ttt},\ttt) \jdeq p_\ttt
+\end{equation*}
+holds.
+\end{defn}
+
+The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section.
+\begin{defn}
+We define the \define{empty type} to be a type $\emptyt$ satisfying the induction principle that for any type family $P:\emptyt\to\type$, there is a term
+\begin{equation*}
+\ind{\emptyt} : \prd{x:\emptyt}P(x).
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+We define the \define{booleans} to be a type $\bool$ that comes equipped with
+\begin{align*}
+\bfalse & : \bool \\
+\btrue & : \bool
+\end{align*}
+satisfying the induction principle that for any type family $P:\bool\to\type$, there is a term
+\begin{equation*}
+\ind{\bool} : P(\bfalse)\to P(\btrue)\to \prd{x:\bool}P(x)
+\end{equation*}
+for which the computation rules
+\begin{align*}
+\ind{\bool}(p_0,p_1,\bfalse) & \jdeq p_0 \\
+\ind{\bool}(p_0,p_1,\btrue) & \jdeq p_1
+\end{align*}
+hold.
+\end{defn}
+
+\begin{defn}
+Let $A$ and $B$ be types. We define the \define{disjoint sum} $A+B$ to be a type that comes equipped with
+\begin{align*}
+\inl & : A \to A+B \\
+\inr & : B \to A+B
+\end{align*}
+satisfying the induction principle that for any type family $P:(A+B)\to\type$, there is a term
+\begin{equation*}
+\ind{A+B} : \Big(\prd{x:A}P(\inl(x))\Big)\to\Big(\prd{y:B}P(\inr(y))\Big)\to\prd{z:A+B}P(z)
+\end{equation*}
+for which the computation rules
+\begin{align*}
+\ind{A+B}(f,g,\inl(x)) & \jdeq f(x) \\
+\inr{A+B}(f,g,\inr(y)) & \jdeq g(y)
+\end{align*}
+hold.
+\end{defn}
+
+\section{The type of integers}
+\begin{defn}
+We define the \define{integers} to be the type $\Z\defeq\nat_{\geq 1}+\unit+\nat_{\geq 1}$.
+\end{defn}
+
+\begin{defn}
+We construct a successor function $S:\Z\to\Z$.
+\end{defn}
+
+\begin{constr}
+
+\end{constr}
+
+\begin{exercises}
+\item For any type $A$, show that $(A+\neg A)\to(\neg\neg A\to A)$. 
+\item \label{ex:int_group_ops}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
+\item \label{ex:int_order}Define the relations $\leq$ and $<$ on both $\nat$ and $\Z$.
+\end{exercises}

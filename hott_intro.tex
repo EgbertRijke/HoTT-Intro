@@ -1,0 +1,400 @@
+% arara: makechapters: {items: [dtt, inductive, identity, equivalences, fundamental, hierarchy, univalence]}
+
+\documentclass[11pt]{memoir} %[ebook,10pt,oneside]
+
+\title{Introduction to homotopy type theory}
+\author{Egbert Rijke}
+\date{Carnegie Mellon University\\Pittsburgh PA\\Spring 2018}
+%\address{Carnegie Mellon University}
+%\email{erijke@andrew.cmu.edu}
+
+\pretitle{\begin{center}\textsc\bgroup\LARGE}
+\posttitle{\egroup\end{center}\vspace{2cm}}
+\preauthor{\begin{center}\textsc\bgroup\Large}\postauthor{\egroup\end{center}\vfill}
+\predate{\begin{center}\textsc\bgroup}{\postdate{\egroup\end{center}}
+
+\usepackage{hott}
+
+\makeatletter
+\renewcommand{\@chapapp}{Lecture}
+\makeatother
+
+\newlist{exenum}{enumerate}{1}
+\setlist[exenum]{noitemsep,label=\thechapter.\arabic*}%,ref=\thechapter.\arabic*}
+%\crefalias{exenumi}{Exercise} 
+\crefname{exenumi}{Exercise}{Exercises}
+
+\newlist{subexenum}{enumerate}{1}
+\setlist[subexenum]{noitemsep,label=(\alph*),ref=\theexenumi.\alph*}
+\crefname{subexenumi}{Exercise}{Exercises}
+
+\newenvironment{exercises}%
+{%
+\section*{Exercises}\addcontentsline{toc}{section}{Exercises}\sectionmark{Exercises}
+\begin{exenum}}
+{%
+\end{exenum}}
+
+\begin{document}
+
+\begin{titlingpage}
+\maketitle 
+\end{titlingpage}
+
+\frontmatter
+\tableofcontents
+
+\chapter{Introduction}
+%\addcontentsline{toc}{chapter}{Introduction}
+These are course notes for an introduction to homotopy type theory taught at Carnegie Mellon University in the spring semester of 2018.
+
+\chapter{Syllabus}
+
+\mainmatter 
+
+\include{dtt}
+
+\include{inductive}
+
+\include{identity}
+
+\include{equivalences}
+
+\include{fundamental}
+
+\include{hierarchy}
+
+\include{univalence}
+
+\chapter{The Yoneda embedding}
+This is a good moment to review what we did so far, by recalling some basic notions and prove some more properties of them that involve function extensionality.
+
+\section{Basic propositions}
+\begin{lem}
+For any type $A$, the type $\iscontr(A)$ is a proposition.
+\end{lem}
+
+\begin{lem}
+For any family of propositions $P:A\to\prop$, the dependent function type $\prd{x:A}P(x)$ is a proposition.
+\end{lem}
+
+\begin{cor}
+For any map $f:A\to B$, the type $\isequiv(f)$ is a proposition.
+\end{cor}
+
+\begin{cor}
+For any type $A$ and any $n:\Z_{\geq -2}$, the type $\istrunc{n}(A)$ is a proposition.
+\end{cor}
+
+\begin{cor}
+For any type $A$ and any proposition $P$, the type $A\to P$ is a proposition
+\end{cor}
+
+\begin{cor}
+For any type $A$, the type $A\to \emptyt$ is a proposition.
+\end{cor}
+
+\begin{cor}
+For any type $A$, the type $A\to \unit$ is contractible.
+\end{cor}
+
+\begin{exercises}
+\item Show that for any type $A$ and any $n\geq-2$, the type $\istrunc{n}(A)$ is a proposition.
+\item Show that for any map $f:A\to B$, the type $\isequiv(f)$ is a proposition, 
+\item Show that for any type family $P:A\to\type$ and any $n\geq-2$, we have
+\begin{equation*}
+\Big(\prd{x:A}\istrunc{n}(P(x))\Big)\to\istrunc{n}\Big(\prd{x:A}P(x)\Big).
+\end{equation*}
+In other words, the truncation levels are closed under dependent function types.
+Conclude that the univalence axiom is a proposition.
+\item Use the construction of \autoref{ex:fiber_trans} to construct an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{h:A\to B} f\htpy g\circ h\Big)}{\Big(\prd{x:X}\hfib{f}{x}\to\hfib{g}{x}\Big)}.
+\end{equation*}
+\end{exercises}
+
+\chapter{The circle}
+In this chapter we introduce the idea of higher inductive types, by studying the simplest non-trivial example: the circle. Moreover, we show that the loop space of the circle is equivalent to $\mathbb{Z}$, by constructing the universal cover of the circle as an application of the univalence axiom. 
+
+\begin{exercises}
+\item Use the negation equivalence $\mathsf{neg}:\eqv{\bool}{\bool}$ of \autoref{ex:neg_equiv} to construct a fiber sequence
+\begin{equation*}
+\bool\hookrightarrow \sphere{1}\twoheadrightarrow \sphere{1}.
+\end{equation*}
+\item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
+\end{exercises}
+
+\chapter{Homotopy colimits}
+
+\section{Coequalizers}
+
+\section{Pushouts}
+\begin{enumerate}
+\item General pushouts,
+\item Suspensions, the spheres.
+\item join, wedge, smash.
+\end{enumerate}
+
+\section{Sequential colimits}
+
+\begin{exercises}
+\item Show that $\join{P}{Q}= P\lor Q$, for any two propositions $P$ and $Q$.
+\item Let $Q$ be a proposition, and let $A$ be a type. Show that $\inr:A\to \join{Q}{A}$ is an equivalence if and only if $Q\to\iscontr(A)$.
+\item Consider a sequence
+\begin{tikzcd}
+X_0 \arrow[r] & X_1 \arrow[r] & X_2 \arrow[r] & \cdots
+\end{tikzcd}
+of \emph{pointed} types and \emph{pointed} maps between them. Show that the sequential colimit is contractible. 
+\item Let
+\begin{tikzcd}
+P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
+\end{tikzcd}
+be a sequence of propositions. Show that
+\begin{equation*}
+\colim_n(P_n)=\exists_n P_n.
+\end{equation*}
+\item In this exercise we study the \define{reflexive coequalizer}. Let $R:A\to A\to\UU$ be a relation, and $\rho:\prd{x:A}R(x,x)$ be a witness of reflexivity.  
+\begin{subexenum}
+\item Formulate the induction principle and computation rules for the higher inductive type $\mathsf{rcoeq}(A,R,\rho)$ with constructors
+\begin{align*}
+\pts{\eta} &: A \to \mathsf{rcoeq}(A,R,\rho) \\
+\edg{\eta} &: \prd*{x,y:A} R(x,y)\to \id{\pts{\eta}(x)}{\pts{\eta}(y)} \\
+\rfx{\eta} &: \prd{x:A} \edg{\eta}(\rho(x))=\refl{\pts{\eta}(x)}.
+\end{align*}
+\item Show that
+\begin{equation*}
+\begin{tikzcd}
+\sm{x,y:A} R(x,y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & A \arrow[d,"\pts{\eta}"] \\
+A \arrow[r,swap,"\pts{\eta}"] & \mathsf{rcoeq}(A,R,\rho)
+\end{tikzcd}
+\end{equation*}
+commutes, and is a pushout square.
+\item Compute $\mathsf{rcoeq}(A,\idtypevar{A},\refl{})$ and $\mathsf{rcoeq}(A,(\lam{x}{y}\unit),(\lam{x}\ttt))$. Furthermore, consider a pointed type $\pairr{X,x_0}$ as a reflexive relation on the unit type, and compute $\mathsf{rcoeq}(\unit,X,x_0)$.
+\end{subexenum}
+\end{exercises}
+
+\chapter{Descent}
+
+\section{Homotopy pullbacks}
+[Tell something about why pullbacks are important.]
+\begin{defn}
+Given maps $f:A\to X$ and $g:B\to X$, we define \[A\times_X B\defeq \sm{x:A}{y:B}f(x)=f(y).\] The \define{canonical pullback square} of $f$ and $g$ is the commuting square
+\begin{equation*}
+\begin{tikzcd}
+A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X,
+\end{tikzcd}
+\end{equation*}
+where $\pi_1(x,y,p)\defeq x$, and $\pi_2(x,y,p)\defeq y$, and the commutativity is witnessed by the homotopy $\lam{\pairr{x,y,p}}p$. 
+\end{defn}
+
+\begin{thm}
+For any type $C$, the map
+\begin{equation*}
+(C\to A\times_X B)\to \sm{h:C\to A}{k:C\to B}f\circ h\htpy g\circ k
+\end{equation*}
+is an equivalence.
+\end{thm}
+
+\begin{lem}[Pullback pasting lemma]\label{lem:pb_pasting}
+Consider 
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r,"j"] & B \arrow[d,swap,"g"] \arrow[r,"l"] & C \arrow[d,"h"] \\
+X \arrow[r,swap,"i"] & Y \arrow[r,swap,"k"] & Z
+\end{tikzcd}
+\end{equation*}
+with homotopies $H:i\circ f\htpy g\circ j$ and $K:k\circ g\htpy h\circ l$ witnessing that the two squares commute, and suppose that the square on the right is a pullback square. Then the square on the left is a pullback square if and only if the outer rectangle is a pullback square.
+\end{lem}
+
+\section{The flattening lemma}
+
+\begin{exercises}
+\item Show that the square
+\begin{equation*}
+\begin{tikzcd}
+(x=y) \arrow[r] \arrow[d] & \unit \arrow[d,"\mathsf{const}_y"] \\
+\unit \arrow[r,swap,"\mathsf{const}_x"] & A
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\item Let $f:A\to B$ be a map, and consider $P:A\to\type$, and $Q:B\to\type$. Furthermore, consider a fiberwise transformation
+\begin{equation*}
+g:\prd{x:A}P(x)\to Q(f(x)).
+\end{equation*}
+Show that the following are equivalent:
+\begin{subexenum}
+\item The fiberwise map $g$ is a fiberwise equivalence.
+\item The commuting square
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+\sm{x:A}P(x) \arrow[d,swap,"\proj 1"] \arrow[r,"\total{g}"] & \sm{y:B}Q(y) \arrow[d,"\proj 1"] \\
+A \arrow[r,swap,"f"] & B
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{subexenum}
+\end{exercises}
+
+\chapter{The Hopf fibration}
+Our goal in this chapter is to construct the Hopf fibration, i.e.~a fiber sequence
+\begin{equation*}
+\sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}.
+\end{equation*}
+
+\chapter{Embeddings and surjections}
+Embeddings, subtypes, surjective maps, image factorization.
+We give a type theoretical variant of the Yoneda lemma, using the groupoid structure of types.
+
+\begin{exercises}
+\item Let $\UU_\bool\defeq \sm{A:\UU}\brck{A=\bool}$ be the subuniverse of $2$-element types. Show that the type
+\begin{equation*}
+\sm{A:\UU_\bool}A
+\end{equation*}
+of \emph{pointed} 2-element types is contractible.
+\end{exercises}
+
+\chapter{Univalent logic}
+
+
+\section{Propositional truncation}
+
+\begin{defn}
+Let $A:\UU$ be a type. We define the \define{propositional truncation} $\brck{A}:\UU$ as a higher inductive type with constructors
+\begin{align*}
+\eta & : A\to \brck{A} \\
+\mu & : \prd{x,y:\brck{A}} x=y.
+\end{align*}
+The induction principle of $\brck{A}$ asserts that for any type family $P:\brck{A}\to\type$, if we have
+\begin{align*}
+f & : \prd{x:A}P(\eta(x)) \\
+g & : \prd{x,y:\brck{A}}{p:P(x)}{q:P(y)} \trans{\mu(x,y)}{p}=q,
+\end{align*}
+then we obtain a section $\rec{\brck{\blank}}(f,g):\prd{x:\brck{A}}P(x)$ satisfying
+\begin{align*}
+\rec{\brck{\blank}}(f,g,\eta(x)) & = f(x).
+\end{align*}
+\end{defn}
+
+\begin{rmk}
+We will not need a computation rule corresponding to the path constructor $\mu$.
+\end{rmk}
+
+\begin{lem}
+For any $A:\UU$, the type $\brck{A}$ is a proposition.
+\end{lem}
+
+\begin{proof}
+The path constructor $\mu:\prd{x,y:\brck{A}}x=y$ directly provides a proof that $\brck{A}$ is a proposition.
+\end{proof}
+
+The following theorem asserts that for any map $f:A\to P$ into a proposition $P$, there is a unique map $g:\brck{A}\to P$ such that $g\circ\eta=f$, as indicated in the following diagram
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[dr,"\forall"] \arrow[d,swap,"\eta"] \\
+\brck{A} \arrow[r,densely dotted,swap,"\exists!"] & P
+\end{tikzcd}
+\end{equation*}
+
+\begin{thm}
+Let $A:\UU$ be a type. Then for any proposition $P$, the map
+\begin{equation*}
+\lam{g} g\circ \eta : (\brck{A}\to P)\to (A\to P)
+\end{equation*}
+is an equivalence.
+\end{thm}
+
+\section{First order logic in type theory}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\multicolumn{2}{c}{\large\textbf{Logic in type theory}} \\[2ex]
+\emph{Logical connective} & \emph{Interpretation in HoTT} \\
+\midrule
+$\top$ & $\unit$ \\
+$\bot$ & $\emptyt$ \\
+$P\land Q$ & $P\times Q$ \\
+$P\lor Q$ & $\brck{P+Q}$ \\
+$P\to Q$ & $P\to Q$ \\
+$P\leftrightarrow Q$ & $P=Q$ \\
+$\neg P$ & $P\to\emptyt$ \\
+$\forall x.P(x)$ & $\prd{x:A}P(x)$ \\
+$\exists x.P(x)$ & $\brck{\sm{x:A}P(x)}$ \\
+$\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{enumerate}
+\item First order logic in type theory. Stress difference between $\exists$ and $\Sigma$.
+\item Propositional extensionality
+\end{enumerate}
+
+\begin{exercises}
+\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
+\item Show that
+\begin{equation*}
+\eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}.
+\end{equation*}
+\item \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
+\begin{equation*}
+P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
+\end{equation*}
+\begin{subexenum}
+\item Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$.
+\end{subexenum}
+\end{exercises}
+
+\chapter{Univalent algebra}
+\begin{enumerate}
+\item Subsets and quotients
+\item Factorization
+\item The structure isomorphism theorem
+\item The axiom of choice
+\end{enumerate}
+
+\chapter{Homotopy groups of types}
+Introduce groups, abelian groups, Eckmann-Hilton argument, long exact sequence.
+
+\chapter{Connectedness}
+
+\chapter{The Blakers-Massey theorem}
+The Blakers-Massey theorem is a connectivity theorem which can be used to prove the Freudenthal suspension theorem, giving rise to the field of \emph{stable homotopy theory}. It was proven in the setting of homotopy type theory by Lumsdaine et al, and their proof was the first that was given entirely in an elementary way, using only constructions that are invariant under homotopy equivalence. 
+
+Consider a span $A \leftarrow S \rightarrow B$, consisting of an $m$-connected map $f:S\to A$ and an $n$-connected map $g:S\to B$. We take the pushout of this span, and subsequently the pullback of the resulting cospan, as indicated in the diagram
+\begin{equation}\label{eq:BM}
+\begin{tikzcd}
+S \arrow[drr,bend left=15,"g"] \arrow[ddr,bend right=15,swap,"f"] \arrow[dr,densely dotted,"u" near end] \\
+& A \times_{(A \sqcup^S B)} B \arrow[r,"\pi_2"] \arrow[d,"\pi_1"] & B \arrow[d,"\inr"] \\
+& A \arrow[r,swap,"\inl"] & A \sqcup^S B.
+\end{tikzcd}
+\end{equation}
+The universal property of the pullback determines a unique map $u:S\to A \times_{(A\sqcup^S B)} B$ as indicated.
+
+\begin{thm}[Blakers-Massey]
+The map $u:S\to A \times_{(A\sqcup^S B)} B$ of \autoref{eq:BM} is $(n+m)$-connected.
+\end{thm}
+
+\chapter{Some stable homotopy theory}
+\section{The Freudenthal suspension theorem}
+
+\chapter{Eilenberg-Mac Lane spaces}
+
+\chapter{Cohomology}
+
+\chapter{The real projective spaces}
+...and their cohomology.
+
+\appendix
+
+\chapter{Formalization in the Lean HoTT mode}
+\begin{enumerate}
+\item Introduce universes
+\item The inductive type constructor
+\item identity functions, composition, constant functions
+\end{enumerate}
+
+\chapter{Literature}
+
+\backmatter
+
+\end{document}

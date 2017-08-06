@@ -1,0 +1,69 @@
+\chapter{Dependent type theory}
+
+\section{The Curry-Howard correspondence}
+\begin{center}
+\bigskip
+\begin{tabular}{lll}
+\toprule
+\multicolumn{3}{c}{\large\textbf{The Curry-Howard correspondence}}\\[2ex]
+\emph{First order logic} & \emph{Set theory} & \emph{Type theory}\\
+\midrule
+Propositions & Sets & Types\\
+Predicates & Families of sets & Dependent types\\
+Proofs & Elements & Terms \\
+$\top$ & $\{\emptyset\}$ & $\unit$\\
+$\bot$ & $\emptyset$ & $\emptyt$ \\
+$P \land Q$ & $A \times B$ & $A \times B$ \\
+$P \vee Q$ & $A \sqcup B$ & $A + B$ \\
+$\exists x.P(x)$ & $\coprod_{i\in I}A_i$ & $\sm{x:A}B(x)$ \\
+$\forall x.P(x)$ & $\prod_{i\in I}A_i$ & $\prd{x:A}B(x)$\\
+\bottomrule
+\end{tabular}
+
+\bigskip
+\end{center}
+
+\section{Dependent function types}
+\begin{defn}
+Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
+The \define{dependent function type} $\prd{x:A}B(x)$ is defined to be a type equipped with a \define{$\lambda$-abstraction operation}
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
+\UnaryInfC{$\Gamma\vdash \lam{x}b(x) : \prd{x:A}B(x)$}
+\end{prooftree}
+and an \define{evaluation operation}
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f : \prd{x:A}B(x)$}
+\UnaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(f,x) : B(x)$}
+\end{prooftree}
+for which the following inference rules are satisfied:
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
+\UnaryInfC{$\Gamma,x:A \vdash b(x)\jdeq \mathsf{ev}((\lambda y.b(y)),x) : B(x)$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
+\UnaryInfC{$\Gamma \vdash f\jdeq \lam{x}\mathsf{ev}(f,x) : \prd{x:A}B(x)$}
+\end{prooftree}
+\end{defn}
+
+\section{Dependent pair types}
+
+\begin{defn}
+Let $A$ be a type, and let $P:A\to\type$ be a type family over $A$.
+The \define{dependent pair type} $\sm{x:A}P(x)$ is defined to be a type equipped with a \define{pairing function}
+\begin{equation*}
+\pairr{\blank,\blank}:\prd{x:A} P(x)\to \Big(\sm{y:A}P(y)\Big)
+\end{equation*}
+and \define{projection maps}
+\begin{align*}
+\proj 1 & : \Big(\sm{x:A}P(x)\Big)\to A \\
+\proj 2 & : \prd{w:\sm{x:A}P(x)}P(\proj 1(w))
+\end{align*}
+satisfying the equations
+\begin{align*}
+\proj 1(\pairr{a,p}) & \jdeq a \tag{$\beta_1$}\\
+\proj 2(\pairr{a,p}) & \jdeq p \tag{$\beta_2$}\\
+\pairr{\proj 1(w),\proj 2(w)} & \jdeq w. \tag{$\eta$}
+\end{align*}
+\end{defn}

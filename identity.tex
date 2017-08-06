@@ -1,0 +1,193 @@
+\chapter{Identity types}
+In this chapter we introduce the identity type of Martin-L\"of. 
+
+\section{Martin-L\"of's inductive definition}
+\begin{defn}
+The \define{identity type} $\idtypevar{A}$ of a type $A$ is a type family
+\end{defn}
+
+\section{Basic operations on identifications}\label{sec:groupoid}
+\begin{defn}\label{defn:groupoid}
+Let $A$ be a type. We construct the following operations and identifications:
+\begin{enumerate}
+\item A \define{concatenation} operation
+\begin{equation*}
+\mathsf{concat} : \prd*{x,y,z:A} (\id{x}{y})\to(\id{y}{z})\to (\id{x}{z}).
+\end{equation*}
+We will write $\ct{p}{q}$ for $\mathsf{concat}(p,q)$. Also, we will \emph{associate to the right}, i.e.~by $\ct{p}{q}{r}$ we mean $\ct{p}{(\ct{q}{r})}$.
+\item For each $p:\id{x}{y}$ an inverse $\mathsf{inv}(p):\id{y}{x}$. We will write $p^{-1}$ for $\mathsf{inv}(p)$.
+\item An \define{associativity operation}
+\begin{equation*}
+\mathsf{assoc}(p,q,r) : \ct{(\ct{p}{q})}{r}=\ct{p}{(\ct{q}{r})}.
+\end{equation*}
+\item Left and right \define{unit operations}
+\begin{align*}
+\mathsf{left\usc{}unit}(p) & : \ct{\refl{x}}{p}=p \\
+\mathsf{right\usc{}unit}(p) & : \ct{p}{\refl{y}}=p.
+\end{align*}
+\item Left and right \define{inverse operations}
+\begin{align*}
+\mathsf{left\usc{}inv}(p) & : \ct{p^{-1}}{p} = \refl{y} \\
+\mathsf{right\usc{}inv}(p) & : \ct{p}{p^{-1}} = \refl{x}
+\end{align*}
+\end{enumerate}
+\end{defn}
+
+\begin{constr}
+We construct the concatenation operation by path induction: it suffices to construct
+\begin{equation*}
+\mathsf{concat}(\refl{x}):\prd*{z:A} (x=z)\to(x=z).
+\end{equation*}
+Here we take $\mathsf{concat}(\refl{x})_z \jdeq \refl{(x=z)}$. 
+Explicitly, the term we have constructed is
+\begin{equation*}
+\rec{=}(\lam{x}{z}\idfunc[(\id{x}{z})]).\qedhere
+\end{equation*}
+Next, we construct the inverse operation by path induction. It suffices to construct
+\begin{equation*}
+\mathsf{inv}(\refl{x}): x=x,
+\end{equation*}
+for any $x:A$. Here we take $\mathsf{inv}(\refl{x})\defeq \refl{x}$.
+\end{constr}
+
+\section{The homotopy interpretation}
+
+\begin{defn}
+Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
+We will construct a \define{transport} operation
+\begin{equation*}
+\mathsf{transport}^B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
+\end{equation*}
+\end{defn}
+
+\begin{defn}\label{defn:path_lifting}
+Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
+We will construct a \define{path lifting} operation
+\begin{equation*}
+\mathsf{lift}^B : \prd*{x,y:A}{p:\id{x}{y}}{b:B(x)} \id{\pairr{x,b}}{\pairr{y,\trans{p}{b}}}.
+\end{equation*}
+\end{defn}
+
+\autoref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \autoref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\multicolumn{2}{c}{\large\textbf{The homotopy interpretation}}\\[2ex]
+\emph{Type theory} &  \emph{Homotopy theory} \\
+\midrule
+Types  & Spaces \\
+Dependent types & Fibrations \\
+Terms & Points \\
+Dependent pair type & Total space \\
+Identity type & Path fibration\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Homotopies}
+We start with the definition of a homotopy, formulated using \emph{dependent} functions. In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$.
+
+\begin{defn}
+Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies} from $f$ to $g$ is defined as
+\begin{equation*}
+f\htpy g \defeq \prd{x:A} f(x)=g(x).
+\end{equation*}
+\end{defn}
+
+Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between} homotopies, and further homotopies between those higher homotopies. 
+Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just the type
+\begin{equation*}
+\prd{x:A} H(x)=K(x).
+\end{equation*}
+
+\begin{defn}
+Let $f,g:\prd{x:A}B(x)$. Given a homotopy $H:f\htpy g$, we define the \define{inverse} homotopy $H^{-1}\defeq \lam{x}H(x)^{-1}:g\htpy f$. Given a further homotopy $K:g\htpy h$, we define the \define{concatenation} 
+\begin{equation*}
+\ct{H}{K}\defeq\lam{x}\ct{H(x)}{K(x)}:f\htpy h.
+\end{equation*}
+\end{defn}
+
+\begin{comment}
+\begin{defn}
+We define the following \define{whiskering} operations on homotopies:
+\begin{enumerate}
+\item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define
+\begin{equation*}
+hH\defeq \lam{x}\ap{h}{H(x)}:h\circ f\htpy h\circ g.
+\end{equation*}
+\item Suppose $f:A\to B$ and $H:g\htpy h$ for two functions $g,h:B\to C$. We define
+\begin{equation*}
+Hf\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
+\end{equation*}
+\end{enumerate}
+\end{defn}
+\end{comment}
+
+\begin{exercises}
+\item \label{ex:trans_triv}Consider two types $A$ and $B$, and let $p:x=y$ in $A$, and $b:B$. Construct an identification
+\begin{align*}
+\mathsf{trans\usc{}triv}(p,b):\mathsf{transport}^{\lam{x}B}(p,b)=b.
+\end{align*}
+\item \label{ex:inv_assoc}Let $p:\id{x}{y}$ and $q:\id{y}{z}$. Construct an identification
+\begin{align*}
+\mathsf{inv\usc{}assoc}(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
+\end{align*}
+\item \label{ex:ap_ap}Let $f:A\to B$ and $g:B\to C$ be maps, and let $p:\id{x}{y}$ in $A$. Construct an identification
+\begin{equation*}
+\mathsf{ap\usc{}ap}(f,g,p):\ap{g}{\ap{f}{p}}=\ap{gf}{p}.
+\end{equation*}
+\item \label{ex:inv_ap}Let $f:A\to B$ be a map, and let $p:x=y$. Construct an identification 
+\begin{equation*}
+\mathsf{inv\usc{}ap}(f,p):\ap{f}{p}^{-1}=\ap{f}{p^{-1}}.
+\end{equation*} 
+\item \label{ex:trans_ap}Let $f:A\to B$ be a map, and consider $p:x=y$ in $A$, and $q:f(x)=b$ in $B$. Construct an identification
+\begin{equation*}
+\mathsf{trans\usc{}ap}(p,q):\id{\trans{p}{q}}{\ct{\ap{f}{p}^{-1}}{q}}.
+\end{equation*}
+Similarly, for $q':b=f(x)$, construct an identification
+\begin{equation*}
+\mathsf{trans\usc{}ap'}(p,q'):\id{\trans{p}{q}}{\ct{q}{\ap{f}{p}}}.
+\end{equation*}
+\item \label{ex:inv_con}For any $p:x=y$, $q:y=z$, and $r:x=z$, construct maps
+\begin{align*}
+\mathsf{inv\usc{}con}(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
+\mathsf{con\usc{}inv}(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
+\end{align*}
+\item \label{ex:htpy_nat}
+\begin{subexenum}
+\item Let $f,g:A\to B$ be functions, and consider $H:f\htpy g$ and $p:x=y$ in $A$. Construct the identification
+\begin{align*}
+\mathsf{htpy\usc{}nat}(H,p) & :\ct{H(x)}{\ap{g}{p}}=\ct{\ap{f}{p}}{H(y)}
+\end{align*}
+witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+f(x) \arrow[r,equals,"H(x)"] \arrow[d,equals,swap,"\ap{f}{p}"] & g(x) \arrow[d,equals,"\ap{g}{p}"] \\
+f(y) \arrow[r,equals,swap,"H(y)"] & g(y)
+\end{tikzcd}
+\end{equation*}
+commutes.
+\item Now let $f:A\to B$, $g:B\to A$, and $H:g\circ f\htpy \idfunc[A]$. 
+%Show that the square
+%\begin{equation*}
+%\begin{tikzcd}
+%gfgf(x) \arrow[d,swap,equals,"\ap{gf}{H(x)}"] \arrow[r,equals,"H(gf(x))"] & gf(x) \arrow[d,"H(x)"] \\
+%gf(x) \arrow[r,swap,equals,"H(x)"] & x
+%\end{tikzcd}
+%\end{equation*}
+%commutes.
+Construct an identification $H(gf(x))=\ap{gf}{H(x)}$, for any $x:A$.
+\item Similarly, let $f:A\to B$, $g:B\to A$, and $G:f\circ g\htpy\idfunc[A]$. 
+Construct an identification $G(fg(y))=\ap{fg}{G(y)}$, for any $y:B$.
+\end{subexenum}
+\item \label{ex:int_group_laws}Show that the operations $k,l\mapsto k+l$ and $k\mapsto -k$ on the integers defined in \autoref{ex:int_group_ops} satisfy the group laws:
+\begin{align*}
+k+(l+m) & = (k+l)+m \\
+k+0 & = k \\
+0+k & = k \\
+k+(-k) & = 0 \\
+(-k) + k & = 0,
+\end{align*}
+and that $k+l=l+k$, making $\pairr{\Z,0,+,-}$ into an abelian group.
+\end{exercises}

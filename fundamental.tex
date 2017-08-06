@@ -1,0 +1,213 @@
+\chapter{The fundamental theorem of identity types}
+\chaptermark{The fundamental theorem}
+
+\section{Fiberwise equivalences}
+Consider a family
+\begin{equation*}
+f : \prd{x:A}B(x)\to C(x)
+\end{equation*}
+of maps. Such $f$ is also called a \define{fiberwise map} or \define{fiberwise transformation}.
+
+\begin{defn}
+We define a map
+\begin{equation*}
+\total{f}:\sm{x:A}B(x)\to\sm{x:A}C(x).
+\end{equation*}
+\end{defn}
+
+\begin{constr}
+Since we are mapping out of a dependent pair type, we may construct this map by induction. Thus, it suffices to construct a map of type
+\begin{equation*}
+\prd{x:A} \Big(B(x)\to \sm{y:A}C(y)\Big).
+\end{equation*}
+Now let $x:A$ and $b:B(x)$. Then we have $\pairr{x,f(b)}:\sm{y:A}C(y)$. 
+\end{constr}
+
+\begin{thm}\label{thm:fib_equiv}
+Let $f:\prd{x:A}B(x)\to C(x)$ be a fiberwise transformation. The following are logically equivalent:
+\begin{enumerate}
+\item For each $x:A$, the map $f(x)$ is an equivalence. In this case we say that $f$ is a \define{fiberwise equivalence}.
+\item The map $\total{f}:\sm{x:A}B(x)\to\sm{x:A}C(x)$ is an equivalence.
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+We will show that $f(x)$ is a contractible map for each $x:A$, if and only if $\total{f}$ is a contractible map. Thus, we will show that $\fib{f(x)}{c}$ is contractible if and only if $\fib{\total{f}}{x,c}$ is contractible, for each $x:A$ and $c:C(x)$. Let $x:A$ and $c:C$. By \autoref{ex:contr_equiv} it suffices to construct an equivalence
+\begin{equation*}
+\varphi:\eqv{\fib{f(x)}{c}}{\fib{\total{f}}{\pairr{x,c}}}.
+\end{equation*}
+The map $\varphi:{\fib{f(x)}{c}}\to{\fib{\total{f}}{\pairr{x,c}}}$ is constructed by path induction, by taking $\pairr{b,\refl{f(x,b)}}$ to $\pairr{\pairr{x,b},\refl{\pairr{x,f(x,b)}}}$.
+
+Next, we define a map
+\begin{equation*}
+\psi:{\fib{\total{f}}{x,c}}\to{\fib{f(x)}{c}}.
+\end{equation*}
+Let $\pairr{\pairr{y,b},r}:\fib{\total{f}}{\pairr{x,v}}$. Then we have $r:\total{f}(y,b)=\pairr{x,c}$. Since the endpoint of $r$ is free, we proceed by path induction on $r$. Our goal is now to construct a term of type
+\begin{equation*}
+\fib{f(y)}{f(y,b)}. 
+\end{equation*}
+Here we simply take $\pairr{b,\refl{f(y,b)}}$, completing the construction of $\psi$.
+
+To show that $\psi$ is a retraction of $\varphi$, we construct an identification 
+\begin{equation*}
+\psi(\varphi(\pairr{b,p})=\pairr{b,p}
+\end{equation*}
+for each $b:B(x)$ and $p:f(x,b)=c$. We proceed by path induction on $p:f(x,b)=c$. Our goal is now to show that
+\begin{equation*}
+\psi(\varphi(\pairr{b,\refl{f(x,b)}})=\pairr{b,\refl{f(x,b)}}
+\end{equation*}
+By definition we have
+\begin{align*}
+\varphi(\pairr{b,\refl{f(x,b)}} & \jdeq \pairr{\pairr{x,b},\refl{\pairr{x,f(x,b)}}} \\
+\psi\pairr{\pairr{x,b},\refl{\pairr{x,f(x,b)}}} & \jdeq\pairr{b,\refl{f(x,b)}}.
+\end{align*}
+Thus, we simply take $\refl{\pairr{b,\refl{f(x,b)}}}$ to complete the goal of showing that $\psi$ is a retraction of $\varphi$.
+
+To show that $\psi$ is a section of $\varphi$, we construct an identification 
+\begin{equation*}
+\varphi(\psi(\pairr{\pairr{y,b},r}))=\pairr{\pairr{y,b},r}
+\end{equation*}
+for each $y:A$, $b:B(y)$, and $r:\total{f}(y,b)=\pairr{x,c}$. 
+We proceed by path induction on $r$, so our goal is to show
+\begin{equation*}
+\varphi(\psi(\pairr{y,b},\refl{\pairr{y,f(y,b)}}))=\pairr{y,f(y,b)}.
+\end{equation*}
+By definition we have
+\begin{align*}
+\psi(\pairr{y,b},\refl{\pairr{y,f(y,b)}})& \jdeq \pairr{b,\refl{f(y,b)}} \\
+\varphi\pairr{b,\refl{f(y,b)}} & \jdeq \pairr{\pairr{y,b},\refl{\pairr{y,f(y,b)}}}
+\end{align*}
+Thus, we simply take $\refl{\pairr{y,f(y,b)}}$ to complete the goal of showing that $\psi$ is a section of $\varphi$.
+\end{proof}
+
+\section{The fundamental theorem}
+
+\begin{thm}\label{thm:id_fundamental}
+Let $A$ be a type with $a:A$, and let $B:A\to\type$ be a type family with $b:B(a)$.
+Then  the following are logically equivalent:
+\begin{enumerate}
+\item The canonical family of maps
+\begin{equation*}
+\rec{a{=}}(b):\prd{x:A} (a=x)\to B(x)
+\end{equation*}
+is a fiberwise equivalence.
+\item The total space
+\begin{equation*}
+\sm{x:A}B(x)
+\end{equation*}
+is contractible.
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+By \autoref{thm:fib_equiv} it follows that the fiberwise transformation $\rec{a{=}}(b)$ is a fiberwise equivalence if and only if it induces an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{x:A}a=x\Big)}{\Big(\sm{x:A}B(x)\Big)}
+\end{equation*}
+on total spaces. We have that $\sm{x:A}a=x$ is contractible. Now it follows by the 3-for-2 property, applied in the case
+\begin{equation*}
+\begin{tikzcd}
+\sm{x:A}a=x \arrow[rr,"\total{\rec{a{=}}(b)}"] \arrow[dr,swap,"\eqvsym"] & & \sm{x:A}B(x) \arrow[dl] \\
+& \unit
+\end{tikzcd}
+\end{equation*}
+that $\total{\rec{a{=}}(b)}$ is an equivalence if and only if $\sm{x:A}B(x)$ is contractible.
+\end{proof}
+
+As a first application of the fundamental theorem, we compute the identity type of a disjoint sum.
+This illustrates in a simple case the most important technique of computing the identity type of a type, that is also called the \emph{encode-decode method}.
+
+\begin{defn}
+Let $A$ and $B$ be types. We construct equivalences
+\begin{align*}
+(\id[A+B]{\inl(x)}{\inl(x')}) & \eqvsym (\id[A]{x}{x'}) \\
+(\id[A+B]{\inl(x)}{\inr(y')}) & \eqvsym \emptyt \\
+(\id[A+B]{\inr(y)}{\inl(x')}) & \eqvsym \emptyt \\
+(\id[A+B]{\inr(y)}{\inr(y')}) & \eqvsym (\id[B]{y}{y'}).
+\end{align*}
+\end{defn}
+
+\begin{constr}
+We define by double induction on the disjoint sum the binary relation
+\begin{equation*}
+E : (A+B)\to (A+B)\to\type
+\end{equation*}
+given by
+\begin{align*}
+E({\inl(x)},{\inl(x')}) & \defeq \id[A]{x}{x'} \\
+E({\inl(x)},{\inr(y')}) & \defeq \emptyt \\
+E({\inr(y)},{\inl(x')}) & \defeq \emptyt \\
+E({\inr(y)},{\inr(y')}) & \defeq (\id[B]{y}{y'}).
+\end{align*}
+Moreover, we have a term $\rho:\prd{s:A+B}E(s,s)$ defined by $\rho(\inl(x))\defeq\refl{x}$ and $\rho(\inr(y))\defeq\refl{y}$.
+
+Our goal is to construct an equivalence $\eqv{(\id{s}{t})}{E(s,t)}$ for any $s,t:A+B$. 
+By \autoref{thm:id_fundamental} it suffices to show that for any $s:A+B$, the type
+\begin{equation*}
+\sm{t:A+B}E(s,t)
+\end{equation*}
+is contractible. The center of contraction is taken to be $\pairr{s,\rho(s)}$, so it remains to construct the contraction
+\begin{equation*}
+\prd{t:A+B}{e:E(s,t)} \pairr{s,\rho(s)}=\pairr{t,e}.
+\end{equation*}
+This is done by induction on $s$ and $t$, so whe have to show that
+\begin{align*}
+& \prd{x':A}{p:x=x'} \pairr{\inl(x),\refl{x}}=\pairr{x',p} \\
+& \prd{y':A}{q:\emptyt} \pairr{\inl(x),\refl{x}}=\pairr{y',q} \\
+& \prd{x':A}{q:\emptyt} \pairr{\inr(y),\refl{y}}=\pairr{x',q} \\
+& \prd{y':A}{p:y=y'} \pairr{\inr(y),\refl{y}}=\pairr{y',p}.
+\end{align*}
+The first and fourth case are easily shown by path induction on $p$, and the second and third case are easily shown by induction on the empty type.
+\end{constr}
+
+\begin{exercises}
+\item \label{ex:htpy_total} Let $f,g:\prd{x:A}B(x)\to C(x)$ be two fiberwise transformations. Show that
+\begin{equation*}
+\Big(\prd{x:A}f(x)\htpy g(x)\Big)\to (\total{f}\htpy \total{g}). 
+\end{equation*}
+\item \label{ex:fiber_trans}Consider a triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=small]
+A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle commutes. 
+\begin{subexenum}
+\item Construct a fiberwise transformation
+\begin{equation*}
+\mathsf{fib\usc{}triangle}(h,H):\prd{x:X}\fib{f}{x}\to\fib{g}{x}.
+\end{equation*}
+\item Show that $h$ is an equivalence if and only if $\mathsf{fib\usc{}triangle}(h,H)$ is a fiberwise equivalence.
+\end{subexenum}
+\item Let $f:A\to B$ be a map. Then for each $y:B$, and each $(x,p),(x',p'):\fib{f}{y}$, the map
+\begin{equation*}
+\id{\pairr{x,p}}{\pairr{x',p'}}\to \sm{q:\id{x}{x'}} \id{p}{\ct{\ap{f}{q}}{p'}}
+\end{equation*}
+is an equivalence. 
+\item \label{ex:proj_fiber}Let $B:A\to \type$ be a type family over $A$. Show that for the projection map
+$\proj 1 : (\sm{x:A}B(x))\to A$, the map
+\begin{equation*}
+\lam{y}((x,y),\refl{x}) : B(x)\to \fib{\proj 1}{x}
+\end{equation*}
+is an equivalence, for each $x:A$. Conclude that $\proj 1$ is itself an equivalence if and only if each $B(x)$ is contractible.
+\item \label{ex:emb_equiv} Use \autoref{thm:id_fundamental} to show that for any equivalence $e:\eqv{A}{B}$ and any $x,y:A$, the map
+\begin{equation*}
+\apfunc{e}:(\id{x}{y})\to(\id{e(x)}{e(y)})
+\end{equation*}
+is an equivalence.
+\item \label{ex:id_fundamental_gen}Let $A$ be a type with $a:A$, and let $B:A\to\type$ be a type family over $A$. Show that for \emph{any} family of maps
+\begin{equation*}
+f:\prd{x:A} (a=x)\to B(x)
+\end{equation*}
+the following are logically equivalent:
+\begin{enumerate}
+\item The family of maps $f$ is a fiberwise equivalence.
+\item The total space
+\begin{equation*}
+\sm{x:A}B(x)
+\end{equation*}
+is contractible.
+\end{enumerate}
+\item Let $a:A$, and let $P:A\to \type$. Use \autoref{ex:htpy_total,ex:contr_retr,ex:id_fundamental_gen} to show that if each $P(x)$ is a retract of $\id{a}{x}$, then each $P(x)$ is equivalent to $\id{a}{x}$. 
+\end{exercises}
