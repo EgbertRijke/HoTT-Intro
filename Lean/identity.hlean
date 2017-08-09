@@ -87,12 +87,22 @@ definition right_unit {A : Type} {x y : A} (p : Id x y)
   : Id (concat p (Id.refl y)) p :=
   Id.rec (refl (refl x)) p
 
+/--
+Apart from the groupoid operations and laws, the whiskering and unwhiskering
+operations are also basic operations of importance. We will need the whiskering
+operations, for instance, to establish that the action on paths of a function
+respects the groupoid-like structure of types that we established above. The
+unwhiskering operations are inverse to the whiskering operations.
+--/
+
 definition whisker_left {A : Type} {x y : A} (p : Id x y) {z : A} 
   {q r : Id y z} (u : Id q r) 
   : Id (concat p q) (concat p r) :=
   Id.rec (refl (concat p q)) u
 
-definition whisker_right {A : Type} {x y : A} {p q : Id x y} (u : Id p q) {z : A} (r : Id y z) : Id (concat p r) (concat q r) :=
+definition whisker_right {A : Type} {x y : A} {p q : Id x y} (u : Id p q) 
+  {z : A} (r : Id y z) 
+  : Id (concat p r) (concat q r) :=
   Id.rec u r
 
 definition unwhisker_left {A : Type} {x y : A} (p : Id x y) 
@@ -300,6 +310,16 @@ definition right_unit {A : Type} {B : A → Type} {f g : forall x, B x}
   : homotopy (concat H (refl g)) H :=
   λ x, Id.right_unit (H x)
 
+definition whisker_left {A B C : Type} {f g : A → B} (h : B → C) 
+  (H : homotopy f g)  
+  : homotopy (λ x, h (f (x))) (λ x, h (g (x))) :=
+  λ x, ap h (H x)
+
+definition whisker_right {A B C : Type} {g h : B → C} (H : homotopy g h) 
+  (f : A → B)
+  : homotopy (λ x, g (f (x))) (λ x, h (f (x))) :=
+  λ x, H (f x)
+
 end htpy
 
 /--
@@ -345,20 +365,6 @@ definition assoc {A : Type} {B : A → Type} {x1 x2 : A} (p : Id x1 x2)
   Id.rec (Id.rec (Id.rec (λ (b : B x1), Id.refl _) p) q) r
 
 end tr
-
-namespace htpy
-
-definition whisker_left {A B C : Type} {f g : A → B} (h : B → C) 
-  (H : homotopy f g)  
-  : homotopy (λ x, h (f (x))) (λ x, h (g (x))) :=
-  λ x, ap h (H x)
-
-definition whisker_right {A B C : Type} {g h : B → C} (H : homotopy g h) 
-  (f : A → B)
-  : homotopy (λ x, g (f (x))) (λ x, h (f (x))) :=
-  λ x, H (f x)
-
-end htpy
 
 definition apd {A : Type} {B : A → Type} (f : forall x, B x) {x y : A} 
   (p : Id x y) 
