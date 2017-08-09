@@ -1,8 +1,8 @@
 \chapter{The hierarchy of homotopical complexity}
 \chaptermark{Homotopical complexity}
-Not all types have interesting higher groupoid structure. For example, we will see below that two natural numbers can only be equal in at most one way. Voevodsky articulated a useful notion to detect the homotopical complexity of types, which allows us to distinguish between contractible types (also called \emph{$(-2)$-types}), \emph{propositions} (also called \emph{$(-1)$-types}), \emph{sets} (\emph{$0$-types}), and \emph{$k$-types} for higher $k$.
+%Not all types have interesting higher groupoid structure. For example, we will see below that two natural numbers can only be equal in at most one way. Voevodsky articulated a useful notion to detect the homotopical complexity of types, which allows us to distinguish between contractible types (also called \emph{$(-2)$-types}), \emph{propositions} (also called \emph{$(-1)$-types}), \emph{sets} (\emph{$0$-types}), and \emph{$k$-types} for higher $k$.
 
-We will see [later] that there are types that are not $k$-types for any $k$.
+%We will see [later] that there are types that are not $k$-types for any $k$.
 
 \section{Propositions and subtypes}
 
@@ -31,9 +31,8 @@ Now suppose that $A$ is a type equipped with $H:\prd{x,y:A}\id{x}{y}$. Then we t
 \end{equation*}
 we proceed by path induction. Our goal is to show that
 \begin{equation*}
-\ct{H(x,x)^{-1}}{H(x,x)}=\refl{x}.
+\ct{H(x,x)^{-1}}{H(x,x)}=\refl{x}.\qedhere
 \end{equation*}
-This is indeed the case by $\mathsf{left\usc{}inv}(H(x,x))$, which was constructed in \autoref{defn:groupoid}.
 \end{proof}
 
 \begin{cor}
@@ -96,6 +95,11 @@ is a fiberwise equivalence. Consequently, if there is such a fiberwise map, then
 
 \begin{proof}
 Let $f:\prd{x,y:A}R(x,y)\to(\id{x}{y})$. 
+Since $R$ is assumed to be reflexive, we also have a fiberwise transformation
+\begin{equation*}
+\rec{x=}(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
+\end{equation*}
+Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. We conclude by \autoref{ex:id_fundamental_retr} that for each $x,y:A$, the map $f(x,y):R(x,y)\to(\id{x}{y})$ must be an equivalence. 
 \end{proof}
 
 \begin{thm}

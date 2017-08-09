@@ -33,7 +33,19 @@ Any equivalence can be given the structure of an invertible map.
 \end{defn}
 
 \begin{constr}
-We have $\ct{(Hg)^{-1}}{hG}:g\htpy h$. This allows us to show that $g$ is a retraction of $f$: we simply take the homotopy $\ct{H}{(\ct{(Hg)^{-1}}{hG})f}:g\circ f \htpy \idfunc[A]$. 
+For any $y:B$, we have 
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+g(y) \arrow[r,equals,"H(g(y))^{-1}"] & hfg(y) \arrow[r,equals,"\ap{h}{G(y)}"] & h(y)
+\end{tikzcd}
+\end{equation*} 
+from which we obtain a homotopy $K:g\htpy h$.
+This allows us to show that $g$ is a retraction of $f$: for $x:A$ we take
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+gf(x) \arrow[r,equals,"K(f(x))"] & hf(x) \arrow[r,equals,"H(x)"] & x.
+\end{tikzcd}\qedhere
+\end{equation*}
 \end{constr}
 
 \begin{thm}\label{thm:id_equiv}
