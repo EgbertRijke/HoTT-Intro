@@ -672,10 +672,16 @@ definition is_equiv {A B : Type} (f : A → B) : Type :=
 
 namespace is_equiv
 
+definition construct {A B : Type} {f : A → B}
+  : Π (f_linv : B → A) (f_islinv : homotopy (λ x, f_linv (f x)) (λ x, x))
+      (f_rinv : B → A) (f_isrinv : homotopy (λ y, f (f_rinv y)) (λ y, y)),
+    is_equiv f :=
+  λ h H g G, Sigma.pair (Sigma.pair h H) (Sigma.pair g G)
+
 definition destruct {A B : Type} {f : A → B} {P : is_equiv f → Type}
   : (Π (h : B → A) (is_retraction : homotopy (λ x, h (f x)) (λ x, x))
        (g : B → A) (is_section : homotopy (λ y, f (g y)) (λ y, y)),
-       P (prod.pair (Sigma.pair h is_retraction) (Sigma.pair g is_section)))
+       P (construct h is_retraction g is_section))
   → Π (E : is_equiv f), P E :=
   λ F, Sigma.rec 
     ( Sigma.rec 
@@ -683,12 +689,6 @@ definition destruct {A B : Type} {f : A → B} {P : is_equiv f → Type}
         ( λ g is_section, F h is_retraction g is_section)
       )
     )
-
-definition construct {A B : Type} {f : A → B}
-  : Π (f_linv : B → A) (f_islinv : homotopy (λ x, f_linv (f x)) (λ x, x))
-      (f_rinv : B → A) (f_isrinv : homotopy (λ y, f (f_rinv y)) (λ y, y)),
-    is_equiv f :=
-  λ h H g G, Sigma.pair (Sigma.pair h H) (Sigma.pair g G)
 
 end is_equiv
 
@@ -713,7 +713,7 @@ definition construct {A B : Type} {f : A → B} (g : B → A)
 definition destruct {A B : Type} {f : A → B} {P : invertible f → Type}
   (D : Π (g : B → A) (is_sec : homotopy (λ y, f (g y)) (λ y, y))
        ( is_retr : homotopy (λ x, g (f x)) (λ x, x)), 
-       P (Sigma.pair g (Sigma.pair is_sec is_retr)))
+       P (construct g is_sec is_retr))
   : Π (I : invertible f), P I :=
   Sigma.rec (λ g, Sigma.rec (λ h k, D g h k))
 
@@ -770,6 +770,27 @@ definition equiv_compose {A B C : Type} {f : A → B} {g : B → C} {h : A → C
           )
         )
       )
+    )
+
+definition inv_of_is_equiv {A B : Type} {e : A → B} 
+  : is_equiv e → (B → A) :=
+  is_equiv.destruct (λ h is_retr g is_sec, g)
+
+definition inv_of_invertible {A B : Type} {f : A → B}
+  : invertible f → (B → A) :=
+  invertible.destruct (λ g is_sec is_retr, g)
+
+definition invertible_inv_of_invertible {A B : Type} {f : A → B}
+  : Π (I : invertible f), invertible (inv_of_invertible I) :=
+  invertible.destruct 
+    ( λ g is_sec is_retr, invertible.construct f is_retr is_sec)
+
+definition is_equiv_equiv_inv {A B : Type} {e : A → B} 
+  : Π (H : is_equiv e), is_equiv (inv_of_is_equiv H) :=
+  λ H, is_equiv_of_htpy 
+    ( λ y, is_equiv.destruct ( λ h is_retr g is_sec, (Id.refl _)) H) 
+    ( is_equiv_of_invertible _ 
+      ( invertible_inv_of_invertible (invertible_of_is_equiv e H))
     )
 
 definition equiv_3for2_left {A B C : Type} {f : A → B} {g : B → C} {h : A → C} 
