@@ -127,6 +127,13 @@ definition ap {A B : Type} (f : A → B) {x y : A} (p : Id x y)
 
 namespace ap
 
+/-- 
+Before we show that ap f preserves the groupoid structure, we show that ap (idfun A) is (pointwise equal to) the identity funcion on Id x y.
+--/
+
+definition idfun {A : Type} {x y : A} (p : Id x y) : Id (ap (λ a, a) p) p :=
+  Id.rec (Id.refl _) p
+
 definition concat {A B : Type} (f : A → B) {x y : A} (p : Id x y) {z : A} 
   (q : Id y z) 
   : Id (ap f (Id.concat p q)) (Id.concat (ap f p) (ap f q)) :=
@@ -320,6 +327,26 @@ definition whisker_right {A B C : Type} {g h : B → C} (H : homotopy g h)
   : homotopy (λ x, g (f (x))) (λ x, h (f (x))) :=
   λ x, H (f x)
 
+/--
+The naturality of homotopies is the construction that for each homotopy 
+H : f ~ g and each p : x = y, the square
+
+             H x
+        f x ===== g x 
+         ||       ||
+  ap f p ||       || ap g p
+         ||       ||
+        f y ===== g y
+             H y
+
+commutes.
+--/
+
+definition natural {A B : Type} {f g : A → B} (H : homotopy f g) {x y : A} 
+  (p : Id x y) 
+  : Id (Id.concat (H x) (ap g p)) (Id.concat (ap f p) (H y)) :=
+  Id.rec (Id.concat (Id.right_unit (H x)) (Id.inv (Id.left_unit (H x)))) p
+
 end htpy
 
 /--
@@ -371,9 +398,27 @@ definition apd {A : Type} {B : A → Type} (f : forall x, B x) {x y : A}
   : Id (transport p (f x)) (f y) :=
   Id.rec (Id.refl (f x)) p
 
-definition hnat {A B : Type} {f g : A → B} (H : homotopy f g) {x y : A} 
-  (p : Id x y) 
-  : Id (Id.concat (H x) (ap g p)) (Id.concat (ap f p) (H y)) :=
-  Id.rec (Id.concat (Id.right_unit (H x)) (Id.inv (Id.left_unit (H x)))) p
+namespace square
 
--- definition isretr_swap {A B : Type} (f : A → B) (g : B → A) (H : homotopy 
+definition whisker_east {A : Type} {x00 x01 x10 x11 : A} 
+  {pnorth : Id x00 x01} 
+  {peast peast' : Id x01 x11} (q : Id peast peast') 
+  
+  : forall {pwest : Id x00 x10} {psouth : Id x10 x11}, 
+  Id (Id.concat pnorth peast) (Id.concat pwest psouth) 
+  → Id (Id.concat pnorth peast') (Id.concat pwest psouth)
+  :=
+  Id.rec (λ pw ps sq, sq) q
+
+end square
+
+definition retraction_swap {A B : Type} {i : A → B} {r : B → A} 
+  (H : homotopy (λ x, r (i x)) (λ x, x)) (a : A) 
+  : Id (H (r (i a))) (htpy.whisker_left (λ x, r (i x)) H a)  :=
+  Id.unwhisker_right 
+    ( H a) 
+    ( square.whisker_east 
+      ( ap.idfun (H a)) 
+      ( htpy.natural H (H a))
+    )
+
