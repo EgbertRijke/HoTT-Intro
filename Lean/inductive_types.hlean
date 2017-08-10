@@ -1,76 +1,96 @@
+/-------------------------------------------------------------------------------
+  LECTURE 2. Inductive types
+
+-------------------------------------------------------------------------------/
+
 prelude
 
-inductive nat.{u} : Type.{u} :=
-  | zero : nat
-  | succ : nat → nat
+inductive hnat.{u} : Type.{u} :=
+  | zero : hnat
+  | succ : hnat → hnat
 
-print nat.rec
-print nat.rec_on
+print hnat.rec
+print hnat.rec_on
 
-namespace nat
+notation `ℕ` := hnat
 
-definition add : nat → nat → nat :=
-  λ n, nat.rec (λ m, m) (λ m (add_m : nat → nat) k, succ (add_m k)) n
+namespace hnat
 
-end nat
+definition add : hnat → hnat → hnat :=
+  hnat.rec (λ m, m) (λ m (add_m : hnat → hnat) k, hnat.succ (add_m k))
 
-inductive unit.{u} : Type.{u} :=
-  | tt : unit
+definition mul : hnat → hnat → hnat :=
+  hnat.rec (λ m, hnat.zero) (λ m (mul_m : hnat → hnat) k, add m (mul_m k))
 
-namespace unit
+end hnat
 
-definition terminating (A : Type) : A → unit :=
-  λ a, unit.tt
+inductive hunit.{u} : Type.{u} :=
+  | tt : hunit
 
-end unit
+notation `𝟙` := hunit
 
-inductive empty.{u} : Type.{u} 
+namespace hunit
 
-print empty.rec
-print empty.rec_on
+definition terminating (A : Type) : A → hunit :=
+  λ a, hunit.tt
 
-namespace empty
+end hunit
 
-definition initiating (A : Type) : empty → A :=
-  λ t, @empty.rec (λ x, A) t
+inductive hempty.{u} : Type.{u} 
 
-end empty
+print hempty.rec
+print hempty.rec_on
 
-inductive bool.{u} : Type.{u} :=
-  | false : bool
-  | true : bool
+notation `∅` := hempty
+notation `𝟘` := hempty
 
-namespace bool
+definition not (A : Type) := A → ∅
 
-definition taut : bool → Type :=
-  λ t, bool.rec empty unit t
+namespace hempty
 
-definition or : bool → bool → bool :=
-  λ t, bool.rec (λ s, bool.rec false true s) (λ s, true) t
+definition initiating (A : Type) : ∅ → A :=
+  @hempty.rec (λ x, A)
 
-definition and : bool → bool → bool :=
-  λ t, bool.rec (λ s, false) (λ s, bool.rec false true s) t
+end hempty
 
-definition implies : bool → bool → bool :=
-  λ t, bool.rec (λ s, true) (λ s, bool.rec false true s) t
+inductive hbool.{u} : Type.{u} :=
+  | false : hbool
+  | true : hbool
 
-definition neg : bool → bool :=
-  λ t, bool.rec true false t
+notation `ℤ₂` := hbool
+notation `𝟚` := hbool
 
-definition mul : bool → bool → bool :=
-  λ t, bool.rec (λ s, bool.rec false false s) (λ s, bool.rec false true s) t
+namespace hbool
 
-definition mul_unit : bool := true
+definition taut : hbool → Type :=
+  hbool.rec hempty hunit
 
-definition add : bool → bool → bool :=
-  λ t, bool.rec (λ s, s) (λ s, neg s) t
+definition or : hbool → hbool → hbool :=
+  hbool.rec (hbool.rec false true) (λ s, true)
 
-definition add_unit : bool := false
+definition and : hbool → hbool → hbool :=
+  hbool.rec (λ b, false) (hbool.rec false true)
 
-definition add_inv : bool → bool :=
-  λ t, t
+definition implies : hbool → hbool → hbool :=
+  hbool.rec (λ b, true) (hbool.rec false true)
 
-end bool
+definition neg : hbool → hbool :=
+  hbool.rec true false
+
+definition mul : hbool → hbool → hbool :=
+  hbool.rec (hbool.rec false false) (hbool.rec false true)
+
+definition mul_unit : hbool := true
+
+definition add : hbool → hbool → hbool :=
+  hbool.rec (λ b, b) (λ b, neg b)
+
+definition add_unit : hbool := false
+
+definition add_inv : hbool → hbool :=
+  λ b, b
+
+end hbool
 
 inductive coprod.{u v} (A : Type.{u}) (B : Type.{v}) : Type.{max u v} :=
   | inl : A → coprod A B
@@ -78,97 +98,104 @@ inductive coprod.{u v} (A : Type.{u}) (B : Type.{v}) : Type.{max u v} :=
 
 print coprod.inl
 
-definition int : Type :=
-  coprod nat (coprod unit nat)
+definition hint : Type :=
+  coprod hnat (coprod hunit hnat)
 
-namespace int
+notation `ℤ` := hint
 
-definition neg : nat → int :=
-  λ n, @coprod.inl nat (coprod unit nat) n
+namespace hint
 
-definition zero : int :=
-  @coprod.inr nat (coprod unit nat) (@coprod.inl unit nat unit.tt)
+definition neg : hnat → hint :=
+  @coprod.inl hnat (coprod hunit hnat)
 
-definition one : int :=
-  @coprod.inr nat (coprod unit nat) (@coprod.inr unit nat nat.zero)
+definition zero : hint :=
+  @coprod.inr hnat (coprod hunit hnat) (@coprod.inl hunit hnat hunit.tt)
 
-definition neg_one : int :=
-  @coprod.inl nat (coprod unit nat) nat.zero
+definition one : hint :=
+  @coprod.inr hnat (coprod hunit hnat) (@coprod.inr hunit hnat hnat.zero)
 
-definition pos : nat → int :=
-  λ n, @coprod.inr nat (coprod unit nat) (@coprod.inr unit nat n)
+definition neg_one : hint :=
+  @coprod.inl hnat (coprod hunit hnat) hnat.zero
 
-definition ind {P : int → Type} (pneg : Π (n : nat), P (neg n)) 
-  (pzero : P zero) (ppos : Π (n : nat), P (pos n)) (k : int)
-  : P k :=
-  coprod.rec (λ n, pneg n) (λ l, coprod.rec (λ t, unit.rec pzero t) (λ n, ppos n) l) k
+definition pos : hnat → hint :=
+  λ n, @coprod.inr hnat (coprod hunit hnat) (@coprod.inr hunit hnat n)
 
-definition succ : int → int :=
-  λ k, ind 
-    (λ n, nat.rec zero (λ m k, neg m) n)
-    one
-    (λ n, pos (nat.succ n))
-    k
+definition destruct {P : hint → Type} (pneg : Π (n : hnat), P (neg n)) 
+  (pzero : P zero) (ppos : Π (n : hnat), P (pos n))
+  : Π (k : hint), P k :=
+  coprod.rec (λ n, pneg n) (λ l, coprod.rec (λ t, hunit.rec pzero t) (λ n, ppos n) l)
 
-definition pred : int → int :=
-  λ k, ind
-    (λ n, neg (nat.succ n))
+definition destruct_full {P : hint → Type} 
+  (pneg_one : P (neg_one))
+  (pneg_succ : Π (n : hnat), P (neg n) → P (neg (hnat.succ n)))
+  (pzero : P zero)
+  (ppos_one : P (one))
+  (ppos_succ : Π (n : hnat), P (pos n) → P (pos (hnat.succ n)))
+  : Π (k : hint), P k :=
+  destruct (hnat.rec pneg_one pneg_succ) pzero (hnat.rec ppos_one ppos_succ)
+
+definition succ : hint → hint :=
+  destruct
+    ( hnat.rec zero (λ m k, neg m))
+    one 
+    ( λ n, pos (hnat.succ n))
+
+definition pred : hint → hint :=
+  destruct_full
+    ( neg (hnat.succ hnat.zero))
+    ( λ n k, neg (hnat.succ n))
     neg_one
-    (λ n, nat.rec zero (λ m k, pos m) n)
-    k
+    zero 
+    ( λ m k, pos m)
 
-definition minus : int → int :=
-  λ k, ind (λ n, pos n) zero (λ n, neg n) k
+definition minus : hint → hint :=
+  destruct (λ n, pos n) zero (λ n, neg n)
 
-print int.ind
-
-definition add : int → int → int :=
-  λ k, ind
-    (λ n, nat.rec 
-            pred 
-            (λ m (add_neg_m : int → int) (l : int), pred (add_neg_m l)) 
-            n
-    )
+definition add : hint → hint → hint :=
+  destruct_full
+    pred
+    ( λ m (add_neg_m : hint → hint) (l : hint), pred (add_neg_m l))
     (λ l, l)
-    (λ n, nat.rec
-            succ
-            (λ m (add_pos_m : int → int) (l : int), succ (add_pos_m l))
-            n
-    )
-    k
+    succ
+    ( λ m (add_pos_m : hint → hint) (l : hint), succ (add_pos_m l))
 
-definition add_inv : int → int := minus
+-- The additive inverse
+definition add_inv : hint → hint := minus
 
-definition add_unit : int := zero
+-- The additive unit
+definition add_unit : hint := zero
 
-definition mul : int → int → int :=
-  λ k, ind
-    (λ n, nat.rec
-            minus
-            (λ m (mul_neg_m : int → int) (l : int), add (neg m) (mul_neg_m l))
-            n
-    )
-    (λ l, zero)
-    (λ n, nat.rec
-            (λ l, l)
-            (λ m (mul_pos_m : int → int) (l : int), add (pos m) (mul_pos_m l))
-            n
-    )
-    k
+definition mul : hint → hint → hint :=
+  destruct_full
+    minus
+    ( λ m (mul_neg_m : hint → hint) (l : hint), add (neg m) (mul_neg_m l))
+    ( λ l, zero)
+    ( λ l, l)
+    ( λ m (mul_pos_m : hint → hint) (l : hint), add (pos m) (mul_pos_m l))
 
-definition mul_unit : int := one
+definition mul_unit : hint := one
 
-end int
+end hint
 
-inductive Sigma.{u v} (A : Type.{u}) (B : A → Type.{v}) : Type.{max u v} :=
-  dpair : Π (x : A), B x → Sigma A B
+inductive hSigma.{u v} (A : Type.{u}) (B : A → Type.{v}) : Type.{max u v} :=
+  pair : Π (x : A), B x → hSigma A B
 
-namespace sigma
+definition hprod (A : Type) (B : Type) : Type :=
+  hSigma A (λ x, B)
 
-definition pr1 {A : Type} {B : A → Type} (x : Sigma A B) : A :=
-  Sigma.rec (λ a b, a) x
+namespace hprod
+  
+  definition pair {A : Type} {B : Type} : A → B → hprod A B :=
+    λ a b, hSigma.pair a b
 
-definition pr2 {A : Type} {B : A → Type} (x : Sigma A B) : B (pr1 x) :=
-  Sigma.rec (λ a b, b) x
+end hprod
 
-end sigma
+namespace hSigma
+
+definition pr1 {A : Type} {B : A → Type} (x : hSigma A B) : A :=
+  hSigma.rec (λ a b, a) x
+
+definition pr2 {A : Type} {B : A → Type} (x : hSigma A B) : B (pr1 x) :=
+  hSigma.rec (λ a b, b) x
+
+end hSigma

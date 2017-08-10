@@ -1,4 +1,11 @@
+/-------------------------------------------------------------------------------
+  LECTURE 3. Identity types
+
+-------------------------------------------------------------------------------/
+
 prelude
+
+import .inductive_types
 
 /--
 From the perspective of types as proof-relevant propositions, how should we 
@@ -115,6 +122,27 @@ definition unwhisker_right {A : Type} {x y : A} {p q : Id x y} {z : A}
   : forall (u : Id (concat p r) (concat q r)), Id p q :=
   Id.rec (λ u, concat (inv (right_unit p)) (concat u (right_unit q))) r
 
+definition inv_con {A : Type} {x y z : A} (p : Id x y) 
+  : Π (q : Id y z) (r : Id x z), Id (Id.concat p q) r 
+  → Id q (Id.concat (Id.inv p) r) :=
+  Id.rec (Id.rec (λ r, Id.rec (Id.refl _))) p
+
+definition con_inv {A : Type} {x y z : A} (p : Id x y) (q : Id y z) 
+  (r : Id x z)
+  : Id (Id.concat p q) r → Id p (Id.concat r (Id.inv q)) :=
+  Id.rec (Id.rec (Id.refl _) q)
+
+definition inv_con' {A : Type} {x y z : A} {p : Id x y} 
+  {q : Id y z} {r : Id x z}
+  (s : Id r (concat p q)) : Id (concat (inv p) r) q :=
+  inv (inv_con p q r (inv s))
+
+definition con_inv' {A : Type} {x y z : A} {p : Id x y} {q : Id y z}
+  {r : Id x z} (s : Id r (concat p q)) 
+  : Id (concat r (inv q)) p
+  :=
+  inv (con_inv p q r (inv s))
+
 end Id
 
 /--
@@ -132,6 +160,12 @@ Before we show that ap f preserves the groupoid structure, we show that ap (idfu
 --/
 
 definition idfun {A : Type} {x y : A} (p : Id x y) : Id (ap (λ a, a) p) p :=
+  Id.rec (Id.refl _) p
+
+definition compose {A B C : Type} (f : A → B) (g : B → C) {x y : A} 
+  (p : Id x y)
+  : Id (ap (λ x, g (f (x))) p) (ap g (ap f p))
+  :=
   Id.rec (Id.refl _) p
 
 definition concat {A B : Type} (f : A → B) {x y : A} (p : Id x y) {z : A} 
@@ -391,6 +425,15 @@ definition assoc {A : Type} {B : A → Type} {x1 x2 : A} (p : Id x1 x2)
              (concat_compute p (Id.concat q r)) :=
   Id.rec (Id.rec (Id.rec (λ (b : B x1), Id.refl _) p) q) r
 
+definition fun_rel {A B : Type} (f : A → B) {x y : A} (p : Id x y) {b : B}
+  (q : Id (f x) b) : Id (transport p q) (Id.concat (Id.inv (ap f p)) q) :=
+  Id.rec (Id.rec (Id.refl _) p) q
+
+definition fun_rel' {A B : Type} (f : A → B) {x y : A} (p : Id x y) {b : B}
+  (q : Id b (f x)) : Id (transport p q) (Id.concat q (ap f p)) :=
+  Id.rec (Id.rec (Id.refl _) p) q
+  
+
 end tr
 
 definition apd {A : Type} {B : A → Type} (f : forall x, B x) {x y : A} 
@@ -399,26 +442,105 @@ definition apd {A : Type} {B : A → Type} (f : forall x, B x) {x y : A}
   Id.rec (Id.refl (f x)) p
 
 namespace square
+/--
+When we make constructions of higher identities, we soon run into commuting 
+squares. A square
 
-definition whisker_east {A : Type} {x00 x01 x10 x11 : A} 
-  {pnorth : Id x00 x01} 
-  {peast peast' : Id x01 x11} (q : Id peast peast') 
+       ptop  
+  x00 ====== x01
+   ||         ||
+   || pleft   || pright
+   ||         ||
+  x10 ====== x11
+       pbot
+
+is said to commute, if we can construct an identification of type
+
+  Id (Id.concat ptop pright) (Id.concat pleft pbot).
+
+Some basic manipulations on commuting squares include the whiskering 
+operations.
+--/
+
+definition whisker_top {A : Type} {x00 x01 x10 x11 : A}
+  {ptop ptop' : Id x00 x01} (q : Id ptop ptop')
+  : Π {pright : Id x01 x11} {pleft : Id x00 x10} {pbot : Id x10 x11}
+  (sq : Id (Id.concat ptop pright) (Id.concat pleft pbot)),
+  Id (Id.concat ptop' pright) (Id.concat pleft pbot)
+  :=
+  Id.rec (λ pright pleft pbot sq, sq) q
+
+definition whisker_right {A : Type} {x00 x01 x10 x11 : A} 
+  {ptop : Id x00 x01} 
+  {pright pright' : Id x01 x11} (q : Id pright pright') 
   
-  : forall {pwest : Id x00 x10} {psouth : Id x10 x11}, 
-  Id (Id.concat pnorth peast) (Id.concat pwest psouth) 
-  → Id (Id.concat pnorth peast') (Id.concat pwest psouth)
+  : forall {pleft : Id x00 x10} {pbot : Id x10 x11}, 
+  Id (Id.concat ptop pright) (Id.concat pleft pbot) 
+  → Id (Id.concat ptop pright') (Id.concat pleft pbot)
   :=
   Id.rec (λ pw ps sq, sq) q
 
+definition whisker_left {A : Type} {x00 x01 x10 x11 : A}
+  {ptop : Id x00 x01}
+  {pright : Id x01 x11}
+  {pleft pleft' : Id x00 x10} (q : Id pleft pleft')
+  : Π {pbot : Id x10 x11}, 
+    Id (Id.concat ptop pright) (Id.concat pleft pbot)
+    → Id (Id.concat ptop pright) (Id.concat pleft' pbot) :=
+  Id.rec (λ pbot sq, sq) q
+
+definition whisker_bot {A : Type} {x00 x01 x10 x11 : A}
+  {ptop : Id x00 x01}
+  {pright : Id x01 x11}
+  {pleft : Id x00 x10}
+  {pbot pbot' : Id x10 x11} (q : Id pbot pbot')
+  : Id (Id.concat ptop pright) (Id.concat pleft pbot)
+    → Id (Id.concat ptop pright) (Id.concat pleft pbot') :=
+  Id.rec (λ sq, sq) q
+
 end square
 
-definition retraction_swap {A B : Type} {i : A → B} {r : B → A} 
-  (H : homotopy (λ x, r (i x)) (λ x, x)) (a : A) 
-  : Id (H (r (i a))) (htpy.whisker_left (λ x, r (i x)) H a)  :=
-  Id.unwhisker_right 
-    ( H a) 
-    ( square.whisker_east 
-      ( ap.idfun (H a)) 
-      ( htpy.natural H (H a))
-    )
+namespace int
+/--
+We prove some basic properties of operations on the integers
+--/
 
+/--
+definition pred_neg_succ : Π (n : nat), Id (pred (neg n)) (neg (nat.succ n)) :=
+  nat.rec (Id.refl _) (λ n p, _)
+
+definition pred_is_retr : homotopy (λ k, pred (succ k)) (λ k, k) :=
+  destruct_full
+    (Id.refl _)
+    (λ n p, Id.concat _ (ap pred p))
+    _
+    _
+    _
+
+definition assoc_add 
+  : Π (k l m : int), Id (add k (add l m)) (add (add k l) m) :=
+  int.destruct 
+    ( nat.rec 
+      ( int.destruct 
+        ( nat.rec 
+          ( int.destruct 
+            ( nat.rec (Id.refl _) 
+              ( λ m assoc_negk_negl_negm, ap pred assoc_negk_negl_negm)
+            ) 
+            ( unit.rec (Id.refl _) unit.tt) 
+            ( nat.rec (Id.refl _)
+              ( λ m assoc_negk_negl_posm, _)
+            )
+          ) 
+          _
+        ) 
+        _ _
+      )
+      ( _)
+    ) 
+    ( _)
+    ( _)
+
+--/
+
+end int

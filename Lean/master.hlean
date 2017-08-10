@@ -1,11 +1,18 @@
 prelude
 
+/-------------------------------------------------------------------------------
+  LECTURE 2. Inductive types
+
+-------------------------------------------------------------------------------/
+
 inductive nat.{u} : Type.{u} :=
   | zero : nat
   | succ : nat → nat
 
 print nat.rec
 print nat.rec_on
+
+notation `ℕ` := nat
 
 namespace nat
 
@@ -20,6 +27,8 @@ end nat
 inductive unit.{u} : Type.{u} :=
   | tt : unit
 
+notation `𝟙` := unit
+
 namespace unit
 
 definition terminating (A : Type) : A → unit :=
@@ -32,9 +41,14 @@ inductive empty.{u} : Type.{u}
 print empty.rec
 print empty.rec_on
 
+notation `∅` := empty
+notation `𝟘` := empty
+
+definition not (A : Type) := A → ∅
+
 namespace empty
 
-definition initiating (A : Type) : empty → A :=
+definition initiating (A : Type) : ∅ → A :=
   @empty.rec (λ x, A)
 
 end empty
@@ -42,6 +56,9 @@ end empty
 inductive bool.{u} : Type.{u} :=
   | false : bool
   | true : bool
+
+notation `ℤ₂` := bool
+notation `𝟚` := bool
 
 namespace bool
 
@@ -52,10 +69,10 @@ definition or : bool → bool → bool :=
   bool.rec (bool.rec false true) (λ s, true)
 
 definition and : bool → bool → bool :=
-  bool.rec (λ s, false) (bool.rec false true)
+  bool.rec (λ b, false) (bool.rec false true)
 
 definition implies : bool → bool → bool :=
-  bool.rec (λ s, true) (bool.rec false true)
+  bool.rec (λ b, true) (bool.rec false true)
 
 definition neg : bool → bool :=
   bool.rec true false
@@ -66,12 +83,12 @@ definition mul : bool → bool → bool :=
 definition mul_unit : bool := true
 
 definition add : bool → bool → bool :=
-  bool.rec (λ s, s) (λ s, neg s)
+  bool.rec (λ b, b) (λ b, neg b)
 
 definition add_unit : bool := false
 
 definition add_inv : bool → bool :=
-  λ t, t
+  λ b, b
 
 end bool
 
@@ -83,6 +100,8 @@ print coprod.inl
 
 definition int : Type :=
   coprod nat (coprod unit nat)
+
+notation `ℤ` := int
 
 namespace int
 
@@ -101,54 +120,58 @@ definition neg_one : int :=
 definition pos : nat → int :=
   λ n, @coprod.inr nat (coprod unit nat) (@coprod.inr unit nat n)
 
-definition ind {P : int → Type} (pneg : Π (n : nat), P (neg n)) 
-  (pzero : P zero) (ppos : Π (n : nat), P (pos n)) (k : int)
-  : P k :=
-  coprod.rec (λ n, pneg n) (λ l, coprod.rec (λ t, unit.rec pzero t) (λ n, ppos n) l) k
+definition destruct {P : int → Type} (pneg : Π (n : nat), P (neg n)) 
+  (pzero : P zero) (ppos : Π (n : nat), P (pos n))
+  : Π (k : int), P k :=
+  coprod.rec (λ n, pneg n) (λ l, coprod.rec (λ t, unit.rec pzero t) (λ n, ppos n) l)
+
+definition destruct_full {P : int → Type} 
+  (pneg_one : P (neg_one))
+  (pneg_succ : Π (n : nat), P (neg n) → P (neg (nat.succ n)))
+  (pzero : P zero)
+  (ppos_one : P (one))
+  (ppos_succ : Π (n : nat), P (pos n) → P (pos (nat.succ n)))
+  : Π (k : int), P k :=
+  destruct (nat.rec pneg_one pneg_succ) pzero (nat.rec ppos_one ppos_succ)
 
 definition succ : int → int :=
-  λ k, ind 
-    (nat.rec zero (λ m k, neg m))
-    one
-    (λ n, pos (nat.succ n))
-    k
+  destruct
+    ( nat.rec zero (λ m k, neg m))
+    one 
+    ( λ n, pos (nat.succ n))
 
 definition pred : int → int :=
-  λ k, ind
-    (λ n, neg (nat.succ n))
+  destruct_full
+    ( neg (nat.succ nat.zero))
+    ( λ n k, neg (nat.succ n))
     neg_one
-    (nat.rec zero (λ m k, pos m))
-    k
+    zero 
+    ( λ m k, pos m)
 
 definition minus : int → int :=
-  λ k, ind (λ n, pos n) zero (λ n, neg n) k
+  destruct (λ n, pos n) zero (λ n, neg n)
 
 definition add : int → int → int :=
-  λ k, ind
-    ( nat.rec pred 
-      ( λ m (add_neg_m : int → int) (l : int), pred (add_neg_m l))
-    )
+  destruct_full
+    pred
+    ( λ m (add_neg_m : int → int) (l : int), pred (add_neg_m l))
     (λ l, l)
-    ( nat.rec succ
-      ( λ m (add_pos_m : int → int) (l : int), succ (add_pos_m l))
-    )
-    k
+    succ
+    ( λ m (add_pos_m : int → int) (l : int), succ (add_pos_m l))
 
+-- The additive inverse
 definition add_inv : int → int := minus
 
+-- The additive unit
 definition add_unit : int := zero
 
 definition mul : int → int → int :=
-  λ k, ind
-    ( nat.rec minus
-      ( λ m (mul_neg_m : int → int) (l : int), add (neg m) (mul_neg_m l))
-    )
-    (λ l, zero)
-    ( nat.rec
-      ( λ l, l)
-      ( λ m (mul_pos_m : int → int) (l : int), add (pos m) (mul_pos_m l))
-    )
-    k
+  destruct_full
+    minus
+    ( λ m (mul_neg_m : int → int) (l : int), add (neg m) (mul_neg_m l))
+    ( λ l, zero)
+    ( λ l, l)
+    ( λ m (mul_pos_m : int → int) (l : int), add (pos m) (mul_pos_m l))
 
 definition mul_unit : int := one
 
@@ -176,6 +199,11 @@ definition pr2 {A : Type} {B : A → Type} (x : Sigma A B) : B (pr1 x) :=
   Sigma.rec (λ a b, b) x
 
 end Sigma
+
+/-------------------------------------------------------------------------------
+  LECTURE 3. Identity types
+
+-------------------------------------------------------------------------------/
 
 /--
 From the perspective of types as proof-relevant propositions, how should we 
@@ -612,6 +640,25 @@ definition apd {A : Type} {B : A → Type} (f : forall x, B x) {x y : A}
   Id.rec (Id.refl (f x)) p
 
 namespace square
+/--
+When we make constructions of higher identities, we soon run into commuting 
+squares. A square
+
+       ptop  
+  x00 ====== x01
+   ||         ||
+   || pleft   || pright
+   ||         ||
+  x10 ====== x11
+       pbot
+
+is said to commute, if we can construct an identification of type
+
+  Id (Id.concat ptop pright) (Id.concat pleft pbot).
+
+Some basic manipulations on commuting squares include the whiskering 
+operations.
+--/
 
 definition whisker_top {A : Type} {x00 x01 x10 x11 : A}
   {ptop ptop' : Id x00 x01} (q : Id ptop ptop')
@@ -651,6 +698,52 @@ definition whisker_bot {A : Type} {x00 x01 x10 x11 : A}
 
 end square
 
+namespace int
+/--
+We prove some basic properties of operations on the integers
+--/
+
+/--
+definition pred_neg_succ : Π (n : nat), Id (pred (neg n)) (neg (nat.succ n)) :=
+  nat.rec (Id.refl _) (λ n p, _)
+
+definition pred_is_retr : homotopy (λ k, pred (succ k)) (λ k, k) :=
+  destruct_full
+    (Id.refl _)
+    (λ n p, Id.concat _ (ap pred p))
+    _
+    _
+    _
+
+definition assoc_add 
+  : Π (k l m : int), Id (add k (add l m)) (add (add k l) m) :=
+  int.destruct 
+    ( nat.rec 
+      ( int.destruct 
+        ( nat.rec 
+          ( int.destruct 
+            ( nat.rec (Id.refl _) 
+              ( λ m assoc_negk_negl_negm, ap pred assoc_negk_negl_negm)
+            ) 
+            ( unit.rec (Id.refl _) unit.tt) 
+            ( nat.rec (Id.refl _)
+              ( λ m assoc_negk_negl_posm, _)
+            )
+          ) 
+          _
+        ) 
+        _ _
+      )
+      ( _)
+    ) 
+    ( _)
+    ( _)
+
+--/
+
+end int
+
+-- Exercise
 definition retraction_swap {A B : Type} {i : A → B} {r : B → A} 
   (H : homotopy (λ x, r (i x)) (λ x, x)) (a : A) 
   : Id (H (r (i a))) (htpy.whisker_left (λ x, r (i x)) H a)  :=
@@ -660,6 +753,16 @@ definition retraction_swap {A B : Type} {i : A → B} {r : B → A}
       ( ap.idfun (H a)) 
       ( htpy.natural H (H a))
     )
+
+definition retraction_precompose {A B : Type} {P : A → Type} {i : A → B} 
+  {r : B → A} (H : homotopy (λ x, r (i x)) (λ x, x)) (K : Π (b : B), P (r b)) 
+  (a : A) : P a :=
+  transport (H a) (K (i a))
+
+/-------------------------------------------------------------------------------
+  LECTURE 4. Equivalences
+
+-------------------------------------------------------------------------------/
 
 definition has_retraction {A B : Type} (i : A → B) : Type :=
   Sigma (B → A) (λ r, homotopy (λ x, r (i x)) (λ x, x))
@@ -793,6 +896,7 @@ definition is_equiv_equiv_inv {A B : Type} {e : A → B}
       ( invertible_inv_of_invertible (invertible_of_is_equiv e H))
     )
 
+/--
 definition equiv_3for2_left {A B C : Type} {f : A → B} {g : B → C} {h : A → C} 
   {H : homotopy h (λ x, g (f x))}
   : is_equiv f → is_equiv h → is_equiv g :=
@@ -805,10 +909,22 @@ definition equiv_3for2_left {A B C : Type} {f : A → B} {g : B → C} {h : A �
         _
       )
     )
+--/
+
+namespace Sigma
+
+definition eta {A : Type} {B : A → Type} 
+  : Π (x : Sigma A B), Id x (pair (pr1 x) (pr2 x)) :=
+  Sigma.rec (λ a b, Id.refl _)
+
+/--
+In the following we construct an equivalence computing the identity type of a Σ-type. 
+
+--/
 
 definition eq_of_pair {A : Type} {B : A → Type} {u v : Sigma A B}
-  : Sigma (Id (Sigma.pr1 u) (Sigma.pr1 v)) 
-          (λ p, Id (transport p (Sigma.pr2 u)) (Sigma.pr2 v)) 
+  : Sigma (Id (pr1 u) (pr1 v)) 
+          (λ p, Id (transport p (pr2 u)) (pr2 v)) 
   → Id u v :=
   Sigma.rec 
     ( λ y q, Sigma.rec 
@@ -818,20 +934,20 @@ definition eq_of_pair {A : Type} {B : A → Type} {u v : Sigma A B}
       ) u
     ) v
 
-definition base_path {A : Type} {B : A → Type} {x y : Sigma A B}
-  : Id x y → Id (Sigma.pr1 x) (Sigma.pr1 y) :=
-  Id.rec (Id.refl _)
-
-definition fiber_path {A : Type} {B : A → Type} {x y : Sigma A B}
-  : Π (p : Id x y), Id (transport (base_path p) (Sigma.pr2 x)) (Sigma.pr2 y)
-  :=
-  Id.rec (Id.refl _)
-
 definition pair_of_eq {A : Type} {B : A → Type} (x y : Sigma A B)
   : (Id x y)
-  → Sigma (Id (Sigma.pr1 x) (Sigma.pr1 y))
-    (λ u, Id (transport u (Sigma.pr2 x)) (Sigma.pr2 y)) :=
-  Id.rec (Sigma.pair (Id.refl _) (Id.refl _))
+  → Sigma (Id (pr1 x) (pr1 y))
+    (λ u, Id (transport u (pr2 x)) (pr2 y)) :=
+  Id.rec (pair (Id.refl _) (Id.refl _))
+
+definition base_path {A : Type} {B : A → Type} {x y : Sigma A B}
+  : Id x y → Id (pr1 x) (pr1 y) :=
+  λ p, pr1 (pair_of_eq _ _ p)
+
+definition fiber_path {A : Type} {B : A → Type} {x y : Sigma A B}
+  : Π (p : Id x y), Id (transport (base_path p) (pr2 x)) (pr2 y)
+  :=
+  λ p, pr2 (pair_of_eq _ _ p)
 
 definition pair_of_eq_invertible {A : Type} {B : A → Type} (x y : Sigma A B) : invertible (pair_of_eq x y) :=
   invertible.construct
@@ -847,6 +963,8 @@ definition pair_of_eq_invertible {A : Type} {B : A → Type} (x y : Sigma A B) :
 definition pair_of_eq_is_equiv {A : Type} {B : A → Type} (x y : Sigma A B)
   : is_equiv (pair_of_eq x y) :=
   is_equiv_of_invertible (pair_of_eq x y) (pair_of_eq_invertible _ _)
+
+end Sigma
 
 definition is_contr (A : Type) : Type := Sigma A (λ a, Π (x : A), Id a x)
 
@@ -905,7 +1023,7 @@ definition is_equiv_of_is_contr {A B : Type} (f : A → B)
     ( invertible.construct
       (λ b, Sigma.pr1 (is_contr.center (H b)))
       (λ b, Sigma.pr2 (is_contr.center (H b)))
-      (λ a, @base_path _ _ _ 
+      (λ a, @Sigma.base_path _ _ _ 
               ( Sigma.pair a (Id.refl (f a))) 
               ( is_contr.contraction (H (f a)) _))
     )
@@ -922,7 +1040,7 @@ definition is_contr_of_invertible {A B : Type} (f : A → B)
       )
       ( Sigma.rec 
         ( λ a, Id.rec 
-          ( eq_of_pair 
+          ( Sigma.eq_of_pair 
             ( Sigma.pair 
               ( is_retraction a) 
               ( Id.concat 
@@ -968,9 +1086,57 @@ definition is_contr_total_path {A : Type}
   : Π (a : A), is_contr (Sigma A (λ x, Id x a)) :=
   is_contr_idfun
 
-namespace Id
+/-------------------------------------------------------------------------------
+  LECTURE 5. The fundamental theorem
 
-definition is_equiv_inv {A : Type} {x y : A} : is_equiv (@inv A x y) :=
-  sorry
+-------------------------------------------------------------------------------/
 
-end Id
+definition fmap {A : Type} (B C : A → Type) : Type := Π (x : A), B x → C x
+
+definition fmap_natural {A : Type} {B C : A → Type} (f : fmap B C) {x y : A}
+  : Π (p : Id x y) (b : B x), 
+    Id (f y (transport p b)) (transport p (f x b))
+  := Id.rec (λ b, Id.refl _)
+
+definition total {A : Type} {B C : A → Type} (f : Π (x : A), B x → C x)
+  : Sigma A B → Sigma A C :=
+  Sigma.rec (λ a b, Sigma.pair a (f a b))
+
+definition fib_total_of_fib_fmap {A : Type} {B C : A → Type} 
+  (f : fmap B C) (a : A) (c : C a)
+  : fiber (f a) c → fiber (total f) (Sigma.pair a c) :=
+  Sigma.rec
+    ( λ b p, Sigma.pair 
+      ( Sigma.pair a b) 
+      ( Sigma.eq_of_pair (Sigma.pair (Id.refl a) p))
+    )
+
+definition fib_fmap_of_fib_total {A : Type} {B C : A → Type} 
+  (f : fmap B C) (a : A) (c : C a)
+  : fiber (total f) (Sigma.pair a c) → fiber (f a) c :=
+  Sigma.rec
+    ( Sigma.rec 
+      ( λ x b p, Sigma.pair 
+        ( transport (Sigma.base_path p) b)
+        ( Id.concat (fmap_natural f _ _) (Sigma.fiber_path p) )
+      )
+    )
+
+definition fib_total_is_retr {A : Type} {B C : A → Type} {f : fmap B C} {a : A}
+  {c : C a}
+  : homotopy 
+     ( λ x, fib_fmap_of_fib_total f a c (fib_total_of_fib_fmap f a c x)) 
+     ( λ x, x) :=
+  Sigma.rec
+    ( λ b, Id.rec (Sigma.eq_of_pair (Sigma.pair (Id.refl _) (Id.refl _))))
+
+/--
+definition fib_total_is_sec {A : Type} {B C : A → Type} {f : fmap B C} {a : A}
+  {c : C a}
+  : homotopy
+      ( λ x, fib_total_of_fib_fmap f a c (fib_fmap_of_fib_total f a c x))
+      ( λ x, x) :=
+  Sigma.rec
+    ( λ b, (retraction_precompose _ _)
+    )
+--/
