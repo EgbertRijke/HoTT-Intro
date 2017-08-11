@@ -500,7 +500,53 @@ definition whisker_bot {A : Type} {x00 x01 x10 x11 : A}
 
 end square
 
-namespace int
+namespace hnat
+
+definition add_succ : Π (k l : hnat), Id (add k (succ l)) (succ (add k l)) :=
+  hnat.rec 
+    ( hnat.rec (Id.refl one) (λ m q, (Id.refl (succ (succ m)))))
+    ( λ n p, hnat.rec (ap succ (p zero)) (λ m q, (ap succ (p (succ m)))))
+
+definition succ_add : Π (k l : hnat), Id (add (succ k) l) (succ (add k l)) :=
+  λ k l, Id.refl _
+
+definition add_succ_of_succ_add (k l : hnat) 
+  : Id (add (succ k) l) (add k (succ l)) :=
+  Id.concat (succ_add _ _) (Id.inv (add_succ _ _))
+
+definition succ_add_of_add_succ (k l : hnat)
+  : Id (add k (succ l)) (add (succ k) l) :=
+  Id.concat (add_succ _ _) (Id.inv (succ_add _ _))
+
+definition ap_add {k k' : hnat} (p : Id k k') {l l' : hnat} (q : Id l l')
+  : Id (add k l) (add k' l') :=
+  Id.rec (Id.rec (Id.refl (add k l)) q) p
+
+definition ap_add_left {k k' : hnat}
+  : Π (p : Id k k') (l : hnat), Id (add k l) (add k' l) :=
+  Id.rec (λ l, Id.refl (add k l))
+
+definition ap_add_right (k : hnat) {l l' : hnat} (q : Id l l')
+  : Id (add k l) (add k l') :=
+  Id.rec (Id.refl (add k l)) q
+
+definition add_assoc 
+  : Π (k l m : hnat), Id (add (add k l) m) (add k (add l m)) :=
+  hnat.rec ( λ l m, Id.refl _) ( λ k assoc_hyp l m, ap succ (assoc_hyp _ _))
+
+definition add_left_unit : Π (k : hnat), Id (add zero k) k :=
+  λ k, Id.refl _
+
+definition add_right_unit : Π (k : hnat), Id (add k zero) k :=
+  hnat.rec (Id.refl _) (λ k p, ap succ p)
+
+definition add_comm : Π (k l : hnat), Id (add k l) (add l k) :=
+  hnat.rec (λ l, (Id.inv (add_right_unit _))) 
+    (λ k p l, Id.concat (ap succ (p _)) (Id.inv (add_succ _ _)))
+
+end hnat
+
+namespace hint
 /--
 We prove some basic properties of operations on the integers
 --/
@@ -543,4 +589,4 @@ definition assoc_add
 
 --/
 
-end int
+end hint

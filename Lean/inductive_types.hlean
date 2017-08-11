@@ -16,6 +16,8 @@ notation `ℕ` := hnat
 
 namespace hnat
 
+definition one : hnat := succ zero
+
 definition add : hnat → hnat → hnat :=
   hnat.rec (λ m, m) (λ m (add_m : hnat → hnat) k, hnat.succ (add_m k))
 
