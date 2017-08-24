@@ -22,7 +22,7 @@ definition add : hnat → hnat → hnat :=
   hnat.rec (λ m, m) (λ m (add_m : hnat → hnat) k, hnat.succ (add_m k))
 
 definition mul : hnat → hnat → hnat :=
-  hnat.rec (λ m, hnat.zero) (λ m (mul_m : hnat → hnat) k, add m (mul_m k))
+  hnat.rec (λ m, hnat.zero) (λ m (mul_m : hnat → hnat) k, add (mul_m k) k)
 
 end hnat
 

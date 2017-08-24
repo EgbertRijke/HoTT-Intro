@@ -23,7 +23,7 @@ satisfying the computation rule
 \end{equation*}
 \end{defn}
 
-\section{Basic operations on identifications}\label{sec:groupoid}
+\section{The groupoid structure of types}\label{sec:groupoid}
 \begin{defn}\label{defn:groupoid}
 Let $A$ be a type. We construct the following operations and identifications:
 \begin{enumerate}
@@ -67,13 +67,57 @@ Next, we construct the inverse operation by path induction. It suffices to const
 for any $x:A$. Here we take $\mathsf{inv}(\refl{x})\defeq \refl{x}$.
 \end{constr}
 
+\section{The action on paths of functions}
+
+Using the induction principle of the identity type we can show that every function preserves identifications.
+In other words, every function sends identified terms to identified terms.
+Note that this is a form of continuity for functions in type theory: if there is a path that identifies two points $x$ and $y$ of a type $A$, then there also is a path that identifies the values $f(x)$ and $f(y)$ in the codomain of $f$. 
+
+\begin{defn}
+Let $f:A\to B$ be a map. We define the \define{action on paths} of $f$ as an operation
+\begin{equation*}
+\apfunc{f} : \prd*{x,y:A} (\id{x}{y})\to(\id{f(x)}{f(y)}).
+\end{equation*}
+Moreover, there are operations
+\begin{align*}
+\mathsf{ap.idfun}_A & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{\idfunc[A]}{p}}{p} \\
+\mathsf{ap.compose}(f,g) & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{g\circ f}{p}}{\ap{g}{\ap{f}{p}}}.
+\end{align*}
+\end{defn}
+
+\begin{defn}
+Let $f:A\to B$ be a map. Then there are identifications
+\begin{align*}
+\mathsf{ap.refl}(f,x) & : \id{\ap{f}{\refl{x}}}{\refl{f}(x)} \\
+\mathsf{ap.inv}(f,p) & : \id{\ap{f}{p^{-1}}}{\ap{f}{p}^{-1}} \\
+\mathsf{ap.concat}(f,p,q) & : \id{\ap{f}{\ct{p}{q}}}{\ct{\ap{f}{p}}{\ap{f}{q}}}
+\end{align*}
+for every $p:\id{x}{y}$ and $q:\id{x}{y}$.
+\end{defn}
+
 \section{The homotopy interpretation}
+
+Dependent types also come with an action on paths: the \emph{transport} functions.
+Given an identification $p:\id{x}{y}$ in the base type $A$, we can transport any term $b:B(x)$ to the fiber $B(y)$.
+The transport functions have many applications, which we will encounter throughout this course.
+Here we will give two applications.
+We will use transport to describe the action on paths of \emph{dependent} functions, and we will show how the transport functions provide a \emph{path lifting property}. 
 
 \begin{defn}
 Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
 We will construct a \define{transport} operation
 \begin{equation*}
 \mathsf{transport}^B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
+\end{equation*}
+We will write $\trans{p}{b}$ for $\mathsf{transport}^B(p,b)$.
+\end{defn}
+
+If we are given a dependent function $f:\prd{x:A}B(x)$ and an identification $p:\id{x}{y}$ in $A$, we cannot directly compare $f(x)$ with $f(y)$, since the types $B(x)$ and $B(y)$ might be judgmentally different types. However, using the transport function we can first transport $f(x)$ along the identification $p:\id{x}{y}$. This way, we obtain a term $\trans{p}{f(x)}:B(y)$, which is now of the same type as $f(y)$, and therefore may be compared to $f(y)$.
+
+\begin{defn}\label{defn:apd}
+Let $f:\prd{x:A}B(x)$ be a dependent function. We construct the \define{dependent action on paths} of $f$ as an operation
+\begin{equation*}
+\apdfunc{f}:\prd*{x,y:A}{p:\id{x}{y}} \id{\trans{p}{f(x)}}{f(y)}.
 \end{equation*}
 \end{defn}
 
@@ -87,10 +131,11 @@ We will construct a \define{path lifting} operation
 
 \autoref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \autoref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
 
+\begin{table}
 \begin{center}
+\caption{The homotopy interpretation}
 \begin{tabular}{ll}
 \toprule
-\multicolumn{2}{c}{\large\textbf{The homotopy interpretation}}\\[2ex]
 \emph{Type theory} &  \emph{Homotopy theory} \\
 \midrule
 Types  & Spaces \\
@@ -101,45 +146,7 @@ Identity type & Path fibration\\
 \bottomrule
 \end{tabular}
 \end{center}
-
-\section{Homotopies}
-In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$.
-
-\begin{defn}
-Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies} from $f$ to $g$ is defined as
-\begin{equation*}
-f\htpy g \defeq \prd{x:A} f(x)=g(x).
-\end{equation*}
-\end{defn}
-
-Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between} homotopies, and further homotopies between those higher homotopies. 
-Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just the type
-\begin{equation*}
-\prd{x:A} H(x)=K(x).
-\end{equation*}
-
-\begin{defn}
-Let $f,g:\prd{x:A}B(x)$. Given a homotopy $H:f\htpy g$, we define the \define{inverse} homotopy $H^{-1}\defeq \lam{x}H(x)^{-1}:g\htpy f$. Given a further homotopy $K:g\htpy h$, we define the \define{concatenation} 
-\begin{equation*}
-\ct{H}{K}\defeq\lam{x}\ct{H(x)}{K(x)}:f\htpy h.
-\end{equation*}
-\end{defn}
-
-\begin{comment}
-\begin{defn}
-We define the following \define{whiskering} operations on homotopies:
-\begin{enumerate}
-\item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define
-\begin{equation*}
-hH\defeq \lam{x}\ap{h}{H(x)}:h\circ f\htpy h\circ g.
-\end{equation*}
-\item Suppose $f:A\to B$ and $H:g\htpy h$ for two functions $g,h:B\to C$. We define
-\begin{equation*}
-Hf\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
-\end{equation*}
-\end{enumerate}
-\end{defn}
-\end{comment}
+\end{table}
 
 \begin{exercises}
 \item \label{ex:trans_triv}Consider two types $A$ and $B$, and let $p:x=y$ in $A$, and $b:B$. Construct an identification
@@ -150,14 +157,23 @@ Hf\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
 \begin{align*}
 \mathsf{inv\usc{}assoc}(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
 \end{align*}
-\item \label{ex:ap_ap}Let $f:A\to B$ and $g:B\to C$ be maps, and let $p:\id{x}{y}$ in $A$. Construct an identification
+\item In this exercise we show that the action on paths of a function preserves the groupoid-structure of a type.
+\begin{subexenum}
+\item Construct an identification
 \begin{equation*}
-\mathsf{ap\usc{}ap}(f,g,p):\ap{g}{\ap{f}{p}}=\ap{gf}{p}.
+\mathsf{ap.assoc}(f,p,q,r)
 \end{equation*}
-\item \label{ex:inv_ap}Let $f:A\to B$ be a map, and let $p:x=y$. Construct an identification 
+witnessing that the diagram
 \begin{equation*}
-\mathsf{inv\usc{}ap}(f,p):\ap{f}{p}^{-1}=\ap{f}{p^{-1}}.
-\end{equation*} 
+\begin{tikzcd}[column sep=large]
+\ap{f}{\ct{(\ct{p}{q})}{r}} \arrow[r,equals,"\ap{\apfunc{f}}{\mathsf{assoc}(p,q,r)}"] \arrow[d,swap,equals,"{\mathsf{ap.ct}(f,\ct{p}{q},r)}"] & \ap{f}{\ct{p}{(\ct{q}{r})}} \arrow[d,equals,"{\mathsf{ap.ct}(f,p,\ct{q}{r})}"] \\ 
+\ct{\ap{f}{\ct{p}{q}}}{\ap{f}{r}} \arrow[dd,equals,near start,"{\mathsf{whisk\usc{}r}(\mathsf{ap.ct}(f,p,q),\ap{f}{r})}"]   & \ct{\ap{f}{p}}{\ap{f}{\ct{q}{r}}} \arrow[dd,equals,swap,near end,"{\mathsf{whisk\usc{}l}(\ap{f}{p},\mathsf{ap.ct}(f,q,r))}"]  \\
+\\
+\ct{(\ct{\ap{f}{p}}{\ap{f}{q}})}{\ap{f}{r}} \arrow[r,equals,swap,"{\mathsf{assoc}(\ap{f}{p},\ap{f}{q},\ap{f}{r})}"yshift=-1em] & \ct{\ap{f}{p}}{(\ct{\ap{f}{q}}{\ap{f}{r}})}
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{subexenum}
 \item \label{ex:trans_ap}Let $f:A\to B$ be a map, and consider $p:x=y$ in $A$, and $q:f(x)=b$ in $B$. Construct an identification
 \begin{equation*}
 \mathsf{trans\usc{}ap}(p,q):\id{\trans{p}{q}}{\ct{\ap{f}{p}^{-1}}{q}}.
@@ -171,33 +187,6 @@ Similarly, for $q':b=f(x)$, construct an identification
 \mathsf{inv\usc{}con}(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
 \mathsf{con\usc{}inv}(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
 \end{align*}
-\item \label{ex:htpy_nat}
-\begin{subexenum}
-\item Let $f,g:A\to B$ be functions, and consider $H:f\htpy g$ and $p:x=y$ in $A$. Construct the identification
-\begin{align*}
-\mathsf{htpy\usc{}nat}(H,p) & :\ct{H(x)}{\ap{g}{p}}=\ct{\ap{f}{p}}{H(y)}
-\end{align*}
-witnessing that the square
-\begin{equation*}
-\begin{tikzcd}
-f(x) \arrow[r,equals,"H(x)"] \arrow[d,equals,swap,"\ap{f}{p}"] & g(x) \arrow[d,equals,"\ap{g}{p}"] \\
-f(y) \arrow[r,equals,swap,"H(y)"] & g(y)
-\end{tikzcd}
-\end{equation*}
-commutes.
-\item Now let $f:A\to B$, $g:B\to A$, and $H:g\circ f\htpy \idfunc[A]$. 
-%Show that the square
-%\begin{equation*}
-%\begin{tikzcd}
-%gfgf(x) \arrow[d,swap,equals,"\ap{gf}{H(x)}"] \arrow[r,equals,"H(gf(x))"] & gf(x) \arrow[d,"H(x)"] \\
-%gf(x) \arrow[r,swap,equals,"H(x)"] & x
-%\end{tikzcd}
-%\end{equation*}
-%commutes.
-Construct an identification $H(gf(x))=\ap{gf}{H(x)}$, for any $x:A$.
-\item Similarly, let $f:A\to B$, $g:B\to A$, and $G:f\circ g\htpy\idfunc[A]$. 
-Construct an identification $G(fg(y))=\ap{fg}{G(y)}$, for any $y:B$.
-\end{subexenum}
 \item \label{ex:int_group_laws}Show that the operations $k,l\mapsto k+l$ and $k\mapsto -k$ on the integers defined in \autoref{ex:int_group_ops} satisfy the group laws:
 \begin{align*}
 k+(l+m) & = (k+l)+m \\

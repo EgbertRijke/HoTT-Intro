@@ -1,11 +1,11 @@
 \chapter{Dependent type theory}
 
 \section{The Curry-Howard correspondence}
+\begin{table}
+\caption{The Curry-Howard correspondence}
 \begin{center}
-\bigskip
 \begin{tabular}{lll}
 \toprule
-\multicolumn{3}{c}{\large\textbf{The Curry-Howard correspondence}}\\[2ex]
 \emph{First order logic} & \emph{Set theory} & \emph{Type theory}\\
 \midrule
 Propositions & Sets & Types\\
@@ -19,9 +19,8 @@ $\exists x.P(x)$ & $\coprod_{i\in I}A_i$ & $\sm{x:A}B(x)$ \\
 $\forall x.P(x)$ & $\prod_{i\in I}A_i$ & $\prd{x:A}B(x)$\\
 \bottomrule
 \end{tabular}
-
-\bigskip
 \end{center}
+\end{table}
 
 \section{Dependent function types}
 \begin{defn}

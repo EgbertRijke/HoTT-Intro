@@ -1,0 +1,168 @@
+\chapter{Homotopy pushouts}
+
+\section{General pushouts}
+
+\begin{defn}
+A \define{span} from $A$ to $B$ consists of a type $S$ and maps $f:S\to A$ and $g:S\to B$. 
+\end{defn}
+Thus, a span from $A$ to $B$ looks like this:
+\begin{equation*}
+\begin{tikzcd}
+& S \arrow[dl,swap,"f"] \arrow[dr,"g"] \\
+A & & B.
+\end{tikzcd}
+\end{equation*}
+
+\begin{defn}
+Let $X$ be a type, and let $\mathcal{S}\jdeq (S,f,g)$ be a span from $A$ to $B$.
+A \define{cocone with vertex $X$} on $\mathcal{S}$ consists of maps $i:A\to X$ and $j:B\to X$, and a homotopy $H:i\circ f\htpy j\circ g$.
+We write $\mathsf{cocone}_{\mathcal{S}}(X)$ for the type of cocones with vertex $X$.
+\end{defn}
+
+Thus, a cocone $(i,j,H)$ on a span $\mathcal{S}$ can be represented as a commutative square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X 
+\end{tikzcd}
+\end{equation*}
+
+\begin{defn}
+
+\end{defn}
+
+\begin{thm}
+Consider the following configuration of commuting squares:
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"i"] \arrow[d,swap,"f"] & B \arrow[r,"k"] \arrow[d,swap,"g"] & C \arrow[d,"h"] \\
+X \arrow[r,swap,"j"] & Y \arrow[r,swap,"l"] & Z
+\end{tikzcd}
+\end{equation*}
+with homotopies $H:j\circ f\htpy g\circ i$ and $K:l\circ g\htpy h\circ k$, and suppose that the square on the left is a pushout square. 
+Then the square on the right is a pushout square if and only if the outer rectangle is a pushout square.
+\end{thm}
+
+\section{Pushouts as higher inductive types}
+
+\begin{defn}
+The \define{(canonical) pushout} of a span $(S,f,g)$ from $A$ to $B$ is defined as the higher inductive type $A\sqcup^S B$ equipped with
+\begin{align*}
+\inl & : A \to A \sqcup^S B \\
+\inr & : B \to A \sqcup^S B \\
+\glue & : \prd{x:S} \id{\inl(f(x))}{\inr(g(s))}.
+\end{align*}
+\end{defn}
+
+From now on we will assume that the univers $\UU$ is closed under pushouts. By this we mean that if $\mathcal{S}$ is a span in $\UU$, then its pushout exists, and is again a type in $\UU$.
+
+\begin{thm}
+The canonical pushout satisfies the (dependent) universal property of the pushout.
+\end{thm}
+
+\section{Suspension and join}
+Many interesting types can be defined as homotopy pushouts. 
+
+\begin{defn}
+Let $X$ be a type. We define the \define{suspension} $\susp X$ of $X$ to be the pushout of the span
+\begin{equation*}
+\begin{tikzcd}
+& X \arrow[dl,swap,"\mathsf{const}_\ttt"] \arrow[dr,"\mathsf{const}_\ttt"] \\
+\unit & & \unit.
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+We define the \define{sphere} $\sphere{n}$ for any $n:\N$ by induction on $n$, by taking
+\begin{align*}
+\sphere{0} & \defeq \bool \\
+\sphere{n+1} & \defeq \susp{\sphere{n}}.
+\end{align*}
+\end{defn}
+
+\begin{defn}
+We define the \define{join} $\join{X}{Y}$ of $X$ and $Y$ to be the pushout 
+\begin{equation*}
+\begin{tikzcd}
+X\times Y \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & Y \arrow[d,"\inr"] \\
+X \arrow[r,swap,"\inl"] & X \ast Y 
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{comment}
+\begin{defn}
+Let $X$ and $Y$ be types with base points $x_0$ and $y_0$, respectively.
+We define the \define{wedge} $X\lor Y$ of $X$ and $Y$ to be the pushout
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\bool \arrow[r,"{\ind{\bool}(\inl(x_0),\inr(y_0))}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X+Y \arrow[d,"\inr"] \\
+\unit \arrow[r,swap,"\inl"] & X\lor Y
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Let $X$ and $Y$ be types with base points $x_0$ and $y_0$, respectively.
+We define a map
+\begin{equation*}
+\mathsf{wedge\usc{}incl} : X \lor Y \to X\times Y.
+\end{equation*}
+as the unique map obtained from the commutative square
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\bool \arrow[r,"{\ind{\bool}(\inl(x_0),\inr(y_0))}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X+Y \arrow[d,"{\ind{X+Y}(\lam{x}\pairr{x,y_0},\lam{y}\pairr{x_0,y})}"] \\
+\unit \arrow[r,swap,"\lam{t}\pairr{x_0,y_0}"] & X\times Y.
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+We define the \define{smash product} $X\wedge Y$ of $X$ and $Y$ to be the pushout
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X\times Y \arrow[d,"\inr"] \\
+\unit \arrow[r,swap,"\inl"] & X\wedge Y.
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+\end{comment}
+
+\section{Sequential colimits}
+
+\begin{exercises}
+\item Show that $\join{P}{Q}= P\lor Q$, for any two propositions $P$ and $Q$.
+\item Let $Q$ be a proposition, and let $A$ be a type. Show that $\inr:A\to \join{Q}{A}$ is an equivalence if and only if $Q\to\iscontr(A)$.
+\item Consider a sequence
+\begin{tikzcd}
+X_0 \arrow[r] & X_1 \arrow[r] & X_2 \arrow[r] & \cdots
+\end{tikzcd}
+of \emph{pointed} types and \emph{pointed} maps between them. Show that the sequential colimit is contractible. 
+\item Let
+\begin{tikzcd}
+P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
+\end{tikzcd}
+be a sequence of propositions. Show that
+\begin{equation*}
+\colim_n(P_n)=\exists_n P_n.
+\end{equation*}
+\item In this exercise we study the \define{reflexive coequalizer}. Let $R:A\to A\to\UU$ be a relation, and $\rho:\prd{x:A}R(x,x)$ be a witness of reflexivity.  
+\begin{subexenum}
+\item Formulate the induction principle and computation rules for the higher inductive type $\mathsf{rcoeq}(A,R,\rho)$ with constructors
+\begin{align*}
+\pts{\eta} &: A \to \mathsf{rcoeq}(A,R,\rho) \\
+\edg{\eta} &: \prd*{x,y:A} R(x,y)\to \id{\pts{\eta}(x)}{\pts{\eta}(y)} \\
+\rfx{\eta} &: \prd{x:A} \edg{\eta}(\rho(x))=\refl{\pts{\eta}(x)}.
+\end{align*}
+\item Show that
+\begin{equation*}
+\begin{tikzcd}
+\sm{x,y:A} R(x,y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & A \arrow[d,"\pts{\eta}"] \\
+A \arrow[r,swap,"\pts{\eta}"] & \mathsf{rcoeq}(A,R,\rho)
+\end{tikzcd}
+\end{equation*}
+commutes, and is a pushout square.
+\item Compute $\mathsf{rcoeq}(A,\idtypevar{A},\refl{})$ and $\mathsf{rcoeq}(A,(\lam{x}{y}\unit),(\lam{x}\ttt))$. Furthermore, consider a pointed type $\pairr{X,x_0}$ as a reflexive relation on the unit type, and compute $\mathsf{rcoeq}(\unit,X,x_0)$.
+\end{subexenum}
+\end{exercises}

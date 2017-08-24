@@ -1,7 +1,61 @@
 \chapter{Equivalences}
 
-\section{Bi-invertible maps}
+\section{Homotopies}
+In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$.
 
+\begin{defn}
+Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies} from $f$ to $g$ is defined as
+\begin{equation*}
+f\htpy g \defeq \prd{x:A} f(x)=g(x).
+\end{equation*}
+\end{defn}
+
+Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between} homotopies, and further homotopies between those higher homotopies. 
+Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just the type
+\begin{equation*}
+\prd{x:A} H(x)=K(x).
+\end{equation*}
+
+In the following definition we define the groupoid-like structure of homotopies. Note that we implement the groupoid-laws as \emph{homotopies} rather than as identifications.
+
+\begin{defn}
+For any dependent type $B:A\to\type$ there are operations
+\begin{align*}
+& \mathsf{htpy.refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
+& \mathsf{htpy.inv} & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
+& \mathsf{htpy.concat} & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to (g\htpy h)\to (f\htpy h).
+\end{align*}
+We will write $H^{-1}$ for $\mathsf{hinv}(H)$, and $\ct{H}{K}$ for $\mathsf{hconcat}(H,K)$. 
+
+Furthermore, we define
+\begin{align*}
+& \mathsf{htpy.assoc}(H,K,L) & & : \ct{(\ct{H}{K})}{L}\htpy\ct{H}{(\ct{K}{L})} \\
+& \mathsf{htpy.left\usc{}unit}(H) & & : \ct{\mathsf{htpy.refl}_f}{H}\htpy H \\
+& \mathsf{htpy.right\usc{}unit}(H) & & : \ct{H}{\mathsf{htpy.refl}_g}\htpy H \\
+& \mathsf{htpy.left\usc{}inv}(H) & & : \ct{H^{-1}}{H} \htpy \mathsf{htpy.refl}_g \\
+& \mathsf{htpy.right\usc{}inv}(H) & & : \ct{H}{H^{-1}} \htpy \mathsf{htpy.refl}_f
+\end{align*}
+for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x)$.
+\end{defn}
+
+
+Apart from the groupoid operations and their laws, we will occasionally need \emph{whiskering} operations.
+
+\begin{defn}
+We define the following \define{whiskering} operations on homotopies:
+\begin{enumerate}
+\item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define
+\begin{equation*}
+hH\defeq \lam{x}\ap{h}{H(x)}:h\circ f\htpy h\circ g.
+\end{equation*}
+\item Suppose $f:A\to B$ and $H:g\htpy h$ for two functions $g,h:B\to C$. We define
+\begin{equation*}
+Hf\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
+\end{equation*}
+\end{enumerate}
+\end{defn}
+
+\section{Bi-invertible maps}
 \begin{defn}
 Let $f:A\to B$ be a function. We say that $f$ has a \define{section} if there is a term of type
 \begin{equation*}
@@ -53,9 +107,10 @@ For any type $A$, the identity function $\idfunc[A]$ is an equivalence.
 \end{thm}
 
 \begin{proof}
-The identity function is its own section and its own retraction.
+The identity function is trivially its own section and its own retraction.
 \end{proof}
 
+\section{The identity type of a \texorpdfstring{$\Sigma$-}{dependent pair }type}
 \begin{thm}\label{thm:eq_sigma}
 Let $B:A\to\type$ be a type family, and let $\pairr{x,y},\pairr{x',y'}:\sm{x:A}B(x)$. Then the map
 \begin{equation*}
@@ -79,136 +134,9 @@ Finally, we construct an identification $\mathsf{pair\usc{}eq}(\mathsf{eq\usc{}p
 By the definition of $\mathsf{eq\usc{}pair}$ we have $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}\jdeq \refl{\pairr{x,y}}$, and by the definition of $\mathsf{pair\usc{}eq}$ we have $\mathsf{pair\usc{}eq}(\refl{\pairr{x,y}})\jdeq\pairr{\refl{x},\refl{y}}$. Thus we may take $\refl{\pairr{\refl{x},\refl{y}}}$ to complete the proof.
 \end{proof}
 
-
-\section{Contractible types and contractible maps}
-
-\begin{defn}
-A type $A$ is said to be \define{contractible} if there is a term of type
-\begin{equation*}
-\iscontr(A) \defeq \sm{a:A}\prd{x:A}a=x.
-\end{equation*}
-Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction} of $A$, and we call $C:\prd{x:A}a=x$ the \define{contraction} of $A$.
-\end{defn}
-
-\begin{rmk}
-Suppose $A$ is a contractible type with center of contraction $c$ and contraction $C$. Then the type of $C$ is (judgmentally) equal to the type
-\begin{equation*}
-\mathsf{const}_a\htpy\idfunc[A].
-\end{equation*}
-In other words, the contraction $C$ is a \emph{homotopy} from the constant function to the identity function.
-\end{rmk}
-
-\begin{thm}
-The unit type $\unit$ is contractible.
-\end{thm}
-
-\begin{proof}
-The unit type comes equipped with a point $\ttt:\unit$. Now we have to construct the contraction, which is of type $\prd{x:\unit}\ttt=x$. We do this by induction on $x$, so we only have to provide a term of type $\ttt=\ttt$. Here we can just take $\refl{\ttt}$. 
-\end{proof}
-
-\begin{defn}
-Let $f:A\to B$ be a function, and let $b:B$. The \define{fiber} of $f$ at $b$ is defined to be the type
-\begin{equation*}
-\fib{f}{b}\defeq\sm{a:A}f(a)=b.
-\end{equation*}
-\end{defn}
-
-\begin{defn}
-We say that a function $f:A\to B$ is \define{contractible} if there is a term of type
-\begin{equation*}
-\iscontr(f)\defeq\prd{b:B}\iscontr(\fib{f}{b}).
-\end{equation*}
-\end{defn}
-
-\begin{thm}\label{thm:equiv_contr}
-Any contractible map is an equivalence.
-\end{thm}
-
-\begin{proof}
-Let $f:A\to B$ be a contractible map. Using the center of contraction of each $\fib{f}{y}$, we obtain a term of type
-\begin{align*}
-\lam{y}\pairr{g(y),G(y)}:\prd{y:B}\fib{f}{y}.
-\end{align*}
-Thus, we get map $g:B\to A$, and a homotopy $G:\prd{y:B} f(g(y))=y$. In other words, we get a section of $f$.
-
-It remains to construct a retraction of $f$. Taking $g$ as our retraction, we have to show that $\prd{x:A} g(f(x))=x$. Note that we get an identification $p:f(g(f(x)))=f(x)$ since $g$ is a section of $f$. Moreover, since $\fib{f}{f(x)}$ is contractible we get an identification $q:\pairr{g(f(x)),p}=\pairr{x,\refl{f(x)}}$. The base path of this identification is an identification of type $g(f(x))=x$, as desired.
-\end{proof}
-
-\begin{thm}\label{thm:contr_equiv}
-Any equivalence is a contractible map.
-\end{thm}
-
-\begin{proof}
-Since every equivalence has the structure of an invertible map by \autoref{defn:inv_equiv}, it suffices to show that any invertible map is contractible.
-
-Let $f:A\to B$ be a map, with $g:B\to A$, $G:f\circ g\htpy\idfunc[B]$, and $H:h\circ f\htpy \idfunc[A]$.
-We have for any $y:B$ the term $\pairr{g(y),G(y)}:\fib{f}{y}$. However, as our center of contraction we take
-$\pairr{g(y),\epsilon(y)}$, where
-\begin{equation*}
-\varepsilon(y) \defeq \ct{\ap{fg}{G(y)}^{-1}}{\ap{f}{H(g(y))}}{G(y)}.
-\end{equation*}
-Now it remains to construct the contraction. Let $x:A$, and let $p:f(x)=y$.
-Since $p:f(x)=y$ has a free endpoint, we can apply path induction on it. 
-Our goal is now to construct an identification
-\begin{equation*}
-\pairr{g(f(x)),\varepsilon(f(x))}=\pairr{x,\refl{f(x)}}.
-\end{equation*}
-We will construct an identification of the form $\mathsf{eq\usc{}pair}(H(x),\nameless)$,
-so it remains to construct an identification of type
-\begin{equation*}
-\trans{H(x)}{\varepsilon(f(x))}=\refl{f(x)}.
-\end{equation*}
-Using \autoref{ex:trans_ap} we see that it suffices to show that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-fgfgf(x) \arrow[r,equals,"\ap{fg}{G(f(x))}"] \arrow[d,equals,swap,"\ap{f}{H(gf(x))}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
-fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
-\end{tikzcd}
-\end{equation*}
-commutes. Recall from \autoref{ex:htpy_nat} that we have $H(gf(x))=\ap{gf}{H(x)}$ and $\ap{fg}{G(y)}=G(fg(y))$. Using these two identifications and \autoref{ex:ap_ap}, we see that it suffices to show that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-fgfgf(x) \arrow[r,equals,"G(fgf(x))"] \arrow[d,equals,swap,"\ap{fgf}{H(x)}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
-fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
-\end{tikzcd}
-\end{equation*}
-commutes. However, this is just a naturality square of homotopies, which commutes by \autoref{ex:htpy_nat}.
-\end{proof}
-
-\begin{cor}
-Let $A$ be a type, and let $a:A$. Then the type
-\begin{equation*}
-\sm{x:A}x=a
-\end{equation*}
-is contractible.
-\end{cor}
-
-\begin{proof}
-By \autoref{thm:id_equiv}, the identity function is an equivalence. Therefore, the fibers of the identity function are contractible by \autoref{thm:contr_equiv}. Note that $\sm{x:A}x=a$ is exactly the fiber of $\idfunc[A]$ at $a:A$.
-\end{proof}
-
-\begin{comment}
-\begin{proof}
-We have the term $(a,\refl{a}):\sm{x:A}a=x$, which we take for the center of contraction. To construct the contraction, we have to show that
-\begin{equation*}
-\prd{p:\sm{x:A}a=x} (a,\refl{a})=p.
-\end{equation*}
-By the induction principle for dependent pair types it suffices to construct a term of type
-\begin{equation*}
-\prd{x:A}{p:a=x} (a,\refl{a})=(x,p)
-\end{equation*}
-Note that we may proceed here by path induction on $p$. That is, it suffices to consider the case $p\jdeq\refl{a}$, and show that $(a,\refl{a})=(a,\refl{a})$. Here we choose $\refl{(a,\refl{a})}$.
-\end{proof}
-\end{comment}
-
 \begin{exercises}
 \item Suppose that $f$ has a section $g$ and a retraction $h$. Construct a homotopy $g\htpy h$. Conclude that $f$ is invertible if it is bi-invertible.
 \item Show that $\mathsf{inv}:(\id{x}{y})\to(\id{y}{x})$, $\mathsf{concat}(p):(\id{y}{z})\to(\id{x}{z})$, and $\transfibf{P}(p):P(x)\to P(y)$ are equivalences. What are their inverses?
-\item Construct an equivalence 
-\begin{equation*}
-\eqv{\big(\sm{x:A}f(x)=y\big)}{\big(\sm{x:A}y=f(x)\big)}.
-\end{equation*}
-Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
 \item \label{ex:htpy_equiv} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
 \begin{equation*}
 \isequiv(f)\leftrightarrow\isequiv(g).
@@ -218,30 +146,9 @@ Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
 f,\qquad g,\qquad g\circ f
 \end{equation*}
 are equivalences, then so is the third.
-\item \label{ex:contr_retr}Suppose that $A$ is a retract of $B$. Show that
-\begin{equation*}
-\iscontr(B)\to\iscontr(A).
-\end{equation*}
-\item \label{ex:contr_equiv}Show that for any type $A$, the map $\mathsf{const}_\ttt : A\to \unit$ is contractible if and only if $A$ is contractible. Conclude that for any map $f:A\to B$, if any two of the three assertions
-\begin{enumerate}
-\item $A$ is contractible
-\item $B$ is contractible
-\item $f$ is an equivalence
-\end{enumerate}
-hold, then so does the third.
 \item \label{ex:neg_equiv} Show that the negation function on the booleans is an equivalence. Also show that for any function $f:\bool\to\bool$, if $f(\bfalse)=f(\btrue)$ then $f$ is \emph{not} an equivalence.
 \item \label{ex:succ_equiv} Show that the successor function on the integers is an equivalence.
-\item Construct an equivalence $\eqv{A\times B}{B\times A}$.
-\item \label{ex:contr_ind} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B:C\to\type$ be a type family. 
-\begin{subexenum}
-\item Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
-\item Construct a section
-\begin{equation*}
-\mathsf{contr\usc{}ind}:B(c)\to \prd{x:C}B(x),
-\end{equation*}
-of the map $\mathsf{ev}_c\defeq\lam{f}f(c)$.
-\item Construct a homotopy $\mathsf{contr\usc{}ind}(\mathsf{ev}_c(f))\htpy f$ for each $f:\prd{x:C}B(x)$.
-\end{subexenum}
+\item Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.
 \item Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=small]
@@ -257,4 +164,8 @@ A \arrow[r,"i"] & B \arrow[r,"r"] & A,
 \end{tikzcd}
 \end{equation*}
 with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.
+\item Let $B:A\to \type$, and let $C:\prd{x:A}B(a)\to\type$. Construct an equivalence
+\begin{equation*}
+\mathsf{\Sigma.assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1 p,\proj 2 p)\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}
+\end{equation*}
 \end{exercises}

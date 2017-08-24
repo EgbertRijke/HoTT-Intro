@@ -544,49 +544,80 @@ definition add_comm : Π (k l : hnat), Id (add k l) (add l k) :=
   hnat.rec (λ l, (Id.inv (add_right_unit _))) 
     (λ k p l, Id.concat (ap succ (p _)) (Id.inv (add_succ _ _)))
 
-end hnat
-
-namespace hint
 /--
-We prove some basic properties of operations on the integers
+The integers can be viewed as a quotient of ℕ × ℕ, where (m,n) is considered 
+equivalent to (m',n') if m + n' = m' + n. 
 --/
 
+definition diff_rel : (hprod hnat hnat) → (hprod hnat hnat) → Type :=
+  hSigma.rec (λ m n, hSigma.rec (λ m' n', Id (add m n') (add m' n)))
+
+definition diff_rel_refl : Π (p : hprod hnat hnat), diff_rel p p :=
+  hSigma.rec (λ m n, (Id.refl _))
+
+definition diff_rel_symm 
+  : Π (p q : hprod hnat hnat), diff_rel p q → diff_rel q p :=
+  hSigma.rec 
+    ( λ m n, hSigma.rec ( λ m' n', Id.inv))
+
+definition diff_rel_tran 
+  : Π (p q r : hprod hnat hnat), diff_rel p q → diff_rel q r → diff_rel p r :=
+  sorry
+
 /--
-definition pred_neg_succ : Π (n : nat), Id (pred (neg n)) (neg (nat.succ n)) :=
-  nat.rec (Id.refl _) (λ n p, _)
+Each equivalence class has its own canonical representative: the elements of 
+the form (succ m,0), or (0,0), or (0,succ n). Not by coincidence, the canonical 
+representatives of the equivalence classes are naturally organized similarly to 
+the way the integers are organized as a double coproduct. 
+--/
 
-definition pred_is_retr : homotopy (λ k, pred (succ k)) (λ k, k) :=
-  destruct_full
-    (Id.refl _)
-    (λ n p, Id.concat _ (ap pred p))
-    _
-    _
-    _
+definition is_canonical_rep (p : hprod hnat hnat) : Type :=
+  coprod (hSigma hnat (λ n, Id p (hSigma.pair zero (succ n))))
+  ( coprod (Id p (hSigma.pair zero zero)) 
+    ( hSigma hnat (λ n, Id p (hSigma.pair (succ n) zero)))
+  ) 
 
-definition assoc_add 
-  : Π (k l m : int), Id (add k (add l m)) (add (add k l) m) :=
-  int.destruct 
-    ( nat.rec 
-      ( int.destruct 
-        ( nat.rec 
-          ( int.destruct 
-            ( nat.rec (Id.refl _) 
-              ( λ m assoc_negk_negl_negm, ap pred assoc_negk_negl_negm)
-            ) 
-            ( unit.rec (Id.refl _) unit.tt) 
-            ( nat.rec (Id.refl _)
-              ( λ m assoc_negk_negl_posm, _)
-            )
-          ) 
-          _
-        ) 
-        _ _
+definition neg_canonical : hnat → hprod hnat hnat := 
+  λ n, (hSigma.pair zero (succ n))
+
+definition zero_canonical : hprod hnat hnat := hSigma.pair zero zero 
+
+definition pos_canonical : hnat → hprod hnat hnat :=
+  λ n, (hSigma.pair (succ n) zero)
+
+/--
+In the following definitions, we define a function that maps an arbitrary 
+element (m,n) to the canonical representative of its equivalence class. More
+precisely, we write a function on ℕ × ℕ such that:
+  - The value at each term of type ℕ × ℕ is a canonical representative.
+  - It respects the equivalence classes.
+This construction can be used to define operations on the integers indirectly 
+via their counterparts on the natural numbers. 
+--/
+
+definition to_canonical_rep : hprod hnat hnat → hprod hnat hnat :=
+  hSigma.rec 
+    ( hnat.rec (λ n, hSigma.pair zero n)
+      ( λ n f, hnat.rec (hSigma.pair (succ n) zero) 
+        (λ m g, f m)
       )
-      ( _)
-    ) 
-    ( _)
-    ( _)
+    )
 
---/
+definition to_canonical_rep_respects_class 
+  : Π (p : hprod hnat hnat), diff_rel p (to_canonical_rep p) := 
+  hSigma.rec 
+  ( hnat.rec ( λ n, Id.refl _) (λ m f, hnat.rec (Id.refl _) (λ n g, sorry)))
 
-end hint
+definition is_canonical_rep_of_to_canoncal_rep
+  : Π (p : hprod hnat hnat), is_canonical_rep (to_canonical_rep p) := sorry
+
+definition succ_hnat_hnat : hprod hnat hnat → hprod hnat hnat :=
+  hSigma.rec (λ m n, hSigma.pair (succ m) n)
+
+definition pred_hnat_hnat : hprod hnat hnat → hprod hnat hnat :=
+  hSigma.rec (λ m n, hSigma.pair m (succ n))
+
+definition add_hnat_hnat : hprod hnat hnat → hprod hnat hnat → hprod hnat hnat :=
+  hSigma.rec (λ m n, hSigma.rec (λ m' n', hSigma.pair (add m m') (add n n')))
+
+end hnat

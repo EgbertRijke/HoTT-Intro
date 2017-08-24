@@ -24,10 +24,18 @@ definition retraction_swap {A B : Type} {i : A → B} {r : B → A}
       ( htpy.natural H (H a))
     )
 
+-- Exercise
 definition retraction_precompose {A B : Type} {P : A → Type} (i : A → B) 
   (r : B → A) (H : homotopy (λ x, r (i x)) (λ x, x)) (K : Π (b : B), P (r b)) 
   (a : A) : P a :=
   transport (H a) (K (i a))
+
+-- Exercise
+definition computation_retraction_precompose {A B : Type} {P : A → Type} 
+  (i : A → B) (r : B → A) (H : homotopy (λ x, r (i x)) (λ x, x)) 
+  (K : Π (b : B), P (r b)) (b :B)
+  : Id (retraction_precompose i r H K (r b)) (K b) :=
+  
 
 definition is_equiv {A B : Type} (f : A → B) : Type :=
   hprod (has_retraction f) (has_section f)
@@ -366,3 +374,75 @@ definition is_contr_idfun {A : Type} : map.is_contr (λ (x : A), x) :=
 definition is_contr_total_path {A : Type}
   : Π (a : A), is_contr (hSigma A (λ x, Id x a)) :=
   is_contr_idfun
+
+namespace hint
+/--
+We prove some basic properties of operations on the integers
+--/
+
+definition hnat_hnat_of_hint : hint → hprod hnat hnat :=
+  destruct
+    ( λ n, hSigma.pair hnat.zero (hnat.succ n))
+    ( hSigma.pair hnat.zero hnat.zero)
+    ( λ n, hSigma.pair (hnat.succ n) hnat.zero)
+
+definition hint_of_canonical_rep (p : hprod hnat hnat)
+  : hnat.is_canonical_rep p → hint :=
+  coprod.rec 
+    ( hSigma.rec (λ m q, (neg m))) 
+    ( coprod.rec (λ q, zero) (hSigma.rec (λ m q, (pos m))))
+
+-- contains sorry :(
+eval hint_of_canonical_rep
+       (hnat.to_canonical_rep
+          (hnat_hnat_of_hint neg_one))
+       (hnat.is_canonical_rep_of_to_canoncal_rep
+          (hnat_hnat_of_hint neg_one))
+
+definition has_retraction_hnat_hnat_of_hint : 
+  has_retraction (hnat_hnat_of_hint) :=
+  hSigma.pair 
+    ( λ p, hint_of_canonical_rep 
+      ( hnat.to_canonical_rep p) 
+      ( hnat.is_canonical_rep_of_to_canoncal_rep p)
+    )
+    ( sorry)
+/--
+definition pred_neg_succ : Π (n : nat), Id (pred (neg n)) (neg (nat.succ n)) :=
+  nat.rec (Id.refl _) (λ n p, _)
+
+definition pred_is_retr : homotopy (λ k, pred (succ k)) (λ k, k) :=
+  destruct_full
+    (Id.refl _)
+    (λ n p, Id.concat _ (ap pred p))
+    _
+    _
+    _
+
+definition assoc_add 
+  : Π (k l m : int), Id (add k (add l m)) (add (add k l) m) :=
+  int.destruct 
+    ( nat.rec 
+      ( int.destruct 
+        ( nat.rec 
+          ( int.destruct 
+            ( nat.rec (Id.refl _) 
+              ( λ m assoc_negk_negl_negm, ap pred assoc_negk_negl_negm)
+            ) 
+            ( unit.rec (Id.refl _) unit.tt) 
+            ( nat.rec (Id.refl _)
+              ( λ m assoc_negk_negl_posm, _)
+            )
+          ) 
+          _
+        ) 
+        _ _
+      )
+      ( _)
+    ) 
+    ( _)
+    ( _)
+
+--/
+
+end hint
