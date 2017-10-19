@@ -73,7 +73,7 @@ Using the induction principle of the identity type we can show that every functi
 In other words, every function sends identified terms to identified terms.
 Note that this is a form of continuity for functions in type theory: if there is a path that identifies two points $x$ and $y$ of a type $A$, then there also is a path that identifies the values $f(x)$ and $f(y)$ in the codomain of $f$. 
 
-\begin{defn}
+\begin{defn}\label{defn:ap}
 Let $f:A\to B$ be a map. We define the \define{action on paths} of $f$ as an operation
 \begin{equation*}
 \apfunc{f} : \prd*{x,y:A} (\id{x}{y})\to(\id{f(x)}{f(y)}).
@@ -110,15 +110,6 @@ We will construct a \define{transport} operation
 \mathsf{transport}^B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
 \end{equation*}
 We will write $\trans{p}{b}$ for $\mathsf{transport}^B(p,b)$.
-\end{defn}
-
-If we are given a dependent function $f:\prd{x:A}B(x)$ and an identification $p:\id{x}{y}$ in $A$, we cannot directly compare $f(x)$ with $f(y)$, since the types $B(x)$ and $B(y)$ might be judgmentally different types. However, using the transport function we can first transport $f(x)$ along the identification $p:\id{x}{y}$. This way, we obtain a term $\trans{p}{f(x)}:B(y)$, which is now of the same type as $f(y)$, and therefore may be compared to $f(y)$.
-
-\begin{defn}\label{defn:apd}
-Let $f:\prd{x:A}B(x)$ be a dependent function. We construct the \define{dependent action on paths} of $f$ as an operation
-\begin{equation*}
-\apdfunc{f}:\prd*{x,y:A}{p:\id{x}{y}} \id{\trans{p}{f(x)}}{f(y)}.
-\end{equation*}
 \end{defn}
 
 \begin{defn}\label{defn:path_lifting}
@@ -187,13 +178,12 @@ Similarly, for $q':b=f(x)$, construct an identification
 \mathsf{inv\usc{}con}(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
 \mathsf{con\usc{}inv}(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
 \end{align*}
-\item \label{ex:int_group_laws}Show that the operations $k,l\mapsto k+l$ and $k\mapsto -k$ on the integers defined in \autoref{ex:int_group_ops} satisfy the group laws:
+\item Show that the operations of addition and multiplication on the natural numbers satisfy the following laws:
 \begin{align*}
-k+(l+m) & = (k+l)+m \\
-k+0 & = k \\
-0+k & = k \\
-k+(-k) & = 0 \\
-(-k) + k & = 0,
+m+(n+k) & =(m+n)+k & m\cdot (n\cdot k) & = (m\cdot n)\cdot k \\
+m+0 & = m & m\cdot 1 & = m \\
+0+m & = m & 1\cdot m & = m \\
+m+n & = n+m & m\cdot n & = n\cdot m\\
+& & m\cdot (n+k) & = m\cdot n + m\cdot k.
 \end{align*}
-and that $k+l=l+k$, making $\pairr{\Z,0,+,-}$ into an abelian group.
 \end{exercises}

@@ -168,4 +168,28 @@ with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}
 \begin{equation*}
 \mathsf{\Sigma.assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1 p,\proj 2 p)\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}
 \end{equation*}
+\item \label{ex:int_group_laws} To define all the proof terms involved in showing that the integers form an abelian group is fairly involved. We suggest to show first that $\Z$ is a retract of $\N\times\N$ in a way that is compatible with addition.
+\begin{subexenum}
+\item Define the map $\Z\to\N\times\N$ by
+\begin{align*}
+\mathsf{neg}(k) & \mapsto (0,k) \\
+0 & \mapsto (0,0) \\
+\mathsf{pos}(k) & \mapsto (k,0)
+\end{align*}
+for $k:\N$. Construct a retraction $r:\N\times \N\to \Z$ of this map, in such a way that 
+\begin{equation*}
+r((m+m',n+n'))=r(m,n)+r(m',n')
+\end{equation*}
+for any $m,n:\N$.
+\item Use this retraction to show that the operations $k,l\mapsto k+l$ and $k\mapsto -k$ on the integers defined in \autoref{ex:int_group_ops} satisfy the group laws:
+\begin{align*}
+k+(l+m) & = (k+l)+m \\
+k+0 & = k \\
+0+k & = k \\
+k+(-k) & = 0 \\
+(-k) + k & = 0,
+\end{align*}
+and that $k+l=l+k$, making $\pairr{\Z,0,+,-}$ into an abelian group.
+\end{subexenum}
+\item \label{ex:int_ptd_auto} Given a type $X$ with a base point $x_0$ and an equivalence $e:\eqv{X}{X}$, construct a map $f:Z\to X$ for which $f(0)=x_0$ and $f\circ\mathsf{succ} \htpy e\circ f$. 
 \end{exercises}

@@ -43,6 +43,17 @@ with homotopies $H:j\circ f\htpy g\circ i$ and $K:l\circ g\htpy h\circ k$, and s
 Then the square on the right is a pushout square if and only if the outer rectangle is a pushout square.
 \end{thm}
 
+\begin{thm}
+Consider a span $(S,f,g)$ from $A$ to $B$. Then the pushout of the span
+\begin{equation*}
+\begin{tikzcd}
+& S+S \arrow[dl] \arrow[dr] \\
+A + B & & S
+\end{tikzcd}
+\end{equation*}
+is equivalent to the pushout of $(S,f,g)$.
+\end{thm}
+
 \section{Pushouts as higher inductive types}
 
 \begin{defn}
@@ -128,8 +139,6 @@ X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"
 \end{equation*}
 \end{defn}
 \end{comment}
-
-\section{Sequential colimits}
 
 \begin{exercises}
 \item Show that $\join{P}{Q}= P\lor Q$, for any two propositions $P$ and $Q$.

@@ -6,90 +6,219 @@ However, many familiar constructions in algebra involve the construction of alge
 For example, the free abelian group with two generators is described as the group with generators $x$ and $y$, and the relation $xy=yx$. 
 
 In this chapter we introduce higher inductive types, where we follow a similar idea: to allow in the specification of inductive types not only \emph{point constructors}, but also \emph{path constructors} that give us relations between the point constructors. 
-We introduce the idea of higher inductive types by studying the simplest non-trivial example: the \emph{circle}.
+The ideas behind the definition of higher inductive types are introduced by studying the simplest non-trivial example: the \emph{circle}.
 Moreover, we show that the loop space of the circle is equivalent to $\mathbb{Z}$ by constructing the universal cover of the circle as an application of the univalence axiom. 
 
-\section{The definition and universal property of the circle}
+\section{The induction principle of the circle}
 The \define{circle} is defined as a higher inductive type $\sphere{1}$ that comes equipped with
 \begin{align*}
 \base & : \sphere{1} \\
 \lloop & : \id{\base}{\base}.
 \end{align*}
-Just like for ordinary inductive types, the induction principle for higher inductive types provides us with a way of constructing sections of dependent types. However, we need to take the path constructor $\lloop$ into account in the induction principle. To see how we should do that, let us first start with an arbitrary section $f:\prd{t:\sphere{1}}P(t)$ of a dependent type $P$ over the circle. 
+Just like for ordinary inductive types, the induction principle for higher inductive types provides us with a way of constructing sections of dependent types. However, we need to take the path constructor $\lloop$ into account in the induction principle. To see how we should do that, let us first see how \emph{dependent} functions act on paths.
 
-By applying a section $f:\prd{t:\sphere{1}}P(t)$ to the base point of the circle, we obtain a term $f(\base):P(\base)$. Moverover, using the dependent action on paths of $f$ of \autoref{defn:apd} we also obtain
+If we are given a dependent function $f:\prd{x:A}B(x)$ and an identification $p:\id{x}{y}$ in $A$, we cannot directly compare $f(x)$ with $f(y)$, since the types $B(x)$ and $B(y)$ might be judgmentally different types. However, using the transport function we can first transport $f(x)$ along the identification $p:\id{x}{y}$. This way, we obtain a term $\trans{p}{f(x)}:B(y)$, which is now of the same type as $f(y)$, and therefore may be compared to $f(y)$.
+
+\begin{defn}\label{defn:apd}
+Given a dependent function $f:\prd{a:A}B(a)$ and a path $p:\id{x}{y}$ in $A$, we construct a path
+\begin{equation*}
+\apd{f}{p} : \id{\trans{p}{f(x)}}{f(y)}.
+\end{equation*}
+\end{defn}
+
+\begin{constr}
+The path $\apd{f}{p}$ is constructed by path induction on $p$. Thus, it suffices to construct a path
+\begin{equation*}
+\apd{f}{\refl{x}}:\id{\trans{(\refl{x})}{f(x)}}{f(x)}.
+\end{equation*}
+Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simply take $\apd{f}{\refl{x}}\defeq\refl{f(x)}$. 
+\end{constr}
+
+By applying a section $f:\prd{t:\sphere{1}}P(t)$ to the base point of the circle, we obtain a term $f(\base):P(\base)$. Moverover, using the dependent action on paths of $f$ of \autoref{defn:apd} we also obtain for any dependent function $f:\prd{t:\sphere{1}}P(t)$ a path
 \begin{align*}
 \apd{f}{\lloop} & : \id{\trans{\lloop}{f(\base)}}{f(\base)}
 \end{align*}
-In other words, we have a map
+in the fiber $P(\base)$.
+In other words, the operation assigning to each dependent function its \emph{action on generators} is a map
 \begin{equation}\label{eq:kappa_circle}
-\kappa_{\sphere{1}}:\Big(\prd{t:\sphere{1}}P(t)\Big)\to\Big(\sm{y:P(\base)}\id{\trans{\lloop}{y}}{y}\Big)
+\mathsf{dgen}_{\sphere{1}}:\Big(\prd{t:\sphere{1}}P(t)\Big)\to\Big(\sm{y:P(\base)}\id{\trans{\lloop}{y}}{y}\Big)
 \end{equation}
-given by $\kappa_{\sphere{1}}(f)\defeq\pairr{f(\base),\apd{f}{\lloop}}$.
+given by $\mathsf{dgen}_{\sphere{1}}(f)\defeq\pairr{f(\base),\apd{f}{\lloop}}$.
+The induction principle of the circle can now be formulated as a map in the opposite direction, and the computation rule is the homotopy witnessing that the induction principle is a section of $\mathsf{dgen}_{\sphere{1}}$.
 
-The \emph{induction principle of the circle} is a map in the opposite direction:
+\begin{defn}
+The \define{induction principle of the circle} is a class of maps
 \begin{equation*}
-\ind{\sphere{1}}:\Big(\sm{y:P(\base)}\id{\trans{\lloop}{y}}{y}\Big)\to\Big(\prd{t:\sphere{1}} P(t)\Big).
+\ind{\sphere{1}}(P):\Big(\sm{y:P(\base)}\id{\trans{\lloop}{y}}{y}\Big)\to\Big(\prd{t:\sphere{1}} P(t)\Big)
 \end{equation*}
-The computation rule asserts that $\kappa_{\sphere{1}}\circ\ind{\sphere{1}}\htpy \idfunc$. In other words, the induction principle together with the computation rule assert that the map $\kappa_{\sphere{1}}$ has a section. 
-
-In the following theorem we prove the \emph{dependent} universal property of the circle.
-
-\begin{thm}
-For any dependent type $P:\sphere{1}\to\type$, the map $\kappa_{\sphere{1}}$ defined in \autoref{eq:kappa_circle} is an equivalence.
-\end{thm}
-
-\begin{proof}
-It suffices to show that $\ind{\sphere{1}}\circ\kappa_{\sphere{1}}\htpy\idfunc$. Let $f:\prd{t:\sphere{1}}P(t)$. By the function extensionality principle it suffices to show that $\ind{\sphere{1}}(\kappa_{\sphere{1}}(f))\htpy f$. In other words, we have to show that
-\begin{equation*}
-\prd{t:\sphere{1}}\id{\ind{\sphere{1}}(\kappa_{\sphere{1}}(f),t)}{f(t)}.
-\end{equation*}
-Note that by the induction principle for the circle, it suffices to show that
-\begin{equation*}
-\sm{p:\id{\ind{\sphere{1}}(\kappa_{\sphere{1}}(f),\base)}{f(\base)}}\id{\trans{\lloop}{p}}{p}
-\end{equation*}
-\end{proof}
+ranging over all depenent types $P:\sphere{1}\to\type$. 
+The \define{computation rule} asserts that $\mathsf{dgen}_{\sphere{1}}(P) \circ\ind{\sphere{1}}(P) \htpy \idfunc$ for each dependent type $P:\sphere{1}\to\type$. 
+\end{defn} 
 
 \section{The fundamental cover of the circle}
 
-\begin{defn}
+The \emph{fundamental cover} of the circle is a family of sets over the circle with contractible total space.
+Classically, the fundamental cover is described as a map $\mathbb{R}\to\sphere{1}$ that winds the real line around the circle.
+In homotopy type theory there is no analogue of such a construction.
+However, when we see the fundamental cover as a \emph{continuously varying family of spaces}, we can attempt to construct the fundamental cover as a dependent type over the circle. 
+
+The type of (small) dependent types over $\sphere{1}$ is just $\sphere{1}\to\UU$, so in fact we may use the recursion principle of the circle to construct dependent types over the circle. 
+In other words, to give a type family over the circle we must provide a type $X$, and an equality $X=X$ in the universe.
+This is where the univalence axiom comes in. By the map
+\begin{equation*}
+\mathsf{eq\usc{}equiv}_{X,X}:(\eqv{X}{X})\to (X=X)
+\end{equation*}
+it suffices to provide an equivalence $\eqv{X}{X}$. We make these ideas precise in the following lemma.
+
+\begin{defn}\label{defn:circle_descent}
+Consider a type $X$ and every equivalence $e:\eqv{X}{X}$.
+We will construct a dependent type $\mathcal{D}(X,e):\sphere{1}\to\UU$ with $\eqv{\mathcal{D}(X,e,\base)}{X}$ for which the square
+\begin{equation*}
+\begin{tikzcd}
+\mathcal{D}(X,e,\base)\arrow[r,"\eqvsym"] \arrow[d,swap,"\mathsf{tr}^{\mathcal{D}(X,e)}(\lloop)"] & X \arrow[d,"e"] \\
+\mathcal{D}(X,e,\base)\arrow[r,swap,"\eqvsym"] & X
+\end{tikzcd}
+\end{equation*}
+commutes. The type $\sm{X:\UU}\eqv{X}{X}$ is also called the type of \define{descent data} for the circle.
+\end{defn}
+
+\begin{constr}
+By \autoref{ex:tr_ap} we have an identification
+\begin{equation*}
+\mathsf{equiv\usc{}eq}(\ap{P}{\lloop})=\mathsf{tr}^P(\lloop)
+\end{equation*}
+for each dependent type $P:\sphere{1}\to\UU$. Therefore we see that the triangle
+\begin{equation*}
+\begin{tikzcd}
+& (\sphere{1}\to \UU) \arrow[dl,swap,"\mathsf{gen}_{\sphere{1}}"] \arrow[dr,"\mathsf{desc}_{\sphere{1}}"] \\
+\sm{X:\UU}X=X \arrow[rr,swap,"\total{\lam{X}\mathsf{equiv\usc{}eq}_{X,X}}"] & & \sm{X:\UU}\eqv{X}{X}
+\end{tikzcd}
+\end{equation*}
+commutes, where the map $\mathsf{desc}_{\sphere{1}}$ is given by $P\mapsto\pairr{P(\base),\mathsf{tr}^P(\lloop)}$ and the bottom map is an equivalence by the univalence axiom.
+Now it follows that $\mathsf{desc}_{\sphere{1}}$ has a section, since by the recursion principle the map $\mathsf{gen}_{\sphere{1}}$ has a section. 
+This means that for every type $X$ and every $e:\eqv{X}{X}$ there is a type family $\mathcal{D}(X,e):\sphere{1}\to\UU$ such that
+\begin{equation*}
+\pairr{\mathcal{D}(X,e,\base),\mathsf{tr}^{\mathcal{D}(X,e)}(\lloop)}=\pairr{X,e}.
+\end{equation*}
+Equivalently, we have $p:\id{\mathcal{D}(X,e,\base)}{X}$ and $\trans{p}{\mathsf{tr}^{\mathcal{D}(X,e)}(\lloop)}=e$. Thus, we obtain $\mathsf{equiv\usc{}eq}(p):\eqv{\mathcal{D}(X,e,\base)}{X}$, for which the square
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+\mathcal{D}(X,e,\base)\arrow[r,"\mathsf{equiv\usc{}eq}(p)"] \arrow[d,swap,"\mathsf{tr}^{\mathcal{D}(X,e)}(\lloop)"] & X \arrow[d,"e"] \\
+\mathcal{D}(X,e,\base)\arrow[r,swap,"\mathsf{equiv\usc{}eq}(p)"] & X
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{constr}
+
+\begin{comment}
+\begin{defn}\label{defn:fiber_sequence}
 A \define{fiber sequence} 
 \begin{equation*}
 F \hookrightarrow E \twoheadrightarrow B
 \end{equation*}
-consists of a \define{base type} $B$ with a base point $b_0$, a type $E$ called the \define{total space}, a type $F$ called the \define{fiber}, a map $p:E\to B$, and an equivalence
-\begin{align*}
-& \eqv{\fib{p}{b_0}}{F}.
-\end{align*}
+consists of a \define{base type} $B$ with a base point $b_0$ and a dependent type $P:B\to\type$, a type $F$ called the \define{fiber} with an equivalence $\eqv{P(b_0)}{F}$, and a type $E$ called the \define{total space} with a map $p:E\to B$ and an equivalence $e:\eqv{(\sm{b:B}P(b))}{E}$ such that the triangle
+\begin{equation*}
+\begin{tikzcd}
+\Big(\sm{b:B}P(b)\Big) \arrow[rr,"e"] \arrow[dr,swap,"\proj 1"] & & E \arrow[dl,"p"] \\
+& B
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{defn}
+\end{comment}
+
+\begin{defn}
+The \define{fundamental cover} of the circle is the dependent type $\mathcal{E}\defeq\mathcal{D}(\Z,\mathsf{succ}):\sphere{1}\to\UU$ that is obtained by applying the construction of \autoref{defn:circle_descent}.
 \end{defn}
 
-\begin{exercises}
-\item Show that the map
+\begin{thm}
+The total space $\sm{t:\sphere{1}}\mathcal{E}(t)$ of the fundamental cover of $\sphere{1}$ is contractible.
+\end{thm}
+
+\begin{proof}
+We show that $\mathcal{E}(t)$ is a retract of $\base= t$, for each $t:\sphere{1}$, i.e.~we apply \autoref{ex:id_fundamental_retr}. Thus, we will define for each $t:\sphere{1}$ a map $r(t):\mathcal{E}(t)\to(\base=t)$, and for each $t:\sphere{1}$ and $x:\mathcal{E}(t)$ we will show that
 \begin{equation*}
-(\sphere{1}\to X)\to \sm{x:X}\id{x}{x}
+\ind{\base=}(0_\Z,r(t,x))=x.
 \end{equation*}
-given by $\lam{f}\pairr{f(\base),\ap{f}{\lloop}}$ is an equivalence.
+We construct $r(t)$ by induction on $t:\sphere{1}$. For the base point we construct a map $\Z\to (\base=\base)$ with \autoref{ex:int_ptd_auto} using the base point $\refl{\base}$ and the equivalence $l\mapsto \ct{\lloop}{l}$. This defines $r(\base)$. 
+
+Our next goal is to show that
+\begin{equation*}
+\trans{\lloop}{r(\base)}=r(\base).
+\end{equation*}
+Computing the transport, we see that we have to show that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+\mathcal{E}(\base) \arrow[r,"r(\base)"] \arrow[d,swap,"\mathsf{tr}^{\mathcal{E}}(\lloop)"] & (\base=\base) \arrow[d,"l\mapsto \ct{\lloop}{l}"] \\
+\mathcal{E}(\base) \arrow[r,swap,"r(\base)"] & (\base=\base)
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{proof}
+
+\begin{cor}
+The loop space of the circle is equivalent to $\Z$.
+\end{cor}
+
+\begin{cor}
+The circle is a $1$-type and it is not a $0$-type.
+\end{cor}
+
+\begin{exercises}
+\item \label{ex:circle_up} Show that for each type $X$, the \emph{action on generators}
+\begin{equation*}
+\mathsf{gen}_{\sphere{1}}:(\sphere{1}\to X)\to \sm{x:X}x=x
+\end{equation*}
+given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
+\item \label{ex:circle_dup} Show that for each dependent type $P:\sphere{1}\to\type$, the \emph{dependent action on generators}
+\begin{equation*}
+\Big(\prd{t:\sphere{1}}P(t)\Big)\to \sm{u:P(\base)}\trans{\lloop}{u}=u
+\end{equation*}
+is an equivalence.
 \item Show that the map
 \begin{equation*}
 (\sphere{1}\to X)\to \sm{x,y:X} (\id{x}{y})\times(\id{x}{y})
 \end{equation*}
 given by $\lam{f}\pairr{f(\base),f(\base),\refl{f(\base)},\ap{f}{\lloop}}$ is an equivalence.
-\item Use the negation equivalence $\mathsf{neg}:\eqv{\bool}{\bool}$ of \autoref{ex:neg_equiv} to construct a fiber sequence
+\item Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
 \begin{equation*}
-\bool\hookrightarrow \sphere{1}\twoheadrightarrow \sphere{1}.
+P(\base)\to\prd{t:\sphere{1}}P(t).
 \end{equation*}
-\item 
+In this sense the circle is \emph{connected}.
+\item Use the fundamental cover of the circle to show that
+\begin{equation*}
+\neg\Big(\prd{t:\sphere{1}}\base=t\Big).
+\end{equation*}
+\item \label{ex:circle_constant}
+Show that for any type $X$ and any $x:X$, the map
+\begin{equation*}
+\rec{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
+\end{equation*}
+is homotopic to the constant map $\lam{t}x$.
+\item \label{ex:circle_degk}
 \begin{subexenum}
-\item Show that for every $x:\sphere{1}$, we have an equivalence
-\begin{equation*}
-\eqv{\Big(\sm{e:\eqv{\sphere{1}}{\sphere{1}}}e(\base)= x \Big)}{\bool}
-\end{equation*}
 \item Show that for every $x:\sphere{1}$, we have an equivalence
 \begin{equation*}
 \eqv{\Big(\sm{f:\sphere{1}\to \sphere{1}}f(\base)= x \Big)}{\Z}
 \end{equation*}
+The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z$ is called the \define{degree $k$ map} on the circle, and is denoted by $\mathsf{deg}(k)$.
+\item Show that for every $x:\sphere{1}$, we have an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{e:\eqv{\sphere{1}}{\sphere{1}}}e(\base)= x \Big)}{\bool}
+\end{equation*}
 \end{subexenum}
-\item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
+\item \label{ex:circle_double_cover} The \define{(twisted) double cover} of the circle is defined as the type family $\mathcal{T}\defeq\mathcal{D}(\bool,\mathsf{neg}):\sphere{1}\to\UU$, where $\mathsf{neg}:\eqv{\bool}{\bool}$ is the negation equivalence of \autoref{ex:neg_equiv}.
+\begin{subexenum}
+\item Show that $\neg(\prd{t:\sphere{1}}\mathcal{T}(t))$.
+\item Construct an equivalence $e:\eqv{\sphere{1}}{\sm{t:\sphere{1}}\mathcal{T}(t)}$ for which the triangle
+\begin{equation*}
+\begin{tikzcd}
+\sphere{1} \arrow[rr,"e"] \arrow[dr,swap,"\mathsf{deg}(2)"] & & \sm{t:\sphere{1}}\mathcal{T}(t) \arrow[dl,"\proj 1"] \\
+& \sphere{1}
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{subexenum}
 \item 
 \begin{subexenum}
 \item Show that a type $X$ is a set if and only if the map
@@ -103,4 +232,5 @@ is an equivalence.
 \end{equation*}
 is an equivalence.
 \end{subexenum}
+\item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
 \end{exercises}
