@@ -1,0 +1,36 @@
+\chapter{Introduction}
+%\addcontentsline{toc}{chapter}{Introduction}
+These are notes for the course Introduction to Homotopy Type Theory, taught at Carnegie Mellon University in the spring semester of 2018. Homotopy Type Theory (HoTT) is an emerging field of mathematics and computer science that extends Martin-Löf's dependent type theory by the addition of the univalence axiom and higher inductive types. In HoTT we think of types as spaces, dependent types as fibrations, and of the identity types as path spaces. We will see that many spaces that are familiar to topologists can be represented as higher inductive types, and we will develop the basic theorems and constructions in HoTT to reason about them.
+
+We cover the basics --- including equivalences, the univalence axiom, and higher inductive types --- and we introduce the student to the subfield of homotopy type theory that is sometimes called \emph{synthetic homotopy theory}. Early on, students will get acquainted with the basic techniques that are used in homotopy type theory to characterize the identity types of various classes of types, and once higher inductive types are introduced students will get acquainted with the descent property that can be used to construct type families over higher inductive types in order to prove properties about them.
+
+We do not cover the univalence axiom or the function extensionality axiom until we're about a third through the course. 
+There are several reasons for this. 
+First of all, dependent type theory with the inductive types, and among them the identity types, deserve to be covered thoroughly. 
+Second, the univalence axiom is pretty powerful, I believe it is good to go through some `agnostic' type theory first to be able to present concisely what the univalence axiom is really about, and to feel its power once we have it. 
+The final reason is that actually quite a lot can and has to be established without those axioms anyway. 
+These results include the fact that a map is an equivalence if and only if its fibers are contractible, the fundamental theorem of identity types, and theorems that help us identify certain classes of types as sets.
+All of these results belong properly to \emph{homotopy} type theory.
+
+\section{The Curry-Howard correspondence}
+From a logical point of view, type theory can be seen as a deductive system for constructive logic, in which types are propositions of which the constituents are precisely its proofs. In the view of Heyting, `to know the meaning of a proposition is to know which constructions can be considered as proofs of that proposition'. For instance, a proof of the proposition $A\to B$ is an algorithm that transforms proofs of $A$ into proofs of $B$.
+\begin{table}
+\caption{The Curry-Howard correspondence}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\emph{First order logic} & \emph{Set theory} & \emph{Type theory}\\
+\midrule
+Propositions & Sets & Types\\
+Predicates & Families of sets & Dependent types\\
+Proofs & Elements & Terms \\
+$\top$ & $\{\emptyset\}$ & $\unit$\\
+$\bot$ & $\emptyset$ & $\emptyt$ \\
+$P \land Q$ & $A \times B$ & $A \times B$ \\
+$P \vee Q$ & $A \sqcup B$ & $A + B$ \\
+$\exists x.P(x)$ & $\coprod_{i\in I}A_i$ & $\sm{x:A}B(x)$ \\
+$\forall x.P(x)$ & $\prod_{i\in I}A_i$ & $\prd{x:A}B(x)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}

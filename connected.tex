@@ -1,0 +1,73 @@
+\chapter{Connected types and maps}
+
+\begin{thm}
+Consider a commutign square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r] & B \arrow[d,"g"] \\
+X \arrow[r] & Y
+\end{tikzcd}
+\end{equation*}
+The following are equivalent:
+\begin{enumerate}
+\item The map $A\to X\times_Y B$ is $n$-connected. In this case the square is called \define{$n$-cartesian}.
+\item For each $x:X$ the map
+\begin{equation*}
+\fib{f}{x}\to \fib{g}{f(x)}
+\end{equation*}
+is $n$-connected.
+\end{enumerate}
+\end{thm}
+
+\begin{thm}
+If $X$ is $m$-connected and $Y$ is $n$-connected, then $\join{X}{Y}$ is $(m+n+2)$-connected. 
+\end{thm}
+
+\begin{thm}
+Consider a pullback square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r] \arrow[d] & B \arrow[d] \\
+A \arrow[r] & X.
+\end{tikzcd}
+\end{equation*}
+If the maps $A\to X$ and $B\to X$ are $m$- and $n$-connected, respectively, then the map $A\sqcup^C B\to X$ is $(m+n+2)$-connected.
+\end{thm}
+
+\begin{exercises}
+\item Show that a pointed $X$ is $n$-connected precisely when $\pi_k(X)=0$ for each $k\leq n$.
+\item Let $f:A\to_\ast B$ be a pointed map between pointed $n$-connected types, for $n\geq -1$. Show that the following are equivalent:
+\begin{enumerate}
+\item $f$ is an equivalence.
+\item $\loopspace[n+1]{f}$ is an equivalence. 
+\end{enumerate}
+\item Let $f:A\to B$ be a surjective map, and let $g:A\to C$ be any map. Show that if there is a unique extension
+\begin{equation*}
+\begin{tikzcd}
+\fib{f}{f(a)} \arrow[r,"g\circ\pi_1"] \arrow[d] & C \\
+\unit \arrow[ur,densely dotted]
+\end{tikzcd}
+\end{equation*}
+for any $a:A$, then $g$ extends uniquely along $f$.
+\item Consider a span $A \leftarrow S \rightarrow B$, in which the map $S\to A$ is $n$-connected. Show that the map $\inr : B\to A\sqcup^S B$ is again $n$-connected.
+\item Show that if
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r] \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
+X \arrow[r] & Y
+\end{tikzcd}
+\end{equation*}
+is a $k$-cocartesian, then the map $\mathsf{cofib}(f)\to \mathsf{cofib}(g)$ is $k$-connected.
+\item Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r] & B \arrow[d,"g"] \\
+X \arrow[r] & Y
+\end{tikzcd}
+\end{equation*}
+\begin{subexenum}
+\item Show that if the square is $n$-cartesian and $g$ is $n$-connected, then so is $f$.
+\item Show that if $f$ is $n$-connected and $g$ is $(n+1)$-connected, then the square is $n$-cartesian. 
+\end{subexenum}
+\item Show that any sequential colimit of $n$-connected types is again $n$-connected.
+\end{exercises}

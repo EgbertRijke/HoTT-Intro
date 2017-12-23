@@ -1,0 +1,131 @@
+\chapter{Homotopy groups of types}
+
+\section{Pointed types}
+\begin{defn}
+We introduce the `category' of pointed types:
+\begin{enumerate}
+\item A pointed type consists of a type $X$ equipped with a base point $x:X$. We will write $\UU_\ast$ for the type $\sm{X:\UU}X$ of all pointed types.
+\item A pointed map $(f,p):(X,x)\to_\ast (Y,y)$ consists of a map $f:X\to Y$ and an identification $p:f(x)=y$. 
+\item A pointed homotopy $(H,q):(f,p)\htpy_\ast (f',p')$ consists of a homotopy $H:f\htpy f'$ and an identification $q:p=\ct{H(x)}{p'}$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+f(x) \arrow[rr,equals,"H(x)"] \arrow[dr,equals,swap,"p"] & & f'(x) \arrow[dl,equals,"{p'}"] \\
+& y
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{enumerate}
+\end{defn}
+
+\begin{eg}
+The circle $\sphere{1}$ is a pointed type with base point $\base:\sphere{1}$.
+\end{eg}
+
+\begin{eg}
+If $X$ is a pointed type, then in the suspension of $X$ we have the canonical identification $\merid(\ast_X):\north=\south$. Therefore we do not have to worry about whether to choose $\north$ or $\south$ as the base point of $\susp{X}$. 
+\end{eg} 
+
+To consider higher pointed homotopies it is useful to first consider pointed families, and pointed $\Pi$-types.
+
+\begin{defn}
+\begin{enumerate}
+\item Let $(X,\ast_X)$ be a pointed type. A \define{pointed family} over $(X,\ast_X)$ consists of a type family $P:X\to \UU_\ast$ equipped with a base point $\ast_P:P(\ast_X)$. 
+\item Let $(P,\ast_P)$ be a pointed family over $(X,\ast_X)$. A \define{pointed section} of $(P,\ast_P)$ consists of a dependent function $f:\prd{x:X}P(x)$ and an identification $p:f(\ast_X)=\ast_P$. We define the \define{pointed $\Pi$-type} to be the type of pointed sections:
+\begin{equation*}
+\Pi^\ast_{(x:X)}P(x) \defeq \sm{f:\prd{x:X}P(x)}f(\ast_X)=\ast_P
+\end{equation*}
+\item Given any two pointed sections $f$ and $g$ of a pointed family $P$ over $X$, we define the type of pointed homotopies
+\begin{equation*}
+f\htpy_\ast g \defeq \Pi^\ast_{(x:X)} f(x)=g(x),
+\end{equation*}
+where the family $x\mapsto f(x)=g(x)$ is equipped with the base point $\ct{p}{q^{-1}}$. 
+\end{enumerate}
+\end{defn}
+
+Since pointed homotopies are now defined as certain pointed sections, we can use the same definition of pointed homotopies again to consider pointed homotopies between pointed homotopies, and so on.
+
+\section{Loop spaces}
+\begin{defn}
+Let $X$ be a pointed type with base point $x$. We define the \define{loop space} $\loopspace{X,x}$ of $X$ at $x$ to be the pointed type $x=x$ with base point $\refl{x}$. 
+\end{defn}
+
+\begin{defn}
+The loop space operation $\loopspacesym$ is \emph{functorial} in the sense that
+\begin{enumerate}
+\item For every pointed map 
+\end{enumerate}
+\end{defn}
+
+\section{Homotopy groups}
+\begin{defn}
+For $n\geq 1$, the \define{$n$-th homotopy group} of a type $X$ at a base point $x:X$ consists of the type
+\begin{equation*}
+|\pi_n(X,x)| \defeq \trunc{0}{\loopspace[n]{X,x}}
+\end{equation*}
+equipped with the group operations inherited from the path operations on $\loopspace[n]{X,x}$. 
+Often we will simply write $\pi_n(X)$ when it is clear from the context what the base point of $X$ is.
+
+For $n\jdeq 0$ we define $\pi_0(X,x)\defeq \trunc{0}{X}$. 
+\end{defn}
+
+\begin{eg}
+In \autoref{circle_loopspace} we established that $\loopspace{\sphere{1}}=\Z$. It follows that
+\begin{equation*}
+\pi_1(\sphere{1})=\Z \qquad\text{ and }\qquad\pi_n(\sphere{1})=0\qquad\text{for $n\geq 2$.}
+\end{equation*}
+Furthermore, we have seen in \autoref{circle_conn} that $\trunc{0}{\sphere{1}}$ is contractible. 
+Therefore we also have $\pi_0(\sphere{1})=0$.
+\end{eg}
+
+\begin{thm}[The Eckmann-Hilton argument]
+For $n\geq 2$, the $n$-th homotopy group is abelian.
+\end{thm}
+
+\begin{exercises}
+\item Show that the type of pointed families over a pointed type $(X,x)$ is equivalent to the type
+\begin{equation*}
+\sm{Y:\UU_\ast} Y\to_\ast X.
+\end{equation*}
+\item Given two pointed types $A$ and $X$, we say that $A$ is a (pointed) retract of $X$ if we have $i:A\to_\ast X$, a retraction $r:X\to_\ast A$, and a pointed homotopy $H:r\circ_\ast i\htpy_\ast \idfunc^\ast$. 
+\begin{subexenum}
+\item Show that if $A$ is a pointed retract of $X$, then $\loopspace{A}$ is a pointed retract of $\loopspace{X}$. 
+\item Show that if $A$ is a pointed retract of $X$ and $\pi_n(X)$ is a trivial group, then $\pi_n(A)$ is a trivial group.
+\end{subexenum}
+\item Show that if $A\leftarrow S\rightarrow B$ is a span of pointed types, then for any pointed type $X$ the square
+\begin{equation*}
+\begin{tikzcd}
+(A\sqcup^S B \to_\ast X) \arrow[r] \arrow[d] & (B \to_\ast X) \arrow[d] \\
+(A\to_\ast X) \arrow[r] & (S\to_\ast X)
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\item In this exercise we prove the suspension-loopspace adjunction.
+\begin{subexenum}
+\item Construct a pointed equivalence
+\begin{equation*}
+\tau_{X,Y}:(\susp(X)\to_\ast Y) \eqvsym_\ast (X\to \loopspace{Y})
+\end{equation*}
+for any two pointed spaces $X$ and $Y$.
+\item Show that for any $f:X\to_\ast X'$ and $g:Y'\to_\ast Y$, there is a pointed homotopy witnessing that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+(\susp(X')\to_\ast Y') \arrow[r,"\tau_{X',Y'}"] \arrow[d,swap,"h\mapsto g\circ h\circ \susp(f)"] & (X'\to_\ast \loopspace{Y'}) \arrow[d,"h\mapsto\loopspace{g}\circ h\circ f"] \\
+(\susp(X)\to_\ast Y) \arrow[r,swap,"\tau_{X,Y}"] & (X\to_\ast \loopspace{Y})
+\end{tikzcd}
+\end{equation*}
+\end{subexenum}
+\item Show that if
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r] \arrow[d] & B \arrow[d] \\
+A \arrow[r] & X
+\end{tikzcd}
+\end{equation*}
+is a pullback square of pointed types, then so is
+\begin{equation*}
+\begin{tikzcd}
+\loopspace{C} \arrow[r] \arrow[d] & \loopspace{B} \arrow[d] \\
+\loopspace{A} \arrow[r] & \loopspace{X}.
+\end{tikzcd}
+\end{equation*}
+\end{exercises}

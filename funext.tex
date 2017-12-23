@@ -1,0 +1,139 @@
+\chapter{Function extensionality}
+
+\section{Equivalent forms of function extensionality}
+\begin{thm}\label{thm:funext_wkfunext}
+The following are equivalent:
+\begin{enumerate}
+\item The \define{function extensionality principle} holds: For every type family $B:A\to\UU$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map
+\begin{equation*}
+\mathsf{htpy\usc{}eq}(f,g) : (\id{f}{g})\to (f\htpy g)
+\end{equation*}
+by path induction (sending $\refl{f}$ to $\lam{x}\refl{f(x)}$) is an equivalence.
+\item The \define{weak function extensionality principle} holds: For every type family $B:A\to\UU$ one has
+\begin{equation*}
+\Big(\prd{a:A}\iscontr(B(a))\Big)\to\iscontr\Big(\prd{a:A}B(a)\Big).
+\end{equation*}
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+Suppose that each $B(a)$ is contractible with center of contraction $c(a)$ and contraction $C_a:\prd{y:B(a)}c(a)=y$. Then we take $c\defeq \lam{a}c(a)$ to be the center of contraction of $\prd{a:A}B(a)$. To construct the contraction we have to define a term of type
+\begin{equation*}
+\prd{f:\prd{a:A}B(a)}c=f.
+\end{equation*}
+Let $f:\prd{a:A}B(a)$. By function extensionality we have a map $(c\htpy f)\to (c=f)$, so it suffices to construct a term of type $c\htpy f$. Here we take $\lam{a}C_a(f(a))$. This completes the proof that function extensionality implies weak function extensionality.
+
+To prove function extensionality from weak function extensionality, observe that it suffices by \autoref{thm:id_fundamental} to show that
+\begin{equation*}
+\sm{g:\prd{x:A}B(x)}f\htpy g
+\end{equation*}
+is contractible.
+
+Since the type $\sm{b:B(x)}f(x)=b$ is contractible for each $x:X$, it follows by our assumption of weak function extensionality that the type $\prd{x:A}\sm{b:B(x)}f(x)=b$ is contractible. By \autoref{ex:contr_retr} it therefore suffices to show that
+\begin{equation*}
+\sm{g:\prd{x:A}B(x)}f\htpy g
+\end{equation*}
+is a retract of the type $\prd{x:A}\sm{b:B(x)}f(x)=b$. We have the functions
+\begin{align*}
+\mathsf{pi\usc{}sigma} & \defeq \lam{\pairr{g,H}}\lam{x}\pairr{g(x),H(x)} \\
+\mathsf{sigma\usc{}pi} & \defeq \lam{p}\pairr{\lam{x}\proj 1(p(x)),\lam{x}\proj 2(p(x))}.
+\end{align*}
+It remains to show that $\psi\circ\varphi=\idfunc$. Let $\pairr{g,H}:\sum_g f\htpy g$. 
+Then we have
+\begin{align*}
+\mathsf{sigma\usc{}pi}(\mathsf{pi\usc{}sigma}(g,H)) & \jdeq \mathsf{sigma\usc{}pi}(\lam{x}\pairr{g(x),H(x)}) \\
+& \jdeq \pairr{\lam{x}g(x),\lam{x}H(x)} \\
+& \jdeq \pairr{g,H}.\qedhere
+\end{align*}
+\end{proof}
+
+\begin{comment}
+\begin{rmk}
+Since we assumed the $\eta$-rule for $\Sigma$-types, we also have
+\begin{align*}
+\mathsf{pi\usc{}sigma}(\mathsf{sigma\usc{}pi}(p)) & \jdeq \mathsf{pi\usc{}sigma}(\pairr{\lam{x}\proj 1(p(x)),\lam{x}\proj 2(p(x))}) \\
+& \jdeq \lam{x}\pairr{\proj 1(p(x)),\proj 2(p(x))} \\
+& \jdeq \lam{x} p(x) \\
+& \jdeq p.
+\end{align*}
+Therefore, the types $\sum_g f\htpy g$ and $\prod_x\sum_b f(x)=b$ are actually \emph{judgmentally isomorphic}. 
+\end{rmk}
+\end{comment}
+
+\begin{thm}
+Assume function extensionality. Then for any type family $B:A\to\UU$ one has
+\begin{equation*}
+\Big(\prd{a:A}\istrunc{n}(B(a))\Big)\to \istrunc{n}\Big(\prd{a:A}B(a)\Big).
+\end{equation*}
+\end{thm}
+
+\begin{proof}
+The theorem is proven by induction on $n\geq -2$. The base case is just the weak function extensionality principle, which was shown to follow from function extensionality in \autoref{thm:funext_wkfunext}.
+
+For the inductive hypothesis, assume that the $n$-types are closed under dependent function types. Assume that $B$ is a family of $(n+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{a:A}B(a)$. Now observe that $f\htpy g$ is a dependent product of $n$-types, and therefore it is an $n$-type by our inductive hypotheses. Therefore, it follows by \autoref{thm:ntype_eqv} that $f=g$ is an $n$-type, and hence that $\prd{a:A}B(a)$ is an $(n+1)$-type.
+\end{proof}
+
+\section{Universal properties}
+
+\begin{thm}\label{thm:yoneda}
+Let $B:A\to\UU$ be a type family, and let $a:A$. Then the map
+\begin{equation*}
+\Big(\prd{x:A} (a=x)\to B(x)\Big)\to B(a)
+\end{equation*}
+given by $\lam{f} f(a,\refl{a})$ is an equivalence. 
+\end{thm}
+
+\begin{rmk}
+\autoref{thm:yoneda} is sometimes called the \emph{type theoretical Yoneda lemma}.
+\end{rmk}
+
+\begin{exercises}
+\item Show that for any type $A$ and any $n\geq-2$, the type $\istrunc{n}(A)$ is a mere proposition.
+\item Show that for any map $f:A\to B$ the type $\isequiv(f)$ is a mere proposition. Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that for any $(f,p),(g,q):\eqv{A}{B}$ the map
+\begin{equation*}
+\mathsf{ap}_{\proj 1} : ((f,p)= (g,q))\to (f=g)
+\end{equation*}
+is an equivalence.
+\item Let $C$ be a contractible type with center of contraction $c$. Use the function extensionality principle to show that the map $\lam{f}f(c):(C\to A)\to A$ is an equivalence, for each type $A$.
+\item Use the function extensionality principle to show that for any $B:A\to\UU$ and $R:\prd{a:A}B(a)\to \UU$, the map
+\begin{equation*}
+\Big(\sm{f:\prd{a:A}B(a)}\prd{a:A}R(a,f(a))\Big)\to \Big(\prd{a:A}\sm{b:B(a)}R(a,b)\Big)
+\end{equation*}
+given by $\lam{(f,g)}{a}(f(a),g(a))$ is an equivalence. This is sometimes called the \define{type theoretic principle of choice}.
+
+Conclude that for any $A:\UU$ and any $C:B\to \UU$, the map
+\begin{equation*}
+\Big(\sm{f:A\to B} \prd{a:A}C(f(a))\Big)\to\Big(A\to\sm{b:B}C(b)\Big)
+\end{equation*}
+given by $\lam{(f,g)}{a}(f(a),g(a))$ is an equivalence.
+\item Let $e:\eqv{A}{B}$ be an equivalence. Show that the map
+\begin{equation*}
+(B\to X)\to (A\to X)
+\end{equation*}
+given by $\lam{f}f\circ e$ is an equivalence.
+\item Show that the map
+\begin{equation*}
+(A+B\to X)\to (A\to X)\times (B\to X)
+\end{equation*}
+given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
+\item Show that the map
+\begin{equation*}
+(A\times B\to X)\to (A\to (B\to X))
+\end{equation*}
+given by $f\mapsto \lam{a}{b}f(a,b)$ is an equivalence.
+\item Show that the map
+\begin{equation*}
+\Big(\Big(\sm{a:A}B(a)\Big)\to X\Big)\to \Big(\prd{a:A}(B(a)\to X)\Big)
+\end{equation*}
+is an equivalence.
+\item Show that the map
+\begin{equation*}
+(\unit\to X)\to X
+\end{equation*}
+given by $\lam{f}f(\ttt)$ is an equivalence. 
+\item Show that the map
+\begin{equation*}
+(\emptyt \to X)\to \unit
+\end{equation*}
+given by $\lam{f}\ttt$ is an equivalence.
+\end{exercises}

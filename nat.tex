@@ -1,0 +1,70 @@
+\chapter{The type of natural numbers}
+
+The single most important object of mathematical study is the set of natural numbers. In homotopy type theory its position of importance is only challenged by that of the identity type.
+
+The type of natural numbers comes equipped with a \define{zero element} and a \define{successor function}
+\begin{align*}
+0 & : \N \\
+S & : \N\to \N.
+\end{align*}
+Thus we first have to introduce \emph{function types}. 
+It turns out however, that for many useful operations are of a more general nature, where the type of the outputs may depend on the input.  
+For example, if we are given a sequence $(X_n)_{n\in\N}$ of pointed spaces, then the operation that assigns to each $n$ the base point of $X_n$ is clearly of this kind.
+
+Therefore we will introduce \emph{dependent function types}, i.e.~function types of which the types of the outputs are allowed to vary over the input.
+Dependent function types will be used to formulate the induction principle for the natural numbers.
+
+\section{Dependent function types}
+
+\begin{defn}
+Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
+The \define{dependent function type} $\prd{x:A}B(x)$ is defined to be a type equipped with a \define{$\lambda$-abstraction operation}
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
+\UnaryInfC{$\Gamma\vdash \lam{x}b(x) : \prd{x:A}B(x)$}
+\end{prooftree}
+and an \define{evaluation operation}
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f : \prd{x:A}B(x)$}
+\UnaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(f,x) : B(x)$}
+\end{prooftree}
+for which the following inference rules are satisfied:
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
+\UnaryInfC{$\Gamma,x:A \vdash b(x)\jdeq \mathsf{ev}((\lambda y.b(y)),x) : B(x)$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
+\UnaryInfC{$\Gamma \vdash f\jdeq \lam{x}\mathsf{ev}(f,x) : \prd{x:A}B(x)$}
+\end{prooftree}
+\end{defn}
+
+\section{The natural numbers}
+The archetypal example of an inductive type is the type of natural numbers, which is specified by a term $0$ and a successor function. To prove properties about the natural numbers, one uses its induction principle. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{sections} of dependent types over the natural numbers. 
+
+\begin{defn}
+We define $\nat$ to be a type equipped with
+\begin{align*}
+0 & : \nat \\
+S & : \nat \to\nat,
+\end{align*}
+satisfying the induction principle, that for any type family $P:\nat\to\type$ there is a term
+\begin{equation*}
+\ind{\nat}:P(0)\to \Big(\prd{n:\nat}P(n)\to P(S(n))\Big)\to \prd{n:\nat}P(n),
+\end{equation*}
+for which the computation rules
+\begin{align*}
+\ind{\nat}(p_0,p_S,0) & \jdeq p_0 \\
+\ind{\nat}(p_0,p_S,S(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
+\end{align*}
+hold.
+\end{defn}
+
+\begin{exercises}
+\item Define for every $k:\N$ the function $n\mapsto k^n$. 
+\item Define the $\min$ and $\max$ functions of type $\N\to(\N\to\N)$.
+\item Define the function $n\mapsto n!$. 
+\item Define the relations $\leq$ and $<$ on $\N$.
+\item Define the divisibility relation $d\mid n$. 
+\item The \define{greatest common divisor} of any two natural numbers $m$ and $n$ is defined as the largest natural number $d$ such that both $d\mid m$ and $d\mid n$. Define the greatest common divisor as a function $\mathrm{gcd}:\N\to\N\to\N$ in type theory.
+\end{exercises}

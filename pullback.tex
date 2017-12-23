@@ -1,0 +1,183 @@
+\chapter{Homotopy pullbacks}
+
+\section{The universal property of homotopy pullbacks}
+
+Function extensionality is particularly useful to prove universal properties. In this section we encounter one such universal property: that of the homotopy pullback. Using homotopy pullbacks we find a generalization of \autoref{thm:fib_equiv}.
+
+\begin{defn}
+A \define{cospan} consists of three types $A$, $X$, and $B$, and maps $f:A\to X$ and $g:B\to X$. We define the following further structures for any cospan $A \stackrel{f}{\rightarrow} X \stackrel{g}{\leftarrow} B$.
+\begin{enumerate}
+\item Given a type $C$, a \define{cone} on the cospan $A \stackrel{f}{\rightarrow} X \stackrel{g}{\leftarrow} B$ with vertex $C$ consists of maps $p:C\to A$, $q:C\to B$ and a homotopy $H:f\circ p\htpy g\circ q$, rendering the square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X
+\end{tikzcd}
+\end{equation*}
+commutative. We write $\mathsf{cone}(C)$ for the type of cones with vertex $C$. 
+\item For any cone $(p,q,H)$ with vertex $C$, we define a map
+\begin{equation*}
+\mathsf{cone\usc{}map}(p,q,H):(D\to C)\to\mathsf{cone}(D)
+\end{equation*}
+by $h\mapsto (p\circ h,q\circ h,H\circ h)$. 
+\end{enumerate}
+\end{defn}
+
+\begin{defn}
+We say that a commuting square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p\htpy g\circ q$ is a \define{pullback square} if the map
+\begin{equation*}
+\mathsf{cone\usc{}map}(p,q,H):(D\to C)\to\mathsf{cone}(D)
+\end{equation*}
+is an equivalence for every type $D$. 
+\end{defn}
+
+\begin{thm}
+Given maps $f:A\to X$ and $g:B\to X$, the commuting square
+\begin{equation*}
+\begin{tikzcd}
+\sm{a:A}{b:B}f(a)=g(b) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X,
+\end{tikzcd}
+\end{equation*}
+is a pullback square. We write 
+\begin{equation*}
+A\times_X B\defeq \sm{a:A}{b:B}f(a)=g(b),
+\end{equation*}
+and we say that $A\times_X B$ is the \define{canonical pullback} of $f$ and $g$.
+\end{thm}
+
+\begin{thm}
+Let $f:A\to B$, and let $g:\prd{a:A}P(a)\to Q(f(a))$ be a fiberwise transformation. The following are equivalent:
+\begin{enumerate}
+\item The commuting square
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+\sm{a:A}P(a) \arrow[r,"\total{g}"] \arrow[d,->>] & \sm{b:B}Q(b) \arrow[d,->>] \\
+A \arrow[r,swap,"f"] & B
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\item $g$ is a fiberwise equivalence.
+\end{enumerate}
+\end{thm}
+
+Sometimes pullbacks are also called \emph{fiber products}. The following theorem is why.
+
+\begin{thm}
+Consider a pullback square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"k"] \arrow[d,swap,"h"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X.
+\end{tikzcd}
+\end{equation*}
+Then there is an equivalence
+\begin{equation*}
+\eqv{\fib{f\circ h}{x}}{\fib{f}{x}\times\fib{g}{x}}.
+\end{equation*}
+\end{thm}
+
+\begin{exercises}
+\item Show that the square
+\begin{equation*}
+\begin{tikzcd}
+(x=y) \arrow[r] \arrow[d] & \unit \arrow[d,"\mathsf{const}_y"] \\
+\unit \arrow[r,swap,"\mathsf{const}_x"] & A
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\item 
+\begin{subexenum}
+\item Show that for any $f:A\to X$ the commuting square
+\begin{equation*}
+\begin{tikzcd}
+\fib{f}{x} \arrow[d] \arrow[r,"\proj 1"] & A \arrow[d,"f"] \\
+\unit \arrow[r,swap,"x"] & X
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\item Show that for any $B:A\to \UU$ and any $a:A$ the commuting square
+\begin{equation*}
+\begin{tikzcd}
+B(a) \arrow[r] \arrow[d] & \sm{x:A}B(x) \arrow[d,"\proj 1"] \\
+\unit \arrow[r,swap,"a"] & A
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{subexenum}
+\item \label{lem:pb_pasting}(The pullback pasting lemma.) Consider 
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r,"j"] & B \arrow[d,swap,"g"] \arrow[r,"l"] & C \arrow[d,"h"] \\
+X \arrow[r,swap,"i"] & Y \arrow[r,swap,"k"] & Z
+\end{tikzcd}
+\end{equation*}
+with homotopies $H:i\circ f\htpy g\circ j$ and $K:k\circ g\htpy h\circ l$ witnessing that the two squares commute, and suppose that the square on the right is a pullback square. Show that the square on the left is a pullback square if and only if the outer rectangle is a pullback square.
+\item Given a map $f:A\to X$ define $\delta_f:A\to A\times_X A$ by $x\mapsto (x,x,\refl{f(x)})$. Show that a map $f:A\to X$ is $(k+1)$-truncated if and only if $\delta_f$ is $k$-truncated.
+\item Consider a pullback square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X.
+\end{tikzcd}
+\end{equation*}
+Show that if $g$ is $k$-truncated, then so is $p$.
+\item Consider a \define{natural transformation of cospans}, i.e.~a commuting diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r] \arrow[d,swap,"f"] & X \arrow[d,swap,"h"] & B \arrow[l] \arrow[d,"g"] \\
+A' \arrow[r] & X' & B'. \arrow[l]
+\end{tikzcd}
+\end{equation*}
+Show that the map
+\begin{equation*}
+(a,b,p)\mapsto (f(a),g(b),\mathsf{ap}_h(p)): A \times_X B \to A'\times_{X'} B'
+\end{equation*}
+is $n$-truncated if each of the vertical maps is.
+\item 
+\begin{subexenum}
+\item Show that if 
+\begin{equation*}
+\begin{tikzcd}
+P(a) \arrow[r] \arrow[d] & Y(a) \arrow[d] \\
+X(a) \arrow[r] & Z(a)
+\end{tikzcd}
+\end{equation*}
+is a pullback square for each $a:A$, then so is
+\begin{equation*}
+\begin{tikzcd}
+\prd{a:A}P(a) \arrow[r] \arrow[d] & \prd{a:A}Y(a) \arrow[d] \\
+\prd{a:A}X(a) \arrow[r] & \prd{a:A}Z(a)
+\end{tikzcd}
+\end{equation*}
+\item Show that if
+\begin{equation*}
+\begin{tikzcd}
+C_1 \arrow[r] \arrow[d] & B_1 \arrow[d] & C_2 \arrow[r] \arrow[d] & B_2 \arrow[d] \\
+A_1 \arrow[r] & X_1 & A_2 \arrow[r] & X_2
+\end{tikzcd}
+\end{equation*}
+are pullback squares, then so is
+\begin{equation*}
+\begin{tikzcd}
+C_1\times C_2 \arrow[r] \arrow[d] & B_1\times B_2 \arrow[d] \\
+A_1 \times A_2 \arrow[r] & X_1\times X_2. 
+\end{tikzcd}
+\end{equation*}
+\end{subexenum}
+\item Show that 
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\eqv{A}{B} \arrow[r] \arrow[d] & \unit \arrow[d,"{(\idfunc[A],\idfunc[B])}"] \\
+A^B\times B^A \times A^B \arrow[r,swap,"{(h,f,g)\mapsto (h\circ f,f\circ g)}"] & A^A \times B^B
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{exercises}
