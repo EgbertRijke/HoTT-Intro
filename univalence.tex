@@ -47,65 +47,11 @@ From now on we will assume that the univalence axiom holds.
 
 \section{Function extensionality}
 
-The first application of the univalence axiom was Voevodsky's proof of \emph{function extensionality}, which we introduce below.
-
-\begin{defn}
-Let $f,g:\prd{x:A}B(x)$ be two dependent functions. We define the function
-\begin{equation*}
-\mathsf{htpy\usc{}eq}(f,g) : (\id{f}{g})\to (f\htpy g)
-\end{equation*}
-by path induction, sending $\refl{f}$ to $\lam{x}\refl{f(x)}$. The \define{function extensionality principle} asserts that $\mathsf{htpy\usc{}eq}$ is a fiberwise equivalence, for any $A:\type$ and $B:A\to\type$.
-\end{defn}
-
-We first show that function extensionality follows from \emph{weak function extensionality}.
-
-\begin{defn}
-The \define{weak function extensionality principle} asserts that for any $B:A\to\type$,
-\begin{equation*}
-\Big(\prd{x:A}\iscontr(B(x))\Big)\to \iscontr\Big(\prd{x:A}B(x)\Big).
-\end{equation*}
-\end{defn}
+The first application of the univalence axiom was Voevodsky's proof of function extensionality.
 
 \begin{thm}
-Weak function extensionality implies function extensionality.
+Univalence implies the weak principle of function extensionality.
 \end{thm}
-
-\begin{proof}
-To prove function extensionality, it suffices by \autoref{thm:id_fundamental} to show that
-\begin{equation*}
-\sm{g:\prd{x:A}B(x)}f\htpy g
-\end{equation*}
-is contractible.
-
-Assume that products of contractible types are contractible.
-Since the type $\sm{b:B(x)}f(x)=b$ is contractible for each $x:X$, it follows by our assumption of weak function extensionality that the type $\prd{x:A}\sm{b:B(x)}f(x)=b$ is contractible. By \autoref{ex:contr_retr} it therefore suffices to show that
-\begin{equation*}
-\sm{g:\prd{x:A}B(x)}f\htpy g
-\end{equation*}
-is a retract of the type $\prd{x:A}\sm{b:B(x)}f(x)=b$. We have the functions
-\begin{align*}
-\mathsf{pi\usc{}sigma} & \defeq \lam{\pairr{g,H}}\lam{x}\pairr{g(x),H(x)} \\
-\mathsf{sigma\usc{}pi} & \defeq \lam{p}\pairr{\lam{x}\proj 1(p(x)),\lam{x}\proj 2(p(x))}.
-\end{align*}
-It remains to show that $\psi\circ\varphi=\idfunc$. Let $\pairr{g,H}:\sum_g f\htpy g$. 
-Then we have
-\begin{align*}
-\mathsf{sigma\usc{}pi}(\mathsf{pi\usc{}sigma}(g,H)) & \jdeq \mathsf{sigma\usc{}pi}(\lam{x}\pairr{g(x),H(x)}) \\
-& \jdeq \pairr{\lam{x}g(x),\lam{x}H(x)} \\
-& \jdeq \pairr{g,H}.\qedhere
-\end{align*}
-\end{proof}
-
-\begin{rmk}
-Since we assumed the $\eta$-rule for $\Sigma$-types, we also have
-\begin{align*}
-\mathsf{pi\usc{}sigma}(\mathsf{sigma\usc{}pi}(p)) & \jdeq \mathsf{pi\usc{}sigma}(\pairr{\lam{x}\proj 1(p(x)),\lam{x}\proj 2(p(x))}) \\
-& \jdeq \lam{x}\pairr{\proj 1(p(x)),\proj 2(p(x))} \\
-& \jdeq \lam{x} p(x) \\
-& \jdeq p.
-\end{align*}
-Therefore, the types $\sum_g f\htpy g$ and $\prod_x\sum_b f(x)=b$ are actually \emph{judgmentally isomorphic}. 
-\end{rmk}
 
 \begin{exercises}
 \item \label{ex:tr_ap} Show that for any $P:X\to \UU$ and any $p:x=y$ in $X$, we have
@@ -125,5 +71,4 @@ and show that this map is an equivalence. In other words, an \emph{identificatio
 \prd{f,g:A\to B}{p:f(a)=b}{q:g(a)=b} (\id{\pairr{f,p}}{\pairr{g,q}})\to \sm{H:f\htpy g} p = \ct{H(a)}{q},
 \end{equation*}
 and show that this map is an equivalence. In other words, an \emph{identification of pointed maps} is a base point preserving homotopy.
-\item Let $C$ be a contractible type with center of contraction $c$. Use the function extensionality principle to show that the map $\lam{f}f(c):(C\to A)\to A$ is an equivalence, for each type $A$.
 \end{exercises}

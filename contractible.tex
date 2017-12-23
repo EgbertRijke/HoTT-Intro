@@ -75,18 +75,18 @@ commutes.
 \end{defn}
 
 \begin{defn}\label{defn:retraction_swap}
-Let $f:A\to B$, $g:B\to A$, and let $H:g\circ f\htpy \idfunc[A]$ be a homotopy witnessing that $g$ is a retraction of $f$. We construct an identification $H(gf(x))=\ap{gf}{H(x)}$, for any $x:A$.
+Consider $f:A\to A$ and $H: f\htpy \idfunc[A]$. We construct an identification $H(f(x))=\ap{f}{H(x)}$, for any $x:A$.
 \end{defn}
 
 \begin{constr}
 By the naturality of homotopies with respect to identifications the square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
-gfgf(x) \arrow[d,swap,equals,"\ap{gf}{H(x)}"] \arrow[r,equals,"H(gf(x))"] & gf(x) \arrow[d,equals,"H(x)"] \\
-gf(x) \arrow[r,swap,equals,"H(x)"] & x
+ff(x) \arrow[d,swap,equals,"\ap{f}{H(x)}"] \arrow[r,equals,"H(f(x))"] & gf(x) \arrow[d,equals,"H(x)"] \\
+f(x) \arrow[r,swap,equals,"H(x)"] & x
 \end{tikzcd}
 \end{equation*}
-commutes. This gives the desired identification $H(gf(x))=\ap{gf}{H(x)}$.
+commutes. This gives the desired identification $H(f(x))=\ap{f}{H(x)}$.
 \end{constr}
 
 \begin{thm}\label{thm:contr_equiv}

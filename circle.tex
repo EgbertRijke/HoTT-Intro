@@ -165,21 +165,27 @@ The circle is a $1$-type and it is not a $0$-type.
 \end{cor}
 
 \begin{exercises}
-\item \label{ex:circle_up} Show that for each type $X$, the \emph{action on generators}
+\item \label{ex:circle_up} 
+\begin{subexenum}
+\item Show that for each type $X$, the \emph{action on generators}
 \begin{equation*}
 \mathsf{gen}_{\sphere{1}}:(\sphere{1}\to X)\to \sm{x:X}x=x
 \end{equation*}
 given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
+\item Show that
+\begin{equation*}
+\begin{tikzcd}
+X^{\sphere{1}} \arrow[r] \arrow[d] & X \arrow[d,"\delta"] \\
+X \arrow[r,swap,"\delta"] & X\times X
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{subexenum}
 \item \label{ex:circle_dup} Show that for each dependent type $P:\sphere{1}\to\type$, the \emph{dependent action on generators}
 \begin{equation*}
 \Big(\prd{t:\sphere{1}}P(t)\Big)\to \sm{u:P(\base)}\trans{\lloop}{u}=u
 \end{equation*}
 is an equivalence.
-\item Show that the map
-\begin{equation*}
-(\sphere{1}\to X)\to \sm{x,y:X} (\id{x}{y})\times(\id{x}{y})
-\end{equation*}
-given by $\lam{f}\pairr{f(\base),f(\base),\refl{f(\base)},\ap{f}{\lloop}}$ is an equivalence.
 \item Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
 \begin{equation*}
 P(\base)\to\prd{t:\sphere{1}}P(t).
@@ -233,4 +239,5 @@ is an equivalence.
 is an equivalence.
 \end{subexenum}
 \item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
+\item Show that any retract of the circle is equivalent to the circle.
 \end{exercises}

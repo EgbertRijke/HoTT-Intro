@@ -35,6 +35,8 @@
 {%
 \end{exenum}}
 
+\addbibresource{bibliography.bib}
+
 \begin{document}
 
 \begin{titlingpage}
@@ -44,31 +46,19 @@
 \frontmatter
 \tableofcontents
 
-\chapter{Introduction}
-%\addcontentsline{toc}{chapter}{Introduction}
-These are course notes for an introduction to homotopy type theory taught at Carnegie Mellon University in the spring semester of 2018. We cover the basics --- including equivalences, the univalence axiom, and higher inductive types --- and we introduce the student to the subfield of homotopy type theory that is sometimes called \emph{synthetic homotopy theory}. Early on, students will get acquainted with the basic techniques that are used in homotopy type theory to characterize the identity types of various classes of types, and once higher inductive types are introduced students will get acquainted with the descent property that can be used to construct type families over higher inductive types in order to prove properties about them.
-
-We do not cover the univalence axiom or the function extensionality axiom until we're about a third through the course. 
-There are several reasons for this. 
-First of all, dependent type theory with the inductive types, and among them the identity types, deserve to be covered thoroughly. 
-Second, the univalence axiom is pretty powerful, I believe it is good to go through some `agnostic' type theory first to be able to present concisely what the univalence axiom is really about, and to feel its power once we have it. 
-The final reason is that actually quite a lot can and has to be established without those axioms anyway. 
-These results include the fact that a map is an equivalence if and only if its fibers are contractible, the fundamental theorem of identity types, and theorems that help us identify certain classes of types as sets.
-All of these results belong properly to \emph{homotopy} type theory.
+\include{intro}
 
 \chapter{Syllabus}
 
 \mainmatter 
 
-\part{Martin-L\"of's dependent type theory}
-
 \include{dtt}
+
+\include{nat}
 
 \include{inductive}
 
 \include{identity}
-
-\part{Univalent foundations of mathematics}
 
 \include{equivalences}
 
@@ -77,6 +67,10 @@ All of these results belong properly to \emph{homotopy} type theory.
 \include{fundamental}
 
 \include{hierarchy}
+
+\include{funext}
+
+\include{pullback}
 
 \include{univalence}
 
@@ -129,46 +123,72 @@ Conclude that the univalence axiom is a proposition.
 \end{exercises}
 \end{comment}
 
-\part{Higher inductive types}
-
 \include{circle}
 
 \include{colimits}
 
 \include{descent}
 
-\chapter{Sequential colimits}
+\include{sequences}
 
-\part{Higher algebra}
+\chapter{Truncations}
+\section{The homotopy image of a map}
+\section{Homotopy quotients}
+\section{The truncations}
 
-\chapter{Embeddings and surjections}
-Embeddings, subtypes, surjective maps, image factorization.
-We give a type theoretical variant of the Yoneda lemma, using the groupoid structure of types.
+\include{homotopy_groups}
+
+\include{les}
+
+\include{hopf}
+
+\chapter{The wedge and smash product of pointed types}
+
+\begin{thm}
+Given two pointed spaces, there is an equivalence
+\begin{equation*}
+\eqv{\join{X}{Y}}{\susp(X\wedge Y)}.
+\end{equation*}
+\end{thm}
 
 \begin{exercises}
-\item Let $\UU_\bool\defeq \sm{A:\UU}\brck{A=\bool}$ be the subuniverse of $2$-element types. Show that the type
+\item 
+\begin{subexenum}
+\item Show that $Y$ is equivalent to the mapping cone of $X\to X\vee Y$.
+\item Show that the pushout of $X \leftarrow X\vee Y \rightarrow Y$ is contractible.
+\end{subexenum}
+\item Show that if
 \begin{equation*}
-\sm{A:\UU_\bool}A
+\begin{tikzcd}
+S_1 \arrow[r] \arrow[d] & Y_1 \arrow[d] & S_2 \arrow[r] \arrow[d] & Y_2 \arrow[d] \\
+X_1 \arrow[r] & Z_1 & X_2 \arrow[r] & Z_2
+\end{tikzcd}
 \end{equation*}
-of \emph{pointed} 2-element types is contractible.
+are pushout squares, where all types, maps and homotopies are pointed, then so is
+\begin{equation*}
+\begin{tikzcd}
+S_1\vee S_2 \arrow[r] \arrow[d] & Y_1\vee Y_2 \arrow[d] \\
+X_1 \vee X_2 \arrow[r] & Z_1\vee Z_2. 
+\end{tikzcd}
+\end{equation*}
+\item Show that if
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r] \arrow[d] & Y \arrow[d] \\
+X \arrow[r] & Z
+\end{tikzcd}
+\end{equation*}
+is a cocartesian square of pointed spaces, then the cofiber of $X\vee Y\to Z$ is equivalent to $\susp(S)$.
+\item Show that there is an equivalence
+\begin{equation*}
+\eqv{\susp(X\times Y)}{\susp(X\vee Y)\vee \susp(X\wedge Y)}
+\end{equation*}
+\item Show that $\susp(X\vee Y)$ is a retract of $\susp(X\times Y)$. 
+\item Show that if $f:A\to X$ is a constant of pointed spaces, then $\eqv{M_f}{X\vee \susp(A)}$. 
+\item Show that the cofiber of the diagonal $\delta:\sphere{1}\to \sphere{1}\times\sphere{1}$ is equivalent to $\sphere{2}\vee\sphere{2}$.
 \end{exercises}
 
-\include{logic}
-
-\chapter{Univalent algebra}
-\begin{enumerate}
-\item Subsets and quotients
-\item Factorization
-\item The structure isomorphism theorem
-\item The axiom of choice
-\end{enumerate}
-
-\chapter{Homotopy groups of types}
-Introduce groups, abelian groups, Eckmann-Hilton argument, long exact sequence.
-
-\part{Stable homotopy theory}
-
-\chapter{Connectedness}
+\include{connected}
 
 \chapter{The Blakers-Massey theorem}
 The Blakers-Massey theorem is a connectivity theorem which can be used to prove the Freudenthal suspension theorem, giving rise to the field of \emph{stable homotopy theory}. It was proven in the setting of homotopy type theory by Lumsdaine et al, and their proof was the first that was given entirely in an elementary way, using only constructions that are invariant under homotopy equivalence. 
@@ -187,6 +207,32 @@ The universal property of the pullback determines a unique map $u:S\to A \times_
 The map $u:S\to A \times_{(A\sqcup^S B)} B$ of \autoref{eq:BM} is $(n+m)$-connected.
 \end{thm}
 
+\begin{exercises}
+\item Show that if $X$ is $m$-connected and $f:X\to Y$ is $n$-connected, then the map
+\begin{equation*}
+X \to \fib{m_f}{\ast}
+\end{equation*}
+where $m_f:Y\to M_f$ is the inclusion of $Y$ into the cofiber of $f$, is $(m+n)$-connected.
+\item Suppose that $X$ is a connected type, and let $f:X\to Y$ be a map.
+Show that the following are equivalent:
+\begin{enumerate}
+\item $f$ is $n$-connected.
+\item The mapping cone of $f$ is $(n+1)$-connected.
+\end{enumerate}
+\item Apply the Blakers-Massey theorem to the defining pushout square of the smash product to show that if $A$ and $B$ are $m$- and $n$-connected respectively, then there is a $(m+n+\min(m,n)+2)$-connected map
+\begin{equation*}
+\join{\loopspace{A}}{\loopspace{B}}\to \loopspace{A \wedge B}.
+\end{equation*}
+\item Show that the square
+\begin{equation*}
+\begin{tikzcd}
+\unit \arrow[r] \arrow[d] & \bool \arrow[d] \\
+X \arrow[r] & X+\unit
+\end{tikzcd}
+\end{equation*}
+is both a pullback and a pushout. Conclude that the result of the Blakers-Massey theorem is not always sharp.
+\end{exercises}
+
 \chapter{Some stable homotopy theory}
 \section{The Freudenthal suspension theorem}
 
@@ -194,16 +240,65 @@ The map $u:S\to A \times_{(A\sqcup^S B)} B$ of \autoref{eq:BM} is $(n+m)$-connec
 
 \chapter{Cohomology}
 
-\chapter{The real projective spaces}
-...and their cohomology.
+\chapter{Open problems in homotopy type theory}
+We list only the open problems of synthetic homotopy theory, omitting the open problems related to the semantics of homotopy type theory.
+\begin{itemize}
+\item Compute the homotopy groups of the spheres.
+\item Define the Grassmannians.
+\item Prove Freyd's generating hypothesis
+\item Hurewicz theorem
+\item Barratt-Priddy theorem
+\item (Semi-)simplicial types.
+\item Ring structure on the sphere spectrum
+\end{itemize}
 
-\chapter{The Hopf fibration}
-Our goal in this chapter is to construct the Hopf fibration, i.e.~a fiber sequence
+%\chapter{The real projective spaces}
+
+\begin{comment}
+\include{logic}
+
+\chapter{Embeddings and surjections}
+Embeddings, subtypes, surjective maps, image factorization.
+We give a type theoretical variant of the Yoneda lemma, using the groupoid structure of types.
+
+\begin{exercises}
+\item Let $\UU_\bool\defeq \sm{A:\UU}\brck{A=\bool}$ be the subuniverse of $2$-element types. Show that the type
 \begin{equation*}
-\sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}.
+\sm{A:\UU_\bool}A
 \end{equation*}
+of \emph{pointed} 2-element types is contractible.
+\end{exercises}
 
+\chapter{Univalent algebra}
+\begin{enumerate}
+\item Subsets and quotients
+\item Factorization
+\item The structure isomorphism theorem
+\item The axiom of choice
+\end{enumerate}
 
+\begin{defn}
+An ($0$-)equivalence relation $\mathcal{R}$ on a type $X$ consists of a $\prop$-valued binary relation $R:X\to X\to \prop$ on $X$ which is reflexive, symmetric, and transitive, i.e.~which comes equipped with
+\begin{align*}
+\rho & : \prd{x:X} R(x,x) \\
+\sigma & : \prd{x,y:X} R(x,y)\to R(y,x) \\
+\tau & : \prd{x,y,z:X} R(x,y)\to R(y,z)\to R(x,z).
+\end{align*}
+\end{defn}
+
+Classically, the quotient of $X$ by an equivalence relation $\mathcal{R}$ is defined as the set of $\mathcal{R}$-equivalence classes. We can do something similar here. Note that the equivalence class $[x]$ of $x$ is the subtype of all $y:X$ satisfying $R(x,y)$. In other words, the predicate $R(x,\blank)$ describes precisely the equivalence class $[x]$. 
+
+\begin{defn}
+Let $\mathcal{R}$ be an equivalence relation on a type $X$. We define
+\begin{equation*}
+X/\mathcal{R} \defeq \im(R)
+\end{equation*}
+\end{defn}
+
+\begin{exercises}
+\item ..
+\end{exercises}
+\end{comment}
 
 \appendix
 
@@ -215,7 +310,15 @@ Our goal in this chapter is to construct the Hopf fibration, i.e.~a fiber sequen
 \end{enumerate}
 
 \chapter{Literature}
+\begin{enumerate}
+\item The main reference for homotopy type theory is \cite{hottbook}. In this course we have roughly followed the contents of this book, with a focus on synthetic homotopy theory. 
+\item The Blakers-Massey theorem was proved in HoTT in \cite{hottBM}.
+A useful resource on homotopy (co)limits, the Blakers-Massey theorem and its application is \cite{MunsonVolic}, which also has been the source of many exercises in this course.
+\item The Eilenberg-Mac Lane spaces were defined in homotopy type theory in \cite{hottEM}. Following a suggestion by Shulman \cite{ShulmanCoh} this has resulted in the study of spectra and stable homotopy theory in HoTT. See \cite{CavalloCoh}, \cite{FavoniaPhD}
+\end{enumerate}
 
 \backmatter
+
+\printbibliography
 
 \end{document}

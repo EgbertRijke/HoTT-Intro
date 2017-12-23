@@ -143,18 +143,33 @@ X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"
 \begin{exercises}
 \item Show that $\join{P}{Q}= P\lor Q$, for any two propositions $P$ and $Q$.
 \item Let $Q$ be a proposition, and let $A$ be a type. Show that $\inr:A\to \join{Q}{A}$ is an equivalence if and only if $Q\to\iscontr(A)$.
-\item Consider a sequence
-\begin{tikzcd}
-X_0 \arrow[r] & X_1 \arrow[r] & X_2 \arrow[r] & \cdots
-\end{tikzcd}
-of \emph{pointed} types and \emph{pointed} maps between them. Show that the sequential colimit is contractible. 
-\item Let
-\begin{tikzcd}
-P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
-\end{tikzcd}
-be a sequence of propositions. Show that
+\item Show that if
 \begin{equation*}
-\colim_n(P_n)=\exists_n P_n.
+\begin{tikzcd}
+S \arrow[r] \arrow[d] & Y \arrow[d] \\
+X \arrow[r] & Z
+\end{tikzcd}
+\end{equation*}
+is a pushout square, then so is
+\begin{equation*}
+\begin{tikzcd}
+A\times S \arrow[r] \arrow[d] & A\times Y \arrow[d] \\
+A\times X \arrow[r] & A\times Z
+\end{tikzcd}
+\end{equation*}
+\item Show that if
+\begin{equation*}
+\begin{tikzcd}
+S_1 \arrow[r] \arrow[d] & Y_1 \arrow[d] & S_2 \arrow[r] \arrow[d] & Y_2 \arrow[d] \\
+X_1 \arrow[r] & Z_1 & X_2 \arrow[r] & Z_2
+\end{tikzcd}
+\end{equation*}
+are pushout squares, then so is
+\begin{equation*}
+\begin{tikzcd}
+S_1+S_2 \arrow[r] \arrow[d] & Y_1+ Y_2 \arrow[d] \\
+X_1 +X_2 \arrow[r] & Z_1+Z_2. 
+\end{tikzcd}
 \end{equation*}
 \item In this exercise we study the \define{reflexive coequalizer}. Let $R:A\to A\to\UU$ be a relation, and $\rho:\prd{x:A}R(x,x)$ be a witness of reflexivity.  
 \begin{subexenum}

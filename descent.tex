@@ -1,62 +1,61 @@
 \chapter{Descent}
 
-\section{Homotopy pullbacks}
-[Tell something about why pullbacks are important.]
-\begin{defn}
-Given maps $f:A\to X$ and $g:B\to X$, we define \[A\times_X B\defeq \sm{x:A}{y:B}f(x)=f(y).\] The \define{canonical pullback square} of $f$ and $g$ is the commuting square
+\begin{thm}
+Consider the commuting diagram
 \begin{equation*}
-\begin{tikzcd}
-A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X,
+\begin{tikzcd}[column sep=small,row sep=tiny]
+A_{00} \arrow[rr] \arrow[dr] \arrow[dd] & & A_{10} \arrow[dd] \arrow[dr] \\
+& A_{01} \arrow[rr,crossing over] & & A_{11} \arrow[dd] \\
+B_{00} \arrow[rr] \arrow[dr] & & B_{10} \arrow[dr] \\
+& B_{01} \arrow[from=uu,crossing over] \arrow[rr] & & B_{11}.
 \end{tikzcd}
 \end{equation*}
-where $\pi_1(x,y,p)\defeq x$, and $\pi_2(x,y,p)\defeq y$, and the commutativity is witnessed by the homotopy $\lam{\pairr{x,y,p}}p$. 
-\end{defn}
-
-\begin{thm}
-For any type $C$, the map
-\begin{equation*}
-(C\to A\times_X B)\to \sm{h:C\to A}{k:C\to B}f\circ h\htpy g\circ k
-\end{equation*}
-is an equivalence.
+If each of the vertical squares is a pullback, and the bottom square  is a pushout, then the top square is a pushout.
 \end{thm}
 
-\begin{lem}[Pullback pasting lemma]\label{lem:pb_pasting}
-Consider 
+\begin{cor}
+For any map $f:A\sqcup^S B\to X$, and any $x:X$, the square
 \begin{equation*}
 \begin{tikzcd}
-A \arrow[d,swap,"f"] \arrow[r,"j"] & B \arrow[d,swap,"g"] \arrow[r,"l"] & C \arrow[d,"h"] \\
-X \arrow[r,swap,"i"] & Y \arrow[r,swap,"k"] & Z
+\fib{f_S}{x} \arrow[r] \arrow[d] & \fib{f_B}{x} \arrow[d] \\
+\fib{f_A}{x} \arrow[r] & \fib{f}{x}
 \end{tikzcd}
 \end{equation*}
-with homotopies $H:i\circ f\htpy g\circ j$ and $K:k\circ g\htpy h\circ l$ witnessing that the two squares commute, and suppose that the square on the right is a pullback square. Then the square on the left is a pullback square if and only if the outer rectangle is a pullback square.
-\end{lem}
-
-\section{The flattening lemma}
+is a pushout square.
+\end{cor}
 
 \begin{exercises}
-\item Show that the square
+\item Consider two maps $f:A\to X$ and $g:B\to X$. The \define{join} $\join{f}{g}$ is defined by the universal property of the pushout as the unique map rendering the diagram
 \begin{equation*}
 \begin{tikzcd}
-(x=y) \arrow[r] \arrow[d] & \unit \arrow[d,"\mathsf{const}_y"] \\
-\unit \arrow[r,swap,"\mathsf{const}_x"] & A
+\sm{a:A}{b:B}f(a)=g(b) \arrow[d,"\pi_1"] \arrow[r,"\pi_2"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"g"] \\
+A \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"f"] & \join[X]{A}{B} \arrow[dr,densely dotted,near start,swap,"\join{f}{g}"] \\
+& & X
 \end{tikzcd}
 \end{equation*}
-is a pullback square.
-\item Let $f:A\to B$ be a map, and consider $P:A\to\type$, and $Q:B\to\type$. Furthermore, consider a fiberwise transformation
+commutative, where $\join[X]{A}{B}$ is defined as a pushout, as indicated.
+Construct an equivalence
 \begin{equation*}
-g:\prd{x:A}P(x)\to Q(f(x)).
+\eqv{\fib{\join{f}{g}}{x}}{\join{\fib{f}{x}}{\fib{g}{x}}}
 \end{equation*}
-Show that the following are equivalent:
-\begin{subexenum}
-\item The fiberwise map $g$ is a fiberwise equivalence.
-\item The commuting square
+for any $x:X$. 
+\item Consider two maps $f:A\to B$ and $g:C\to D$.
+The \define{pushout-product}
 \begin{equation*}
-\begin{tikzcd}[column sep=large]
-\sm{x:A}P(x) \arrow[d,swap,"\proj 1"] \arrow[r,"\total{g}"] & \sm{y:B}Q(y) \arrow[d,"\proj 1"] \\
-A \arrow[r,swap,"f"] & B
+f\square g : (A\times D)\sqcup^{A\times B} (B\times C)\to B\times D
+\end{equation*}
+of $f$ and $g$ is defined by the universal property of the pushout as the unique map rendering the diagram
+\begin{equation*}
+\begin{tikzcd}
+A\times C \arrow[r,"{f\times \idfunc[C]}"] \arrow[d,swap,"{\idfunc[A]\times g}"] & B\times C \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\idfunc[B]\times g}"] \\
+A\times D \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{f\times\idfunc[D]}"] & (A\times D)\sqcup^{A\times B} (B\times C) \arrow[dr,densely dotted,swap,near start,"f\square g"] \\
+& & B\times D
 \end{tikzcd}
 \end{equation*}
-is a pullback square.
-\end{subexenum}
+commutative. Construct an equivalence
+\begin{equation*}
+\eqv{\fib{f\square g}{b,d}}{\join{\fib{f}{b}}{\fib{g}{d}}}
+\end{equation*}
+for all $b:B$ and $d:D$.
+\item Show that the fiber of the wedge inclusion $A\vee B\to A\times B$ is equivalent to $\join{\loopspace{A}}{\loopspace{B}}$.
 \end{exercises}

@@ -1,27 +1,7 @@
 \chapter{Inductive types}
 
-\section{The type of natural numbers}
-The archetypal example of an inductive type is the type of natural numbers, which is specified by a term $0$ and a successor function. To prove properties about the natural numbers, one uses its induction principle. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{sections} of dependent types over the natural numbers. 
+\section{The idea of inductive types}
 
-\begin{defn}
-We define $\nat$ to be a type equipped with
-\begin{align*}
-0 & : \nat \\
-S & : \nat \to\nat,
-\end{align*}
-satisfying the induction principle, that for any type family $P:\nat\to\type$ there is a term
-\begin{equation*}
-\ind{\nat}:P(0)\to \Big(\prd{n:\nat}P(n)\to P(S(n))\Big)\to \prd{n:\nat}P(n),
-\end{equation*}
-for which the computation rules
-\begin{align*}
-\ind{\nat}(p_0,p_S,0) & \jdeq p_0 \\
-\ind{\nat}(p_0,p_S,S(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
-\end{align*}
-hold.
-\end{defn}
-
-\section{Other basic inductive types}
 Many other types can also be specified as inductive types, similar to the natural numbers. The unit type, the empty type, and the booleans are the simplest examples of this way of defining types. Just like the type of natural numbers, other inductive types are also specified by their \emph{constructors}, an \emph{induction principle}, and their \emph{computation rules}: 
 \begin{enumerate}
 \item The constructors tell what structure the inductive type comes equipped with. There may be multiple constructors, or no constructors at all in the specification of an inductive type. 
@@ -102,8 +82,29 @@ We construct a successor function $S:\Z\to\Z$.
 
 \end{constr}
 
+\section{Dependent pair types}
+
+\begin{defn}
+Let $A$ be a type, and let $P:A\to\type$ be a type family over $A$.
+The \define{dependent pair type} $\sm{x:A}P(x)$ is defined to be a type equipped with a \define{pairing function}
+\begin{equation*}
+\pairr{\blank,\blank}:\prd{x:A} P(x)\to \Big(\sm{y:A}P(y)\Big)
+\end{equation*}
+and \define{projection maps}
+\begin{align*}
+\proj 1 & : \Big(\sm{x:A}P(x)\Big)\to A \\
+\proj 2 & : \prd{w:\sm{x:A}P(x)}P(\proj 1(w))
+\end{align*}
+satisfying the equations
+\begin{align*}
+\proj 1(\pairr{a,p}) & \jdeq a \tag{$\beta_1$}\\
+\proj 2(\pairr{a,p}) & \jdeq p \tag{$\beta_2$}\\
+\pairr{\proj 1(w),\proj 2(w)} & \jdeq w. \tag{$\eta$}
+\end{align*}
+\end{defn}
+
 \begin{exercises}
 \item For any type $A$, show that $(A+\neg A)\to(\neg\neg A\to A)$. 
 \item \label{ex:int_group_ops}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
-\item \label{ex:int_order}Define the relations $\leq$ and $<$ on both $\nat$ and $\Z$.
+\item \label{ex:int_order}Define the relations $\leq$ and $<$ on and $\Z$.
 \end{exercises}

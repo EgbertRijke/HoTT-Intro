@@ -173,7 +173,7 @@ We define $\istrunc{} : \Z_{\geq-2}\to\UU\to\UU$ by induction on $k:\Z_{\geq -2}
 \istrunc{-2}(A) & \defeq \iscontr(A) \\
 \istrunc{k+1}(A) & \defeq \prd{x,y:A}\istrunc{k}(\id{x}{y}).\qedhere
 \end{align*}
-For any type $A$, we say that $A$ is \define{$k$-truncated}, or a \define{$k$-type}, if there is a term of type $\istrunc{k}(A)$.
+For any type $A$, we say that $A$ is \define{$k$-truncated}, or a \define{$k$-type}, if there is a term of type $\istrunc{k}(A)$. We say that a map $f:A\to B$ is $k$-truncated if its fibers are $k$-truncated.
 \end{defn}
 
 %For the rest of this section, let $k:\Z_{\geq-2}$.
@@ -190,7 +190,7 @@ If $A$ is contractible with center of contraction $c$, and contraction $C$, then
 By \autoref{lem:isprop_eq} this shows that $A$ is a proposition. If any $k$-type is also a $(k+1)$-type, then any $(k+1)$-type is a $(k+2)$-type, since its identity types are $k$-types and therefore $(k+1)$-types.
 \end{proof}
 
-\begin{thm}
+\begin{thm}\label{thm:ntype_eqv}
 If $e:\eqv{A}{B}$ is an equivalence, and $B$ is a $k$-type, then so is $A$.
 \end{thm}
 
@@ -237,10 +237,14 @@ commutes. This square commutes by the naturality of homotopies, proven in \autor
 \eqv{(P\leftrightarrow Q)}{(\eqv{P}{Q})}.
 \end{equation*}
 Conclude that any two contractible types are equivalent.
-\item Let $A$ be a type, and let $\delta_A:A\to A\times A$ be given by $\lam{x}(x,x)$. Show that
+\item Let $A$ be a type, and let $\delta_A:A\to A\times A$ be given by $\lam{x}(x,x)$. 
+\begin{subexenum}
+\item Show that
 \begin{equation*}
 \eqv{\isequiv(\delta_A)}{\isprop(A)}.
 \end{equation*}
+\item Show that $A$ is $(k+1)$-truncated if and only if $\delta_A:A\to A\times A$ is $k$-truncated.
+\end{subexenum}
 \item Let $P:A\to\type$ be a type family. Show that for any $n\geq-2$, if $A$ is an $n$-type, and $P(x)$ is an $n$-type for each $x:A$, then so is $\sm{x:A}P(x)$. 
 \item Show that $\bool$ is a set.
 \item Show that for any two sets $A$ and $B$, the disjoint sum $A+B$ is again a set.

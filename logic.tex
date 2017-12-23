@@ -3,6 +3,8 @@
 
 \section{Propositional truncation}
 
+Using the same idea of higher inductive types, we can also turn every type into a mere proposition via an operation we call \emph{propositional truncation}. 
+
 \begin{defn}
 Let $A:\UU$ be a type. We define the \define{propositional truncation} $\brck{A}:\UU$ as a higher inductive type with constructors
 \begin{align*}
@@ -39,6 +41,7 @@ A \arrow[dr,"\forall"] \arrow[d,swap,"\eta"] \\
 \brck{A} \arrow[r,densely dotted,swap,"\exists!"] & P
 \end{tikzcd}
 \end{equation*}
+We call this property the \define{universal property of propositional truncation}. 
 
 \begin{thm}
 Let $A:\UU$ be a type. Then for any proposition $P$, the map
@@ -47,6 +50,24 @@ Let $A:\UU$ be a type. Then for any proposition $P$, the map
 \end{equation*}
 is an equivalence.
 \end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\section{Surjective maps}
+
+\begin{defn}
+We say that a type $A$ is \define{inhabited} if there is a term of type $\brck{A}$. 
+\end{defn}
+
+\begin{defn}
+A function $f:A\to B$ is said to be surjective if its fibers are inhabited. 
+More explicitly, we define
+\begin{equation*}
+\mathsf{is\usc{}surj}(f)\defeq \prd{b:B}\brck{\fib{f}{b}}. 
+\end{equation*}
+\end{defn}
 
 \section{First order logic in type theory}
 \begin{table}
@@ -76,10 +97,13 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
 \end{enumerate}
 
 \begin{exercises}
-\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
 \item Show that
 \begin{equation*}
 \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}.
+\end{equation*}
+\item For any $B:A\to\UU$, construct an equivalence
+\begin{equation*}
+\eqv{\Big(\exists a.\brck{B(a)}\Big)}{\Big(\brck{\sm{a:A}B(a)}\Big)}
 \end{equation*}
 \item \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
 \begin{equation*}
@@ -94,4 +118,5 @@ P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
 \item The type $X^Q$ is contractible.
 \item $Q\to\iscontr(X)$.
 \end{enumerate}
+\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
 \end{exercises}
