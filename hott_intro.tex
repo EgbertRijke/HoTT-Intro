@@ -129,6 +129,52 @@ Conclude that the univalence axiom is a proposition.
 
 \include{descent}
 
+\chapter{Higher homotopy pushouts}
+
+\section{$2$-spans and $2$-pushouts}
+
+\section{Applications}
+\begin{thm}
+Consider the following configuration of commuting squares:
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"i"] \arrow[d,swap,"f"] & B \arrow[r,"k"] \arrow[d,swap,"g"] & C \arrow[d,"h"] \\
+X \arrow[r,swap,"j"] & Y \arrow[r,swap,"l"] & Z
+\end{tikzcd}
+\end{equation*}
+with homotopies $H:j\circ f\htpy g\circ i$ and $K:l\circ g\htpy h\circ k$, and suppose that the square on the left is a pushout square. 
+Then the square on the right is a pushout square if and only if the outer rectangle is a pushout square.
+\end{thm}
+
+\begin{thm}
+The join is an associative operation.
+\end{thm}
+
+\begin{thm}
+the 3-by-3-lemma
+\end{thm}
+
+\begin{exercises}
+\item In this exercise we study the \define{reflexive coequalizer}. Let $R:A\to A\to\UU$ be a relation, and $\rho:\prd{x:A}R(x,x)$ be a witness of reflexivity.  
+\begin{subexenum}
+\item Formulate the induction principle and computation rules for the higher inductive type $\mathsf{rcoeq}(A,R,\rho)$ with constructors
+\begin{align*}
+\pts{\eta} &: A \to \mathsf{rcoeq}(A,R,\rho) \\
+\edg{\eta} &: \prd*{x,y:A} R(x,y)\to \id{\pts{\eta}(x)}{\pts{\eta}(y)} \\
+\rfx{\eta} &: \prd{x:A} \edg{\eta}(\rho(x))=\refl{\pts{\eta}(x)}.
+\end{align*}
+\item Show that
+\begin{equation*}
+\begin{tikzcd}
+\sm{x,y:A} R(x,y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & A \arrow[d,"\pts{\eta}"] \\
+A \arrow[r,swap,"\pts{\eta}"] & \mathsf{rcoeq}(A,R,\rho)
+\end{tikzcd}
+\end{equation*}
+commutes, and is a pushout square.
+\item Compute $\mathsf{rcoeq}(A,\idtypevar{A},\refl{})$ and $\mathsf{rcoeq}(A,(\lam{x}{y}\unit),(\lam{x}\ttt))$. Furthermore, consider a pointed type $\pairr{X,x_0}$ as a reflexive relation on the unit type, and compute $\mathsf{rcoeq}(\unit,X,x_0)$.
+\end{subexenum}
+\end{exercises}
+
 \include{sequences}
 
 \chapter{Truncations}
@@ -141,6 +187,8 @@ Conclude that the univalence axiom is a proposition.
 \include{les}
 
 \include{hopf}
+
+\chapter{The Van Kampen theorem}
 
 \chapter{The wedge and smash product of pointed types}
 
@@ -240,6 +288,8 @@ is both a pullback and a pushout. Conclude that the result of the Blakers-Massey
 
 \chapter{Cohomology}
 
+\chapter{The Mayer-Vietoris sequence}
+
 \chapter{Open problems in homotopy type theory}
 We list only the open problems of synthetic homotopy theory, omitting the open problems related to the semantics of homotopy type theory.
 \begin{itemize}
@@ -250,6 +300,9 @@ We list only the open problems of synthetic homotopy theory, omitting the open p
 \item Barratt-Priddy theorem
 \item (Semi-)simplicial types.
 \item Ring structure on the sphere spectrum
+\item Higher Van Kampen theorems
+\item Higher Blakers-Massey theorems
+\item Find a delooping of $\sphere{3}$, and define the octonionic Hopf fibration.
 \end{itemize}
 
 %\chapter{The real projective spaces}

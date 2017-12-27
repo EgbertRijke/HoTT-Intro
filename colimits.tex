@@ -3,15 +3,14 @@
 \section{General pushouts}
 
 \begin{defn}
-A \define{span} from $A$ to $B$ consists of a type $S$ and maps $f:S\to A$ and $g:S\to B$. 
-\end{defn}
-Thus, a span from $A$ to $B$ looks like this:
+A \define{span} from $A$ to $B$ consists of a type $S$ and maps $f:S\to A$ and $g:S\to B$, as indicated in the diagram
 \begin{equation*}
 \begin{tikzcd}
 & S \arrow[dl,swap,"f"] \arrow[dr,"g"] \\
 A & & B.
 \end{tikzcd}
 \end{equation*}
+\end{defn}
 
 \begin{defn}
 Let $X$ be a type, and let $\mathcal{S}\jdeq (S,f,g)$ be a span from $A$ to $B$.
@@ -28,48 +27,35 @@ A \arrow[r,swap,"i"] & X
 \end{equation*}
 
 \begin{defn}
-
+Let $\mathcal{X}\defeq(i,j,H)$ be a cocone with vertex $X$ on $\mathcal{S}$. For any type $Y$ we define a map
+\begin{equation*}
+\mathsf{cocone\usc{}map}(\mathcal{X}):(X\to Y)\to \mathsf{cocone}(Y)
+\end{equation*}
+by $f\mapsto (f\circ i,f\circ j,f\cdot H)$. We say that $\mathcal{X}$ is \define{colimiting} if $\mathsf{cocone\usc{}map}(\mathcal{X})$ is an equivalence for every type $Y$. 
 \end{defn}
 
-\begin{thm}
-Consider the following configuration of commuting squares:
+\begin{thm}\label{thm:pushout_up}
+Let $\mathcal{X}\defeq(i,j,H)$ be a cocone with vertex $X$ on $\mathcal{S}$. The following are equivalent:
+\begin{enumerate}
+\item The cocone $\mathcal{X}$ is colimiting.
+\item The type $X$ is $\mathcal{S}$-inductive, in the sense that for any type fampy $P:X\to \UU$ the map
 \begin{equation*}
-\begin{tikzcd}
-A \arrow[r,"i"] \arrow[d,swap,"f"] & B \arrow[r,"k"] \arrow[d,swap,"g"] & C \arrow[d,"h"] \\
-X \arrow[r,swap,"j"] & Y \arrow[r,swap,"l"] & Z
-\end{tikzcd}
+\Big(\prd{x:X}P(x)\Big)\to \Big(\sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))} i'\htpy_H j'\Big)
 \end{equation*}
-with homotopies $H:j\circ f\htpy g\circ i$ and $K:l\circ g\htpy h\circ k$, and suppose that the square on the left is a pushout square. 
-Then the square on the right is a pushout square if and only if the outer rectangle is a pushout square.
+given by $h\mapsto (h\circ i,h\circ j,\mathsf{apd}_h(H(s)))$ has a section. Here we define
+\begin{equation*}
+i'\htpy_H j'\defeq \prd{s:S}\dpath{P}{H(s)}{i'(f(s))}{j'(g(s))}.
+\end{equation*}
+\end{enumerate}
 \end{thm}
 
-\begin{thm}
-Consider a span $(S,f,g)$ from $A$ to $B$. Then the pushout of the span
-\begin{equation*}
-\begin{tikzcd}
-& S+S \arrow[dl] \arrow[dr] \\
-A + B & & S
-\end{tikzcd}
-\end{equation*}
-is equivalent to the pushout of $(S,f,g)$.
-\end{thm}
-
-\section{Pushouts as higher inductive types}
-
-\begin{defn}
-The \define{(canonical) pushout} of a span $(S,f,g)$ from $A$ to $B$ is defined as the higher inductive type $A\sqcup^S B$ equipped with
+From now on we will assume that for any span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$ there is a type $A\sqcup^{\mathcal{S}}B$ equipped with
 \begin{align*}
 \inl & : A \to A \sqcup^S B \\
 \inr & : B \to A \sqcup^S B \\
-\glue & : \prd{x:S} \id{\inl(f(x))}{\inr(g(s))}.
+\glue & : \prd{x:S} \id{\inl(f(x))}{\inr(g(s))},
 \end{align*}
-\end{defn}
-
-From now on we will assume that the univers $\UU$ is closed under pushouts. By this we mean that if $\mathcal{S}$ is a span in $\UU$, then its pushout exists, and is again a type in $\UU$.
-
-\begin{thm}
-The canonical pushout satisfies the (dependent) universal property of the pushout.
-\end{thm}
+which is $\mathcal{S}$-inductive in the sense of \autoref{thm:pushout_up}. Moreover, if $A$ and $B$ are types in $\UU$, then we assume that also $A\sqcup^{\mathcal{S}} B$ is in $\UU$. We call $A\sqcup^{\mathcal{S}} B$ the \define{canonical pushout} of $\mathcal{S}$. 
 
 \section{Suspension and join}
 Many interesting types can be defined as homotopy pushouts. 
@@ -142,7 +128,15 @@ X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"
 
 \begin{exercises}
 \item Show that $\join{P}{Q}= P\lor Q$, for any two propositions $P$ and $Q$.
+\item Show that $\sphere{1}$ is equivalent to $\susp\bool$. 
+\item Show that $\eqv{A\sqcup^{\mathcal{S}} B}{B\sqcup^{\mathcal{S}'} A}$, where $\mathcal{S'}\defeq (S,g,f)$ is the \define{opposite span} of $\mathcal{S}$. 
 \item Let $Q$ be a proposition, and let $A$ be a type. Show that $\inr:A\to \join{Q}{A}$ is an equivalence if and only if $Q\to\iscontr(A)$.
+\item Show that if $\mathcal{S}\jdeq(S,f,g)$ is a span from $A$ to $B$ and $f:S\to A$ is an equivalence, then so is $\inr:B\to A\sqcup^\mathcal{S} B$. Use this observation to conclude the following:
+\begin{subexenum}
+\item If $X$ is contractible, then $\susp X$ is contractible.
+\item There is an equivalence $\eqv{X}{\join{\emptyt}{X}}$.
+\item If $X$ is contractible, then $\join{X}{Y}$ is contractible. 
+\end{subexenum}
 \item Show that if
 \begin{equation*}
 \begin{tikzcd}
@@ -171,22 +165,12 @@ S_1+S_2 \arrow[r] \arrow[d] & Y_1+ Y_2 \arrow[d] \\
 X_1 +X_2 \arrow[r] & Z_1+Z_2. 
 \end{tikzcd}
 \end{equation*}
-\item In this exercise we study the \define{reflexive coequalizer}. Let $R:A\to A\to\UU$ be a relation, and $\rho:\prd{x:A}R(x,x)$ be a witness of reflexivity.  
-\begin{subexenum}
-\item Formulate the induction principle and computation rules for the higher inductive type $\mathsf{rcoeq}(A,R,\rho)$ with constructors
-\begin{align*}
-\pts{\eta} &: A \to \mathsf{rcoeq}(A,R,\rho) \\
-\edg{\eta} &: \prd*{x,y:A} R(x,y)\to \id{\pts{\eta}(x)}{\pts{\eta}(y)} \\
-\rfx{\eta} &: \prd{x:A} \edg{\eta}(\rho(x))=\refl{\pts{\eta}(x)}.
-\end{align*}
-\item Show that
+\item Consider a span $(S,f,g)$ from $A$ to $B$. Show that the pushout of the span
 \begin{equation*}
 \begin{tikzcd}
-\sm{x,y:A} R(x,y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & A \arrow[d,"\pts{\eta}"] \\
-A \arrow[r,swap,"\pts{\eta}"] & \mathsf{rcoeq}(A,R,\rho)
+& S+S \arrow[dl] \arrow[dr] \\
+A + B & & S
 \end{tikzcd}
 \end{equation*}
-commutes, and is a pushout square.
-\item Compute $\mathsf{rcoeq}(A,\idtypevar{A},\refl{})$ and $\mathsf{rcoeq}(A,(\lam{x}{y}\unit),(\lam{x}\ttt))$. Furthermore, consider a pointed type $\pairr{X,x_0}$ as a reflexive relation on the unit type, and compute $\mathsf{rcoeq}(\unit,X,x_0)$.
-\end{subexenum}
+is equivalent to the pushout of $(S,f,g)$.
 \end{exercises}
