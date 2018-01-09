@@ -1,57 +1,115 @@
 \chapter{The univalence axiom}
 
 \section{Type extensionality}
-\begin{defn}
-We define a family of maps
+
+The univalence axiom asserts that equivalent types are equal. It is considered to be an \emph{extensionality principle} for types. In the following theorem we give several equivalent ways of stating this.
+
+\begin{thm}\label{thm:univalence}
+The following are equivalent:
+\begin{enumerate}
+\item The \define{univalence axiom}: for any $A:\UU$ the map
 \begin{equation*}
-\mathsf{equiv\usc{}eq}\defeq \mathsf{rec}_{=}(\lam{A}\idfunc[A]) : \prd*{A,B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
+\mathsf{equiv\usc{}eq}\defeq \mathsf{eq\usc{}ind}(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
 \end{equation*}
-\end{defn}
-
-\begin{defn}
-The \define{univalence axiom} asserts that the family of maps $\mathsf{equiv\usc{}eq}$ is a fiberwise equivalence.
-\end{defn}
-
-The univalence axiom asserts that equivalent types are equal. It is considered to be an \emph{extensionality principle} for types.
-
-\begin{lem}
-The univalence axiom holds if and only if the type
+is a fiberwise equivalence.
+\item The type
 \begin{equation*}
 \sm{B:\UU}\eqv{A}{B}
 \end{equation*}
 is contractible for each $A:\UU$.
-\end{lem}
-
-\begin{proof}
-By \autoref{thm:id_fundamental}.
-\end{proof}
-
-The following construction enables us to make construction by induction on equivalences, analogous to path induction.
-
-\begin{defn}
-Let $A:\UU$, and let $P:\prd{B:\UU} (\eqv{A}{B})\to\type$ be a type family. Using the univalence axiom we construct
+\item The principle of \define{equivalence induction}: for every $A:\UU$ and for every type family
 \begin{equation*}
-\mathsf{equiv\usc{}ind}(P,A) : P(A,\idfunc[A])\to \prd{B:\UU}{e:\eqv{A}{B}}P(B,e).
+P:\prd{B:\UU} (\eqv{A}{B})\to \mathsf{Type},
 \end{equation*}
-\end{defn}
-
-\begin{constr}
-Since $\sm{B:\UU}\eqv{A}{B}$ is contractible we have
+the map
 \begin{equation*}
-P(\idfunc[A])\to\prd{\pairr{B,e}:\sm{B:\UU}\eqv{A}{B}}P(B,e)
+\Big(\prd{B:\UU}{e:\eqv{A}{B}}P(B,e)\Big)\to P(A,\idfunc[A])
 \end{equation*}
-by \autoref{ex:contr_ind}, so we obtain the desired function by uncurrying.
-\end{constr}
+given by $f\mapsto f(A,\idfunc[A])$ has a section.
+\end{enumerate}
+\end{thm}
 
 From now on we will assume that the univalence axiom holds.
 
-\section{Function extensionality}
+\section{Consequences of the univalence axiom}
 
 The first application of the univalence axiom was Voevodsky's proof of function extensionality.
 
 \begin{thm}
-Univalence implies the weak principle of function extensionality.
+The univalence axiom implies function extensionality.
 \end{thm}
+
+\begin{proof}
+By \autoref{thm:funext_wkfunext} it suffices to show that univalence implies the weak principle of function extensionality.
+
+To see this, we first note that post-composing with an equivalence $\eqv{X}{Y}$ gives an equivalence $\eqv{(A\to X)}{(A\to Y)}$. This follows immediately by equivalence induction, \autoref{thm:univalence}
+\end{proof}
+
+\begin{thm}
+For any type $X:\UU$ the map
+\begin{equation*}
+\Big(\sm{A:\UU}A\to X\Big)\to \Big(X\to\UU\Big)
+\end{equation*}
+given by $(A,f)\mapsto \mathsf{fib}_f$ is an equivalence. 
+\end{thm}
+
+\begin{thm}
+For any map $f:A\to B$ in $\UU$, the square
+\begin{equation*}
+\begin{tikzcd}[column sep=10em]
+A \arrow[d,swap,"f"] \arrow[r,"a\mapsto{(\fib{f}{f(a)},(a,\refl{f(a)}))}"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
+B \arrow[r,swap,"\mathsf{fib}_{f}"] & \UU
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{thm}
+
+\begin{thm}
+Assuming the univalence axiom on $\UU$, the map
+\begin{equation*}
+\idtypevar{X}:X\to (X\to\UU)
+\end{equation*}
+is an embedding, for any type $X:\UU$.
+\end{thm}
+
+\begin{proof}
+Let $a:A$. By function extensionality it suffices to show that the canonical map
+\begin{equation*}
+(a=b)\to \idtypevar{A}(a)\htpy\idtypevar{A}(b)
+\end{equation*}
+that sends $\refl{a}$ to $\lam{x}\refl{(a=x)}$ is an equivalence for every $b:A$, and by univalence it therefore suffices to show that the canonical map
+\begin{equation*}
+(a=b)\to \prd{x:A}\eqv{(a=x)}{(b=x)}
+\end{equation*}
+that sends $\refl{a}$ to $\lam{x}\idfunc[(a=x)]$ is an equivalence for every $b:B$. To do this we employ the type theoretic Yoneda lemma, \autoref{thm:yoneda}.
+
+By the type theoretic Yoneda lemma we have an equivalence
+\begin{equation*}
+\Big(\prd{x:A} (b=x)\to (a=x)\Big)\to (a=b)
+\end{equation*}
+given by $\lam{f} f(b,\refl{b})$, for every $b:A$. Note that any fiberwise map $\prd{x:A}(b=x)\to (a=x)$ induces an equivalence of total spaces by \autoref{ex:contr_equiv}, since their total spaces are are both contractible by \autoref{cor:contr_path}. It follows that we have an equivalence
+\begin{equation*}
+\varphi_b:\Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)\to (a=b)
+\end{equation*}
+given by $\lam{f} f(b,\refl{b})$, for every $b:A$. 
+
+Note that $\varphi_a(\lam{x}\idfunc[(a=x)])\jdeq\refl{a}$. Therefore it follows by another application of \autoref{thm:yoneda} that the unique family of maps 
+\begin{equation*}
+\alpha_b:(a=b)\to \Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)
+\end{equation*}
+that satisfies $\alpha_a(\refl{a})=\lam{x}\idfunc[(a=x)]$ is a fiberwise section of $\varphi$. 
+It follows that $\alpha$ is a fiberwise equivalence. Now the proof is completed by reverting the direction of the fiberwise equivalences in the codomain.
+\end{proof}
+
+\section{Locally small types}
+It is a trivial observation, but nevertheless of fundamental importance, that by the univalence axiom the identity types of $\UU$ are equivalent to types in $\UU$, namely $\eqv{(A=B)}{(\eqv{A}{B})}$. In other words, the universe is \emph{locally small}.
+
+\begin{defn}
+A type $X$ is said to be \define{locally small} if for every $x,y:X$ there is a type $x='y:\UU$ and an equivalence
+\begin{equation*}
+\eqv{(x=y)}{(x='y)}.
+\end{equation*}
+\end{defn}
 
 \begin{exercises}
 \item \label{ex:tr_ap} Show that for any $P:X\to \UU$ and any $p:x=y$ in $X$, we have
@@ -61,14 +119,4 @@ Univalence implies the weak principle of function extensionality.
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.
 \item Use the univalence axiom to show that the type $\sm{P:\prop}P$ is contractible.
 \item Show that $\eqv{(\eqv{\bool}{\bool})}{\bool}$, and conclude by the univalence axiom that the universe is not a set.
-\item Construct by path induction a family of maps
-\begin{equation*}
-\prd{A,B:\UU}{a:A}{b:B} (\id{\pairr{A,a}}{\pairr{B,b}})\to \sm{e:\eqv{A}{B}}e(a)=b,
-\end{equation*}
-and show that this map is an equivalence. In other words, an \emph{identification of pointed types} is a base point preserving equivalence.
-\item Let $\pairr{A,a}$ and $\pairr{B,b}$ be two pointed types. Construct by path induction a family of maps
-\begin{equation*}
-\prd{f,g:A\to B}{p:f(a)=b}{q:g(a)=b} (\id{\pairr{f,p}}{\pairr{g,q}})\to \sm{H:f\htpy g} p = \ct{H(a)}{q},
-\end{equation*}
-and show that this map is an equivalence. In other words, an \emph{identification of pointed maps} is a base point preserving homotopy.
 \end{exercises}

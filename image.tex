@@ -1,0 +1,101 @@
+\chapter{The homotopy image of a map}
+\section{The universal property of the image of a map}
+
+\begin{defn}
+Let $f:A\to X$ and $g:B\to X$ be maps. We define
+\begin{equation*}
+\mathrm{hom}_X(f,g)\defeq\sm{h:A\to B}f\htpy g\circ h.
+\end{equation*}
+\end{defn}
+
+\begin{rmk}
+The type $\mathrm{hom}_X(f,g)$ is equivalent to the type
+\begin{equation*}
+\prd{x:X}\fib{f}{x}\to\fib{g}{x}.
+\end{equation*}
+\end{rmk}
+
+\begin{lem}
+For any $f:A\to X$ and any embedding $m:B\to X$, the type $\mathrm{hom}_X(f,m)$ is a mere proposition.
+\end{lem}
+
+\begin{defn}
+Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=small]
+A \arrow[rr,"i"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $I:f\htpy m\circ i$, and where $m$ is an embedding.
+We say that $m$ has the \define{universal property of the image of $f$} if the map
+\begin{equation*}
+(i,I)^\ast : \mathrm{hom}_X(m,m')\to\mathrm{hom}_X(f,m')
+\end{equation*}
+is an equivalence for every embedding $m':B'\to X$. 
+\end{defn}
+
+\begin{rmk}
+Since $\mathrm{hom}_X(f,m)$ is a mere proposition for every $f:A\to X$ and every embedding $m:B\to X$, it follows that the universal property of the image of $f$ is equivalent to the property that the implication
+\begin{equation*}
+\mathrm{hom}_X(f,m')\to\mathrm{hom}_X(m,m')
+\end{equation*}
+holds for every embedding $m':B'\to X$. 
+\end{rmk}
+
+\section{The join construction}
+\section{Univalent logic}
+\begin{table}
+\caption{Logic in type theory}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\emph{Logical connective} & \emph{Interpretation in HoTT} \\
+\midrule
+$\top$ & $\unit$ \\
+$\bot$ & $\emptyt$ \\
+$P\land Q$ & $P\times Q$ \\
+$P\lor Q$ & $\brck{P+Q}$ \\
+$P\to Q$ & $P\to Q$ \\
+$P\leftrightarrow Q$ & $P=Q$ \\
+$\neg P$ & $P\to\emptyt$ \\
+$\forall x.P(x)$ & $\prd{x:A}P(x)$ \\
+$\exists x.P(x)$ & $\brck{\sm{x:A}P(x)}$ \\
+$\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{exercises}
+\item Show that
+\begin{equation*}
+\eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}.
+\end{equation*}
+\item For any $B:A\to\UU$, construct an equivalence
+\begin{equation*}
+\eqv{\Big(\exists a.\brck{B(a)}\Big)}{\Big(\brck{\sm{a:A}B(a)}\Big)}
+\end{equation*}
+\item \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
+\begin{equation*}
+P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
+\end{equation*}
+\begin{subexenum}
+\item Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$.
+\end{subexenum}
+\item Show that for any mere proposition $Q$, and any type $X$, the following are equivalent:
+\begin{enumerate}
+\item The map $(Q\to X)\to(\emptyt\to X)$ is an equivalence.
+\item The type $X^Q$ is contractible.
+\item $Q\to\iscontr(X)$.
+\end{enumerate}
+\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
+\item Let
+\begin{tikzcd}
+P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
+\end{tikzcd}
+be a sequence of propositions. Show that
+\begin{equation*}
+\colim_n(P_n)=\exists_n P_n.
+\end{equation*}
+\end{exercises}

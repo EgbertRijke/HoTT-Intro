@@ -103,8 +103,90 @@ satisfying the equations
 \end{align*}
 \end{defn}
 
+\section{The universe}
+We assume there is a closed type $\UU$ called the \define{universe}, and a type family $\mathrm{El}$ over $\UU$ called the \define{universal family}.
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash\UU~\mathrm{type}$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$X:\UU \vdash \mathrm{El}(X)~\mathrm{type}$}
+\end{prooftree}
+
+The universe is useful for several reasons.
+We will postulate that the universe is closed under most type forming operations (with the exception that we will not assume that the universe contains a universe), and this enables us to use type theory itself to study type theory.
+Thus, we postulate the following rules asserting closure under $\Pi$:
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \check{\Pi}(A,B):\UU$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))~\mathrm{type}$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash \check{\N}:\UU$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash \mathrm{El}(\check{\N})\jdeq \mathbb{N}~\mathrm{type}$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash \check{\emptyt}:\UU$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash \mathrm{El}(\check{\emptyt})\jdeq \emptyt~\mathrm{type}$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash \check{\unit}:\UU$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash \mathrm{El}(\check{\unit})\jdeq \unit~\mathrm{type}$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \check{\Sigma}(A,B):\UU$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \mathrm{El}(\check{\Sigma}(A,B))\jdeq \sm{x:\mathrm{El}(A)}\mathrm{El}(B(x))~\mathrm{type}$}
+\end{prooftree}
+
+The idea of the universe is that it is a type of \emph{small} types. Indeed, given a closed term $A:\UU$ we also obtain the closed type $\mathrm{El}(A)$ of its \define{elements}, so the term $A:\UU$ is an \emph{encoding} of the type $\mathrm{El}(A)$. 
+
+\begin{defn}
+We say that a type $A$ in context $\Gamma$ is \define{small} if it occurs in the universe, i.e.~if there is a term $\check{A}:\UU$ in context $\Gamma$ such that $\Gamma\vdash\mathrm{El}(\check{A})\jdeq A~\mathrm{type}$.
+\end{defn}
+
+In particular, if $A$ is a small type in context $\Gamma$ and $B$ is a small type in context $\Gamma,x:A$, then $\prd{x:A}B(x)$ is again a small type in context $\Gamma$.
+
+\begin{defn}
+Let $A$ be a type in context $\Gamma$. A \define{family of small types} over $A$ is defined to be a map
+\begin{equation*}
+B:A\to\UU
+\end{equation*}
+\end{defn}
+
+In particular, we see that we can use the rules for function types to define families of small types. More to the point: one of the ways in which a universe is useful is that it provides us with a way to define new type families. Another way in which the universe can be useful is that the universe can occur in a context (so constructions in type theory can have occurences of `type-varialbes').
+
+\begin{rmk}
+If $A$ is small, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathrm{El}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
+\end{rmk}
+
 \begin{exercises}
 \item For any type $A$, show that $(A+\neg A)\to(\neg\neg A\to A)$. 
 \item \label{ex:int_group_ops}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
 \item \label{ex:int_order}Define the relations $\leq$ and $<$ on and $\Z$.
+\item Construct a closed term of type
+\begin{equation*}
+\prd{A:\UU}\Big(\prd{X:\UU}X\Big)\to A.
+\end{equation*}
+\item Define the relations $\leq$ and $<$ on $\N$.
+\item Define the divisibility relation $d\mid n$. 
 \end{exercises}

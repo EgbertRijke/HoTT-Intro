@@ -76,8 +76,6 @@ B_0 \arrow[rr] \arrow[drrr] & & B_1 \arrow[rr] \arrow[dr] & & B_2 \arrow[rr] \ar
 If each of the vertical squares is a pullback square, and $Y$ is the sequential colimit of the type sequence $B_n$, then $X$ is the sequential colimit of the type sequence $A_n$. 
 \end{thm}
 
-\section{Propositional truncation}
-
 \begin{exercises}
 \item Consider a type sequence
 \begin{equation*}
@@ -90,17 +88,4 @@ in which $f_n:A_n\to A_{n+1}$ is weakly constant in the sense that
 \prd{x,y:A_n} f_n(x)=f_n(y)
 \end{equation*}
 Show that $A_\infty$ is a mere proposition.
-\item Consider a sequence
-\begin{tikzcd}
-X_0 \arrow[r] & X_1 \arrow[r] & X_2 \arrow[r] & \cdots
-\end{tikzcd}
-of \emph{pointed} types and \emph{pointed} maps between them. Show that the sequential colimit is contractible. 
-\item Let
-\begin{tikzcd}
-P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
-\end{tikzcd}
-be a sequence of propositions. Show that
-\begin{equation*}
-\colim_n(P_n)=\exists_n P_n.
-\end{equation*}
 \end{exercises}

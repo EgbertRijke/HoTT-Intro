@@ -85,6 +85,25 @@ Then there is an equivalence
 \end{thm}
 
 \begin{exercises}
+\item Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p\htpy g\circ q$. Show that the following are equivalent:
+\begin{enumerate}
+\item The square is a pullback square.
+\item For every type $D$, the commuting square
+\begin{equation*}
+\begin{tikzcd}
+C^D \arrow[r,"q\circ\blank"] \arrow[d,swap,"p\circ\blank"] & B^D \arrow[d,"g\circ\blank"] \\
+A^D \arrow[r,swap,"f\circ\blank"] & X^D
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{enumerate}
 \item Show that the square
 \begin{equation*}
 \begin{tikzcd}
@@ -180,4 +199,34 @@ A^B\times B^A \times A^B \arrow[r,swap,"{(h,f,g)\mapsto (h\circ f,f\circ g)}"] &
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
+\item Consider a diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
+X \arrow[r,swap,"h"] & Y
+\end{tikzcd}
+\end{equation*}
+\begin{subexenum}
+\item Construct an equivalence between the type
+\begin{equation*}
+\prd{x:X}\fib{f}{x}\to\fib{g}{h(x)}
+\end{equation*}
+of fiberwise transformations between the fibers of $f$ and $g$, and the type
+\begin{equation*}
+\sm{i:A\to B} h\circ f\htpy g\circ i.
+\end{equation*}
+\item Now consider additionally $i:A\to B$ and $H:h\circ f\htpy g\circ i$, and let $u:A\to X\times_Y B$ be the unique map for which the diagram
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[ddr,bend right=15,swap,"f"] \arrow[dr,densely dotted,"u"] \arrow[drr,bend left=15,"i"] \\
+& X\times_Y B \arrow[d,swap,"\pi_1"] \arrow[r,"\pi_2" near start] & B \arrow[d,"g"] \\
+& X \arrow[r,swap,"h"] & Y
+\end{tikzcd}
+\end{equation*}
+commutes. Show that the fiber of $u$ at $(x,b,p):X\times_Y B$ is equivalent to the fiber of
+\begin{equation*}
+i_x:\fib{f}{x} \to \fib{g}{h(x)}
+\end{equation*}
+at $(b,p^{-1})$. 
+\end{subexenum}
 \end{exercises}

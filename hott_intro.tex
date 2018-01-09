@@ -15,6 +15,8 @@
 
 \usepackage{hott}
 
+\usetikzlibrary{mindmap}
+
 \makeatletter
 \renewcommand{\@chapapp}{Lecture}
 \makeatother
@@ -48,11 +50,13 @@
 
 \include{intro}
 
-\chapter{Syllabus}
+\include{syllabus}
 
 \mainmatter 
 
 \include{dtt}
+
+\include{pi}
 
 \include{nat}
 
@@ -125,26 +129,15 @@ Conclude that the univalence axiom is a proposition.
 
 \include{circle}
 
-\include{colimits}
+\include{pushout}
 
 \include{descent}
 
-\chapter{Higher homotopy pushouts}
+%\chapter{Higher homotopy pushouts}
 
 \section{$2$-spans and $2$-pushouts}
 
 \section{Applications}
-\begin{thm}
-Consider the following configuration of commuting squares:
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[r,"i"] \arrow[d,swap,"f"] & B \arrow[r,"k"] \arrow[d,swap,"g"] & C \arrow[d,"h"] \\
-X \arrow[r,swap,"j"] & Y \arrow[r,swap,"l"] & Z
-\end{tikzcd}
-\end{equation*}
-with homotopies $H:j\circ f\htpy g\circ i$ and $K:l\circ g\htpy h\circ k$, and suppose that the square on the left is a pushout square. 
-Then the square on the right is a pushout square if and only if the outer rectangle is a pushout square.
-\end{thm}
 
 \begin{thm}
 The join is an associative operation.
@@ -177,9 +170,10 @@ commutes, and is a pushout square.
 
 \include{sequences}
 
+\include{image}
+
 \chapter{Truncations}
-\section{The homotopy image of a map}
-\section{Homotopy quotients}
+
 \section{The truncations}
 
 \include{homotopy_groups}
@@ -188,9 +182,88 @@ commutes, and is a pushout square.
 
 \include{hopf}
 
-\chapter{The Van Kampen theorem}
+\begin{comment}
+\chapter{The Seifert-Van Kampen theorem}
+
+\begin{thm}
+Suppose
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X
+\end{tikzcd}
+\end{equation*}
+is a cocartesian square, in which $S$, $A$, and $B$ are assumed to be $0$-connected. Then 
+\begin{equation*}
+\begin{tikzcd}
+\pi_1(S) \arrow[r,"g"] \arrow[d,swap,"f"] & \pi_1(B) \arrow[d,"j"] \\
+\pi_1(A) \arrow[r,swap,"i"] & \pi_1(X)
+\end{tikzcd}
+\end{equation*}
+is a pushout square of groups.
+\end{thm}
+\end{comment}
+
+\include{connected}
 
 \chapter{The wedge and smash product of pointed types}
+
+\begin{defn}
+Let $A$ and $B$ be pointed types.
+\begin{enumerate}
+\item We define the \define{wedge} $A\vee B$ of $A$ and $B$ to be the pushout
+\begin{equation*}
+\begin{tikzcd}
+\unit \arrow[r] \arrow[d] & B \arrow[d] \\
+A \arrow[r] & A\vee B
+\end{tikzcd}
+\end{equation*}
+\item We define the \define{smash product} $A\wedge B$ of $A$ and $B$ to be the cofiber of the cogap map of the square
+\begin{equation*}
+\begin{tikzcd}
+\unit \arrow[r] \arrow[d] & B \arrow[d] \\
+A \arrow[r] & A\times B
+\end{tikzcd}
+\end{equation*}
+That is, the smash product is defined as the cofiber of the canonical map $A\vee B\to A\times B$. 
+\end{enumerate}
+\end{defn}
+
+For any two pointed types $A$ and $B$, there is a pointed map
+\begin{equation*}
+\mathsf{pair}_\ast : A \to_\ast (B\to_\ast A\wedge B).
+\end{equation*}
+
+\begin{thm}\label{thm:smash_adj}
+Let $A$, $B$, and $X$ be pointed types. Then the pointed map
+\begin{equation*}
+(A\wedge B \to_\ast X)\to_\ast (A \to_\ast (B\to_\ast X))
+\end{equation*}
+given by $f\mapsto f\mathbin{\circ_\ast}\mathsf{pair}_\ast$ is an equivalence.
+Moreove, these equivalences are natural in $A$, $B$, and $X$ in the sense that...
+\end{thm}
+
+\begin{cor}
+For any $m,n:\N$ we have an equivalence
+\begin{equation*}
+\eqv{{\sphere{m}}\wedge{\sphere{n}}}{\sphere{m+n}}.
+\end{equation*}
+\end{cor}
+
+\begin{proof}
+We have
+\begin{align*}
+({\sphere{m}}\wedge{\sphere{n}}\to_\ast X) & \eqvsym (\sphere{m}\to_\ast (\sphere{n}\to_\ast X)) \\
+& \eqvsym \loopspace[m]{\loopspace[n]{X}} \\
+& \eqvsym \loopspace[m+n]{X} \\
+& \eqvsym (\sphere{m+n}\to_\ast X)
+\end{align*}
+By the naturality of the equivalences in \autoref{thm:smash_adj} it follows that the composite equivalence is given by precomposition by the pointed map 
+\begin{equation*}
+\sphere{m}\wedge\sphere{n}\to_\ast \sphere{m+n}
+\end{equation*}
+that corresponds to the identity map $\sphere{m+n}\to_\ast \sphere{m+n}$. Thus it follows by \autoref{ex:yoneda_ptd_types} that this pointed map is an equivalence.
+\end{proof}
 
 \begin{thm}
 Given two pointed spaces, there is an equivalence
@@ -205,6 +278,14 @@ Given two pointed spaces, there is an equivalence
 \item Show that $Y$ is equivalent to the mapping cone of $X\to X\vee Y$.
 \item Show that the pushout of $X \leftarrow X\vee Y \rightarrow Y$ is contractible.
 \end{subexenum}
+\item Let $A$ and $B$ be pointed types. Show that the square
+\begin{equation*}
+\begin{tikzcd}
+A+B \arrow[r] \arrow[d] & A\times B \arrow[d] \\
+1+1 \arrow[r] & A\wedge B
+\end{tikzcd}
+\end{equation*}
+is cocartesian.
 \item Show that if
 \begin{equation*}
 \begin{tikzcd}
@@ -235,8 +316,6 @@ is a cocartesian square of pointed spaces, then the cofiber of $X\vee Y\to Z$ is
 \item Show that if $f:A\to X$ is a constant of pointed spaces, then $\eqv{M_f}{X\vee \susp(A)}$. 
 \item Show that the cofiber of the diagonal $\delta:\sphere{1}\to \sphere{1}\times\sphere{1}$ is equivalent to $\sphere{2}\vee\sphere{2}$.
 \end{exercises}
-
-\include{connected}
 
 \chapter{The Blakers-Massey theorem}
 The Blakers-Massey theorem is a connectivity theorem which can be used to prove the Freudenthal suspension theorem, giving rise to the field of \emph{stable homotopy theory}. It was proven in the setting of homotopy type theory by Lumsdaine et al, and their proof was the first that was given entirely in an elementary way, using only constructions that are invariant under homotopy equivalence. 
@@ -289,6 +368,10 @@ is both a pullback and a pushout. Conclude that the result of the Blakers-Massey
 \chapter{Cohomology}
 
 \chapter{The Mayer-Vietoris sequence}
+
+\chapter{Hopf invariant}
+
+\chapter{The fourth homotopy group of the $3$-sphere}
 
 \chapter{Open problems in homotopy type theory}
 We list only the open problems of synthetic homotopy theory, omitting the open problems related to the semantics of homotopy type theory.

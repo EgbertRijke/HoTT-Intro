@@ -172,14 +172,14 @@ The circle is a $1$-type and it is not a $0$-type.
 \mathsf{gen}_{\sphere{1}}:(\sphere{1}\to X)\to \sm{x:X}x=x
 \end{equation*}
 given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
-\item Show that
+\item \label{ex:circle_up_pushout}Show that
 \begin{equation*}
-\begin{tikzcd}
-X^{\sphere{1}} \arrow[r] \arrow[d] & X \arrow[d,"\delta"] \\
-X \arrow[r,swap,"\delta"] & X\times X
+\begin{tikzcd}[column sep=huge]
+X^{\sphere{1}} \arrow[r] \arrow[d] & X^\unit \arrow[d,"\blank\circ\mathsf{const}_{\ttt}"] \\
+X^\unit \arrow[r,swap,"\blank\circ\mathsf{const}_{\ttt}"] & X^\bool
 \end{tikzcd}
 \end{equation*}
-is a pullback square.
+is a pullback square for each type $X$.
 \end{subexenum}
 \item \label{ex:circle_dup} Show that for each dependent type $P:\sphere{1}\to\type$, the \emph{dependent action on generators}
 \begin{equation*}

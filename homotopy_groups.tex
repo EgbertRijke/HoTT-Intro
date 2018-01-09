@@ -1,19 +1,21 @@
 \chapter{Homotopy groups of types}
 
 \section{Pointed types}
+
 \begin{defn}
-We introduce the `category' of pointed types:
 \begin{enumerate}
 \item A pointed type consists of a type $X$ equipped with a base point $x:X$. We will write $\UU_\ast$ for the type $\sm{X:\UU}X$ of all pointed types.
-\item A pointed map $(f,p):(X,x)\to_\ast (Y,y)$ consists of a map $f:X\to Y$ and an identification $p:f(x)=y$. 
-\item A pointed homotopy $(H,q):(f,p)\htpy_\ast (f',p')$ consists of a homotopy $H:f\htpy f'$ and an identification $q:p=\ct{H(x)}{p'}$ witnessing that the square
+\item Let $(X,\ast_X)$ be a pointed type. A \define{pointed family} over $(X,\ast_X)$ consists of a type family $P:X\to \UU_\ast$ equipped with a base point $\ast_P:P(\ast_X)$. 
+\item Let $(P,\ast_P)$ be a pointed family over $(X,\ast_X)$. A \define{pointed section} of $(P,\ast_P)$ consists of a dependent function $f:\prd{x:X}P(x)$ and an identification $p:f(\ast_X)=\ast_P$. We define the \define{pointed $\Pi$-type} to be the type of pointed sections:
 \begin{equation*}
-\begin{tikzcd}
-f(x) \arrow[rr,equals,"H(x)"] \arrow[dr,equals,swap,"p"] & & f'(x) \arrow[dl,equals,"{p'}"] \\
-& y
-\end{tikzcd}
+\Pi^\ast_{(x:X)}P(x) \defeq \sm{f:\prd{x:X}P(x)}f(\ast_X)=\ast_P
 \end{equation*}
-commutes.
+In the case of two pointed types $X$ and $Y$, we may also view $Y$ as a pointed family over $X$. In this case we write $X\to_\ast Y$ for the type of pointed functions.
+\item Given any two pointed sections $f$ and $g$ of a pointed family $P$ over $X$, we define the type of pointed homotopies
+\begin{equation*}
+f\htpy_\ast g \defeq \Pi^\ast_{(x:X)} f(x)=g(x),
+\end{equation*}
+where the family $x\mapsto f(x)=g(x)$ is equipped with the base point $\ct{p}{q^{-1}}$. 
 \end{enumerate}
 \end{defn}
 
@@ -25,24 +27,19 @@ The circle $\sphere{1}$ is a pointed type with base point $\base:\sphere{1}$.
 If $X$ is a pointed type, then in the suspension of $X$ we have the canonical identification $\merid(\ast_X):\north=\south$. Therefore we do not have to worry about whether to choose $\north$ or $\south$ as the base point of $\susp{X}$. 
 \end{eg} 
 
-To consider higher pointed homotopies it is useful to first consider pointed families, and pointed $\Pi$-types.
+\begin{rmk}
+Since pointed homotopies are defined as certain pointed sections, we can use the same definition of pointed homotopies again to consider pointed homotopies between pointed homotopies, and so on.
+\end{rmk}
 
 \begin{defn}
 \begin{enumerate}
-\item Let $(X,\ast_X)$ be a pointed type. A \define{pointed family} over $(X,\ast_X)$ consists of a type family $P:X\to \UU_\ast$ equipped with a base point $\ast_P:P(\ast_X)$. 
-\item Let $(P,\ast_P)$ be a pointed family over $(X,\ast_X)$. A \define{pointed section} of $(P,\ast_P)$ consists of a dependent function $f:\prd{x:X}P(x)$ and an identification $p:f(\ast_X)=\ast_P$. We define the \define{pointed $\Pi$-type} to be the type of pointed sections:
+\item For any pointed type $X$, we define the \define{pointed identity function} $\mathsf{id}^\ast_X\defeq (\idfunc[X],\refl{\ast})$. 
+\item For any two pointed maps $f:X\to_\ast Y$ and $g:Y\to_\ast Z$, we define the \define{pointed composite}
 \begin{equation*}
-\Pi^\ast_{(x:X)}P(x) \defeq \sm{f:\prd{x:X}P(x)}f(\ast_X)=\ast_P
+g\mathbin{\circ_\ast} f \defeq (g\circ f,\ct{\ap{g}{p_f}}{p_g}).
 \end{equation*}
-\item Given any two pointed sections $f$ and $g$ of a pointed family $P$ over $X$, we define the type of pointed homotopies
-\begin{equation*}
-f\htpy_\ast g \defeq \Pi^\ast_{(x:X)} f(x)=g(x),
-\end{equation*}
-where the family $x\mapsto f(x)=g(x)$ is equipped with the base point $\ct{p}{q^{-1}}$. 
 \end{enumerate}
 \end{defn}
-
-Since pointed homotopies are now defined as certain pointed sections, we can use the same definition of pointed homotopies again to consider pointed homotopies between pointed homotopies, and so on.
 
 \section{Loop spaces}
 \begin{defn}
@@ -52,11 +49,37 @@ Let $X$ be a pointed type with base point $x$. We define the \define{loop space}
 \begin{defn}
 The loop space operation $\loopspacesym$ is \emph{functorial} in the sense that
 \begin{enumerate}
-\item For every pointed map 
+\item For every pointed map $f:X\to_\ast Y$ there is a pointed map
+\begin{equation*}
+\loopspace{f}:\loopspace{X}\to_\ast \loopspace{Y},
+\end{equation*}
+defined by $\loopspace{f}(\omega)\defeq \ct{p_f}{\ap{f}{\omega}}{p_f^{-1}}$, which is base point preserving by $\mathsf{right\usc{}inv}(p_f)$. 
+\item For every pointed type $X$ there is a pointed homotopy
+\begin{equation*}
+\loopspace{\mathsf{id}_X^\ast}\htpy_\ast \mathsf{id}^\ast_{\loopspace{X}}.
+\end{equation*}
+\item For any two pointed maps $f:X\to_\ast Y$ and $g:Y\to_\ast X$, there is a pointed homotopy witnessing that the triangle
+\begin{equation*}
+\begin{tikzcd}
+& \loopspace{Y} \arrow[dr,"\loopspace{g}"] \\
+\loopspace{X} \arrow[rr,swap,"\loopspace{g\circ_\ast f}"] \arrow[ur,"\loopspace{f}"] & & \loopspace{Z}
+\end{tikzcd}
+\end{equation*}
+of pointed types commutes.
 \end{enumerate}
 \end{defn}
 
 \section{Homotopy groups}
+In homotopy type theory we use $0$-types to define groups.
+\begin{defn}
+A \define{group} $\mathcal{G}$ consists of a set $G$ with a unit $e:G$, a multiplication $x,y\mapsto x\cdot y$, and an inverse operation $x\mapsto x^{-1}$ satisfying the \define{group laws}:
+\begin{align*}
+(x\cdot y)\cdot z & =x\cdot(y\cdot z) & x^{-1}\cdot x & = e \\
+e\cdot x & = x & x\cdot x^{-1} & = e. \\
+x\cdot e & =x
+\end{align*}
+\end{defn}
+
 \begin{defn}
 For $n\geq 1$, the \define{$n$-th homotopy group} of a type $X$ at a base point $x:X$ consists of the type
 \begin{equation*}
@@ -91,6 +114,16 @@ For $n\geq 2$, the $n$-th homotopy group is abelian.
 \item Show that if $A$ is a pointed retract of $X$, then $\loopspace{A}$ is a pointed retract of $\loopspace{X}$. 
 \item Show that if $A$ is a pointed retract of $X$ and $\pi_n(X)$ is a trivial group, then $\pi_n(A)$ is a trivial group.
 \end{subexenum}
+\item Construct by path induction a family of maps
+\begin{equation*}
+\prd{A,B:\UU}{a:A}{b:B} (\id{\pairr{A,a}}{\pairr{B,b}})\to \sm{e:\eqv{A}{B}}e(a)=b,
+\end{equation*}
+and show that this map is an equivalence. In other words, an \emph{identification of pointed types} is a base point preserving equivalence.
+\item Let $\pairr{A,a}$ and $\pairr{B,b}$ be two pointed types. Construct by path induction a family of maps
+\begin{equation*}
+\prd{f,g:A\to B}{p:f(a)=b}{q:g(a)=b} (\id{\pairr{f,p}}{\pairr{g,q}})\to \sm{H:f\htpy g} p = \ct{H(a)}{q},
+\end{equation*}
+and show that this map is an equivalence. In other words, an \emph{identification of pointed maps} is a base point preserving homotopy.
 \item Show that if $A\leftarrow S\rightarrow B$ is a span of pointed types, then for any pointed type $X$ the square
 \begin{equation*}
 \begin{tikzcd}
@@ -99,6 +132,15 @@ For $n\geq 2$, the $n$-th homotopy group is abelian.
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
+\item \label{ex:yoneda_ptd_types}Let $f:A\to_\ast B$ be a pointed map. Show that the following are equivalent:
+\begin{enumerate}
+\item $f$ is an equivalence.
+\item For any pointed type $X$, the precomposition map
+\begin{equation*}
+\blank\mathbin{\circ_\ast}f:(B\to_\ast X)\to_\ast (A\to_\ast X)
+\end{equation*}
+is an equivalence. 
+\end{enumerate}
 \item In this exercise we prove the suspension-loopspace adjunction.
 \begin{subexenum}
 \item Construct a pointed equivalence

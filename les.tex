@@ -1,7 +1,41 @@
 \chapter{The long exact sequence of homotopy groups}
 
 \section{The Hopf fibration}
-Our goal in this chapter is to construct the Hopf fibration, i.e.~a fiber sequence
+Our goal in this section is to construct the Hopf fibration, i.e.~a fiber sequence
 \begin{equation*}
 \sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}.
 \end{equation*}
+
+\begin{defn}
+An \emph{H-space} $\mathcal{A}$ consists of a small type $A$ equipped with unital multiplicative structure
+\begin{align*}
+e & : A \\
+\mu & : A\to A\to A\\
+\mu_{10} & : \prd{x:A} \mu(x,e)=x \\
+\mu_{01} & : \prd{y:A} \mu(e,y)=y \\
+\mu_{00} & : \mu_{10}(e)=\mu_{01}(e).
+\end{align*}
+such that $\mu(x,\blank)$ and $\mu(\blank,y)$ are equivalences for every $x:A$ and $y:A$, respectively.
+\end{defn}
+
+\begin{thm}
+For any H-space $\mathcal{A}$ there is a type family $H_{\mathcal{A}}:\susp A\to \UU$ with equivalences
+\begin{align*}
+H_{\mathcal{A}}(\ast) & \eqvsym A \\
+\sm{x:\susp A}H_{\mathcal{A}}(x) & \eqvsym \join{A}{A}
+\end{align*}
+\end{thm}
+
+\begin{thm}
+There is a fiber sequence $\sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}$. 
+\end{thm}
+
+\begin{cor}
+We have $\pi_2(\sphere{2})=\Z$, and for $k>2$ we have $\pi_k(\sphere{2})=\pi_k(\sphere{3})$.
+\end{cor}
+
+
+\begin{exercises}
+\item Give the $0$-sphere $\sphere{0}$ the structure of an H-space.
+\item For any pointed type $A$, give $\loopspace{A}$ the structure of an H-space.
+\end{exercises}

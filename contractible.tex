@@ -2,29 +2,44 @@
 \chaptermark{Contractible types and maps}
 
 \section{Contractible types}
-\begin{defn}
-A type $A$ is said to be \define{contractible} if there is a term of type
+
+\begin{thm}\label{thm:contractible}
+Let $A$ be a type. The following are equivalent:
+\begin{enumerate}
+\item $A$ is \define{contractible}: there is a term of type
 \begin{equation*}
-\iscontr(A) \defeq \sm{a:A}\prd{x:A}a=x.
+\iscontr(A) \defeq \sm{c:A}\prd{x:A}c=x.
 \end{equation*}
 Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction} of $A$, and we call $C:\prd{x:A}a=x$ the \define{contraction} of $A$.
-\end{defn}
+\item $A$ comes equipped with a term $a:A$, and satisfies \define{singleton induction}: for every $B:A\to\mathsf{Type}$ the map
+\begin{equation*}
+\Big(\prd{x:A}B(x)\Big)\to B(a)
+\end{equation*}
+given by $f\mapsto f(a)$ has a section.
+\end{enumerate}
+\end{thm}
 
 \begin{rmk}
 Suppose $A$ is a contractible type with center of contraction $c$ and contraction $C$. Then the type of $C$ is (judgmentally) equal to the type
 \begin{equation*}
-\mathsf{const}_a\htpy\idfunc[A].
+\mathsf{const}_c\htpy\idfunc[A].
 \end{equation*}
 In other words, the contraction $C$ is a \emph{homotopy} from the constant function to the identity function.
 \end{rmk}
 
-\begin{thm}
-The unit type $\unit$ is contractible.
-\end{thm}
+\begin{proof}[Proof of \autoref{thm:contractible}]
+Suppose $A$ is contractible with center of contraction $c$ and contraction $C$. Without loss of generality we may assume that $C(c)=\refl{c}$, since for any contraction $C$ we can define a new contraction $C'$ satisfying this property by setting $C'(x)\defeq\ct{C(c)^{-1}}{C(x)}$. To show that $A$ satisfies singleton induction let $B:A\to\mathsf{Type}$ be a type family over $A$ equipped with $b:B(a)$. We define $\mathsf{sing\usc{}ind}(b):\prd{x:A}B(x)$ by $\lam{x}\mathsf{tr}^B(C(x),b)$. To see that $\mathsf{sing\usc{}ind}(c)=b$ note that we have
+\begin{equation*}
+\mathsf{tr}^B(C(c),b)=\mathsf{tr}^B(\refl{c},b)=b.
+\end{equation*}
+This completes the proof that $A$ satisfies singleton induction.
 
-\begin{proof}
-The unit type comes equipped with a point $\ttt:\unit$. Now we have to construct the contraction, which is of type $\prd{x:\unit}\ttt=x$. We do this by induction on $x$, so we only have to provide a term of type $\ttt=\ttt$. Here we can just take $\refl{\ttt}$. 
+For the converse, if $A$ comes equipped with a center of contraction $a:A$ and satisfies singleton induction, then we can use singleton induction to construct the contraction using the family $B(x)\defeq a=x$ with the base point $\refl{a}:B(a)$. 
 \end{proof}
+
+\begin{eg}
+By definition the unit type $\unit$ satisfies singleton induction, so it is contractible.
+\end{eg}
 
 \section{Contractible maps}
 \begin{defn}
@@ -130,7 +145,7 @@ fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
 commutes. However, this is just a naturality square of homotopies, which commutes by \autoref{defn:htpy_nat}.
 \end{proof}
 
-\begin{cor}
+\begin{cor}\label{cor:contr_path}
 Let $A$ be a type, and let $a:A$. Then the type
 \begin{equation*}
 \sm{x:A}x=a
@@ -166,21 +181,24 @@ Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
 \begin{equation*}
 \iscontr(B)\to\iscontr(A).
 \end{equation*}
-\item \label{ex:contr_equiv}Show that for any type $A$, the map $\mathsf{const}_\ttt : A\to \unit$ is contractible if and only if $A$ is contractible. Conclude that for any map $f:A\to B$, if any two of the three assertions
+\item \label{ex:contr_equiv}
+\begin{subexenum}
+\item Show that for any type $A$, the map $\mathsf{const}_\ttt : A\to \unit$ is an equivalence if and only if $A$ is contractible. 
+\item Show that for any map $f:A\to B$, if any two of the three assertions
 \begin{enumerate}
 \item $A$ is contractible
 \item $B$ is contractible
 \item $f$ is an equivalence
 \end{enumerate}
 hold, then so does the third.
-\item \label{ex:contr_ind} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B:C\to\type$ be a type family. 
-\begin{subexenum}
-\item Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
-\item Construct a section
-\begin{equation*}
-\mathsf{contr\usc{}ind}:B(c)\to \prd{x:C}B(x),
-\end{equation*}
-of the map $\mathsf{ev}_c\defeq\lam{f}f(c)$.
-\item Construct a homotopy $\mathsf{contr\usc{}ind}(\mathsf{ev}_c(f))\htpy f$ for each $f:\prd{x:C}B(x)$.
 \end{subexenum}
+\item \label{ex:contr_ind} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B:C\to\type$ be a type family. Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
+\item \label{ex:coh_intro}Consider a type $A$ with base point $a:A$, and let $B$ be a type family on $A$ that implies the identity type, i.e.~there is a term
+\begin{equation*}
+\alpha : \prd{x:A} B(x)\to (a=x).
+\end{equation*}
+Construct an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{x:A}B(x)\Big)}{\Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big)}.
+\end{equation*}
 \end{exercises}
