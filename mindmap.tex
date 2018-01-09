@@ -1,0 +1,35 @@
+\makebox[\textwidth][c]{%
+\begin{tikzpicture}
+  [mindmap,
+  every node/.style={concept, execute at begin node=\hskip0pt},
+  concept color = black!20,
+  grow cyclic,
+  level 1/.append style = {level distance = 5.5cm, sibling angle = 90}, 
+  level 2/.append style={level distance = 3cm, sibling angle = 45}]
+  \node [root concept] {\scshape Homotopy Type Theory}
+    child { node {\scshape Computer proof assistants}
+      child { node {Automath, Coq, Agda, Lean, \ldots}}
+      child { node {Four color theorem}}
+      child { node {Feit-Thompson theorem}}
+      child { node {Kepler conjecture}}
+      child { node {Formal abstracts project}}}
+    child { node {\scshape Martin-L\"of type theories}
+      child { node {The $\lambda$-calculus}}
+      child { node {\tiny Calculus of inductive constructions}}
+      child { node {Cubical type theory}}
+      child { node {Cohesive type theory}}}
+    child { node {\scshape Category theory}
+      child { node {The groupoid model}}
+      child { node {Categorical semantics}}
+      child { node {Realizability}}
+      child { node {Toposes}}
+      child { node {$n$-categories}}
+      child { node {Higher topos theory}}}
+    child { node {\scshape Homotopy Theory}
+      child { node {Quillen model categories}}
+      child { node {Homotopy groups}}
+      child { node {Homology and cohomology}}
+      child { node {Spectral sequences}}
+      child { node {Stable homotopy theory}}
+      child { node {The simplicial model}}};
+\end{tikzpicture}}
