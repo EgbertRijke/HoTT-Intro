@@ -1,36 +1,57 @@
 \chapter{Function extensionality}
 
+A significant part of the devolopment of homotopy type theory involves answering the following basic questions:
+\begin{enumerate}
+\item What is the identity type of a given type $A$?
+\item What is the total space of a type family $B$ over $A$?
+\item What are the fibers of a given map $f:A\to B$?
+\item What does transporting a point in a given type family $B$ over $A$ do?
+\end{enumerate}
+We have already characterized the identity types of $\Sigma$-types as a $\Sigma$-type of identity types (\cref{thm:eq_sigma}), of $\emptyt$ and $\unit$ since both are propositions (\cref{eg:prop_contr}), of natural numbers $\N$ as observational equality (\cref{thm:eq_nat}), and also of $\bool$ as observational equality (\cref{ex:eq_bool}). In this section we will discuss the identity type of $\Pi$-types.
+
 \section{Equivalent forms of function extensionality}
-\begin{thm}\label{thm:funext_wkfunext}
+\begin{thm}\label{thm:funext_wkfunext}\specialindex{function extensionality}
 The following are equivalent:
 \begin{enumerate}
-\item The principle of \define{homotopy induction}: for every $f:\prd{x:A}B(x)$ and every type family
+\item The principle of \define{homotopy induction}\index{homotopy induction}: for every $f:\prd{x:A}B(x)$ and every type family
 \begin{equation*}
-P : \prd{g:\prd{x:A}B(x)}(f\htpy g)\to\mathsf{Type},
+\Gamma,g:\prd{x:A}B(x), H:f\htpy g \vdash P(g,H)~\mathrm{type},
 \end{equation*}
 the map
 \begin{equation*}
 \Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\mathsf{htpy.refl}_f)
 \end{equation*}
 given by $s\mapsto s(f,\mathsf{htpy.refl}_f)$ has a section.
-\item The \define{function extensionality principle}: For every type family $B:A\to\UU$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map
+\item The \define{function extensionality principle}\index{function extensionality}: For every type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map
 \begin{equation*}
 \mathsf{htpy\usc{}eq}(f,g) : (\id{f}{g})\to (f\htpy g)
 \end{equation*}
 by path induction (sending $\refl{f}$ to $\lam{x}\refl{f(x)}$) is an equivalence.
-\item The \define{weak function extensionality principle} holds: For every type family $B:A\to\UU$ one has
+\item The \define{weak function extensionality principle}\index{weak function extensionality} holds: For every type family $B$ over $A$ one has\index{contractible!weak function extensionality}
 \begin{equation*}
-\Big(\prd{a:A}\iscontr(B(a))\Big)\to\iscontr\Big(\prd{a:A}B(a)\Big).
+\Big(\prd{x:A}\iscontr(B(x))\Big)\to\iscontr\Big(\prd{x:A}B(x)\Big).
 \end{equation*}
 \end{enumerate}
 \end{thm}
 
 \begin{proof}
-Suppose that each $B(a)$ is contractible with center of contraction $c(a)$ and contraction $C_a:\prd{y:B(a)}c(a)=y$. Then we take $c\defeq \lam{a}c(a)$ to be the center of contraction of $\prd{a:A}B(a)$. To construct the contraction we have to define a term of type
+To show that homotopy induction implies function extensionality, note that from homotopy induction and $\Sigma$-induction combined, we obtain that for any type family $P$ over $\sm{g:\prd{x:A}B(x)}f\htpy g$, the evaluation map
 \begin{equation*}
-\prd{f:\prd{a:A}B(a)}c=f.
+\Big(\prd{t:\sm{g:\prd{x:A}B(x)}f\htpy g} P(t)\Big)\to P((f,\mathsf{htpy.refl}_f))
 \end{equation*}
-Let $f:\prd{a:A}B(a)$. By function extensionality we have a map $(c\htpy f)\to (c=f)$, so it suffices to construct a term of type $c\htpy f$. Here we take $\lam{a}C_a(f(a))$. This completes the proof that function extensionality implies weak function extensionality.
+has a section. In other words, the type $\sm{g:\prd{x:A}B(x)}f\htpy g$ satisfies singleton induction and therefore it is contractible. Now we conclude by \cref{thm:id_fundamental} that the canonical map $(f=g)\to (f\htpy g)$ is an equivalence, i.e.~that function extensionality holds.
+
+Conversely, to prove homotopy induction from function extensionality we again note that by function extensionality and \cref{thm:id_fundamental} the type 
+\begin{equation*}
+\sm{g:\prd{x:A}B(x)}f\htpy g
+\end{equation*}
+is contractible. Therefore it satisfies singleton induction, so homotopy induction follows.
+
+To show that function extensionality implies weak function extensionality, suppose that each $B(a)$ is contractible with center of contraction $c(a)$ and contraction $C_a:\prd{y:B(a)}c(a)=y$. Then we take $c\defeq \lam{a}c(a)$ to be the center of contraction of $\prd{x:A}B(x)$. To construct the contraction we have to define a term of type
+\begin{equation*}
+\prd{f:\prd{x:A}B(x)}c=f.
+\end{equation*}
+Let $f:\prd{x:A}B(x)$. By function extensionality we have a map $(c\htpy f)\to (c=f)$, so it suffices to construct a term of type $c\htpy f$. Here we take $\lam{a}C_a(f(a))$. This completes the proof that function extensionality implies weak function extensionality.
 
 To prove function extensionality from weak function extensionality, observe that it suffices by \autoref{thm:id_fundamental} to show that
 \begin{equation*}
@@ -44,16 +65,16 @@ Since the type $\sm{b:B(x)}f(x)=b$ is contractible for each $x:X$, it follows by
 \end{equation*}
 is a retract of the type $\prd{x:A}\sm{b:B(x)}f(x)=b$. We have the functions
 \begin{align*}
-\mathsf{pi\usc{}sigma} & \defeq \lam{\pairr{g,H}}\lam{x}\pairr{g(x),H(x)} \\
-\mathsf{sigma\usc{}pi} & \defeq \lam{p}\pairr{\lam{x}\proj 1(p(x)),\lam{x}\proj 2(p(x))}.
+i & \defeq \ind{\Sigma}(\lam{g}{H}{x}\pairr{g(x),H(x)}) \\
+r & \defeq \lam{p}\pairr{\lam{x}\proj 1(p(x)),\lam{x}\proj 2(p(x))}.
 \end{align*}
-It remains to show that $\psi\circ\varphi=\idfunc$. Let $\pairr{g,H}:\sum_g f\htpy g$. 
-Then we have
+It remains to show that $r\circ i\htpy \idfunc$. This homotopy is constructed by $\Sigma$-induction. Let $g:\prd{x:A}B(x)$ and let $H:f\htpy g$. Then we have
 \begin{align*}
-\mathsf{sigma\usc{}pi}(\mathsf{pi\usc{}sigma}(g,H)) & \jdeq \mathsf{sigma\usc{}pi}(\lam{x}\pairr{g(x),H(x)}) \\
+r(i(g,H)) & \jdeq r(\lam{x}\pairr{g(x),H(x)}) \\
 & \jdeq \pairr{\lam{x}g(x),\lam{x}H(x)} \\
-& \jdeq \pairr{g,H}.\qedhere
+& \jdeq \pairr{g,H}.
 \end{align*}
+In other words, the homotopy $r\circ i\htpy \idfunc$ is given by $\ind{\Sigma}(\lam{g}{H}\refl{(\pairr{g,H})})$. 
 \end{proof}
 
 \begin{comment}
@@ -70,40 +91,99 @@ Therefore, the types $\sum_g f\htpy g$ and $\prod_x\sum_b f(x)=b$ are actually \
 \end{comment}
 
 \begin{thm}
-Assume function extensionality. Then for any type family $B:A\to\UU$ one has
+Assume function extensionality. Then for any type family $B$ over $A$ one has\index{truncated}
 \begin{equation*}
-\Big(\prd{a:A}\istrunc{n}(B(a))\Big)\to \istrunc{n}\Big(\prd{a:A}B(a)\Big).
+\Big(\prd{x:A}\istrunc{k}(B(x))\Big)\to \istrunc{k}\Big(\prd{x:A}B(x)\Big).
 \end{equation*}
 \end{thm}
 
 \begin{proof}
-The theorem is proven by induction on $n\geq -2$. The base case is just the weak function extensionality principle, which was shown to follow from function extensionality in \autoref{thm:funext_wkfunext}.
+The theorem is proven by induction on $k\geq -2$. The base case is just the weak function extensionality principle, which was shown to follow from function extensionality in \autoref{thm:funext_wkfunext}.
 
-For the inductive hypothesis, assume that the $n$-types are closed under dependent function types. Assume that $B$ is a family of $(n+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{a:A}B(a)$. Now observe that $f\htpy g$ is a dependent product of $n$-types, and therefore it is an $n$-type by our inductive hypotheses. Therefore, it follows by \autoref{thm:ntype_eqv} that $f=g$ is an $n$-type, and hence that $\prd{a:A}B(a)$ is an $(n+1)$-type.
+For the inductive hypothesis, assume that the $k$-types are closed under dependent function types. Assume that $B$ is a family of $(k+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{x:A}B(x)$. Now observe that $f\htpy g$ is a dependent product of $k$-types, and therefore it is an $k$-type by our inductive hypotheses. Therefore, it follows by \autoref{thm:ntype_eqv} that $f=g$ is an $k$-type, and hence that $\prd{x:A}B(x)$ is an $(k+1)$-type.
 \end{proof}
 
+\begin{cor}
+Suppose $B$ is a $k$-type. Then $A\to B$ is also a $k$-type, for any type $A$.
+\end{cor}
+
+The following theorem is sometimes called the \define{type theoretic principle of choice}. This terminology comes from the point of view of propositions as types, where the $\Sigma$-type has the role of the existential quantifier, and the $\Pi$-type has the role of the universal quantifier.
+
+\begin{thm}
+Let $C(x,y)$ be a type in context $\Gamma,x:A,y:B(x)$. Then the map
+\begin{equation*}
+\varphi:\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)\to \Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)
+\end{equation*}
+given by $\lam{h}(\lam{x}\proj 1(h(x)),\lam{x}\proj 2(h(x)))$ is an equivalence.
+\end{thm}
+
+\begin{proof}
+The map $\psi$ in the converse direction is defined by
+\begin{equation*}
+\psi\defeq \ind{\Sigma}(\lam{f}{g}{x}(f(x),g(x))).
+\end{equation*}
+We need to define homotopies $\psi\circ\varphi\htpy \idfunc$ and $\varphi\circ\psi\htpy \idfunc$. 
+
+For the first homotopy, let $h:\prd{x:A}\sm{y:B(x)}C(x,y)$. Then we have
+\begin{align*}
+\psi(\varphi(h)) & \jdeq \psi(\lam{x}\proj 1(h(x)),\lam{x}\proj 2(h(x))) \\
+& \jdeq \lam{x}(\proj 1(h(x)),\proj 2(h(x))).
+\end{align*}
+Note that for each $x:A$ we have an identification
+\begin{equation*}
+(\proj 1(h(x)),\proj 2(h(x)))=h(x).
+\end{equation*}
+Therefore we obtain a \emph{homotopy} $\psi(\varphi(h))\htpy h$, but this suffices because function extensionality now provides us with an identification $\psi(\varphi(h))=h$.
+
+The second homotopy is constructed by $\Sigma$-induction. Let $f:\prd{x:A}B(x)$ and let $g:\prd{x:A}C(x,f(x))$. 
+Then we have
+\begin{align*}
+\varphi(\psi(f,g)) & \jdeq \varphi(\lam{x}(f(x),g(x))) \\
+& \jdeq (\lam{x}f(x),\lam{x}g(x)) \\
+& \jdeq (f,g)
+\end{align*}
+where the last judgmental equality holds by the $\eta$-rule for $\Pi$-types. In other words, the homotopy $\varphi\circ\psi\htpy \idfunc$ is given by
+\begin{equation*}
+\ind{\Sigma}(\lam{f}{g}\refl{(f,g)}).\qedhere
+\end{equation*}
+\end{proof}
+
+\begin{cor}
+For type $A$ and any type family $C$ over $B$, the map
+\begin{equation*}
+\Big(\sm{f:A\to B} \prd{x:A}C(f(x))\Big)\to\Big(A\to\sm{y:B}C(x)\Big)
+\end{equation*}
+given by $\lam{(f,g)}{x}(f(x),g(x))$ is an equivalence.
+\end{cor}
+
 \section{Universal properties}
-The function extensionality principle allows us to prove \emph{universal properties}: characterizations of all maps out of (or into) a given type. In the following theorem we prove the universal property of dependent pair types.
+The function extensionality principle allows us to prove \emph{universal properties}: characterizations of all maps out of (or into) a given type. Universal properties characterize a type up to equivalence. In the following theorem we prove the universal property of dependent pair types.
 
 \begin{thm}
 Let $B$ be a type family over $A$, and let $X$ be a type. Then the map
 \begin{equation*}
-\mathsf{ev\usc{}pair}:\Big(\Big(\sm{a:A}B(a)\Big)\to X\Big)\to \Big(\prd{a:A}(B(a)\to X)\Big)
+\mathsf{ev\usc{}pair}:\Big(\Big(\sm{x:A}B(x)\Big)\to X\Big)\to \Big(\prd{x:A}(B(x)\to X)\Big)
 \end{equation*}
-given by $f\mapsto\lam{a}{b}f(\mathsf{pair}(a,b))$ is an equivalence.
+given by $f\mapsto\lam{a}{b}f((a,b))$ is an equivalence.
 \end{thm}
 
-This theorem justifies that we usually write $f(a,b)$ rather than $f(\mathsf{pair}(a,b))$, since $f:(\sm{a:A}B(a))\to X$ is uniquely determined by its action on terms of the form $\mathsf{pair}(a,b)$.
+This theorem justifies that we usually write $f(a,b)$ rather than $f((a,b))$, since $f:\big(\sm{x:A}B(x)\big)\to X$ is uniquely determined by its action on terms of the form $(a,b)$.
 
 \begin{proof}
-We define $\varphi$ in the converse direction by dependent pair induction.
-Given $f:\prd{a:A}(B(a)\to X)$ we obtain $\tilde{f}:\big(\sm{a:A}B(a)\big)\to X$ satisfying $\tilde{f}(\mathsf{pair}(a,b))\jdeq f(a,b)$. Thus it is immediate by an application of function extensionality that $\mathsf{ev\usc{}pair}\circ\varphi\htpy\idfunc$. 
-
-To show that $\varphi\circ\mathsf{ev\usc{}pair}\htpy\idfunc$ we will also apply function extensionality. Thus, it suffices to show that $\varphi(\lam{a}{b}f(\mathsf{pair}(a,b)))=f$. We apply function extensionality again, so it suffices to show that
+The map in the converse direction is simply
 \begin{equation*}
-\prd{x:\sm{a:A}B(a)}\varphi(\lam{a}{b}f(\mathsf{pair}(a,b)))(x)=f(x).
+\ind{\Sigma} : \Big(\prd{x:A}(B(x)\to X)\Big)\to \Big(\Big(\sm{x:A}B(x)\Big)\to X\Big).
 \end{equation*}
-This follows immediately by dependent pair induction. 
+By the computation rules for $\Sigma$-types we have
+\begin{equation*}
+\lam{f}\refl{f}:\mathsf{ev\usc{}pair}\circ\ind{\Sigma}\htpy\idfunc
+\end{equation*}
+
+To show that $\ind{\Sigma}\circ\mathsf{ev\usc{}pair}\htpy\idfunc$ we will also apply function extensionality. Thus, it suffices to show that $\ind{\Sigma}(\lam{x}{y}f((x,y)))=f$. We apply function extensionality again, so it suffices to show that
+\begin{equation*}
+\prd{t:\sm{x:A}B(x)}\ind{\Sigma}\big(\lam{x}{y}f((x,y))\big)(t)=f(t).
+\end{equation*}
+We obtain this homotopy by another application of $\Sigma$-induction. 
 \end{proof}
 
 \begin{cor}
@@ -111,7 +191,7 @@ Let $A$, $B$, and $X$ be types. Then the map
 \begin{equation*}
 \mathsf{ev\usc{}pair}: (A\times B \to X)\to (A\to (B\to X))
 \end{equation*}
-given by $f\mapsto\lam{a}{b}f(\mathsf{pair}(a,b))$ is an equivalence.
+given by $f\mapsto\lam{a}{b}f((a,b))$ is an equivalence.
 \end{cor}
 
 The universal property of identity types is sometimes called the \emph{type theoretical Yoneda lemma}: families of maps out of the identity type are uniquely determined by their action on the reflexivity identification.
@@ -137,34 +217,50 @@ This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\
 
 
 \begin{exercises}
-\item Show that for any type $A$ and any $n\geq-2$, the type $\istrunc{n}(A)$ is a mere proposition.
+\item 
+\begin{subexenum}
+\item Let $P$ and $Q$ be propositions. Show that
+\begin{equation*}
+\eqv{(P\leftrightarrow Q)}{(\eqv{P}{Q})}.
+\end{equation*}
+\item Show that $P\to P$ is contractible for any proposition $P$.
+\item Show that if $P\to P$ is contractible, then $P$ is a proposition.
+\end{subexenum}
+\item 
+\begin{subexenum}
+\item Show that for any type $A$ the type $\iscontr(A)$ is a proposition.
+\item Show that for any type $A$ and any $k\geq-2$, the type $\istrunc{k}(A)$ is a proposition.
+\end{subexenum}
 \item Let $f:A\to B$ be a function.
 \begin{subexenum}
 \item Show that if $f$ is an equivalence, then the type $\sm{g:B\to A}f\circ g\htpy \idfunc$ of sections of $f$ is contractible.
 \item Show that if $f$ is an equivalence, then the type $\sm{h:B\to A}h\circ f\htpy \idfunc$ of retractions of $f$ is contractible.
-\item Show that $\isequiv(f)$ is a mere proposition.
-\item Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that for any $(f,p),(g,q):\eqv{A}{B}$ the map
+\item Show that $\isequiv(f)$ is a proposition.
+\end{subexenum}
+Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that for any $(f,p),(g,q):\eqv{A}{B}$ the map
 \begin{equation*}
 \mathsf{ap}_{\proj 1} : ((f,p)= (g,q))\to (f=g)
 \end{equation*}
 is an equivalence.
+\item Let $B$ and $C$ be type families over $A$, suppose that $p:\id{a}{a'}$ in $A$, and consider two functions $f:B(a)\to C(a)$ and $g:B(a')\to C(a')$.
+\begin{subexenum}
+\item Show that the square
+\begin{equation*}
+\begin{tikzcd}
+B(a) \arrow[r,"f"] \arrow[d,swap,"\mathsf{tr}_B(p)"] & C(a) \arrow[d,"\mathsf{tr}_C(p)"] \\
+B(a') \arrow[r,swap,"g"] & C(a')
+\end{tikzcd}
+\end{equation*}
+commutes for every homotopy $H:\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g$. In other words, construct a function of type
+\begin{equation*} 
+\Big(\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g\Big)\to \Big(\mathsf{tr}_C(p)\circ f\htpy g\circ \mathsf{tr}_B(p)\Big)
+\end{equation*}
+\item Show that this map is an equivalence.
 \end{subexenum}
-\item Let $C$ be a contractible type with center of contraction $c$. Use the function extensionality principle to show that the map $\lam{f}f(c):(C\to A)\to A$ is an equivalence, for each type $A$.
-\item Use the function extensionality principle to show that for any $B:A\to\UU$ and $R:\prd{a:A}B(a)\to \UU$, the map
-\begin{equation*}
-\Big(\sm{f:\prd{a:A}B(a)}\prd{a:A}R(a,f(a))\Big)\to \Big(\prd{a:A}\sm{b:B(a)}R(a,b)\Big)
-\end{equation*}
-given by $\lam{(f,g)}{a}(f(a),g(a))$ is an equivalence. This is sometimes called the \define{type theoretic principle of choice}.
-
-Conclude that for any $A:\UU$ and any $C:B\to \UU$, the map
-\begin{equation*}
-\Big(\sm{f:A\to B} \prd{a:A}C(f(a))\Big)\to\Big(A\to\sm{b:B}C(b)\Big)
-\end{equation*}
-given by $\lam{(f,g)}{a}(f(a),g(a))$ is an equivalence.
 \item Let $f:A\to B$ be a map. Show that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
-\item For any type family $P:B\to\UU$ the map
+\item For any type family $P$ over $B$ the map
 \begin{equation*}
 \Big(\prd{y:B}P(y)\Big)\to\Big(\prd{x:A}P(f(x))\Big)
 \end{equation*}
@@ -175,6 +271,10 @@ given by $s\mapsto s\circ f$ is an equivalence.
 \end{equation*}
 given by $g\mapsto g\circ f$ is an equivalence. 
 \end{enumerate}
+\item Construct for any type $A$ an equivalence
+\begin{equation*}
+\eqv{\mathsf{is\usc{}invertible}(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
+\end{equation*}
 \item Let $f:A\to B$ be a map. Use \autoref{ex:coh_intro} and \autoref{defn:inv_equiv} to show that
 \begin{equation*}
 \eqv{\isequiv(f)}{\mathsf{half\usc{}adj}(f)},
@@ -183,22 +283,46 @@ where $\mathsf{half\usc{}adj}(f)$ is the type consisting of functions $g:B\to A$
 \begin{align*}
 H_r & : f\circ g\htpy \idfunc \\
 H_l & : g\circ f\htpy \idfunc \\
-H_{coh} & : g\cdot H_r\htpy H_l\cdot g,
+H_{coh} & : g H_r\htpy H_l g,
 \end{align*}
 witnessing that $f$ is a \define{half-adjoint equivalence}.
+\item 
+\begin{subexenum}
 \item Show that the map
 \begin{equation*}
 (\emptyt \to X)\to \unit
 \end{equation*}
-given by $\lam{f}\ttt$ is an equivalence.
+given by $\lam{f}\ttt$ is an equivalence. 
+\item Show that any type $Y$ satisfying the property that the map 
+\begin{equation*}
+\lam{f}\ttt: (Y\to X)\to \unit
+\end{equation*} 
+is an equivalence for any $X$, is itself equivalent to $\emptyt$.
+\end{subexenum}
+\item 
+\begin{subexenum}
 \item Show that the map
 \begin{equation*}
-(A+B\to X)\to (A\to X)\times (B\to X)
+(A+B\to X)\to \Big((A\to X)\times (B\to X)\Big)
 \end{equation*}
 given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
+\item Show that any type $Y$ that is equipped with functions $i:A\to Y$ and $j:B\to Y$ and satisfies the condition that the map
+\begin{equation*}
+\lam{f}(f\circ i,f\circ j): (Y\to X)\to \Big((A\to X)\times (B\to X)\Big)
+\end{equation*}
+is an equivalence for any $X$, is itself equivalent to $A+B$.
+\end{subexenum}
+\item 
+\begin{subexenum}
 \item Show that the map
 \begin{equation*}
 (\unit\to X)\to X
 \end{equation*}
 given by $\lam{f}f(\ttt)$ is an equivalence. 
+\item Show that a type $C$ is contractible if and only if it comes equipped with a term $c:C$ and satisfies the condition that the map
+\begin{equation*}
+\lam{f}f(c) :(C\to X)\to X
+\end{equation*}
+is an equivalence for any $X$.
+\end{subexenum}
 \end{exercises}

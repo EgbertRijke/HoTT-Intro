@@ -4,13 +4,13 @@
 In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$.
 
 \begin{defn}
-Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies} from $f$ to $g$ is defined as
+Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies}\index{homotopy|textbf} from $f$ to $g$ is defined as
 \begin{equation*}
 f\htpy g \defeq \prd{x:A} f(x)=g(x).
 \end{equation*}
 \end{defn}
 
-Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between} homotopies, and further homotopies between those higher homotopies. 
+Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between}\index{homotopy!iterated} homotopies, and further homotopies between those higher homotopies. 
 Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just the type
 \begin{equation*}
 \prd{x:A} H(x)=K(x).
@@ -18,14 +18,14 @@ Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just th
 
 In the following definition we define the groupoid-like structure of homotopies. Note that we implement the groupoid-laws as \emph{homotopies} rather than as identifications.
 
-\begin{defn}
+\begin{defn}\index{groupoid laws!of homotopies|textbf}
 For any dependent type $B:A\to\type$ there are operations
 \begin{align*}
 & \mathsf{htpy.refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
 & \mathsf{htpy.inv} & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
 & \mathsf{htpy.concat} & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to (g\htpy h)\to (f\htpy h).
 \end{align*}
-We will write $H^{-1}$ for $\mathsf{hinv}(H)$, and $\ct{H}{K}$ for $\mathsf{hconcat}(H,K)$. 
+We will write $H^{-1}$ for $\mathsf{htpy.inv}(H)$, and $\ct{H}{K}$ for $\mathsf{htpy.concat}(H,K)$. 
 
 Furthermore, we define
 \begin{align*}
@@ -38,11 +38,28 @@ Furthermore, we define
 for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x)$.
 \end{defn}
 
+\begin{constr}
+We define
+\begin{align*}
+\mathsf{htpy.refl}(f) & \defeq \lam{x} \refl{f(x)} \\
+\mathsf{htpy.inv}(H) & \defeq \lam{x} H(x)^{-1} \\
+\mathsf{htpy.concat}(H,K) & \defeq \lam{x}\ct{H(x)}{K(x)},
+\end{align*}
+where $H:f\htpy g$ and $K:g\htpy h$ are homotopies. Furthermore, we define
+\begin{align*}
+\mathsf{htpy.assoc}(H,K,L) & \defeq \lam{x}\mathsf{assoc}(H(x),K(x),L(x)) \\
+\mathsf{htpy.left\usc{}unit}(H) & \defeq \lam{x}\mathsf{left\usc{}unit}(H(x)) \\
+\mathsf{htpy.right\usc{}unit}(H) & \defeq \lam{x}\mathsf{right\usc{}unit}(H(x)) \\
+\mathsf{htpy.left\usc{}inv}(H) & \defeq \lam{x}\mathsf{left\usc{}inv}(H(x)) \\
+\mathsf{htpy.right\usc{}inv}(H) & \defeq \lam{x}\mathsf{right\usc{}inv}(H(x)).\qedhere
+\end{align*}
+\end{constr}
+
 
 Apart from the groupoid operations and their laws, we will occasionally need \emph{whiskering} operations.
 
 \begin{defn}
-We define the following \define{whiskering} operations on homotopies:
+We define the following \define{whiskering}\index{homotopy!whiskering operations|textbf}\index{whiskering operations!of homotopies|textbf} operations on homotopies:
 \begin{enumerate}
 \item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define
 \begin{equation*}
@@ -57,16 +74,16 @@ Hf\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
 
 \section{Bi-invertible maps}
 \begin{defn}
-Let $f:A\to B$ be a function. We say that $f$ has a \define{section} if there is a term of type
+Let $f:A\to B$ be a function. We say that $f$ has a \define{section}\index{section!of a map|textbf} if there is a term of type
 \begin{equation*}
 \mathsf{sec}(f) \defeq \sm{g:B\to A} f\circ g\htpy \idfunc[B].
 \end{equation*}
-Dually, we say that $f$ has a \define{retraction} if there is a term of type
+Dually, we say that $f$ has a \define{retraction}\index{retraction} if there is a term of type
 \begin{equation*}
 \mathsf{retr}(f) \defeq \sm{h:B\to A} h\circ f\htpy \idfunc[A].
 \end{equation*}
-If $f$ has a retraction, we also say that $A$ is a \define{retract} of $B$.
-We say that a function $f:A\to B$ is an \define{equivalence} if it has both a section and a retraction, i.e.~if it comes equipped with a term of type
+If $f$ has a retraction, we also say that $A$ is a \define{retract}\index{retract!of a type} of $B$.
+We say that a function $f:A\to B$ is an \define{equivalence}\index{equivalence|textbf}\index{bi-invertible map|see {equivalence}} if it has both a section and a retraction, i.e.~if it comes equipped with a term of type
 \begin{equation*}
 \isequiv(f)\defeq\mathsf{sec}(f)\times\mathsf{retr}(f).
 \end{equation*}
@@ -79,22 +96,23 @@ An equivalence, as we defined it here, can be thought of as a \define{bi-inverti
 g & : B\to A & h & : B\to A \\
 G & : f\circ g \htpy \idfunc[B] & H & : h\circ f \htpy \idfunc[A].
 \end{align*}
-Clearly, if $f$ is \define{invertible} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence.
+Clearly, if $f$ is \define{invertible}\index{invertible map} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence.
 \end{rmk}
 
 \begin{defn}\label{defn:inv_equiv}
-Any equivalence can be given the structure of an invertible map.
+Any equivalence can be given the structure of an invertible map.\index{equivalence!invertibility of}
 \end{defn}
 
 \begin{constr}
-For any $y:B$, we have 
+First we construct for any equivalence $f$ with right inverse $g$ and left inverse $h$ a homotopy $K:g\htpy h$. For any $y:B$, we have 
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
-g(y) \arrow[r,equals,"H(g(y))^{-1}"] & hfg(y) \arrow[r,equals,"\ap{h}{G(y)}"] & h(y)
+g(y) \arrow[r,equals,"H(g(y))^{-1}"] & hfg(y) \arrow[r,equals,"\ap{h}{G(y)}"] & h(y).
 \end{tikzcd}
 \end{equation*} 
+Therefore we define $K\defeq \ct{(Hg)^{-1}}{hG}$.
 from which we obtain a homotopy $K:g\htpy h$.
-This allows us to show that $g$ is a retraction of $f$: for $x:A$ we take
+This allows us to show that $g$ is also a left inverse of $f$. For $x:A$ we have the identification
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
 gf(x) \arrow[r,equals,"K(f(x))"] & hf(x) \arrow[r,equals,"H(x)"] & x.
@@ -103,72 +121,87 @@ gf(x) \arrow[r,equals,"K(f(x))"] & hf(x) \arrow[r,equals,"H(x)"] & x.
 \end{constr}
 
 \begin{thm}\label{thm:id_equiv}
-For any type $A$, the identity function $\idfunc[A]$ is an equivalence.
+For any type $A$, the identity function $\idfunc[A]$ is an equivalence.\index{identity function!is an equivalence|textit}
 \end{thm}
 
 \begin{proof}
 The identity function is trivially its own section and its own retraction.
 \end{proof}
 
+\begin{eg}
+Let $A$ and $B$ be types in context $\Gamma$. 
+For any $\Gamma,x:A,y:B\vdash C(x,y)~\mathrm{type}$, the map
+\begin{equation*}
+\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
+\end{equation*}
+is an equivalence by \cref{ex:swap}.\index{swap function!is an equivalence|textit}
+\end{eg}
+
 \section{The identity type of a \texorpdfstring{$\Sigma$-}{dependent pair }type}
 \begin{thm}\label{thm:eq_sigma}
-Let $B:A\to\type$ be a type family, and let $\pairr{x,y},\pairr{x',y'}:\sm{x:A}B(x)$. Then the map
+Let $B$ be a type family over $A$, and let $\pairr{x,y},\pairr{x',y'}:\sm{x:A}B(x)$. Then the map
 \begin{equation*}
-\mathsf{eq\usc{}pair} : \Big(\sm{p:x=x'}\id{\trans{p}{y}}{y'}\Big)\to(\id{\pairr{x,y}}{\pairr{x',y'}})
+\mathsf{eq\usc{}pair} : \Big(\sm{p:x=x'}\id{\mathsf{tr}_B(p,y)}{y'}\Big)\to(\id{\pairr{x,y}}{\pairr{x',y'}})
 \end{equation*}
-defined by double path induction by sending $\pairr{\refl{x},\refl{y}}$ to $\refl{\pairr{x,y}}$ is an equivalence.
+defined by double path induction by sending $\pairr{\refl{x},\refl{y}}$ to $\refl{\pairr{x,y}}$ is an equivalence.\index{Sigma type@{$\Sigma$-type}!identity types of|textit}
 \end{thm}
 
 \begin{proof}
-The map $\mathsf{pair\usc{}eq}$ in the converse direction is constructed by path induction, taking $\refl{\pairr{x,y}}$ to $\pairr{\refl{x},\refl{y}}$.
-It remains to show that $\mathsf{pair\usc{}eq}$ and $\mathsf{eq\usc{}pair}$ are mutual inverses. 
+Before we construct a map in the converse direction, we construct a slightly more general map
+\begin{equation*}
+\mathsf{pair\usc{}eq}:(z=z')\to \sm{p:\proj 1(z)=\proj 1(z')} \mathsf{tr}(p,\proj 2(z))=\proj 2(z').
+\end{equation*}
+for every $z,z':\sm{x:A}B(x)$. This map can be constructed by path induction, sending $\refl{z}$ to $(\refl{\proj 1(z)},\refl{\proj 2(z)})$. 
 
-We first show that $\mathsf{eq\usc{}pair}(\mathsf{pair\usc{}eq}(p))=p$ for each $p:\pairr{x,y}=\pairr{x',y'}$. We proceed by path induction on $p$. 
-Our goal is now to construct an identification $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}=\refl{\pairr{x,y}}$. 
-Thus, we may take $\refl{\refl{\pairr{x,y}}}$.
-
-Finally, we construct an identification $\mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}(p,q))=\pairr{p,q}$ for each $\pairr{p,q}:\sm{p:x=x'}\id{\trans{p}{y}}{y'}$. We proceed by path induction on $p$, followed by path induction on $q$. Our goal is now to construct a term of type
+We first construct an identification $\mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}(p,q))=\pairr{p,q}$ for each $\pairr{p,q}:\sm{p:x=x'}\id{\mathsf{tr}_B(p,y)}{y'}$. We proceed by path induction on $p$, followed by path induction on $q$. Our goal is now to construct a term of type
 \begin{equation*}
 \mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}})=\pairr{\refl{x},\refl{y}}
 \end{equation*}
-By the definition of $\mathsf{eq\usc{}pair}$ we have $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}\jdeq \refl{\pairr{x,y}}$, and by the definition of $\mathsf{pair\usc{}eq}$ we have $\mathsf{pair\usc{}eq}(\refl{\pairr{x,y}})\jdeq\pairr{\refl{x},\refl{y}}$. Thus we may take $\refl{\pairr{\refl{x},\refl{y}}}$ to complete the proof.
+By the definition of $\mathsf{eq\usc{}pair}$ we have $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}\jdeq \refl{\pairr{x,y}}$, and by the definition of $\mathsf{pair\usc{}eq}$ we have $\mathsf{pair\usc{}eq}(\refl{\pairr{x,y}})\jdeq\pairr{\refl{x},\refl{y}}$. Thus we may take $\refl{\pairr{\refl{x},\refl{y}}}$ to complete the construction of the homotopy $\mathsf{pair\usc{}eq}\circ\mathsf{eq\usc{}pair}\htpy\idfunc$.
+
+Next show that $\mathsf{eq\usc{}pair}(\mathsf{pair\usc{}eq}(p))=p$ for each $p:\pairr{x,y}=\pairr{x',y'}$.
+To do this, note that by $\Sigma$-induction, the map $\mathsf{eq\usc{}pair}$ induces a map
+\begin{equation*}
+\mathsf{eq\usc{}pair} : \Big(\sm{p:\proj 1(z)=\proj 1 (z')}\id{\mathsf{tr}_B(p,\proj 2(z))}{\proj 2(z')}\Big)\to(\id{z}{z'})
+\end{equation*}
+Now we can use identification elimination to show that $\mathsf{eq\usc{}pair}(\mathsf{pair\usc{}eq}(p))=p$ for any $p:z=z'$.
+It suffices to construct an identification 
+\begin{equation*}
+\mathsf{eq\usc{}pair}\pairr{\refl{\proj 1(z)},\refl{\proj 2(z)}}=\refl{z}.
+\end{equation*}
+Now we proceed by $\Sigma$-induction on $z:\sm{x:A}B(x)$, so it suffices to construct an identification
+\begin{equation*}
+\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}=\refl{(x,y)}.
+\end{equation*}
+Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simply take $\refl{\refl{(x,y)}}$.
 \end{proof}
 
 \begin{exercises}
-\item Suppose that $f$ has a section $g$ and a retraction $h$. Construct a homotopy $g\htpy h$. Conclude that $f$ is invertible if it is bi-invertible.
-\item Show that $\mathsf{inv}:(\id{x}{y})\to(\id{y}{x})$, $\mathsf{concat}(p):(\id{y}{z})\to(\id{x}{z})$, and $\transfibf{P}(p):P(x)\to P(y)$ are equivalences. What are their inverses?
-\item \label{ex:htpy_equiv} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
+\item \label{ex:equiv_grpd_ops}Show that $\mathsf{inv}:(\id{x}{y})\to(\id{y}{x})$, $\mathsf{concat}(p):(\id{y}{z})\to(\id{x}{z})$, and $\mathsf{tr}_B(p):B(x)\to B(y)$ are equivalences. What are their inverses?
+\item \label{ex:htpy_equiv}\index{equivalence!homotopic maps} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
 \begin{equation*}
 \isequiv(f)\leftrightarrow\isequiv(g).
 \end{equation*}
-\item \label{ex:3_for_2} (The 3-for-2 property) Let $f:A\to B$ and $g:B\to C$ be functions. Show that if any two of the functions
+\item \label{ex:3_for_2}\index{equivalence!three@{3-for-2 property}} (The 3-for-2 property) Let $f:A\to B$ and $g:B\to C$ be functions. Show that if any two of the functions
 \begin{equation*}
 f,\qquad g,\qquad g\circ f
 \end{equation*}
 are equivalences, then so is the third.
-\item \label{ex:neg_equiv} Show that the negation function on the booleans is an equivalence. Also show that for any function $f:\bool\to\bool$, if $f(\bfalse)=f(\btrue)$ then $f$ is \emph{not} an equivalence.
-\item \label{ex:succ_equiv} Show that the successor function on the integers is an equivalence.
-\item Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.
-\item Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=small]
-A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"] \\
-& B
-\end{tikzcd}
-\end{equation*}
-commutes. The projection $\proj 1 : (\sm{y:B}\fib{f}{y})\to B$ is sometimes also called the \define{fibrant replacement} of $f$.
+\item \label{ex:neg_equiv} Show that the negation function on the booleans is an equivalence. Also show that for any function $f:\bool\to\bool$, if $f(\bfalse)=f(\btrue)$ then $f$ is \emph{not} an equivalence.\index{negation function!is an equivalence}
+\item \label{ex:succ_equiv} Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}
+\item Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is symmetric}
 \item \label{ex:retr_id} Consider a section-retraction pair
 \begin{equation*}
 \begin{tikzcd}
 A \arrow[r,"i"] & B \arrow[r,"r"] & A,
 \end{tikzcd}
 \end{equation*}
-with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.
-\item Let $B:A\to \type$, and let $C:\prd{x:A}B(a)\to\type$. Construct an equivalence
+with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
+\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B:A\to \type$, and let $C:\prd{x:A}B(a)\to\type$. Construct an equivalence
 \begin{equation*}
 \mathsf{\Sigma.assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1 p,\proj 2 p)\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}
 \end{equation*}
-\item \label{ex:int_group_laws} To define all the proof terms involved in showing that the integers form an abelian group is fairly involved. We suggest to show first that $\Z$ is a retract of $\N\times\N$ in a way that is compatible with addition.
+\item \label{ex:int_group_laws}\index{Z@{$\Z$}!group laws} To define all the proof terms involved in showing that the integers form an abelian group is fairly involved. We suggest to show first that $\Z$ is a retract of $\N\times\N$\index{Z@{$\Z$}!as retract of $\N\times\N$} in a way that is compatible with addition.
 \begin{subexenum}
 \item Define the map $\Z\to\N\times\N$ by
 \begin{align*}
@@ -191,5 +224,5 @@ k+(-k) & = 0 \\
 \end{align*}
 and that $k+l=l+k$, making $\pairr{\Z,0,+,-}$ into an abelian group.
 \end{subexenum}
-\item \label{ex:int_ptd_auto} Given a type $X$ with a base point $x_0$ and an equivalence $e:\eqv{X}{X}$, construct a map $f:Z\to X$ for which $f(0)=x_0$ and $f\circ\mathsf{succ} \htpy e\circ f$. 
+\item \label{ex:int_ptd_auto} Given a type $X$ with a base point $x_0$ and an equivalence $e:\eqv{X}{X}$, construct a map $f:\Z\to X$ for which $f(0)=x_0$ and $f\circ\mathsf{succ} \htpy e\circ f$. 
 \end{exercises}

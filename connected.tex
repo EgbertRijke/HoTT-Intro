@@ -1,5 +1,35 @@
 \chapter{Connected types and maps}
 
+\begin{defn}
+A type $A$ is said to be $n$-connected if $\trunc{n}{A}$ is contractible.
+If $A$ is $0$-connected we also say that $A$ is \define{(path) connected},
+and if $A$ is $1$-connected we also say that $A$ is \define{simply connected}.
+\end{defn}
+
+\begin{thm}
+Let $f:A\to B$ be a map. The following are equivalent:
+\begin{enumerate}
+\item The map $f$ is \define{$n$-connected}, i.e. the fibers of $f$ are $n$-connected types.
+\item The map $f$ is \define{left orthogonal} with respect to every $n$-truncated map $g:X\to Y$, i.e. the square
+\begin{equation*}
+\begin{tikzcd}
+X^B \arrow[r,"\blank\circ f"] \arrow[d,swap,"g\circ \blank"] & X^A \arrow[d,"g\circ\blank"] \\
+Y^B \arrow[r,swap,"\blank\circ f"] & Y^A
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\item For each $i\leq n$, the map $f$ induces an isomorphism
+\begin{equation*}
+\pi_i(f):\pi_i(A)\to\pi_i(B)
+\end{equation*}
+of homotopy groups, and 
+\begin{equation*}
+\pi_{n+1}(f):\pi_{n+1}(A)\to\pi_{n+1}(B)
+\end{equation*}
+is surjective.
+\end{enumerate}
+\end{thm}
+
 \begin{thm}
 Consider a commutign square
 \begin{equation*}

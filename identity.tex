@@ -8,63 +8,175 @@ Clearly, the equality type should not just be any type dependent on $x,y:A$. The
 The situation where two terms can be identified in possibly more than one way is analogous to the situation in \emph{homotopy theory}, where two points of a space can be connected by possibly more than one \emph{path}. Indeed, for any two points $x,y$ in a space, there is a \emph{space of paths} from $x$ to $y$. Moreover, between any two paths from $x$ to $y$ there is a space of \emph{homotopies} between them, and so on. This analogy has been made precise by the construction of \emph{homotopical models} of type theory, and it has led to the fruitful research area of \emph{synthetic homotopy theory}, the subfield of \emph{homotopy type theory} that is the topic of this course.
 
 \section{The inductive definition of identity types}
-\begin{defn}
-Let $A$ be a type with $a:A$. The \define{identity type} of $A$ at $a:A$ is a type family $\idtypevar{A}(a):A\to\type$ that comes equipped with
+
+Let $A$ be a type in context $\Gamma$. The \define{identity type} of $A$ at $a:A$ is the inductive type family 
 \begin{equation*}
-\refl{a} : \idtypevar{A}(a,a),
+\Gamma,x:A,y:A\vdash x =_A y~\mathrm{type}
 \end{equation*}
-and satisfies the induction principle that for any $P:\prd{x:A}\idtypevar{A}(a,x)\to\type$ there is a term
+with constructor
 \begin{equation*}
-\ind{a=} : P(a,\refl{a})\to \prd{x:A}{p:\idtypevar{A}(a,x)}P(x,p)
+\Gamma,x:A\vdash \refl{x} : x=_A x.
 \end{equation*}
-satisfying the computation rule
+The induction principle that for any type family
 \begin{equation*}
-\ind{a=}(u,a,\refl{a})\jdeq u.
+\Gamma,x:A,y:A,\alpha: x=_A y\vdash P(x,y,\alpha)~\mathrm{type}
 \end{equation*}
-\end{defn}
+%we can derive
+%\begin{prooftree}
+%\AxiomC{$\Gamma,\Delta[a/x,\refl{a}/p]\vdash \alpha : P(a,\refl{a})$}
+%\UnaryInfC{$\Gamma,x:A,p:\idtypevar{A}(a,x),\Delta\vdash \ind{a=}(\alpha,x,p):P(x,p)$}
+%\end{prooftree}
+there is a term
+\begin{equation*}
+\ind{x=} : P(x,x,\refl{x})\to \prd{y:A}{\alpha:x=_A y}P(x,y,\alpha)
+\end{equation*}
+in context $\Gamma,x:A$, satisfying the computation rule
+\begin{equation*}
+\ind{x=}(p,x,\refl{x})\jdeq p.
+\end{equation*}
+A term of type $x=_A y$ is also called an \define{identification} of $x$ with $y$, and sometimes it is called a \define{path} from $x$ to $y$.
+The induction principle for identity types is sometimes called \define{identification elimination} or \define{path induction}. We also write $\idtypevar{A}$ for the identity type on $A$. 
+
+We also assume that the universe $\UU$ is closed under identity types, i.e. that there is a map
+\begin{equation*}
+\check{\mathsf{Id}}:\prd{A:\UU}\mathrm{El}(A)\to\mathrm{El}(A)\to\UU
+\end{equation*}
+satisfying
+\begin{equation*}
+\mathrm{El}(\check{\mathsf{Id}}(A,x,y))\jdeq x=_{\mathrm{El}(A)} y.
+\end{equation*}
+
+In the following lemma we show that the identity type on $A$ is contained in any reflexive relation on $A$.
+
+\begin{lem}
+Let $\Gamma,x:A,y:A\vdash R(x,y)~\mathrm{type}$, and suppose that $R$ is reflexive in the sense that there is a term
+\begin{equation*}
+\rho:\prd{x:A}R(x,x)
+\end{equation*}
+Then there is a term of type
+\begin{equation*}
+\prd{y:A} (x=_A y)\to R(x,y)
+\end{equation*}
+in context $\Gamma,x:A$.
+\end{lem}
+
+\begin{constr}
+By weakening the reflexive relation $R$ we obtain
+\begin{equation*}
+\Gamma,x:A,y:A,\alpha:x=_A y\vdash R(x,y)~\mathrm{type},
+\end{equation*}
+on which the induction principle is applicable.
+Thus we see that by the induction principle for identity types we have a term
+\begin{equation*}
+\ind{x=} : R(x,x)\to \prd{y:A}(x=_A y)\to R(x,y)
+\end{equation*}
+so it suffices to construct a term of type $R(x,x)$, which we have by reflexivity of $R$.
+\end{constr}
 
 \section{The groupoid structure of types}\label{sec:groupoid}
-\begin{defn}\label{defn:groupoid}
-Let $A$ be a type. We construct the following operations and identifications:
-\begin{enumerate}
-\item A \define{concatenation} operation
+We show that identifications can be \emph{concatenated} and \emph{inverted}, which corresponds to the transitivity and symmetry of the identity type. 
+
+Furthermore, we observe that we can iteratively take identity types, i.e.~we can take identity types of identity types, 
 \begin{equation*}
-\mathsf{concat} : \prd*{x,y,z:A} (\id{x}{y})\to(\id{y}{z})\to (\id{x}{z}).
+p =_{(x=_Ay)} q,
+\end{equation*}
+and so on. In other words, for any two identifications $p,q:x=_A y$, there is a type of identifications of $p$ with $y$. One way to think about this is that the identifications $p,q:x=_A y$ are paths in the type (space) $A$, and an identification of $p$ with $q$ is a \emph{higher path} from $p$ to $q$, i.e.~a \emph{homotopy}.
+
+Using the observation that identity types can be iterated we show that concatenation is \emph{associative}, satisfies the left and right \emph{unit laws}, and satisfies the left and right \emph{inverse laws}. These are the \define{groupoid operations} on the identity type.
+
+\begin{defn}\label{defn:id_concat}
+Let $A$ be a type. We define the \define{concatenation} operation
+\begin{equation*}
+\mathsf{concat} : \prd{x,y,z:A} (\id{x}{y})\to(\id{y}{z})\to (\id{x}{z}).
 \end{equation*}
 We will write $\ct{p}{q}$ for $\mathsf{concat}(p,q)$. Also, we will \emph{associate to the right}, i.e.~by $\ct{p}{q}{r}$ we mean $\ct{p}{(\ct{q}{r})}$.
-\item For each $p:\id{x}{y}$ an inverse $\mathsf{inv}(p):\id{y}{x}$. We will write $p^{-1}$ for $\mathsf{inv}(p)$.
-\item An \define{associativity operation}
-\begin{equation*}
-\mathsf{assoc}(p,q,r) : \ct{(\ct{p}{q})}{r}=\ct{p}{(\ct{q}{r})}.
-\end{equation*}
-\item Left and right \define{unit operations}
-\begin{align*}
-\mathsf{left\usc{}unit}(p) & : \ct{\refl{x}}{p}=p \\
-\mathsf{right\usc{}unit}(p) & : \ct{p}{\refl{y}}=p.
-\end{align*}
-\item Left and right \define{inverse operations}
-\begin{align*}
-\mathsf{left\usc{}inv}(p) & : \ct{p^{-1}}{p} = \refl{y} \\
-\mathsf{right\usc{}inv}(p) & : \ct{p}{p^{-1}} = \refl{x}
-\end{align*}
-\end{enumerate}
 \end{defn}
 
 \begin{constr}
-We construct the concatenation operation by path induction: it suffices to construct
+We construct the concatenation operation by path induction. It suffices to construct
 \begin{equation*}
-\mathsf{concat}(\refl{x}):\prd*{z:A} (x=z)\to(x=z).
+\mathsf{concat}(\refl{x}):\prd{z:A} (x=z)\to(x=z).
 \end{equation*}
-Here we take $\mathsf{concat}(\refl{x})_z \jdeq \refl{(x=z)}$. 
+Here we take $\mathsf{concat}(\refl{x})_z \jdeq \idfunc[(x=z)]$. 
 Explicitly, the term we have constructed is
 \begin{equation*}
-\rec{=}(\lam{x}{z}\idfunc[(\id{x}{z})]).\qedhere
+\lam{x}\rec{x=}(\lam{z}\idfunc[(\id{x}{z})]):\prd{x,y:A} (x=y)\to \prd{z:A} (y=z)\to (x=z).
 \end{equation*}
-Next, we construct the inverse operation by path induction. It suffices to construct
+To obtain a term of the asserted type we need to swap the order of the arguments $p:x=y$ and $z:A$, using \autoref{ex:swap}.
+\end{constr}
+
+\begin{defn}\label{defn:id_inv}
+Let $A$ be a type. We define the \define{inverse operation} 
+\begin{equation*}
+\mathsf{inv}:\prd{x,y:A} (x=y)\to (y=x).
+\end{equation*}
+Most of the time we will write $p^{-1}$ for $\mathsf{inv}(p)$.
+\end{defn}
+
+\begin{constr}
+We construct the inverse operation by path induction. It suffices to construct
 \begin{equation*}
 \mathsf{inv}(\refl{x}): x=x,
 \end{equation*}
 for any $x:A$. Here we take $\mathsf{inv}(\refl{x})\defeq \refl{x}$.
+\end{constr}
+
+\begin{defn}\label{defn:id_assoc}
+Let $A$ be a type. We define the \define{associativity operation}, which assigns to each $p:x=y$, $q:y=z$, and $r:z=w$ the \define{associator}
+\begin{equation*}
+\mathsf{assoc}(p,q,r) : \ct{(\ct{p}{q})}{r}=\ct{p}{(\ct{q}{r})}.
+\end{equation*}
+\end{defn}
+
+\begin{constr}
+By identification elimination it suffices to show that
+\begin{equation*}
+\prd{z:A}{q:x=z}{z':A}{r:z=w} \ct{(\ct{\refl{x}}{q})}{r}= \ct{\refl{x}}{(\ct{q}{r})}.
+\end{equation*}
+Let $q:x=z$ and $r:z=w$. Note that by the computation rule $\ct{\refl{x}}{q}\jdeq q$, so $\ct{(\ct{\refl{x}}{q})}{r}\jdeq \ct{q}{r}$. Similarly we have $\ct{\refl{x}}{(\ct{q}{r})}\jdeq \ct{q}{r}$. Therefore we can simply take $\refl{\ct{q}{r}}$.
+\end{constr}
+
+\begin{defn}\label{defn:id_unit}
+Let $A$ be a type. We define the left and right \define{unit operations}, which assigns to each $p:x=y$ the terms
+\begin{align*}
+\mathsf{left\usc{}unit}(p) & : \ct{\refl{x}}{p}=p \\
+\mathsf{right\usc{}unit}(p) & : \ct{p}{\refl{y}}=p,
+\end{align*}
+respectively.
+\end{defn}
+
+\begin{constr}
+By identification elimination it suffices to construct
+\begin{align*}
+\mathsf{left\usc{}unit}(\refl{x}) & : \ct{\refl{x}}{\refl{x}} = \refl{x} \\
+\mathsf{right\usc{}unit}(\refl{x}) & : \ct{\refl{x}}{\refl{x}} = \refl{x}.
+\end{align*}
+In both cases we take $\refl{\refl{x}}$.
+\end{constr}
+
+\begin{defn}\label{defn:id_invlaw}
+Let $A$ be a type. Left and right \define{inverse operations}
+\begin{align*}
+\mathsf{left\usc{}inv}(p) & : \ct{p^{-1}}{p} = \refl{y} \\
+\mathsf{right\usc{}inv}(p) & : \ct{p}{p^{-1}} = \refl{x}
+\end{align*}
+\end{defn}
+
+\begin{constr}
+By identification elimination it suffices to construct
+\begin{align*}
+\mathsf{left\usc{}inv}(\refl{x}) & : \ct{\refl{x}^{-1}}{\refl{x}} = \refl{x} \\
+\mathsf{right\usc{}inv}(\refl{x}) & : \ct{\refl{x}}{\refl{x}^{-1}} = \refl{x}
+\end{align*}
+Using the computation rules we see that
+\begin{equation*}
+\ct{\refl{x}^{-1}}{\refl{x}}\jdeq \ct{\refl{x}}{\refl{x}}\jdeq\refl{x},
+\end{equation*}
+so we define $\mathsf{left\usc{}inv}(\refl{x})\defeq \refl{\refl{x}}$. Similarly it follows from the computation rules that
+\begin{equation*}
+\ct{\refl{x}}{\refl{x}^{-1}} \jdeq \refl{x}^{-1}\jdeq \refl{x}
+\end{equation*}
+so we again define $\mathsf{right\usc{}inv}(\refl{x})\defeq\refl{\refl{x}}$. 
 \end{constr}
 
 \section{The action on paths of functions}
@@ -80,10 +192,25 @@ Let $f:A\to B$ be a map. We define the \define{action on paths} of $f$ as an ope
 \end{equation*}
 Moreover, there are operations
 \begin{align*}
-\mathsf{ap.idfun}_A & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{\idfunc[A]}{p}}{p} \\
-\mathsf{ap.compose}(f,g) & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{g\circ f}{p}}{\ap{g}{\ap{f}{p}}}.
+\mathsf{ap.idfun}_A & : \prd*{x,y:A}{p:\id{x}{y}} \id{p}{\ap{\idfunc[A]}{p}} \\
+\mathsf{ap.comp}(f,g) & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{g}{\ap{f}{p}}}{\ap{g\circ f}{p}}.
 \end{align*}
 \end{defn}
+
+\begin{constr}
+First we define $\apfunc{f}$ by identity elimination, taking
+\begin{equation*}
+\apfunc{f}(\refl{x})\defeq \refl{f(x)}.
+\end{equation*}
+Next, we construct $\mathsf{ap.idfun}_A$ by identity elimination, taking
+\begin{equation*}
+\mathsf{ap.idfun}_A(\refl{x}) \defeq \refl{\refl{x}}.
+\end{equation*}
+Finally, we construct $\mathsf{ap.comp}(f,g)$ by identity elimination, taking
+\begin{equation*}
+\mathsf{ap.comp}(f,g,\refl{x}) \defeq \refl{g(f(x))}.\qedhere
+\end{equation*}
+\end{constr}
 
 \begin{defn}
 Let $f:A\to B$ be a map. Then there are identifications
@@ -95,32 +222,22 @@ Let $f:A\to B$ be a map. Then there are identifications
 for every $p:\id{x}{y}$ and $q:\id{x}{y}$.
 \end{defn}
 
-\section{The homotopy interpretation}
-
-Dependent types also come with an action on paths: the \emph{transport} functions.
-Given an identification $p:\id{x}{y}$ in the base type $A$, we can transport any term $b:B(x)$ to the fiber $B(y)$.
-The transport functions have many applications, which we will encounter throughout this course.
-Here we will give two applications.
-We will use transport to describe the action on paths of \emph{dependent} functions, and we will show how the transport functions provide a \emph{path lifting property}. 
-
-\begin{defn}
-Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
-We will construct a \define{transport} operation
+\begin{constr}
+To construct $\mathsf{ap.refl}(f,x)$ we simply observe that ${\ap{f}{\refl{x}}}\jdeq {\refl{f}(x)}$, so we take
 \begin{equation*}
-\mathsf{transport}^B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
+\mathsf{ap.refl}(f,x)\defeq\refl{\refl{f(x)}}.
 \end{equation*}
-We will write $\trans{p}{b}$ for $\mathsf{transport}^B(p,b)$.
-\end{defn}
-
-\begin{defn}\label{defn:path_lifting}
-Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
-We will construct a \define{path lifting} operation
+We construct $\mathsf{ap.inv}(f,p)$ by identification elimination on $p$, taking
 \begin{equation*}
-\mathsf{lift}^B : \prd*{x,y:A}{p:\id{x}{y}}{b:B(x)} \id{\pairr{x,b}}{\pairr{y,\trans{p}{b}}}.
+\mathsf{ap.inv}(f,\refl{x}) \defeq \refl{\ap{f}{\refl{x}}}.
 \end{equation*}
-\end{defn}
+Finally we construct $\mathsf{ap.concat}(f,p,q)$ by identification elimination on $p$, taking
+\begin{equation*}
+\mathsf{ap.concat}(f,\refl{x},q)  \defeq \refl{\ap{f}{q}}.\qedhere
+\end{equation*}
+\end{constr}
 
-\autoref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \autoref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
+\section{Transport}
 
 \begin{table}
 \begin{center}
@@ -139,45 +256,108 @@ Identity type & Path fibration\\
 \end{center}
 \end{table}
 
+Dependent types also come with an action on paths: the \emph{transport} functions.
+Given an identification $p:\id{x}{y}$ in the base type $A$, we can transport any term $b:B(x)$ to the fiber $B(y)$.
+The transport functions have many applications, which we will encounter throughout this course.
+
+\begin{defn}
+Let $A$ be a type, and let $B$ be a type family over $A$.
+We will construct a \define{transport} operation
+\begin{equation*}
+\mathsf{tr}_B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
+\end{equation*}
+We will write $\trans{p}{b}$ for $\mathsf{tr}_B(p,b)$.
+\end{defn}
+
+\begin{constr}
+We construct $\mathsf{tr}_B(p)$ by induction on $p:x=_A y$, taking
+\begin{equation*}
+\mathsf{tr}_B(\refl{x}) \defeq \idfunc[B(x)].\qedhere
+\end{equation*}
+\end{constr}
+
+Thus we see that type theory cannot distinguish between identified terms $x$ and $y$, because for any type family $B$ over $A$ one gets a term of $B(y)$ as soon as $B(x)$ has a term.
+
+As an application of the transport function we construct the \emph{dependent} action on paths of a dependent function $f:\prd{x:A}B(x)$. Note that for such a dependent function $f$, and an identification $p:\id[A]{x}{y}$, it does not make sense to directly compare $f(x)$ and $f(y)$, since the type of $f(x)$ is $B(x)$ whereas the type of $f(y)$ is $B(y)$, which might not be exactly the same type. However, we can first \emph{transport} $f(x)$ along $p$, so that we obtain the term $\mathsf{tr}_B(p,f(x))$ which is of type $B(y)$. Now we can ask whether it is the case that $\mathsf{tr}_B(p,f(x))=f(y)$. The dependent action on paths of $f$ establishes this identification.
+
+\begin{defn}\label{defn:apd}
+Given a dependent function $f:\prd{a:A}B(a)$ and a path $p:\id{x}{y}$ in $A$, we construct a path
+\begin{equation*}
+\apd{f}{p} : \id{\mathsf{tr}_B(p,f(x))}{f(y)}.
+\end{equation*}
+\end{defn}
+
+\begin{constr}
+The path $\apd{f}{p}$ is constructed by path induction on $p$. Thus, it suffices to construct a path
+\begin{equation*}
+\apd{f}{\refl{x}}:\id{\mathsf{tr}_B(\refl{x},f(x))}{f(x)}.
+\end{equation*}
+Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simply take $\apd{f}{\refl{x}}\defeq\refl{f(x)}$. 
+\end{constr}
+
+%\begin{defn}\label{defn:path_lifting}
+%Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
+%We will construct a \define{path lifting} operation
+%\begin{equation*}
+%\mathsf{lift}^B : \prd*{x,y:A}{p:\id{x}{y}}{b:B(x)} \id{\pairr{x,b}}{\pairr{y,\trans{p}{b}}}.
+%\end{equation*}
+%\end{defn}
+%
+%\autoref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \autoref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
+
 \begin{exercises}
-\item \label{ex:trans_triv}Consider two types $A$ and $B$, and let $p:x=y$ in $A$, and $b:B$. Construct an identification
-\begin{align*}
-\mathsf{trans\usc{}triv}(p,b):\mathsf{transport}^{\lam{x}B}(p,b)=b.
-\end{align*}
+\item \label{ex:trans_concat}Let $B$ be a family over a type $A$. Construct for any two identifications $p:x=_A y$ and $q:y=_A z$, and any $b:B(x)$ an identification
+\begin{equation*}
+\mathsf{tr}_B(q,\mathsf{tr}_B(p,x))=\mathsf{tr}_B(\ct{p}{q},x).
+\end{equation*}
 \item \label{ex:inv_assoc}Let $p:\id{x}{y}$ and $q:\id{y}{z}$. Construct an identification
 \begin{align*}
 \mathsf{inv\usc{}assoc}(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
 \end{align*}
-\item In this exercise we show that the action on paths of a function preserves the groupoid-structure of a type.
+\item \label{ex:trans_triv}Consider two types $A$ and $B$, and let $p:x=y$ in $A$, and $b:B$. Construct an identification
+\begin{align*}
+\mathsf{tr\usc{}triv}(p,b):\mathsf{tr}_{W_A(B)}(p,b)=b
+\end{align*}
+where $W_A(B)$ is the family $B$ weakened by $A$.
+%\item In this exercise we show that the action on paths of a function preserves the groupoid-structure of a type.
+%\begin{subexenum}
+%\item Construct an identification
+%\begin{equation*}
+%\mathsf{ap.assoc}(f,p,q,r)
+%\end{equation*}
+%witnessing that the diagram
+%\begin{equation*}
+%\begin{tikzcd}[column sep=large]
+%\ap{f}{\ct{(\ct{p}{q})}{r}} \arrow[r,equals,"\ap{\apfunc{f}}{\mathsf{assoc}(p,q,r)}"] \arrow[d,swap,equals,"{\mathsf{ap.ct}(f,%\ct{p}{q},r)}"] & \ap{f}{\ct{p}{(\ct{q}{r})}} \arrow[d,equals,"{\mathsf{ap.ct}(f,p,\ct{q}{r})}"] \\ 
+%\ct{\ap{f}{\ct{p}{q}}}{\ap{f}{r}} \arrow[dd,equals,near start,"{\mathsf{whisk\usc{}r}(\mathsf{ap.ct}(f,p,q),\ap{f}{r})}"]   & %\ct{\ap{f}{p}}{\ap{f}{\ct{q}{r}}} \arrow[dd,equals,swap,near end,"{\mathsf{whisk\usc{}l}(\ap{f}{p},\mathsf{ap.ct}(f,q,r))}"]  %\\
+%\\
+%\ct{(\ct{\ap{f}{p}}{\ap{f}{q}})}{\ap{f}{r}} \arrow[r,equals,swap,"{\mathsf{assoc}(\ap{f}{p},\ap{f}{q},\ap{f}{r})}"yshift=-1em] & \ct{\ap{f}{p}}{(\ct{\ap{f}{q}}{\ap{f}{r}})}
+%\end{tikzcd}
+%\end{equation*}
+%commutes.
+%\end{subexenum}
+\item \label{ex:trans_ap}Let $f:A\to B$ be a map, and consider $p:x=y$ in $A$. 
 \begin{subexenum}
-\item Construct an identification
+\item Construct for any $q:f(x)=b$ in $B$ an identification
 \begin{equation*}
-\mathsf{ap.assoc}(f,p,q,r)
+\mathsf{tr\usc{}ap}(p,q):\id{\trans{p}{q}}{\ct{\ap{f}{p}^{-1}}{q}}.
 \end{equation*}
-witnessing that the diagram
+\item Similarly, construct for any $q':b=f(x)$ in $B$ an identification
 \begin{equation*}
-\begin{tikzcd}[column sep=large]
-\ap{f}{\ct{(\ct{p}{q})}{r}} \arrow[r,equals,"\ap{\apfunc{f}}{\mathsf{assoc}(p,q,r)}"] \arrow[d,swap,equals,"{\mathsf{ap.ct}(f,\ct{p}{q},r)}"] & \ap{f}{\ct{p}{(\ct{q}{r})}} \arrow[d,equals,"{\mathsf{ap.ct}(f,p,\ct{q}{r})}"] \\ 
-\ct{\ap{f}{\ct{p}{q}}}{\ap{f}{r}} \arrow[dd,equals,near start,"{\mathsf{whisk\usc{}r}(\mathsf{ap.ct}(f,p,q),\ap{f}{r})}"]   & \ct{\ap{f}{p}}{\ap{f}{\ct{q}{r}}} \arrow[dd,equals,swap,near end,"{\mathsf{whisk\usc{}l}(\ap{f}{p},\mathsf{ap.ct}(f,q,r))}"]  \\
-\\
-\ct{(\ct{\ap{f}{p}}{\ap{f}{q}})}{\ap{f}{r}} \arrow[r,equals,swap,"{\mathsf{assoc}(\ap{f}{p},\ap{f}{q},\ap{f}{r})}"yshift=-1em] & \ct{\ap{f}{p}}{(\ct{\ap{f}{q}}{\ap{f}{r}})}
-\end{tikzcd}
+\mathsf{tr\usc{}ap'}(p,q'):\id{\trans{p}{q}}{\ct{q}{\ap{f}{p}}}.
 \end{equation*}
-commutes.
 \end{subexenum}
-\item \label{ex:trans_ap}Let $f:A\to B$ be a map, and consider $p:x=y$ in $A$, and $q:f(x)=b$ in $B$. Construct an identification
-\begin{equation*}
-\mathsf{trans\usc{}ap}(p,q):\id{\trans{p}{q}}{\ct{\ap{f}{p}^{-1}}{q}}.
-\end{equation*}
-Similarly, for $q':b=f(x)$, construct an identification
-\begin{equation*}
-\mathsf{trans\usc{}ap'}(p,q'):\id{\trans{p}{q}}{\ct{q}{\ap{f}{p}}}.
-\end{equation*}
 \item \label{ex:inv_con}For any $p:x=y$, $q:y=z$, and $r:x=z$, construct maps
 \begin{align*}
 \mathsf{inv\usc{}con}(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
 \mathsf{con\usc{}inv}(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
 \end{align*}
+\item Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
+Construct the \define{path lifting} operation
+\begin{equation*}
+\mathsf{lift}_B : \prd*{x,y:A}{p:\id{x}{y}}{b:B(x)} \id{\pairr{x,b}}{\pairr{y,\trans{p}{b}}}.
+\end{equation*}
+In other words, a path in the \emph{base type} $A$ lifts to a path in the total space $\sm{x:A}B(x)$ for every term over the domain.
 \item Show that the operations of addition and multiplication on the natural numbers satisfy the following laws:
 \begin{align*}
 m+(n+k) & =(m+n)+k & m\cdot (n\cdot k) & = (m\cdot n)\cdot k \\

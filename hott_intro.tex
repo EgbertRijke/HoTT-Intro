@@ -21,6 +21,8 @@
 \renewcommand{\@chapapp}{Lecture}
 \makeatother
 
+\crefname{table}{Table}{Tables}
+
 \newlist{exenum}{enumerate}{1}
 \setlist[exenum]{noitemsep,label=\thechapter.\arabic*}%,ref=\thechapter.\arabic*}
 %\crefalias{exenumi}{Exercise} 
@@ -39,16 +41,19 @@
 
 \addbibresource{bibliography.bib}
 
+\makeindex
+
 \begin{document}
+
+\frontmatter
 
 \begin{titlingpage}
 \maketitle 
 \end{titlingpage}
 
-\frontmatter
 \tableofcontents
 
-\include{intro}
+%\include{intro}
 
 \include{syllabus}
 
@@ -57,8 +62,6 @@
 \include{dtt}
 
 \include{pi}
-
-\include{nat}
 
 \include{inductive}
 
@@ -78,103 +81,19 @@
 
 \include{univalence}
 
-\begin{comment}
-\chapter{The Yoneda embedding}
-This is a good moment to review what we did so far, by recalling some basic notions and prove some more properties of them that involve function extensionality.
-
-\section{Basic propositions}
-\begin{lem}
-For any type $A$, the type $\iscontr(A)$ is a proposition.
-\end{lem}
-
-\begin{lem}
-For any family of propositions $P:A\to\prop$, the dependent function type $\prd{x:A}P(x)$ is a proposition.
-\end{lem}
-
-\begin{cor}
-For any map $f:A\to B$, the type $\isequiv(f)$ is a proposition.
-\end{cor}
-
-\begin{cor}
-For any type $A$ and any $n:\Z_{\geq -2}$, the type $\istrunc{n}(A)$ is a proposition.
-\end{cor}
-
-\begin{cor}
-For any type $A$ and any proposition $P$, the type $A\to P$ is a proposition
-\end{cor}
-
-\begin{cor}
-For any type $A$, the type $A\to \emptyt$ is a proposition.
-\end{cor}
-
-\begin{cor}
-For any type $A$, the type $A\to \unit$ is contractible.
-\end{cor}
-
-\begin{exercises}
-\item Show that for any type $A$ and any $n\geq-2$, the type $\istrunc{n}(A)$ is a proposition.
-\item Show that for any map $f:A\to B$, the type $\isequiv(f)$ is a proposition, 
-\item Show that for any type family $P:A\to\type$ and any $n\geq-2$, we have
-\begin{equation*}
-\Big(\prd{x:A}\istrunc{n}(P(x))\Big)\to\istrunc{n}\Big(\prd{x:A}P(x)\Big).
-\end{equation*}
-In other words, the truncation levels are closed under dependent function types.
-Conclude that the univalence axiom is a proposition.
-\item Use the construction of \autoref{ex:fiber_trans} to construct an equivalence
-\begin{equation*}
-\eqv{\Big(\sm{h:A\to B} f\htpy g\circ h\Big)}{\Big(\prd{x:X}\hfib{f}{x}\to\hfib{g}{x}\Big)}.
-\end{equation*}
-\end{exercises}
-\end{comment}
-
 \include{circle}
 
 \include{pushout}
 
 \include{descent}
 
-%\chapter{Higher homotopy pushouts}
-
-\section{$2$-spans and $2$-pushouts}
-
-\section{Applications}
-
-\begin{thm}
-The join is an associative operation.
-\end{thm}
-
-\begin{thm}
-the 3-by-3-lemma
-\end{thm}
-
-\begin{exercises}
-\item In this exercise we study the \define{reflexive coequalizer}. Let $R:A\to A\to\UU$ be a relation, and $\rho:\prd{x:A}R(x,x)$ be a witness of reflexivity.  
-\begin{subexenum}
-\item Formulate the induction principle and computation rules for the higher inductive type $\mathsf{rcoeq}(A,R,\rho)$ with constructors
-\begin{align*}
-\pts{\eta} &: A \to \mathsf{rcoeq}(A,R,\rho) \\
-\edg{\eta} &: \prd*{x,y:A} R(x,y)\to \id{\pts{\eta}(x)}{\pts{\eta}(y)} \\
-\rfx{\eta} &: \prd{x:A} \edg{\eta}(\rho(x))=\refl{\pts{\eta}(x)}.
-\end{align*}
-\item Show that
-\begin{equation*}
-\begin{tikzcd}
-\sm{x,y:A} R(x,y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & A \arrow[d,"\pts{\eta}"] \\
-A \arrow[r,swap,"\pts{\eta}"] & \mathsf{rcoeq}(A,R,\rho)
-\end{tikzcd}
-\end{equation*}
-commutes, and is a pushout square.
-\item Compute $\mathsf{rcoeq}(A,\idtypevar{A},\refl{})$ and $\mathsf{rcoeq}(A,(\lam{x}{y}\unit),(\lam{x}\ttt))$. Furthermore, consider a pointed type $\pairr{X,x_0}$ as a reflexive relation on the unit type, and compute $\mathsf{rcoeq}(\unit,X,x_0)$.
-\end{subexenum}
-\end{exercises}
+%\include{higher_pushouts}
 
 \include{sequences}
 
 \include{image}
 
-\chapter{Truncations}
-
-\section{The truncations}
+\include{truncation}
 
 \include{homotopy_groups}
 
@@ -182,211 +101,27 @@ commutes, and is a pushout square.
 
 \include{hopf}
 
-\begin{comment}
-\chapter{The Seifert-Van Kampen theorem}
-
-\begin{thm}
-Suppose
-\begin{equation*}
-\begin{tikzcd}
-S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
-A \arrow[r,swap,"i"] & X
-\end{tikzcd}
-\end{equation*}
-is a cocartesian square, in which $S$, $A$, and $B$ are assumed to be $0$-connected. Then 
-\begin{equation*}
-\begin{tikzcd}
-\pi_1(S) \arrow[r,"g"] \arrow[d,swap,"f"] & \pi_1(B) \arrow[d,"j"] \\
-\pi_1(A) \arrow[r,swap,"i"] & \pi_1(X)
-\end{tikzcd}
-\end{equation*}
-is a pushout square of groups.
-\end{thm}
-\end{comment}
+\include{van_kampen}
 
 \include{connected}
 
-\chapter{The wedge and smash product of pointed types}
+\include{smash}
 
-\begin{defn}
-Let $A$ and $B$ be pointed types.
-\begin{enumerate}
-\item We define the \define{wedge} $A\vee B$ of $A$ and $B$ to be the pushout
-\begin{equation*}
-\begin{tikzcd}
-\unit \arrow[r] \arrow[d] & B \arrow[d] \\
-A \arrow[r] & A\vee B
-\end{tikzcd}
-\end{equation*}
-\item We define the \define{smash product} $A\wedge B$ of $A$ and $B$ to be the cofiber of the cogap map of the square
-\begin{equation*}
-\begin{tikzcd}
-\unit \arrow[r] \arrow[d] & B \arrow[d] \\
-A \arrow[r] & A\times B
-\end{tikzcd}
-\end{equation*}
-That is, the smash product is defined as the cofiber of the canonical map $A\vee B\to A\times B$. 
-\end{enumerate}
-\end{defn}
+\include{blakers-massey}
 
-For any two pointed types $A$ and $B$, there is a pointed map
-\begin{equation*}
-\mathsf{pair}_\ast : A \to_\ast (B\to_\ast A\wedge B).
-\end{equation*}
+\chapter{Stable homotopy theory}
 
-\begin{thm}\label{thm:smash_adj}
-Let $A$, $B$, and $X$ be pointed types. Then the pointed map
-\begin{equation*}
-(A\wedge B \to_\ast X)\to_\ast (A \to_\ast (B\to_\ast X))
-\end{equation*}
-given by $f\mapsto f\mathbin{\circ_\ast}\mathsf{pair}_\ast$ is an equivalence.
-Moreove, these equivalences are natural in $A$, $B$, and $X$ in the sense that...
-\end{thm}
+%\chapter{Eilenberg-Mac Lane spaces}
 
-\begin{cor}
-For any $m,n:\N$ we have an equivalence
-\begin{equation*}
-\eqv{{\sphere{m}}\wedge{\sphere{n}}}{\sphere{m+n}}.
-\end{equation*}
-\end{cor}
+%\chapter{Cohomology}
 
-\begin{proof}
-We have
-\begin{align*}
-({\sphere{m}}\wedge{\sphere{n}}\to_\ast X) & \eqvsym (\sphere{m}\to_\ast (\sphere{n}\to_\ast X)) \\
-& \eqvsym \loopspace[m]{\loopspace[n]{X}} \\
-& \eqvsym \loopspace[m+n]{X} \\
-& \eqvsym (\sphere{m+n}\to_\ast X)
-\end{align*}
-By the naturality of the equivalences in \autoref{thm:smash_adj} it follows that the composite equivalence is given by precomposition by the pointed map 
-\begin{equation*}
-\sphere{m}\wedge\sphere{n}\to_\ast \sphere{m+n}
-\end{equation*}
-that corresponds to the identity map $\sphere{m+n}\to_\ast \sphere{m+n}$. Thus it follows by \autoref{ex:yoneda_ptd_types} that this pointed map is an equivalence.
-\end{proof}
+%\chapter{The Mayer-Vietoris sequence}
 
-\begin{thm}
-Given two pointed spaces, there is an equivalence
-\begin{equation*}
-\eqv{\join{X}{Y}}{\susp(X\wedge Y)}.
-\end{equation*}
-\end{thm}
+%\chapter{Hopf invariant}
 
-\begin{exercises}
-\item 
-\begin{subexenum}
-\item Show that $Y$ is equivalent to the mapping cone of $X\to X\vee Y$.
-\item Show that the pushout of $X \leftarrow X\vee Y \rightarrow Y$ is contractible.
-\end{subexenum}
-\item Let $A$ and $B$ be pointed types. Show that the square
-\begin{equation*}
-\begin{tikzcd}
-A+B \arrow[r] \arrow[d] & A\times B \arrow[d] \\
-1+1 \arrow[r] & A\wedge B
-\end{tikzcd}
-\end{equation*}
-is cocartesian.
-\item Show that if
-\begin{equation*}
-\begin{tikzcd}
-S_1 \arrow[r] \arrow[d] & Y_1 \arrow[d] & S_2 \arrow[r] \arrow[d] & Y_2 \arrow[d] \\
-X_1 \arrow[r] & Z_1 & X_2 \arrow[r] & Z_2
-\end{tikzcd}
-\end{equation*}
-are pushout squares, where all types, maps and homotopies are pointed, then so is
-\begin{equation*}
-\begin{tikzcd}
-S_1\vee S_2 \arrow[r] \arrow[d] & Y_1\vee Y_2 \arrow[d] \\
-X_1 \vee X_2 \arrow[r] & Z_1\vee Z_2. 
-\end{tikzcd}
-\end{equation*}
-\item Show that if
-\begin{equation*}
-\begin{tikzcd}
-S \arrow[r] \arrow[d] & Y \arrow[d] \\
-X \arrow[r] & Z
-\end{tikzcd}
-\end{equation*}
-is a cocartesian square of pointed spaces, then the cofiber of $X\vee Y\to Z$ is equivalent to $\susp(S)$.
-\item Show that there is an equivalence
-\begin{equation*}
-\eqv{\susp(X\times Y)}{\susp(X\vee Y)\vee \susp(X\wedge Y)}
-\end{equation*}
-\item Show that $\susp(X\vee Y)$ is a retract of $\susp(X\times Y)$. 
-\item Show that if $f:A\to X$ is a constant of pointed spaces, then $\eqv{M_f}{X\vee \susp(A)}$. 
-\item Show that the cofiber of the diagonal $\delta:\sphere{1}\to \sphere{1}\times\sphere{1}$ is equivalent to $\sphere{2}\vee\sphere{2}$.
-\end{exercises}
+%\chapter{The fourth homotopy group of the $3$-sphere}
 
-\chapter{The Blakers-Massey theorem}
-The Blakers-Massey theorem is a connectivity theorem which can be used to prove the Freudenthal suspension theorem, giving rise to the field of \emph{stable homotopy theory}. It was proven in the setting of homotopy type theory by Lumsdaine et al, and their proof was the first that was given entirely in an elementary way, using only constructions that are invariant under homotopy equivalence. 
-
-Consider a span $A \leftarrow S \rightarrow B$, consisting of an $m$-connected map $f:S\to A$ and an $n$-connected map $g:S\to B$. We take the pushout of this span, and subsequently the pullback of the resulting cospan, as indicated in the diagram
-\begin{equation}\label{eq:BM}
-\begin{tikzcd}
-S \arrow[drr,bend left=15,"g"] \arrow[ddr,bend right=15,swap,"f"] \arrow[dr,densely dotted,"u" near end] \\
-& A \times_{(A \sqcup^S B)} B \arrow[r,"\pi_2"] \arrow[d,"\pi_1"] & B \arrow[d,"\inr"] \\
-& A \arrow[r,swap,"\inl"] & A \sqcup^S B.
-\end{tikzcd}
-\end{equation}
-The universal property of the pullback determines a unique map $u:S\to A \times_{(A\sqcup^S B)} B$ as indicated.
-
-\begin{thm}[Blakers-Massey]
-The map $u:S\to A \times_{(A\sqcup^S B)} B$ of \autoref{eq:BM} is $(n+m)$-connected.
-\end{thm}
-
-\begin{exercises}
-\item Show that if $X$ is $m$-connected and $f:X\to Y$ is $n$-connected, then the map
-\begin{equation*}
-X \to \fib{m_f}{\ast}
-\end{equation*}
-where $m_f:Y\to M_f$ is the inclusion of $Y$ into the cofiber of $f$, is $(m+n)$-connected.
-\item Suppose that $X$ is a connected type, and let $f:X\to Y$ be a map.
-Show that the following are equivalent:
-\begin{enumerate}
-\item $f$ is $n$-connected.
-\item The mapping cone of $f$ is $(n+1)$-connected.
-\end{enumerate}
-\item Apply the Blakers-Massey theorem to the defining pushout square of the smash product to show that if $A$ and $B$ are $m$- and $n$-connected respectively, then there is a $(m+n+\min(m,n)+2)$-connected map
-\begin{equation*}
-\join{\loopspace{A}}{\loopspace{B}}\to \loopspace{A \wedge B}.
-\end{equation*}
-\item Show that the square
-\begin{equation*}
-\begin{tikzcd}
-\unit \arrow[r] \arrow[d] & \bool \arrow[d] \\
-X \arrow[r] & X+\unit
-\end{tikzcd}
-\end{equation*}
-is both a pullback and a pushout. Conclude that the result of the Blakers-Massey theorem is not always sharp.
-\end{exercises}
-
-\chapter{Some stable homotopy theory}
-\section{The Freudenthal suspension theorem}
-
-\chapter{Eilenberg-Mac Lane spaces}
-
-\chapter{Cohomology}
-
-\chapter{The Mayer-Vietoris sequence}
-
-\chapter{Hopf invariant}
-
-\chapter{The fourth homotopy group of the $3$-sphere}
-
-\chapter{Open problems in homotopy type theory}
-We list only the open problems of synthetic homotopy theory, omitting the open problems related to the semantics of homotopy type theory.
-\begin{itemize}
-\item Compute the homotopy groups of the spheres.
-\item Define the Grassmannians.
-\item Prove Freyd's generating hypothesis
-\item Hurewicz theorem
-\item Barratt-Priddy theorem
-\item (Semi-)simplicial types.
-\item Ring structure on the sphere spectrum
-\item Higher Van Kampen theorems
-\item Higher Blakers-Massey theorems
-\item Find a delooping of $\sphere{3}$, and define the octonionic Hopf fibration.
-\end{itemize}
+\include{open_problems}
 
 %\chapter{The real projective spaces}
 
@@ -456,5 +191,7 @@ A useful resource on homotopy (co)limits, the Blakers-Massey theorem and its app
 \backmatter
 
 \printbibliography
+
+\printindex
 
 \end{document}

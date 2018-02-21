@@ -1,0 +1,34 @@
+%\chapter{Higher homotopy pushouts}
+
+\section{$2$-spans and $2$-pushouts}
+
+\section{Applications}
+
+\begin{thm}
+The join is an associative operation.
+\end{thm}
+
+\begin{thm}
+the 3-by-3-lemma
+\end{thm}
+
+\begin{exercises}
+\item In this exercise we study the \define{reflexive coequalizer}. Let $R:A\to A\to\UU$ be a relation, and $\rho:\prd{x:A}R(x,x)$ be a witness of reflexivity.  
+\begin{subexenum}
+\item Formulate the induction principle and computation rules for the higher inductive type $\mathsf{rcoeq}(A,R,\rho)$ with constructors
+\begin{align*}
+\pts{\eta} &: A \to \mathsf{rcoeq}(A,R,\rho) \\
+\edg{\eta} &: \prd*{x,y:A} R(x,y)\to \id{\pts{\eta}(x)}{\pts{\eta}(y)} \\
+\rfx{\eta} &: \prd{x:A} \edg{\eta}(\rho(x))=\refl{\pts{\eta}(x)}.
+\end{align*}
+\item Show that
+\begin{equation*}
+\begin{tikzcd}
+\sm{x,y:A} R(x,y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & A \arrow[d,"\pts{\eta}"] \\
+A \arrow[r,swap,"\pts{\eta}"] & \mathsf{rcoeq}(A,R,\rho)
+\end{tikzcd}
+\end{equation*}
+commutes, and is a pushout square.
+\item Compute $\mathsf{rcoeq}(A,\idtypevar{A},\refl{})$ and $\mathsf{rcoeq}(A,(\lam{x}{y}\unit),(\lam{x}\ttt))$. Furthermore, consider a pointed type $\pairr{X,x_0}$ as a reflexive relation on the unit type, and compute $\mathsf{rcoeq}(\unit,X,x_0)$.
+\end{subexenum}
+\end{exercises}

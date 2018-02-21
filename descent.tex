@@ -24,6 +24,43 @@ For any map $f:A\sqcup^S B\to X$, and any $x:X$, the square
 is a pushout square.
 \end{cor}
 
+\begin{thm}
+Consider a commuting cube of types 
+\begin{equation}\label{eq:cube}
+\begin{tikzcd}
+& A_{11} \arrow[dl] \arrow[dr] \arrow[d] \\
+A_{10} \arrow[d] & B_{11} \arrow[dl] \arrow[dr] & A_{01} \arrow[dl,crossing over] \arrow[d] \\
+B_{10} \arrow[dr] & A_{00} \arrow[d] \arrow[from=ul,crossing over] & B_{01} \arrow[dl] \\
+& B_{00},
+\end{tikzcd}
+\end{equation}
+and suppose the vertical squares are pullback squares. Then the commuting square
+\begin{equation*}
+\begin{tikzcd}
+A_{10}\sqcup^{A_{11}} A_{01} \arrow[r] \arrow[d] & A_{00} \arrow[d] \\
+B_{10}\sqcup^{B_{11}} B_{01} \arrow[r] & B_{00}
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{thm}
+
+\begin{proof}
+It suffices to show that the pullback 
+\begin{equation*}
+(B_{10}\sqcup^{B_{11}} B_{01})\times_{B_{00}}A_{00}
+\end{equation*}
+has the universal property of the pushout. This follows by the descent theorem, since by the pasting lemma for pullbacks we also have that the vertical squares in the cube
+\begin{equation*}
+\begin{tikzcd}
+& A_{11} \arrow[dl] \arrow[dr] \arrow[d] \\
+A_{10} \arrow[d] & B_{11} \arrow[dl] \arrow[dr] & A_{01} \arrow[dl,crossing over] \arrow[d] \\
+B_{10} \arrow[dr] & (B_{10}\sqcup^{B_{11}} B_{01})\times_{B_{00}}A_{00} \arrow[d] \arrow[from=ul,crossing over] & B_{01} \arrow[dl] \\
+& B_{10}\sqcup^{B_{11}} B_{01}
+\end{tikzcd}
+\end{equation*}
+are pullback squares.
+\end{proof}
+
 \begin{exercises}
 \item Consider two maps $f:A\to X$ and $g:B\to X$. The \define{join} $\join{f}{g}$ is defined by the universal property of the pushout as the unique map rendering the diagram
 \begin{equation*}

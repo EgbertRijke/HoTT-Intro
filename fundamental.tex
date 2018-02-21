@@ -16,12 +16,93 @@ We define a map
 \end{defn}
 
 \begin{constr}
-Since we are mapping out of a dependent pair type, we may construct this map by induction. Thus, it suffices to construct a map of type
+By $\Sigma$-induction it suffices to construct a map of type
 \begin{equation*}
 \prd{x:A} \Big(B(x)\to \sm{y:A}C(y)\Big).
 \end{equation*}
 Now let $x:A$ and $b:B(x)$. Then we have $\pairr{x,f(b)}:\sm{y:A}C(y)$. 
 \end{constr}
+
+\begin{lem}\label{lem:fib_total}
+For any fiberwise transformation $f:\prd{x:A}B(x)\to C(x)$, and any $a:A$ and $c:C(a)$, there is an equivalence
+\begin{equation*}
+\eqv{\fib{f(a)}{c}}{\fib{\total{f}}{\pairr{a,c}}}.
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+We first define a map $\varphi_{\pairr{a,c}}:{\fib{f(a)}{c}}\to \fib{\total{f}}{\pairr{a,c}}$ by $\Sigma$-induction.
+It suffices to define a term of type
+\begin{equation*}
+\prd{b:B(a)} (f(a,b)=c)\to \fib{\total{f}}{\pairr{a,c}}
+\end{equation*}
+for every $a:A$ and $c:C(a)$. 
+Since the endpoint of the identification $f(a,b)=c$ is free, we may proceed by path induction. 
+It suffices to construct a term of type $\prd{b:B(a)} \fib{\total{f}}{\pairr{a,f(a,b)}}$.
+For $b:B$, we take
+\begin{equation*}
+\pairr{\pairr{a,b},\refl{\pairr{a,f(a,b)}}}:\fib{\total{f}}{\pairr{a,f(a,b)}}.
+\end{equation*}
+Since we have defined $\varphi_{\pairr{a,c}}$ for all $a:A$ and $c:C(a)$, note that we also obtain a map
+\begin{equation*}
+\varphi_t:{\fib{f(\proj 1(t))}{\proj 2(t)}}\to \fib{\total{f}}{t}
+\end{equation*}
+for every $t:\sm{x:A}C(x)$.
+
+Our next goal is to define a map
+\begin{equation*}
+\psi_{(a,c)}:{\fib{\total{f}}{a,c}}\to{\fib{f(a)}{c}}.
+\end{equation*}
+for every $a:A$ and $c:C(a)$. In fact it will be easier to construct more generally the map
+\begin{equation*}
+\psi_t : \fib{\total{f}}{t}\to \fib{f(\proj 1(t))}{\proj 2(t)}.
+\end{equation*}
+for every $t:\sm{x:A}C(x)$. Let us write $t_1\defeq \proj 1(t)$ and $t_2\defeq \proj 2(t)$.
+By $\Sigma$-induction it suffices to construct a term of type
+\begin{equation*}
+\prd{s:\sm{x:A}B(x)} (\total{f}(s)=t)\to \fib{f(t_1)}{t_2},
+\end{equation*}
+We apply $\Sigma$-induction once more, and we need to construct a term of type
+\begin{equation*}
+\prd{x:A}{y:B(x)} (\total{f}(x,y)=t)\to \fib{f(t_1)}{t_2}.
+\end{equation*}
+Let $x:A$ and $y:B(x)$. Since the endpoint of the identification $\total{f}(x,y)=t$ is free, we proceed by path induction. Our goal is now to construct a term of type
+\begin{equation*}
+\fib{f(x)}{f(x,y)}. 
+\end{equation*}
+Here we simply take $\pairr{y,\refl{f(x,y)}}$, completing the construction of $\psi$.
+
+To show that $\psi$ is a retraction of $\varphi$, we construct an identification 
+\begin{equation*}
+\psi(\varphi(\pairr{b,p}))=\pairr{b,p}
+\end{equation*}
+for each $b:B(a)$ and $p:f(a,b)=c$. We proceed by path induction on $p:f(a,b)=c$. Our goal is now to show that
+\begin{equation*}
+\psi(\varphi(b,\refl{f(a,b)}))=\pairr{b,\refl{f(a,b)}}
+\end{equation*}
+By definition we have
+\begin{align*}
+\varphi\pairr{b,\refl{f(a,b)}} & \jdeq \pairr{\pairr{a,b},\refl{\pairr{a,f(a,b)}}} \\
+\psi\pairr{\pairr{a,b},\refl{\pairr{a,f(a,b)}}} & \jdeq\pairr{b,\refl{f(a,b)}}.
+\end{align*}
+Thus, we simply take $\refl{\pairr{b,\refl{f(a,b)}}}$ to complete the goal of showing that $\psi$ is a retraction of $\varphi$.
+
+To show that $\psi_t$ is a section of $\varphi_t$ for every $t:\sm{x:A}C(x)$, we construct an identification 
+\begin{equation*}
+\varphi(\psi\pairr{\pairr{x,b},r})=\pairr{\pairr{x,b},r}
+\end{equation*}
+for each $x:A$, $y:B(x)$, and $r:\total{f}(x,y)=t$. 
+We proceed by path induction on $r$, so our goal is to show
+\begin{equation*}
+\varphi(\psi(\pairr{x,y},\refl{\pairr{x,f(x,y)}}))=\pairr{x,f(x,y)}.
+\end{equation*}
+By definition we have
+\begin{align*}
+\psi(\pairr{x,y},\refl{\pairr{x,f(x,y)}})& \jdeq \pairr{y,\refl{f(x,y)}} \\
+\varphi\pairr{y,\refl{f(x,y)}} & \jdeq \pairr{\pairr{x,y},\refl{\pairr{x,f(x,y)}}}
+\end{align*}
+Thus, we simply take $\refl{\pairr{x,f(x,y)}}$ to complete the goal of showing that $\psi$ is a section of $\varphi$.
+\end{proof}
 
 \begin{thm}\label{thm:fib_equiv}
 Let $f:\prd{x:A}B(x)\to C(x)$ be a fiberwise transformation. The following are logically equivalent:
@@ -32,58 +113,13 @@ Let $f:\prd{x:A}B(x)\to C(x)$ be a fiberwise transformation. The following are l
 \end{thm}
 
 \begin{proof}
-We will show that $f(x)$ is a contractible map for each $x:A$, if and only if $\total{f}$ is a contractible map. Thus, we will show that $\fib{f(x)}{c}$ is contractible if and only if $\fib{\total{f}}{x,c}$ is contractible, for each $x:A$ and $c:C(x)$. Let $x:A$ and $c:C$. By \autoref{ex:contr_equiv} it suffices to construct an equivalence
-\begin{equation*}
-\varphi:\eqv{\fib{f(x)}{c}}{\fib{\total{f}}{\pairr{x,c}}}.
-\end{equation*}
-The map $\varphi:{\fib{f(x)}{c}}\to{\fib{\total{f}}{\pairr{x,c}}}$ is constructed by path induction, by taking $\pairr{b,\refl{f(x,b)}}$ to $\pairr{\pairr{x,b},\refl{\pairr{x,f(x,b)}}}$.
-
-Next, we define a map
-\begin{equation*}
-\psi:{\fib{\total{f}}{x,c}}\to{\fib{f(x)}{c}}.
-\end{equation*}
-Let $\pairr{\pairr{y,b},r}:\fib{\total{f}}{\pairr{x,v}}$. Then we have $r:\total{f}(y,b)=\pairr{x,c}$. Since the endpoint of $r$ is free, we proceed by path induction on $r$. Our goal is now to construct a term of type
-\begin{equation*}
-\fib{f(y)}{f(y,b)}. 
-\end{equation*}
-Here we simply take $\pairr{b,\refl{f(y,b)}}$, completing the construction of $\psi$.
-
-To show that $\psi$ is a retraction of $\varphi$, we construct an identification 
-\begin{equation*}
-\psi(\varphi(\pairr{b,p})=\pairr{b,p}
-\end{equation*}
-for each $b:B(x)$ and $p:f(x,b)=c$. We proceed by path induction on $p:f(x,b)=c$. Our goal is now to show that
-\begin{equation*}
-\psi(\varphi(\pairr{b,\refl{f(x,b)}})=\pairr{b,\refl{f(x,b)}}
-\end{equation*}
-By definition we have
-\begin{align*}
-\varphi(\pairr{b,\refl{f(x,b)}} & \jdeq \pairr{\pairr{x,b},\refl{\pairr{x,f(x,b)}}} \\
-\psi\pairr{\pairr{x,b},\refl{\pairr{x,f(x,b)}}} & \jdeq\pairr{b,\refl{f(x,b)}}.
-\end{align*}
-Thus, we simply take $\refl{\pairr{b,\refl{f(x,b)}}}$ to complete the goal of showing that $\psi$ is a retraction of $\varphi$.
-
-To show that $\psi$ is a section of $\varphi$, we construct an identification 
-\begin{equation*}
-\varphi(\psi(\pairr{\pairr{y,b},r}))=\pairr{\pairr{y,b},r}
-\end{equation*}
-for each $y:A$, $b:B(y)$, and $r:\total{f}(y,b)=\pairr{x,c}$. 
-We proceed by path induction on $r$, so our goal is to show
-\begin{equation*}
-\varphi(\psi(\pairr{y,b},\refl{\pairr{y,f(y,b)}}))=\pairr{y,f(y,b)}.
-\end{equation*}
-By definition we have
-\begin{align*}
-\psi(\pairr{y,b},\refl{\pairr{y,f(y,b)}})& \jdeq \pairr{b,\refl{f(y,b)}} \\
-\varphi\pairr{b,\refl{f(y,b)}} & \jdeq \pairr{\pairr{y,b},\refl{\pairr{y,f(y,b)}}}
-\end{align*}
-Thus, we simply take $\refl{\pairr{y,f(y,b)}}$ to complete the goal of showing that $\psi$ is a section of $\varphi$.
+By \cref{thm:equiv_contr,thm:contr_equiv} it suffices to show that $f(x)$ is a contractible map for each $x:A$, if and only if $\total{f}$ is a contractible map. Thus, we will show that $\fib{f(x)}{c}$ is contractible if and only if $\fib{\total{f}}{x,c}$ is contractible, for each $x:A$ and $c:C(x)$. However, by \autoref{lem:fib_total} these types are equivalent, so the result follows by \cref{ex:contr_equiv}.
 \end{proof}
 
 \section{The fundamental theorem}
 
 \begin{thm}\label{thm:id_fundamental}
-Let $A$ be a type with $a:A$, and let $B:A\to\type$ be a type family with $b:B(a)$.
+Let $A$ be a type with $a:A$, and let $B$ be be a type family over $A$ with $b:B(a)$.
 Then  the following are logically equivalent:
 \begin{enumerate}
 \item The canonical family of maps
@@ -104,7 +140,7 @@ By \autoref{thm:fib_equiv} it follows that the fiberwise transformation $\rec{a{
 \begin{equation*}
 \eqv{\Big(\sm{x:A}a=x\Big)}{\Big(\sm{x:A}B(x)\Big)}
 \end{equation*}
-on total spaces. We have that $\sm{x:A}a=x$ is contractible. Now it follows by the 3-for-2 property, applied in the case
+on total spaces. We have that $\sm{x:A}a=x$ is contractible. Now it follows by \cref{ex:contr_equiv}, applied in the case
 \begin{equation*}
 \begin{tikzcd}
 \sm{x:A}a=x \arrow[rr,"\total{\rec{a{=}}(b)}"] \arrow[dr,swap,"\eqvsym"] & & \sm{x:A}B(x) \arrow[dl] \\
@@ -114,11 +150,51 @@ on total spaces. We have that $\sm{x:A}a=x$ is contractible. Now it follows by t
 that $\total{\rec{a{=}}(b)}$ is an equivalence if and only if $\sm{x:A}B(x)$ is contractible.
 \end{proof}
 
+As an application of the fundamental theorem we show that equivalences are embeddings. The notion embeddings is the homotopically correct notion of injective maps.
+
+\begin{defn}
+An \define{embedding} is a map $f:A\to B$ satisfying the property that
+\begin{equation*}
+\apfunc{f}:(\id{x}{y})\to(\id{f(x)}{f(y)})
+\end{equation*}
+is an equivalence for every $x,y:A$. We write $\mathsf{is\usc{}emb}(f)$ for the type of witnesses that $f$ is an embedding.
+\end{defn}
+
+\begin{cor}
+\label{cor:emb_equiv} 
+Any equivalence is an embedding.
+\end{cor}
+
+\begin{proof}
+Let $e:\eqv{A}{B}$ be an equivalence, and let $x:A$. Our goal is to show that
+\begin{equation*}
+\apfunc{e} : (\id{x}{y})\to (\id{e(x)}{e(y)})
+\end{equation*}
+is an equivalence for every $y:A$. By \autoref{thm:id_fundamental} it suffices to show that 
+\begin{equation*}
+\sm{y:A}e(x)=e(y)
+\end{equation*}
+is contractible for every $y:A$. Now observe that there is an equivalence
+\begin{samepage}
+\begin{align*}
+\sm{y:A}e(x)=e(y) & \eqvsym \sm{y:A}e(y)=e(x) \\
+& \jdeq \fib{e}{e(x)}
+\end{align*}
+\end{samepage}
+by \cref{thm:fib_equiv}, since for each $y:A$ the map
+\begin{equation*}
+\mathsf{inv} : (e(x)=e(y))\to (e(y)= e(x))
+\end{equation*}
+is an equivalence by \cref{ex:equiv_grpd_ops}.
+The fiber $\fib{e}{e(x)}$ is contractible by \cref{thm:contr_equiv}, so it follows by \autoref{ex:contr_equiv} that the type $\sm{y:A}e(x)=e(y)$ is indeed contractible.
+\end{proof}
+
+\begin{comment}
 As a first application of the fundamental theorem, we compute the identity type of a disjoint sum.
 This illustrates in a simple case the most important technique of computing the identity type of a type, that is also called the \emph{encode-decode method}.
 
 \begin{defn}
-Let $A$ and $B$ be types. We construct equivalences
+Let $A$ and $B$ be types in $\UU$. We construct equivalences
 \begin{align*}
 (\id[A+B]{\inl(x)}{\inl(x')}) & \eqvsym (\id[A]{x}{x'}) \\
 (\id[A+B]{\inl(x)}{\inr(y')}) & \eqvsym \emptyt \\
@@ -130,7 +206,7 @@ Let $A$ and $B$ be types. We construct equivalences
 \begin{constr}
 We define by double induction on the disjoint sum the binary relation
 \begin{equation*}
-E : (A+B)\to (A+B)\to\type
+E : (A+B)\to (A+B)\to\UU
 \end{equation*}
 given by
 \begin{align*}
@@ -150,7 +226,7 @@ is contractible. The center of contraction is taken to be $\pairr{s,\rho(s)}$, s
 \begin{equation*}
 \prd{t:A+B}{e:E(s,t)} \pairr{s,\rho(s)}=\pairr{t,e}.
 \end{equation*}
-This is done by induction on $s$ and $t$, so whe have to show that
+This is done by induction on $s$ and $t$, so we have to show that
 \begin{align*}
 & \prd{x':A}{p:x=x'} \pairr{\inl(x),\refl{x}}=\pairr{x',p} \\
 & \prd{y':A}{q:\emptyt} \pairr{\inl(x),\refl{x}}=\pairr{y',q} \\
@@ -159,12 +235,29 @@ This is done by induction on $s$ and $t$, so whe have to show that
 \end{align*}
 The first and fourth case are easily shown by path induction on $p$, and the second and third case are easily shown by induction on the empty type.
 \end{constr}
+\end{comment}
 
 \begin{exercises}
-\item \label{ex:htpy_total} Let $f,g:\prd{x:A}B(x)\to C(x)$ be two fiberwise transformations. Show that
+\item \label{ex:htpy_total} 
+\begin{subexenum}
+\item Let $f,g:\prd{x:A}B(x)\to C(x)$ be two fiberwise transformations. Show that
 \begin{equation*}
 \Big(\prd{x:A}f(x)\htpy g(x)\Big)\to (\total{f}\htpy \total{g}). 
 \end{equation*}
+\item Let $f:\prd{x:A}B(x)\to C(x)$ and let $g:\prd{x:A}C(x)\to D(x)$. Show that
+\begin{equation*}
+\total{\lam{x}g(x)\circ f(x)}\htpy \total{g}\circ\total{f}.
+\end{equation*}
+\item For any family $B$ over $A$, show that
+\begin{equation*}
+\total{\lam{x}\idfunc[B(x)]}\htpy\idfunc[\sm{x:A}B(x)].
+\end{equation*}
+\end{subexenum}
+\item Construct an equivalence 
+\begin{equation*}
+\eqv{\big(\sm{x:A}f(x)=y\big)}{\big(\sm{x:A}y=f(x)\big)}.
+\end{equation*}
+%Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
 \item \label{ex:fiber_trans}Consider a triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=small]
@@ -185,18 +278,13 @@ with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle commutes.
 \id{\pairr{x,p}}{\pairr{x',p'}}\to \sm{q:\id{x}{x'}} \id{p}{\ct{\ap{f}{q}}{p'}}
 \end{equation*}
 is an equivalence. 
-\item \label{ex:proj_fiber}Let $B:A\to \type$ be a type family over $A$. Show that for the projection map
+\item \label{ex:proj_fiber}Let $B$ be a type family over $A$. Show that for the projection map
 $\proj 1 : (\sm{x:A}B(x))\to A$, the map
 \begin{equation*}
 \lam{y}((x,y),\refl{x}) : B(x)\to \fib{\proj 1}{x}
 \end{equation*}
 is an equivalence, for each $x:A$. Conclude that $\proj 1$ is itself an equivalence if and only if each $B(x)$ is contractible.
-\item \label{ex:emb_equiv} Use \autoref{thm:id_fundamental} to show that for any equivalence $e:\eqv{A}{B}$ and any $x,y:A$, the map
-\begin{equation*}
-\apfunc{e}:(\id{x}{y})\to(\id{e(x)}{e(y)})
-\end{equation*}
-is an equivalence.
-\item \label{ex:id_fundamental_gen}Let $A$ be a type with $a:A$, and let $B:A\to\type$ be a type family over $A$. Show that for \emph{any} family of maps
+\item \label{ex:id_fundamental_gen}Let $A$ be a type with $a:A$, and let $B$ be a type family over $A$. Show that for \emph{any} family of maps
 \begin{equation*}
 f:\prd{x:A} (a=x)\to B(x)
 \end{equation*}
@@ -209,5 +297,19 @@ the following are logically equivalent:
 \end{equation*}
 is contractible.
 \end{enumerate}
-\item \label{ex:id_fundamental_retr}Let $a:A$, and let $P:A\to \type$. Use \autoref{ex:htpy_total,ex:contr_retr,ex:id_fundamental_gen} to show that if each $P(x)$ is a retract of $\id{a}{x}$, then the section $P(x)\to\id{a}{x}$ of the retraction is an equivalence for each $x:A$. 
+\item \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. Use \autoref{ex:htpy_total,ex:contr_retr,ex:id_fundamental_gen} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
+\item Show that the map $\emptyt\to A$ is an embedding for every type $A$.
+\item Show that 
+\begin{equation*}
+(f\htpy g)\to (\mathsf{is\usc{}emb}(f)\leftrightarrow\mathsf{is\usc{}emb}(g))
+\end{equation*}
+for any $f,g:A\to B$.
+\item \label{ex:emb_triangle}Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $H:f\htpy g\circ e$, where $e$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.
 \end{exercises}

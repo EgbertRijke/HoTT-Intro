@@ -15,24 +15,7 @@ The \define{circle} is defined as a higher inductive type $\sphere{1}$ that come
 \base & : \sphere{1} \\
 \lloop & : \id{\base}{\base}.
 \end{align*}
-Just like for ordinary inductive types, the induction principle for higher inductive types provides us with a way of constructing sections of dependent types. However, we need to take the path constructor $\lloop$ into account in the induction principle. To see how we should do that, let us first see how \emph{dependent} functions act on paths.
-
-If we are given a dependent function $f:\prd{x:A}B(x)$ and an identification $p:\id{x}{y}$ in $A$, we cannot directly compare $f(x)$ with $f(y)$, since the types $B(x)$ and $B(y)$ might be judgmentally different types. However, using the transport function we can first transport $f(x)$ along the identification $p:\id{x}{y}$. This way, we obtain a term $\trans{p}{f(x)}:B(y)$, which is now of the same type as $f(y)$, and therefore may be compared to $f(y)$.
-
-\begin{defn}\label{defn:apd}
-Given a dependent function $f:\prd{a:A}B(a)$ and a path $p:\id{x}{y}$ in $A$, we construct a path
-\begin{equation*}
-\apd{f}{p} : \id{\trans{p}{f(x)}}{f(y)}.
-\end{equation*}
-\end{defn}
-
-\begin{constr}
-The path $\apd{f}{p}$ is constructed by path induction on $p$. Thus, it suffices to construct a path
-\begin{equation*}
-\apd{f}{\refl{x}}:\id{\trans{(\refl{x})}{f(x)}}{f(x)}.
-\end{equation*}
-Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simply take $\apd{f}{\refl{x}}\defeq\refl{f(x)}$. 
-\end{constr}
+Just like for ordinary inductive types, the induction principle for higher inductive types provides us with a way of constructing sections of dependent types. However, we need to take the path constructor $\lloop$ into account in the induction principle. 
 
 By applying a section $f:\prd{t:\sphere{1}}P(t)$ to the base point of the circle, we obtain a term $f(\base):P(\base)$. Moverover, using the dependent action on paths of $f$ of \autoref{defn:apd} we also obtain for any dependent function $f:\prd{t:\sphere{1}}P(t)$ a path
 \begin{align*}

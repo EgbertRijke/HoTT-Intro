@@ -1,52 +1,66 @@
-\chapter{Dependent function types and the universe}
+\chapter{Dependent function types and the natural numbers}
+\chaptermark{\texorpdfstring{$\Pi$}{Π}-types and the natural numbers}
 
-\section{Inference rules for dependent function types}
+\section{Dependent function types}
 
-Dependent function types are formed from a type $A$ and a type family $B$ over $A$, i.e.~the \define{$\Pi$-formation rule} is as follows:
+\define{Dependent function types}\index{dependent function type}\index{pi-type@{$\Pi$-type}} are formed from a type $A$ and a type family $B$ over $A$, i.e.~the \define{$\Pi$-formation rule}\index{rule!pi-formation@{$\Pi$-formation}} is as follows:
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
-\UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)$}
+\RightLabel{$\Pi$}
+\UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)~\mathrm{type}$}
 \end{prooftree}
-The idea of dependent function types is that their terms are dependent functions, i.e.~constructions that provide for every $x:A$ a term $b(x):B(x)$. Thus, dependent functions are formed from terms $b(x)$ of type $B(x)$ in context $\Gamma,x:A$, i.e.~the \define{$\lambda$-abstraction rule} is as follows:
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash A\jdeq A'~\mathrm{type}$}
+\AxiomC{$\Gamma,x:A\vdash B(x)\jdeq B'(x)~\textrm{type}$}
+\RightLabel{$\Pi$-eq}
+\BinaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq\prd{x:A'}B'(x)~\mathrm{type}$}
+\end{prooftree}
+Furthermore, when $x'$ is a fresh variable, we also postulate that
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
+\RightLabel{$\Pi$-$x'/x$}
+\UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq \prd{x':A}B(x')~\mathrm{type}$}
+\end{prooftree}
+The idea of dependent function types is that their terms are dependent functions, i.e.~constructions that provide for every $x:A$ a term $b(x):B(x)$. Thus, dependent functions are formed from terms $b(x)$ of type $B(x)$ in context $\Gamma,x:A$, i.e.~the \define{$\lambda$-abstraction rule}\index{lambda-abstraction@{$\lambda$-abstraction}}\index{rule!lambda-abstraction@{$\lambda$-abstraction}} is as follows:
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
+\RightLabel{$\lambda_A$}
 \UnaryInfC{$\Gamma\vdash \lam{x}b(x) : \prd{x:A}B(x)$}
 \end{prooftree}
-We also need to know \emph{how to use} dependent functions.
-This is determined by the \define{evaluation rule}, which asserts that given a dependent function $f:\prd{x:A}B(x)$ in context $\Gamma$ we obtain a term $f(x)$ of type $B(x)$ in context $\Gamma,x:A$. More formally:
 \begin{prooftree}
-\AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
-\UnaryInfC{$\Gamma,f:\prd{y:A}B(y),x:A\vdash \mathsf{ev}(f,x) : B(x)$}
+\AxiomC{$\Gamma,x:A \vdash b(x)\jdeq b'(x) : B(x)$}
+\RightLabel{$\lambda_A$-eq}
+\UnaryInfC{$\Gamma\vdash \lam{x}b(x)\jdeq \lam{x}b'(x) : \prd{x:A}B(x)$}
 \end{prooftree}
-In other words, every term of type $B(x)$ in context $\Gamma,x:A$ determines a term of type $\prd{x:A}B(x)$ in context $\Gamma$, and vice versa. The $\lambda$-abstraction rule and the evaluation rule are mutual inverses: we impose the \define{$\beta$-rule}
+Furthermore, when $x'$ is a fresh variable, we also postulate that
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
-\UnaryInfC{$\Gamma,x:A \vdash \mathsf{ev}(\lambda y.b(y),x)\jdeq b(x) : B(x)$}
+\RightLabel{$\lambda_A$-$x'/x$}
+\UnaryInfC{$\Gamma\vdash \lam{x}b(x)\jdeq \lam{x'}b(x') : \prd{x:A}B(x)$}
 \end{prooftree}
-and the \define{$\eta$-rule}
+There are also rules providing a way to \emph{use} dependent functions.
+This is determined by the \define{evaluation rule}\index{evaluation}\index{rule!evaluation}, which asserts that given a dependent function $f:\prd{x:A}B(x)$ in context $\Gamma$ we obtain a term $f(x)$ of type $B(x)$ in context $\Gamma,x:A$. More formally:
 \begin{prooftree}
-\AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
-\UnaryInfC{$\Gamma, f:\prd{x:A}B(x) \vdash \lam{x}\mathsf{ev}(f,x)\jdeq f : \prd{x:A}B(x)$}
+\AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
+\RightLabel{$ev_A$}
+\UnaryInfC{$\Gamma,x:A\vdash f(x) : B(x)$}
+\end{prooftree}
+In other words, every term of type $B(x)$ in context $\Gamma,x:A$ determines a term of type $\prd{x:A}B(x)$ in context $\Gamma$, and vice versa. The $\lambda$-abstraction rule and the evaluation rule are mutual inverses: we impose the \define{$\beta$-rule}\index{beta-rule@{$\beta$-rule}}\index{rule!beta-rule@{$\beta$-rule}}
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
+\RightLabel{$\beta$}
+\UnaryInfC{$\Gamma,x:A \vdash (\lambda y.b(y))(x)\jdeq b(x) : B(x)$}
+\end{prooftree}
+and the \define{$\eta$-rule}\index{eta-rule@{$\eta$-rule}}\index{rule!eta-rule@{$\eta$-rule}}
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
+\RightLabel{$\eta$}
+\UnaryInfC{$\Gamma \vdash \lam{x}f(x) \jdeq f : \prd{x:A}B(x)$}
 \end{prooftree}
 This completes the specification of dependent function types.
 
 \begin{rmk}
-Note that the $\eta$-rule makes sense because $\prd{x:A}B(x)$ weakened by $\prd{x:A}B(x)$ is judgmentally equal to the dependent function type $\prd{x:A}B(x)$ formed in context $\Gamma,f:\prd{x:A}B(x)$. 
-More generally, the $\Pi$-formation rule commutes with weakening, the derivations
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A~\textrm{type}$}
-  \AxiomC{$\Gamma,y:B\vdash C(y)~\textrm{type}$}
-  \UnaryInfC{$\Gamma\vdash\prd{y:B}C(y)~\textrm{type}$}
-\BinaryInfC{$\Gamma,x:A\vdash\prd{y:B}C(y)~\textrm{type}$}
-\end{prooftree}
-and
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A~\textrm{type}$}
-  \AxiomC{$\Gamma,y:B\vdash C(y)~\textrm{type}$}
-\BinaryInfC{$\Gamma,x:A,y:B\vdash C(y)~\textrm{type}$}
-\UnaryInfC{$\Gamma,x:A\vdash\prd{y:B}C(y)~\textrm{type}$}
-\end{prooftree}
-result in judgmentally equal types in context $\Gamma,x:A$.
+Types of dependent functions with \emph{multiple} arguments can be obtained by iterating the $\Pi$-construction.
 \end{rmk}
 
 \begin{rmk}
@@ -57,7 +71,21 @@ Some authors write
 for the dependent function type $\prd{x:A}B(x)$. 
 \end{rmk}
 
-\section{Non-dependent function types}
+\begin{rmk}\label{rmk:ev_var}
+By the derivation
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A\vdash B~\mathrm{type}$}
+\RightLabel{$\Pi_A$}
+\UnaryInfC{$\Gamma\vdash\prd{x:A}B(x)~\mathrm{type}$}
+\RightLabel{$\delta$}
+\UnaryInfC{$\Gamma,f:\prd{x:A}B(x)\vdash f:\prd{x:A}B(x)$}
+\RightLabel{$ev$}
+\UnaryInfC{$\Gamma,f:\prd{x:A}B(x),x:A\vdash f(x):B(x)$}
+\end{prooftree}
+it follows that one can also evaluate variables of type $\prd{x:A}B(x)$.
+\end{rmk}
+
+\section{Function types}
 In the case where both $A$ and $B$ are types in context $\Gamma$, we may first weaken $B$ by $A$, and then apply the formation rule for the dependent function type:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
@@ -65,34 +93,57 @@ In the case where both $A$ and $B$ are types in context $\Gamma$, we may first w
 \BinaryInfC{$\Gamma,x:A\vdash B~\textrm{type}$}
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B~\textrm{type}$}
 \end{prooftree}
-The result is the type of functions that take an argument of type $A$, and return a term of type $B$. In other words, terms of the type $\prd{x:A}B$ are \emph{ordinary} functions from $A$ to $B$. We write $A\to B$ for the type of functions from $A$ to $B$.
+The result is the type of functions that take an argument of type $A$, and return a term of type $B$. In other words, terms of the type $\prd{x:A}B$ are \emph{ordinary} functions from $A$ to $B$. We write $A\to B$ for the \define{type of functions}\index{function type} from $A$ to $B$.
 
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
+\RightLabel{$\to$}
 \BinaryInfC{$\Gamma\vdash A\to B~\textrm{type}$}
-\end{prooftree}
+\end{prooftree}%
+\index{arrow-formation@{$\to$-formation}}\index{rule!arrow-formation@{$\to$-formation}}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \AxiomC{$\Gamma,x:A\vdash b(x):B$}
+\RightLabel{$\lambda$}
 \BinaryInfC{$\Gamma\vdash \lam{x}b(x):A\to B$}
-\end{prooftree}
+\end{prooftree}%
+\index{lambda-abstraction@{$\lambda$-abstraction}}\index{rule!lambda-abstraction@{$\lambda$-abstraction}}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
-\UnaryInfC{$\Gamma,x:A\vdash\mathsf{ev}(f,x):B$}
-\end{prooftree}
+\RightLabel{$ev$}
+\UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
+\end{prooftree}%
+\index{rule!evaluation}\index{evaluation}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \AxiomC{$\Gamma,x:A\vdash b(x):B$}
-\BinaryInfC{$\Gamma,x:A\vdash\mathsf{ev}(\lam{y}b(y),x)\jdeq b(x):B$}
-\end{prooftree}
+\RightLabel{$\beta$}
+\BinaryInfC{$\Gamma,x:A\vdash(\lam{y}b(y))(x)\jdeq b(x):B$}
+\end{prooftree}%
+\index{rule!beta-rule@{$\beta$-rule}}\index{beta-rule@{$\beta$-rule}}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
-\UnaryInfC{$\Gamma\vdash\lam{x}\mathsf{ev}(f,x)\jdeq f:A\to B$}
+\RightLabel{$\eta$}
+\UnaryInfC{$\Gamma\vdash\lam{x} f(x)\jdeq f:A\to B$}
 \end{prooftree}
+\index{rule!eta-rule@{$\eta$-rule}}\index{eta-rule@{$\eta$-rule}}
+
+\begin{rmk}
+We also use the exponent notation $B^A$\index{exponent} for the function type $A\to B$. Furthermore, we maintain the convention that the $\to$ associates to the right, i.e.~when we write $A\to B\to C$, we mean $A\to (B\to C)$.
+\end{rmk}
+
+\begin{rmk}
+Similar to \cref{rmk:ev_var}, we can derive
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash A~\mathrm{type}$}
+\AxiomC{$\Gamma\vdash B~\mathrm{type}$}
+\BinaryInfC{$\Gamma,f:B^A,x:A\vdash f(x):B$}
+\end{prooftree}
+\end{rmk}
 
 \begin{defn}
-For any type $A$ in context $\Gamma$, we define the \define{identity function} $\idfunc[A]:A\to A$ using the `variable rule':
+For any type $A$ in context $\Gamma$, we define the \define{identity function}\index{identity function|textbf} $\idfunc[A]:A\to A$ using the `variable rule'\index{variable rule}\index{rule!variable rule}:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \UnaryInfC{$\Gamma,x:A\vdash x:A$}
@@ -101,7 +152,7 @@ For any type $A$ in context $\Gamma$, we define the \define{identity function} $
 \end{defn}
 
 \begin{defn}
-For any three types $A$, $B$, and $C$ in context $\Gamma$, there is a composition operation
+For any three types $A$, $B$, and $C$ in context $\Gamma$, there is a \define{composition}\index{composition!of functions|textbf} operation
 \begin{equation*}
 \mathsf{comp}:(B\to C)\to ((A\to B)\to (A\to C)),
 \end{equation*}
@@ -115,28 +166,34 @@ i.e.~we can derive
 We will write $g\circ f$ for $\mathsf{ev}(\mathsf{ev}(\mathsf{comp},g),f)$.
 \end{defn}
 
-\begin{defn}
-For any $f:A\to B$ and $g:B\to C$, we define the \define{composition} $g\circ f:A\to C$ as follows:
+\begin{constr}
+We give the following derivation to define the composition operation:
+\begin{small}
 \begin{prooftree}
-\AxiomC{$\Gamma\vdash C~\textrm{type}$}
-\AxiomC{$\Gamma\vdash f:A\to B$}
-\UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
-\AxiomC{$\Gamma\vdash A~\textrm{type}$}
-\AxiomC{$\Gamma\vdash g:B\to C$}
-\UnaryInfC{$\Gamma,y:B\vdash \mathsf{ev}(g,y):C$}
-\BinaryInfC{$\Gamma,x:A,y:B\vdash \mathsf{ev}(g,y):C$}
-\BinaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(g,\mathsf{ev}(f,x)):C$}
-\BinaryInfC{$\Gamma\vdash g\circ f\defeq \lam{x}\mathsf{ev}(g,\mathsf{ev}(f,x)) : A\to C$}
+\AxiomC{$\Gamma\vdash A~\mathrm{type}$}
+\AxiomC{$\Gamma\vdash B~\mathrm{type}$}
+\BinaryInfC{$\Gamma,f:B^A,x:A\vdash f(x):B$}
+\UnaryInfC{$\Gamma,g:C^B,f:B^A,x:A\vdash f(x):B$}
+\AxiomC{$\Gamma\vdash B~\mathrm{type}$}
+\AxiomC{$\Gamma\vdash C~\mathrm{type}$}
+\BinaryInfC{$\Gamma,g:C^B,y:B\vdash g(y):C$}
+\UnaryInfC{$\Gamma,g:C^B,f:B^A,y:B\vdash g(y):C$}
+\UnaryInfC{$\Gamma,g:C^B,f:B^A,x:A,y:B\vdash g(y):C$}
+\BinaryInfC{$\Gamma,g:C^B,f:B^A,x:A\vdash g(f(x)) : C$}
+\UnaryInfC{$\Gamma,g:C^B,f:B^A\vdash \lam{x}g(f(x)):C^A$}
+\UnaryInfC{$\Gamma,g:B\to C\vdash \lam{f}{x}g(f(x)):B^A\to C^A$}
+\UnaryInfC{$\Gamma\vdash\mathsf{comp}\defeq \lam{g}{f}{x}g(f(x)):C^B\to (B^A\to C^A)$}
 \end{prooftree}
-\end{defn}
+\end{small}
+\end{constr}
 
 \begin{lem}
-Composition of functions is associative, i.e. we can derive
+Composition of functions is associative\index{associativity!of function composition}\index{composition!of functions!associativity}, i.e. we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \AxiomC{$\Gamma\vdash g:B\to C$}
 \AxiomC{$\Gamma\vdash h:C\to D$}
-\TrinaryInfC{$\Gamma\vdash (h\circ g)\circ f\jdeq h\circ(g\circ f):A\to D$}
+\TrinaryInfC{$\Gamma \vdash (h\circ g)\circ f\jdeq h\circ(g\circ f):A\to D$}
 \end{prooftree}
 \end{lem}
 
@@ -159,7 +216,7 @@ In the following derivation we prove that composition of functions is associativ
 \end{proof}
 
 \begin{lem}\label{lem:fun_unit}
-Composition of functions satisfies the left and right unit laws, i.e.~we can derive
+Composition of functions satisfies the left and right unit laws\index{left unit law|see {unit laws}}\index{right unit law|see {unit laws}}\index{unit laws!of function composition}, i.e.~we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:A\to B$}
@@ -185,34 +242,88 @@ The right unit law is left as \autoref{ex:fun_right_unit}.
 \end{proof}
 
 \section{The natural numbers}
-The archetypal example of an inductive type is the type of natural numbers, which is specified by a term $0$ and a successor function. To prove properties about the natural numbers, one uses its induction principle. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{sections} of dependent types over the natural numbers. 
-
-\begin{defn}
-We define $\nat$ to be a type equipped with
-\begin{align*}
-0 & : \nat \\
-S & : \nat \to\nat,
-\end{align*}
-satisfying the induction principle, that for any type family $P:\nat\to\type$ there is a term
+The archetypal example of an inductive type is the type of \emph{natural numbers}. 
+The type of \define{natural numbers}\index{natural numbers|see N@{$\N$}} is defined to be a closed type $\nat$\index{N@{$\N$}} equipped with closed terms for a \define{zero term}\index{zero term} and a \define{successor function}\index{successor function!of N@{of $\N$}}\index{function!successor on N@{successor on $\N$}}
 \begin{equation*}
-\ind{\nat}:P(0)\to \Big(\prd{n:\nat}P(n)\to P(S(n))\Big)\to \prd{n:\nat}P(n),
+0:\N \qquad\text{and}\qquad S:\N\to\N,
 \end{equation*}
-for which the computation rules
+To prove properties about the natural numbers, we postulate an \emph{induction principle}\index{induction principle!of N@{of $\N$}} for $\N$. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{dependent functions} of types depending on the natural numbers. 
+
+The \define{induction principle} for $\N$ states that for every type $P$ in context $\Gamma,n:\N$ one can infer
+\begin{prooftree}
+\def\fCenter{\Gamma}
+\Axiom$\fCenter\ \vdash p_0:P(0)$
+\noLine
+\UnaryInf$\fCenter\ \vdash p_S:\prd{n:\N}P(n)\to P(S(n))$
+\RightLabel{$\N{-}\mathrm{Ind}$}
+\UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S):\prd{n:\N} P(n)$
+\end{prooftree}
+Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $0$ or a successor, i.e.~with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
+\begin{prooftree}
+\AxiomC{$\cdots$}
+\RightLabel{$\N{-}\mathrm{Comp}(0)$}
+\UnaryInfC{$\Gamma \vdash \ind{\N}(p_0,p_S,0)\jdeq p_0 : P(0)$}
+\end{prooftree}
+\begin{prooftree}
+\AxiomC{$\cdots$}
+\RightLabel{$\N{-}\mathrm{Comp}(S)$}
+\UnaryInfC{$\Gamma, n:\N \vdash  \ind{\N}(p_0,p_S,S(n))\jdeq p_S(n,\ind{\N}(p_0,p_S,n)) : P(S(n))$}
+\end{prooftree}
+
+Using the induction principle of $\N$ we can perform many familiar constructions. 
+For instance, we can define the \define{addition operation}\index{addition!on N@{on $\N$}}\index{function!addition on N@{addition on $\N$}}
+\begin{equation*}
+\mathsf{add}:\N\to (\N\to\N)
+\end{equation*}
+by induction.
+
+Informally, the definition of addition is as follows. By induction it suffices to construct a function $add_0 : \N\to\N$, and a function
 \begin{align*}
-\ind{\nat}(p_0,p_S,0) & \jdeq p_0 \\
-\ind{\nat}(p_0,p_S,S(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
+add_S(f):\N\to\N,
 \end{align*}
-hold.
-\end{defn}
+assuming $n:\N$ and $f:\N\to\N$. 
+The function $add_0:\N\to\N$ is of course taken to be $\idfunc[\N]$, since it has to add nothing. Given a function $f:\N\to\N$ we define $add_S(f)$ to be $\lam{m}S(f(m))$, simply adding one to $f$ pointwise.
 
-\begin{itemize}
-\item define addition.
-\end{itemize}
+The derivation for the construction of $add_S$ looks as follows:
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash\N~\mathrm{type}$}
+\AxiomC{}
+\UnaryInfC{$\vdash\N~\mathrm{type}$}
+\AxiomC{}
+\UnaryInfC{$\vdash\N~\mathrm{type}$}
+\BinaryInfC{$f:\N^\N,m:\N\vdash f(m):\N$}
+\AxiomC{}
+\UnaryInfC{$\vdash S:\N\to\N$}
+\UnaryInfC{$n:\N\vdash S(n):\N$}
+\UnaryInfC{$f:\N^\N,m:\N,n:\N\vdash S(n):\N$}
+\BinaryInfC{$f:\N^\N,m:\N\vdash S(f(m)):\N$}
+\BinaryInfC{$n:\N,f:\N^\N,m:\N\vdash S(f(m)):\N$}
+\UnaryInfC{$\vdash add_S\defeq \lam{n}{f}{m}S(f(m)):\N\to \N^\N \to \N^\N$}
+%\BinaryInfC{$\vdash\mathsf{add}:\ind{\N}(add_0,add_S):\N\to \N^\N$}
+\end{prooftree}
+We combine this derivation with the induction principle of $\N$ to complete the construction of addition:
+\begin{prooftree}
+\AxiomC{}
+\UnaryInfC{$\vdash add_0\defeq \idfunc[\N]:\N^\N$}
+\AxiomC{}
+\UnaryInfC{$\vdash add_S:\N\to \N^\N \to \N^\N$}
+\BinaryInfC{$\vdash\mathsf{add}:\ind{\N}(add_0,add_S):\N\to \N^\N$}
+\end{prooftree}
+Usually we will write $n+m$ for $\mathsf{add}(n,m)$. By the computation rules we have
+\begin{align*}
+0+m & \jdeq m \\
+S(n)+m & \jdeq S(n+m)
+\end{align*}
+for any $n,m:\N$. 
 
+\begin{rmk}
+The rules that we provided so far are not sufficient to also conclude that $n+0\jdeq n$ and $n+ S(m)\jdeq S(n+m)$. However, once we have introduced the \emph{identity type} we will nevertheless be able to \emph{identify} $n+0$ with $n$, and $n+ S(m)$ with $S(n+m)$. 
+\end{rmk}
 
 \begin{exercises}
-\item \label{ex:fun_right_unit}Give a derivation for the right unit law of \autoref{lem:fun_unit}.
-\item In this exercise we generalize the composition operation of non-dependent function types:
+\item \label{ex:fun_right_unit}Give a derivation for the right unit law of \autoref{lem:fun_unit}.\index{unit laws!for function composition}
+\item In this exercise we generalize the composition operation of non-dependent function types\index{composition!of dependent functions}:
 \begin{subexenum}
 \item Define a composition operation for dependent function types
 \begin{prooftree}
@@ -221,13 +332,13 @@ hold.
 \BinaryInfC{$\Gamma\vdash g\circ f:\prd{x:A} C(x,\mathsf{ev}(f,x))$}
 \end{prooftree}
 and show that this operation agrees with ordinary composition when it is specialized to non-dependent function types.
-\item Show that composition of dependent functions is associative.
-\item Show that composition of dependent functions satisfies the right unit law:
+\item Show that composition of dependent functions is associative.\index{associativity!of dependent function composition}\index{composition!of dependent functions!associativity}
+\item Show that composition of dependent functions satisfies the right unit law\index{unit laws!dependent function composition}:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
 \UnaryInfC{$\Gamma\vdash f\circ\idfunc[A]\jdeq f :\prd{x:A}B(x)$}
 \end{prooftree}
-\item Show that composition of dependent functions satisfies the left unit law:
+\item Show that composition of dependent functions satisfies the left unit law\index{unit laws!dependent function composition}:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
 \UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:\prd{x:A}B(x)$}
@@ -235,7 +346,7 @@ and show that this operation agrees with ordinary composition when it is special
 \end{subexenum}
 \item 
 \begin{subexenum}
-\item Construct the \define{constant function} 
+\item Construct the \define{constant function}\index{constant function}\index{function!constant function}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \UnaryInfC{$\Gamma,y:B\vdash \mathsf{const}_y:A\to B$}
@@ -252,19 +363,33 @@ and show that this operation agrees with ordinary composition when it is special
 \BinaryInfC{$\Gamma,y:B\vdash g\circ\mathsf{const}_y\jdeq \mathsf{const}_{\mathsf{ev}(g,y)}:A\to C$}
 \end{prooftree}
 \end{subexenum}
-\item 
+\item \label{ex:swap}
 \begin{subexenum}
-\item Given two types $A$ and $B$ in context $\Gamma$, and a type $C$ in context $\Gamma,x:A,y:B$, define a function
+\item Given two types $A$ and $B$ in context $\Gamma$, and a type $C$ in context $\Gamma,x:A,y:B$, define the \define{swap function}\index{function!swap}\index{swap function}
 \begin{equation*}
-\Gamma\vdash \mathsf{swap}:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
+\Gamma\vdash \sigma:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
 \end{equation*}
 that swaps the order of the arguments.
 \item Show that
 \begin{equation*}
-\Gamma\vdash \mathsf{swap}\circ\mathsf{swap}\jdeq\idfunc:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to \Big(\prd{x:A}{y:B}C(x,y)\Big).
+\Gamma\vdash \sigma\circ\sigma\jdeq\idfunc:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to \Big(\prd{x:A}{y:B}C(x,y)\Big).
 \end{equation*}
 \end{subexenum}
-\item Define for every $k:\N$ the function $n\mapsto k^n$. 
-\item Define the $\min$ and $\max$ functions of type $\N\to(\N\to\N)$.
-\item Define the function $n\mapsto n!$. 
+\item 
+\begin{subexenum}
+\item Define the \define{multiplication}\index{multiplication!on N@{on $\N$}}\index{function!multiplication on N@{multiplication on $\N$}} operation $\mathsf{mul}:\N\to(\N\to\N)$.
+\item Define the \define{power}\index{power function on N@{power function on $\N$}}\index{function!power function on N@{power function on $\N$}} operation $n,m\mapsto m^n$ of type $\N\to (\N\to \N)$.
+\item Define the \define{factorial}\index{factorial function}\index{function!factorial function} function $n\mapsto n!$. 
+\end{subexenum}
+\item Define the binary $\min$ and $\max$ functions $\mathsf{min},\mathsf{max}:\N\to(\N\to\N)$.\index{minimum function}\index{maximum function}\index{function!min}\index{function!max}
+\item Construct a function
+\begin{equation*}
+\ind{\nat}:P(0)\to \Big(\prd{n:\nat}P(n)\to P(S(n))\Big)\to \prd{n:\nat}P(n),
+\end{equation*}
+in context $\Gamma$, for every type $P$ in context $\Gamma,n:\N$, and show that the computation rules
+\begin{align*}
+\ind{\nat}(p_0,p_S,0) & \jdeq p_0 \\
+\ind{\nat}(p_0,p_S,S(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
+\end{align*}
+hold. \emph{Note: this is more an exercise in type theoretical bookkeeping than an exercise about the natural numbers.}
 \end{exercises}

@@ -9,10 +9,76 @@
 \input{mindmap}
 \end{figure}
 
-From a syntactic point of view, type theory is a just a deductive system, or a language with enough structure to encode (most) mathematical practice. It can be used as a constructive logic, a constructive set theory, a programming language, or indeed for `synthetic homotopy theory'. These are four points of view, where types are treated as propositions, sets, data types, or $\omega$-groupoids, respectively. In this course we will mostly focus on the latter point of view, but it is worth stressing that each of the four points of view is of fundamental importance, and will occur in the course.
-
 In the present lecture we do not commit to either point of view, and simply present a deductive system of dependent type theory. It must be noted that \emph{types} and \emph{terms} are primitive notions in this system. Therefore, we will only learn what a type is by learning in what ways types may be used. The semantics of type theory is currently an active field of research (part of homotopy type theory), and could be the topic of an entire other course.
 
 We start at the very beginning, describing the deductive system of dependent type theory is in \autoref{ch:dtt} without any type forming operations. Then we gradually introduce the standard type forming operations until we give Martin-L\"of's inductive definition of identity types. 
 
 We cover the basics --- including equivalences, the univalence axiom, and higher inductive types --- and we introduce the student to the subfield of homotopy type theory that is sometimes called \emph{synthetic homotopy theory}. Early on, students will get acquainted with the basic techniques that are used in homotopy type theory to characterize the identity types of various classes of types, and once higher inductive types are introduced students will get acquainted with the descent property that can be used to construct type families over higher inductive types in order to prove properties about them.
+
+\section{The Curry-Howard correspondence}
+%Dependent type theory is designed to reflect closely on actual mathematical practice and is compatible with classical logic. The foundational issue that isomorphic objects may have wildly different encodings in set-theoretic language, complicating the verification of mathematics, is addressed in type theory, where objects can only ever be defined up to equivalence. Despite the fact that dependent type theory is of constructive nature, it is important to note that type theory is not anti-classical: at the loss of certain properties of constructive type theory constructivists may care about, the axiom of choice may be assumed in type theory and it is in fact consistent with the univalence axiom. This may be helpful to obtain some classical results in type theory.
+
+%One of the important properties that dependent type theory has (when the axiom of choice is not assumed) is that  
+
+%From a logical point of view, type theory can be seen as a deductive system for constructive logic, in which types are propositions of which the constituents are precisely its proofs. In the view of Heyting, `to know the meaning of a proposition is to know which constructions can be considered as proofs of that proposition'. For instance, a proof of the proposition $A\to B$ is an algorithm that transforms proofs of $A$ into proofs of $B$.
+
+From a syntactic point of view, type theory is a just a deductive system, or a language with enough structure to encode (most) mathematical practice. If one thinks of type theory as a deductive system, then it is natural to think of types as propositions. The terms of a type are then its proofs. However, one important difference between types and propositions is that types may have different terms, whereas propositions are completely determined by their truth value, and therefore do not have intrinsic structure beyond their provability. In other words, if there are two proofs of a given proposition $P$, then these two proofs are never regarded as distinct elements of that proposition (although they might be distinct in a syntactic sense). Nevertheless, the analogy between types and propositions holds up quite well, and is made precise in the \define{Curry-Howard correspondence}, see \cref{table:ch}.
+
+The phenomenon that types may have distinct terms is known as \define{proof-relevance}: to construct a term of a given type with a certain property it often matters how that term is constructed. This is of course no different in mathematical practice. For example, every now and then one encounters in a mathematical exposition a proposition that of the form `structures $A$ and $B$ are isomorphic', with the isomorphism being constructed in the proof. Here it matters of course how that isomorphism is constructed, and that specific isomorphism might even be used later on. Thus, the idea of proof-relevance is nothing new.
+
+Since types may possess many terms, one might observe that there are also formal similarities between types and sets. Indeed, a set is completely determined by how one can give an element of that set, in a similar way that a proposition is determined by how one can give a proof of that proposition. The Curry-Howard correspondence also provides a translation between types and sets.
+
+An important difference between type theory and set theory, which makes type theory more useful as a language for formalizing mathematical constructions, is that the theory of types is itself a deductive system, whereas the theory of sets is formulated on a \emph{separate} deductive system: first order logic. Moreover, one may extract programs from proofs: a proof of the existence of an object with a certain property yields a construction of that object together with a proof that the constructed object indeed satisfies the stated property.
+
+\begin{table}\label{table:ch}
+\caption{The Curry-Howard correspondence}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\emph{First order logic} & \emph{Set theory} & \emph{Type theory}\\
+\midrule
+Propositions & Sets & Types\\
+Predicates & Families of sets & Dependent types\\
+Proofs & Elements & Terms \\
+$\top$ & $\{\emptyset\}$ & $\unit$\\
+$\bot$ & $\emptyset$ & $\emptyt$ \\
+$P \land Q$ & $A \times B$ & $A \times B$ \\
+$P \vee Q$ & $A \sqcup B$ & $A + B$ \\
+$\exists x.P(x)$ & $\coprod_{i\in I}A_i$ & $\sm{x:A}B(x)$ \\
+$\forall x.P(x)$ & $\prod_{i\in I}A_i$ & $\prd{x:A}B(x)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Types in mathematical practice}
+
+
+To illustrate the concept of type dependency, let us have a closer look at the anatomy of the following purposefully simple lemma.
+
+\begin{lem}\label{lem:unit}
+Given a binary operation $\mu:A\times A\to A$ on a set $A$, any $u_l\in A$ satisfying satisfying the left unit law $\mu(u_l,x)=x$, and any $u_r\in A$ satisfying the right unit law $\mu(x,u_r)=x$, one has $u_l=u_r$. 
+\end{lem}
+
+\begin{proof}
+Since $u_l$ is a left unit, we have in particular $u_l=\mu(u_l,u_r)$. Furthermore, since $u_r$ is a right unit we have in particular $\mu(u_l,u_r)=u_r$. Thus, we have $u_l=\mu(u_l,u_r)=u_r$. 
+\end{proof}
+
+\begin{samepage}
+By the hypotheses of \autoref{lem:unit}, we start the proof with the following set of presuppositions:
+\begin{align*}
+A & : \mathbf{Set} \\
+\mu & : A\times A\to A \\
+u_l & : A \\
+p & : \forall x.\,\mu(u_l,x)=x\\
+u_r & : A \\
+q & : \forall x.\,\mu(x,u_r)=x,
+\end{align*}
+and the task is to show that $u_l=u_r$.
+\end{samepage}
+
+This list of assumptions is called the context of our proof, and the goal $u_l=u_r$ is a type in this context. 
+Note that $\mathbf{Set}$ is a type in the empty context (where no assumptions are made), $A\times A\to A$ is a type in the context $A:\mathbf{Set}$, also $A$ is a type in the context $A:\mathrm{Set}$, and $\forall x.\,\mu(u_l,x)=x$ is a type in context $A:\mathbf{Set},\mu:A\times A\to A,u_l:A$, and so on.
+In principle, one could give such a finite list of presumed structure for any mathematical text at any position in the text.
+
+More generally, \define{contexts} are lists of `typed' variable declarations. By `typed' we mean that any variable is assigned a (unique) type. A context is always finite, and the variables in a context can have any type, possibly depending on variables that have been declared previously. In our example, the variable $p:\forall x.\,\mu(u_l,x)=x$ depends on $A:\mathbf{Set}$, $\mu:A\times A\to A$, and $u_l:A$. 

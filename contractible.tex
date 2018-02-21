@@ -6,16 +6,20 @@
 \begin{thm}\label{thm:contractible}
 Let $A$ be a type. The following are equivalent:
 \begin{enumerate}
-\item $A$ is \define{contractible}: there is a term of type
+\item $A$ is \define{contractible}\index{contractible!type|textbf}: there is a term of type
 \begin{equation*}
 \iscontr(A) \defeq \sm{c:A}\prd{x:A}c=x.
 \end{equation*}
-Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction} of $A$, and we call $C:\prd{x:A}a=x$ the \define{contraction} of $A$.
-\item $A$ comes equipped with a term $a:A$, and satisfies \define{singleton induction}: for every $B:A\to\mathsf{Type}$ the map
+Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction}\index{center of contraction|textbf} of $A$, and we call $C:\prd{x:A}a=x$ the \define{contraction}\define{contraction} of $A$.
+\item $A$ comes equipped with a term $a:A$, and satisfies \define{singleton induction}\index{singleton induction|textbf}: for every type family $B$ over $A$, the map
 \begin{equation*}
 \Big(\prd{x:A}B(x)\Big)\to B(a)
 \end{equation*}
-given by $f\mapsto f(a)$ has a section.
+given by $f\mapsto f(a)$ has a section. In other words, we have a function and a homotopy
+\begin{align*}
+\mathsf{sing\usc{}ind}_{A,a} & : B(a)\to \prd{x:A}B(x) \\
+\mathsf{sing\usc{}comp}_{A,a} & : \prd{b:B(a)} \mathsf{sing\usc{}ind}_{A,a}(b,a)=b.
+\end{align*}
 \end{enumerate}
 \end{thm}
 
@@ -25,39 +29,89 @@ Suppose $A$ is a contractible type with center of contraction $c$ and contractio
 \mathsf{const}_c\htpy\idfunc[A].
 \end{equation*}
 In other words, the contraction $C$ is a \emph{homotopy} from the constant function to the identity function.
+
+Also note that the `computation rule' in the singleton induction for $A$ is stated using an \emph{identification} rather than as a judgmental equality. 
 \end{rmk}
 
 \begin{proof}[Proof of \autoref{thm:contractible}]
-Suppose $A$ is contractible with center of contraction $c$ and contraction $C$. Without loss of generality we may assume that $C(c)=\refl{c}$, since for any contraction $C$ we can define a new contraction $C'$ satisfying this property by setting $C'(x)\defeq\ct{C(c)^{-1}}{C(x)}$. To show that $A$ satisfies singleton induction let $B:A\to\mathsf{Type}$ be a type family over $A$ equipped with $b:B(a)$. We define $\mathsf{sing\usc{}ind}(b):\prd{x:A}B(x)$ by $\lam{x}\mathsf{tr}^B(C(x),b)$. To see that $\mathsf{sing\usc{}ind}(c)=b$ note that we have
+Suppose $A$ is contractible with center of contraction $c$ and contraction $C$. 
+First we observe that, without loss of generality, we may assume that $C$ comes equipped with an identification $p:C(c)=\refl{c}$.
+To see this, note that we can always define a new contraction $C'$ by
 \begin{equation*}
-\mathsf{tr}^B(C(c),b)=\mathsf{tr}^B(\refl{c},b)=b.
+C'(x)\defeq\ct{C(c)^{-1}}{C(x)},
+\end{equation*}
+which satisfies the requirement by the left inverse law, constructed in \cref{defn:id_invlaw}.
+
+To show that $A$ satisfies singleton induction let $B$ be a type family over $A$ equipped with $b:B(a)$. We define $\mathsf{sing\usc{}ind}(b):\prd{x:A}B(x)$ by $\lam{x}\mathsf{tr}_B(C(x),b)$. To see that $\mathsf{sing\usc{}ind}(c)=b$ note that we have
+\begin{equation*}
+\begin{tikzcd}
+\mathsf{tr}_B(C(c),b) \arrow[r,equals,"\ap{\lam{\omega}\mathsf{tr}_B(\omega,b)}{p}"] &[4em] \mathsf{tr}_B(\refl{c},b) \arrow[r,equals,"\refl{b}"] & b.
+\end{tikzcd}
 \end{equation*}
 This completes the proof that $A$ satisfies singleton induction.
 
-For the converse, if $A$ comes equipped with a center of contraction $a:A$ and satisfies singleton induction, then we can use singleton induction to construct the contraction using the family $B(x)\defeq a=x$ with the base point $\refl{a}:B(a)$. 
+For the converse, suppose that $a:A$ and that $A$ satisfies singleton induction. Our goal is to show that $A$ is contractible. For the center of contraction we take the term $a:A$. By singleton induction applied to $B(x)\defeq a=x$ we have the map 
+\begin{equation*}
+\mathsf{sing\usc{}ind}_{A,a} : a=a \to \prd{x:A}a=x.
+\end{equation*}
+Therefore $\mathsf{sing\usc{}ind}_{A,a}(\refl{a})$ is a contraction.
 \end{proof}
 
 \begin{eg}
-By definition the unit type $\unit$ satisfies singleton induction, so it is contractible.
+By definition the unit type\index{unit type!contractibility} $\unit$ satisfies singleton induction, so it is contractible.
 \end{eg}
+
+\begin{thm}\label{thm:total_path}
+For any $x:A$, the type
+\begin{equation*}
+\sm{y:A}x=y
+\end{equation*}
+is contractible.\index{identity type!contractibility of total space|textit}
+\end{thm}
+
+In the following proof we stress the analogy of path induction with singleton elimination, as we did in class. An alternative proof can be found in Lemma 3.11.8 of the HoTT book \cite{hottbook}.
+
+\begin{proof}
+We will prove the statement by showing that $\sm{y:A}x=y$ satisfies singleton induction, applying \cref{thm:contractible}.
+
+We have the term $(x,\refl{x}):\sm{y:A}x=y$. Thus we need to show that for any type family $B$ over $\sm{x:A}x=y$, the map
+\begin{equation*}
+\Big(\prd{t:\sm{x:A}x=y}B(t)\Big)\to B((x,\refl{x}))
+\end{equation*}
+has a section. Note that we have the composite of maps
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+B((x,\refl{x})) \arrow[r,"\ind{x=}"] & \prd{y:A}{p:x=y}B((y,p)) \arrow[r,"\ind{\Sigma}"] & \prd{t:\sm{y:A}x=y}B(t)
+\end{tikzcd}
+\end{equation*}
+which we take as our definition of $\mathsf{sing\usc{}ind}$. 
+Moreover, by the computation rules we have
+\begin{equation*}
+\ind{\Sigma}(\ind{x=}(b),(x,\refl{x}))\jdeq b.
+\end{equation*}
+Thus, for $\mathsf{sing\usc{}comp}$ we simply take $\lam{b}\refl{b}$.
+\end{proof}
 
 \section{Contractible maps}
 \begin{defn}
-Let $f:A\to B$ be a function, and let $b:B$. The \define{fiber} of $f$ at $b$ is defined to be the type
+Let $f:A\to B$ be a function, and let $b:B$. The \define{fiber}\index{fiber|textbf}\index{homotopy fiber|see {fiber}} of $f$ at $b$ is defined to be the type
 \begin{equation*}
 \fib{f}{b}\defeq\sm{a:A}f(a)=b.
 \end{equation*}
 \end{defn}
 
+In other words, the fiber of $f$ at $b$ is the type of $a:A$ that get mapped by $f$ to $b$.
+One may think of the fiber as a type theoretic version of the pre-image\index{pre-image|see {fiber}} of a point.
+
 \begin{defn}
-We say that a function $f:A\to B$ is \define{contractible} if there is a term of type
+We say that a function $f:A\to B$ is \define{contractible}\index{contractible!map|textbf} if there is a term of type
 \begin{equation*}
 \iscontr(f)\defeq\prd{b:B}\iscontr(\fib{f}{b}).
 \end{equation*}
 \end{defn}
 
 \begin{thm}\label{thm:equiv_contr}
-Any contractible map is an equivalence.
+Any contractible map is an equivalence.\index{contractible!map!is an equivalence|textit}
 \end{thm}
 
 \begin{proof}
@@ -67,17 +121,17 @@ Let $f:A\to B$ be a contractible map. Using the center of contraction of each $\
 \end{align*}
 Thus, we get map $g:B\to A$, and a homotopy $G:\prd{y:B} f(g(y))=y$. In other words, we get a section of $f$.
 
-It remains to construct a retraction of $f$. Taking $g$ as our retraction, we have to show that $\prd{x:A} g(f(x))=x$. Note that we get an identification $p:f(g(f(x)))=f(x)$ since $g$ is a section of $f$. Moreover, since $\fib{f}{f(x)}$ is contractible we get an identification $q:\pairr{g(f(x)),p}=\pairr{x,\refl{f(x)}}$. The base path of this identification is an identification of type $g(f(x))=x$, as desired.
+It remains to construct a retraction of $f$. Taking $g$ as our retraction, we have to show that $\prd{x:A} g(f(x))=x$. Note that we get an identification $p:f(g(f(x)))=f(x)$ since $g$ is a section of $f$. It follows that $(g(f(x)),p):\fib{f}{f(x)}$. Moreover, since $\fib{f}{f(x)}$ is contractible we get an identification $q:\pairr{g(f(x)),p}=\pairr{x,\refl{f(x)}}$. The base path $\ap{\proj 1}{q}$ of this identification is an identification of type $g(f(x))=x$, as desired.
 \end{proof}
 
 \section{Equivalences are contractible maps}
 
 In this section we will show the converse to \autoref{thm:equiv_contr}, that equivalences are contractible maps. Before we do so, we will establish some useful constructions on homotopies and section-retraction pairs.
 
-\begin{defn}\label{defn:htpy_nat}
-Let $f,g:A\to B$ be functions, and consider $H:f\htpy g$ and $p:x=y$ in $A$. We will construct an identification
+\begin{defn}\label{defn:htpy_nat}\index{homotopy!naturality|textbf}
+Let $f,g:A\to B$ be functions, and consider $H:f\htpy g$ and $p:x=y$ in $A$. We define identification
 \begin{align*}
-\mathsf{htpy\usc{}nat}(H,p) & :\ct{H(x)}{\ap{g}{p}}=\ct{\ap{f}{p}}{H(y)}
+\mathsf{htpy\usc{}nat}(H,p) \defeq \ind{x=}(\mathsf{right\usc{}unit}(H(x)),p) & :\ct{H(x)}{\ap{g}{p}}=\ct{\ap{f}{p}}{H(y)}
 \end{align*}
 witnessing that the square
 \begin{equation*}
@@ -86,7 +140,7 @@ f(x) \arrow[r,equals,"H(x)"] \arrow[d,equals,swap,"\ap{f}{p}"] & g(x) \arrow[d,e
 f(y) \arrow[r,equals,swap,"H(y)"] & g(y)
 \end{tikzcd}
 \end{equation*}
-commutes.
+commutes. This square is also called the \define{naturality square} of the homotopy $H$ at $p$.
 \end{defn}
 
 \begin{defn}\label{defn:retraction_swap}
@@ -97,7 +151,7 @@ Consider $f:A\to A$ and $H: f\htpy \idfunc[A]$. We construct an identification $
 By the naturality of homotopies with respect to identifications the square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
-ff(x) \arrow[d,swap,equals,"\ap{f}{H(x)}"] \arrow[r,equals,"H(f(x))"] & gf(x) \arrow[d,equals,"H(x)"] \\
+ff(x) \arrow[d,swap,equals,"\ap{f}{H(x)}"] \arrow[r,equals,"H(f(x))"] & f(x) \arrow[d,equals,"H(x)"] \\
 f(x) \arrow[r,swap,equals,"H(x)"] & x
 \end{tikzcd}
 \end{equation*}
@@ -105,19 +159,22 @@ commutes. This gives the desired identification $H(f(x))=\ap{f}{H(x)}$.
 \end{constr}
 
 \begin{thm}\label{thm:contr_equiv}
-Any equivalence is a contractible map.
+Any equivalence is a contractible map.\index{equivalence!is a contractible map|textit}
 \end{thm}
 
 \begin{proof}
 Since every equivalence has the structure of an invertible map by \autoref{defn:inv_equiv}, it suffices to show that any invertible map is contractible.
 
-Let $f:A\to B$ be a map, with $g:B\to A$, $G:f\circ g\htpy\idfunc[B]$, and $H:h\circ f\htpy \idfunc[A]$.
+Let $f:A\to B$ be a map, with $g:B\to A$, $G:f\circ g\htpy\idfunc[B]$, and $H:g\circ f\htpy \idfunc[A]$.
 We have for any $y:B$ the term $\pairr{g(y),G(y)}:\fib{f}{y}$. However, as our center of contraction we take
-$\pairr{g(y),\epsilon(y)}$, where
+$\pairr{g(y),\epsilon(y)}$, where $\epsilon$ is defined as the concatenation
 \begin{equation*}
-\varepsilon(y) \defeq \ct{\ap{fg}{G(y)}^{-1}}{\ap{f}{H(g(y))}}{G(y)}.
+\begin{tikzcd}
+fg(y) \arrow[r,equals,"\ap{fg}{G(y)}^{-1}"] &[2.5em] fgfg(y) \arrow[r,equals,"\ap{f}{H(g(y))}"] &[2.5em] fg(y) \arrow[r,equals,"G(y)"] & y.
+\end{tikzcd}
 \end{equation*}
-Now it remains to construct the contraction. Let $x:A$, and let $p:f(x)=y$.
+Now it remains to construct the contraction, which we do by $\Sigma$-induction. 
+Let $x:A$, and let $p:f(x)=y$.
 Since $p:f(x)=y$ has a free endpoint, we can apply path induction on it. 
 Our goal is now to construct an identification
 \begin{equation*}
@@ -126,23 +183,31 @@ Our goal is now to construct an identification
 We will construct an identification of the form $\mathsf{eq\usc{}pair}(H(x),\nameless)$,
 so it remains to construct an identification of type
 \begin{equation*}
-\trans{H(x)}{\varepsilon(f(x))}=\refl{f(x)}.
+\mathsf{tr}_{f(\blank)=f(x)}(H(x),\varepsilon(f(x)))=\refl{f(x)}.
 \end{equation*}
-Using \autoref{ex:trans_ap} we see that it suffices to show that the square
+Using \autoref{ex:trans_ap} we see that
+\begin{equation*}
+\mathsf{tr}_{f(\blank)=f(x)}(H(x),\varepsilon(f(x)))= \ct{\ap{f}{H(x)}^{-1}}{\epsilon(f(x))},
+\end{equation*}
+so it suffices to show that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=8em]
 fgfgf(x) \arrow[r,equals,"\ap{fg}{G(f(x))}"] \arrow[d,equals,swap,"\ap{f}{H(gf(x))}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
 fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
 \end{tikzcd}
 \end{equation*}
-commutes. Recall from \autoref{defn:retraction_swap} that we have $H(gf(x))=\ap{gf}{H(x)}$ and $\ap{fg}{G(y)}=G(fg(y))$. Using these two identifications and \autoref{ex:ap_ap}, we see that it suffices to show that the square
+commutes, i.e. that 
+\begin{equation*}
+\ct{\ap{fg}{G(f(x))}}{\ap{f}{H(x)}}=\ct{\ap{f}{H(gf(x))}}{G(f(x))}.
+\end{equation*}
+Recall from \autoref{defn:retraction_swap} that we have $H(gf(x))=\ap{gf}{H(x)}$ and $\ap{fg}{G(y)}=G(fg(y))$. Using these two identifications and the fact that for any $p,p':x=y$, $r:y=z$, $q,q':x=y'$, and $s:y'=z$, if $p=p'$ and $q=q'$ then $\ct{p'}{r}=\ct{q'}{s}\to \ct{p}{r}=\ct{q}{s}$, we see that it suffices to show that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=8em]
 fgfgf(x) \arrow[r,equals,"G(fgf(x))"] \arrow[d,equals,swap,"\ap{fgf}{H(x)}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
 fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
 \end{tikzcd}
 \end{equation*}
-commutes. However, this is just a naturality square of homotopies, which commutes by \autoref{defn:htpy_nat}.
+commutes. However, this is just a naturality square the homotopy $Gf:fgf\htpy f$, which commutes by \autoref{defn:htpy_nat}.
 \end{proof}
 
 \begin{cor}\label{cor:contr_path}
@@ -172,19 +237,15 @@ Note that we may proceed here by path induction on $p$. That is, it suffices to 
 \end{comment}
 
 \begin{exercises}
-\item Construct an equivalence 
-\begin{equation*}
-\eqv{\big(\sm{x:A}f(x)=y\big)}{\big(\sm{x:A}y=f(x)\big)}.
-\end{equation*}
-Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
-\item \label{ex:contr_retr}Suppose that $A$ is a retract of $B$. Show that
+\item \label{ex:prop_contr}Show that if $A$ is contractible, then for any $x,y:A$ the identity type $x=y$ is also contractible.\index{contractible!type!identity types of}
+\item \label{ex:contr_retr}Suppose that $A$ is a retract of $B$. Show that\index{contractible!type!retracts of}
 \begin{equation*}
 \iscontr(B)\to\iscontr(A).
 \end{equation*}
 \item \label{ex:contr_equiv}
 \begin{subexenum}
-\item Show that for any type $A$, the map $\mathsf{const}_\ttt : A\to \unit$ is an equivalence if and only if $A$ is contractible. 
-\item Show that for any map $f:A\to B$, if any two of the three assertions
+\item Show that for any type $A$, the map $\mathsf{const}_\ttt : A\to \unit$ is an equivalence if and only if $A$ is contractible.\index{contractible!type!equivalence with $\unit$}
+\item Apply \cref{ex:3_for_2} to show that for any map $f:A\to B$, if any two of the three assertions\index{contractible!type!three@{3-for-2}}
 \begin{enumerate}
 \item $A$ is contractible
 \item $B$ is contractible
@@ -192,7 +253,7 @@ Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
 \end{enumerate}
 hold, then so does the third.
 \end{subexenum}
-\item \label{ex:contr_ind} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B:C\to\type$ be a type family. Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
+\item \label{ex:contr_in_sigma} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B$ be a type family over $C$. Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
 \item \label{ex:coh_intro}Consider a type $A$ with base point $a:A$, and let $B$ be a type family on $A$ that implies the identity type, i.e.~there is a term
 \begin{equation*}
 \alpha : \prd{x:A} B(x)\to (a=x).
@@ -201,4 +262,13 @@ Construct an equivalence
 \begin{equation*}
 \eqv{\Big(\sm{x:A}B(x)\Big)}{\Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big)}.
 \end{equation*}
+\item \label{ex:fib_replacement}Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=small]
+A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"] \\
+& B
+\end{tikzcd}
+\end{equation*}
+commutes. The projection $\proj 1 : (\sm{y:B}\fib{f}{y})\to B$ is sometimes also called the \define{fibrant replacement}\index{fibrant replacement} of $f$.
+\item Use \cref{ex:contr_retr} to show that if $A\times B$ is contractible, then $A$ and $B$ are contractible. 
 \end{exercises}

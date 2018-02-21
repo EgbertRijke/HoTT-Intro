@@ -1,20 +1,20 @@
 \makebox[\textwidth][c]{%
 \begin{tikzpicture}
-  [mindmap,
+  [small mindmap,
   every node/.style={concept, execute at begin node=\hskip0pt},
   concept color = black!20,
   grow cyclic,
-  level 1/.append style = {level distance = 5.5cm, sibling angle = 90}, 
-  level 2/.append style={level distance = 3cm, sibling angle = 45}]
+  level 1/.append style = {level distance = 5cm, sibling angle = 90}, 
+  level 2/.append style={level distance = 2.5cm, sibling angle = 45}]
   \node [root concept] {\scshape Homotopy Type Theory}
     child { node {\scshape Computer proof assistants}
-      child { node {Automath, Coq, Agda, Lean, \ldots}}
+      child { node {\tiny Automath, Coq, Agda, Lean, \ldots}}
       child { node {Four color theorem}}
       child { node {Feit-Thompson theorem}}
       child { node {Kepler conjecture}}
       child { node {Formal abstracts project}}}
-    child { node {\scshape Martin-L\"of type theories}
-      child { node {The $\lambda$-calculus}}
+    child { node {\scshape Dependent type theories}
+      child { node {$\lambda$-calculus}}
       child { node {\tiny Calculus of inductive constructions}}
       child { node {Cubical type theory}}
       child { node {Cohesive type theory}}}

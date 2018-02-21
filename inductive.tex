@@ -1,6 +1,8 @@
-\chapter{Inductive types}
+\chapter{Inductive types and the universe}
 
-\section{The idea of inductive types}
+\emph{From this chapter on we will use a more informal style of reasoning. Keeping in mind that formal deductions can be given, we will reason in prose.}
+
+\section{Inductive types}
 
 Many other types can also be specified as inductive types, similar to the natural numbers. The unit type, the empty type, and the booleans are the simplest examples of this way of defining types. Just like the type of natural numbers, other inductive types are also specified by their \emph{constructors}, an \emph{induction principle}, and their \emph{computation rules}: 
 \begin{enumerate}
@@ -8,42 +10,76 @@ Many other types can also be specified as inductive types, similar to the natura
 \item The induction principle specifies the data that should be provided in order to construct a section of an arbitrary dependent type over the inductive type. 
 \item The computation rules assert that the inductively defined section agrees on the constructors with the data that was used to define the section. Thus, there is a computation rule for every constructor.
 \end{enumerate}
-For a more general treatment of inductive types, we refer to Chapter 5 of \cite{hottbook}.
+The induction principle and computation rules can be generated automatically once the constructors are specified, but it goes beyond the scope of our course to describe general inductive types.
+%For a more general treatment of inductive types, we refer to Chapter 5 of \cite{hottbook}.
+
+\begin{table}
+\caption{Many types can be defined as inductive types.}
+\begin{tabular}{llll}
+\toprule
+name & type & constructors \\
+\midrule
+\define{natural numbers} & $\N$ & $0:\N$ \\
+& & $S:\N\to \N$ & \\
+\define{empty type} & $\emptyt$ & {\color{black!20}(no constructors)}\\
+\define{unit type} & $\unit$ & $\ttt:\unit$ \\
+\define{booleans} & $\bool$ & $\bfalse:\bool$ \\
+& & $\btrue : \bool$ \\
+\define{coproduct} & $A+B$ & $\inl : A \to A+B$ \\
+& & $\inr : B\to A+B$ & \\
+\define{product} & $A\times B$ & $\pairr{\blank,\blank}:A\to (B\to A\times B)$ \\
+\define{$\Sigma$-type} & $\sm{x:A}B(x)$ & $\pairr{\blank,\blank}:\prd{y:A} \big(B(y)\to \sm{x:A}B(x)\big)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A straightforward example of an inductive type is the \emph{unit type}, which has just one constructor. 
+Its induction principle is analogous to just the base case of induction on the natural numbers.
+
 \begin{defn}
-We define the \define{unit type} to be a type $\unit$ equipped with
+We define the \define{unit type}\index{1@{$\unit$}|see {unit type}}\index{unit type|textbf} to be a closed type $\unit$ equipped with a closed term\index{unit type!star@{$\ttt$}}
 \begin{equation*}
 \ttt:\unit,
 \end{equation*}
-satisfying the induction principle that for any type family $P:\unit\to\type$, there is a term
+satisfying the induction principle\index{induction principle!of unit type} that for any type family $\Gamma,x:\unit\vdash P(x)~\mathrm{type}$, there is a term
 \begin{equation*}
 \ind{\unit} : P(\ttt)\to\prd{x:\unit}P(x)
 \end{equation*}
-for which the computation rule
+in context $\Gamma$ for which the computation rule\index{computation rules!of unit type}
 \begin{equation*}
 \ind{\unit}(p_{\ttt},\ttt) \jdeq p_\ttt
 \end{equation*}
 holds.
 \end{defn}
 
-The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section.
+The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
+
 \begin{defn}
-We define the \define{empty type} to be a type $\emptyt$ satisfying the induction principle that for any type family $P:\emptyt\to\type$, there is a term
+We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{empty type|textbf} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type} that for any type family $P:\emptyt\to\type$, there is a term
 \begin{equation*}
 \ind{\emptyt} : \prd{x:\emptyt}P(x).
 \end{equation*}
 \end{defn}
 
+Using the empty type we can also define \emph{negation}. The idea is that if $A$ is false (i.e.~has no terms), then from $A$ follows everything.
+
 \begin{defn}
-We define the \define{booleans} to be a type $\bool$ that comes equipped with
+For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
+\end{defn}
+
+Unlike set theory, in most type theories every term has a \emph{unique} type. Therefore we annotate the constructors of $\bool$ with their type, to not confuse them with the terms $0$ and $1$ of the natural numbers.
+
+\begin{defn}
+We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with
 \begin{align*}
 \bfalse & : \bool \\
 \btrue & : \bool
 \end{align*}
-satisfying the induction principle that for any type family $P:\bool\to\type$, there is a term
+satisfying the induction principle\index{induction principle!of booleans} that for any type family $P:\bool\to\type$, there is a term
 \begin{equation*}
-\ind{\bool} : P(\bfalse)\to P(\btrue)\to \prd{x:\bool}P(x)
+\ind{\bool} : P(\bfalse)\to \Big(P(\btrue)\to \prd{x:\bool}P(x)\Big)
 \end{equation*}
-for which the computation rules
+for which the computation rules\index{computation rules!of booleans}
 \begin{align*}
 \ind{\bool}(p_0,p_1,\bfalse) & \jdeq p_0 \\
 \ind{\bool}(p_0,p_1,\btrue) & \jdeq p_1
@@ -52,16 +88,16 @@ hold.
 \end{defn}
 
 \begin{defn}
-Let $A$ and $B$ be types. We define the \define{disjoint sum} $A+B$ to be a type that comes equipped with
+Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with
 \begin{align*}
 \inl & : A \to A+B \\
 \inr & : B \to A+B
 \end{align*}
-satisfying the induction principle that for any type family $P:(A+B)\to\type$, there is a term
+satisfying the induction principle\index{induction principle!of coproduct} that for any type family $P:(A+B)\to\type$, there is a term
 \begin{equation*}
 \ind{A+B} : \Big(\prd{x:A}P(\inl(x))\Big)\to\Big(\prd{y:B}P(\inr(y))\Big)\to\prd{z:A+B}P(z)
 \end{equation*}
-for which the computation rules
+for which the computation rules\index{computation rules!of coproduct}
 \begin{align*}
 \ind{A+B}(f,g,\inl(x)) & \jdeq f(x) \\
 \inr{A+B}(f,g,\inr(y)) & \jdeq g(y)
@@ -69,62 +105,114 @@ for which the computation rules
 hold.
 \end{defn}
 
-\section{The type of integers}
-\begin{defn}
-We define the \define{integers} to be the type $\Z\defeq\nat_{\geq 1}+\unit+\nat_{\geq 1}$.
-\end{defn}
+The coproduct of two types is sometimes also called the \define{disjoint sum}.
+When one thinks of types as propositions, then the coproduct plays the role of the disjunction.\index{propositions as types!disjunction}
+To construct a term of type $A+B$ you first have to decide whether it is of the form $\inl$ or $\inr$, and then you construct a term of $A$ or $B$ accordingly. Of course, this is to be contrasted with the \emph{double negation translation}\index{double negation translation!disjunction} of the disjunction, which is read as `not neither $A$ nor $B$'. 
+
+The \emph{dependent pair type}\index{dependent pair type|see {$\Sigma$-type}} (or $\Sigma$-type) can be thought of as a `type indexed' disjoint sum.
+However, this intuition for the dependent pair type can be counterproductive once we start to do homotopy theory in type theory.
+It is better to think of the $\Sigma$-type as the total space of a family of types depending continuously on a base type, just like one can have a family of spaces depending continuously on a base space (i.e.~a fibration).
 
 \begin{defn}
-We construct a successor function $S:\Z\to\Z$.
-\end{defn}
-
-\begin{constr}
-
-\end{constr}
-
-\section{Dependent pair types}
-
-\begin{defn}
-Let $A$ be a type, and let $P:A\to\type$ be a type family over $A$.
-The \define{dependent pair type} $\sm{x:A}P(x)$ is defined to be a type equipped with a \define{pairing function}
+Let $A$ be a type in context $\Gamma$, and let $\Gamma,x:A\vdash B(x)~\mathrm{type}$ be a type family over $A$.
+The \define{dependent pair type}\index{Sigma type{$\Sigma$-type}|textbf} is defined to be the inductive type $\sm{x:A}B(x)$ in context $\Gamma$ equipped with a \define{pairing function}\index{pairing function}
 \begin{equation*}
-\pairr{\blank,\blank}:\prd{x:A} P(x)\to \Big(\sm{y:A}P(y)\Big)
+\pairr{\blank,\blank}:\prd{x:A} \Big(B(x)\to \sm{y:A}B(y)\Big).
 \end{equation*}
-and \define{projection maps}
+The induction principle\index{induction principle|of Sigma types@{of $\Sigma$-types}} for $\sm{x:A}B(x)$ asserts that for every type family 
+\begin{equation*}
+\Gamma,p:\sm{x:A}B(x)\vdash P(p)~\mathrm{type}
+\end{equation*}
+one has
+\begin{equation*}
+\ind{\Sigma}:\Big(\prd{x:A}{y:B(x)}P(\pairr{x,y})\Big)\to\Big(\prd{p:\sm{x:A}B(x)}P(p)\Big).
+\end{equation*}
+satisfying the computation rule\index{compution rules!of Sigma types@{of $\Sigma$-types}}
+\begin{equation*}
+\ind{\Sigma}(f,\pairr{x,y})\jdeq f(x,y).
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map|textbf}\index{projection maps!first projection|textbf}
+\begin{equation*}
+\proj 1:\Big(\sm{x:A}B(x)\Big)\to A
+\end{equation*}
+is defined by induction as
+\begin{equation*}
+\proj 1\defeq \ind{\Sigma}(\lam{x}{y}x).
+\end{equation*}
+The \define{second projection map}\index{second projection map|textbf}\index{projection map!second projection|textbf} is a dependent function
+\begin{equation*}
+\prd{p:\sm{x:A}B(x)} B(\proj 1(p))
+\end{equation*}
+defined by induction as
+\begin{equation*}
+\proj 2\defeq \ind{\Sigma}(\lam{x}{y}y).
+\end{equation*}
+By the computation rule we have
 \begin{align*}
-\proj 1 & : \Big(\sm{x:A}P(x)\Big)\to A \\
-\proj 2 & : \prd{w:\sm{x:A}P(x)}P(\proj 1(w))
-\end{align*}
-satisfying the equations
-\begin{align*}
-\proj 1(\pairr{a,p}) & \jdeq a \tag{$\beta_1$}\\
-\proj 2(\pairr{a,p}) & \jdeq p \tag{$\beta_2$}\\
-\pairr{\proj 1(w),\proj 2(w)} & \jdeq w. \tag{$\eta$}
+\proj 1 \pairr{x,y} & \jdeq x \\
+\proj 2 \pairr{x,y} & \jdeq y.
 \end{align*}
 \end{defn}
+
+When one thinks of types as propositions, then the $\Sigma$-type has the r\^{o}le of the existential quantification.
+
+A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e.~$B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product)} of $A$ and $B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its definition.
+
+\begin{defn}
+Let $A$ and $B$ be types in context $\Gamma$. The \define{(cartesian) product}\index{cartesian product|textbf}\index{product!of types|textbf} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor
+\begin{equation*}
+\pairr{\blank,\blank}:A\to (B\to A\times B).
+\end{equation*}
+The induction principle\index{induction principle!of cartesian products} for $A\times B$ asserts that for any type family $P$ over $A\times B$, one has
+\begin{equation*}
+\ind{\times} : \Big(\prd{x:A}{y:B}P(\pairr{\blank,\blank})\Big)\to\Big(\prd{p:A\times B} P(p)\Big)
+\end{equation*}
+satisfying the computation rule\index{computation rules!of cartesian product} that
+\begin{align*}
+\ind{\times}(f,x,y) & \jdeq f(x,y).
+\end{align*}
+\end{defn}
+
+The projection maps are defined similarly to the projection maps of $\Sigma$-types. When one thinks of types as propositions\index{propositions as types!conjunction}, then $A\times B$ is interpreted as the conjunction of $A$ and $B$. 
 
 \section{The universe}
-We assume there is a closed type $\UU$ called the \define{universe}, and a type family $\mathrm{El}$ over $\UU$ called the \define{universal family}.
+The induction principle for inductive types can be used to prove universal quantifications. 
+However, it would also be nice if we could construct \emph{new type families} over inductive types, using their induction principles.
+To be able to do this, we introduce a \emph{universe}, a type of which the terms represent types. The idea is that the universe $\UU$ comes equipped with a type family $\mathrm{El}$, so that for each $X:\UU$ we have an associated type $\mathrm{El}(X)$, the type of \emph{elements} of $X$. 
+
+We assume there is a closed type $\UU$\index{U@{$\UU$}|textbf} called the \define{universe}\index{universe|textbf}, and a type family $\mathrm{El}$\index{El@{$\mathrm{El}$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}.
+\begin{center}
+\begin{minipage}{.4\textwidth}
 \begin{prooftree}
 \AxiomC{}
 \UnaryInfC{$\vdash\UU~\mathrm{type}$}
 \end{prooftree}
+\end{minipage}\quad
+\begin{minipage}{.4\textwidth}
 \begin{prooftree}
 \AxiomC{}
 \UnaryInfC{$X:\UU \vdash \mathrm{El}(X)~\mathrm{type}$}
 \end{prooftree}
+\end{minipage}
+\end{center}
 
-The universe is useful for several reasons.
-We will postulate that the universe is closed under most type forming operations (with the exception that we will not assume that the universe contains a universe), and this enables us to use type theory itself to study type theory.
-Thus, we postulate the following rules asserting closure under $\Pi$:
+We postulate that the universe is closed under the type constructors, by the following rules:
+\begin{enumerate}
+\item The universe is closed under $\Pi$-types
 \begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \check{\Pi}(A,B):\UU$}
+\AxiomC{$\Gamma\vdash A:\UU$}
+\AxiomC{$\Gamma\vdash B:\mathrm{El}(A)\to\UU$}
+\BinaryInfC{$\Gamma \vdash \check{\Pi}(A,B):\UU$}
 \end{prooftree}
 \begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))~\mathrm{type}$}
+\AxiomC{$\Gamma\vdash A:\UU$}
+\AxiomC{$\Gamma\vdash B:\mathrm{El}(A)\to\UU$}
+\BinaryInfC{$\Gamma \vdash \mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))~\mathrm{type}$}
 \end{prooftree}
+\item The type of natural numbers is in the universe
 \begin{prooftree}
 \AxiomC{}
 \UnaryInfC{$\vdash \check{\N}:\UU$}
@@ -133,60 +221,235 @@ Thus, we postulate the following rules asserting closure under $\Pi$:
 \AxiomC{}
 \UnaryInfC{$\vdash \mathrm{El}(\check{\N})\jdeq \mathbb{N}~\mathrm{type}$}
 \end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \check{\emptyt}:\UU$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \mathrm{El}(\check{\emptyt})\jdeq \emptyt~\mathrm{type}$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \check{\unit}:\UU$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \mathrm{El}(\check{\unit})\jdeq \unit~\mathrm{type}$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \check{\Sigma}(A,B):\UU$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$A:\UU,B:\mathrm{El}(A)\to\UU \vdash \mathrm{El}(\check{\Sigma}(A,B))\jdeq \sm{x:\mathrm{El}(A)}\mathrm{El}(B(x))~\mathrm{type}$}
-\end{prooftree}
-
-The idea of the universe is that it is a type of \emph{small} types. Indeed, given a closed term $A:\UU$ we also obtain the closed type $\mathrm{El}(A)$ of its \define{elements}, so the term $A:\UU$ is an \emph{encoding} of the type $\mathrm{El}(A)$. 
+\item Similarly we postulate that the universe contains the empty type, the unit type, the booleans, coproducts, products, and $\Sigma$-types. These closure properties of the universe are given concisely in \cref{tab:universe}.
+\begin{table}
+\begin{center}
+\caption{\label{tab:universe}Closure properties of the universe}
+\begin{tabular}{lll}
+\toprule
+Premises & Type encoding in $\UU$ & Type of elements $\mathrm{El}(\blank)$ \\
+\midrule
+$A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Pi}(A,B)$ & $\prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))$ \\
+& $\check{\nat}$ & $\nat$ \\
+& $\check{\emptyt}$ &  $\emptyt$ \\
+& $\check{\unit}$ &  $\unit$ \\
+& $\check{\bool}$ &  $\bool$ \\
+$A,B:\UU$ & $A\mathbin{\check{+}}B$ &  $\mathrm{El}(A)+\mathrm{El}(B)$ \\
+$A,B:\UU$ & $A\mathbin{\check{\times}}B$ &  $\mathrm{El}(A)\times\mathrm{El}(B)$ \\
+$A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Sigma}(A,B)$ & $\sm{x:\mathrm{El}(A)}\mathrm{El}(B(x))$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+\end{enumerate}
 
 \begin{defn}
-We say that a type $A$ in context $\Gamma$ is \define{small} if it occurs in the universe, i.e.~if there is a term $\check{A}:\UU$ in context $\Gamma$ such that $\Gamma\vdash\mathrm{El}(\check{A})\jdeq A~\mathrm{type}$.
+We say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} if it occurs in the universe, i.e.~if there is a term $\check{A}:\UU$ in context $\Gamma$ such that $\Gamma\vdash\mathrm{El}(\check{A})\jdeq A~\mathrm{type}$.
 \end{defn}
 
 In particular, if $A$ is a small type in context $\Gamma$ and $B$ is a small type in context $\Gamma,x:A$, then $\prd{x:A}B(x)$ is again a small type in context $\Gamma$.
 
 \begin{defn}
-Let $A$ be a type in context $\Gamma$. A \define{family of small types} over $A$ is defined to be a map
+Let $A$ be a type in context $\Gamma$. A \define{family of small types}\index{family of small types|textbf} over $A$ is defined to be a map
 \begin{equation*}
 B:A\to\UU
 \end{equation*}
 \end{defn}
 
-In particular, we see that we can use the rules for function types to define families of small types. More to the point: one of the ways in which a universe is useful is that it provides us with a way to define new type families. Another way in which the universe can be useful is that the universe can occur in a context (so constructions in type theory can have occurences of `type-varialbes').
-
 \begin{rmk}
 If $A$ is small, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathrm{El}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
 \end{rmk}
 
+\begin{defn}
+We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types by induction on $\N$\index{family!of finite types}, taking
+\begin{align*}
+\mathsf{Fin}(0) & \defeq \emptyt \\
+\mathsf{Fin}(n+1) & \defeq \mathsf{Fin}(n)+1
+\end{align*}
+\end{defn}
+
+\begin{defn}\label{defn:obs_nat}
+We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathrm{Eq}_\N:\N\to(\N\to\UU)$ satisfying
+\begin{align*}
+\mathrm{Eq}_\N(0,0) & \jdeq \unit & \mathrm{Eq}_\N(S(n),0) & \jdeq \emptyt \\
+\mathrm{Eq}_\N(0,S(n)) & \jdeq \emptyt & \mathrm{Eq}_\N(S(n),S(m)) & \jdeq \mathrm{Eq}_\N(n,m).
+\end{align*}
+\end{defn}
+
+\begin{constr}
+We define $\mathrm{Eq}_\N$ by double induction on $\N$. By the first application of induction it suffices to provide
+\begin{align*}
+E_0 & : \N\to\UU \\
+E_S & : \N\to (\N\to\UU)\to(\N\to\UU)
+\end{align*}
+We define $E_0$ by induction, taking $E_{00}\defeq \unit$ and $E_{0S}(n,X,m)\defeq \emptyt$. The resulting family $E_0$ satisfies
+\begin{align*}
+E_0(0) & \jdeq \unit \\
+E_0(S(n)) & \jdeq \emptyt.
+\end{align*} 
+We define $E_S$ by induction, taking $E_{S0}\defeq \emptyt$ and $E_{S0}(n,X,m)\defeq X(m)$. The resulting family $E_S$ satisfies
+\begin{align*}
+E_S(n,X,0) & \jdeq \emptyt \\
+E_S(n,X,S(m)) & \jdeq X(m) 
+\end{align*}
+Therefore we have by the computation rule for the first induction that the judgmental equality
+\begin{align*}
+\mathrm{Eq}_\N(0,m) & \jdeq E_0(m) \\
+\mathrm{Eq}_\N(S(n),m) & \jdeq E_S(n,\mathrm{Eq}_\N(n),m)
+\end{align*}
+holds, from which the judgmental equalities in the statement of the definition follow.
+\end{constr}
+
+\begin{eg}
+Another important way to use the universe is to define types of \define{structured types}\index{structured types}. We give some examples:
+\begin{enumerate}
+\item The type of small \define{pointed types}\index{pointed types} is defined as
+\begin{equation*}
+\UU_\ast\defeq \sm{A:\UU}A,
+\end{equation*}
+\item The type of small \define{graphs}\index{graphs} is defined as the type
+\begin{equation*}
+\mathsf{Gph}_\UU \defeq \sm{A:\UU} A\to (A\to \UU),
+\end{equation*}
+\item The type of small \define{reflexive graphs}\index{reflexive graphs} is defined as the type
+\begin{equation*}
+\mathsf{rGph}_\UU \defeq \sm{A:\UU}{R:A\to (A\to \UU)}\prd{a:A}R(a,a).
+\end{equation*}
+\end{enumerate}
+Once we have introduced the \emph{identity types} we will also be able to state the types of groups, rings, and many other structured types. However, when doing so one has to be cautious to make sure that the underlying type is in the level of sets, in the hierarchy of homotopical complexity of types.
+\end{eg}
+
+\section{The type of integers}
+
+\begin{defn}
+We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$, and we write
+\begin{align*}
+\mathsf{neg} & \defeq \inl & &  : \N \to \Z \\
+-1 & \defeq \mathsf{neg}(0) & & : \Z \\
+0 & \defeq \inr(\ttt) & & : \Z \\
+\mathsf{pos} & \defeq \inr\circ\inr & & : \N\to \Z \\
+1 & \defeq \mathsf{pos}(0) & & : \Z.
+\end{align*}
+\end{defn}
+
+In the following lemma we derive an alternative induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which makes it easer to make definitions.
+\begin{lem}
+\label{lem:Z_ind}
+For any $\Gamma,k:\Z\vdash P(k)~\mathrm{type}$ we have
+\begin{prooftree}
+\Axiom$\fCenter\Gamma\vdash p_{-1}:P(-1)$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{neg}(n))\to P(\mathsf{neg}(S(n)))$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_0: P(0)$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_{1}:P(1)$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{pos}(n))\to P(\mathsf{pos}(S(n)))$
+\UnaryInf$\fCenter\Gamma\vdash\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S}):\prd{k:\Z}P(k)$
+\end{prooftree}
+The term $\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S})$ furthermore satisfies the following computation rules:
+\begin{align*}
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},-1) & \jdeq p_{-1} \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(S(n))) & \jdeq p_{-S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(n))) \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},0) & \jdeq p_0 \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},1) & \jdeq p_1 \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(S(n))) & \jdeq p_{S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(n))).
+\end{align*}
+\end{lem}
+
+As an application we define the successor function on the integers.
+
+\begin{defn}
+We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $S_\Z:\Z\to\Z$.
+\end{defn}
+
+\begin{constr}
+We apply the induction principle of \autoref{lem:Z_ind}, taking
+\begin{align*}
+S_\Z(-1) & \defeq 0 \\
+S_\Z(\mathsf{neg}(S(n))) & \defeq \mathsf{neg}(n) \\
+S_\Z(0) & \defeq 1 \\
+S_\Z(1) & \defeq \mathsf{pos}(S(1)) \\
+S_\Z(\mathsf{pos}(S(n))) & \defeq \mathsf{pos}(S(S(n))).
+\end{align*}
+\end{constr}
+
 \begin{exercises}
 \item For any type $A$, show that $(A+\neg A)\to(\neg\neg A\to A)$. 
-\item \label{ex:int_group_ops}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
-\item \label{ex:int_order}Define the relations $\leq$ and $<$ on and $\Z$.
-\item Construct a closed term of type
+\item Construct a function
 \begin{equation*}
-\prd{A:\UU}\Big(\prd{X:\UU}X\Big)\to A.
+\check{\Pi}:\prd{A:\UU} (\mathrm{El}(A)\to\UU)\to \UU
 \end{equation*}
+such that
+\begin{equation*}
+\mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))
+\end{equation*}
+holds for every $A:\UU$ and $B:\mathrm{El}(A)\to\UU$. 
+
+\emph{A similar exercise can be posed for $\Sigma$ and $+$ (and for $\to$ and $\times$ as special cases of $\Pi$ and $\Sigma$).}
+\item \label{ex:obs_nat_eqrel}Show that observational equality on $\N$\index{observational equality!on N@{on $\N$}} is an equivalence relation, i.e.~construct terms of the following types:
+\begin{align*}
+& \prd{n:\N} \mathrm{Eq}_\N(n,n) \\
+& \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(m,n) \\
+& \prd{n,m,l:\N} \mathrm{Eq}_\N(n,m)\to (\mathrm{Eq}_\N(m,l)\to \mathrm{Eq}_\N(n,l)).
+\end{align*}
+\item \label{ex:obs_nat_least}\index{observational equality!on N@{on $\N$}}Let $R$ be a reflexive binary relation\index{reflexive relation} on $\N$, i.e.~$R$ is of type $\N\to (\N\to\UU)$ and comes equipped with a term $\rho:\prd{n:\N}R(n,n)$. Show that
+\begin{equation*}
+\prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to R(n,m).
+\end{equation*}
+\item \index{observational equality!on N@{on $\N$}}Show that every function $f:\N\to \N$ preserves observational equality in the sense that
+\begin{equation*}
+\prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)).
+\end{equation*}
+\emph{Hint: to get the inductive step going the induction hypothesis has to be strong enough. Construct by double induction a term of type}
+\begin{equation*}
+\prd{n,m:\N}{f:\N\to\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)),
+\end{equation*}
+\emph{and pull out the universal quantification over $f:\N\to\N$ by \autoref{ex:swap}.}
+\item 
+\begin{subexenum}
 \item Define the relations $\leq$ and $<$ on $\N$.
-\item Define the divisibility relation $d\mid n$. 
+\item Show that $\leq$ is reflexive and that $<$ is \define{anti-reflexive}, i.e. that $\neg(n<n)$. 
+\item Show that both $\leq$ and $<$ are transitive, and that $n<S(n)$. 
+\end{subexenum}
+\item \index{observational equality!on N@{on $\N$}}Use the observational equality of the natural numbers to define the divisibility relation $d\mid n$. 
+\item \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
+\begin{subexenum}
+\item Define observational equality $\mathrm{Eq}_\bool$ on the booleans.
+\item Show that $\mathrm{Eq}_\bool$ is reflexive.
+\item Show that for any reflexive relation $R:\bool\to(\bool\to \UU)$ one has
+\begin{equation*}
+\prd{x,y:\bool} \mathrm{Eq}_\bool(x,y)\to R(x,y).
+\end{equation*}
+\end{subexenum}
+\item \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e. define
+\begin{align*}
+t_0 & : \unit + \unit \\
+t_1 & : \unit + \unit,
+\end{align*}
+and show that for every $\Gamma,t:\unit+\unit\vdash P(t)~\mathrm{type}$ there is a dependent function of type
+\begin{align*}
+\ind{\unit+\unit}:P(t_0)\to \Big(P(t_1)\to \prd{t:\unit+\unit}P(t)\Big)
+\end{align*}
+satisfying
+\begin{align*}
+\ind{\unit+\unit}(p_0,p_1,t_0) & \jdeq p_0 \\
+\ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
+\end{align*}
+In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+\unit$.}
+\item \label{ex:int_order}
+\begin{subexenum}
+\item Define the relations $\leq$ and $<$ on and $\Z$.
+\item For $k:\Z$, consider the type $\Z_{\geq k}\defeq \sm{n:\Z}n\geq k$. Construct
+\begin{align*}
+b_k & : \Z_{\geq k} \\
+s_k & : \Z_{\geq k}\to\Z_{\geq k},
+\end{align*}
+and show that $\Z_{\geq k}$ satisfies the induction principle of the natural numbers\index{induction principle!of N@{of $\N$}}:
+\begin{equation*}
+\ind{\Z_{\geq k}} : P(b_k)\to \Big(\prd{n:\Z_{\geq k}} P(n)\to P(s_k(n))\Big)\to \Big(\prd{n:\Z_{\geq k}} P(n)\Big)
+\end{equation*}
+\end{subexenum}
+\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
 \end{exercises}

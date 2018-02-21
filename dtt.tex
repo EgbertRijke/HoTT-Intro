@@ -1,74 +1,15 @@
 \chapter{Dependent type theory}
 \label{ch:dtt}
 
-\section{The Curry-Howard correspondence}
-Dependent type theory is designed to reflect closely on actual mathematical practice and is compatible with classical logic. The foundational issue that isomorphic objects may have wildly different encodings in set-theoretic language, complicating the verification of mathematics, is addressed in type theory, where objects can only ever be defined up to equivalence. Despite the fact that dependent type theory is of constructive nature, it is important to note that type theory is not anti-classical: at the loss of certain properties of constructive type theory constructivists may care about, the axiom of choice may be assumed in type theory and it is in fact consistent with the univalence axiom. This may be helpful to obtain some classical results in type theory.
-
-One of the important properties that dependent type theory has (when the axiom of choice is not assumed) is that one may extract programs from proofs: a proof of the existence of an object with a certain property yields a construction of that object together with a proof that the constructed object indeed satisfies the stated property. 
-
-From a logical point of view, type theory can be seen as a deductive system for constructive logic, in which types are propositions of which the constituents are precisely its proofs. In the view of Heyting, `to know the meaning of a proposition is to know which constructions can be considered as proofs of that proposition'. For instance, a proof of the proposition $A\to B$ is an algorithm that transforms proofs of $A$ into proofs of $B$.
-\begin{table}
-\caption{The Curry-Howard correspondence}
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-\emph{First order logic} & \emph{Set theory} & \emph{Type theory}\\
-\midrule
-Propositions & Sets & Types\\
-Predicates & Families of sets & Dependent types\\
-Proofs & Elements & Terms \\
-$\top$ & $\{\emptyset\}$ & $\unit$\\
-$\bot$ & $\emptyset$ & $\emptyt$ \\
-$P \land Q$ & $A \times B$ & $A \times B$ \\
-$P \vee Q$ & $A \sqcup B$ & $A + B$ \\
-$\exists x.P(x)$ & $\coprod_{i\in I}A_i$ & $\sm{x:A}B(x)$ \\
-$\forall x.P(x)$ & $\prod_{i\in I}A_i$ & $\prd{x:A}B(x)$\\
-\bottomrule
-\end{tabular}
-\end{center}
-\end{table}
-
-\section{Types in mathematical practice}
-
-
-To illustrate the concept of type dependency, let us have a closer look at the anatomy of the following purposefully simple lemma.
-
-\begin{lem}\label{lem:unit}
-Given a binary operation $\mu:A\times A\to A$ on a set $A$, any $u_l\in A$ satisfying satisfying the left unit law $\mu(u_l,x)=x$, and any $u_r\in A$ satisfying the right unit law $\mu(x,u_r)=x$, one has $u_l=u_r$. 
-\end{lem}
-
-\begin{proof}
-Since $u_l$ is a left unit, we have in particular $u_l=\mu(u_l,u_r)$. Furthermore, since $u_r$ is a right unit we have in particular $\mu(u_l,u_r)=u_r$. Thus, we have $u_l=\mu(u_l,u_r)=u_r$. 
-\end{proof}
-
-\begin{samepage}
-By the hypotheses of \autoref{lem:unit}, we start the proof with the following set of presuppositions:
-\begin{align*}
-A & : \mathbf{Set} \\
-\mu & : A\times A\to A \\
-u_l & : A \\
-p & : \forall x.\,\mu(u_l,x)=x\\
-u_r & : A \\
-q & : \forall x.\,\mu(x,u_r)=x,
-\end{align*}
-and the task is to show that $u_l=u_r$.
-\end{samepage}
-
-This list of assumptions is called the context of our proof, and the goal $u_l=u_r$ is a type in this context. 
-Note that $\mathbf{Set}$ is a type in the empty context (where no assumptions are made), $A\times A\to A$ is a type in the context $A:\mathbf{Set}$, also $A$ is a type in the context $A:\mathrm{Set}$, and $\forall x.\,\mu(u_l,x)=x$ is a type in context $A:\mathbf{Set},\mu:A\times A\to A,u_l:A$, and so on.
-In principle, one could give such a finite list of presumed structure for any mathematical text at any position in the text.
-
-More generally, \define{contexts} are lists of `typed' variable declarations. By `typed' we mean that any variable is assigned a (unique) type. A context is always finite, and the variables in a context can have any type, possibly depending on variables that have been declared previously. In our example, the variable $p:\forall x.\,\mu(u_l,x)=x$ depends on $A:\mathbf{Set}$, $\mu:A\times A\to A$, and $u_l:A$. 
-
 \section{The primitive judgments of type theory}
 
-The theory of type dependency is formulated as a deductive system in which derivations establish that a given construction is well-formed. In any dependent type theory there are four \define{primitive judgments}:
+The theory of type dependency is formulated as a deductive system in which derivations establish that a given construction is well-formed. In any dependent type theory there are four \define{primitive judgments}\index{primitive judgment}:
 \begin{enumerate}
 %\item `\emph{$\Gamma$ is a well-formed context.}'
-\item `\emph{$A$ is a well-formed \define{type} in context $\Gamma$.}'
-\item `\emph{$A$ and $B$ are \define{judgmentally equal types} in context $\Gamma$.}'
-\item `\emph{$a$ is a well-formed \define{term} of type $A$ in context $\Gamma$.}'
-\item `\emph{$a$ and $b$ are \define{judgmentally equal terms} of type $A$ in context $\Gamma$.}'
+\item `\emph{$A$ is a well-formed \define{type} in context $\Gamma$.}'\index{primitive judgment!type in context}
+\item `\emph{$A$ and $B$ are \define{judgmentally equal types} in context $\Gamma$.}'\index{primitive judgment!equal types in context}\index{judgmental equality!of types}
+\item `\emph{$a$ is a well-formed \define{term} of type $A$ in context $\Gamma$.}'\index{primitive judgment!term of a type in context}
+\item `\emph{$a$ and $b$ are \define{judgmentally equal terms} of type $A$ in context $\Gamma$.}'\index{primitive judgment!equal terms of a type in context}\index{judgmental equality!of terms}
 \end{enumerate}
 \begin{samepage}
 The symbolic expressions for these four primitive judgments are as follows:
@@ -78,7 +19,7 @@ The symbolic expressions for these four primitive judgments are as follows:
 \Gamma & \vdash a:A & \Gamma & \vdash a\jdeq b:A.
 \end{align*}
 \end{samepage}
-A context is an expression of the form
+A \define{context}\index{context|textbf} is an expression of the form
 \begin{equation*}
 x_1:A_1,~x_2:A_2(x_1),~\ldots,~x_n:A_n(x_1,\ldots,x_{n-1}),
 \end{equation*}
@@ -87,20 +28,21 @@ satisfying the condition that for each $1\leq k\leq n$ we have that $A_k$ is a w
 \begin{equation*}
 x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1} \vdash A_k~\textrm{type}.
 \end{equation*}
-We say that a context $x_1:A_1,~\ldots,~x_n:A_n$ \define{declares} the variables $x_1,\ldots,x_n$. 
-We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.} For example we used the variable names $A,\mu,u_l,p,u_r,q$ when we displayed the context of \autoref{lem:unit}.
+We say that a context $x_1:A_1,~\ldots,~x_n:A_n$ \define{declares the variables}\index{variable declaration} $x_1,\ldots,x_n$. 
+We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.} 
+%For example we used the variable names $A,\mu,u_l,p,u_r,q$ when we displayed the context of \autoref{lem:unit}.
 
-In the special case where $n=0$, the list $x_1:A_1,x_2:A_2,\ldots,x_n:A_n$ is empty, which satisfies the well-formedness condition vacuously. In other words, the \define{empty context} is well-formed. A well-formed type in the empty context is also called a \define{closed type}, and a well-formed term of a closed type is called a \define{closed term}.
+In the special case where $n=0$, the list $x_1:A_1,x_2:A_2,\ldots,x_n:A_n$ is empty, which satisfies the well-formedness condition vacuously. In other words, the \define{empty context}\index{context!empty context|textbf}\index{empty context|textbf} is well-formed. A well-formed type in the empty context is also called a \define{closed type}\index{closed type|textbf}, and a well-formed term of a closed type is called a \define{closed term}\index{closed term|textbf}.
 
 \section{Renaming variables}
 In some situations one might want to change the name of a variable in a context. This is allowed, provided that the new variable does not occur anywhere else in the context, so that also after renaming no variable is declared more than once. 
-The inference rules that rename a variable are sometimes called $\alpha$-conversion rules. 
+The inference rules that rename a variable are sometimes called $\alpha$-conversion\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}} rules. 
 
 If we are given a type $A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[x'/x]$ in context $\Gamma,x':A,\Delta[x'/x]$, where $B[x'/x]$ is an abbreviation for
 \begin{equation*}
 B(x_1,\ldots,x_{n-1},x',x_{n+1},\ldots,x_{n+m-1})
 \end{equation*}
-This definition of renaming $x$ by $x'$ is understood to be recursive over the length of $\Delta$. The first variable renaming rule postulates that the renaming of a variable preserves well-formedness of types:
+This definition of \define{renaming}\index{variable renaming|textbf} the variable $x$ by $x'$ is understood to be recursive over the length of $\Delta$. The first variable renaming rule\index{rule!variable renaming} postulates that the renaming of a variable preserves well-formedness of types:
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A,\Delta\vdash B~\mathrm{type}$}
 \RightLabel{$x'/x$}
@@ -108,7 +50,7 @@ This definition of renaming $x$ by $x'$ is understood to be recursive over the l
 \end{prooftree}
 
 Similarly we obtain for any term $b:B$ in context $\Gamma,x:A,\Delta$ a term $b[x'/x]:B[x'/x]$, and there is a variable renaming rule postulating that the renaming of a variable preserves the well-formedness of terms.
-In fact, there is variable renaming rule for each of the primitive judgments. To avoid having to state essentially the same rule four times in a row, we postulate the four variable renaming rules all at once using a \emph{generic judgment} $\mathcal{J}$. 
+In fact, there is variable renaming rule for each of the primitive judgments. To avoid having to state essentially the same rule four times in a row, we postulate the four variable renaming rules all at once using a \emph{generic judgment}\index{generic judgment} $\mathcal{J}$. 
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
 \RightLabel{$x'/x$}
@@ -120,7 +62,7 @@ We will use generic judgments extensively to postulate the rest of the rules of 
 \section{Inference rules governing judgmental equality}
 
 \begin{samepage}
-Both on types and on terms, we postulate that judgmental equality is an equivalence relation. That is, we provide inference rules for the reflexivity, symmetry and transitivity of both kinds of judgmental equality:
+Both on types and on terms, we postulate that judgmental equality is an equivalence relation. That is, we provide inference rules for the reflexivity, symmetry and transitivity of both kinds of judgmental equality\index{judgmental equality!equivalence relation}:
 \begin{center}
 \begin{small}
 \begin{minipage}{.2\textwidth}
@@ -167,7 +109,7 @@ Both on types and on terms, we postulate that judgmental equality is an equivale
 \end{center}
 \end{samepage}
 
-Apart from the rules postulating that judgmental equality is an equivalence relation, there are also \define{conversion rules}.
+Apart from the rules postulating that judgmental equality is an equivalence relation, there are also \define{conversion rules}\index{judgmental equality!conversion rules}.
 Informally, these are rules stating that if $A$ and $A'$ are judgmentally equal types in context $\Gamma$, then any valid judgment in context $\Gamma,x:A$ is also a valid judgment in context $\Gamma,x:A'$. We state this with a generic judgment $\mathcal{J}$
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A\jdeq A'~\textrm{type}$}
@@ -180,7 +122,7 @@ Informally, these are rules stating that if $A$ and $A'$ are judgmentally equal 
 
 We complete the specification of dependent type theory by postulating rules for \emph{weakening} and \emph{substitution}, and the \emph{variable rule}:
 \begin{enumerate}
-\item If we are given a type $A$ in context $\Gamma$, then any judgment made in a longer context $\Gamma,\Delta$ can also be made in the context $\Gamma,x:A,\Delta$, for a fresh variable $x$. The \define{weakening rule} asserts that weakening by a type $A$ in context preserves well-formedness and judgmental equality of types and terms.
+\item If we are given a type $A$ in context $\Gamma$, then any judgment made in a longer context $\Gamma,\Delta$ can also be made in the context $\Gamma,x:A,\Delta$, for a fresh variable $x$. The \define{weakening rule}\index{weakening}\index{rule!weakening} asserts that weakening by a type $A$ in context preserves well-formedness and judgmental equality of types and terms.
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \AxiomC{$\Gamma,\Delta\vdash \mathcal{J}$}
@@ -194,17 +136,29 @@ This process of expanding the context by a fresh variable (of type $A$) is calle
 \RightLabel{$\delta_A$}
 \UnaryInfC{$\Gamma,x:A\vdash x:A$}
 \end{prooftree}
-This is called the \define{variable rule}. It provides an identity function on the type $A$ in context $\Gamma$.
+This is called the \define{variable rule}\index{variable rule}\index{rule!variable rule|textbf}. It provides an \emph{identity function}\index{identity function} on the type $A$ in context $\Gamma$.
 \item If we are given a term $a:A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[a/x]$ in context $\Gamma,\Delta[a/x]$, where $B[a/x]$ is an abbreviation for
 \begin{equation*}
 B(x_1,\ldots,x_{n-1},a(x_1,\ldots,x_{n-1}),x_{n+1},\ldots,x_{n+m-1})
 \end{equation*}
-This definition of substituting $a$ for $x$ is understood to be recursive over the length of $\Delta$. Similarly we obtain for any term $b:B$ in context $\Gamma,x:A,\Delta$ a term $b[a/x]:B[a/x]$. The \define{substitution rule} asserts that substitution preserves well-formedness and judgmental equality of types and terms:
+This definition of substituting $a$ for $x$ is understood to be recursive over the length of $\Delta$. Similarly we obtain for any term $b:B$ in context $\Gamma,x:A,\Delta$ a term $b[a/x]:B[a/x]$. The \define{substitution rule}\index{substitution}\index{rule!substitution} asserts that substitution preserves well-formedness and judgmental equality of types and terms:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash a:A$}
 \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
 \RightLabel{$S_a$}
 \BinaryInfC{$\Gamma,\Delta[a/x]\vdash \mathcal{J}[a/x]$}
+\end{prooftree}
+Furthermore, we postulate that substitution by judgmentally equal terms results in judgmentally equal types
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash a\jdeq a':A$}
+\AxiomC{$\Gamma,x:A,\Delta\vdash B~\mathrm{type}$}
+\BinaryInfC{$\Gamma,\Delta[a/x]\vdash B[a/x]\jdeq B[a'/x]~\mathrm{type}$}
+\end{prooftree}
+and it also results in judgmentally equal terms
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash a\jdeq a':A$}
+\AxiomC{$\Gamma,x:A,\Delta\vdash b:B$}
+\BinaryInfC{$\Gamma,\Delta[a/x]\vdash b[a/x]\jdeq b[a'/x]:B[a/x]$}
 \end{prooftree}
 \end{enumerate}
 
@@ -260,7 +214,7 @@ This definition of substituting $a$ for $x$ is understood to be recursive over t
 
 
 \begin{eg}
-To give an example of how the deductive system works, we give a deduction for the \define{interchange rule}
+To give an example of how the deductive system works, we give a deduction for the \define{interchange rule}\index{rule!interchange}\index{interchange rule}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \AxiomC{$\Gamma,x:A,y:B,\Delta\vdash \mathcal{J}$}
@@ -285,6 +239,7 @@ The derivation is as follows:
 \end{prooftree}
 \end{small}
 \end{eg}
+
 
 \begin{comment}
 For $A\in T_n$ we define $T_{n+k+1}(A):= \{B\in T_{n+k}\mid \mathrm{ft}^{k+1}(B)=A\}$. Similarly we define $\tilde{T}_{n+k+1}(A):=\{b\in\tilde{T}_{n+k+1}\mid\mathrm{ft}^{k+1}(\partial(b))=A\}$. For any closed type $A$ we maintain the convention that $T_{k}(\mathrm{ft}(A)):= T_k$.
@@ -378,12 +333,49 @@ W_A(W_B(\mathcal{J})) & \jdeq W_{W_A(B)}(W_A(\mathcal{J}))
 Here $A$ is a type in context $\Gamma$ and $a$ is a term of type $A$, $B$ is a type in context $\Gamma,x:A,\Delta$ and $b$ is a term of type $B$.
 \end{comment}
 
+%\begin{rmk}
+%To avoid overly long proof trees maintain as a convention that every derivation with hypotheses $\mathcal{H}_1,\ldots,\mathcal{H}_n$ and conclusion $\mathcal{C}$ can be used as a rule
+%\begin{prooftree}
+%\AxiomC{$\mathcal{H}_1$}
+%\AxiomC{$\cdots$}
+%\AxiomC{$\mathcal{H}_n$}
+%\TrinaryInfC{$\mathcal{C}$}
+%\end{prooftree}
+%in later derivations.
+%\end{rmk}
 
 \begin{exercises}
-\item Give a derivation for the following rule:
+\item Give a derivation for the following conversion rule\index{conversion rule}:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A\jdeq A'~\textrm{type}$}
 \AxiomC{$\Gamma\vdash a:A$}
 \BinaryInfC{$\Gamma\vdash a:A'$}
 \end{prooftree}
+\begin{comment}
+\item Consider a type $A$ in context $\Gamma$. In this exercise we establish a connection between types in context $\Gamma,x:A$, and uniform choices of types $B_a$, where $a$ ranges over terms of $A$ in a uniform way. A similar connection is made for terms.
+\begin{subexenum}
+\item We define a \define{uniform family} over $A$ to consist of a type
+\begin{equation*}
+\Delta,\Gamma\vdash B_a~\mathrm{type}
+\end{equation*}
+for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
+\begin{prooftree}
+\AxiomC{$\Delta\vdash d:D$}
+\AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
+\BinaryInfC{$\Delta,\Gamma\vdash B_a[d/y]\jdeq B_{a[d/y]}~\mathrm{type}$}
+\end{prooftree}
+Define a bijection between types in context $\Gamma,x:A$ and uniform families over $A$. 
+\item Consider a type $\Gamma,x:A\vdash B$. We define a \define{uniform term} of $B$ over $A$ to consist of a type
+\begin{equation*}
+\Delta,\Gamma\vdash b_a:B[a/x]~\mathrm{type}
+\end{equation*}
+for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
+\begin{prooftree}
+\AxiomC{$\Delta\vdash d:D$}
+\AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
+\BinaryInfC{$\Delta,\Gamma\vdash b_a[d/y]\jdeq b_{a[d/y]}:B[a/x][d/y]$}
+\end{prooftree}
+Define a bijection between terms of $B$ in context $\Gamma,x:A$ and uniform terms of $B$ over $A$. 
+\end{subexenum}
+\end{comment}
 \end{exercises}
