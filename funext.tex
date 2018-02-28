@@ -90,6 +90,28 @@ Therefore, the types $\sum_g f\htpy g$ and $\prod_x\sum_b f(x)=b$ are actually \
 \end{rmk}
 \end{comment}
 
+\begin{comment}
+\begin{thm}
+Assume weak function extensionality. Then for any type $A$, the type $\iscontr(A)$ is a proposition.
+\end{thm}
+
+\begin{proof}
+Let $A$ be a contractible type with center of contraction $c$, and contraction $C$. We want to show that
+\begin{equation*}
+\prd{d:A}{D:\prd{x:A}d=x} (c,C)=(d,D).
+\end{equation*}
+Since $A$ is contractible, we may proceed by singleton induction. Thus, it suffices to show that
+\begin{equation*}
+\prd{D:\prd{x:A}c=x}(c,C)=(c,D).
+\end{equation*}
+Now recall from \cref{ex:prop_contr} it follows that for any $x:A$ the type $c=x$ is contractible. By the principle of weak function extensionality it follows that the type $\prd{x:A}c=x$ is contractible. Therefore we may proceed by singleton induction on $D$. It suffices to show that
+\begin{equation*}
+(c,C)=(c,C),
+\end{equation*}
+which we have by reflexivity.
+\end{proof}
+\end{comment}
+
 \begin{thm}
 Assume function extensionality. Then for any type family $B$ over $A$ one has\index{truncated}
 \begin{equation*}
@@ -109,7 +131,7 @@ Suppose $B$ is a $k$-type. Then $A\to B$ is also a $k$-type, for any type $A$.
 
 The following theorem is sometimes called the \define{type theoretic principle of choice}. This terminology comes from the point of view of propositions as types, where the $\Sigma$-type has the role of the existential quantifier, and the $\Pi$-type has the role of the universal quantifier.
 
-\begin{thm}
+\begin{thm}\label{thm:choice}
 Let $C(x,y)$ be a type in context $\Gamma,x:A,y:B(x)$. Then the map
 \begin{equation*}
 \varphi:\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)\to \Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)
@@ -217,7 +239,7 @@ This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\
 
 
 \begin{exercises}
-\item 
+\item \label{ex:prop_equiv}
 \begin{subexenum}
 \item Let $P$ and $Q$ be propositions. Show that
 \begin{equation*}
@@ -226,16 +248,17 @@ This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\
 \item Show that $P\to P$ is contractible for any proposition $P$.
 \item Show that if $P\to P$ is contractible, then $P$ is a proposition.
 \end{subexenum}
-\item 
+\item \label{ex:isprop_istrunc}
 \begin{subexenum}
-\item Show that for any type $A$ the type $\iscontr(A)$ is a proposition.
+\item Show that for any type $A$ the type $\iscontr(A)$ is a proposition. %There's an easy proof using double singleton induction. This is a nice application of weak funext.
 \item Show that for any type $A$ and any $k\geq-2$, the type $\istrunc{k}(A)$ is a proposition.
 \end{subexenum}
-\item Let $f:A\to B$ be a function.
+\item \label{ex:isprop_isequiv}Let $f:A\to B$ be a function.
 \begin{subexenum}
 \item Show that if $f$ is an equivalence, then the type $\sm{g:B\to A}f\circ g\htpy \idfunc$ of sections of $f$ is contractible.
 \item Show that if $f$ is an equivalence, then the type $\sm{h:B\to A}h\circ f\htpy \idfunc$ of retractions of $f$ is contractible.
 \item Show that $\isequiv(f)$ is a proposition.
+\item Use \cref{ex:prop_equiv,ex:isprop_istrunc} to show that $\isequiv(f)\eqvsym \iscontr(f)$.
 \end{subexenum}
 Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that for any $(f,p),(g,q):\eqv{A}{B}$ the map
 \begin{equation*}

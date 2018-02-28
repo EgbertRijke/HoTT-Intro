@@ -18,7 +18,7 @@ Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just th
 
 In the following definition we define the groupoid-like structure of homotopies. Note that we implement the groupoid-laws as \emph{homotopies} rather than as identifications.
 
-\begin{defn}\index{groupoid laws!of homotopies|textbf}
+\begin{defn}\label{defn:htpy_groupoid}\index{groupoid laws!of homotopies|textbf}
 For any dependent type $B:A\to\type$ there are operations
 \begin{align*}
 & \mathsf{htpy.refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
@@ -189,7 +189,7 @@ f,\qquad g,\qquad g\circ f
 are equivalences, then so is the third.
 \item \label{ex:neg_equiv} Show that the negation function on the booleans is an equivalence. Also show that for any function $f:\bool\to\bool$, if $f(\bfalse)=f(\btrue)$ then $f$ is \emph{not} an equivalence.\index{negation function!is an equivalence}
 \item \label{ex:succ_equiv} Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}
-\item Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is symmetric}
+\item \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is symmetric}
 \item \label{ex:retr_id} Consider a section-retraction pair
 \begin{equation*}
 \begin{tikzcd}
@@ -197,9 +197,13 @@ A \arrow[r,"i"] & B \arrow[r,"r"] & A,
 \end{tikzcd}
 \end{equation*}
 with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
-\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B:A\to \type$, and let $C:\prd{x:A}B(a)\to\type$. Construct an equivalence
+\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B:A\to \type$, and let $C$ be a family over $x:A,y:B(x)$. Construct an equivalence
 \begin{equation*}
-\mathsf{\Sigma.assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1 p,\proj 2 p)\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}
+\mathsf{\Sigma.assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1 p,\proj 2 p)\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
+\end{equation*}
+\item \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
+\begin{equation*}
+\mathsf{\Sigma.swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
 \end{equation*}
 \item \label{ex:int_group_laws}\index{Z@{$\Z$}!group laws} To define all the proof terms involved in showing that the integers form an abelian group is fairly involved. We suggest to show first that $\Z$ is a retract of $\N\times\N$\index{Z@{$\Z$}!as retract of $\N\times\N$} in a way that is compatible with addition.
 \begin{subexenum}
@@ -225,4 +229,15 @@ k+(-k) & = 0 \\
 and that $k+l=l+k$, making $\pairr{\Z,0,+,-}$ into an abelian group.
 \end{subexenum}
 \item \label{ex:int_ptd_auto} Given a type $X$ with a base point $x_0$ and an equivalence $e:\eqv{X}{X}$, construct a map $f:\Z\to X$ for which $f(0)=x_0$ and $f\circ\mathsf{succ} \htpy e\circ f$. 
+\item Show that for any term $a:A$ the functions
+\begin{align*}
+\ind{\unit}(a) & : \unit \to A \\
+\mathsf{const}_a & : \unit \to A
+\end{align*}
+are homotopic.
+\item Let $A$ and $B$ be types, and consider the constant map $\mathsf{const}_b:A\to B$ for some $b:B$. Construct a homotopy
+\begin{equation*}
+\mathsf{ap}_{\mathsf{const}_b}(x,y)\htpy \mathsf{const}_{\refl{b}}
+\end{equation*}
+for any $x,y:A$.
 \end{exercises}
