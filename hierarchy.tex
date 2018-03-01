@@ -243,7 +243,7 @@ We have seen in \cref{eg:prop_contr} that contractible types are propositions. T
 For the inductive step, note that if any $k$-type is also a $(k+1)$-type, then any $(k+1)$-type is a $(k+2)$-type, since its identity types are $k$-types and therefore $(k+1)$-types.
 \end{proof}
 
-\begin{thm}\label{thm:ntype_eqv}
+\begin{thm}\label{thm:ktype_eqv}
 If $e:\eqv{A}{B}$ is an equivalence, and $B$ is a $k$-type, then so is $A$.
 \end{thm}
 
@@ -266,7 +266,7 @@ By the assumption that $f$ is an embedding, the action on paths
 \begin{equation*}
 \apfunc{f}:(\id{x}{y})\to (\id{f(x)}{f(y)})
 \end{equation*}
-is an equivalence for every $x,y:A$. Since $B$ is assumed to be a $(k+1)$-type, it follows that $f(x)=f(y)$ is a $k$-type for every $x,y:A$. Therefore we conclude by \cref{thm:ntype_eqv} that $\id{x}{y}$ is a $k$-type for every $x,y:A$. In other words, $A$ is a $(k+1)$-type.
+is an equivalence for every $x,y:A$. Since $B$ is assumed to be a $(k+1)$-type, it follows that $f(x)=f(y)$ is a $k$-type for every $x,y:A$. Therefore we conclude by \cref{thm:ktype_eqv} that $\id{x}{y}$ is a $k$-type for every $x,y:A$. In other words, $A$ is a $(k+1)$-type.
 \end{proof}
 
 In the following definition we generalize the notion of contractible map.
@@ -292,7 +292,7 @@ By \cref{ex:fib_replacement,ex:fiber_trans} we obtain equivalences
 \begin{equation*}
 \eqv{B(x)}{\fib{\proj 1}{x}}
 \end{equation*}
-for every $x:A$. Therefore the claim follows from \cref{thm:ntype_eqv}.
+for every $x:A$. Therefore the claim follows from \cref{thm:ktype_eqv}.
 \end{proof}
 
 \begin{thm}\label{thm:trunc_ap}
@@ -319,13 +319,13 @@ We do this by $\Sigma$-induction on $s$ and $t$, and then we calculate using \cr
 & \eqvsym \sm{r:x=y} \ap{f}{r}=\ct{p}{q^{-1}} \\
 & \jdeq \fib{\apfunc{f}}{\ct{p}{q^{-1}}}.
 \end{align*}
-By these equivalences, it follows that if $\apfunc{f}$ is $k$-truncated, then for each $s,t:\fib{f}{b}$ the identity type $s=t$ is equivalent to a $k$-truncated type, and therefore we obtain by \cref{thm:ntype_eqv} that $f$ is $(k+1)$-truncated.
+By these equivalences, it follows that if $\apfunc{f}$ is $k$-truncated, then for each $s,t:\fib{f}{b}$ the identity type $s=t$ is equivalent to a $k$-truncated type, and therefore we obtain by \cref{thm:ktype_eqv} that $f$ is $(k+1)$-truncated.
 
 For the converse, note that we have equivalences
 \begin{align*}
 \fib{\apfunc{f}}{p} & \eqvsym ((x,p)=(y,\refl{f(y)})).
 \end{align*}
-Therefore it follows that if $f$ is $(k+1)$-truncated, then the identity type $(x,p)=(y,\refl{f(y)})$ in $\fib{f}{f(y)}$ is $k$-truncated for any $p:f(x)=f(y)$, and therefore $\fib{\apfunc{f}}{p}$ is $k$-truncated by \cref{thm:ntype_eqv}. 
+Therefore it follows that if $f$ is $(k+1)$-truncated, then the identity type $(x,p)=(y,\refl{f(y)})$ in $\fib{f}{f(y)}$ is $k$-truncated for any $p:f(x)=f(y)$, and therefore $\fib{\apfunc{f}}{p}$ is $k$-truncated by \cref{thm:ktype_eqv}. 
 \end{proof}
 
 \begin{cor}
@@ -353,7 +353,7 @@ is $k$-truncated.
 \end{thm}
 
 \begin{proof}
-This follows directly from \cref{lem:fib_total,thm:ntype_eqv}.
+This follows directly from \cref{lem:fib_total,thm:ktype_eqv}.
 \end{proof}
 
 \begin{comment}
