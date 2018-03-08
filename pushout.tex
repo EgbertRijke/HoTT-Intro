@@ -1,43 +1,93 @@
 \chapter{Homotopy pushouts}
 
-\section{General pushouts}
+Homotopy pushouts are dual to homotopy pullbacks. However, unlike pullbacks we have to \emph{assume} that pushouts exist by postulating rules for higher inductive types. For the purpose of this course, the only higher inductive types that we add are the pushouts. Some of the more exotic higher inductive types are described in \cite{hottbook}.
 
+\section{Cocartesian squares}
+
+In \cref{defn:cospan} we broke down a commuting square into a cospan, a type, and a cone with that type as its vertex. 
 \begin{defn}
 A \define{span} from $A$ to $B$ consists of a type $S$ and maps $f:S\to A$ and $g:S\to B$, as indicated in the diagram
 \begin{equation*}
 \begin{tikzcd}
-& S \arrow[dl,swap,"f"] \arrow[dr,"g"] \\
-A & & B.
+A & S \arrow[l,swap,"f"] \arrow[r,"g"] & B.
 \end{tikzcd}
 \end{equation*}
 \end{defn}
 
 \begin{defn}
-Let $X$ be a type, and let $\mathcal{S}\jdeq (S,f,g)$ be a span from $A$ to $B$.
-A \define{cocone} with vertex $X$ on $\mathcal{S}$ consists of maps $i:A\to X$ and $j:B\to X$, and a homotopy $H:i\circ f\htpy j\circ g$.
-We write $\mathsf{cocone}_{\mathcal{S}}(X)$ for the type of cocones with vertex $X$.
-\end{defn}
-
-Thus, a cocone $(i,j,H)$ on a span $\mathcal{S}$ can be represented as a commutative square
+Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and let $X$ be a type.
+A \define{cocone} with vertex $X$ on $\mathcal{S}$ is a triple $(i,j,H)$ consisting of maps $i:A\to X$ and $j:B\to X$, and a homotopy $H:i\circ f\htpy j\circ g$ witnessing that the square
 \begin{equation*}
 \begin{tikzcd}
 S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
-A \arrow[r,swap,"i"] & X 
+A \arrow[r,swap,"i"] & X
 \end{tikzcd}
 \end{equation*}
-
-\begin{defn}
-Let $\mathcal{X}\defeq(i,j,H)$ be a cocone with vertex $X$ on $\mathcal{S}$. For any type $Y$ we define a map
-\begin{equation*}
-\mathsf{cocone\usc{}map}(\mathcal{X}):(X\to Y)\to \mathsf{cocone}(Y)
-\end{equation*}
-by $f\mapsto (f\circ i,f\circ j,f\cdot H)$. We say that $\mathcal{X}$ is \define{colimiting} if $\mathsf{cocone\usc{}map}(\mathcal{X})$ is an equivalence for every type $Y$. 
+commutes.
+We write $\mathsf{cocone}_{\mathcal{S}}(X)$ for the type of cocones with vertex $X$.
 \end{defn}
 
+\begin{defn}
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X,
+\end{tikzcd}
+\end{equation*}
+where $(i,j,H)$ is a cocone with vertex $X$ on the span $A \leftarrow S \rightarrow B$.
+We say that the square is a \define{homotopy pushout}, or that it is \define{cocartesian}, if it satisfies the \define{universal property of pushouts}, which asserts that for any type $Y$ the map
+\begin{equation*}
+\mathsf{cocone\usc{}map}(i,j,H):(X\to Y)\to \mathsf{cocone}(Y)
+\end{equation*}
+given by $f\mapsto (f\circ i,f\circ j,f\cdot H)$ is an equivalence. Sometimes we simply say that $X$ is a pushout if the square is a pushout.
+\end{defn}
+
+\begin{rmk}
+Given a pushout square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X,
+\end{tikzcd}
+\end{equation*}
+we can view the cocone $(i,j,H)$ as \emph{structure} on $X$, in the sense that $X$ comes equipped with
+\begin{align*}
+i & : A\to X \\
+j & : B\to X \\
+H & : \prd{s:S} i(f(s))=j(g(s)).
+\end{align*}
+As we will see in \cref{thm:pushout_up}, the type $X$ is a pushout precisely when it satisfies an \emph{induction principle} formulated in terms of $(i,j,H)$. However, the homotopy $H$ provides \emph{path constructors} of $X$. 
+
+The induction principle of pushouts is formulated with respect to families $P$ over $X$, and provides a way to construct sections of $P$. Note that from any section $s:\prd{x:X}P(x)$ we obtain
+\begin{align*}
+s\circ i & : \prd{a:A}P(i(a)) \\
+s\circ j & : \prd{b:B}P(j(b)) \\
+s\cdot H & : \prd{x:S}\mathsf{tr}_P(H(x),s(i(x)))=s(j(x)).
+\end{align*}
+It will be useful to write
+\begin{equation*}
+i' \htpy_H j' \defeq \prd{s:S} \mathsf{tr}_P(H(s),i'(f(s)))=j'(g(s))
+\end{equation*}
+for the type of $s\cdot H$. Thus we see that there is a map
+\begin{equation*}
+\Big(\prd{x:X}P(x)\Big)\to \sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))} i'\htpy_H j'
+\end{equation*}
+given by $s\mapsto (s\circ i,s\circ j,s\cdot H)$.
+\end{rmk}
+
 \begin{thm}\label{thm:pushout_up}
-Let $\mathcal{X}\defeq(i,j,H)$ be a cocone with vertex $X$ on $\mathcal{S}$. The following are equivalent:
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X,
+\end{tikzcd}
+\end{equation*}
+where $(i,j,H)$ is a cocone with vertex $X$ on the span $A \leftarrow S \rightarrow B$.
+The following are equivalent:
 \begin{enumerate}
-\item The cocone $\mathcal{X}$ is colimiting.
+\item The square is a pushout square.
 \item The commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -46,14 +96,11 @@ Y^A \arrow[r,swap,"\blank\circ f"] & Y^S
 \end{tikzcd}
 \end{equation*}
 is a pullback square, for every type $Y$.
-\item The type $X$ is $\mathcal{S}$-inductive, in the sense that for any type fampy $P:X\to \UU$ the map
+\item The type $X$ satisfies \define{span induction} for the span $A\leftarrow S \rightarrow B$, in the sense that for any type family $P$ over $X$, the map
 \begin{equation*}
 \Big(\prd{x:X}P(x)\Big)\to \Big(\sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))} i'\htpy_H j'\Big)
 \end{equation*}
-given by $h\mapsto (h\circ i,h\circ j,\mathsf{apd}_h(H(s)))$ has a section. Here we define
-\begin{equation*}
-i'\htpy_H j'\defeq \prd{s:S}\dpath{P}{H(s)}{i'(f(s))}{j'(g(s))}.
-\end{equation*}
+given by $s\mapsto (s\circ i,s\circ j,s\cdot H)$ has a section.
 \end{enumerate}
 \end{thm}
 
@@ -67,15 +114,7 @@ By \autoref{ex:circle_up_pushout} and the second characterization of pushouts in
 \end{equation*}
 \end{eg}
 
-From now on we will assume that for any span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$ there is a type $A\sqcup^{\mathcal{S}}B$ equipped with
-\begin{align*}
-\inl & : A \to A \sqcup^S B \\
-\inr & : B \to A \sqcup^S B \\
-\glue & : \prd{x:S} \id{\inl(f(x))}{\inr(g(s))},
-\end{align*}
-which is $\mathcal{S}$-inductive in the sense of \autoref{thm:pushout_up}. Moreover, if $A$ and $B$ are types in $\UU$, then we assume that also $A\sqcup^{\mathcal{S}} B$ is in $\UU$. We call $A\sqcup^{\mathcal{S}} B$ the \define{canonical pushout} of $\mathcal{S}$. 
-
-\begin{rmk}
+\begin{proof}[Proof of \cref{thm:pushout_up}]
 The type $\mathsf{cocone}(X)$ is a pullback in the following way:
 \begin{equation*}
 \begin{tikzcd}
@@ -92,7 +131,63 @@ Y^X \arrow[ddr,bend right=15] \arrow[drr,bend left=15] \arrow[dr,densely dotted,
 \end{tikzcd}
 \end{equation*}
 Therefore it follows that the cocone $\mathcal{X}$ is colimiting precisely when the outer commuting square is a pullback.
-\end{rmk}
+\end{proof}
+
+\begin{cor}
+Consider two commuting squares
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] & S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"{j'}"] \\
+A \arrow[r,swap,"i"] & X & A \arrow[r,swap,"{i'}"] & {X'}
+\end{tikzcd}
+\end{equation*}
+with homotopies $H:i\circ f\htpy j\circ g$ and $H':i'\circ f\htpy j'\circ g$. Furthermore, consider a map
+\begin{equation*}
+h:X\to X'
+\end{equation*}
+equipped with
+\begin{align*}
+K & : h\circ i\htpy i' \\
+L & : h\circ j\htpy j' \\
+M & : \ct{(h\cdot H)}{(L\cdot g)} \htpy \ct{(K\cdot f)}{H'}.
+\end{align*}
+If any two of the following three properties hold, then so does the third:
+\begin{enumerate}
+\item $X$ is a pushout.
+\item $X'$ is a pushout.
+\item $h$ is an equivalence.
+\end{enumerate}
+\end{cor}
+
+\section{Rules for pushouts}
+
+The \define{formation rule} for pushouts simply states that for any span $\mathcal{S}\defeq (S,f,g)$ from $A$ to $B$, a type $A\sqcup^{\mathcal{S}} B$ can be formed. We call $A\sqcup^{\mathcal{S}} B$ the \define{canonical pushout} of $\mathcal{S}$. 
+
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f:S\to A$}
+\AxiomC{$\Gamma\vdash g:S\to B$}
+\BinaryInfC{$\Gamma\vdash A\sqcup^{\mathcal{S}} B~\mathrm{type}$}
+\end{prooftree}
+
+The \define{introduction rules} for pushouts provide ways to construct terms of the type $A\sqcup^{\mathcal{S}} B$, and ways to identify some of those.
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f:S\to A$}
+\AxiomC{$\Gamma\vdash g:S\to B$}
+\BinaryInfC{$\Gamma\vdash \inl : A \to A\sqcup^{\mathcal{S}} B$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f:S\to A$}
+\AxiomC{$\Gamma\vdash g:S\to B$}
+\BinaryInfC{$\Gamma\vdash \inr : B \to A\sqcup^{\mathcal{S}} B$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash f:S\to A$}
+\AxiomC{$\Gamma\vdash g:S\to B$}
+\BinaryInfC{$\Gamma\vdash \glue : \inl\circ f \htpy \inr\circ g$}
+\end{prooftree}
+We assume that $A\sqcup^{\mathcal{S}} B$ is span inductive in the sense of \autoref{thm:pushout_up}. Moreover, if $A$, $B$, and $S$ are types in $\UU$, then we assume that also $A\sqcup^{\mathcal{S}} B$ is in $\UU$. In other words, we assume that the universe is \emph{closed under pushouts}.
 
 \section{Suspension and join}
 Many interesting types can be defined as homotopy pushouts. 

@@ -257,7 +257,7 @@ For the inductive step, assume that the $k$-types are stable under equivalences,
 is an equivalence for any $x,y$. Note that $\id{e(x)}{e(y)}$ is a $k$-type, so by the induction hypothesis it follows that $\id{x}{y}$ is a $k$-type. This proves that $A$ is a $(k+1)$-type.
 \end{proof}
 
-\begin{cor}
+\begin{cor}\label{cor:emb_into_ktype}
 If $f:A\to B$ is an embedding, and $B$ is a $(k+1)$-type, then so is $A$.
 \end{cor}
 
@@ -398,7 +398,7 @@ commutes. This square commutes by the naturality of homotopies, proven in \autor
 \item Show that if $A$ and $B$ are $k$-types, then so is $A\times B$.
 \end{subexenum}
 \item \label{ex:eq_bool}Show that $\bool$ is a set by applying \cref{lem:prop_to_id} with the observational equality on $\bool$ defined in \cref{ex:obs_bool}.
-\item Show that for any two sets $A$ and $B$, the disjoint sum $A+B$ is again a set.
+\item \label{ex:set_coprod}Show that for any two sets $A$ and $B$, the disjoint sum $A+B$ is again a set.
 \item \label{ex:hedberg}(Hedberg's theorem) A type $A$ is said to have \define{decidable equality} if there is a term of type
 \begin{equation*}
 \prd{x,y:A} (\id{x}{y})+\neg(\id{x}{y}).
@@ -412,4 +412,13 @@ Use $D$ to show that any type with decidable equality is a set.
 \item Show that $\nat$ and $\bool$ have decidable equality, as defined in \autoref{ex:hedberg}.
 \item Show that if $A$ and $B$ have decidable equality, then so do $A+B$ and $A\times B$.
 \item Use \autoref{ex:contr_retr,ex:retr_id} to show that if $A$ is a retract of a $k$-type $B$, then $A$ is also a $k$-type.
+\item \label{ex:injective}A map $f:A\to B$ between sets is said to be \define{injective} if for every $x,y:A$ there is a map
+\begin{equation*}
+(f(x)\to f(y))\to (x=y).
+\end{equation*}
+\begin{subexenum}
+\item Use \cref{ex:eq_bool} to show that $\mathsf{const}_\bfalse,\mathsf{const}_\btrue:\unit\to \bool$ are injective maps.
+\item Show that between sets are injective if and only if they are embeddings.
+\item Show that a type $A$ is a set if and only if the map $\mathsf{const}_x:\unit\to A$ is an embedding for every $x:A$.
+\end{subexenum}
 \end{exercises}

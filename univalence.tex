@@ -9,7 +9,7 @@ The following are equivalent:
 \begin{enumerate}
 \item The \define{univalence axiom}: for any $A:\UU$ the map
 \begin{equation*}
-\mathsf{equiv\usc{}eq}\defeq \mathsf{eq\usc{}ind}(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
+\mathsf{equiv\usc{}eq}\defeq \ind{A=}(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
 \end{equation*}
 is a fiberwise equivalence.
 \item The type
@@ -29,47 +29,235 @@ given by $f\mapsto f(A,\idfunc[A])$ has a section.
 \end{enumerate}
 \end{thm}
 
+\begin{proof}
+The equivalence of (i) and (ii) is a direct consequence of \cref{thm:id_fundamental}. 
+To see that (ii) and (iii) are equivalent, note that we have a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=-1em]
+\prd{t:\sm{B:\UU}\eqv{A}{B}}P(t) \arrow[rr,"\ind{\Sigma}"] \arrow[dr,"\varphi","{f\mapsto f((A,\idfunc[A]))}"'] & & \prd{B:\UU}{e:\eqv{A}{B}} P((B,e)) \arrow[dl,"{f\mapsto f(A,\idfunc[A])}","\psi"'] \\
+& P((A,\idfunc[A]))
+\end{tikzcd}
+\end{equation*}
+The map $\ind{\Sigma}$ has a section. Therefore it follows that $\varphi$ has a section if and only if $\psi$ has a section. By \cref{thm:contractible} it follows that $\varphi$ has a section if and only if $\sm{B:\UU}\eqv{A}{B}$ is contractible. 
+\end{proof}
+
 From now on we will assume that the univalence axiom holds.
 
-\section{Consequences of the univalence axiom}
+\section{Groups in univalent mathematics}
 
-The first application of the univalence axiom was Voevodsky's proof of function extensionality.
+In this section we exhibit a typical way to use the univalence axiom, showing that isomorphic groups can be identified.
+This is an instance of the \emph{structure identity principle}, which is described in more detail in section 9.8 of \cite{hottbook}.
+We will see that in order to establish the fact that isomorphic groups can be identified, it has to be part of the definition of a group that its underlying type is a set. This is an important observation: in many branches of algebra the objects of study are \emph{set-level} structures\footnote{An important exception is that of categories, which are objects at truncation level $1$, i.e. at the level of \emph{groupoids}. For more on this, see Chapter 9 of \cite{hottbook}.}.
+
+\begin{defn}
+A \define{group} $\mathcal{G}$ consists of a type $G$ equipped with
+\begin{samepage}
+\begin{align*}
+p & : \mathsf{is\usc{}set}(G) \\
+1 & : G \\
+i & : G\to G \\
+\mu & : G\to (G\to G),
+\end{align*}
+\end{samepage}
+satisfying the \define{group laws}:
+\begin{align*}
+\mathsf{assoc} & : \prd{x,y,z:G} \mu(\mu(x,y),z)=\mu(x,\mu(y,z)) \\
+\mathsf{left\usc{}unit} & : \prd{x:G} \mu(1,x)=x \\
+\mathsf{right\usc{}unit} & : \prd{x:G} \mu(x,1)=x \\
+\mathsf{left\usc{}inv} & : \prd{x:G} \mu(i(x),x)=1 \\
+\mathsf{right\usc{}inv} & : \prd{x:G} \mu(x,i(x))=x.
+\end{align*}
+The type $\mathsf{Grp}$ of all small groups is defined as
+\begin{align*}
+\mathsf{Grp} & \defeq \sm{G:\UU}{p:\mathsf{is\usc{}set}(G)}{1:G}{i:G\to G}{\mu:G\to(G\to G)} \\
+& \qquad \Big(\prd{x,y,z:G} \mu(\mu(x,y),z)=\mu(x,\mu(y,z))\Big) \times \\
+& \qquad \Big(\prd{x:G} \mu(1,x)=x\Big)\times\Big(\prd{x:G} \mu(x,1)=x\Big) \times \\
+& \qquad \Big(\prd{x:G} \mu(i:x,x)=1\Big)\times\Big(\prd{x:G} \mu(x,i(x))=x\Big).
+\end{align*}
+We will usually write $x^{-1}$ for $i(x)$, and $xy$ for $\mu(x,y)$. The binary operation $\mu$ is also referred to as the \define{group operation}.
+\end{defn}
+
+\begin{eg}
+An important class of examples consists of the \define{loop space} $x=x$ of a $1$-type $X$, for any $x:X$. 
+We will write $\loopspace{X,x}$ for the loop space of $X$ at $x$. 
+Since $X$ is assumed to be a $1$-type, it follows that the type $\loopspace{X,x}$ is a set. Then we have
+\begin{align*}
+\refl{x} & : \loopspace{X,x} \\
+\mathsf{inv} & : \loopspace{X,x} \to \loopspace{X,x} \\
+\mathsf{concat} & : \loopspace{X,x} \to (\loopspace{X,x}\to \loopspace{X,x}),
+\end{align*}
+and these operations satisfy the group laws, since the group laws are just a special case of the groupoid laws for identity types, constructed in \cref{sec:groupoid}.
+
+Using higher inductive types we will show in \cref{chap:image} that \emph{every} group is of this form.
+\end{eg}
+
+\begin{eg}
+The type $\Z$ of integers can be given the structure of a group, with the group operation being addition. The fact that $\Z$ is a set follows from \cref{thm:eq_nat,ex:set_coprod}. The group laws were shown in \cref{ex:int_group_laws}. 
+\end{eg}
+
+\begin{defn}
+Let $\mathcal{G}$ and $\mathcal{G}'$ be groups. The type $\mathrm{hom}(\mathcal{G},\mathcal{G}')$ of \define{group homomorphisms} from $\mathcal{G}$ to $\mathcal{G}'$ is defined to be the type of pairs $(h,p)$ consisting of
+\begin{samepage}
+\begin{align*}
+h & : G \to G' \\
+p & : \prd{x,y:G} f(xy)=f(x)f(y).
+\end{align*}
+\end{samepage}
+\end{defn}
+
+\begin{rmk}
+Since preservation of the group operation is a property, we will usually write $h$ for the group homomorphism $(h,p)$.
+Moreover, from \cref{thm:subtype} we obtain that the projection map
+\begin{equation*}
+\proj 1:\mathrm{hom}(\mathcal{G},\mathcal{G}')\to (G\to G')
+\end{equation*}
+is an embedding. Therefore the equality type $(h,p)=(h',p')$ is equivalent to $h=h'$. In other words, to show that two group homomorphisms are equal it suffices to show that their underlying maps are equal.
+\end{rmk}
+
+\begin{defn}
+Let $\mathcal{G}$ be a group. Then the \define{identity homomorphism} $\idfunc[\mathcal{G}]:\mathrm{hom}(\mathcal{G},\mathcal{G})$ is defined to be the pair $(\idfunc[G],p)$, where 
+\begin{equation*}
+p(x,y)\defeq \refl{xy}. 
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Let $h:\mathrm{hom}(\mathcal{G},\mathcal{H})$ and $k:\mathrm{hom}(\mathcal{H},\mathcal{K})$ be group homomorphisms, with proofs $p$ and $q$ that $h$ and $k$ preserve the group operation, respectively. Then we define
+\begin{equation*}
+k\circ h:\mathrm{hom}(\mathcal{G},\mathcal{K})
+\end{equation*}
+to be the group homomorphism with underlying map $k\circ h$. This map preserves the group operation since
+\begin{equation*}
+\begin{tikzcd}
+k(h(xy)) \arrow[r,equals] & k(h(x)h(y)) \arrow[r,equals] & k(h(x))k(h(y)).
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Let $h:\mathrm{hom}(\mathcal{G},\mathcal{H})$ be a group homomorphism. Then $h$ is said to be an \define{isomorphism} if there is a group homomorphism $h^{-1}:\mathrm{hom}(\mathcal{H},\mathcal{G})$ such that
+\begin{equation*}
+h^{-1}\circ h=\idfunc[\mathcal{G}]\qquad\text{and}\qquad h\circ h^{-1}=\idfunc[\mathcal{H}].
+\end{equation*}
+We write $\mathcal{G}\cong\mathcal{H}$ for the type of all group isomorphisms from $\mathcal{G}$ to $\mathcal{H}$, i.e.
+\begin{equation*}
+\mathcal{G}\cong\mathcal{H} \defeq \sm{h:\mathrm{hom}(\mathcal{G},\mathcal{H})}{k:\mathrm{hom}(\mathcal{H},\mathcal{G})} (k\circ h = \idfunc[\mathcal{G}])\times (h\circ k=\idfunc[\mathcal{H}]).
+\end{equation*}
+\end{defn}
+
+\begin{lem}
+The type of isomorphisms $\mathcal{G}\cong\mathcal{H}$ is equivalent to the type
+\begin{equation*}
+\sm{e:\eqv{G}{H}}\prd{x,y:G}e(xy)=e(x)e(y).
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+
+\end{proof}
+
+\begin{defn}
+Let $\mathcal{G}:\mathsf{Grp}$ be a group. We define the map
+\begin{equation*}
+\mathsf{iso\usc{}eq} : \prd{\mathcal{H}:\mathsf{Grp}}(\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
+\end{equation*}
+by path induction, taking $\refl{\mathcal{G}}\to\idfunc[\mathcal{G}]$. Indeed, $\idfunc[\mathcal{G}]$ is a group isomorphism since it is its own inverse.
+\end{defn}
 
 \begin{thm}
-The univalence axiom implies function extensionality.
+The fiberwise transformation
+\begin{equation*}
+\mathsf{iso\usc{}eq} : \prd{\mathcal{H}:\mathsf{Grp}}(\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
+\end{equation*}
+is a fiberwise equivalence, for any group $\mathcal{G}$.
 \end{thm}
 
 \begin{proof}
-By \autoref{thm:funext_wkfunext} it suffices to show that univalence implies the weak principle of function extensionality.
-
-To see this, we first note that post-composing with an equivalence $\eqv{X}{Y}$ gives an equivalence $\eqv{(A\to X)}{(A\to Y)}$. This follows immediately by equivalence induction, \autoref{thm:univalence}
+\begin{align*}
+...
+\end{align*}
 \end{proof}
 
-\begin{thm}
-For any type $X:\UU$ the map
+\begin{cor}
+The type $\mathsf{Grp}$ is a $1$-type.
+\end{cor}
+
+\section{Equivalence relations}
+
+\begin{defn}\label{defn:eq_rel}
+Let $R:A\to (A\to\prop)$ be a binary relation valued in the propositions. We say that $R$ is an \define{($0$-)equivalence relation} if $R$ comes equipped with
+\begin{align*}
+\rho & : \prd{x:A}R(x,x) \\
+\sigma & : \prd{x,y:A} R(x,y)\to R(y,x) \\
+\tau & : \prd{x,y,z:A} R(x,y)\to (R(y,z)\to R(x,z)).
+\end{align*}
+Given an equivalence relation $R:A\to (A\to\prop)$, the \define{equivalence class} $[x]_R$ of $x:A$ is defined to be
 \begin{equation*}
-\Big(\sm{A:\UU}A\to X\Big)\to \Big(X\to\UU\Big)
+[x]_R\defeq R(x).
 \end{equation*}
-given by $(A,f)\mapsto \mathsf{fib}_f$ is an equivalence. 
+\end{defn}
+
+\begin{defn}
+Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
+We define for any $x,y:A$ a map
+\begin{equation*}
+\mathsf{class\usc{}eq}:R(x,y)\to ([x]_R=[y]_R).
+\end{equation*}
+\end{defn}
+
+\begin{proof}[Construction.]
+Let $r:R(x,y)$. By function extensionality, the identity type $R(x)=R(y)$ is equivalent to the type
+\begin{equation*}
+\prd{z:A}R(x,z)=R(y,z).
+\end{equation*}
+Let $z:A$. By the univalence axiom, the type $R(x,z)=R(y,z)$ is equivalent to the type
+\begin{equation*}
+\eqv{R(x,z)}{R(y,z)}.
+\end{equation*}
+We have the map $\tau_{y,x,z}(\sigma(r)):R(x,z)\to R(y,z)$. Since this is a map between propositions, we only have to construct a map in the converse direction to show that it is an equivalence. The map in the converse direction is just $\tau_{x,y,z}(r):R(y,z)\to R(x,z)$. 
+\end{proof}
+
+\begin{thm}\label{thm:equivalence_classes}
+Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
+Then for any $x,y:A$ the map
+\begin{equation*}
+\mathsf{class\usc{}eq} : R(x,y)\to ([x]_R=[y]_R)
+\end{equation*}
+is an equivalence.
 \end{thm}
 
-\begin{thm}
-For any map $f:A\to B$ in $\UU$, the square
+\begin{proof}
+By the 3-for-2 property of equivalences, it suffices to show that the map
 \begin{equation*}
-\begin{tikzcd}[column sep=10em]
-A \arrow[d,swap,"f"] \arrow[r,"a\mapsto{(\fib{f}{f(a)},(a,\refl{f(a)}))}"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
-B \arrow[r,swap,"\mathsf{fib}_{f}"] & \UU
-\end{tikzcd}
+\lam{r}{z}\tau_{y,x,z}(\sigma(r)) : R(x,y)\to \prd{z:A} \eqv{R(x,z)}{R(y,z)}
 \end{equation*}
-is a pullback square.
-\end{thm}
+is an equivalence. Since this is a map between propositions, it suffices to construct a map of type
+\begin{equation*}
+\Big(\prd{z:A} \eqv{R(x,z)}{R(y,z)}\Big)\to R(x,y).
+\end{equation*}
+This map is simply $\lam{f} \sigma_{y,x}(f_x(\rho(x)))$. 
+\end{proof}
+
+\begin{rmk}
+By \cref{thm:equivalence_classes} we can begin to think of the \emph{quotient} $A/R$ of a type $A$ by an equivalence relation $R$. Classically, the quotient is described as the set of equivalence classes, and \cref{thm:equivalence_classes} establishes that two equivalence classes $[x]_R$ and $[y]_R$ are equal precisely when $x$ and $y$ are related by $R$.
+
+However, the type $A\to\prop$ may contain many more terms than just the $R$-equivalence classes. Therefore we are facing the task of finding a type theoretic description of the smallest subtype of $A\to\prop$ containing the equivalence classes.
+Another to think about this is as the \emph{image} of $R$ in $A\to \prop$. 
+The construction of the (homotopy) image of a map can be done with \emph{higher inductive types}, which we will do in \cref{chap:image}.
+\end{rmk}
+
+The notion of $0$-equivalence relation which we defined in \cref{defn:eq_rel} fits in a hierarchy of `$n$-equivalence relations', the study of which is a research topic on its own. However, we already know an example of a relation that should count as an `$\infty$-equivalence relation': the identity type. Analogous to \cref{thm:equivalence_classes}, the following theorem shows that the canonical map
+\begin{equation*}
+(x=y)\to (\idtypevar{A}(x)=\idtypevar{A}(y))
+\end{equation*}
+is an equivalence, for any $x,y:A$. In other words, $\idtypevar{A}(x)$ can be thought of as the equivalence class of $x$ with respect to the relation $\idtypevar{A}$.
 
 \begin{thm}
 Assuming the univalence axiom on $\UU$, the map
 \begin{equation*}
-\idtypevar{X}:X\to (X\to\UU)
+\idtypevar{A}:A\to (A\to\UU)
 \end{equation*}
-is an embedding, for any type $X:\UU$.
+is an embedding, for any type $A:\UU$.
 \end{thm}
 
 \begin{proof}
@@ -101,22 +289,174 @@ that satisfies $\alpha_a(\refl{a})=\lam{x}\idfunc[(a=x)]$ is a fiberwise section
 It follows that $\alpha$ is a fiberwise equivalence. Now the proof is completed by reverting the direction of the fiberwise equivalences in the codomain.
 \end{proof}
 
+\section{The universal family}
+\begin{thm}
+For any type $X:\UU$ the map
+\begin{equation*}
+\Big(\sm{A:\UU}A\to X\Big)\to \Big(X\to\UU\Big)
+\end{equation*}
+given by $(A,f)\mapsto \mathsf{fib}_f$ is an equivalence. 
+\end{thm}
+
+In the following theorem we see that the $\Sigma$-type of all families of small types appear as a pullback of the universal family $\mathrm{El}$ over $\UU$. Indeed, this is the sense in which the universal family is universal. Note that its proof does not require univalence.
+
+\begin{thm}
+For any type $A$ (not necessarily small), and any $B:A\to \UU$, the square
+\begin{equation*}
+\begin{tikzcd}[column sep=6em]
+\sm{x:A}B(x) \arrow[d,swap,"\proj 1"] \arrow[r,"{\lam{(x,y)}(B(x),y)}"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
+A \arrow[r,swap,"B"] & \UU
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{thm}
+
+\begin{proof}
+To see that the claim is a direct consequence of \cref{lem:pb_subst} we write the asserted square in its rudimentary form:
+\begin{equation*}
+\begin{gathered}[b]
+\begin{tikzcd}[column sep=6em]
+\sm{x:A}\mathrm{El}(B(x)) \arrow[d,swap,"\proj 1"] \arrow[r,"{\lam{(x,y)}(B(x),y)}"] & \sm{X:\UU}\mathrm{El}(X) \arrow[d,"\proj 1"] \\
+A \arrow[r,swap,"B"] & \UU.
+\end{tikzcd}\\[-\dp\strutbox]\end{gathered}\qedhere
+\end{equation*}
+\end{proof}
+
 \section{Locally small types}
 It is a trivial observation, but nevertheless of fundamental importance, that by the univalence axiom the identity types of $\UU$ are equivalent to types in $\UU$, namely $\eqv{(A=B)}{(\eqv{A}{B})}$. In other words, the universe is \emph{locally small}.
 
 \begin{defn}
-A type $X$ is said to be \define{locally small} if for every $x,y:X$ there is a type $x='y:\UU$ and an equivalence
-\begin{equation*}
-\eqv{(x=y)}{(x='y)}.
-\end{equation*}
+Let $X$ be a type.
+\begin{enumerate}
+\item $X$ is said to be \define{essentially small} if there is a type $X':\UU$ and an equivalence $\eqv{X}{X'}$.
+\item $X$ is said to be \define{locally small} if for every $x,y:X$ the identity type $x=y$ is essentially small.
+\end{enumerate}
 \end{defn}
+
+\begin{lem}
+The conditions of being essentially small and locally small are propositions.
+\end{lem}
+
+\begin{proof}
+Let $X$ be a type. Our goal is to show that the type
+\begin{equation*}
+\sm{Y:\UU}\eqv{X}{Y}
+\end{equation*}
+is a propostion. Suppose there is a type $X':\UU$ and an equivalence $e:\eqv{X}{X'}$, then the map
+\begin{equation*}
+(\eqv{X}{Y})\to (\eqv{X'}{Y})
+\end{equation*}
+given by precompsing with $e^{-1}$ is an equivalence. This induces an equivalence on total spaces
+\begin{equation*}
+\eqv{\Big(\sm{Y:\UU}\eqv{X}{Y}\Big)}{\Big(\sm{Y:\UU}\eqv{X'}{Y}\Big)}
+\end{equation*}
+However, the codomain of this equivalence is contractible by \cref{thm:univalence}. Thus it follows by \cref{cor:contr_prop} that the asserted type is a proposition.
+
+The second claim follows from the first, since a product of propositions is again a proposition by \cref{thm:trunc_pi}.
+\end{proof}
+
+\begin{thm}
+Let $X$ be a type. The following are equivalent:
+\begin{enumerate}
+\item $X$ is locally small.
+\item There is a map $I':X\times X\to\UU$ such that the square
+\begin{equation*}
+\begin{tikzcd}
+X \arrow[r] \arrow[d,swap,"\delta_X"] & \UU_\ast \arrow[d] \\
+X\times X \arrow[r,swap,"{I'}"] & \UU
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+
+\end{proof}
+
+\section{Univalence implies function extensionality}
+The first application of the univalence axiom was Voevodsky's proof of function extensionality. Just for the purpose of the following theorem we drop our assumption of function extensionality. 
+
+\begin{thm}
+The univalence axiom implies function extensionality for small types. 
+\end{thm}
+
+\begin{proof}
+Note that \cref{thm:funext_wkfunext} also holds when it is restricted to small types. 
+Therefore it suffices to show that univalence implies the weak principle of function extensionality.
+
+To see this, we first note that for any equivalence $e:\eqv{X}{Y}$, the post-composition map $e\circ \blank:\eqv{(A\to X)}{(A\to Y)}$. This is is obvious in the case $e\jdeq\idfunc[A]$, so it follows from equivalence induction.
+
+Now suppose that $B:A\to \UU$ is a family of contractible types. Our goal is to show that the product $\prd{x:A}B(x)$ is contractible.
+Since each $B(x)$ is contractible, the projection map $\proj 1:\big(\sm{x:A}B(x)\big)\to A$ is an equivalence by \cref{ex:proj_fiber}. It follows from \cref{thm:contr_equiv} that the fibers of
+\begin{equation*}
+\proj 1\circ\blank : \Big(A\to \sm{x:A}B(x)\Big)\to (A\to A)
+\end{equation*}
+are contractible. In particular, the fiber at $\idfunc[A]$ is contractible. Therefore it suffices to show that $\prd{x:A}B(x)$ is a retract of $\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]$. In other words, we will construct
+\begin{equation*}
+\begin{tikzcd}
+\Big(\prd{x:A}B(x)\Big) \arrow[r,"i"] & {\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]} \arrow[r,"r"] & \Big(\prd{x:A}B(x)\Big),
+\end{tikzcd}
+\end{equation*}
+and a homotopy $r\circ i\htpy \idfunc$. We define
+\begin{align*}
+i & \defeq \lam{f}(\lam{x}(x,f(x)),\lam{x}\refl{x}) \\
+r & \defeq \lam{(f,H)}{x}\mathsf{tr}_B(...,\proj 2(f(x)))
+\end{align*}
+\end{proof}
 
 \begin{exercises}
 \item \label{ex:tr_ap} Show that for any $P:X\to \UU$ and any $p:x=y$ in $X$, we have
 \begin{equation*}
-\mathsf{equiv\usc{}eq}(\ap{P}{p})=\mathsf{tr}^P(p).
+\mathsf{equiv\usc{}eq}(\ap{P}{p})=\mathsf{tr}_P(p).
 \end{equation*}
+\item 
+\begin{subexenum}
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.
+\item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.
+\item Use univalence to show that the universe of $k$-types
+\begin{equation*}
+\UU^{\leq k}\defeq \sm{X:\UU}\mathsf{is\usc{}trunc}_k(X)
+\end{equation*}
+is a $(k+1)$-type, for any $k\geq -2$.
+\item It follows that the universe of propositions $\UU^{\leq-1}$ is a set. However, show that $\UU^{\leq-1}$ is not a proposition.
+\item Show that $\eqv{(\eqv{\bool}{\bool})}{\bool}$, and conclude by the univalence axiom that the universe of sets $\UU^{\leq 0}$ is not a set. 
+\end{subexenum}
 \item Use the univalence axiom to show that the type $\sm{P:\prop}P$ is contractible.
-\item Show that $\eqv{(\eqv{\bool}{\bool})}{\bool}$, and conclude by the univalence axiom that the universe is not a set.
+\item Let $A$ and $B$ be small types. 
+\begin{subexenum}
+\item Construct an equivalence
+\begin{equation*}
+\eqv{(A\to (B\to\UU))}{\Big(\sm{S:\UU} (S\to A)\times (S\to B)\Big)}
+\end{equation*}
+\item We say that a relation $R:A\to (B\to\UU)$ is \define{functional} if it comes equipped with a term of type
+\begin{equation*}
+\mathsf{is\usc{}function}(R) \defeq \prd{x:A}\iscontr\Big(\sm{y:B}R(x,y)\Big)
+\end{equation*}
+For any function $f:A\to B$, show that the \define{graph} of $f$ 
+\begin{equation*}
+\mathsf{graph}_f:A\to (B\to \UU)
+\end{equation*}
+given by $\mathsf{graph}_f(a,b)\defeq (f(a)=b)$ is a functional relation from $A$ to $B$.
+\item Construct an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{R:A\to (B\to\UU)}\mathsf{is\usc{}function}(R)\Big)}{(A\to B)}
+\end{equation*}
+\item Given a relation $R:A\to (B\to \UU)$ we define the \define{opposite relation}
+\begin{equation*}
+R^{\mathsf{op}} : B\to (A\to\UU)
+\end{equation*}
+by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{R:A\to (B\to \UU)}\mathsf{is\usc{}function}(R)\times\mathsf{is\usc{}function}(R^{\mathsf{op}})\Big)}{(\eqv{A}{B})}.
+\end{equation*}
+\end{subexenum}
+\item Consider a map $f:A\to B$ in $\UU$, and let $K_f:A\to (A\to\UU)$ be the binary relation on $A$ given by
+\begin{equation*}
+K_f(x,y)\defeq f(x)=f(y).
+\end{equation*}
+Construct an equivalence
+\begin{equation*}
+\eqv{K_f(x,y)}{(K_f(x)=K_f(y))}.
+\end{equation*}
 \end{exercises}

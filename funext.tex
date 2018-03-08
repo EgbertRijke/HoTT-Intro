@@ -112,7 +112,7 @@ which we have by reflexivity.
 \end{proof}
 \end{comment}
 
-\begin{thm}
+\begin{thm}\label{thm:trunc_pi}
 Assume function extensionality. Then for any type family $B$ over $A$ one has\index{truncated}
 \begin{equation*}
 \Big(\prd{x:A}\istrunc{k}(B(x))\Big)\to \istrunc{k}\Big(\prd{x:A}B(x)\Big).
@@ -125,7 +125,7 @@ The theorem is proven by induction on $k\geq -2$. The base case is just the weak
 For the inductive hypothesis, assume that the $k$-types are closed under dependent function types. Assume that $B$ is a family of $(k+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{x:A}B(x)$. Now observe that $f\htpy g$ is a dependent product of $k$-types, and therefore it is an $k$-type by our inductive hypotheses. Therefore, it follows by \autoref{thm:ntype_eqv} that $f=g$ is an $k$-type, and hence that $\prd{x:A}B(x)$ is an $(k+1)$-type.
 \end{proof}
 
-\begin{cor}
+\begin{cor}\label{cor:funtype_trunc}
 Suppose $B$ is a $k$-type. Then $A\to B$ is also a $k$-type, for any type $A$.
 \end{cor}
 
@@ -260,11 +260,7 @@ This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\
 \item Show that $\isequiv(f)$ is a proposition.
 \item Use \cref{ex:prop_equiv,ex:isprop_istrunc} to show that $\isequiv(f)\eqvsym \iscontr(f)$.
 \end{subexenum}
-Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that for any $(f,p),(g,q):\eqv{A}{B}$ the map
-\begin{equation*}
-\mathsf{ap}_{\proj 1} : ((f,p)= (g,q))\to (f=g)
-\end{equation*}
-is an equivalence.
+Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the map $\proj 1 : (\eqv{A}{B})\to (A\to B)$ is an embedding.
 \item Let $B$ and $C$ be type families over $A$, suppose that $p:\id{a}{a'}$ in $A$, and consider two functions $f:B(a)\to C(a)$ and $g:B(a')\to C(a')$.
 \begin{subexenum}
 \item Show that the square
@@ -347,5 +343,17 @@ given by $\lam{f}f(\ttt)$ is an equivalence.
 \lam{f}f(c) :(C\to X)\to X
 \end{equation*}
 is an equivalence for any $X$.
+\end{subexenum}
+\item \label{ex:sec_retr}Consider a commuting triangle 
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $H:f\htpy g\circ h$.
+\begin{subexenum}
+\item Show that if $h$ has a section, then $\mathsf{sec}(g)$ is a retract of $\mathsf{sec}(f)$.
+\item Show that if $g$ has a retraction, then $\mathsf{retr}(h)$ is a retract of $\mathsf{sec}(f)$.
 \end{subexenum}
 \end{exercises}
