@@ -233,8 +233,10 @@ The derivation for the left unit law is
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \UnaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(f,x):B$}
-\UnaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(f,x)\jdeq \mathsf{ev}(f,x):B$}
-\UnaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(\idfunc[B],\mathsf{ev}(f,x))\jdeq \mathsf{ev}(f,x):B$}
+\AxiomC{$\Gamma\vdash B~\mathrm{type}$}
+\UnaryInfC{$\Gamma,y:B\vdash \mathsf{ev}(\idfunc[B],y)\jdeq y:B$}
+\UnaryInfC{$\Gamma,x:A,y:B\vdash \mathsf{ev}(\idfunc[B],y)\jdeq y:B$}
+\BinaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(\idfunc[B],\mathsf{ev}(f,x))\jdeq \mathsf{ev}(f,x):B$}
 \UnaryInfC{$\Gamma,x:A\vdash \mathsf{ev}(\idfunc[B]\circ f,x)\jdeq \mathsf{ev}(f,x):B$}
 \UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:A\to B$}
 \end{prooftree}

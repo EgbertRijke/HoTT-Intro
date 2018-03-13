@@ -182,11 +182,24 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
 \begin{equation*}
 \isequiv(f)\leftrightarrow\isequiv(g).
 \end{equation*}
-\item \label{ex:3_for_2}\index{equivalence!three@{3-for-2 property}} (The 3-for-2 property) Let $f:A\to B$ and $g:B\to C$ be functions. Show that if any two of the functions
+\item \label{ex:3_for_2}\index{equivalence!three@{3-for-2 property}} 
+Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X.
+\end{tikzcd}
+\end{equation*}
+with $H:f\htpy g\circ h$.
+\begin{subexenum}
+\item Suppose that the map $h$ has a section. Show that $f$ has a section if and only if $g$ has a section.
+\item Suppose that the map $g$ has a retraction. Show that $f$ has a retraction if and only if $h$ has a retraction.
+\item (The \define{3-for-2 property} for equivalences.) Show that if any two of the functions
 \begin{equation*}
 f,\qquad g,\qquad g\circ f
 \end{equation*}
 are equivalences, then so is the third.
+\end{subexenum}
 \item \label{ex:neg_equiv} Show that the negation function on the booleans is an equivalence. Also show that for any function $f:\bool\to\bool$, if $f(\bfalse)=f(\btrue)$ then $f$ is \emph{not} an equivalence.\index{negation function!is an equivalence}
 \item \label{ex:succ_equiv} Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}
 \item \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is symmetric}

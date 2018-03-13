@@ -261,21 +261,38 @@ This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\
 \item Use \cref{ex:prop_equiv,ex:isprop_istrunc} to show that $\isequiv(f)\eqvsym \iscontr(f)$.
 \end{subexenum}
 Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the map $\proj 1 : (\eqv{A}{B})\to (A\to B)$ is an embedding.
-\item Let $B$ and $C$ be type families over $A$, suppose that $p:\id{a}{a'}$ in $A$, and consider two functions $f:B(a)\to C(a)$ and $g:B(a')\to C(a')$.
-\begin{subexenum}
-\item Show that the square
+%\item Let $B$ and $C$ be type families over $A$, suppose that $p:\id{a}{a'}$ in $A$, and consider two functions $f:B(a)\to C(a)$ and $g:B(a')\to C(a')$.
+%\begin{subexenum}
+%\item Show that the square
+%\begin{equation*}
+%\begin{tikzcd}
+%B(a) \arrow[r,"f"] \arrow[d,swap,"\mathsf{tr}_B(p)"] & C(a) \arrow[d,"\mathsf{tr}_C(p)"] \\
+%B(a') \arrow[r,swap,"g"] & C(a')
+%\end{tikzcd}
+%\end{equation*}
+%commutes for every homotopy $H:\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g$. In other words, construct a function of type
+%\begin{equation*} 
+%\Big(\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g\Big)\to \Big(\mathsf{tr}_C(p)\circ f\htpy g\circ \mathsf{tr}_B(p)\Big)
+%\end{equation*}
+%\item Show that this map is an equivalence.
+%\end{subexenum}
+\item \label{ex:idfunc_autohtpy}Construct for any type $A$ an equivalence
 \begin{equation*}
-\begin{tikzcd}
-B(a) \arrow[r,"f"] \arrow[d,swap,"\mathsf{tr}_B(p)"] & C(a) \arrow[d,"\mathsf{tr}_C(p)"] \\
-B(a') \arrow[r,swap,"g"] & C(a')
-\end{tikzcd}
+\eqv{\mathsf{is\usc{}invertible}(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
 \end{equation*}
-commutes for every homotopy $H:\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g$. In other words, construct a function of type
-\begin{equation*} 
-\Big(\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g\Big)\to \Big(\mathsf{tr}_C(p)\circ f\htpy g\circ \mathsf{tr}_B(p)\Big)
+\item Let $f:A\to B$ be a map. Use \autoref{ex:coh_intro} and \autoref{defn:inv_equiv} to show that
+\begin{equation*}
+\eqv{\isequiv(f)}{\mathsf{half\usc{}adj}(f)},
 \end{equation*}
-\item Show that this map is an equivalence.
-\end{subexenum}
+where $\mathsf{half\usc{}adj}(f)$ is the type consisting of functions $g:B\to A$ equipped with
+\begin{samepage}
+\begin{align*}
+H_r & : f\circ g\htpy \idfunc \\
+H_l & : g\circ f\htpy \idfunc \\
+H_{coh} & : g H_r\htpy H_l g,
+\end{align*}
+\end{samepage}%
+witnessing that $f$ is a \define{half-adjoint equivalence}.
 \item Let $f:A\to B$ be a map. Show that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
@@ -290,21 +307,6 @@ given by $s\mapsto s\circ f$ is an equivalence.
 \end{equation*}
 given by $g\mapsto g\circ f$ is an equivalence. 
 \end{enumerate}
-\item Construct for any type $A$ an equivalence
-\begin{equation*}
-\eqv{\mathsf{is\usc{}invertible}(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
-\end{equation*}
-\item Let $f:A\to B$ be a map. Use \autoref{ex:coh_intro} and \autoref{defn:inv_equiv} to show that
-\begin{equation*}
-\eqv{\isequiv(f)}{\mathsf{half\usc{}adj}(f)},
-\end{equation*}
-where $\mathsf{half\usc{}adj}(f)$ is the type consisting of functions $g:B\to A$ equipped with
-\begin{align*}
-H_r & : f\circ g\htpy \idfunc \\
-H_l & : g\circ f\htpy \idfunc \\
-H_{coh} & : g H_r\htpy H_l g,
-\end{align*}
-witnessing that $f$ is a \define{half-adjoint equivalence}.
 \item 
 \begin{subexenum}
 \item Show that the map
@@ -356,4 +358,27 @@ with $H:f\htpy g\circ h$.
 \item Show that if $h$ has a section, then $\mathsf{sec}(g)$ is a retract of $\mathsf{sec}(f)$.
 \item Show that if $g$ has a retraction, then $\mathsf{retr}(h)$ is a retract of $\mathsf{sec}(f)$.
 \end{subexenum}
+\item \label{ex:equiv_pi}Let $e_i:\eqv{A_i}{B_i}$ be an equivalence for every $i:I$. Show that the map
+\begin{equation*}
+\lam{f}{i}e_i\circ f:\Big(\prd{i:I}A_i\Big)\to\Big(\prd{i:I}B_i\Big)
+\end{equation*}
+is an equivalence.
+\item \label{ex:sq_fib}Consider a diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
+X \arrow[r,swap,"h"] & Y.
+\end{tikzcd}
+\end{equation*}
+Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise transformations
+\begin{equation*}
+\prd{x:X}\fib{f}{x}\to\fib{g}{h(x)}.
+\end{equation*}
+\item \label{ex:iso_equiv}Let $A$ and $B$ be sets. Show that type type $\eqv{A}{B}$ of equivalences from $A$ to $B$ is equivalent to the type $A\cong B$ of \define{isomorphisms} from $A$ to $B$, i.e. the type of quadruples $(f,g,H,K)$ consisting of
+\begin{align*}
+f & : A\to B \\
+g & : B\to A \\
+H & : f\circ g = \idfunc[B] \\
+K & : g\circ f = \idfunc[A].
+\end{align*}
 \end{exercises}

@@ -896,20 +896,20 @@ is a pullback square.
 \end{equation*}
 is a pullback square, where $\delta_A:A\to A\times A$ is the diagonal of $A$, defined in \cref{ex:diagonal}.
 \end{subexenum}
-\item In this exercise we give an alternative characterization of the notion of $k$-truncated map, compared to \cref{thm:trunc_ap}. Given a map $f:A\to X$ define the \define{diagonal}\index{diagonal!of a map} of $f$ to be the map $\delta_f:A\to A\times_X A$ given by $x\mapsto (x,x,\refl{f(x)})$.
+\item \label{ex:trunc_diagonal_map}In this exercise we give an alternative characterization of the notion of $k$-truncated map, compared to \cref{thm:trunc_ap}. Given a map $f:A\to X$ define the \define{diagonal}\index{diagonal!of a map} of $f$ to be the map $\delta_f:A\to A\times_X A$ given by $x\mapsto (x,x,\refl{f(x)})$.
 \begin{subexenum}
-\item Show that the square\index{action on paths!fibers of}\index{diagonal!of a map!fibers of}
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-\fib{\apfunc{f}}{p} \arrow[r,"\mathsf{const}_x"] \arrow[d,swap,"\mathsf{const}_\ttt"] & A \arrow[d,"\delta_f"] \\
-\unit \arrow[r,swap,"{\ind{\unit}((x,y,p))}"] & A\times_X A
-\end{tikzcd}
-\end{equation*}
-is a pullback square, to obtain an equivalence
+\item Construct an equivalence
 \begin{equation*}
 \eqv{\fib{\delta_f}{(x,y,p)}}{\fib{\apfunc{f}}{p}}
 \end{equation*}
-for every $x,y:A$ and $p:f(x)=f(y)$.
+to show that the square\index{action on paths!fibers of}\index{diagonal!of a map!fibers of}
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+\fib{\apfunc{f}}{p} \arrow[r,"\mathsf{const}_x"] \arrow[d,swap,"\mathsf{const}_\ttt"] & A \arrow[d,"\delta_f"] \\
+\unit \arrow[r,swap,"{\mathsf{const}_(x,y,p)}"] & A\times_X A
+\end{tikzcd}
+\end{equation*}
+is a pullback square, for every $x,y:A$ and $p:f(x)=f(y)$.
 \item Show that a map $f:A\to X$ is $(k+1)$-truncated if and only if $\delta_f$ is $k$-truncated.\index{truncated!map!by truncatedness of diagonal}
 \end{subexenum}
 Conclude that $f$ is an embedding if and only if $\delta_f$ is an equivalence.\index{embedding!diagonal is an equivalence}
@@ -969,18 +969,22 @@ A_1 \times A_2 \arrow[r] & X_1\times X_2.
 \item Consider for each $i:I$ a pullback square\index{pullback!Sigma-type of pullbacks@{$\Sigma$-type of pullbacks}}
 \begin{equation*}
 \begin{tikzcd}
-C_i \arrow[r] \arrow[d] & B_i \arrow[d] \\
-A_i \arrow[r] & X_i
+C_i \arrow[r,"q_i"] \arrow[d,swap,"p_i"] & B_i \arrow[d,"g_i"] \\
+A_i \arrow[r,swap,"f_i"] & X_i
 \end{tikzcd}
 \end{equation*}
 with $H_i: f_i\circ p_i\htpy g_i\circ q_i$. 
 \begin{subexenum}
-\item Show that the commuting square
+\item Show that the square
 \begin{equation*}
-\begin{tikzcd}
-\sm{i:I}C_i \arrow[r] \arrow[d] & \sm{i:I}B_i \arrow[d] \\
-\sm{i:I}A_i \arrow[r] & \sm{i:I}X_i
+\begin{tikzcd}[column sep=large]
+\sm{i:I}C_i \arrow[r,"\total{q}"] \arrow[d,swap,"\total{p}"] & \sm{i:I}B_i \arrow[d,"\total{g}"] \\
+\sm{i:I}A_i \arrow[r,swap,"\total{f}"] & \sm{i:I}X_i
 \end{tikzcd}
+\end{equation*}
+which commutes by the homotopy
+\begin{equation*}
+\total{H}\defeq \lam{(i,c)}\mathsf{eq\usc{}pair}(\refl{i},H_i(c))
 \end{equation*}
 is a pullback square.\index{pullback!Pi-type of pullbacks@{$\Pi$-type of pullbacks}}
 \item Show that the commuting square
@@ -992,25 +996,25 @@ is a pullback square.\index{pullback!Pi-type of pullbacks@{$\Pi$-type of pullbac
 \end{equation*}
 is a pullback square.
 \end{subexenum}
-\item 
-\begin{subexenum}
-\item Show that \index{equivalence!type of equivalences!as pullback}
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-\eqv{A}{B} \arrow[r] \arrow[d] & \unit \arrow[d,"{(\idfunc[A],\idfunc[B])}"] \\
-A^B\times B^A \times A^B \arrow[r,swap,"{(h,f,g)\mapsto (h\circ f,f\circ g)}"] & A^A \times B^B
-\end{tikzcd}
-\end{equation*}
-is a pullback square.
-\item Show that \index{contractible!type of contractibility!as pullback}
-\begin{equation*}
-\begin{tikzcd}[column sep=6em]
-\iscontr(A) \arrow[r,"\mathsf{const}_{\ttt}"] \arrow[d,swap,"\proj 1"] & \unit \arrow[d,"{\lam{\ttt}\idfunc[A]}"] \\
-A \arrow[r,swap,"{\lam{x}\mathsf{const}_x}"] & A^A
-\end{tikzcd}
-\end{equation*}
-is a pullback square.
-\end{subexenum}
+%\item 
+%\begin{subexenum}
+%\item Show that \index{equivalence!type of equivalences!as pullback}
+%\begin{equation*}
+%\begin{tikzcd}[column sep=8em]
+%\eqv{A}{B} \arrow[r] \arrow[d] & \unit \arrow[d,"{(\idfunc[A],\idfunc[B])}"] \\
+%A^B\times B^A \times A^B \arrow[r,swap,"{(h,f,g)\mapsto (h\circ f,f\circ g)}"] & A^A \times B^B
+%\end{tikzcd}
+%\end{equation*}
+%is a pullback square.
+%\item Show that \index{contractible!type of contractibility!as pullback}
+%\begin{equation*}
+%\begin{tikzcd}[column sep=6em]
+%\iscontr(A) \arrow[r,"\mathsf{const}_{\ttt}"] \arrow[d,swap,"\proj 1"] & \unit \arrow[d,"{\lam{\ttt}\idfunc[A]}"] \\
+%A \arrow[r,swap,"{\lam{x}\mathsf{const}_x}"] & A^A
+%\end{tikzcd}
+%\end{equation*}
+%is a pullback square.
+%\end{subexenum}
 %\item Consider a commuting square
 %\begin{equation*}
 %\begin{tikzcd}
@@ -1022,11 +1026,26 @@ is a pullback square.
 \item Let $B$ be a type family over $A$. Show that the square\index{Pi-type@{$\Pi$-type}!as pullback}
 \begin{equation*}
 \begin{tikzcd}[column sep=6em]
-\prd{x:A}B(x) \arrow[r,"{\lam{f}{x}(x,f(x))}"] \arrow[d] & \Big(\sm{x:A}B(x)\Big)^A \arrow[d,"\proj 1\blank\circ"] \\
-\unit \arrow[r,swap,"{\lam{\ttt}\idfunc[A]}"] & A^A
+\prd{x:A}B(x) \arrow[r,"{\lam{f}{x}(x,f(x))}"] \arrow[d] & \Big(\sm{x:A}B(x)\Big)^A \arrow[d,"\proj 1\circ\blank"] \\
+\unit \arrow[r,swap,"{\mathsf{const}_{\idfunc[A]}}"] & A^A
 \end{tikzcd}
 \end{equation*}
 is a pullback square. Conclude that the type $\prd{x:A}B(x)$ is equivalent to the type $\mathsf{sec}(\proj 1)$ of sections of the projection map.
+\item Consider a pullback square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X,
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p\htpy g\circ q$, and let $c_1,c_2:C$. Show that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+(c_1=c_2) \arrow[r,"\apfunc{q}"] \arrow[d,swap,"\apfunc{p}"] & (q(c_1)=q(c_2)) \arrow[d,"\lam{\beta}\ct{H(c_1)}{\ap{g}{\beta}}"] \\
+(p(c_1)=p(c_2)) \arrow[r,swap,"\lam{\alpha}\ct{\ap{f}{\alpha}}{H(c_2)}"] & f(p(c_1))=g(q(c_2)),
+\end{tikzcd}
+\end{equation*}
+which commutes by the naturality of homotopies (\cref{defn:htpy_nat}), is again a pullback square.
 %\end{subexenum}
 %\item Suppose that the squares
 %\begin{equation*}

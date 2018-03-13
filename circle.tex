@@ -212,7 +212,7 @@ The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z
 \end{equation*}
 commutes.
 \end{subexenum}
-\item 
+\item \label{ex:circle_connected}
 \begin{subexenum}
 \item Show that a type $X$ is a set if and only if the map
 \begin{equation*}
@@ -227,4 +227,17 @@ is an equivalence.
 \end{subexenum}
 \item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
 \item Show that any retract of the circle is equivalent to the circle.
+\item 
+\begin{subexenum}
+\item Construct a fiberwise equivalence
+\begin{equation*}
+\prd{t:\sphere{1}} \big(\eqv{(t=t)}{\Z}\big).
+\end{equation*}
+\item Use \cref{ex:circle_connected} to show that $\eqv{(\idfunc[\sphere{1}]\htpy\idfunc[\sphere{1}])}{\Z}$.
+\item Use \cref{ex:idfunc_autohtpy} to show that
+\begin{equation*}
+\eqv{\mathsf{is\usc{}invertible}(\idfunc[\sphere{1}])}{\Z},
+\end{equation*}
+and conclude that ${\mathsf{is\usc{}invertible}}(\idfunc[\sphere{1}])\not\simeq{\isequiv(\idfunc[\sphere{1}])}$. 
+\end{subexenum}
 \end{exercises}
