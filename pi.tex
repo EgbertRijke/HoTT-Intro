@@ -15,13 +15,13 @@
 \RightLabel{$\Pi$-eq}
 \BinaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq\prd{x:A'}B'(x)~\mathrm{type}$}
 \end{prooftree}
-Furthermore, when $x'$ is a fresh variable, we also postulate that
+Furthermore, when $x'$ is a fresh variable, i.e. which does not occur in the context $\Gamma,x:A$, we also postulate that
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
 \RightLabel{$\Pi$-$x'/x$}
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq \prd{x':A}B(x')~\mathrm{type}$}
 \end{prooftree}
-The idea of dependent function types is that their terms are dependent functions, i.e.~constructions that provide for every $x:A$ a term $b(x):B(x)$. Thus, dependent functions are formed from terms $b(x)$ of type $B(x)$ in context $\Gamma,x:A$, i.e.~the \define{$\lambda$-abstraction rule}\index{lambda-abstraction@{$\lambda$-abstraction}}\index{rule!lambda-abstraction@{$\lambda$-abstraction}} is as follows:
+The idea of dependent function types is that their terms are functions of which the type of the output depends on the input. In other words, they consist of constructions that provide for every $x:A$ a term $b(x):B(x)$. Dependent functions are formed from terms $b(x)$ of type $B(x)$ in context $\Gamma,x:A$, i.e.~the \define{$\lambda$-abstraction rule}\index{lambda-abstraction@{$\lambda$-abstraction}}\index{rule!lambda-abstraction@{$\lambda$-abstraction}} is as follows:
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
 \RightLabel{$\lambda_A$}

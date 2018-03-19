@@ -38,7 +38,7 @@ When $B$ is a type in context $\Gamma,x:A$, we also say that $B$ is a \define{fa
 
 \section{Renaming variables}
 In some situations one might want to change the name of a variable in a context. This is allowed, provided that the new variable does not occur anywhere else in the context, so that also after renaming no variable is declared more than once. 
-The inference rules that rename a variable are sometimes called $\alpha$-conversion\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}} rules. 
+The inference rules that rename a variable are sometimes called $\alpha$-conversion\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}}\index{rule!alpha conversion@{$\alpha$-conversion}} rules. 
 
 If we are given a type $A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[x'/x]$ in context $\Gamma,x':A,\Delta[x'/x]$, where $B[x'/x]$ is an abbreviation for
 \begin{equation*}

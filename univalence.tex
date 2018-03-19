@@ -11,7 +11,9 @@ The following are equivalent:
 \begin{equation*}
 \mathsf{equiv\usc{}eq}\defeq \ind{A=}(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
 \end{equation*}
-is a fiberwise equivalence.\index{identity type!universe}
+is a fiberwise equivalence.\index{identity type!universe} If this is the case, we write
+$\mathsf{eq\usc{}equiv}$\index{eq equiv@{$\mathsf{eq\usc{}equiv}$}|textbf}
+for the inverse of $\mathsf{equiv\usc{}eq}$.
 \item The type
 \begin{equation*}
 \sm{B:\UU}\eqv{A}{B}
@@ -183,9 +185,9 @@ e & : \eqv{G}{H} \\
 \end{lem}
 
 \begin{proof}
-The standard proof showing that if the underlying map $f:G\to H$ of a group homomorphism is invertible then its inverse is again a group homomorphism, also works in type theory. Since being a group homomorphism is a property, it follows that the type of group isomorphism is equivalent to the type of group homomorphsims of which the underlying map has an inverse. By \cref{ex:iso_equiv} it follows that the type 
+The standard proof showing that if the underlying map $f:G\to H$ of a group homomorphism is invertible then its inverse is again a group homomorphism, also works in type theory. Since being a group homomorphism is a property, it follows that the type of group isomorphism is equivalent to the type of group homomorphisms of which the underlying map has an inverse. By \cref{ex:iso_equiv} it follows that the type 
 \begin{equation*}
-\sm{f:\mathrm{hom}(\mathcal{G},\mathcal{H})}\mathsf{invertible}(f)
+\sm{f:\mathrm{hom}(\mathcal{G},\mathcal{H})}\mathsf{is\usc{}invertible}(f)
 \end{equation*}
 of group homomorphism of which the underlying map has an inverse is equivalent to the type
 \begin{equation*}

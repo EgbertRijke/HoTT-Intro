@@ -47,9 +47,9 @@ satisfying the induction principle\index{induction principle!of unit type} that 
 \end{equation*}
 in context $\Gamma$ for which the computation rule\index{computation rules!of unit type}
 \begin{equation*}
-\ind{\unit}(p_{\ttt},\ttt) \jdeq p_\ttt
+\ind{\unit}(p,\ttt) \jdeq p
 \end{equation*}
-holds.
+holds. Sometimes we write $\lam{\ttt}p$ for $\ind{\unit}(p)$.
 \end{defn}
 
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
@@ -95,14 +95,14 @@ Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\inde
 \end{align*}
 satisfying the induction principle\index{induction principle!of coproduct} that for any type family $P:(A+B)\to\type$, there is a term
 \begin{equation*}
-\ind{A+B} : \Big(\prd{x:A}P(\inl(x))\Big)\to\Big(\prd{y:B}P(\inr(y))\Big)\to\prd{z:A+B}P(z)
+\ind{+} : \Big(\prd{x:A}P(\inl(x))\Big)\to\Big(\prd{y:B}P(\inr(y))\Big)\to\prd{z:A+B}P(z)
 \end{equation*}
 for which the computation rules\index{computation rules!of coproduct}
 \begin{align*}
-\ind{A+B}(f,g,\inl(x)) & \jdeq f(x) \\
-\inr{A+B}(f,g,\inr(y)) & \jdeq g(y)
+\ind{+}(f,g,\inl(x)) & \jdeq f(x) \\
+\inr{+}(f,g,\inr(y)) & \jdeq g(y)
 \end{align*}
-hold.
+hold. Sometimes we write $[f,g]$ for $\ind{+}(f,g)$.
 \end{defn}
 
 The coproduct of two types is sometimes also called the \define{disjoint sum}.
@@ -115,7 +115,7 @@ It is better to think of the $\Sigma$-type as the total space of a family of typ
 
 \begin{defn}
 Let $A$ be a type in context $\Gamma$, and let $\Gamma,x:A\vdash B(x)~\mathrm{type}$ be a type family over $A$.
-The \define{dependent pair type}\index{Sigma type{$\Sigma$-type}|textbf} is defined to be the inductive type $\sm{x:A}B(x)$ in context $\Gamma$ equipped with a \define{pairing function}\index{pairing function}
+The \define{dependent pair type}\index{Sigma type@{$\Sigma$-type}|textbf} is defined to be the inductive type $\sm{x:A}B(x)$ in context $\Gamma$ equipped with a \define{pairing function}\index{pairing function}
 \begin{equation*}
 \pairr{\blank,\blank}:\prd{x:A} \Big(B(x)\to \sm{y:A}B(y)\Big).
 \end{equation*}
@@ -127,11 +127,16 @@ one has
 \begin{equation*}
 \ind{\Sigma}:\Big(\prd{x:A}{y:B(x)}P(\pairr{x,y})\Big)\to\Big(\prd{p:\sm{x:A}B(x)}P(p)\Big).
 \end{equation*}
-satisfying the computation rule\index{compution rules!of Sigma types@{of $\Sigma$-types}}
+satisfying the computation rule\index{computation rules!of Sigma types@{of $\Sigma$-types}}
 \begin{equation*}
 \ind{\Sigma}(f,\pairr{x,y})\jdeq f(x,y).
 \end{equation*}
+Most of the time we write $\lam{(x,y)}f(x,y)$ for $\ind{\Sigma}(\lam{x}{y}f(x,y))$. 
 \end{defn}
+
+\begin{rmk}
+Some authors write $(x:A)\times B(x)$ for the dependent pair type $\sm{x:A}B(x)$. 
+\end{rmk}
 
 \begin{defn}
 Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map|textbf}\index{projection maps!first projection|textbf}
@@ -140,7 +145,7 @@ Given a type $A$ and a type family $B$ over $A$, the \define{first projection ma
 \end{equation*}
 is defined by induction as
 \begin{equation*}
-\proj 1\defeq \ind{\Sigma}(\lam{x}{y}x).
+\proj 1\defeq \lam{(x,y)}x.
 \end{equation*}
 The \define{second projection map}\index{second projection map|textbf}\index{projection map!second projection|textbf} is a dependent function
 \begin{equation*}
@@ -148,7 +153,7 @@ The \define{second projection map}\index{second projection map|textbf}\index{pro
 \end{equation*}
 defined by induction as
 \begin{equation*}
-\proj 2\defeq \ind{\Sigma}(\lam{x}{y}y).
+\proj 2\defeq \lam{(x,y)}y.
 \end{equation*}
 By the computation rule we have
 \begin{align*}
@@ -227,7 +232,7 @@ We postulate that the universe is closed under the type constructors, by the fol
 \caption{\label{tab:universe}Closure properties of the universe}
 \begin{tabular}{lll}
 \toprule
-Premises & Type encoding in $\UU$ & Type of elements $\mathrm{El}(\blank)$ \\
+Premises & Type encoding\index{type encoding@{type encoding $\check{A}$}} in $\UU$ & Type of elements $\mathrm{El}(\blank)$ \\
 \midrule
 $A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Pi}(A,B)$ & $\prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))$ \\
 & $\check{\nat}$ & $\nat$ \\
@@ -260,16 +265,39 @@ B:A\to\UU
 If $A$ is small, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathrm{El}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
 \end{rmk}
 
+\begin{eg}
+One important way to use the universe is to define types of \define{structured types}\index{structured types}. We give some examples:
+\begin{enumerate}
+\item The type of small \define{pointed types}\index{pointed types} is defined as
+\begin{equation*}
+\UU_\ast\defeq \sm{A:\UU}A,
+\end{equation*}
+\item The type of small \define{graphs}\index{graphs} is defined as the type
+\begin{equation*}
+\mathsf{Gph}_\UU \defeq \sm{A:\UU} A\to (A\to \UU),
+\end{equation*}
+\item The type of small \define{reflexive graphs}\index{reflexive graphs} is defined as the type
+\begin{equation*}
+\mathsf{rGph}_\UU \defeq \sm{A:\UU}{R:A\to (A\to \UU)}\prd{a:A}R(a,a).
+\end{equation*}
+\end{enumerate}
+Once we have introduced the \emph{identity types} we will also be able to state the types of groups, rings, and many other structured types. However, when doing so one has to be cautious to make sure that the underlying type is in the level of sets, in the hierarchy of homotopical complexity of types.
+\end{eg}
+
+Another important way to use the universe is to \emph{define} new type families by induction. For example, we can define the finite types as family over the natural numbers.
+
 \begin{defn}
-We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types by induction on $\N$\index{family!of finite types}, taking
+We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}|textbf}\index{finite types|textbf} by induction on $\N$\index{family!of finite types}, taking
 \begin{align*}
 \mathsf{Fin}(0) & \defeq \emptyt \\
-\mathsf{Fin}(n+1) & \defeq \mathsf{Fin}(n)+1
+\mathsf{Fin}(n+1) & \defeq \mathsf{Fin}(n)+\unit
 \end{align*}
 \end{defn}
 
+A second example of this kind is the notion of \emph{observational equality} on the natural numbers.
+
 \begin{defn}\label{defn:obs_nat}
-We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathrm{Eq}_\N:\N\to(\N\to\UU)$ satisfying
+We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathrm{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathrm{Eq}_\N$}|textbf} satisfying
 \begin{align*}
 \mathrm{Eq}_\N(0,0) & \jdeq \unit & \mathrm{Eq}_\N(S(n),0) & \jdeq \emptyt \\
 \mathrm{Eq}_\N(0,S(n)) & \jdeq \emptyt & \mathrm{Eq}_\N(S(n),S(m)) & \jdeq \mathrm{Eq}_\N(n,m).
@@ -300,25 +328,6 @@ Therefore we have by the computation rule for the first induction that the judgm
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
 
-\begin{eg}
-Another important way to use the universe is to define types of \define{structured types}\index{structured types}. We give some examples:
-\begin{enumerate}
-\item The type of small \define{pointed types}\index{pointed types} is defined as
-\begin{equation*}
-\UU_\ast\defeq \sm{A:\UU}A,
-\end{equation*}
-\item The type of small \define{graphs}\index{graphs} is defined as the type
-\begin{equation*}
-\mathsf{Gph}_\UU \defeq \sm{A:\UU} A\to (A\to \UU),
-\end{equation*}
-\item The type of small \define{reflexive graphs}\index{reflexive graphs} is defined as the type
-\begin{equation*}
-\mathsf{rGph}_\UU \defeq \sm{A:\UU}{R:A\to (A\to \UU)}\prd{a:A}R(a,a).
-\end{equation*}
-\end{enumerate}
-Once we have introduced the \emph{identity types} we will also be able to state the types of groups, rings, and many other structured types. However, when doing so one has to be cautious to make sure that the underlying type is in the level of sets, in the hierarchy of homotopical complexity of types.
-\end{eg}
-
 \section{The type of integers}
 
 \begin{defn}
@@ -332,7 +341,7 @@ We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\
 \end{align*}
 \end{defn}
 
-In the following lemma we derive an alternative induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which makes it easer to make definitions.
+In the following lemma we derive an alternative induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which makes it easier to make definitions.
 \begin{lem}
 \label{lem:Z_ind}
 For any $\Gamma,k:\Z\vdash P(k)~\mathrm{type}$ we have
@@ -388,17 +397,17 @@ such that
 holds for every $A:\UU$ and $B:\mathrm{El}(A)\to\UU$. 
 
 \emph{A similar exercise can be posed for $\Sigma$ and $+$ (and for $\to$ and $\times$ as special cases of $\Pi$ and $\Sigma$).}
-\item \label{ex:obs_nat_eqrel}Show that observational equality on $\N$\index{observational equality!on N@{on $\N$}} is an equivalence relation, i.e.~construct terms of the following types:
+\item \label{ex:obs_nat_eqrel}Show that observational equality on $\N$\index{observational equality!on N@{on $\N$}!is an equivalence relation} is an equivalence relation\index{equivalence relation!observational equality on N@{observational equality on $\N$}}, i.e.~construct terms of the following types:
 \begin{align*}
 & \prd{n:\N} \mathrm{Eq}_\N(n,n) \\
 & \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(m,n) \\
 & \prd{n,m,l:\N} \mathrm{Eq}_\N(n,m)\to (\mathrm{Eq}_\N(m,l)\to \mathrm{Eq}_\N(n,l)).
 \end{align*}
-\item \label{ex:obs_nat_least}\index{observational equality!on N@{on $\N$}}Let $R$ be a reflexive binary relation\index{reflexive relation} on $\N$, i.e.~$R$ is of type $\N\to (\N\to\UU)$ and comes equipped with a term $\rho:\prd{n:\N}R(n,n)$. Show that
+\item \label{ex:obs_nat_least}\index{observational equality!on N@{on $\N$}!is least reflexive relation}Let $R$ be a reflexive binary relation\index{reflexive relation} on $\N$, i.e.~$R$ is of type $\N\to (\N\to\UU)$ and comes equipped with a term $\rho:\prd{n:\N}R(n,n)$. Show that
 \begin{equation*}
 \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to R(n,m).
 \end{equation*}
-\item \index{observational equality!on N@{on $\N$}}Show that every function $f:\N\to \N$ preserves observational equality in the sense that
+\item \index{observational equality!on N@{on $\N$}!is preserved by functions}Show that every function $f:\N\to \N$ preserves observational equality in the sense that
 \begin{equation*}
 \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)).
 \end{equation*}
@@ -409,16 +418,16 @@ holds for every $A:\UU$ and $B:\mathrm{El}(A)\to\UU$.
 \emph{and pull out the universal quantification over $f:\N\to\N$ by \autoref{ex:swap}.}
 \item 
 \begin{subexenum}
-\item Define the relations $\leq$ and $<$ on $\N$.
-\item Show that $\leq$ is reflexive and that $<$ is \define{anti-reflexive}, i.e. that $\neg(n<n)$. 
+\item Define the \define{order relations}\index{relation!order}\index{order relation} $\leq$ and $<$ on $\N$.
+\item Show that $\leq$ is reflexive and that $<$ is \define{anti-reflexive}\index{anti-reflexive}\index{relation!anti-reflexive}, i.e. that $\neg(n<n)$. 
 \item Show that both $\leq$ and $<$ are transitive, and that $n<S(n)$. 
 \end{subexenum}
-\item \index{observational equality!on N@{on $\N$}}Use the observational equality of the natural numbers to define the divisibility relation $d\mid n$. 
+\item \index{observational equality!on N@{on $\N$}}Use the observational equality of the natural numbers to define the \define{divisibility relation}\index{divisibility relation}\index{relation!divisibility} $d\mid n$. 
 \item \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
 \begin{subexenum}
-\item Define observational equality $\mathrm{Eq}_\bool$ on the booleans.
-\item Show that $\mathrm{Eq}_\bool$ is reflexive.
-\item Show that for any reflexive relation $R:\bool\to(\bool\to \UU)$ one has
+\item Define observational equality $\mathrm{Eq}_\bool$\index{Eq_bool@{$\mathrm{Eq}_\bool$}|textbf} on the booleans.
+\item Show that $\mathrm{Eq}_\bool$ is reflexive.\index{observational equality!on 2@{on $\bool$}!is reflexive}
+\item Show that for any reflexive relation $R:\bool\to(\bool\to \UU)$ one has\index{observational equality!on 2@{on $\bool$}!is least reflexive relation}
 \begin{equation*}
 \prd{x,y:\bool} \mathrm{Eq}_\bool(x,y)\to R(x,y).
 \end{equation*}
@@ -440,7 +449,7 @@ satisfying
 In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+\unit$.}
 \item \label{ex:int_order}
 \begin{subexenum}
-\item Define the relations $\leq$ and $<$ on and $\Z$.
+\item Define the order relations\index{relation!order}\index{order relation} $\leq$ and $<$ on and $\Z$.
 \item For $k:\Z$, consider the type $\Z_{\geq k}\defeq \sm{n:\Z}n\geq k$. Construct
 \begin{align*}
 b_k & : \Z_{\geq k} \\
@@ -451,5 +460,6 @@ and show that $\Z_{\geq k}$ satisfies the induction principle of the natural num
 \ind{\Z_{\geq k}} : P(b_k)\to \Big(\prd{n:\Z_{\geq k}} P(n)\to P(s_k(n))\Big)\to \Big(\prd{n:\Z_{\geq k}} P(n)\Big)
 \end{equation*}
 \end{subexenum}
+\item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}:\Z\to \Z$.
 \item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
 \end{exercises}

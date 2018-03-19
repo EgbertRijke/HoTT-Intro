@@ -10,7 +10,7 @@ The ideas behind the definition of higher inductive types are introduced by stud
 Moreover, we show that the loop space of the circle is equivalent to $\mathbb{Z}$ by constructing the universal cover of the circle as an application of the univalence axiom. 
 
 \section{The induction principle of the circle}
-The \define{circle} is defined as a higher inductive type $\sphere{1}$ that comes equipped with
+The \emph{circle}\index{circle} is defined as a higher inductive type\index{higher inductive type} $\sphere{1}$\index{S 1@{$\sphere{1}$}} that comes equipped with\index{base@{$\base$}}\index{loop@{$\lloop$}}
 \begin{align*}
 \base & : \sphere{1} \\
 \lloop & : \id{\base}{\base}.
@@ -19,24 +19,108 @@ Just like for ordinary inductive types, the induction principle for higher induc
 
 By applying a section $f:\prd{t:\sphere{1}}P(t)$ to the base point of the circle, we obtain a term $f(\base):P(\base)$. Moverover, using the dependent action on paths of $f$ of \autoref{defn:apd} we also obtain for any dependent function $f:\prd{t:\sphere{1}}P(t)$ a path
 \begin{align*}
-\apd{f}{\lloop} & : \id{\trans{\lloop}{f(\base)}}{f(\base)}
+\apd{f}{\lloop} & : \id{\mathsf{tr}_P(\lloop,f(\base))}{f(\base)}
 \end{align*}
 in the fiber $P(\base)$.
-In other words, the operation assigning to each dependent function its \emph{action on generators} is a map
-\begin{equation}\label{eq:kappa_circle}
-\mathsf{dgen}_{\sphere{1}}:\Big(\prd{t:\sphere{1}}P(t)\Big)\to\Big(\sm{y:P(\base)}\id{\trans{\lloop}{y}}{y}\Big)
-\end{equation}
-given by $\mathsf{dgen}_{\sphere{1}}(f)\defeq\pairr{f(\base),\apd{f}{\lloop}}$.
-The induction principle of the circle can now be formulated as a map in the opposite direction, and the computation rule is the homotopy witnessing that the induction principle is a section of $\mathsf{dgen}_{\sphere{1}}$.
 
 \begin{defn}
-The \define{induction principle of the circle} is a class of maps
+Let $P$ be a type family over the circle. The \define{dependent action on generators}\index{dependent action on generators!for the circle|textbf} is the map
+\begin{equation}\label{eq:dgen_circle}
+\mathsf{dgen}_{\sphere{1}}:\Big(\prd{t:\sphere{1}}P(t)\Big)\to\Big(\sm{y:P(\base)}\id{\mathsf{tr}_P(\lloop,y)}{y}\Big)
+\end{equation}
+given by $\mathsf{dgen}_{\sphere{1}}(f)\defeq\pairr{f(\base),\apd{f}{\lloop}}$.
+\end{defn}
+
+We now give the full specification of the circle.
+
+\begin{defn}
+The \define{circle}\index{circle|textbf} is a type $\sphere{1}$\index{S 1@{$\sphere{1}$}} that comes equipped with\index{base@{$\base$}}\index{loop@{$\lloop$}}
+\begin{align*}
+\base & : \sphere{1} \\
+\lloop & : \id{\base}{\base},
+\end{align*}
+and satisfies the \define{induction principle of the circle}\index{induction principle!of the circle}, which provides for each type family $P$ over $\sphere{1}$ a map
 \begin{equation*}
-\ind{\sphere{1}}(P):\Big(\sm{y:P(\base)}\id{\trans{\lloop}{y}}{y}\Big)\to\Big(\prd{t:\sphere{1}} P(t)\Big)
+\ind{\sphere{1}}:\Big(\sm{y:P(\base)}\id{\mathsf{tr}_P(\lloop,y)}{y}\Big)\to \Big(\prd{t:\sphere{1}}P(t)\Big),
 \end{equation*}
-ranging over all depenent types $P:\sphere{1}\to\type$. 
-The \define{computation rule} asserts that $\mathsf{dgen}_{\sphere{1}}(P) \circ\ind{\sphere{1}}(P) \htpy \idfunc$ for each dependent type $P:\sphere{1}\to\type$. 
-\end{defn} 
+and a homotopy witnessing that $\ind{\sphere{1}}$ is a section of $\mathsf{dgen}_{\sphere{1}}$
+\begin{equation*}
+\mathsf{dgen}_{\sphere{1}}\circ \ind{\sphere{1}}\htpy \idfunc
+\end{equation*}
+for the computation rule\index{computation rule!of the circle}.
+\end{defn}
+
+\begin{rmk}
+The induction principle of the circle provides us with a dependent function $f:\prd{t:\sphere{1}}P(t)$ equipped with an identification
+\begin{equation*}
+(f(\base),\apd{f}{\lloop})=(x,p),
+\end{equation*}
+for any $x : P(\base)$ and $p : \mathsf{tr}_P(\lloop,y)=y$. By \cref{thm:eq_sigma} the identification
+$(f(\base),\apd{f}{\lloop})=(x,p)$ is equivalently described as a pair of identifications
+\begin{samepage}
+\begin{align*}
+\alpha & : f(\base)= x \\
+\beta & : \mathsf{tr}(\alpha,\apd{f}{\lloop}) = p.
+\end{align*}\end{samepage}%
+Here, the transport is taken with respect to the family $x\mapsto \mathsf{tr}_P(\lloop,x)=x$. 
+This transport can be computed as (i.e.~identified with) the term
+\begin{equation*}
+\ct{\mathsf{ap}_{\mathsf{tr}_P(\lloop)}(\alpha)^{-1}}{(\ct{\apd{f}{\lloop}}{\alpha})}.
+\end{equation*}
+Therefore we see that the type of $\beta$ is equivalent to the type of identifications
+\begin{equation*}
+\beta':\ct{\apd{f}{\lloop}}{\alpha}=\ct{\mathsf{ap}_{\mathsf{tr}_P(\lloop)}(\alpha)}{p}
+\end{equation*}
+witnessing that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+\mathsf{tr}_P(\lloop,f(\base)) \arrow[d,equals,swap,"\apd{f}{\lloop}"] \arrow[r,equals,"\ap{\mathsf{tr}_P(\lloop)}{\alpha}"] & \mathsf{tr}_P(\lloop,x) \arrow[d,equals,"p"] \\
+f(\base) \arrow[r,equals,swap,"\alpha"] & x
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{rmk}
+
+The following theorem establishes the \define{universal property}\index{universal property!of the circle} of the circle.
+\begin{thm}\label{thm:circle_up} 
+For each type $X$, the \define{action on generators}\index{action on generators!for the circle}
+\begin{equation*}
+\mathsf{gen}_{\sphere{1}}:(\sphere{1}\to X)\to \sm{x:X}x=x
+\end{equation*}
+given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
+\end{thm}
+
+\begin{proof}
+Let $x:X$ and let $p:x=x$. By \cref{ex:trans_triv} we have an identification 
+\begin{equation*}
+\mathsf{tr\usc{}triv}(\lloop,x):\mathsf{tr}_{W_{\sphere{1}}X}(\lloop,x)=x,
+\end{equation*}
+from which we obtain a fiberwise equivalence
+\begin{equation*}
+\varphi : \prd{x:X} (x=x) \to (\mathsf{tr}_{W_{\sphere{1}}X}(\lloop,x)=x)
+\end{equation*}
+given by $p\mapsto \ct{\mathsf{tr\usc{}triv}(\lloop,x)}{p}$.
+Moreover, for any $f:A\to B$, and any $p:x=y$ there is an identification $\ct{\mathsf{tr\usc{}triv}(p,f(x))}{\mathsf{ap}_f(p)}=\apd{f}{p}$, so it follows that the triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=0]
+& (\sphere{1}\to X) \arrow[dl,swap,"\mathsf{gen}_{\sphere{1}}"] \arrow[dr,swap,"\mathsf{dgen}_{\sphere{1}}" near start] \\
+\sm{x:X}x=x \arrow[rr,"\total{\varphi}"',"\eqvsym"] & & \sm{x:X} \mathsf{tr}_{W_{\sphere{1}}X}(\lloop,x)=x \arrow[ul,densely dotted,bend right=15,swap,"\ind{\sphere{1}}"]
+\end{tikzcd}
+\end{equation*}
+commutes, and the map $\total{\varphi}$ is a fiberwise equivalence by \cref{thm:fib_equiv}. Since the triangle commutes and $\ind{\sphere{1}}$ is a section of $\mathsf{dgen}_{\sphere{1}}$, it follows that the composite
+\begin{equation*}
+\rec{\sphere{1}}\defeq \ind{\sphere{1}}\circ \total{\varphi}
+\end{equation*}
+is a section of $\mathsf{gen}_{\sphere{1}}$. Therefore it remains to show that $\rec{\sphere{1}}$ is also a retraction of $\mathsf{gen}_{\sphere{1}}$, i.e.~we have to show that for every $f:\sphere{1}\to X$ there is an identification
+\begin{equation*}
+\rec{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))=f.
+\end{equation*}
+First we note that by the commutativity of the triangle we have
+\begin{equation*}
+\rec{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))= \ind{\sphere{1}}(\mathsf{dgen}_{\sphere{1}}(f)).
+\end{equation*}
+To finish the proof we note that $\ind{\sphere{1}}(\mathsf{dgen}_{\sphere{1}}(f)=f$ since $\mathsf{dgen}_{\sphere{1}}(f)$ is a section of $\ind{\sphere{1}}$.
+\end{proof}
 
 \section{The fundamental cover of the circle}
 
@@ -110,6 +194,8 @@ commutes.
 \end{defn}
 \end{comment}
 
+Recall from \cref{ex:succ_equiv} that the successor function $\mathsf{succ}:\Z\to \Z$ is an equivalence. Its inverse is the predecessor function defined in \cref{ex:int_pred}. 
+
 \begin{defn}
 The \define{fundamental cover} of the circle is the dependent type $\mathcal{E}\defeq\mathcal{D}(\Z,\mathsf{succ}):\sphere{1}\to\UU$ that is obtained by applying the construction of \autoref{defn:circle_descent}.
 \end{defn}
@@ -148,13 +234,6 @@ The circle is a $1$-type and it is not a $0$-type.
 \end{cor}
 
 \begin{exercises}
-\item \label{ex:circle_up} 
-\begin{subexenum}
-\item Show that for each type $X$, the \emph{action on generators}
-\begin{equation*}
-\mathsf{gen}_{\sphere{1}}:(\sphere{1}\to X)\to \sm{x:X}x=x
-\end{equation*}
-given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
 \item \label{ex:circle_up_pushout}Show that
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
@@ -163,7 +242,6 @@ X^\unit \arrow[r,swap,"\blank\circ\mathsf{const}_{\ttt}"] & X^\bool
 \end{tikzcd}
 \end{equation*}
 is a pullback square for each type $X$.
-\end{subexenum}
 \item \label{ex:circle_dup} Show that for each dependent type $P:\sphere{1}\to\type$, the \emph{dependent action on generators}
 \begin{equation*}
 \Big(\prd{t:\sphere{1}}P(t)\Big)\to \sm{u:P(\base)}\trans{\lloop}{u}=u
