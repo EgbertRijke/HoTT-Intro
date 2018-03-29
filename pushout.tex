@@ -1,166 +1,106 @@
 \chapter{Homotopy pushouts}
 
-Homotopy pushouts are dual to homotopy pullbacks. However, unlike pullbacks we have to \emph{assume} that pushouts exist by postulating rules for higher inductive types. For the purpose of this course, the only higher inductive types that we add are the pushouts. Some of the more exotic higher inductive types are described in \cite{hottbook}.
+We can use higher inductive types to attach cells to types.
+For example, when we are given a type $A$, and we have a map $f:\sphere{1}\to A$ describing a circle in $A$.
+Then we can form a new type $A'$ in which we attach a disc by `gluing' the boundary of the disc to the circle in $A$.
+Using higher inductive types, this process of attaching a disc works as follows:
+\begin{enumerate}
+\item First we add all the points of $A$ to $A'$, i.e.~$A'$ comes equipped with a map
+\begin{equation*}
+i : A \to A'
+\end{equation*}
+\item Next, we add a new point, which is to be thought of as the center of the disc that we're attaching. In other words, $A'$ comes equipped with
+\begin{equation*}
+\mathrm{pt} : A'
+\end{equation*}
+\item Finally, for each point $x$ on the circle we add a path from the center of the disc to $i(f(x))$. In other words, $A'$ comes equipped with a path constructor
+\begin{equation*}
+r:\prd{x:\sphere{1}} \mathrm{pt}=i(f(x)).
+\end{equation*}
+\end{enumerate}
+Moreover, since we're only attaching a disc to $A$ along $f$, we suppose that $A'$ satisfies an induction principle with respect to the constructors $i$, $\mathrm{pt}$, and $r$. 
 
-\section{Cocartesian squares}
+The process of attaching a disc to a type $A$ along a map $f:\sphere{1}\to A$ can be generalized, so that we will also be able to attach cells of different shapes to a type. This generalization is called homotopy pushouts. Homotopy pushouts are dual to homotopy pullbacks. However, unlike pullbacks we will \emph{assume} that pushouts exist by postulating rules for higher inductive types. For the purpose of this course, the only higher inductive types that we add to our type theory are the pushouts. Some of the more exotic higher inductive types, including the Cauchy real numbers, are described in \cite{hottbook}.
 
-In \cref{defn:cospan} we broke down a commuting square into a cospan, a type, and a cone with that type as its vertex. 
-\begin{defn}
-A \define{span} from $A$ to $B$ consists of a type $S$ and maps $f:S\to A$ and $g:S\to B$, as indicated in the diagram
+\section{Pushouts as higher inductive types}
+
+The idea of pushouts is to glue two types $A$ and $B$ together using a mediating type $S$ and maps $f:S\to A$ and $g:S\to B$. In other words, we start with a diagram of the form
 \begin{equation*}
 \begin{tikzcd}
 A & S \arrow[l,swap,"f"] \arrow[r,"g"] & B.
 \end{tikzcd}
 \end{equation*}
-\end{defn}
+We call such a triple $\mathcal{S}\jdeq (S,f,g)$ a \define{span} from $A$ to $B$.
+A span from $A$ to $B$ can be thought of as a relation from $A$ to $B$, relating $f(x)$ to $g(x)$ for any $x:S$.
+Indeed, an equivalence between the type of all spans and the type of relations from $A$ to $B$ is established in \cref{ex:span_rel}.
+
+Given a span $\mathcal{S}$ from $A$ to $B$, we form the higher inductive type $A \sqcup^{\mathcal{S}} B$. It comes equipped with the following constructors
+\begin{align*}
+\inl & : A \to A \sqcup^{\mathcal{S}} B \\
+\inr & : B \to A \sqcup^{\mathcal{S}} B \\
+\glue & : \prd{x:S} \inl(f(x))=\inr(g(x))
+\end{align*}
+and we require that it satisfies an induction principle and computation rules.
+
+To see what the induction principle has to be, consider first a dependent function $s:\prd{x:A\sqcup^{\mathcal{S}}B}P(x)$. When we evaluate this function at the constructors, we obtain
+\begin{align*}
+s\circ \inl & : \prd{a:A} P(\inl(a)) \\
+s\circ \inr & : \prd{b:B} P(\inr(b)) \\
+\apdfunc{s}\circ \glue & : \prd{x:S} \mathsf{tr}_P(\glue(x),s(f(x)))=s(g(x)).
+\end{align*}
 
 \begin{defn}
-Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and let $X$ be a type.
-A \define{cocone} with vertex $X$ on $\mathcal{S}$ is a triple $(i,j,H)$ consisting of maps $i:A\to X$ and $j:B\to X$, and a homotopy $H:i\circ f\htpy j\circ g$ witnessing that the square
-\begin{equation*}
-\begin{tikzcd}
-S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
-A \arrow[r,swap,"i"] & X
-\end{tikzcd}
-\end{equation*}
-commutes.
-We write $\mathsf{cocone}_{\mathcal{S}}(X)$ for the type of cocones with vertex $X$.
+Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and let $P$ be a family over $A\sqcup^{\mathcal{S}} B$. The \define{dependent action on generators} is defined to be the map
+\begin{align*}
+\mathsf{dgen}_{\mathcal{S}}^P & : \Big(\prd{x:A\sqcup^{\mathcal{S}} B} P(x)\Big) \to \Big(\sm{f': \prd{a:A}P(\inl(a))}{g':\prd{b:B}P(\inr(b))}\Big.\\
+& \qquad\qquad\qquad\qquad\qquad\qquad \Big.\prd{x:S} \mathsf{tr}_P(\glue(x),f'(f(x)))=g'(g(x))\Big).
+\end{align*}
+given by $s\mapsto (s\circ\inl,s\circ\inr,\apdfunc{s}\circ\glue)$.
 \end{defn}
 
+We can now fully specify homotopy pushouts.
+
 \begin{defn}
-Consider a commuting square
-\begin{equation*}
-\begin{tikzcd}
-S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
-A \arrow[r,swap,"i"] & X,
-\end{tikzcd}
-\end{equation*}
-where $(i,j,H)$ is a cocone with vertex $X$ on the span $A \leftarrow S \rightarrow B$.
-We say that the square is a \define{homotopy pushout}, or that it is \define{cocartesian}, if it satisfies the \define{universal property of pushouts}, which asserts that for any type $Y$ the map
-\begin{equation*}
-\mathsf{cocone\usc{}map}(i,j,H):(X\to Y)\to \mathsf{cocone}(Y)
-\end{equation*}
-given by $f\mapsto (f\circ i,f\circ j,f\cdot H)$ is an equivalence. Sometimes we simply say that $X$ is a pushout if the square is a pushout.
+Given a span $\mathcal{S}\jdeq (S,f,g)$, the \define{(homotopy) pushout} $A\sqcup^{\mathcal{S}} B$ of $\mathcal{S}$ is defined to be the higher inductive type equipped with
+\begin{align*}
+\inl & : A \to A \sqcup^{\mathcal{S}} B \\
+\inr & : B \to A \sqcup^{\mathcal{S}} B \\
+\glue & : \prd{x:S} \inl(f(x))=\inr(g(x)),
+\end{align*}
+such that for each type family $P$ over $A\sqcup^{\mathcal{S}} B$ the map $\mathsf{dgen}_{\mathcal{S}}^P$ has a section.
 \end{defn}
 
 \begin{rmk}
-Given a pushout square
+The induction principle of the pushout $A\sqcup^{\mathcal{S}} B$ provides us with a dependent function
 \begin{equation*}
-\begin{tikzcd}
-S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
-A \arrow[r,swap,"i"] & X,
+\ind{\mathcal{S}}(f',g',G) : \prd{x:A\sqcup^{\mathcal{S}} B} P(x),
+\end{equation*}
+for every
+\begin{align*}
+f' & : \prd{a:A}P(\inl(a)) \\
+g' & : \prd{b:B}P(\inr(b)) \\
+G & : \prd{x:S} \mathsf{tr}_P(\glue(x),f'(f(x)))=g'(g(x))
+\end{align*}
+Moreover, the function $\ind{\mathcal{S}}(f',g',G)$ comes equipped with an identification
+\begin{equation*}
+\mathsf{dgen}_{\mathcal{S}}(\ind{\mathcal{S}}(f',g',G))=(f',g',G).
+\end{equation*}
+Writing $s\defeq \ind{\mathcal{S}}(f',g',G)$, we see that such an identification between triples is equivalently described by a triple $(H,K,L)$ consisting of
+\begin{align*}
+H : s\circ \inl \htpy f' \\
+K : s\circ\inr \htpy g' 
+\end{align*}
+and a homotopy $L$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\mathsf{tr}_{P}(\glue(x),s(\inl(f(x)))) \arrow[r,equals,"\ap{\mathsf{tr}_P(\glue(x))}{H(x)}"] \arrow[d,equals,swap,"\apd{s}{\glue(x)}"] & \mathsf{tr}_{P}(\glue(x),f'(f(x))) \arrow[d,equals,"G(x)"] \\
+s(\inr(g(x))) \arrow[r,equals,swap,"K(x)"] & g'(g(x))
 \end{tikzcd}
 \end{equation*}
-we can view the cocone $(i,j,H)$ as \emph{structure} on $X$, in the sense that $X$ comes equipped with
-\begin{align*}
-i & : A\to X \\
-j & : B\to X \\
-H & : \prd{s:S} i(f(s))=j(g(s)).
-\end{align*}
-As we will see in \cref{thm:pushout_up}, the type $X$ is a pushout precisely when it satisfies an \emph{induction principle} formulated in terms of $(i,j,H)$. However, the homotopy $H$ provides \emph{path constructors} of $X$. 
-
-The induction principle of pushouts is formulated with respect to families $P$ over $X$, and provides a way to construct sections of $P$. Note that from any section $s:\prd{x:X}P(x)$ we obtain
-\begin{align*}
-s\circ i & : \prd{a:A}P(i(a)) \\
-s\circ j & : \prd{b:B}P(j(b)) \\
-s\cdot H & : \prd{x:S}\mathsf{tr}_P(H(x),s(i(x)))=s(j(x)).
-\end{align*}
-It will be useful to write
-\begin{equation*}
-i' \htpy_H j' \defeq \prd{s:S} \mathsf{tr}_P(H(s),i'(f(s)))=j'(g(s))
-\end{equation*}
-for the type of $s\cdot H$. Thus we see that there is a map
-\begin{equation*}
-\Big(\prd{x:X}P(x)\Big)\to \sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))} i'\htpy_H j'
-\end{equation*}
-given by $s\mapsto (s\circ i,s\circ j,s\cdot H)$.
+commutes, for every $x:S$.
 \end{rmk}
 
-\begin{thm}\label{thm:pushout_up}
-Consider a commuting square
-\begin{equation*}
-\begin{tikzcd}
-S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
-A \arrow[r,swap,"i"] & X,
-\end{tikzcd}
-\end{equation*}
-where $(i,j,H)$ is a cocone with vertex $X$ on the span $A \leftarrow S \rightarrow B$.
-The following are equivalent:
-\begin{enumerate}
-\item The square is a pushout square.
-\item The commuting square
-\begin{equation*}
-\begin{tikzcd}
-Y^X \arrow[r,"\blank\circ j"] \arrow[d,swap,"\blank\circ i"] & Y^B \arrow[d,"\blank\circ g"] \\
-Y^A \arrow[r,swap,"\blank\circ f"] & Y^S
-\end{tikzcd}
-\end{equation*}
-is a pullback square, for every type $Y$.
-\item The type $X$ satisfies \define{span induction} for the span $A\leftarrow S \rightarrow B$, in the sense that for any type family $P$ over $X$, the map
-\begin{equation*}
-\Big(\prd{x:X}P(x)\Big)\to \Big(\sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))} i'\htpy_H j'\Big)
-\end{equation*}
-given by $s\mapsto (s\circ i,s\circ j,s\cdot H)$ has a section.
-\end{enumerate}
-\end{thm}
-
-\begin{eg}
-By \autoref{ex:circle_up_pushout} and the second characterization of pushouts in \autoref{thm:pushout_up} it follows that the circle is a pushout
-\begin{equation*}
-\begin{tikzcd}
-\bool \arrow[r] \arrow[d] & \unit \arrow[d] \\
-\unit \arrow[r] & \sphere{1}.
-\end{tikzcd}
-\end{equation*}
-\end{eg}
-
-\begin{proof}[Proof of \cref{thm:pushout_up}]
-The type $\mathsf{cocone}(X)$ is a pullback in the following way:
-\begin{equation*}
-\begin{tikzcd}
-\mathsf{cocone}(X) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & X^B \arrow[d,"\blank\circ g"] \\
-X^A \arrow[r,swap,"\blank\circ f"] & X^S
-\end{tikzcd}
-\end{equation*}
-Moreover, $\mathsf{cocone\usc{}map}(\mathcal{X}):(X\to Y)\to \mathsf{cocone}(Y)$ is the unique map making the diagram
-\begin{equation*}
-\begin{tikzcd}
-Y^X \arrow[ddr,bend right=15] \arrow[drr,bend left=15] \arrow[dr,densely dotted,"\mathsf{cocone\usc{}map}(\mathcal{X})" {description,xshift=1em}] &[2em] \\
-& \mathsf{cocone}(Y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & Y^B \arrow[d,"\blank\circ g"] \\
-& Y^A \arrow[r,swap,"\blank\circ f"] & Y^S
-\end{tikzcd}
-\end{equation*}
-Therefore it follows that the cocone $\mathcal{X}$ is colimiting precisely when the outer commuting square is a pullback.
-\end{proof}
-
-\begin{cor}
-Consider two commuting squares
-\begin{equation*}
-\begin{tikzcd}
-S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] & S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"{j'}"] \\
-A \arrow[r,swap,"i"] & X & A \arrow[r,swap,"{i'}"] & {X'}
-\end{tikzcd}
-\end{equation*}
-with homotopies $H:i\circ f\htpy j\circ g$ and $H':i'\circ f\htpy j'\circ g$. Furthermore, consider a map
-\begin{equation*}
-h:X\to X'
-\end{equation*}
-equipped with
-\begin{align*}
-K & : h\circ i\htpy i' \\
-L & : h\circ j\htpy j' \\
-M & : \ct{(h\cdot H)}{(L\cdot g)} \htpy \ct{(K\cdot f)}{H'}.
-\end{align*}
-If any two of the following three properties hold, then so does the third:
-\begin{enumerate}
-\item $X$ is a pushout.
-\item $X'$ is a pushout.
-\item $h$ is an equivalence.
-\end{enumerate}
-\end{cor}
-
-\section{Rules for pushouts}
-
+\begin{comment}
 The \define{formation rule} for pushouts simply states that for any span $\mathcal{S}\defeq (S,f,g)$ from $A$ to $B$, a type $A\sqcup^{\mathcal{S}} B$ can be formed. We call $A\sqcup^{\mathcal{S}} B$ the \define{canonical pushout} of $\mathcal{S}$. 
 
 \begin{prooftree}
@@ -188,63 +128,73 @@ The \define{introduction rules} for pushouts provide ways to construct terms of 
 \BinaryInfC{$\Gamma\vdash \glue : \inl\circ f \htpy \inr\circ g$}
 \end{prooftree}
 We assume that $A\sqcup^{\mathcal{S}} B$ is span inductive in the sense of \autoref{thm:pushout_up}. Moreover, if $A$, $B$, and $S$ are types in $\UU$, then we assume that also $A\sqcup^{\mathcal{S}} B$ is in $\UU$. In other words, we assume that the universe is \emph{closed under pushouts}.
+\end{comment}
 
-\section{Suspension and join}
+\section{Examples of pushouts}
 Many interesting types can be defined as homotopy pushouts. 
 
 \begin{defn}
-\begin{enumerate}
-\item Let $X$ be a type. We define the \define{suspension} $\susp X$ of $X$ to be the pushout of the span
+Let $X$ be a type. We define the \define{suspension} $\susp X$ of $X$ to be the pushout of the span
 \begin{equation*}
 \begin{tikzcd}
 X \arrow[r] \arrow[d] & \unit \arrow[d,"\inr"] \\
 \unit \arrow[r,swap,"\inl"] & \susp X 
 \end{tikzcd}
 \end{equation*}
-\item We define the \define{$n$-sphere} $\sphere{n}$ for any $n:\N$ by induction on $n$, by taking
+\end{defn}
+
+\begin{defn}
+We define the \define{$n$-sphere} $\sphere{n}$ for any $n:\N$ by induction on $n$, by taking
 \begin{align*}
 \sphere{0} & \defeq \bool \\
 \sphere{n+1} & \defeq \susp{\sphere{n}}.
 \end{align*}
-\item Given a map $f:A\to B$, we define the \define{mapping cone} $M_f$ of $f$ as the pushout
+\end{defn}
+
+\begin{defn}
+Given a map $f:A\to B$, we define the \define{cofiber} $\mathsf{cofib}_f$ of $f$ as the pushout
 \begin{equation*}
 \begin{tikzcd}
 A \arrow[r,"f"] \arrow[d] & B \arrow[d,"\inr"] \\
-\unit \arrow[r,swap,"\inl"] & M_f 
+\unit \arrow[r,swap,"\inl"] & \mathsf{cofib}_f. 
 \end{tikzcd}
 \end{equation*}
-\item We define the \define{join} $\join{X}{Y}$ of $X$ and $Y$ to be the pushout 
+The cofiber of a map is sometimes also called the \define{mapping cone}.
+\end{defn}
+
+\begin{eg}
+The suspension $\susp X$ of $X$ is the cofiber of the map $X\to \unit$. 
+\end{eg}
+
+\begin{defn}
+We define the \define{join} $\join{X}{Y}$ of $X$ and $Y$ to be the pushout 
 \begin{equation*}
 \begin{tikzcd}
 X\times Y \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & Y \arrow[d,"\inr"] \\
-X \arrow[r,swap,"\inl"] & X \ast Y 
+X \arrow[r,swap,"\inl"] & X \ast Y. 
 \end{tikzcd}
 \end{equation*}
-\end{enumerate}
 \end{defn}
 
-\begin{thm}
-Consider the following configuration of commuting squares:
+\begin{defn}
+Suppose $A$ and $B$ are pointed types, with base points $a_0$ and $b_0$, respectively. The \define{(binary) wedge} $A\vee B$ of $A$ and $B$ is defined as the pushout
 \begin{equation*}
 \begin{tikzcd}
-A \arrow[r,"i"] \arrow[d,swap,"f"] & B \arrow[r,"k"] \arrow[d,swap,"g"] & C \arrow[d,"h"] \\
-X \arrow[r,swap,"j"] & Y \arrow[r,swap,"l"] & Z
+\bool \arrow[r] \arrow[d] & A+B \arrow[d] \\
+\unit \arrow[r] & A\vee B.
 \end{tikzcd}
 \end{equation*}
-with homotopies $H:j\circ f\htpy g\circ i$ and $K:l\circ g\htpy h\circ k$, and suppose that the square on the left is a pushout square. 
-Then the square on the right is a pushout square if and only if the outer rectangle is a pushout square.
-\end{thm}
+\end{defn}
 
-\begin{proof}
-Let $T$ be a type. Taking the exponent $T^{(\blank)}$ of the entire diagram of the statement of the theorem, we obtain the following commuting diagram
+\begin{defn}
+Given a type $I$, and a family of pointed types $A$ over $i$, with base points $a_0(i)$. We define the \define{(indexed) wedge} $\bigvee_{(i:I)}A_i$ as the pushout
 \begin{equation*}
-\begin{tikzcd}
-T^Z \arrow[r,"\blank\circ l"] \arrow[d,swap,"\blank\circ h"] & T^Y \arrow[d,swap,"\blank\circ g"] \arrow[r,"\blank\circ j"] & T^X \arrow[d,"\blank\circ f"] \\
-T^C \arrow[r,swap,"\blank\circ k"] & T^B \arrow[r,swap,"\blank\circ i"] & T^A.
+\begin{tikzcd}[column sep=huge]
+I \arrow[d] \arrow[r,"{\lam{i}(i,a_0(i))}"] & \sm{i:I}A_i \arrow[d] \\
+\unit \arrow[r] & \bigvee_{(i:I)} A_i.
 \end{tikzcd}
 \end{equation*}
-By the assumption that $Y$ is the pushout of $B\leftarrow A \rightarrow X$, it follows that the square on the right is a pullback square. It follows by \autoref{lem:pb_pasting} that the rectangle on the left is a pullback if and only if the outer rectangle is a pullback. Thus the statement follows by the second characterization in \autoref{thm:pushout_up}.
-\end{proof}
+\end{defn}
 
 \begin{comment}
 \begin{defn}
@@ -284,18 +234,339 @@ X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"
 \end{defn}
 \end{comment}
 
+\section{The universal property of pushouts}
+
+\begin{defn}
+Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and let $X$ be a type.
+A \define{cocone} with vertex $X$ on $\mathcal{S}$ is a triple $(i,j,H)$ consisting of maps $i:A\to X$ and $j:B\to X$, and a homotopy $H:i\circ f\htpy j\circ g$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X
+\end{tikzcd}
+\end{equation*}
+commutes.
+We write $\mathsf{cocone}_{\mathcal{S}}(X)$ for the type of cocones on $\mathcal{S}$ with vertex $X$.
+\end{defn}
+
+\begin{defn}
+Consider a cocone $(i,j,H)$ with vertex $X$ on the span $\mathcal{S}\jdeq (S,f,g)$, as indicated in the following commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X.
+\end{tikzcd}
+\end{equation*}
+For every type $Y$, we define the map
+\begin{equation*}
+\mathsf{cocone\usc{}map}(i,j,H):(X\to Y)\to \mathsf{cocone}(Y)
+\end{equation*}
+by $f\mapsto (f\circ i,f\circ j,f\cdot H)$.
+\end{defn}
+
+\begin{defn}
+A commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X.
+\end{tikzcd}
+\end{equation*}
+with $H:i\circ f \htpy j\circ g$ is said to be a \define{(homotopy) pushout square} if the cocone $(i,j,H)$ with vertex $X$ on the span $\mathcal{S}\jdeq (S,f,g)$
+satisfies the \define{universal property of pushouts}, which asserts that the map
+\begin{equation*}
+\mathsf{cocone\usc{}map}(i,j,H):(X\to Y)\to \mathsf{cocone}(Y)
+\end{equation*}
+is an equivalence for any type $Y$. Sometimes pushout squares are also called \define{cocartesian squares}.
+\end{defn}
+
+\begin{comment}
+\begin{rmk}
+Given a pushout square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X,
+\end{tikzcd}
+\end{equation*}
+we can view the cocone $(i,j,H)$ as \emph{structure} on $X$, in the sense that $X$ comes equipped with
+\begin{align*}
+i & : A\to X \\
+j & : B\to X \\
+H & : \prd{s:S} i(f(s))=j(g(s)).
+\end{align*}
+As we will see in \cref{thm:pushout_up}, the type $X$ is a pushout precisely when it satisfies an \emph{induction principle} formulated in terms of $(i,j,H)$. However, the homotopy $H$ provides \emph{path constructors} of $X$. 
+
+The induction principle of pushouts is formulated with respect to families $P$ over $X$, and provides a way to construct sections of $P$. Note that from any section $s:\prd{x:X}P(x)$ we obtain
+\begin{align*}
+s\circ i & : \prd{a:A}P(i(a)) \\
+s\circ j & : \prd{b:B}P(j(b)) \\
+s\cdot H & : \prd{x:S}\mathsf{tr}_P(H(x),s(i(x)))=s(j(x)).
+\end{align*}
+It will be useful to write
+\begin{equation*}
+i' \htpy_H j' \defeq \prd{s:S} \mathsf{tr}_P(H(s),i'(f(s)))=j'(g(s))
+\end{equation*}
+for the type of $s\cdot H$. Thus we see that there is a map
+\begin{equation*}
+\Big(\prd{x:X}P(x)\Big)\to \sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))} i'\htpy_H j'
+\end{equation*}
+given by $s\mapsto (s\circ i,s\circ j,s\cdot H)$.
+\end{rmk}
+\end{comment}
+
+\begin{lem}
+For any span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and any type $X$ the square
+\begin{equation*}
+\begin{tikzcd}
+\mathsf{cocone}_{\mathcal{S}}(X) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & X^B \arrow[d,"\blank\circ g"] \\
+X^A \arrow[r,swap,"\blank\circ f"] & X^S,
+\end{tikzcd}
+\end{equation*}
+which commutes by the homotopy $\pi_3' \defeq\lam{(i,j,H)} \mathsf{eq\usc{}htpy}(H)$, is a pullback square.
+\end{lem}
+
+\begin{proof}
+The function extensionality principle induces an equivalence on total spaces
+\begin{align*}
+X^A\times_{X^S} X^B & \jdeq \sm{i:A\to X}{j:B\to X} i\circ f= j\circ g\\
+& \eqvsym \sm{i:A\to X}{j:B\to X} i\circ f\htpy j\circ g \\
+& \jdeq \mathsf{cocone}_{\mathcal{S}}(X).
+\end{align*}
+Concretely, the equivalence $X^A\times_{X^S} X^B \to \mathsf{cocone}_{\mathcal{S}}(X)$ is defined as
+\begin{equation*}
+e\defeq \lam{(i,j,p)}(i,j,\mathsf{htpy\usc{}eq}(p)),
+\end{equation*}
+and its inverse is the function $\lam{(i,j,H)}(i,j,\mathsf{eq\usc{}htpy}(H))$.
+To complete the proof using \cref{thm:pb_3for2} that the square is a pullback it remains to construct homotopies
+\begin{samepage}
+\begin{align*}
+K & : \pi_1\circ e \htpy \pi_1 \\
+L & : \pi_2\circ e \htpy \pi_2 \\
+M & : \ct{(\pi_3'\cdot e)}{((\blank\circ g)\cdot L)} \htpy \ct{((\blank\circ f)\cdot K)}{\pi_3}
+\end{align*}
+\end{samepage}%
+For $K$ and $L$ we simply take
+\begin{align*}
+K & \defeq \lam{(i,j,p)} \refl{i} \\
+L & \defeq \lam{(i,j,p)} \refl{j}
+\end{align*}
+Then we have homotopies 
+\begin{align*}
+(\blank\circ f)\cdot K & \htpy \lam{(i,j,p)}\refl{i\circ f} \\
+(\blank\circ g)\cdot L & \htpy \lam{(i,j,p)}\refl{j\circ g}.
+\end{align*}
+There is also a homotopies 
+\begin{align*}
+\pi_3'\cdot e & \htpy \lam{(i,j,p)}\mathsf{eq\usc{}htpy}(\mathsf{htpy\usc{}eq}(p)) \\
+& \htpy \lam{(i,j,p)}p
+\end{align*}
+by the definition of $e$. In order to construct the homotopy $M$ it is therefore equivalent to construct an identification
+\begin{equation*}
+\ct{p}{\refl{i\circ f}}=\ct{\refl{j\circ g}}{p},
+\end{equation*}
+for every $(i,j,p):X^A\times_{X^S} X^B$. This can be obtained by the unit laws.
+\end{proof}
+
+In the following theorem we establish an alternative characterization of the universal property of pushouts.
+\begin{thm}\label{thm:pushout_up}
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X,
+\end{tikzcd}
+\end{equation*}
+with $H:i\circ f\htpy j\circ g$. The following are equivalent:
+\begin{enumerate}
+\item The square is a pushout square.
+\item The square
+\begin{equation*}
+\begin{tikzcd}
+T^X \arrow[r,"\blank\circ j"] \arrow[d,swap,"\blank\circ i"] & T^B \arrow[d,"\blank\circ g"] \\
+T^A \arrow[r,swap,"\blank\circ f"] & T^S
+\end{tikzcd}
+\end{equation*}
+which commutes by the homotopy
+\begin{equation*}
+\lam{h} \mathsf{eq\usc{}htpy}(h\cdot H)
+\end{equation*}
+is a pullback square, for every type $T$.
+%\item The type $X$ satisfies \define{span induction} for the span $A\leftarrow S \rightarrow B$, in the sense that for any type family $P$ over $X$, the map
+%\begin{equation*}
+%\Big(\prd{x:X}P(x)\Big)\to \Big(\sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))} i'\htpy_H j'\Big)
+%\end{equation*}
+%given by $s\mapsto (s\circ i,s\circ j,s\cdot H)$ has a section.
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+It is straightforward to verify that the diagram
+\begin{equation*}
+\begin{tikzcd}
+T^X \arrow[dr,densely dotted,"{\mathsf{cocone\usc{}map}(i,j,H)}" {description,xshift=1em}] \arrow[ddr,bend right=15] \arrow[drr,bend left=15] &[2em] \\
+& \mathsf{cocone}(T) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & T^B \arrow[d,"\blank\circ g"] \\
+& T^A \arrow[r,swap,"\blank\circ f"] & T^S
+\end{tikzcd}
+\end{equation*}
+commutes, i.e.~that there are homotopies
+\begin{align*}
+K & : \pi_1\circ \mathsf{cocone\usc{}map}(i,j,H) \htpy \lam{h}h\circ i \\
+L & : \pi_2\circ \mathsf{cocone\usc{}map}(i,j,H) \htpy \lam{h}h\circ j \\
+M & : \ct{(\pi_3'\cdot e)}{((\blank\circ g)\cdot L)} \htpy \ct{((\blank\circ f)\cdot K)}{(\lam{h} \mathsf{eq\usc{}htpy}(h\cdot H))}.
+\end{align*}
+Therefore it follows by \cref{thm:pb_3for2} that the cocone $(i,j,H)$ is colimiting precisely when for every type $T$ the asserted square is a pullback.
+\end{proof}
+
+\begin{eg}
+By \autoref{ex:circle_up_pushout} and the second characterization of pushouts in \autoref{thm:pushout_up} it follows that the circle is a pushout
+\begin{equation*}
+\begin{tikzcd}
+\bool \arrow[r] \arrow[d] & \unit \arrow[d] \\
+\unit \arrow[r] & \sphere{1}.
+\end{tikzcd}
+\end{equation*}
+In other words, $\eqv{\sphere{1}}{\susp{\bool}}$. 
+\end{eg}
+
+\begin{thm}\label{thm:pushout}
+Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$. Then the square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"\inr"] \\
+A \arrow[r,swap,"\inl"] & A \sqcup^{\mathcal{S}} B
+\end{tikzcd}
+\end{equation*}
+is a pushout square.
+\end{thm}
+
+\begin{comment}
+\begin{proof}
+Let $X$ be a type. Our goal is to show that the map
+\begin{equation*}
+(A\sqcup^{\mathcal{S}} B \to X)\to \mathsf{cocone}_{\mathcal{S}}(X)
+\end{equation*}
+is an equivalence. To see this, we first show that there is a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=0]
+& X^{A\sqcup^{\mathcal{S}} B} \arrow[dl,swap,"\mathsf{cocone\usc{}map}_{\mathcal{S}}"] \arrow[dr,"\mathsf{dgen}_{\mathcal{S}}"] \\
+\mathsf{cocone}_{\mathcal{S}}(X) \arrow[rr,"\eqvsym"] & & \mathsf{cocone}'_{\mathcal{S}}(X)
+\end{tikzcd}
+\end{equation*}
+where we write
+\begin{align*}
+\mathsf{cocone}'_{\mathcal{S}}(X) & : \Big(\sm{f': A\to X}{g':A\to X}\Big.\\
+& \qquad\qquad\Big.\prd{x:S} \mathsf{tr}_{W_{A\sqcup^{\mathcal{S}}B}(X)}(\glue(x),f'(f(x)))=g'(g(x))\Big).
+\end{align*}
+The bottom equivalence is the induced map on total spaces of the fiberwise equivalence
+\begin{equation*}
+(p:f'(f(x))=g'(g(x)))\mapsto \ct{\mathsf{tr\usc{}triv}(\glue(x),f'(f(x)))}{p}.
+\end{equation*}
+\end{proof}
+\end{comment}
+
+\begin{comment}
+\begin{cor}
+Consider two commuting squares
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] & S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"{j'}"] \\
+A \arrow[r,swap,"i"] & X & A \arrow[r,swap,"{i'}"] & {X'}
+\end{tikzcd}
+\end{equation*}
+with homotopies $H:i\circ f\htpy j\circ g$ and $H':i'\circ f\htpy j'\circ g$. Furthermore, consider a map
+\begin{equation*}
+h:X\to X'
+\end{equation*}
+equipped with
+\begin{align*}
+K & : h\circ i\htpy i' \\
+L & : h\circ j\htpy j' \\
+M & : \ct{(h\cdot H)}{(L\cdot g)} \htpy \ct{(K\cdot f)}{H'}.
+\end{align*}
+If any two of the following three properties hold, then so does the third:
+\begin{enumerate}
+\item $X$ is a pushout.
+\item $X'$ is a pushout.
+\item $h$ is an equivalence.
+\end{enumerate}
+\end{cor}
+\end{comment}
+
+\begin{cor}
+Let $X$ and $Y$ be types. Then the map
+\begin{equation*}
+(\susp{X}\to Y)\to \sm{y,y':Y} X\to (y=y')
+\end{equation*}
+given by $f\mapsto (f(\inl(\ttt)),f(\inr(\ttt)),\ap{f}{\glue(\blank)})$ is an equivalence.
+\end{cor}
+
+\section{The pasting property for pushouts}
+\begin{thm}
+Consider the following configuration of commuting squares:
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"i"] \arrow[d,swap,"f"] & B \arrow[r,"k"] \arrow[d,swap,"g"] & C \arrow[d,"h"] \\
+X \arrow[r,swap,"j"] & Y \arrow[r,swap,"l"] & Z
+\end{tikzcd}
+\end{equation*}
+with homotopies $H:j\circ f\htpy g\circ i$ and $K:l\circ g\htpy h\circ k$, and suppose that the square on the left is a pushout square. 
+Then the square on the right is a pushout square if and only if the outer rectangle is a pushout square.
+\end{thm}
+
+\begin{proof}
+Let $T$ be a type. Taking the exponent $T^{(\blank)}$ of the entire diagram of the statement of the theorem, we obtain the following commuting diagram
+\begin{equation*}
+\begin{tikzcd}
+T^Z \arrow[r,"\blank\circ l"] \arrow[d,swap,"\blank\circ h"] & T^Y \arrow[d,swap,"\blank\circ g"] \arrow[r,"\blank\circ j"] & T^X \arrow[d,"\blank\circ f"] \\
+T^C \arrow[r,swap,"\blank\circ k"] & T^B \arrow[r,swap,"\blank\circ i"] & T^A.
+\end{tikzcd}
+\end{equation*}
+By the assumption that $Y$ is the pushout of $B\leftarrow A \rightarrow X$, it follows that the square on the right is a pullback square. It follows by \autoref{thm:pb_pasting} that the rectangle on the left is a pullback if and only if the outer rectangle is a pullback. Thus the statement follows by the second characterization in \autoref{thm:pushout_up}.
+\end{proof}
+
+\begin{lem}
+Consider a map $f:A\to B$. Then the cofiber of the map $\inr:B\to \mathsf{cofib}_f$ is equivalent to the suspension $\susp{A}$ of $A$. 
+\end{lem}
+
 \begin{exercises}
-\item Use the univalence axiom to show that the type $\mathsf{span}(A,B)$ of spans from $A$ to $B$ is equivalent to the type $A\to B\to\UU$.
-\item Show that $\join{P}{Q}= P\lor Q$, for any two propositions $P$ and $Q$.
-\item Show that $\sphere{1}$ is equivalent to $\susp\bool$. 
-\item Show that $\eqv{A\sqcup^{\mathcal{S}} B}{B\sqcup^{\mathcal{S}'} A}$, where $\mathcal{S'}\defeq (S,g,f)$ is the \define{opposite span} of $\mathcal{S}$. 
-\item Let $Q$ be a proposition, and let $A$ be a type. Show that $\inr:A\to \join{Q}{A}$ is an equivalence if and only if $Q\to\iscontr(A)$.
-\item Show that if $\mathcal{S}\jdeq(S,f,g)$ is a span from $A$ to $B$ and $f:S\to A$ is an equivalence, then so is $\inr:B\to A\sqcup^\mathcal{S} B$. Use this observation to conclude the following:
+\item \label{ex:span_rel}Use \cref{thm:choice,thm:fam_proj,cor:times_up_out} to show that the type 
+\begin{equation*}
+\mathsf{span}(A,B)\defeq \sm{S:\UU} (S\to A)\times (S\to B)
+\end{equation*}
+of small spans from $A$ to $B$ is equivalent to the type $A\to (B\to\UU)$ of small relations from $A$ to $B$.
+\item Let $P$ and $Q$ be propositions.
 \begin{subexenum}
+\item Show that $\join{P}{Q}$ is again a proposition.
+\item Show that $\join{P}{Q}$ satisfies the \emph{universal property of disjunction}, i.e.~that for any proposition $R$, the map
+\begin{equation*}
+(\join{P}{Q}\to R)\to (P\to R)\times (Q\to R)
+\end{equation*}
+given by $f\mapsto (f\circ \inl,f\circ \inr)$, is an equivalence.
+\end{subexenum}
+\item Let $Q$ be a proposition, and let $A$ be a type. Show that $\inr:A\to \join{Q}{A}$ is an equivalence if and only if $Q\to\iscontr(A)$.
+\item Let $P$ be a proposition. Show that $\susp P$ is a set, with an equivalence
+\begin{equation*}
+\eqv{\Big(\inl(\ttt)=\inr(\ttt)\Big)}{P}.
+\end{equation*}
+\item Use \cref{thm:pushout_up,cor:pb_equiv,ex:equiv_precomp} to show that for any commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f","{\eqvsym}"'] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & C
+\end{tikzcd}
+\end{equation*} 
+where $f$ is an equivalence, the square is a pushout square if and only if $j:B\to C$ is an equivalence.
+Use this observation to conclude the following:
+\begin{enumerate}
 \item If $X$ is contractible, then $\susp X$ is contractible.
+\item The cofiber of any equivalence is contractible.
+\item The cofiber of a point in $B$ (i.e.~of a map of the type $\unit\to B$) is equivalent to $B$.
 \item There is an equivalence $\eqv{X}{\join{\emptyt}{X}}$.
 \item If $X$ is contractible, then $\join{X}{Y}$ is contractible. 
-\end{subexenum}
+\item If $A$ is contractible, then there is an equivalence $\eqv{A\vee B}{B}$ for any pointed type $B$.
+\end{enumerate}
+\item Show that $\eqv{A\sqcup^{\mathcal{S}} B}{B\sqcup^{\mathcal{S}^{\mathsf{op}}} A}$, where $\mathcal{S^{\mathsf{op}}}\defeq (S,g,f)$ is the \define{opposite span} of $\mathcal{S}$. 
 \item Show that if
 \begin{equation*}
 \begin{tikzcd}
@@ -310,6 +581,7 @@ A\times S \arrow[r] \arrow[d] & A\times Y \arrow[d] \\
 A\times X \arrow[r] & A\times Z
 \end{tikzcd}
 \end{equation*}
+for any type $A$.
 \item Show that if
 \begin{equation*}
 \begin{tikzcd}
@@ -324,17 +596,63 @@ S_1+S_2 \arrow[r] \arrow[d] & Y_1+ Y_2 \arrow[d] \\
 X_1 +X_2 \arrow[r] & Z_1+Z_2. 
 \end{tikzcd}
 \end{equation*}
-\item Consider a span $(S,f,g)$ from $A$ to $B$. Show that the pushout of the span
+\item 
+\begin{subexenum}
+\item Consider a span $(S,f,g)$ from $A$ to $B$. Show that the square
 \begin{equation*}
-\begin{tikzcd}
-& S+S \arrow[dl] \arrow[dr] \\
-A + B & & S
+\begin{tikzcd}[column sep=large]
+S+S \arrow[d,swap,"{f+g}"] \arrow[r,"{[\idfunc,\idfunc]}"] & S \arrow[d,"{\inr\circ g}"] \\
+A+B \arrow[r,swap,"{[\inl,\inr]}"] & A\sqcup^\mathcal{S} B
 \end{tikzcd}
 \end{equation*}
-is equivalent to the pushout of $(S,f,g)$.
-\item Consider maps $f:A\to X$, $f':A'\to X$, and $h:A\to A'$ such that $H:f\htpy f'\circ h$. 
+is again a pushout square.
+\item Show that $\eqv{\susp X}{\join{\bool}{X}}$.
+\end{subexenum}
+\item Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $H:f\htpy g\circ h$. 
 \begin{subexenum}
-\item Construct a map $M_{(h,H)}: M_{f'}\to M_f$.
-\item Show that $\eqv{M_{M(h,h)}}{M_h}$.
+\item Construct a map $\mathsf{cofib}_{(h,H)}: \mathsf{cofib}_{g}\to \mathsf{cofib}_f$.
+\item Show that $\eqv{\mathsf{cofib}_{\mathsf{cofib}(h,H)}}{\mathsf{cofib}_h}$.
+\end{subexenum}
+\item Use \cref{ex:circle_connected} to show that for $n\geq 0$, $X$ is an $n$-type if and only if the map
+\begin{equation*}
+\lam{x}\mathsf{const}_x : X \to (\sphere{n+1}\to X)
+\end{equation*}
+is an equivalence.
+\item 
+\begin{subexenum}
+\item Construct a function
+\begin{equation*}
+(X\to Y)\to (\susp X\to \susp Y),
+\end{equation*}
+for any two types $X$ and $Y$. Thus we obtain a function $\susp f:\susp X \to \susp Y$, for any $f:X\to Y$.
+\item Show that if $f\htpy g$, then $\susp f \htpy \susp g$. 
+\item Show that $\susp \idfunc[X]\htpy\idfunc[\susp X]$
+\item Show that
+\begin{equation*}
+\susp(g\circ f)\htpy (\susp g)\circ (\susp f).
+\end{equation*}
+for any $f:X\to Y$ and $g:Y\to Z$.
+\end{subexenum}
+\item 
+\begin{subexenum}
+\item Let $I$ be a type, and let $A$ be a family over $I$. Construct an equivalence
+\begin{equation*}
+\eqv{\Big(\bigvee\nolimits_{(i:I)}\susp A_i\Big)}{\susp\Big(\bigvee\nolimits_{(i:I)}A_i\Big)}.
+\end{equation*}
+\item Show that for any type $X$ there is an equivalence
+\begin{equation*}
+\eqv{\Big(\bigvee\nolimits_{(x:X)}\bool\Big)}{X+1}.
+\end{equation*}
+\item Construct an equivalence
+\begin{equation*}
+\eqv{\susp(\mathsf{Fin}(n+1))}{\bigvee\nolimits_{(i:\mathsf{Fin}(n))}\sphere{1}}.
+\end{equation*}
 \end{subexenum}
 \end{exercises}

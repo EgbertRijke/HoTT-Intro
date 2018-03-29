@@ -22,11 +22,11 @@ the map
 \Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\mathsf{htpy.refl}_f)
 \end{equation*}
 given by $s\mapsto s(f,\mathsf{htpy.refl}_f)$ has a section.
-\item The \define{function extensionality principle}\index{function extensionality}: For every type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map
+\item The \define{function extensionality principle}\index{function extensionality}: For every type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map\index{htpy_eq@{$\mathsf{htpy\usc{}eq}$}|textbf}
 \begin{equation*}
 \mathsf{htpy\usc{}eq}(f,g) : (\id{f}{g})\to (f\htpy g)
 \end{equation*}
-by path induction (sending $\refl{f}$ to $\lam{x}\refl{f(x)}$) is an equivalence.
+by path induction (sending $\refl{f}$ to $\lam{x}\refl{f(x)}$) is an equivalence. We will write $\mathsf{eq\usc{}htpy}$\index{eq_htpy@{$\mathsf{eq\usc{}htpy}$}} for its inverse.
 \item The \define{weak function extensionality principle}\index{weak function extensionality} holds: For every type family $B$ over $A$ one has\index{contractible!weak function extensionality}
 \begin{equation*}
 \Big(\prd{x:A}\iscontr(B(x))\Big)\to\iscontr\Big(\prd{x:A}B(x)\Big).
@@ -208,7 +208,7 @@ To show that $\ind{\Sigma}\circ\mathsf{ev\usc{}pair}\htpy\idfunc$ we will also a
 We obtain this homotopy by another application of $\Sigma$-induction. 
 \end{proof}
 
-\begin{cor}
+\begin{cor}\label{cor:times_up_out}
 Let $A$, $B$, and $X$ be types. Then the map
 \begin{equation*}
 \mathsf{ev\usc{}pair}: (A\times B \to X)\to (A\to (B\to X))
@@ -293,7 +293,7 @@ H_{coh} & : g H_r\htpy H_l g,
 \end{align*}
 \end{samepage}%
 witnessing that $f$ is a \define{half-adjoint equivalence}.
-\item Let $f:A\to B$ be a map. Show that the following are equivalent:
+\item \label{ex:equiv_precomp}Let $f:A\to B$ be a map. Show that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
 \item For any type family $P$ over $B$ the map
@@ -363,6 +363,23 @@ with $H:f\htpy g\circ h$.
 \lam{f}{i}e_i\circ f:\Big(\prd{i:I}A_i\Big)\to\Big(\prd{i:I}B_i\Big)
 \end{equation*}
 is an equivalence.
+\item \label{ex:triangle_fib}Consider a diagram of the form
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+A \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+\begin{subexenum}
+\item Show that the type $\sm{h:A\to B} f\htpy g\circ h$ is equivalent to the type of fiberwise transformations
+\begin{equation*}
+\prd{x:X}\fib{f}{x}\to\fib{g}{x}.
+\end{equation*}
+\item Show that the type $\sm{h:\eqv{A}{B}} f\htpy g\circ h$ is equivalent to the type of fiberwise equivalences
+\begin{equation*}
+\prd{x:X}\fib{f}{x}\eqvsym\fib{g}{x}.
+\end{equation*}
+\end{subexenum}
 \item \label{ex:sq_fib}Consider a diagram of the form
 \begin{equation*}
 \begin{tikzcd}
@@ -370,10 +387,16 @@ A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
 X \arrow[r,swap,"h"] & Y.
 \end{tikzcd}
 \end{equation*}
-Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise transformations
+\begin{subexenum}
+\item Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise transformations
 \begin{equation*}
 \prd{x:X}\fib{f}{x}\to\fib{g}{h(x)}.
 \end{equation*}
+\item Show that the type $\sm{i:\eqv{A}{B}}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise equivalences
+\begin{equation*}
+\prd{x:X}\fib{f}{x}\eqvsym\fib{g}{h(x)}.
+\end{equation*}
+\end{subexenum}
 \item \label{ex:iso_equiv}Let $A$ and $B$ be sets. Show that type type $\eqv{A}{B}$ of equivalences from $A$ to $B$ is equivalent to the type $A\cong B$ of \define{isomorphisms} from $A$ to $B$, i.e. the type of quadruples $(f,g,H,K)$ consisting of
 \begin{align*}
 f & : A\to B \\

@@ -49,6 +49,23 @@ By proof irrelevance it follows that propositions are contractible as soon as th
 For any proposition $P$ we have $P\to\iscontr(P)$.
 \end{cor}
 
+\begin{lem}\label{lem:prop_equiv}
+Let $A$ and $B$ be types, and let $e:\eqv{A}{B}$. Then we have
+\begin{equation*}
+\isprop(A)\leftrightarrow\isprop(B).
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+We will show that $\isprop(B)$ implies $\isprop(A)$. This suffices, because the converse follows from the fact that $e^{-1}:B\to A$ is also an equivalence. 
+
+Since $e$ is assumed to be an equivalence, it follows by \cref{cor:emb_equiv} that
+\begin{equation*}
+\apfunc{e} : (x=y)\to (e(x)=e(y))
+\end{equation*}
+is an equivalence for any $x,y:A$. If $B$ is a proposition, then in particular the type $e(x)=e(y)$ is contractible for any $x,y:A$, so the claim follows from \cref{thm:contr_equiv}.
+\end{proof}
+
 In type theory terms always come equipped with their types, i.e.~they never appear in isolation. This is useful from the perspective that terms are programs with a certain specification, but as a consequence we cannot consider subtypes in the same way as set theorists have subsets. Our definition of subtype is therefore considerably different:
 
 \begin{defn}
@@ -176,7 +193,9 @@ Since $R$ is assumed to be reflexive, we also have a fiberwise transformation
 \begin{equation*}
 \rec{x=}(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
 \end{equation*}
-Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. We conclude by \autoref{ex:id_fundamental_retr} that for each $x,y:A$, the map $f(x,y):R(x,y)\to(\id{x}{y})$ must be an equivalence. 
+Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. We conclude by \autoref{ex:id_fundamental_retr} that for each $x,y:A$, the map $f(x,y):R(x,y)\to(\id{x}{y})$ must be an equivalence.
+
+Now it also follows that $A$ is a set, since its identity types are equivalent to propositions, and therefore they are propositions by \cref{lem:prop_equiv}. 
 \end{proof}
 
 \begin{thm}\label{thm:eq_nat}

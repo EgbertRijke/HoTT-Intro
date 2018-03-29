@@ -1,5 +1,86 @@
 \chapter{Descent}\label{chap:descent}
 
+\section{The flattening lemma}
+
+\begin{defn}
+Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$. Then we define the type of \define{descent data} for the pushout of $\mathcal{S}$ to be
+\begin{equation*}
+\mathsf{Desc}_{\mathcal{S}} \defeq \sm{P_A : A\to \UU}{P_B : B\to \UU}\prd{x:S}\eqv{P_A(f(x))}{P_B(g(x))}.
+\end{equation*}
+Moreover, we define the map
+\begin{equation*}
+\mathsf{desc}_{\mathcal{S}} : (A \sqcup^{\mathcal{S}} B \to \UU) \to \mathsf{Desc}_{\mathcal{S}}
+\end{equation*}
+by $\mathsf{desc}_{\mathcal{S}}(P)\defeq (P\circ\inl,P\circ\inr,\mathsf{tr}_P(\glue(\blank)))$.
+\end{defn}
+
+\begin{thm}
+The map
+\begin{equation*}
+\mathsf{desc}_{\mathcal{S}} : (A \sqcup^{\mathcal{S}} B \to \UU) \to \mathsf{Desc}_{\mathcal{S}}
+\end{equation*}
+is an equivalence for any span $\mathcal{S}$.
+\end{thm}
+
+\begin{thm}
+Consider a cocartesian square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & C.
+\end{tikzcd}
+\end{equation*}
+Furthermore, suppose we have families
+\begin{align*}
+P_A : A \to \UU \\
+P_B : B \to \UU,
+\end{align*}
+equipped with equivalences $e_x : \eqv{P_A(f(x))}{P_B(g(x))}$ for every $x:S$.
+Then there is a family $Q:C\to \UU$
+\end{thm}
+
+\section{The descent property for pushouts}
+
+\begin{defn}
+A commuting cube
+\begin{equation*}
+\begin{tikzcd}
+& A_{111} \arrow[dl] \arrow[dr] \arrow[d] \\
+A_{110} \arrow[d] & A_{101} \arrow[dl] \arrow[dr] & A_{011} \arrow[dl,crossing over] \arrow[d] \\
+A_{100} \arrow[dr] & A_{010} \arrow[d] \arrow[from=ul,crossing over] & A_{001} \arrow[dl] \\
+& A_{000},
+\end{tikzcd}
+\end{equation*}
+consists of 
+\begin{enumerate}
+\item types
+\begin{equation*}
+A_{111},A_{110},A_{101},A_{011},A_{100},A_{010},A_{001},A_{000},
+\end{equation*}
+\item maps
+\begin{align*}
+f_{11\check{1}} & : A_{111}\to A_{110} & f_{\check{1}01} & : A_{101}\to A_{001} \\
+f_{1\check{1}1} & : A_{111}\to A_{101} & f_{01\check{1}} & : A_{011}\to A_{010} \\
+f_{\check{1}11} & : A_{111}\to A_{011} & f_{0\check{1}1} & : A_{011}\to A_{001} \\
+f_{1\check{1}0} & : A_{110}\to A_{100} & f_{\check{1}00} & : A_{100}\to A_{000} \\
+f_{\check{1}10} & : A_{110}\to A_{010} & f_{0\check{1}0} & : A_{010}\to A_{000} \\
+f_{10\check{1}} & : A_{101}\to A_{100} & f_{00\check{1}} & : A_{001}\to A_{000},
+\end{align*}
+\item homotopies
+\begin{align*}
+H_{1\check{1}\check{1}} & : f_{1\check{1}0}\circ f_{11\check{1}} \htpy f_{10\check{1}}\circ f_{1\check{1}1} & H_{0\check{1}\check{1}} & : f_{0\check{1}0}\circ f_{01\check{1}} \htpy f_{00\check{1}}\circ f_{0\check{1}1} \\
+H_{\check{1}1\check{1}} & : f_{\check{1}10}\circ f_{11\check{1}} \htpy f_{01\check{1}}\circ f_{\check{1}11} & H_{\check{1}0\check{1}} & : f_{\check{1}00}\circ f_{10\check{1}} \htpy f_{00\check{1}}\circ f_{\check{1}01} \\
+H_{\check{1}\check{1}1} & : f_{\check{1}01}\circ f_{1\check{1}1} \htpy f_{0\check{1}1}\circ f_{\check{1}11} & H_{\check{1}\check{1}0} & : f_{\check{1}00}\circ f_{1\check{1}0} \htpy f_{0\check{1}0}\circ f_{\check{1}10},
+\end{align*}
+\item and a homotopy 
+\begin{align*}
+C & : \ct{(f_{\check{1}00}\cdot H_{1\check{1}\check{1}})}{(\ct{(H_{\check{1}0\check{1}}\cdot f_{1\check{1}1})}{(f_{00\check{1}}\cdot H_{\check{1}\check{1}1})})} \\
+& \qquad \htpy \ct{(H_{\check{1}\check{1}0}\cdot f_{11\check{1}})}{(\ct{(f_{0\check{1}0}\cdot H_{\check{1}1\check{1}})}{(H_{0\check{1}\check{1}}\cdot f_{\check{1}11})})}
+\end{align*}
+filling the cube.
+\end{enumerate}
+\end{defn}
+
 \begin{thm}
 Consider the commuting diagram
 \begin{equation*}
@@ -62,10 +143,19 @@ are pullback squares.
 \end{proof}
 
 \begin{exercises}
+\item Let $f:A\to B$ be a map. The \define{codiagonal} $\nabla_f$ of $f$ is the map obtained from the universal property of the pushout, as indicated in the diagram
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r,"f"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\idfunc[B]}"] \\
+A \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\idfunc[B]}"] & B\sqcup^{A} B \arrow[dr,densely dotted,near start,swap,"\nabla_f"] \\
+& & B
+\end{tikzcd}
+\end{equation*}
+Show that $\fib{\nabla_f}{b}\eqvsym \susp(\fib{f}{b})$ for any $b:B$.
 \item Consider two maps $f:A\to X$ and $g:B\to X$. The \define{join} $\join{f}{g}$ is defined by the universal property of the pushout as the unique map rendering the diagram
 \begin{equation*}
 \begin{tikzcd}
-\sm{a:A}{b:B}f(a)=g(b) \arrow[d,"\pi_1"] \arrow[r,"\pi_2"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"g"] \\
+A\times_X B \arrow[d,"\pi_1"] \arrow[r,"\pi_2"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"g"] \\
 A \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"f"] & \join[X]{A}{B} \arrow[dr,densely dotted,near start,swap,"\join{f}{g}"] \\
 & & X
 \end{tikzcd}

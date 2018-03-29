@@ -380,7 +380,7 @@ We write\index{loc_small(A)@{$\mathsf{loc\usc{}small}(A)$}|textbf}
 \end{enumerate}
 \end{defn}
 
-\begin{lem}
+\begin{lem}\label{lem:isprop_ess_small}
 The type $\mathsf{ess\usc{}small}(A)$ is a proposition for any type $A$.\index{essentially small!is a proposition|textit}
 \end{lem}
 
@@ -399,6 +399,49 @@ given by precomposing with $e^{-1}$ is an equivalence. This induces an equivalen
 \end{equation*}
 However, the codomain of this equivalence is contractible by \cref{thm:univalence}. Thus it follows by \cref{cor:contr_prop} that the asserted type is a proposition.
 \end{proof}
+
+\begin{cor}
+For each function $f:A\to B$, the type $\mathsf{ess\usc{}small}(f)$ is a proposition, and for each type $X$ the type $\mathsf{loc\usc{}small}(X)$ is a proposition.
+\end{cor}
+
+\begin{proof}
+This follows from the fact that propositions are closed under dependent products, established in \cref{thm:trunc_pi}.
+\end{proof}
+
+\begin{thm}\label{thm:fam_proj}
+For any small type $A:\UU$ there is an equivalence
+\begin{equation*}
+\eqv{(A\to \UU)}{\Big(\sm{X:\UU} X\to A\Big)}.
+\end{equation*}
+\end{thm}
+
+\begin{proof}
+Note that we have the function
+\begin{equation*}
+\varphi :\lam{B} \Big(\sm{x:A}B(x),\proj 1\Big) : (A\to \UU)\to \Big(\sm{X:\UU}X\to A\Big).
+\end{equation*}
+The fiber of this map at $(X,f)$ is by univalence and function extensionality equivalent to the type
+\begin{equation*}
+\sm{B:A\to \UU}{e:\eqv{(\sm{x:A}B(x))}{X}} \proj 1\htpy f\circ e.
+\end{equation*}
+By exercise \cref{ex:triangle_fib} this type is equivalent to the type
+\begin{equation*}
+\sm{B:A\to \UU}\prd{a:A} \eqv{B(a)}{\fib{f}{a}},
+\end{equation*}
+and by `type theoretic choice', which was established in \cref{thm:choice}, this type is equivalent to
+\begin{equation*}
+\prd{a:A}\sm{X:\UU}\eqv{X}{\fib{f}{a}}.
+\end{equation*}
+We conclude that the fiber of $\varphi$ at $(X,f)$ is equivalent to the type $\mathsf{ess\usc{}small}(f)$. However, since $f:X\to A$ is a map between small types it is essentially small. Moreover, since being essentially small is a proposition by \cref{lem:isprop_ess_small}, it follows that $\fib{\varphi}{(X,f)}$ is contractible for every $f:X\to A$. In other words, $\varphi$ is a contractible map, and therefore it is an equivalence.
+\end{proof}
+
+\begin{rmk}
+The inverse of the map
+\begin{equation*}
+\varphi : (A\to \UU)\to \Big(\sm{X:\UU}X\to A\Big).
+\end{equation*}
+constructed in \cref{thm:fam_proj} is the map $(X,f)\mapsto \fibf{f}$.
+\end{rmk}
 
 \begin{thm}\label{thm:classifier}
 Let $f:A\to B$ be a map. Then there is an equivalence

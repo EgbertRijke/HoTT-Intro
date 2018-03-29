@@ -153,7 +153,7 @@ that $\total{\rec{a{=}}(b)}$ is an equivalence if and only if $\sm{x:A}B(x)$ is 
 As an application of the fundamental theorem we show that equivalences are embeddings. The notion embeddings is the homotopically correct notion of injective maps.
 
 \begin{defn}
-An \define{embedding} is a map $f:A\to B$ satisfying the property that
+An \define{embedding}\index{embedding|textbf} is a map $f:A\to B$ satisfying the property that
 \begin{equation*}
 \apfunc{f}:(\id{x}{y})\to(\id{f(x)}{f(y)})
 \end{equation*}
@@ -162,7 +162,7 @@ is an equivalence for every $x,y:A$. We write $\mathsf{is\usc{}emb}(f)$ for the 
 
 \begin{cor}
 \label{cor:emb_equiv} 
-Any equivalence is an embedding.
+Any equivalence is an embedding.\index{embedding!equivalences are embeddings|textit}\index{equivalence!is an embedding|textit}
 \end{cor}
 
 \begin{proof}
@@ -312,4 +312,24 @@ A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 \end{tikzcd}
 \end{equation*}
 with $H:f\htpy g\circ e$, where $e$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.
+\item \label{ex:eqv_sigma_mv}Consider a map
+\begin{equation*}
+f:A \to \sm{y:B}C(y).
+\end{equation*}
+\begin{subexenum}
+\item Construct a fiberwise transformation
+\begin{equation*}
+f':\prd{y:B} \fib{\proj 1\circ f}{y}\to C(y).
+\end{equation*}
+\item Construct an equivalence
+\begin{equation*}
+\eqv{\fib{f'(b)}{c}}{\fib{f}{(b,c)}}
+\end{equation*}
+for every $(b,c):\sm{y:B}C(y)$.
+\item Conclude that the following are equivalent:
+\begin{enumerate}
+\item $f$ is an equivalence.
+\item $f'$ is a fiberwise equivalence.
+\end{enumerate}
+\end{subexenum}
 \end{exercises}
