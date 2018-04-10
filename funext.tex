@@ -122,7 +122,7 @@ Assume function extensionality. Then for any type family $B$ over $A$ one has\in
 \begin{proof}
 The theorem is proven by induction on $k\geq -2$. The base case is just the weak function extensionality principle, which was shown to follow from function extensionality in \autoref{thm:funext_wkfunext}.
 
-For the inductive hypothesis, assume that the $k$-types are closed under dependent function types. Assume that $B$ is a family of $(k+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{x:A}B(x)$. Now observe that $f\htpy g$ is a dependent product of $k$-types, and therefore it is an $k$-type by our inductive hypotheses. Therefore, it follows by \autoref{thm:ntype_eqv} that $f=g$ is an $k$-type, and hence that $\prd{x:A}B(x)$ is an $(k+1)$-type.
+For the inductive hypothesis, assume that the $k$-types are closed under dependent function types. Assume that $B$ is a family of $(k+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{x:A}B(x)$. Now observe that $f\htpy g$ is a dependent product of $k$-types, and therefore it is an $k$-type by our inductive hypotheses. Therefore, it follows by \autoref{thm:ktype_eqv} that $f=g$ is an $k$-type, and hence that $\prd{x:A}B(x)$ is an $(k+1)$-type.
 \end{proof}
 
 \begin{cor}\label{cor:funtype_trunc}
@@ -236,7 +236,41 @@ To see that $\varphi\circ \mathsf{ev\usc{}refl}\htpy\idfunc$, let $f:\prd{x:A}(a
 This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\jdeq f(a,\refl{a})$.
 \end{proof}
 
+\section{Composing with equivalences}
 
+\begin{lem}\label{lem:postcomp_equiv}
+Let $f:X\to Y$ be a map. Then the following are equivalent:
+\begin{enumerate}
+\item $f$ is an equivalence.\index{equivalence!post-composition|textit}
+\item For any type $A$, the map $f\circ\blank : X^A\to Y^A$ is an equivalence.
+\end{enumerate}
+\end{lem}
+
+\begin{proof}
+If $f$ is an equivalence, then it is straightforward to see that the map
+\begin{equation*}
+f^{-1}\circ\blank : Y^A\to X^A
+\end{equation*}
+is an inverse of $f\circ \blank : X^A \to Y^A$, for any type $A$.
+
+For the converse, we use that the fibers of $f\circ \blank$ are contractible, for any $A$. In particular, the fiber
+\begin{equation*}
+\fib{f\circ\blank}{\idfunc[Y]}\jdeq \sm{g:Y\to X} f\circ g=\idfunc[Y]
+\end{equation*}
+is contractible (choosing $A\jdeq Y$). Thus we obtain a function $g:Y\to X$ and a homotopy $G:f\circ g\htpy \idfunc[Y]$.
+
+It remains to be shown that $g$ is a retract of $f$, i.e.~to construct a homotopy $g\circ f\htpy \idfunc[X]$. To see this, we use that the fiber
+\begin{equation*}
+\fib{f\circ\blank}{f}\jdeq \sm{h:X\to X} f\circ h=f
+\end{equation*}
+is contractible (choosing $A\jdeq X$). Of course we have $(\idfunc[X],\refl{f})$ in this fiber. However we claim that there also is an identification $p:f\circ (g\circ f)=f$, showing that $(g\circ f,p)$ is in this fiber. To see this, note that
+\begin{align*}
+f\circ (g\circ f) & \jdeq (f\circ g)\circ f \\
+& = \idfunc[Y]\circ f \\
+& \jdeq f
+\end{align*}
+By the contractibility of the fiber we conclude that $(\idfunc[X],\refl{f})=(g\circ f,p)$, so it follows that $\idfunc[X]=g\circ f$.
+\end{proof}
 
 \begin{exercises}
 \item \label{ex:prop_equiv}
@@ -387,16 +421,14 @@ A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
 X \arrow[r,swap,"h"] & Y.
 \end{tikzcd}
 \end{equation*}
-\begin{subexenum}
-\item Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise transformations
+Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise transformations
 \begin{equation*}
 \prd{x:X}\fib{f}{x}\to\fib{g}{h(x)}.
 \end{equation*}
-\item Show that the type $\sm{i:\eqv{A}{B}}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise equivalences
-\begin{equation*}
-\prd{x:X}\fib{f}{x}\eqvsym\fib{g}{h(x)}.
-\end{equation*}
-\end{subexenum}
+%\item Show that the type $\sm{i:\eqv{A}{B}}h\circ f\htpy g\circ i$ is equivalent to the type of fiberwise equivalences
+%\begin{equation*}
+%\prd{x:X}\fib{f}{x}\eqvsym\fib{g}{h(x)}.
+%\end{equation*}
 \item \label{ex:iso_equiv}Let $A$ and $B$ be sets. Show that type type $\eqv{A}{B}$ of equivalences from $A$ to $B$ is equivalent to the type $A\cong B$ of \define{isomorphisms} from $A$ to $B$, i.e. the type of quadruples $(f,g,H,K)$ consisting of
 \begin{align*}
 f & : A\to B \\

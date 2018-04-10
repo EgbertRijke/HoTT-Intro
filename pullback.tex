@@ -116,11 +116,11 @@ commutes.
 \begin{proof}[Proof of \cref{lem:id_cone}]
 By the fundamental theorem of identity types (\cref{thm:id_fundamental}) and associativity of $\Sigma$-types (\cref{ex:sigma_assoc}) it suffices to show that the type
 \begin{equation*}
-\sm{p':C\to A}{q':C\to B}{H':f\circ p'\htpy g\circ q}{K:p\htpy p'}{L:q\htpy q'} \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}
+\sm{p':C\to A}{q':C\to B}{H':f\circ p'\htpy g\circ q'}{K:p\htpy p'}{L:q\htpy q'} \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}
 \end{equation*}
 is contractible. Now we apply \cref{ex:sigma_swap} repeatedly to see that this type is equivalent to the type
 \begin{equation*}
-\sm{p':C\to A}{K: p\htpy p'}{q':C\to B}{L: q\htpy q'}{H':f\circ p'\htpy g\circ q} \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}.
+\sm{p':C\to A}{K: p\htpy p'}{q':C\to B}{L: q\htpy q'}{H':f\circ p'\htpy g\circ q'} \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}.
 \end{equation*}
 The types $\sm{p':C\to A} p\htpy p'$ and $\sm{q':C\to B} q\htpy q'$ are contractible by function extensionality, and  we have
 \begin{samepage}
@@ -131,9 +131,9 @@ The types $\sm{p':C\to A} p\htpy p'$ and $\sm{q':C\to B} q\htpy q'$ are contract
 \end{samepage}%
 Thus we apply \cref{ex:contr_in_sigma} to see that the type of tuples $(p',K,q',L,H',M)$ is equivalent to the type
 \begin{equation*}
-\sm{H':f\circ p'\htpy g\circ q} \ct{H}{\mathsf{htpy.refl}_{g\circ q}}\htpy \ct{\mathsf{htpy.refl}_{f\circ p}}{H'}.
+\sm{H':f\circ p'\htpy g\circ q'} \ct{H}{\mathsf{htpy.refl}_{g\circ q}}\htpy \ct{\mathsf{htpy.refl}_{f\circ p}}{H'}.
 \end{equation*}
-Of course, the type $\ct{H}{\mathsf{htpy.refl}_{g\circ q}}\htpy \ct{\mathsf{htpy.refl}_{f\circ p}}{H'}$ is equivalent to the type $H\htpy H'$, and $\sm{H':f\circ p'\htpy g\circ q} H\htpy H'$ is contractible.
+Of course, the type $\ct{H}{\mathsf{htpy.refl}_{g\circ q}}\htpy \ct{\mathsf{htpy.refl}_{f\circ p}}{H'}$ is equivalent to the type $H\htpy H'$, and $\sm{H':f\circ p\htpy g\circ q} H\htpy H'$ is contractible.
 \end{proof}
 
 As a corollary we obtain the following characterization of the universal property of pullbacks.
@@ -218,9 +218,9 @@ The composite of these equivalences is the map
 which is \emph{exactly} the map $\mathsf{cone\usc{}map}(\pi_1,\pi_2,\pi_3)$, and since it is a composite of equivalences it follows that it is itself an equivalence.
 \end{proof}
 
-In the following theorem we establish the uniqueness of pullbacks up to equivalence via a \emph{3-for-2 property} for pullbacks\index{pullback!3-for-2 property}\index{3-for-2 property!of pullbacks}.
+In the following lemma we establish the uniqueness of pullbacks up to equivalence via a \emph{3-for-2 property} for pullbacks.
 
-\begin{thm}\label{thm:pb_3for2}
+\begin{lem}\label{lem:pb_3for2}\index{pullback!3-for-2 property|textit}\index{3-for-2 property!of pullbacks|textit}%
 Consider the squares
 \begin{equation*}
 \begin{tikzcd}
@@ -243,7 +243,7 @@ If any two of the following three properties hold, so does the third:
 \item $h$ is an equivalence.
 \end{enumerate}%
 \end{samepage}%
-\end{thm}
+\end{lem}
 
 \begin{proof}
 By the characterization of the identity type of $\mathsf{cone}(C')$ given in \cref{lem:id_cone} we obtain an identification
@@ -271,44 +271,10 @@ commutes. Therefore it follows from the 3-for-2 property of equivalences establi
 \item The map $\mathsf{cone\usc{}map}(p',q',H'):(D\to C')\to \mathsf{cone}(D)$ is an equivalence,
 \item The map $h\circ\blank : (D\to C')\to (D\to C)$ is an equivalence.
 \end{enumerate}
-Thus the 3-for-2 property for pullbacks follows once we show that $h$ is an equivalence if and only if $h\circ\blank : (D\to C')\to (D\to C)$ is an equivalence for any type $D$. We establish this in \cref{lem:postcomp_equiv}.
+Thus the 3-for-2 property for pullbacks follows from the fact that $h$ is an equivalence if and only if $h\circ\blank : (D\to C')\to (D\to C)$ is an equivalence for any type $D$, which was established in \cref{lem:postcomp_equiv}.
 \end{proof}
 
-\begin{lem}\label{lem:postcomp_equiv}
-Let $f:X\to Y$ be a map. Then the following are equivalent:
-\begin{enumerate}
-\item $f$ is an equivalence.\index{equivalence!post-composition|textit}
-\item For any type $A$, the map $f\circ\blank : X^A\to Y^A$ is an equivalence.
-\end{enumerate}
-\end{lem}
-
-\begin{proof}
-If $f$ is an equivalence, then it is straightforward to see that the map
-\begin{equation*}
-f^{-1}\circ\blank : Y^A\to X^A
-\end{equation*}
-is an inverse of $f\circ \blank : X^A \to Y^A$, for any type $A$.
-
-For the converse, we use that the fibers of $f\circ \blank$ are contractible, for any $A$. In particular, the fiber
-\begin{equation*}
-\fib{f\circ\blank}{\idfunc[Y]}\jdeq \sm{g:Y\to X} f\circ g=\idfunc[Y]
-\end{equation*}
-is contractible (choosing $A\jdeq Y$). Thus we obtain a function $g:Y\to X$ and a homotopy $G:f\circ g\htpy \idfunc[Y]$.
-
-It remains to be shown that $g$ is a retract of $f$, i.e.~to construct a homotopy $g\circ f\htpy \idfunc[X]$. To see this, we use that the fiber
-\begin{equation*}
-\fib{f\circ\blank}{f}\jdeq \sm{h:X\to X} f\circ h=f
-\end{equation*}
-is contractible (choosing $A\jdeq X$). Of course we have $(\idfunc[X],\refl{f})$ in this fiber. However we claim that there also is an identification $p:f\circ (g\circ f)=f$, showing that $(g\circ f,p)$ is in this fiber. To see this, note that
-\begin{align*}
-f\circ (g\circ f) & \jdeq (f\circ g)\circ f \\
-& = \idfunc[Y]\circ f \\
-& \jdeq f
-\end{align*}
-By the contractibility of the fiber we conclude that $(\idfunc[X],\refl{f})=(g\circ f,p)$, so it follows that $\idfunc[X]=g\circ f$.
-\end{proof}
-
-Pullbacks are not only unique in the sense that any two pullbacks of the same cospan are equivalent, they are \emph{uniquely unique}\index{uniquely uniqueness!of pullbacks} in the sense that 
+Pullbacks are not only unique in the sense that any two pullbacks of the same cospan are equivalent, they are \emph{uniquely unique}\index{uniquely uniqueness!of pullbacks} in the sense that the type of quadruples $(h,K,L,M)$ as in \cref{lem:pb_3for2} is contractible.
 
 \begin{cor}
 Suppose both commuting squares
@@ -329,7 +295,59 @@ is contractible.
 \end{cor}
 
 \begin{proof}
-We have seen that the type of quadruples $(h,K,L,M)$ is equivalent to the fiber of $\mathsf{cone\usc{}map}(p,q,H)$ at $(p',q',H')$. By \cref{thm:pb_3for2} it follows that $h$ is an equivalence. Since $\isequiv(h)$ is a proposition (and hence contractible as soon as it is inhabited) it follows that the type of quadruples $(e,K,L,M)$ is contractible. 
+We have seen that the type of quadruples $(h,K,L,M)$ is equivalent to the fiber of $\mathsf{cone\usc{}map}(p,q,H)$ at $(p',q',H')$. By \cref{lem:pb_3for2} it follows that $h$ is an equivalence. Since $\isequiv(h)$ is a proposition (and hence contractible as soon as it is inhabited) it follows that the type of quadruples $(e,K,L,M)$ is contractible. 
+\end{proof}
+
+\begin{defn}
+Given a commuting square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p \htpy g \circ q$, we define the \define{gap map}\index{gap map|textbf}\index{pullback!gap map|textbf}
+\begin{equation*}
+\mathsf{gap}(p,q,H):C \to A\times_X B
+\end{equation*}
+by $\lam{z}(p(z),q(z),H(z))$. Furthermore, we will write\index{is_pullback@{$\mathsf{is\usc{}pullback}$}|textbf}
+\begin{equation*}
+\mathsf{is\usc{}pullback}(f,g,H)\defeq \isequiv(\mathsf{gap}(p,q,H)).
+\end{equation*}
+\end{defn}
+
+\begin{thm}\label{thm:is_pullback}
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p \htpy g \circ q$. The following are equivalent:
+\begin{enumerate}
+\item The square is a pullback square
+\item There is a term of type
+\begin{equation*}
+\mathsf{is\usc{}pullback}(p,q,H)\defeq \isequiv(\mathsf{gap}(p,q,H)).
+\end{equation*}
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+Note that there are homotopies
+\begin{align*}
+K & : \pi_1\circ \mathsf{gap}(p,q,H) \htpy p \\
+L & : \pi_2\circ \mathsf{gap}(p,q,H) \htpy q \\
+M & : \ct{(\pi_3\cdot \mathsf{gap}(p,q,H))}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H}.
+\end{align*}
+given by 
+\begin{align*}
+K & \defeq \lam{z}\refl{p(z)} \\
+L & \defeq \lam{z}\refl{q(z)} \\
+M & \defeq \lam{z}\ct{\mathsf{right\usc{}unit}(H(z))}{\mathsf{left\usc{}unit}(H(z))^{-1}}.
+\end{align*}
+Therefore the claim follows by \cref{lem:pb_3for2}.
 \end{proof}
 
 \section{Fiber products}
@@ -354,23 +372,11 @@ which commutes by the homotopy $\mathsf{const}_{\refl{\ttt}}$ is a pullback squa
 \end{lem}
 
 \begin{proof}
-By \cref{thm:pb_3for2} it suffices to construct an equivalence 
+By \cref{thm:is_pullback} it suffices to show that
 \begin{equation*}
-e:\eqv{(A\times B)}{(A\times_\unit B)}
+\mathsf{gap}(\proj 1,\proj2,\lam{(a,b)}\refl{\ttt})
 \end{equation*}
-equipped with homotopies
-\begin{align*}
-K & : \pi_1\circ e \htpy \proj 1 \\
-L & : \pi_2\circ e \htpy \proj 2 \\
-M & : \ct{(\pi_3\cdot e)}{(\mathsf{const}_\ttt\cdot L)}\htpy \ct{(\mathsf{const}_\ttt\cdot K)}{\mathsf{const}_{\refl{\ttt}}}.
-\end{align*}
-
-The equivalence $e:\eqv{(A\times B)}{(A\times_\unit B)}$ is given by $\lam{(a,b)}(a,b,\refl{\ttt})$. Its inverse is the map $\lam{(a,b,p)}(a,b)$. The homotopies $K$, $L$, and $M$ are given by
-\begin{align*}
-K & \defeq \lam{(a,b)}\refl{a} \\
-L & \defeq \lam{(a,b)}\refl{b} \\
-M & \defeq \lam{(a,b)}\refl{\refl{\ttt}}\qedhere
-\end{align*}
+is an equivalence. Its inverse is the map $\lam{(a,b,p)}(a,b)$.
 \end{proof}
 
 The following generalization of \cref{lem:prod_pb} is the reason why pullbacks are sometimes called \define{fiber products}\index{fiber product|textbf}.
@@ -380,49 +386,25 @@ Let $P$ and $Q$ be families over a type $X$. Then the square
 \begin{equation*}
 \begin{tikzcd}[column sep=8em]
 \sm{x:X}P(x)\times Q(x) \arrow[r,"{\lam{(x,(p,q))}(x,q)}"] \arrow[d,swap,"{\lam{(x,(p,q))}(x,p)}"] & \sm{x:X}Q(x) \arrow[d,"\proj 1"] \\
-\sm{x:X}P(x) \arrow[r,swap,"\proj 1"] & X
+\sm{x:X}P(x) \arrow[r,swap,"\proj 1"] & X,
 \end{tikzcd}
+\end{equation*}
+which commutes by the homotopy
+\begin{equation*}
+H\defeq \lam{(x,(p,q))}\refl{x},
 \end{equation*}
 is a pullback square.
 \end{thm}
 
 \begin{proof}
-The square commutes by the homotopy
+By \cref{thm:is_pullback} it suffices to show that the gap map is an equivalence. The gap map is homotopic to the function
 \begin{equation*}
-H\defeq \lam{(x,(p,q))}\refl{x}.
+\lam{(x,(p,q))}((x,p),(x,q),\refl{x})
 \end{equation*}
-To show that the stated square is a pullback square we will construct an equivalence
+is an equivalence. The inverse of this function is the map 
 \begin{equation*}
-e:\eqv{\Big(\sm{x:X}P(x)\times Q(x)\Big)}{\Big(\sm{x:X}P(x)\Big)\times_X \Big(\sm{x:X}Q(x)\Big)}
+\lam{((x,p),(y,q),\alpha)}(y,(\mathsf{tr}_P(\alpha,p),q)).\qedhere
 \end{equation*}
-equipped with homotopies
-\begin{align*}
-K & : \pi_1\circ e \htpy \lam{(x,(p,q))}(x,p) \\
-L & : \pi_2\circ e \htpy \lam{(x,(p,q))}(x,q) \\
-M & : \ct{(\pi_3\cdot e)}{(\proj 1\cdot L)} \htpy \ct{(\proj 1\cdot K)}{H}.
-\end{align*}
-We define $e(x,(p,q))\defeq ((x,p),(x,q),\refl{x})$. The inverse of $e$ is defined as 
-\begin{equation*}
-\lam{((x,p),(y,q),\alpha)}(y,(\mathsf{tr}_P(\alpha,p),q)).
-\end{equation*}
-It is straightforward to see that this is indeed an inverse of $e$.
-
-Then we define
-\begin{align*}
-K & \defeq \lam{(x,(p,q))}\refl{(x,p)} \\
-L & \defeq \lam{(x,(p,q))}\refl{(x,q)}.
-\end{align*}
-Then we have homotopies
-\begin{align*}
-\proj 1\cdot K & \htpy \lam{(x,(p,q))}\refl{x} \\
-\proj 1\cdot L & \htpy \lam{(x,(p,q))}\refl{x} \\
-\pi_3\cdot e & \htpy \lam{(x,(p,q))}\refl{x}.
-\end{align*}
-Therefore the type of $M$ is equivalent to the type of homotopies
-\begin{equation*}
-\ct{(\lam{(x,(p,q))}\refl{x})}{(\lam{(x,(p,q))}\refl{x})} \htpy \ct{(\lam{(x,(p,q))}\refl{x})}{(\lam{(x,(p,q))}\refl{x})}
-\end{equation*}
-Here we have the homotopy $\lam{(x,(p,q))}\refl{\refl{x}}$.
 \end{proof}
 
 \begin{cor}
@@ -450,33 +432,11 @@ which commutes by $\proj 2 : \prd{t:\fib{f}{b}} f(\proj 1(t))=b$. This is a pull
 \end{lem}
 
 \begin{proof}
-To see this, note that by \cref{thm:pb_3for2} it suffices to construct an equivalence $e:\eqv{\fib{f}{b}}{A\times_B \unit}$, and homotopies
-\begin{align*}
-K & : \pi_1\circ e \htpy \proj 1 \\
-L & : \pi_2\circ e \htpy \mathsf{const}_\ttt \\
-M & : \ct{(\pi_3 \cdot e)}{(\mathsf{const}_b \cdot L)} \htpy \ct{(f \cdot K)}{\proj 2}.
-\end{align*}
-
-The equivalence $e:\eqv{\fib{f}{b}}{A\times_B \unit}$ is defined to be the map $\total{\varphi}$, where 
+By \cref{thm:is_pullback} it suffices to show that the gap map is an equivalence. The gap map is homotopic to the function
 \begin{equation*}
-\varphi : \prd{x:A} (f(x)=b)\to \sm{t:\unit} f(x)=b
+\mathsf{total}(\lam{x}{p}(\ttt,p))
 \end{equation*}
-is given by $\varphi_x(p)\defeq (\ttt,p)$. This is a fiberwise equivalence by \cref{ex:contr_in_sigma}, so $e$ is an equivalence by \cref{thm:fib_equiv}. Then we have
-\begin{align*}
-K\defeq \lam{(a,p)}\refl{a} & : \pi_1\circ e \htpy \proj 1 \\
-L \defeq  \lam{(a,p)}\refl{\ttt} & : \pi_2\circ e \htpy \mathsf{const}_\ttt.
-\end{align*}
-Now we observe that there are homotopies
-\begin{align*}
-f\cdot K & \htpy \lam{(a,p)} \refl{f(a)} \\
-\mathsf{const}_b \cdot L & \htpy \lam{(a,p)}\refl{b} \\
-\pi_3\cdot e & \htpy \proj 2.
-\end{align*}
-Therefore we obtain the homotopy $M$ by constructing a homotopy
-\begin{equation*}
-\ct{\proj 2}{(\lam{(a,p)}\refl{b})} \htpy \ct{(\lam{(a,p)} \refl{f(a)})}{\proj 2}.
-\end{equation*}
-We obtain this homotopy from the left and right unit laws of identity types.
+The map $\lam{x}{p}(\ttt,p)$ is a fiberwise equivalence by \cref{ex:contr_in_sigma}, so it induces an equivalence on total spaces by \cref{thm:fib_equiv}.
 \end{proof}
 
 \cref{lem:fib_pb} motivates the following definition of \emph{fiber sequences}, which play an important role in synthetic homotopy theory (and in algebraic topology). 
@@ -510,23 +470,11 @@ B(a) \arrow[d,swap,"{\lam{y}(a,y)}"] \arrow[r,"\mathsf{const}_\ttt"] & \unit \ar
 \end{equation*}
 is a pullback square. 
 
-To see this we have to construct a equivalence $e:\eqv{B(a)}{\fib{\proj 1}{a}}$ equipped with homotopies
-\begin{align*}
-K & : \proj 1\circ e \htpy \lam{y}(a,y) \\
-L & : \mathsf{const}_\ttt \circ e \htpy \mathsf{const}_\ttt \\
-M & : \ct{(\proj 2\circ e)}{((\lam{\ttt}a)\cdot L)} \htpy \ct{(\proj 1\cdot K)}{(\lam{y}\refl{a})}
-\end{align*}
-We define
+To see this, note that the gap map is homotopic to the function
 \begin{equation*}
-e \defeq \lam{y}((a,y),\refl{a})
+e \defeq \lam{y}((a,y),\refl{a}).
 \end{equation*}
-This function is an equivalence by \cref{ex:proj_fiber}. For the homotopies we take
-\begin{align*}
-K & \defeq \lam{y}\refl{(a,y)} \\
-L & \defeq \lam{y}\refl{\ttt} \\
-M & \defeq \lam{y}\refl{\refl{a}}.
-\end{align*}
-This concludes the proof that the asserted square is a pullback square.
+This function is an equivalence by \cref{ex:proj_fiber}.
 
 Thus we see that if we additionally suppose that there is a term $b:B(a)$, then we obtain a fiber sequence
 \begin{equation*}
@@ -550,39 +498,11 @@ commutes by $H\defeq \lam{(x,q)}\refl{f(x)}$. This is a pullback square.\index{s
 \end{lem}
 
 \begin{proof}
-By \cref{thm:pb_3for2} it suffices to construct an equivalence 
+By \cref{thm:is_pullback} it suffices to show that the gap map is an equivalence. The gap map is homotopic to the function
 \begin{equation*}
-e:\eqv{\Big(\sm{x:A}Q(f(x))\Big)}{A\times_B \Big(\sm{y:B}Q(y)\Big)},
-\end{equation*}
-and homotopies
-\begin{align*}
-K & : \pi_1\circ e \htpy \proj 1 \\
-L & : \pi_2\circ e \htpy \lam{(x,q)}(f(x),q) \\
-M & : \ct{(\pi_3 \cdot e)}{(\proj 1 \cdot L)} \htpy \ct{(f \cdot K)}{H}.
-\end{align*}
-We define $e$ by
-The equivalence $e$ is defined by $\Sigma$-induction, taking
-\begin{equation*}
-e \defeq \lam{(x,q)}(x,(f(x),q),\refl{f(x)}).
+\lam{(x,q)}(x,(f(x),q),\refl{f(x)}).
 \end{equation*}
 The inverse of this map is given by $\lam{(x,((y,q),p))}(x,\mathsf{tr}_Q(p^{-1},q))$, and it is straightforward to see that these maps are indeed mutual inverses.
-
-Now we define 
-\begin{align*}
-K \defeq \lam{(x,q)}\refl{x} \\
-L \defeq \lam{(x,q)}\refl{(f(x),q)}.
-\end{align*}
-Then we observe that there are homotopies
-\begin{align*}
-f \cdot K & \htpy \lam{(x,q)} \refl{f(x)} \\
-\proj 1 \cdot L & \htpy \lam{(x,q)} \refl{f(x)} \\
-\pi_3 \cdot e & \htpy \lam{(x,q)} \refl{f(x)}.
-\end{align*}
-Therefore the type of $M$ is equivalent to the type of homotopies
-\begin{equation*}
-\ct{(\lam{(x,q)} \refl{f(x)})}{(\lam{(x,q)} \refl{f(x)})} \htpy \ct{(\lam{(x,q)} \refl{f(x)})}{(\lam{(x,q)} \refl{f(x)})},
-\end{equation*}
-and here we have the homotopy $\lam{(x,q)}\refl{\refl{f(x)}}$. 
 \end{proof}
 
 \begin{thm}\label{thm:pb_fibequiv}
@@ -601,30 +521,41 @@ is a pullback square.
 \end{thm}
 
 \begin{proof}
-Note that we have the map
+The gap map is homotopic to the composite
 \begin{equation*}
-\total{g}:\Big(\sm{x:A}P(x)\Big)\to\Big(\sm{x:A}Q(f(x))\Big),
-\end{equation*}
-and homotopies
-\begin{align*}
-K & : \proj 1\circ \total{g} \htpy \proj 1 \\
-L & : (\lam{(x,q)}(f(x),q))\circ \total{g}\htpy \total[f]{g} \\
-M & : \ct{((\lam{(x,q)}\refl{f(x)})\cdot \total{g})}{(\proj 1\cdot L)} \htpy \ct{(f\cdot K)}{(\lam{(x,p)}\refl{f(x)})}
-\end{align*}
-defined by
-\begin{align*}
-K & \defeq \lam{(x,p)}\refl{x} \\
-L & \defeq \lam{(x,p)}\refl{(f(x),g(x,p))} \\
-M & \defeq \lam{(x,p)}\refl{f(x)}.
-\end{align*}
-Therefore we are in the situation of \cref{thm:pb_3for2}, with the commuting squares
-\begin{equation*}
-\begin{tikzcd}
-\sm{x:A}Q(f(x)) \arrow[r] \arrow[d,swap,"\proj 1"] & \sm{y:B}Q(b) \arrow[d,"\proj 1"] &[-1em] \sm{a:A}P(a) \arrow[r,"{\total[f]{g}}"] \arrow[d,->>] &[1.5em] \sm{b:B}Q(b) \arrow[d,->>] \\
-A \arrow[r,swap,"f"] & B & A \arrow[r,swap,"f"] & B.
+\begin{tikzcd}[column sep=large]
+\sm{x:A}P(x) \arrow[r,"\total{g}"] & \sm{x:A}Q(f(x)) \arrow[r,"{\mathsf{gap}'}"] & A \times_B \Big(\sm{y:B}Q(y)\Big)
 \end{tikzcd}
 \end{equation*}
-Since the square on the left is a pullback by \cref{lem:pb_subst}, it follows that the square on the right is a pullback if and only if $\total{g}$ is an equivalence. By \cref{thm:fib_equiv} we know that $\total{g}$ is an equivalence if and only if $g$ is a fiberwise equivalence.
+where $\mathsf{gap}'$ is the gap map for the square in \cref{lem:pb_subst}. Since $\mathsf{gap}'$ is an equivalence, it follows by \cref{ex:3_for_2,thm:fib_equiv} that the gap map is an equivalence if and only if $g$ is a fiberwise equivalence.
+\end{proof}
+
+\begin{lem}
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p\htpy g\circ q$, and consider the fiberwise transformation
+\begin{equation*}
+\fibf{(f,q,H)} : \prd{a:A} \fib{p}{a}\to \fib{g}{f(a)}
+\end{equation*}
+given by $\lam{a}{(c,u)}(q(c),\ct{H(c)^{-1}}{\ap{f}{u}})$. Then there is an equivalence
+\begin{equation*}
+\eqv{\fib{\mathsf{gap}(p,q,H)}{(a,b,\alpha)}}{\fib{\fibf{(f,q,H)}(a)}{(b,\alpha^{-1})}}
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+To obtain an equivalence of the desired type we simply concatenate known equivalences:
+\begin{align*}
+\fib{h}{(a,b,\alpha)} & \jdeq \sm{z:C} (p(z),q(z),H(z))=(a,b,\alpha) \\
+& \eqvsym \sm{z:C}{u:p(z)=a}{v:q(z)=b}\ct{H(z)}{\ap{g}{v}}=\ct{\ap{f}{u}}{\alpha} \\
+& \eqvsym \sm{(z,u):\fib{p}{a}}{v:q(z)=b} \ct{H(z)^{-1}}{\ap{f}{u}}=\ct{\ap{g}{v}}{\alpha^{-1}} \\
+& \eqvsym \fib{\varphi(a)}{(b,\alpha^{-1})}\qedhere
+\end{align*}
 \end{proof}
 
 \begin{cor}\label{cor:pb_fibequiv}
@@ -681,6 +612,46 @@ If the square is a pullback square, then by \cref{thm:pb_fibequiv} the fibers of
 
 If $p$ is an equivalence, then by \cref{thm:contr_equiv} both $\fib{p}{x}$ and $\fib{g}{f(x)}$ are contractible for any $x:X$. It follows by \cref{ex:contr_equiv} that the induced map $\fib{p}{x}\to\fib{g}{f(x)}$ is an equivalence. Thus we apply \cref{cor:pb_fibequiv} to conclude that the square is a pullback.
 \end{proof}
+
+\begin{thm}\label{thm:pb_fibequiv_complete}
+Consider a diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
+X \arrow[r,swap,"h"] & Y.
+\end{tikzcd}
+\end{equation*}
+Then the type of triples $(i,H,p)$ consisting of a map $i:A\to B$, a homotopy $H:h\circ f\htpy g\circ i$, and a term $p$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r,"i"] & B \arrow[d,"g"] \\
+X \arrow[r,swap,"h"] & Y.
+\end{tikzcd}
+\end{equation*}
+is a pullback square, is equivalent to the type of fiberwise equivalences
+\begin{equation*}
+\prd{x:X}\eqv{\fib{f}{x}}{\fib{g}{h(x)}}.
+\end{equation*}
+\end{thm}
+
+\begin{cor}\label{cor:pb_fibequiv_complete}
+Let $h:X\to Y$ be a map, and let $P$ and $Q$ be families over $X$ and $Y$, respectively.
+Then the type of triples $(i,H,p)$ consisting of a map 
+\begin{equation*}
+i:\Big(\sm{x:X}P(x)\Big)\to \Big(\sm{y:Y}Q(y)\Big),
+\end{equation*}
+a homotopy $H:h\circ \proj 1\htpy \proj 1\circ i$, and a term $p$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+\sm{x:X}P(x) \arrow[d,swap,"\proj 1"] \arrow[r,"i"] & \sm{y:Y}Q(y) \arrow[d,"\proj 1"] \\
+X \arrow[r,swap,"h"] & Y.
+\end{tikzcd}
+\end{equation*}
+is a pullback square, is equivalent to the type of fiberwise equivalences
+\begin{equation*}
+\prd{x:X}\eqv{P(x)}{Q(h(x))}.
+\end{equation*}
+\end{cor}
 
 \section{The pullback pasting property}
 
@@ -788,28 +759,18 @@ The two cases are similar, so we only give the proof that the left square is a p
 \begin{equation*}
 H\defeq \mathsf{htpy.refl}_{\mathsf{const}_{\bfalse}}.
 \end{equation*}
-To see that the asserted square is a pullback square we will apply \cref{thm:pb_3for2} and construct an equivalence
-\begin{equation*}
-e:\eqv{A}{(A+B)\times_\bool\unit}
-\end{equation*}
-equipped with homotopies
-\begin{align*}
-K & : \pi_1\circ e\htpy \inl \\
-L & : \pi_2\circ e\htpy \mathsf{const}_\ttt \\
-M & : \ct{(\pi_3\cdot e)}{(\mathsf{const}_{\bfalse})}\htpy \ct{({[\mathsf{const}_{\bfalse},\mathsf{const}_{\btrue}]}\cdot K)}{\mathsf{htpy.refl}_{\mathsf{const}_{\bfalse}}}.
-\end{align*}
-The map $e:A\to (A+B)\times_\bool\unit$ is defined by
+To see that the asserted square is a pullback square we use \cref{thm:is_pullback} and show that the gap map is an equivalence. First we note that the gap map is homotopic to the function $e:A\to (A+B)\times_\bool\unit$ is defined by
 \begin{equation*}
 \lam{x}(\inl(x),\ttt,\refl{\bfalse}).
 \end{equation*}
-We claim that this map is an equivalence. The map in the converse direction is defined by the induction principle of coproducts by
+The inverse is defined by the induction principle of coproducts by
 \begin{align*}
-\varphi(\inl(x),t,\alpha) & \defeq x \\
-\varphi(\inr(y),t,\alpha) & \defeq \ind{\emptyt}(\zeta(\alpha)),
+e^{-1}(\inl(x),t,\alpha) & \defeq x \\
+e^{-1}(\inr(y),t,\alpha) & \defeq \ind{\emptyt}(\zeta(\alpha)),
 \end{align*}
-where $\zeta:\prd{x,y:\bool}(x=y)\to \mathsf{Eq}_\bool(x,y)$ is the canonical map of the identity type of $\bool$ into the observational equality on $\bool$. In the case of $\alpha:\bfalse=\btrue$ we obtain a term of $\mathsf{Eq}_\bool(\bfalse,\btrue)\jdeq \emptyt$. It is immediate from the computation rules that $\varphi\circ e\jdeq \idfunc$. 
+where $\zeta:\prd{x,y:\bool}(x=y)\to \mathsf{Eq}_\bool(x,y)$ is the canonical map of the identity type of $\bool$ into the observational equality on $\bool$. In the case of $\alpha:\bfalse=\btrue$ we obtain a term of $\mathsf{Eq}_\bool(\bfalse,\btrue)\jdeq \emptyt$. It is immediate from the computation rules that $e^{-1}\circ e\jdeq \idfunc$. 
 
-The homotopy $e\circ \varphi\htpy \idfunc$ is again constructed by the induction principle of coproducts. In the $\inl$-case we have $e(\varphi(\inl(x),t,\alpha))\jdeq (\inl(x),\ttt,\refl{\bfalse})$. We define the identification
+The homotopy $e\circ e^{-1}\htpy \idfunc$ is again constructed by the induction principle of coproducts. In the $\inl$-case we have $e(e^{-1}(\inl(x),t,\alpha))\jdeq (\inl(x),\ttt,\refl{\bfalse})$. We define the identification
 \begin{equation*}
 (\inl(x),\ttt,\refl{\bfalse})=(\inl(x),t,\alpha)
 \end{equation*}
@@ -817,14 +778,7 @@ by singleton induction on $t:\unit$ and $\alpha:\bfalse=\bfalse$ (both of which 
 \begin{equation*}
 (\inl(x),\ttt,\refl{\bfalse})=(\inl(x),\ttt,\refl{\bfalse}),
 \end{equation*}
-which we have by reflexivity. The $\inr$-case is again automatic, since we obtain a term of the empty type from $\alpha:\bfalse=\btrue$. This completes the proof that $e$ is an equivalence. 
-
-The homotopies $K$, $L$, and $M$ are given by
-\begin{align*}
-K & \defeq \lam{x}\refl{\inl(x)} \\
-L & \defeq \lam{x}\refl{\ttt} \\
-M & \defeq \lam{x}\refl{\refl{\bfalse}}.\qedhere
-\end{align*}
+which we have by reflexivity. The $\inr$-case is again automatic, since we obtain a term of the empty type from $\alpha:\bfalse=\btrue$. This completes the proof that $e$ is an equivalence.
 \end{proof}
 
 \begin{cor}\label{cor:inl_emb}
@@ -923,11 +877,11 @@ A \arrow[r,swap,"f"] & X
 with $H:f\circ p\htpy g\circ q$. Show that the following are equivalent:
 \begin{enumerate}
 \item The square is a pullback square.
-\item For every type $D$, the commuting square
+\item For every type $T$, the commuting square
 \begin{equation*}
 \begin{tikzcd}
-C^D \arrow[r,"q\circ\blank"] \arrow[d,swap,"p\circ\blank"] & B^D \arrow[d,"g\circ\blank"] \\
-A^D \arrow[r,swap,"f\circ\blank"] & X^D
+C^T \arrow[r,"q\circ\blank"] \arrow[d,swap,"p\circ\blank"] & B^T \arrow[d,"g\circ\blank"] \\
+A^T \arrow[r,swap,"f\circ\blank"] & X^T
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
@@ -1073,4 +1027,34 @@ Show that the map
 \end{equation*}
 is $k$-truncated if each of the vertical maps is.
 \end{comment}
+\item Suppose that 
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X 
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p\htpy g\circ q$ is a pullback square. Show that the square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"p"] \arrow[d,swap,"q"] & A \arrow[d,"f"] \\
+B \arrow[r,swap,"g"] & X 
+\end{tikzcd}
+\end{equation*}
+with $H^{-1}:g\circ q\htpy f\circ p$ is again a pullback square.
+\item Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[d,swap,"p"] \arrow[r,"q"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X.
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p\htpy g\circ q$, and let $h:C\to A\times_X B$ be the map given by $h(z)\defeq (p(c),q(c),H(c))$. 
+Show that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=6.5em]
+\fib{\mathsf{gap}(p,q,H)}{(a,b,\alpha)} \arrow[d,swap,"\mathsf{const}_{\ttt}"] \arrow[r,"{\lam{(c,\beta)}(c,\ap{\pi_1}{\beta})}"] & \fib{p}{a} \arrow[d,"{\fibf{(f,g,H)}}"] \\
+\unit \arrow[r,swap,"\mathsf{const}_{(b,\alpha^{-1})}"] & \fib{g}{f(a)}
+\end{tikzcd}
+\end{equation*}
 \end{exercises}

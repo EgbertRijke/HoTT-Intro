@@ -13,15 +13,8 @@ We define a map
 \begin{equation*}
 \total{f}:\sm{x:A}B(x)\to\sm{x:A}C(x).
 \end{equation*}
+by $\lam{(x,y)}(x,f(x,y))$.
 \end{defn}
-
-\begin{constr}
-By $\Sigma$-induction it suffices to construct a map of type
-\begin{equation*}
-\prd{x:A} \Big(B(x)\to \sm{y:A}C(y)\Big).
-\end{equation*}
-Now let $x:A$ and $b:B(x)$. Then we have $\pairr{x,f(b)}:\sm{y:A}C(y)$. 
-\end{constr}
 
 \begin{lem}\label{lem:fib_total}
 For any fiberwise transformation $f:\prd{x:A}B(x)\to C(x)$, and any $a:A$ and $c:C(a)$, there is an equivalence
