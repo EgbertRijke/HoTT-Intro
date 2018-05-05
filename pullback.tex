@@ -418,7 +418,7 @@ A \arrow[r,swap,"f"] & X
 is a pullback square.
 \end{cor}
 
-\section{Fiber sequences}
+\section{Fibers as pullbacks}
 
 \begin{lem}\label{lem:fib_pb}
 For any function $f:A\to B$, and any $b:B$, consider the square
@@ -887,7 +887,7 @@ A^T \arrow[r,swap,"f\circ\blank"] & X^T
 is a pullback square.
 \end{enumerate}
 Note: property (ii) is really just a rephrasing of the universal property of pullbacks.\index{pullback square!universal property}
-\item Consider a commuting square
+\item \label{ex:pb_diagonal}Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
@@ -906,7 +906,7 @@ A\times B \arrow[r,swap,"f\times g"] & X\times X
 \end{equation*}
 which commutes by $\lam{z}\mathsf{eq\usc{}pair}(H(z),\refl{g(q(z))})$ is a pullback square.
 \end{enumerate}
-\item Show that if\index{pullback!cartesian products of pullbacks}
+\item \label{ex:pb_prod}Show that if\index{pullback!cartesian products of pullbacks}
 \begin{equation*}
 \begin{tikzcd}
 C_1 \arrow[r] \arrow[d] & B_1 \arrow[d] & C_2 \arrow[r] \arrow[d] & B_2 \arrow[d] \\
@@ -929,7 +929,7 @@ A_i \arrow[r,swap,"f_i"] & X_i
 \end{equation*}
 with $H_i: f_i\circ p_i\htpy g_i\circ q_i$. 
 \begin{subexenum}
-\item Show that the square
+\item \label{ex:pb_sigma}Show that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
 \sm{i:I}C_i \arrow[r,"\total{q}"] \arrow[d,swap,"\total{p}"] & \sm{i:I}B_i \arrow[d,"\total{g}"] \\
@@ -941,7 +941,7 @@ which commutes by the homotopy
 \total{H}\defeq \lam{(i,c)}\mathsf{eq\usc{}pair}(\refl{i},H_i(c))
 \end{equation*}
 is a pullback square.\index{pullback!Pi-type of pullbacks@{$\Pi$-type of pullbacks}}
-\item Show that the commuting square
+\item \label{ex:pb_pi}Show that the commuting square
 \begin{equation*}
 \begin{tikzcd}
 \prd{i:I}C_i \arrow[r] \arrow[d] & \prd{i:I}B_i \arrow[d] \\
@@ -977,7 +977,7 @@ is a pullback square.
 %\end{tikzcd}
 %\end{equation*}
 %Show that this square is cartesian if and only if the induced map $C\to A\times_X B$ has a retraction.
-\item Let $B$ be a type family over $A$. Show that the square\index{Pi-type@{$\Pi$-type}!as pullback}
+\item \label{ex:pi_sec}Let $B$ be a type family over $A$. Show that the square\index{Pi-type@{$\Pi$-type}!as pullback}
 \begin{equation*}
 \begin{tikzcd}[column sep=6em]
 \prd{x:A}B(x) \arrow[r,"{\lam{f}{x}(x,f(x))}"] \arrow[d] & \Big(\sm{x:A}B(x)\Big)^A \arrow[d,"\proj 1\circ\blank"] \\
@@ -1042,7 +1042,7 @@ B \arrow[r,swap,"g"] & X
 \end{tikzcd}
 \end{equation*}
 with $H^{-1}:g\circ q\htpy f\circ p$ is again a pullback square.
-\item Consider a commuting square
+\item \label{ex:pb_fib}Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[d,swap,"p"] \arrow[r,"q"] & B \arrow[d,"g"] \\
@@ -1057,4 +1057,18 @@ Show that the square
 \unit \arrow[r,swap,"\mathsf{const}_{(b,\alpha^{-1})}"] & \fib{g}{f(a)}
 \end{tikzcd}
 \end{equation*}
+\item \label{ex:pb_3by3}Consider a commuting diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A_0 \arrow[r] \arrow[d] & B_0 \arrow[d] & C_0 \arrow[l] \arrow[d] \\
+A_1 \arrow[r] & B_1 & C_1 \arrow[l] \\
+A_2 \arrow[u] \arrow[r] & B_2 \arrow[u] & C_2 \arrow[u] \arrow[l]
+\end{tikzcd}
+\end{equation*}
+with homotopies filling the (small) squares. Construct an equivalence
+\begin{align*}
+& (A_0\times_{B_0} C_0) \times_{(A_1\times_{B_1} C_1)} (A_2\times_{B_2} C_2) \\
+& \qquad \eqvsym (A_0\times_{A_1} A_2) \times_{(B_0\times_{B_1} B_2)} (C_0\times_{C_1} C_2).
+\end{align*}
+This is also known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pullbacks} for pullbacks.
 \end{exercises}

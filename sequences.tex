@@ -1,5 +1,7 @@
 \chapter{Sequential colimits}
 
+\emph{Note: This chapter currently contains only the statements of the definitions and theorems, but no proofs. I hope to make a complete version available soon.}
+
 \section{The universal property of sequential colimits}
 
 Type sequences are diagrams of the following form.
@@ -18,6 +20,12 @@ f & : \prd{n:\N} A_n\to A_{n+1}.
 \end{align*}
 \end{defn}
 
+In this section we will introduce the sequential colimit of a type sequence.
+The sequential colimit includes each of the types $A_n$, but we also identify each $x:A_n$ with its value $f_n(x):A_{n+1}$. 
+Imagine that the type sequence $A_0\to A_1\to A_2\to\cdots$ defines a big telescope, with $A_0$ sliding into $A_1$, which slides into $A_2$, and so forth.
+
+As usual, the sequential colimit is characterized by its universal property.
+
 \begin{defn}
 \begin{enumerate}
 \item A \define{(sequential) cocone} on a type sequence $\mathcal{A}$ with vertex $B$ consists of
@@ -31,38 +39,170 @@ We write $\mathsf{cocone}(B)$ for the type of cones with vertex $X$.
 \mathsf{cocone\usc{}map}(h,H) : (B\to C)\to \mathsf{cocone}(B)
 \end{equation*}
 given by $f\mapsto (f\circ h,\lam{n}{x}\mathsf{ap}_f(H_n(x)))$. 
-\item We say that a cone $(h,H)$ with vertex $B$ is \define{colimiting} if $\mathsf{cocone\usc{}map}(h,H)$ is an equivalence.
+\item We say that a cone $(h,H)$ with vertex $B$ is \define{colimiting} if $\mathsf{cocone\usc{}map}(h,H)$ is an equivalence for any type $C$. 
 \end{enumerate}
 \end{defn}
 
-\begin{thm}
+\begin{thm}\label{thm:sequential_up}
 Consider a cocone $(h,H)$ with vertex $B$ for a type sequence $\mathcal{A}$. The following are equivalent:
 \begin{enumerate}
 \item The cocone $(h,H)$ is colimiting.
-\item The cocone $(h,H)$ is \define{$\mathcal{A}$-inductive} in the sense that for every type family $P:B\to \UU$, the map
+\item The cocone $(h,H)$ is inductive in the sense that for every type family $P:B\to \UU$, the map
 \begin{align*}
-\Big(\prd{b:B}P(b)\Big)\to {}& \sm{g:\prd{n:\N}{x:A_n}P(h_n(x))}\\ 
-& \qquad \prd{n:\N}{x:A_n} \dpath{P}{H_n(x)}{g_n(x)}{g_{n+1}(f_n(x))}
+\Big(\prd{b:B}P(b)\Big)\to {}& \sm{h:\prd{n:\N}{x:A_n}P(h_n(x))}\\ 
+& \qquad \prd{n:\N}{x:A_n} \mathsf{tr}_P(H_n(x),h_n(x))={h_{n+1}(f_n(x))}
 \end{align*}
 given by
 \begin{equation*}
 s\mapsto (\lam{n}s\circ h_n,\lam{n}{x} \mathsf{apd}_{s}(H_n(x)))
 \end{equation*}
 has a section.
+\item The map in (ii) is an equivalence.
 \end{enumerate}
 \end{thm}
 
-\begin{defn}
-Consider a type sequence $\mathcal{A}\jdeq (A,f)$. The \define{sequential colimit} of $\mathcal{A}$ is defined as a higher inductive type $A_\infty$ with constructors
-\begin{align*}
-\mathsf{in} & : \prd{n:\N} A_n\to A_\infty \\
-\mathsf{glue} & : \prd{n:\N}{x:A_n} \mathsf{in}_n(x)=\mathsf{in}_{n+1}(f_n(x)).
-\end{align*}
-The induction principle for $A_\infty$ is that for any type family $P:A_\infty\to\type$, the map
+\section{The construction of sequential colimits}
 
+We construct sequential colimits using pushouts.
+
+\begin{defn}
+Let $\mathcal{A}\jdeq (A,f)$ be a type sequence. We define the type $A_\infty$ as a pushout
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+\tilde{A}+\tilde{A} \arrow[r,"{[\idfunc,\sigma_{\mathcal{A}}]}"] \arrow[d,swap,"{[\idfunc,\idfunc]}"] & \tilde{A} \arrow[d,"\inr"] \\
+\tilde{A} \arrow[r,swap,"\inl"] & A_\infty.
+\end{tikzcd}
+\end{equation*}
 \end{defn}
 
+\begin{defn}
+The type $A_\infty$ comes equipped with a cocone structure consisting of
+\begin{align*}
+\mathsf{seq\usc{}in} & : \prd{n:\N} A_n\to A_\infty \\
+\mathsf{seq\usc{}glue} & : \prd{n:\N}{x:A_n} \mathsf{in}_n(x)=\mathsf{in}_{n+1}(f_n(x)).
+\end{align*}
+\end{defn}
+
+\begin{constr}
+We define
+\begin{align*}
+\mathsf{seq\usc{}in}(n,x)\defeq \inr(n,x) \\
+\mathsf{seq\usc{}glue}(n,x)\defeq \ct{\glue(\inl(n,x))^{-1}}{\glue(\inr(n,x))}.
+\end{align*}
+\end{constr}
+
+\begin{thm}
+Consider a type sequence $\mathcal{A}$, and write $\tilde{A}\defeq\sm{n:\N}A_n$. Moreover, consider the map
+\begin{equation*}
+\sigma_{\mathcal{A}}:\tilde{A}\to\tilde{A}
+\end{equation*}
+defined by $\sigma_{\mathcal{A}}(n,a)\defeq (n+1,f_n(a))$. Furthermore, consider a cocone $(h,H)$ with vertex $B$.
+The following are equivalent:
+\begin{enumerate}
+\item The cocone $(h,H)$ with vertex $B$ is colimiting.
+\item The defining square
+\begin{equation*}
+\begin{tikzcd}[column sep=large]
+\tilde{A}+\tilde{A} \arrow[r,"{[\idfunc,\sigma_{\mathcal{A}}]}"] \arrow[d,swap,"{[\idfunc,\idfunc]}"] & \tilde{A} \arrow[d,"{\lam{(n,x)}h_n(x)}"] \\
+\tilde{A} \arrow[r,swap,"{\lam{(n,x)}h_n(x)}"] & A_\infty,
+\end{tikzcd}
+\end{equation*}
+of $A_\infty$ is a pushout square.
+\end{enumerate}
+\end{thm}
+
 \section{Descent for sequential colimits}
+
+\begin{defn}
+The type of \define{descent data} on a type sequence $\mathcal{A}\jdeq (A,f)$ is defined to be
+\begin{equation*}
+\mathsf{Desc}(\mathcal{A}) \defeq \sm{B:\prd{n:\N}A_n\to\UU}\prd{n:\N}{x:A_n}\eqv{B_n(x)}{B_{n+1}(f_n(x))}.
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+We define a map
+\begin{equation*}
+\mathsf{desc\usc{}fam} : (A_\infty\to\UU)\to\mathsf{Desc}(\mathcal{A})
+\end{equation*}
+by $B\mapsto (\lam{n}{x}B(\mathsf{seq\usc{}in}(n,x)),\lam{n}{x}\mathsf{tr}_B(\mathsf{seq\usc{}glue}(n,x)))$.
+\end{defn}
+
+\begin{thm}
+The map 
+\begin{equation*}
+\mathsf{desc\usc{}fam} : (A_\infty\to\UU)\to\mathsf{Desc}(\mathcal{A})
+\end{equation*}
+is an equivalence.
+\end{thm}
+
+\begin{defn}
+A \define{cartesian transformation} of type sequences from $\mathcal{A}$ to $\mathcal{B}$ is a pair $(h,H)$ consisting of
+\begin{align*}
+h & : \prd{n:\N} A_n\to B_n \\
+H & : \prd{n:\N} g_n\circ h_n \htpy h_{n+1}\circ f_n,
+\end{align*}
+such that each of the squares in the diagram
+\begin{equation*}
+\begin{tikzcd}
+A_0 \arrow[d,swap,"h_0"] \arrow[r,"f_0"] & A_1 \arrow[d,swap,"h_1"] \arrow[r,"f_1"] & A_2 \arrow[d,swap,"h_2"] \arrow[r,"f_2"] & \cdots \\
+B_0 \arrow[r,swap,"g_0"] & B_1 \arrow[r,swap,"g_1"] & B_2 \arrow[r,swap,"g_2"] & \cdots
+\end{tikzcd}
+\end{equation*}
+is a pullback square. We define
+\begin{align*}
+\mathsf{cart}(\mathcal{A},\mathcal{B}) & \defeq\sm{h:\prd{n:\N}A_n\to B_n} \\
+& \qquad\qquad \sm{H:\prd{n:\N}g_n\circ h_n\htpy h_{n+1}\circ f_n}\prd{n:\N}\mathsf{is\usc{}pullback}(h_n,f_n,H_n),
+\end{align*}
+and we write
+\begin{equation*}
+\mathsf{Cart}(\mathcal{B}) \defeq \sm{\mathcal{A}:\mathsf{Seq}}\mathsf{cart}(\mathcal{A},\mathcal{B}).
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+We define a map
+\begin{equation*}
+\mathsf{cart\usc{}map}(\mathcal{B}) : \Big(\sm{X':\UU}X'\to X\Big)\to\mathsf{Cart}(\mathcal{B}).
+\end{equation*}
+which associates to any morphism $h:X'\to X$ a cartesian transformation of type sequences into $\mathcal{B}$.
+\end{defn}
+
+\begin{thm}
+The operation $\mathsf{cart\usc{}map}(\mathcal{B})$ is an equivalence.
+\end{thm}
+
+\section{The flattening lemma for sequential colimits}
+
+The flattening lemma for sequential colimits essentially states that sequential colimits commute with $\Sigma$. 
+
+\begin{lem}
+Consider
+\begin{align*}
+B & : \prd{n:\N}A_n\to\UU \\
+g & : \prd{n:\N}{x:A_n}\eqv{B_n(x)}{B_{n+1}(f_n(x))}.
+\end{align*}
+and suppose $P:A_\infty\to\UU$ is the unique family equipped with
+\begin{align*}
+e & : \prd{n:\N}\eqv{B_n(x)}{P(\mathsf{seq\usc{}in}(n,x))}
+\end{align*}
+and homotopies $H_n(x)$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=7em]
+B_n(x) \arrow[r,"g_n(x)"] \arrow[d,swap,"e_n(x)"] & B_{n+1}(f_n(x)) \arrow[d,"e_{n+1}(f_n(x))"] \\
+P(\mathsf{seq\usc{}in}(n,x)) \arrow[r,swap,"{\mathsf{tr}_P(\mathsf{seq\usc{}glue}(n,x))}"] & P(\mathsf{seq\usc{}in}(n+1,f_n(x)))
+\end{tikzcd}
+\end{equation*}
+commutes. Then $\sm{t:A_\infty}P(t)$ satisfies the universal property of the sequential colimit of the type sequence
+\begin{equation*}
+\begin{tikzcd}
+\sm{x:A_0}B_0(x) \arrow[r,"{\total[f_0]{g_0}}"] & \sm{x:A_1}B_1(x) \arrow[r,"{\total[f_1]{g_1}}"] & \sm{x:A_2}B_2(x) \arrow[r,"{\total[f_2]{g_2}}"] & \cdots.
+\end{tikzcd}
+\end{equation*}
+\end{lem}
+
+In the following theorem we rephrase the flattening lemma in using cartesian transformations of type sequences.
+
 \begin{thm}
 Consider a commuting diagram of the form
 \begin{equation*}
@@ -76,7 +216,54 @@ B_0 \arrow[rr] \arrow[drrr] & & B_1 \arrow[rr] \arrow[dr] & & B_2 \arrow[rr] \ar
 If each of the vertical squares is a pullback square, and $Y$ is the sequential colimit of the type sequence $B_n$, then $X$ is the sequential colimit of the type sequence $A_n$. 
 \end{thm}
 
+\begin{cor}
+Consider a commuting diagram of the form
+\begin{equation*}
+\begin{tikzcd}[column sep=small,row sep=small]
+A_0 \arrow[rr] \arrow[dd] & & A_1 \arrow[rr] \arrow[dr] \arrow[dd] &[-.9em] &[-.9em] A_2 \arrow[dl] \arrow[dd] & & \cdots \\
+& & & X \arrow[from=ulll,crossing over] \arrow[from=urrr,crossing over] \arrow[from=ur,to=urrr] \\
+B_0 \arrow[rr] \arrow[drrr] & & B_1 \arrow[rr] \arrow[dr] & & B_2 \arrow[rr] \arrow[dl] & & \cdots \arrow[dlll] \\
+& & & Y \arrow[from=uu,crossing over] 
+\end{tikzcd}
+\end{equation*}
+If each of the vertical squares is a pullback square, then the square
+\begin{equation*}
+\begin{tikzcd}
+A_\infty \arrow[r] \arrow[d] & X \arrow[d] \\
+B_\infty \arrow[r] & Y
+\end{tikzcd}
+\end{equation*} 
+is a pullback square.
+\end{cor}
+
 \begin{exercises}
+\item \label{ex:seqcolim_shift}
+Show that the sequential colimit of a type sequence
+\begin{equation*}
+\begin{tikzcd}
+A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
+\end{tikzcd}
+\end{equation*}
+is equivalent to the sequential colimit of its shifted type sequence
+\begin{equation*}
+\begin{tikzcd}
+A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & A_3 \arrow[r,"f_3"] & \cdots.
+\end{tikzcd}
+\end{equation*}
+\item \label{ex:seqcolim_contr}Consider a type sequence
+\begin{equation*}
+\begin{tikzcd}
+A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
+\end{tikzcd}
+\end{equation*}
+and suppose that $f_n\htpy \mathsf{const}_{a_{n+1}}$ for some $a_n:\prd{n:\N}A_n$. Show that the sequential colimit is contractible.
+\item Define the $\infty$-sphere $\sphere{\infty}$ as the sequential colimit of
+\begin{equation*}
+\begin{tikzcd}
+\sphere{0} \arrow[r,"f_0"] & \sphere{1} \arrow[r,"f_1"] & \sphere{2} \arrow[r,"f_2"] & \cdots
+\end{tikzcd}
+\end{equation*}
+where $f_0:\sphere{0}\to\sphere{1}$ is defined by $f_0(\bfalse)\jdeq \inl(\ttt)$ and $f_0(\btrue)\jdeq \inr(\ttt)$, and $f_{n+1}:\sphere{n+1}\to\sphere{n+2}$ is defined as $\susp(f_n)$. Use \cref{ex:seqcolim_contr} to show that $\sphere{\infty}$ is contractible.
 \item Consider a type sequence
 \begin{equation*}
 \begin{tikzcd}

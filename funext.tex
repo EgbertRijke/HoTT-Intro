@@ -238,38 +238,124 @@ This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\
 
 \section{Composing with equivalences}
 
-\begin{lem}\label{lem:postcomp_equiv}
-Let $f:X\to Y$ be a map. Then the following are equivalent:
+We show in this section that a map $f:A\to B$ is an equivalence if and only if for any type $X$ the precomposition map 
+\begin{equation*}
+\blank\circ f: (B\to X)\to (A\to X)
+\end{equation*}
+is an equivalence. Moreover, we will show in \cref{ex:equiv_precomp} that the `dependent version' of this statement also holds: a map $f:A\to B$ is an equivalence if and only if for any type family $P$ over $B$, the precomposition map
+\begin{equation*}
+\blank\circ f: \Big(\prd{y:B}P(y)\Big)\to\Big(\prd{x:A}P(f(x))\Big)
+\end{equation*}
+is an equivalence. However, in our proof of this fact we will rely on a piece of data that every equivalence satisfies in addition to being invertible.
+
+\begin{defn}
+We say that a map $f:A\to B$ is a \define{half-adjoint equivalence}\index{half-adjoint equivalence|textbf}, in the sense that there are
+\begin{align*}
+g & : B \to A\\
+G & : f\circ g \htpy \idfunc[B] \\
+H & : g\circ f \htpy \idfunc[A] \\
+K & : G\cdot f \htpy f\cdot H.
+\end{align*}
+We write $\mathsf{half\usc{}adj}(f)$\index{half_adj(f)@{$\mathsf{half\usc{}adj}(f)$}|textbf} for the type of such quadruples $(g,G,H,K)$.
+\end{defn}
+
+To show that every equivalence is a half-adjoint equivalence, we also introduce the notion of \emph{path-split} maps.
+
+\begin{defn}
+We say that a map $f:A\to B$ is \define{path-split}\index{path-split|textbf} if $f$ has a section, and for each $x,y:A$ the map
+\begin{equation*}
+\apfunc{f}(x,y):(x=y)\to (f(x)=f(y))
+\end{equation*}
+also has a section. We write $\mathsf{path\usc{}split}(f)$\index{path_split(f)@{$\mathsf{path\usc{}split}(f)$}|textbf} for the type
+\begin{equation*}
+\mathsf{sec}(f)\times\prd{x,y:A}\mathsf{sec}(\apfunc{f}(x,y)).
+\end{equation*}
+\end{defn}
+
+\begin{thm}\label{ex:equiv_precomp}
+For any map $f:A\to B$, the following are equivalent:
 \begin{enumerate}
-\item $f$ is an equivalence.\index{equivalence!post-composition|textit}
-\item For any type $A$, the map $f\circ\blank : X^A\to Y^A$ is an equivalence.
+\item $f$ is an equivalence.
+\item $f$ is path-split.
+\item $f$ is a half-adjoint equivalence.
+\item For any type family $P$ over $B$ the map
+\begin{equation*}
+\Big(\prd{y:B}P(y)\Big)\to\Big(\prd{x:A}P(f(x))\Big)
+\end{equation*}
+given by $s\mapsto s\circ f$ is an equivalence.
+\item For any type $X$ the map
+\begin{equation*}
+(B\to X)\to (A\to X)
+\end{equation*}
+given by $g\mapsto g\circ f$ is an equivalence. 
 \end{enumerate}
-\end{lem}
+\end{thm}
 
 \begin{proof}
-If $f$ is an equivalence, then it is straightforward to see that the map
-\begin{equation*}
-f^{-1}\circ\blank : Y^A\to X^A
-\end{equation*}
-is an inverse of $f\circ \blank : X^A \to Y^A$, for any type $A$.
+To see that (i) implies (ii) we note that any equivalence has a section, and its action on paths is an equivalence by \cref{cor:emb_equiv} so again it has a section.
 
-For the converse, we use that the fibers of $f\circ \blank$ are contractible, for any $A$. In particular, the fiber
+To show that (ii) implies (iii), assume that $f$ is path-split. Thus we have $(g,G):\mathsf{sec}(f)$, and the assumption that $\apfunc{f}:(x=y)\to (f(x)=f(y))$ has a section for every $x,y:A$ gives us a term of type
 \begin{equation*}
-\fib{f\circ\blank}{\idfunc[Y]}\jdeq \sm{g:Y\to X} f\circ g=\idfunc[Y]
+\prd{x:A}\fib{\apfunc{f}}{G(f(x))}.
 \end{equation*}
-is contractible (choosing $A\jdeq Y$). Thus we obtain a function $g:Y\to X$ and a homotopy $G:f\circ g\htpy \idfunc[Y]$.
+By \cref{thm:choice} this type is equivalent to
+\begin{equation*}
+\sm{H:\prd{x:A}g(f(x))=x}\prd{x:A}G(f(x))=\ap{f}{H(x)},
+\end{equation*}
+so we obtain $H:g\circ f\htpy \idfunc[A]$ and $K:G\cdot f\htpy f\cdot H$, showing that $f$ is a half-adjoint equivalence.
 
-It remains to be shown that $g$ is a retract of $f$, i.e.~to construct a homotopy $g\circ f\htpy \idfunc[X]$. To see this, we use that the fiber
+To show that (iii) implies (iv), suppose that $f$ comes equipped with $(g,G,H,K)$ witnessing that $f$ is a half-adjoint equivalence. Then we define the inverse of $\blank\circ f$ to be the map
 \begin{equation*}
-\fib{f\circ\blank}{f}\jdeq \sm{h:X\to X} f\circ h=f
+\varphi:\Big(\prd{x:A}P(f(x))\Big)\to\Big(\prd{y:B}P(y)\Big)
 \end{equation*}
-is contractible (choosing $A\jdeq X$). Of course we have $(\idfunc[X],\refl{f})$ in this fiber. However we claim that there also is an identification $p:f\circ (g\circ f)=f$, showing that $(g\circ f,p)$ is in this fiber. To see this, note that
+given by $s\mapsto \lam{y}\mathsf{tr}_P(G(y),sg(y))$. 
+
+To see that $\varphi$ is a section of $\blank\circ f$, let $s:\prd{x:A}P(f(x))$. By function extensionality it suffices to construct a homotopy $\varphi(s)\circ f\htpy s$. In other words, we have to show that
+\begin{equation*}
+\mathsf{tr}_P(G(f(x)),s(g(f(x)))=s(x)
+\end{equation*}
+for any $x:A$. Now we use the additional homotopy $K$ from our assumption that $f$ is a half-adjoint equivalence. Since we have $K(x):G(f(x))=\ap{f}{H(x)}$ it suffices to show that
+\begin{equation*}
+\mathsf{tr}_P(\ap{f}{H(x)},sgf(x))=s(x).
+\end{equation*}
+A simple path-induction argument yields that
+\begin{equation*}
+\mathsf{tr}_P(\ap{f}{p})\htpy \mathsf{tr}_{P\circ f}(p)
+\end{equation*}
+for any path $p:x=y$ in $A$, so it suffices to construct an identification
+\begin{equation*}
+\mathsf{tr}_{P\circ f}(H(x),sgf(x))=s(x).
+\end{equation*}
+We have such an identification by $\apd{H(x)}{s}$.
+
+To see that $\varphi$ is a retraction of $\blank\circ f$, let $s:\prd{y:B}P(y)$. By function extensionality it suffices to construct a homotopy $\varphi(s\circ f)\htpy s$. In other words, we have to show that
+\begin{equation*}
+\mathsf{tr}_P(G(y),sfg(y))=s(y)
+\end{equation*}
+for any $y:B$. We have such an identification by $\apd{G(y)}{s}$. This completes the proof that (iii) implies (iv).
+
+Note that (v) is an immediate consequence of (iv), since we can just choose $P$ to be the constant family $X$.
+
+It remains to show that (v) implies (i). Suppose that
+\begin{equation*}
+\blank\circ f:(B\to X)\to (A\to X)
+\end{equation*}
+is an equivalence for every type $X$. Then its fibers are contractible by \cref{thm:contr_equiv}. In particular, choosing $X\jdeq A$ we see that the fiber
+\begin{equation*}
+\fib{\blank\circ f}{\idfunc[A]}\jdeq \sm{h:B\to A}h\circ f=\idfunc[A]
+\end{equation*}
+is contractible. Thus we obtain a function $h:B\to A$ and a homotopy $H:h\circ f\htpy\idfunc[A]$ showing that $h$ is a retraction of $f$. We will show that $h$ is also a section of $f$. To see this, we use that the fiber
+\begin{equation*}
+\fib{\blank\circ f}{f}\jdeq \sm{i:B\to B} i\circ f=f
+\end{equation*}
+is contractible (choosing $X\jdeq B$). 
+Of course we have $(\idfunc[B],\refl{f})$ in this fiber. However we claim that there also is an identification $p:(f\circ h)\circ f=f$, showing that $(f\circ h,p)$ is in this fiber, because
 \begin{align*}
-f\circ (g\circ f) & \jdeq (f\circ g)\circ f \\
-& = \idfunc[Y]\circ f \\
+(f\circ h)\circ f & \jdeq f\circ (h\circ f) \\
+& = f\circ \idfunc[A] \\
 & \jdeq f
 \end{align*}
-By the contractibility of the fiber we conclude that $(\idfunc[X],\refl{f})=(g\circ f,p)$, so it follows that $\idfunc[X]=g\circ f$.
+Now we conclude by the contractibility of the fiber that $(\idfunc[B],\refl{f})=(f\circ h,p)$. In particular we obtain that $\idfunc[B]=f\circ h$, showing that $h$ is a section of $f$.
 \end{proof}
 
 \begin{exercises}
@@ -279,8 +365,7 @@ By the contractibility of the fiber we conclude that $(\idfunc[X],\refl{f})=(g\c
 \begin{equation*}
 \eqv{(P\leftrightarrow Q)}{(\eqv{P}{Q})}.
 \end{equation*}
-\item Show that $P\to P$ is contractible for any proposition $P$.
-\item Show that if $P\to P$ is contractible, then $P$ is a proposition.
+\item Show that $P$ is a proposition if and only if $P\to P$ is contractible.
 \end{subexenum}
 \item \label{ex:isprop_istrunc}
 \begin{subexenum}
@@ -295,6 +380,7 @@ By the contractibility of the fiber we conclude that $(\idfunc[X],\refl{f})=(g\c
 \item Use \cref{ex:prop_equiv,ex:isprop_istrunc} to show that $\isequiv(f)\eqvsym \iscontr(f)$.
 \end{subexenum}
 Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the map $\proj 1 : (\eqv{A}{B})\to (A\to B)$ is an embedding.
+\item Show that $\mathsf{path\usc{}split}(f)$ and $\mathsf{half\usc{}adj}(f)$ are propositions for any map $f:A\to B$. 
 %\item Let $B$ and $C$ be type families over $A$, suppose that $p:\id{a}{a'}$ in $A$, and consider two functions $f:B(a)\to C(a)$ and $g:B(a')\to C(a')$.
 %\begin{subexenum}
 %\item Show that the square
@@ -310,37 +396,16 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 %\end{equation*}
 %\item Show that this map is an equivalence.
 %\end{subexenum}
+\item \label{lem:postcomp_equiv}
+Let $f:X\to Y$ be a map. Show that the following are equivalent:
+\begin{enumerate}
+\item $f$ is an equivalence.\index{equivalence!post-composition|textit}
+\item For any type $A$, the map $f\circ\blank : X^A\to Y^A$ is an equivalence.
+\end{enumerate}
 \item \label{ex:idfunc_autohtpy}Construct for any type $A$ an equivalence
 \begin{equation*}
 \eqv{\mathsf{is\usc{}invertible}(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
 \end{equation*}
-\item Let $f:A\to B$ be a map. Use \autoref{ex:coh_intro} and \autoref{defn:inv_equiv} to show that
-\begin{equation*}
-\eqv{\isequiv(f)}{\mathsf{half\usc{}adj}(f)},
-\end{equation*}
-where $\mathsf{half\usc{}adj}(f)$ is the type consisting of functions $g:B\to A$ equipped with
-\begin{samepage}
-\begin{align*}
-H_r & : f\circ g\htpy \idfunc \\
-H_l & : g\circ f\htpy \idfunc \\
-H_{coh} & : g H_r\htpy H_l g,
-\end{align*}
-\end{samepage}%
-witnessing that $f$ is a \define{half-adjoint equivalence}.
-\item \label{ex:equiv_precomp}Let $f:A\to B$ be a map. Show that the following are equivalent:
-\begin{enumerate}
-\item $f$ is an equivalence.
-\item For any type family $P$ over $B$ the map
-\begin{equation*}
-\Big(\prd{y:B}P(y)\Big)\to\Big(\prd{x:A}P(f(x))\Big)
-\end{equation*}
-given by $s\mapsto s\circ f$ is an equivalence.
-\item For any type $X$ the map
-\begin{equation*}
-(B\to X)\to (A\to X)
-\end{equation*}
-given by $g\mapsto g\circ f$ is an equivalence. 
-\end{enumerate}
 \item 
 \begin{subexenum}
 \item Show that the map

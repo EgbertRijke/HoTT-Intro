@@ -1,34 +1,227 @@
 \chapter{The long exact sequence of homotopy groups}
+\chaptermark{The long exact sequence}
+
+\section{The long exact sequence}
+
+\begin{defn}
+A fiber sequence $F\hookrightarrow E \twoheadrightarrow B$ consists of:
+\begin{enumerate}
+\item Pointed types $F$, $E$, and $B$, with base points $x_0$, $y_0$, and $b_0$ respectively, 
+\item Base point preserving maps $i:F\to_\ast E$ and $p:E\to_\ast B$, with $\alpha:i(x_0)=y_0$ and $\beta:p(y_0)=b_0$,
+\item A pointed homotopy $H:\mathsf{const}_{b_0}\htpy_\ast p\circ_\ast i$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+F \arrow[r,"i"] \arrow[d] & E \arrow[d,"p"] \\
+\unit \arrow[r,swap,"\mathsf{const}_{b_0}"] & B,
+\end{tikzcd}
+\end{equation*}
+commutes and is a pullback square.
+\end{enumerate}
+\end{defn}
+
+\begin{lem}
+Any fiber sequence $F\hookrightarrow E\twoheadrightarrow B$ induces a sequence of pointed maps
+\begin{equation*}
+\begin{tikzcd}
+\loopspace{F} \arrow[r,"\loopspace{i}"] & \loopspace{E} \arrow[r,"\loopspace{p}"] & \loopspace{B} \arrow[r,"\partial"] & F \arrow[r,"i"] & E \arrow[r,"p"] & B,
+\end{tikzcd}
+\end{equation*}
+in which every two consecutive maps form a fiber sequence.
+\end{lem}
+
+\begin{proof}
+By taking pullback squares repeatedly, we obtain the diagram
+\begin{equation*}
+\begin{gathered}[b]
+\begin{tikzcd}[column sep=large]
+\loopspace{F} \arrow[d,swap,"\loopspace{i}"] \arrow[r] & \unit \arrow[d,"\mathsf{const}_{\refl{b_0}}"] \\
+\loopspace{E} \arrow[r,"\loopspace{p}"] \arrow[d] & \loopspace{B} \arrow[r] \arrow[d,swap,"\partial"] & \unit \arrow[d,"\mathsf{const}_{y_0}"] \\
+\unit \arrow[r,swap,"\mathsf{const}_{x_0}"] & F \arrow[r,"i"] \arrow[d] & E \arrow[d,"p"] \\
+& \unit \arrow[r,swap,"\mathsf{const}_{b_0}"] & B.
+\end{tikzcd}\\[-\dp\strutbox]
+\end{gathered}\qedhere
+\end{equation*}
+\end{proof}
+
+\begin{defn}
+We say that a consecutive pair of pointed maps between pointed sets
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"f"] & B \arrow[r,"g"] & C
+\end{tikzcd}
+\end{equation*}
+is \define{exact} at $B$ if we have
+\begin{equation*}
+\Big(\exis{a:A}f(a)=b\Big)\leftrightarrow (g(b)=c)
+\end{equation*}
+for any $b:B$. 
+\end{defn}
+
+\begin{rmk}
+If a pair of consecutive pointed maps between pointed sets
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"f"] & B \arrow[r,"g"] & C
+\end{tikzcd}
+\end{equation*}
+is exact at $B$, it directly that $\im(f)=\fib{g}{c}$. Indeed, such a pair of pointed maps is exact at $B$ if and only if there is an equivalence $e:\im(f)\eqvsym \fib{g}{c}$ such that the triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+\im(f) \arrow[dr] \arrow[rr,"e"] & & \fib{g}{c} \arrow[dl] \\
+& B
+\end{tikzcd}
+\end{equation*}
+commutes. In other words, $\im(f)$ and $\fib{g}{c}$ are equal \emph{as subsets of $B$}.
+\end{rmk}
+
+\begin{lem}
+Suppose $F\hookrightarrow E \twoheadrightarrow B$ is a fiber sequence. Then the sequence
+\begin{equation*}
+\begin{tikzcd}
+\trunc{0}{F} \arrow[r,"\trunc{0}{i}"] & \trunc{0}{E} \arrow[r,"\trunc{0}{p}"] & \trunc{0}{B}
+\end{tikzcd}
+\end{equation*}
+is exact at $\trunc{0}{E}$. 
+\end{lem}
+
+\begin{proof}
+To show that the image $\im\trunc{0}{i}$ is the fiber $\fib{\trunc{0}{p}}{\tproj{0}{b_0}}$, it suffices to construct a fiberwise equivalence
+\begin{equation*}
+\prd{x:\trunc{0}{E}} \trunc{-1}{\fib{\trunc{0}{i}}{x}} \eqvsym \trunc{0}{p}(x)=\tproj{0}{b_0}.
+\end{equation*}
+By the universal property of $0$-truncation it suffices to show that
+\begin{equation*}
+\prd{x:E} \trunc{-1}{\fib{\trunc{0}{i}}{\tproj{0}{x}}} \eqvsym \trunc{0}{p}(\tproj{0}{x})=\tproj{0}{b_0}.
+\end{equation*}
+First we note that 
+\begin{align*}
+\trunc{0}{p}(\tproj{0}{x})=\tproj{0}{b_0} & \eqvsym \tproj{0}{p(x)} = \tproj{0}{b_0} \\
+& \eqvsym \trunc{-1}{p(x)=b_0}.
+\end{align*}
+Next, we note that
+\begin{align*}
+\fib{\trunc{0}{i}}{\tproj{0}{x}} & \eqvsym \sm{y:\trunc{0}{F}}\trunc{0}{i}(y)=\tproj{0}{x} \\
+& \eqvsym \trunc{0}{\sm{y:F}\trunc{0}{i}(\tproj{0}{y})=\tproj{0}{x}} \\
+& \eqvsym \trunc{0}{\sm{y:F}\tproj{0}{i(y)}=\tproj{0}{x}} \\
+& \eqvsym \trunc{0}{\sm{y:F}\trunc{-1}{i(y)=x}}.
+\end{align*}
+Therefore it follows that
+\begin{align*}
+\trunc{-1}{\fib{\trunc{0}{i}}{\tproj{0}{x}}} & \eqvsym \trunc{-1}{\sm{y:F}\trunc{-1}{i(y)=x}} \\
+& \eqvsym \trunc{-1}{\sm{y:F}i(y)=x} \\
+\end{align*}
+Now it suffices to show that $\eqv{\big(\sm{y:F}i(y)=x\big)}{p(x)=b_0}$. This follows by the pasting lemma of pullbacks
+\begin{equation*}
+\begin{tikzcd}
+(p(x)=b_0) \arrow[r] \arrow[d] & \unit \arrow[d] \\
+F \arrow[r] \arrow[d] & E \arrow[d] \\
+\unit \arrow[r] & B
+\end{tikzcd}
+\end{equation*}
+\end{proof}
+
+\begin{thm}
+Any fiber sequence $F\hookrightarrow E\twoheadrightarrow B$ induces a long exact sequence on homotopy groups
+\begin{equation*}
+\begin{tikzcd}
+& & \cdots \arrow[out=355,in=175,dll] \\
+\pi_n(F) \arrow[r,"\pi_n(i)"] & \pi_n(E) \arrow[r,"\pi_n(p)"] & \pi_n(B) \arrow[out=355,in=175,dll,densely dotted] \\
+\pi_1(F) \arrow[r,"\pi_1(i)"] & \pi_1(E) \arrow[r,"\pi_1(p)"] & \pi_1(B) \arrow[out=355,in=175,dll] \\
+\pi_0(F) \arrow[r,"\pi_0(i)"] & \pi_0(E) \arrow[r,"\pi_0(p)"] & \pi_0(B)
+\end{tikzcd}
+\end{equation*}
+\end{thm}
 
 \section{The Hopf fibration}
 Our goal in this section is to construct the Hopf fibration, i.e.~a fiber sequence
 \begin{equation*}
 \sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}.
 \end{equation*}
+This fiber sequence involves the complex multiplication of the unit sphere in the complex number, which is a circle. Viewing the circle as a subspace of the complex numbers, we write $1$ for the base point of the circle.
 
 \begin{defn}
-An \emph{H-space} $\mathcal{A}$ consists of a small type $A$ equipped with unital multiplicative structure
-\begin{align*}
-e & : A \\
-\mu & : A\to A\to A\\
-\mu_{10} & : \prd{x:A} \mu(x,e)=x \\
-\mu_{01} & : \prd{y:A} \mu(e,y)=y \\
-\mu_{00} & : \mu_{10}(e)=\mu_{01}(e).
-\end{align*}
-such that $\mu(x,\blank)$ and $\mu(\blank,y)$ are equivalences for every $x:A$ and $y:A$, respectively.
+We define the \define{complex multiplication} operation
+\begin{equation*}
+\mu_{\mathbb{C}}:\sphere{1}\to(\sphere{1}\to\sphere{1}).
+\end{equation*}
 \end{defn}
 
-\begin{thm}
-For any H-space $\mathcal{A}$ there is a type family $H_{\mathcal{A}}:\susp A\to \UU$ with equivalences
+\begin{constr}
+By the universal property of the circle, it is equialent to define
 \begin{align*}
-H_{\mathcal{A}}(\ast) & \eqvsym A \\
-\sm{x:\susp A}H_{\mathcal{A}}(x) & \eqvsym \join{A}{A}
+\mu_{\mathbb{C}}(1) & : \sphere{1}\to\sphere{1} \\
+\ap{\mu_{\mathbb{C}}}{\lloop} & : \mu_{\mathbb{C}}(1)=\mu_{\mathbb{C}}(1). 
 \end{align*}
-\end{thm}
+The function $\mu_{\mathbb{C}}(1)$ is multiplication by $1$, which is the identity function. The type of $\ap{\mu_{\mathbb{C}}}{\lloop}$ is equivalent to the type of homotopies
+\begin{equation*}
+\idfunc[\sphere{1}] \htpy \idfunc[\sphere{1}]. 
+\end{equation*}
+We construct this homotopy by induction on $\sphere{1}$. Therefore it suffices to construct
+\begin{align*}
+p & : 1=1 \\
+q & : \mathsf{tr}_{L}(\lloop,p)=p
+\end{align*}
+\end{constr}
+
+\begin{lem}
+The complex multiplication operation $\mu_{\mathbb{C}}$ on the circle satisfies the unit laws
+\begin{align*}
+\mathsf{left\usc{}unit}_{\mathbb{C}}(x) & : \mu_{\mathbb{C}}(1,x) = x \\
+\mathsf{right\usc{}unit}_{\mathbb{C}}(x) & : \mu_{\mathbb{C}}(x,1) = x \\
+\mathsf{coh\usc{}unit}_{\mathbb{C}} & : \mathsf{left\usc{}unit}_{\mathbb{C}}(1)=\mathsf{right\usc{}unit}_{\mathbb{C}}(1),
+\end{align*}
+and the functions $\mu_{\mathbb{C}}(x,\blank)$ and $\mu_{\mathbb{C}}(\blank,y)$ are equivalences for each $x:\sphere{1}$ and $y:\sphere{1}$, respectively.
+\end{lem}
+
+\begin{lem}
+Both commuting squares in the diagram
+\begin{equation*}
+\begin{tikzcd}
+\sphere{1} \arrow[d] & \sphere{1}\times\sphere{1} \arrow[d,swap,"\mu_{\mathbb{C}}"] \arrow[l,swap,"\proj 1"] \arrow[r,"\proj 2"] & \sphere{1} \arrow[d] \\
+\unit & \sphere{1} \arrow[l] \arrow[r] & \unit
+\end{tikzcd}
+\end{equation*}
+are pullback squares.
+\end{lem}
+
+\begin{cor}
+There is a fiber sequence
+\begin{equation*}
+\sphere{1}\hookrightarrow \join{\sphere{1}}{\sphere{1}} \twoheadrightarrow \sphere{2}.
+\end{equation*}
+\end{cor}
+
+\begin{lem}
+The join operation is associative
+\end{lem}
+
+\begin{proof}
+\begin{equation*}
+\begin{tikzcd}
+A & A\times C \arrow[l] \arrow[r] & A\times C \\
+A\times B \arrow[u] \arrow[d] & A\times B \times C \arrow[r] \arrow[d] \arrow[l] \arrow[u] & A\times C \arrow[u] \arrow[d] \\
+B & B\times C \arrow[l] \arrow[r] & C
+\end{tikzcd}
+\end{equation*}
+\end{proof}
+
+\begin{cor}
+There is an equivalence $\eqv{\join{\sphere{1}}{\sphere{1}}}{\sphere{3}}$.
+\end{cor}
 
 \begin{thm}
 There is a fiber sequence $\sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}$. 
 \end{thm}
+
+\begin{lem}
+Suppose $f:G\to H$ is a group homomorphism, such that the sequence
+\begin{equation*}
+\begin{tikzcd}
+0 \arrow[r] & G \arrow[r,"f"] & H \arrow[r] & 0
+\end{tikzcd}
+\end{equation*}
+is exact at $G$ and $H$, where we write $0$ for the trivial group consisting of just the unit element. Then $f$ is a group isomorphism.
+\end{lem}
 
 \begin{cor}
 We have $\pi_2(\sphere{2})=\Z$, and for $k>2$ we have $\pi_k(\sphere{2})=\pi_k(\sphere{3})$.
@@ -38,4 +231,11 @@ We have $\pi_2(\sphere{2})=\Z$, and for $k>2$ we have $\pi_k(\sphere{2})=\pi_k(\
 \begin{exercises}
 \item Give the $0$-sphere $\sphere{0}$ the structure of an H-space.
 \item For any pointed type $A$, give $\loopspace{A}$ the structure of an H-space.
+\item Show that the type of (small) fiber sequences is equivalent to the type of quadruples $(B,P,b_0,x_0)$, consisting of
+\begin{align*}
+B & : \UU \\
+P & : B \to \UU \\
+b_0 & : B \\
+x_0 & : P(b_0).
+\end{align*}
 \end{exercises}

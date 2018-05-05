@@ -46,7 +46,10 @@ we proceed by path induction. Our goal is to show that
 By proof irrelevance it follows that propositions are contractible as soon as they are inhabited.
 
 \begin{cor}\label{cor:contr_prop}
-For any proposition $P$ we have $P\to\iscontr(P)$.
+For any type $A$ we have
+\begin{equation*}
+\isprop(A)\leftrightarrow (A\to\iscontr(A)).
+\end{equation*}
 \end{cor}
 
 \begin{lem}\label{lem:prop_equiv}
@@ -253,7 +256,7 @@ For any type $A$, we say that $A$ is \define{$k$-truncated}, or a \define{$k$-ty
 
 %For the rest of this section, let $k:\Z_{\geq-2}$.
 
-\begin{thm}
+\begin{thm}\label{thm:istrunc_next}
 If $A$ is a $k$-type, then $A$ is also a $(k+1)$-type.
 \end{thm}
 
@@ -347,7 +350,7 @@ For the converse, note that we have equivalences
 Therefore it follows that if $f$ is $(k+1)$-truncated, then the identity type $(x,p)=(y,\refl{f(y)})$ in $\fib{f}{f(y)}$ is $k$-truncated for any $p:f(x)=f(y)$, and therefore $\fib{\apfunc{f}}{p}$ is $k$-truncated by \cref{thm:ktype_eqv}. 
 \end{proof}
 
-\begin{cor}
+\begin{cor}\label{cor:prop_emb}
 A map is an embedding if and only if its fibers are propositions.
 \end{cor}
 

@@ -4,7 +4,7 @@
 
 \title{Introduction to homotopy type theory}
 \author{Egbert Rijke}
-\date{Carnegie Mellon University\\Pittsburgh PA\\Spring 2018}
+\date{Carnegie Mellon University\\Pittsburgh PA\\Spring 2018\\Version: \today}
 %\address{Carnegie Mellon University}
 %\email{erijke@andrew.cmu.edu}
 
@@ -100,80 +100,13 @@
 
 \include{les}
 
-\include{connected}
+%\include{connected}
 
-\include{smash}
+%\include{smash}
 
-\include{blakers-massey}
+%\include{blakers-massey}
 
-\include{open_problems}
-
-%\chapter{The real projective spaces}
-
-\begin{comment}
-\include{logic}
-
-\chapter{Embeddings and surjections}
-Embeddings, subtypes, surjective maps, image factorization.
-We give a type theoretical variant of the Yoneda lemma, using the groupoid structure of types.
-
-\begin{exercises}
-\item Let $\UU_\bool\defeq \sm{A:\UU}\brck{A=\bool}$ be the subuniverse of $2$-element types. Show that the type
-\begin{equation*}
-\sm{A:\UU_\bool}A
-\end{equation*}
-of \emph{pointed} 2-element types is contractible.
-\end{exercises}
-
-\chapter{Univalent algebra}
-\begin{enumerate}
-\item Subsets and quotients
-\item Factorization
-\item The structure isomorphism theorem
-\item The axiom of choice
-\end{enumerate}
-
-\begin{defn}
-An ($0$-)equivalence relation $\mathcal{R}$ on a type $X$ consists of a $\prop$-valued binary relation $R:X\to X\to \prop$ on $X$ which is reflexive, symmetric, and transitive, i.e.~which comes equipped with
-\begin{align*}
-\rho & : \prd{x:X} R(x,x) \\
-\sigma & : \prd{x,y:X} R(x,y)\to R(y,x) \\
-\tau & : \prd{x,y,z:X} R(x,y)\to R(y,z)\to R(x,z).
-\end{align*}
-\end{defn}
-
-Classically, the quotient of $X$ by an equivalence relation $\mathcal{R}$ is defined as the set of $\mathcal{R}$-equivalence classes. We can do something similar here. Note that the equivalence class $[x]$ of $x$ is the subtype of all $y:X$ satisfying $R(x,y)$. In other words, the predicate $R(x,\blank)$ describes precisely the equivalence class $[x]$. 
-
-\begin{defn}
-Let $\mathcal{R}$ be an equivalence relation on a type $X$. We define
-\begin{equation*}
-X/\mathcal{R} \defeq \im(R)
-\end{equation*}
-\end{defn}
-
-\begin{exercises}
-\item ..
-\end{exercises}
-\end{comment}
-
-\begin{comment}
-\appendix
-
-\chapter{Formalization in the Lean HoTT mode}
-\begin{enumerate}
-\item Introduce universes
-\item The inductive type constructor
-\item identity functions, composition, constant functions
-\end{enumerate}
-
-\chapter{Literature}
-\begin{enumerate}
-\item The main reference for homotopy type theory is \cite{hottbook}. In this course we have roughly followed the contents of this book, with a focus on synthetic homotopy theory. 
-\item The Blakers-Massey theorem was proved in HoTT in \cite{hottBM}.
-A useful resource on homotopy (co)limits, the Blakers-Massey theorem and its application is \cite{MunsonVolic}, which also has been the source of many exercises in this course.
-\item The Eilenberg-Mac Lane spaces were defined in homotopy type theory in \cite{hottEM}. Following a suggestion by Shulman \cite{ShulmanCoh} this has resulted in the study of spectra and stable homotopy theory in HoTT. See \cite{CavalloCoh}, \cite{FavoniaPhD}
-\end{enumerate}
-\end{comment}
+%\include{open_problems}
 
 \backmatter
 

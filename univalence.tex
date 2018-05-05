@@ -361,7 +361,7 @@ It follows that $\alpha$ is a fiberwise equivalence. Now the proof is completed 
 \section{Essentially small types and maps}
 It is a trivial observation, but nevertheless of fundamental importance, that by the univalence axiom the identity types of $\UU$ are equivalent to types in $\UU$, because it provides an equivalence $\eqv{(A=B)}{(\eqv{A}{B})}$, and the type $\eqv{A}{B}$ is in $\UU$ for any $A,B:\UU$. Since the identity types of $\UU$ are equivalent to types in $\UU$, we also say that the universe is \emph{locally small}.
 
-\begin{defn}
+\begin{defn}\label{defn:ess_small}
 \begin{enumerate}
 \item A type $A$ is said to be \define{essentially small}\index{essentially small!type|textbf} if there is a type $X:\UU$ and an equivalence $\eqv{A}{X}$. We write\index{ess_small(A)@{$\mathsf{ess\usc{}small}(A)$}|textbf}
 \begin{equation*}
@@ -411,7 +411,7 @@ This follows from the fact that propositions are closed under dependent products
 \begin{thm}\label{thm:fam_proj}
 For any small type $A:\UU$ there is an equivalence
 \begin{equation*}
-\eqv{(A\to \UU)}{\Big(\sm{X:\UU} X\to A\Big)}.
+\mathsf{map\usc{}fam}_A:\eqv{(A\to \UU)}{\Big(\sm{X:\UU} X\to A\Big)}.
 \end{equation*}
 \end{thm}
 
@@ -551,7 +551,7 @@ r & \defeq \lam{(f,H)}{x}\mathsf{tr}_B(...,\proj 2(f(x)))
 \begin{equation*}
 \mathsf{equiv\usc{}eq}(\ap{P}{p})\htpy \mathsf{tr}_P(p).
 \end{equation*}
-\item 
+\item \label{ex:istrunc_UUtrunc}
 \begin{subexenum}
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.\index{universe!of contractible types}
 \item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.\index{equiv@{$\eqv{A}{B}$}!truncatedness}

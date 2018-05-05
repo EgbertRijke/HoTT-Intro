@@ -315,7 +315,7 @@ given by $s\mapsto (s\circ i,s\circ j,s\cdot H)$.
 \end{rmk}
 \end{comment}
 
-\begin{lem}
+\begin{lem}\label{lem:cocone_pb}
 For any span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and any type $X$ the square\index{cocone_S(X)@{$\mathsf{cocone}_{\mathcal{S}}(X)$}!as a pullback|textit}
 \begin{equation*}
 \begin{tikzcd}
@@ -327,45 +327,11 @@ which commutes by the homotopy $\pi_3' \defeq\lam{(i,j,H)} \mathsf{eq\usc{}htpy}
 \end{lem}
 
 \begin{proof}
-The function extensionality principle induces an equivalence on total spaces
-\begin{align*}
-X^A\times_{X^S} X^B & \jdeq \sm{i:A\to X}{j:B\to X} i\circ f= j\circ g\\
-& \eqvsym \sm{i:A\to X}{j:B\to X} i\circ f\htpy j\circ g \\
-& \jdeq \mathsf{cocone}_{\mathcal{S}}(X).
-\end{align*}
-Concretely, the equivalence $X^A\times_{X^S} X^B \to \mathsf{cocone}_{\mathcal{S}}(X)$ is defined as
+The gap map $\mathsf{cocone}_{\mathcal{S}}(X)\to X^A\times_{X^S} X^B$ is the function 
 \begin{equation*}
-e\defeq \lam{(i,j,p)}(i,j,\mathsf{htpy\usc{}eq}(p)),
+\lam{(i,j,H)}(i,j,\mathsf{eq\usc{}htpy}(H)).
 \end{equation*}
-and its inverse is the function $\lam{(i,j,H)}(i,j,\mathsf{eq\usc{}htpy}(H))$.
-To complete the proof using \cref{thm:pb_3for2} that the square is a pullback it remains to construct homotopies
-\begin{samepage}
-\begin{align*}
-K & : \pi_1\circ e \htpy \pi_1 \\
-L & : \pi_2\circ e \htpy \pi_2 \\
-M & : \ct{(\pi_3'\cdot e)}{((\blank\circ g)\cdot L)} \htpy \ct{((\blank\circ f)\cdot K)}{\pi_3}
-\end{align*}
-\end{samepage}%
-For $K$ and $L$ we simply take
-\begin{align*}
-K & \defeq \lam{(i,j,p)} \refl{i} \\
-L & \defeq \lam{(i,j,p)} \refl{j}
-\end{align*}
-Then we have homotopies 
-\begin{align*}
-(\blank\circ f)\cdot K & \htpy \lam{(i,j,p)}\refl{i\circ f} \\
-(\blank\circ g)\cdot L & \htpy \lam{(i,j,p)}\refl{j\circ g}.
-\end{align*}
-There is also a homotopies 
-\begin{align*}
-\pi_3'\cdot e & \htpy \lam{(i,j,p)}\mathsf{eq\usc{}htpy}(\mathsf{htpy\usc{}eq}(p)) \\
-& \htpy \lam{(i,j,p)}p
-\end{align*}
-by the definition of $e$. In order to construct the homotopy $M$ it is therefore equivalent to construct an identification
-\begin{equation*}
-\ct{p}{\refl{i\circ f}}=\ct{\refl{j\circ g}}{p},
-\end{equation*}
-for every $(i,j,p):X^A\times_{X^S} X^B$. This can be obtained by the unit laws.
+This is an equivalence by \cref{thm:fib_equiv}, since it is the induced map on total spaces of the fiberwise equivalence $\mathsf{eq\usc{}htpy}$. Therefore, the square is a pullback square by \cref{thm:is_pullback}.
 \end{proof}
 
 In the following theorem we establish an alternative characterization of the universal property of pushouts.
@@ -401,21 +367,14 @@ is a pullback square, for every type $T$.
 \end{thm}
 
 \begin{proof}
-It is straightforward to verify that the diagram
+It is straightforward to verify that the triangle
 \begin{equation*}
 \begin{tikzcd}
-T^X \arrow[dr,densely dotted,"{\mathsf{cocone\usc{}map}(i,j,H)}" {description,xshift=1em}] \arrow[ddr,bend right=15] \arrow[drr,bend left=15] &[2em] \\
-& \mathsf{cocone}(T) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & T^B \arrow[d,"\blank\circ g"] \\
-& T^A \arrow[r,swap,"\blank\circ f"] & T^S
+& T^X \arrow[dl,swap,"{\mathsf{cocone\usc{}map}(i,j,H)}"] \arrow[dr,"{\mathsf{gap}(\blank\circ i,\blank\circ j, \mathsf{eq\usc{}htpy}(\blank\cdot H))}"] \\
+\mathsf{cocone}(T) \arrow[rr,swap,"{\mathsf{gap}(i,j,\mathsf{eq\usc{}htpy}(H))}"] & & T^A \times_{T^S} T^B
 \end{tikzcd}
 \end{equation*}
-commutes, i.e.~that there are homotopies
-\begin{align*}
-K & : \pi_1\circ \mathsf{cocone\usc{}map}(i,j,H) \htpy \lam{h}h\circ i \\
-L & : \pi_2\circ \mathsf{cocone\usc{}map}(i,j,H) \htpy \lam{h}h\circ j \\
-M & : \ct{(\pi_3'\cdot e)}{((\blank\circ g)\cdot L)} \htpy \ct{((\blank\circ f)\cdot K)}{(\lam{h} \mathsf{eq\usc{}htpy}(h\cdot H))}.
-\end{align*}
-Therefore it follows by \cref{thm:pb_3for2} that the cocone $(i,j,H)$ is colimiting precisely when for every type $T$ the asserted square is a pullback.
+commutes. Since the bottom map is an equivalence by \cref{lem:cocone_pb}, it follows that if either one of the remaining maps is an equivalence, so is the other. The claim now follows by \cref{thm:is_pullback}.
 \end{proof}
 
 \begin{eg}\label{eg:circle_pushout}
@@ -579,7 +538,7 @@ Consider a map $f:A\to B$. Then the cofiber of the map $\inr:B\to \mathsf{cofib}
 \mathsf{span}(A,B)\defeq \sm{S:\UU} (S\to A)\times (S\to B)
 \end{equation*}
 of small spans from $A$ to $B$ is equivalent to the type $A\to (B\to\UU)$ of small relations from $A$ to $B$.
-\item Use \cref{thm:pushout_up,cor:pb_equiv,ex:equiv_precomp} to show that for any commuting square
+\item \label{ex:pushout_equiv}Use \cref{thm:pushout_up,cor:pb_equiv,ex:equiv_precomp} to show that for any commuting square
 \begin{equation*}
 \begin{tikzcd}
 S \arrow[r,"g"] \arrow[d,swap,"f","{\eqvsym}"'] & B \arrow[d,"j"] \\
@@ -596,7 +555,7 @@ Use this observation to conclude the following:
 \item If $X$ is contractible, then $\join{X}{Y}$ is contractible. 
 \item If $A$ is contractible, then there is an equivalence $\eqv{A\vee B}{B}$ for any pointed type $B$.
 \end{enumerate}
-\item Let $P$ and $Q$ be propositions.
+\item \label{ex:join_propositions}Let $P$ and $Q$ be propositions.
 \begin{subexenum}
 \item Show that $\join{P}{Q}$ satisfies the \emph{universal property of disjunction}, i.e.~that for any proposition $R$, the map
 \begin{equation*}
@@ -605,13 +564,19 @@ Use this observation to conclude the following:
 given by $f\mapsto (f\circ \inl,f\circ \inr)$, is an equivalence.
 \item Use the proposition $R\defeq\iscontr(\join{P}{Q})$ to show that $\join{P}{Q}$ is again a proposition.
 \end{subexenum}
-\item Let $Q$ be a proposition, and let $A$ be a type. Show that $\inr:A\to \join{Q}{A}$ is an equivalence if and only if $Q\to\iscontr(A)$.
+\item Let $Q$ be a proposition, and let $A$ be a type. Show that the following are equivalent:
+\begin{subexenum}
+\item The map $(Q\to A)\to(\emptyt\to A)$ is an equivalence.
+\item The type $A^Q$ is contractible.
+\item There is a term of type $Q\to\iscontr(A)$.
+\item The map $\inr:A\to \join{Q}{A}$ is an equivalence.
+\end{subexenum}
 \item Let $P$ be a proposition. Show that $\susp P$ is a set, with an equivalence
 \begin{equation*}
 \eqv{\Big(\inl(\ttt)=\inr(\ttt)\Big)}{P}.
 \end{equation*}
 \item Show that $\eqv{A\sqcup^{\mathcal{S}} B}{B\sqcup^{\mathcal{S}^{\mathsf{op}}} A}$, where $\mathcal{S^{\mathsf{op}}}\defeq (S,g,f)$ is the \define{opposite span} of $\mathcal{S}$. 
-\item Show that if
+\item Use \cref{ex:pb_pi} to show that if
 \begin{equation*}
 \begin{tikzcd}
 S \arrow[r] \arrow[d] & Y \arrow[d] \\
@@ -626,7 +591,7 @@ A\times X \arrow[r] & A\times Z
 \end{tikzcd}
 \end{equation*}
 for any type $A$.
-\item Show that if
+\item Use \cref{ex:pb_prod} to show that if
 \begin{equation*}
 \begin{tikzcd}
 S_1 \arrow[r] \arrow[d] & Y_1 \arrow[d] & S_2 \arrow[r] \arrow[d] & Y_2 \arrow[d] \\
@@ -642,7 +607,7 @@ X_1 +X_2 \arrow[r] & Z_1+Z_2.
 \end{equation*}
 \item 
 \begin{subexenum}
-\item Consider a span $(S,f,g)$ from $A$ to $B$. Show that the square
+\item Consider a span $(S,f,g)$ from $A$ to $B$. Use \cref{ex:pb_diagonal} to show that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
 S+S \arrow[d,swap,"{f+g}"] \arrow[r,"{[\idfunc,\idfunc]}"] & S \arrow[d,"{\inr\circ g}"] \\
@@ -662,20 +627,19 @@ A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 with $H:f\htpy g\circ h$. 
 \begin{subexenum}
 \item Construct a map $\mathsf{cofib}_{(h,H)}: \mathsf{cofib}_{g}\to \mathsf{cofib}_f$.
-\item Show that $\eqv{\mathsf{cofib}_{\mathsf{cofib}(h,H)}}{\mathsf{cofib}_h}$.
+\item Use \cref{ex:pb_fib} to show that $\eqv{\mathsf{cofib}_{\mathsf{cofib}(h,H)}}{\mathsf{cofib}_h}$.
 \end{subexenum}
-\item Use \cref{ex:circle_connected} to show that for $n\geq 0$, $X$ is an $n$-type if and only if the map
+\item \label{ex:sphere_null}Use \cref{ex:circle_connected} to show that for $n\geq 0$, $X$ is an $n$-type if and only if the map
 \begin{equation*}
 \lam{x}\mathsf{const}_x : X \to (\sphere{n+1}\to X)
 \end{equation*}
 is an equivalence.
 \item 
 \begin{subexenum}
-\item Construct a function
+\item Construct for every $f:X\to Y$ a function
 \begin{equation*}
-(X\to Y)\to (\susp X\to \susp Y),
+\susp f : \susp X\to \susp Y.
 \end{equation*}
-for any two types $X$ and $Y$. Thus we obtain a function $\susp f:\susp X \to \susp Y$, for any $f:X\to Y$.
 \item Show that if $f\htpy g$, then $\susp f \htpy \susp g$. 
 \item Show that $\susp \idfunc[X]\htpy\idfunc[\susp X]$
 \item Show that
@@ -684,6 +648,20 @@ for any two types $X$ and $Y$. Thus we obtain a function $\susp f:\susp X \to \s
 \end{equation*}
 for any $f:X\to Y$ and $g:Y\to Z$.
 \end{subexenum}
+\item Consider a commuting diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A_0 & B_0 \arrow[l] \arrow[r] & C_0 \\
+A_1 \arrow[u] \arrow[d] & B_1 \arrow[u] \arrow[r] \arrow[d] \arrow[l] & C_1 \arrow[u] \arrow[d] \\
+A_2 & B_2 \arrow[l] \arrow[r] & C_2
+\end{tikzcd}
+\end{equation*}
+with homotopies filling the (small) squares. Use \cref{ex:pb_3by3} to construct an equivalence
+\begin{align*}
+& (A_0\sqcup^{B_0} C_0) \sqcup^{(A_1\sqcup^{B_1} C_1)} (A_2 \sqcup^{B_2} C_2) \\
+& \qquad \eqvsym (A_0 \sqcup^{A_1} A_2) \sqcup^{(B_0\sqcup^{B_1} B_2)} (C_0\sqcup^{C_1} C_2).
+\end{align*}
+This is known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pushouts} for pushouts.
 \item 
 \begin{subexenum}
 \item Let $I$ be a type, and let $A$ be a family over $I$. Construct an equivalence
@@ -699,4 +677,5 @@ for any $f:X\to Y$ and $g:Y\to Z$.
 \eqv{\susp(\mathsf{Fin}(n+1))}{\bigvee\nolimits_{(i:\mathsf{Fin}(n))}\sphere{1}}.
 \end{equation*}
 \end{subexenum}
+\item Show that $\eqv{\join{\mathsf{Fin}(n+1)}{\mathsf{Fin}(m+1)}}{\bigvee\nolimits_{(i:\mathsf{Fin}(n\cdot m))}\sphere{1}}$, for any $n,m:\N$. 
 \end{exercises}

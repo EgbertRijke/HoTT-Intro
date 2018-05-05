@@ -1,8 +1,55 @@
 \chapter{Descent}\label{chap:descent}
 
-\section{The flattening lemma for pushouts}
+\section{Type families over pushouts}
 
-In this section we assume to have a pushout square
+Given a pushout square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X.
+\end{tikzcd}
+\end{equation*}
+with $H:i\circ f\htpy j\circ g$, and a family $P:X\to\UU$, we obtain
+\begin{align*}
+P\circ i & : A \to \UU \\
+P\circ j & : B \to \UU \\
+\lam{x}\mathsf{tr}_P(H(x)) & : \prd{x:S} \eqv{P(i(f(x)))}{P(j(g(x)))}.
+\end{align*}
+Our goal in the current section is to show that the triple $(P_A,P_B,P_S)$ consisting of $P_A\defeq P\circ i$, $P_B\defeq P\circ j$, and $P_S\defeq \lam{x}\mathsf{tr}_P(H(x))$ characterizes the family $P$ over $X$.
+
+\begin{defn}
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X.
+\end{tikzcd}
+\end{equation*}
+with $H:i\circ f\htpy j\circ g$, where all types involved are in $\UU$. The type $\mathsf{Desc}(\mathcal{S})$\index{Desc@{$\mathsf{Desc}(\mathcal{S})$}|textbf} of \define{descent data}\index{descent data|textbf} for $X$, is defined defined to be the type of triples $(P_A,P_B,P_S)$ consisting of
+\begin{align*}
+P_A & : A \to \UU \\
+P_B & : B \to \UU \\
+P_S & : \prd{x:S} \eqv{P_A(f(x))}{P_B(g(x))}.
+\end{align*}
+\end{defn}
+
+\begin{defn}
+Given a commuting square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X.
+\end{tikzcd}
+\end{equation*}
+with $H:i\circ f\htpy j\circ g$, we define the map\index{desc_fam@{$\mathsf{desc\usc{}fam}_{\mathcal{S}}$}|textbf}
+\begin{equation*}
+\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H) : (X\to \UU)\to \mathsf{Desc}(\mathcal{S})
+\end{equation*}
+by $P\mapsto (P\circ i,P\circ j,\lam{x}\mathsf{tr}_P(H(x)))$.
+\end{defn}
+
+\begin{thm}\label{thm:desc_fam}
+Consider a pushout square
 \begin{equation*}
 \begin{tikzcd}
 S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
@@ -15,18 +62,7 @@ P_A & : A \to \UU \\
 P_B & : B \to \UU \\
 P_S & : \prd{x:S} \eqv{P_A(f(x))}{P_B(g(x))}.
 \end{align*}
-The type of such triples $(P_A,P_B,P_B)$ is called the \define{descent data} for $\mathcal{S}$, and we write $\mathsf{Desc}(\mathcal{S})$ for this type. 
-
-\begin{defn}
-We define the map
-\begin{equation*}
-\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H) : (X\to \UU)\to \mathsf{Desc}(\mathcal{S})
-\end{equation*}
-given by $P\mapsto (P\circ i,P\circ j,\lam{x}\mathsf{tr}_P(\glue(x)))$.
-\end{defn}
-
-\begin{thm}
-The function
+Then the function\index{desc_fam@{$\mathsf{desc\usc{}fam}_{\mathcal{S}}$}!is an equivalence|textit}
 \begin{equation*}
 \mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H) : (X\to \UU)\to \mathsf{Desc}(\mathcal{S})
 \end{equation*}
@@ -34,30 +70,43 @@ is an equivalence.
 \end{thm}
 
 \begin{proof}
-Note that we have a commuting triangle
+By the 3-for-2 property of equivalences it suffices to construct an equivalence $\varphi:\mathsf{cocone}_{\mathcal{S}}(\UU)\to\mathsf{Desc}(\mathcal{S})$ such that the triangle
 \begin{equation*}
 \begin{tikzcd}
 & \UU^X \arrow[dl,swap,"{\mathsf{cocone\usc{}map}_{\mathcal{S}}(i,j,H)}"] \arrow[dr,"{\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H)}"] \\
-\mathsf{cocone}_{\mathcal{S}}(\UU) \arrow[rr,"\eqvsym","\varphi"'] & & \mathsf{Desc}(\mathcal{S})
+\mathsf{cocone}_{\mathcal{S}}(\UU) \arrow[rr,densely dotted,"\eqvsym","\varphi"'] & & \mathsf{Desc}(\mathcal{S})
 \end{tikzcd}
 \end{equation*}
-where $\varphi\defeq \lam{(P_A,P_B,K)}(P_A,P_B,\lam{x}\mathsf{equiv\usc{}eq}(K(x)))$. This is an equivalence since it is the induced map on total spaces of the fiberwise transformation
+commutes.
+
+Since we have equivalences
 \begin{equation*}
-{\Big(\prd{x:S}P_A(f(x))=P_B(g(x))\Big)}\to{\Big(\prd{x:S}\eqv{P_A(f(x))}{P_B(g(x))}\Big)},
+\mathsf{equiv\usc{}eq}:\eqv{\Big(P_A(f(x))=P_B(g(x))\Big)}{\Big(\eqv{P_A(f(x))}{P_B(g(x))}\Big)}
 \end{equation*}
-which is an equivalence by \cref{ex:equiv_pi} and the univalence axiom. We note that the triangle commutes by \cref{ex:tr_ap}. Thus we conclude by the 3-for-2 property of equivalences that $\mathsf{desc\usc{}fam}_{\mathcal{S}}$ is an equivalence.
+for all $x:S$, we obtain by \cref{ex:equiv_pi} an equivalence on the dependent products
+\begin{equation*}
+{\Big(\prd{x:S}P_A(f(x))=P_B(g(x))\Big)}\to{\Big(\prd{x:S}\eqv{P_A(f(x))}{P_B(g(x))}\Big)}.
+\end{equation*}
+We define $\varphi$ to be the induced map on total spaces. Explicitly, we have
+\begin{equation*}
+\varphi\defeq \lam{(P_A,P_B,K)}(P_A,P_B,\lam{x}\mathsf{equiv\usc{}eq}(K(x))).
+\end{equation*}
+Then $\varphi$ is an equivalence by \cref{thm:fib_equiv}, and the triangle commutes by \cref{ex:tr_ap}.
 \end{proof}
 
 \begin{cor}\label{cor:desc_fam}
+Consider descent data $(P_A,P_B,P_S)$ for a pushout square as in \cref{thm:desc_fam}.
 Then the type of quadruples $(P,e_A,e_B,e_S)$ consisting of a family $P:X\to\UU$ equipped with fiberwise equivalences
+\begin{samepage}
 \begin{align*}
 e_A & : \prd{a:A}\eqv{P_A(a)}{P(i(a))} \\
 e_B & : \prd{b:B}\eqv{P_B(a)}{P(j(b))}
 \end{align*}
+\end{samepage}%
 and a homotopy $e_S$ witnessing that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
-P_A(f(x)) \arrow[r,"e_A(f(x))"] \arrow[d,swap,"P_S(x)"] & P(i(f(x))) \arrow[d,"\mathsf{tr}_P(\glue(x))"] \\
+P_A(f(x)) \arrow[r,"e_A(f(x))"] \arrow[d,swap,"P_S(x)"] & P(i(f(x))) \arrow[d,"\mathsf{tr}_P(H(x))"] \\
 P_B(g(x)) \arrow[r,swap,"e_B(g(x))"] & P(j(g(x)))
 \end{tikzcd}
 \end{equation*}
@@ -68,35 +117,55 @@ commutes, is contractible.
 The fiber of this map at $(P_A,P_B,P_S)$ is equivalent to the type of quadruples $(P,e_A,e_B,e_S)$ as described in the theorem, which are contractible by \cref{thm:contr_equiv}.
 \end{proof}
 
-The following lemma is sometimes called the \define{flattening lemma} for pushouts.
-\begin{lem}\label{lem:flattening}
-Let $(P,e_A,e_B,e_S)$ be as obtained from \cref{cor:desc_fam}. 
-Then the square
+\section{The flattening lemma for pushouts}
+
+In this section we consider a pushout square
 \begin{equation*}
-\begin{tikzcd}[column sep=huge]
-\sm{x:S}P_A(f(x)) \arrow[d,swap,"{\total[f]{\lam{(x,y)}(f(x),y)}}"] \arrow[r,"{\total[g]{e_S}}"] & \sm{b:B}P_B(b) \arrow[d,"{\total[j]{e_B}}"] \\
-\sm{a:A}P_A(a) \arrow[r,swap,"{\total[i]{e_A}}"] & \sm{x:X}P(x)
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X.
 \end{tikzcd}
 \end{equation*}
-commutes and is a pushout square.
-\end{lem}
+with $H:i\circ f\htpy j\circ g$, descent data
+\begin{align*}
+P_A & : A \to \UU \\
+P_B & : B \to \UU \\
+P_S & : \prd{x:S} \eqv{P_A(f(x))}{P_B(g(x))},
+\end{align*}
+and a family $P:X\to\UU$ equipped with 
+\begin{align*}
+e_A & : \prd{a:A}\eqv{P_A(a)}{P(i(a))} \\
+e_B & : \prd{b:B}\eqv{P_B(a)}{P(j(b))}
+\end{align*}
+and a homotopy $e_S$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+P_A(f(x)) \arrow[r,"e_A(f(x))"] \arrow[d,swap,"P_S(x)"] & P(i(f(x))) \arrow[d,"\mathsf{tr}_P(H(x))"] \\
+P_B(g(x)) \arrow[r,swap,"e_B(g(x))"] & P(j(g(x)))
+\end{tikzcd}
+\end{equation*}
+commutes.
+
+\begin{defn}
+We define a commuting square
+\begin{equation*}
+\begin{tikzcd}
+\sm{x:S}P_A(f(x)) \arrow[d,swap,"{f'}"] \arrow[r,"{g'}"] & \sm{b:B}P_B(b) \arrow[d,"{j'}"] \\
+\sm{a:A}P_A(a) \arrow[r,swap,"{i'}"] & \sm{x:X}P(x)
+\end{tikzcd}
+\end{equation*}
+with a homotopy $H':i'\circ f'\htpy j'\circ g'$.
+\end{defn}
 
 \begin{constr}
 We define
 \begin{align*}
-f' & \defeq \total[f]{\lam{(x,y)}(f(x),y)} \\
+f' & \defeq \total[f]{\lam{x}\idfunc[P_A(f(x))]} \\
 g' & \defeq \total[g]{e_S} \\
 i' & \defeq \total[i]{e_A} \\
 j' & \defeq \total[j]{e_B}.
 \end{align*}
-We will also write $\mathcal{S'}$ for the span
-\begin{equation*}
-\begin{tikzcd}
-\sm{a:A}P_A(a) & \sm{x:S}P_A(f(x)) \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] & \sm{b:B}P_B(b).
-\end{tikzcd}
-\end{equation*}
-
-Our first goal is to construct a homotopy $H':i'\circ f'\htpy j'\circ g'$. Thus, we have to show that
+The remaining goal is to construct a homotopy $H':i'\circ f'\htpy j'\circ g'$. Thus, we have to show that
 \begin{equation*}
 (i(f(x)),e_A(y))=(j(g(x)),e_B(e_S(y)))
 \end{equation*}
@@ -105,9 +174,30 @@ for any $x:S$ and $y:P_A(f(x))$. We have he identification
 \mathsf{eq\usc{}pair}(H(x),e_S(x,y)^{-1})
 \end{equation*}
 of this type.
+\end{constr}
 
-Our next goal is to show that the square is a pushout square. 
-In other words, we have to show that the map
+\begin{defn}
+We will write $\mathcal{S'}$ for the span
+\begin{equation*}
+\begin{tikzcd}
+\sm{a:A}P_A(a) & \sm{x:S}P_A(f(x)) \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] & \sm{b:B}P_B(b).
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{lem}[The flattening lemma]\label{lem:flattening}
+The commuting square\index{flattening lemma!for pushouts|textit}
+\begin{equation*}
+\begin{tikzcd}
+\sm{x:S}P_A(f(x)) \arrow[d,swap,"{f'}"] \arrow[r,"{g'}"] & \sm{b:B}P_B(b) \arrow[d,"{j'}"] \\
+\sm{a:A}P_A(a) \arrow[r,swap,"{i'}"] & \sm{x:X}P(x)
+\end{tikzcd}
+\end{equation*}
+is a pushout square.
+\end{lem}
+
+\begin{proof}
+We will show that the map
 \begin{equation*}
 \mathsf{cocone\usc{}map}_{\mathcal{S}'}(i',j',H'): \Big(\Big(\sm{x:X}P(x)\Big)\to Y\Big)\to \mathsf{cocone}_{\mathcal{S}'}(Y)
 \end{equation*}
@@ -121,7 +211,7 @@ w & : \prd{x:S}{y:P_A(f(x))} u(f(x),y)=v(g(x),e_S(x,y)).
 Now observe that there is an equivalence
 \begin{align*}
 & \Big(\prd{y:P_A(f(x))} u(f(x),y)=v(g(x),e_S(x,y))\Big) \\
-& \qquad \qquad \eqvsym \mathsf{tr}_{(t\mapsto P(t)\to Y)}(\glue(x),u'(f(x)))=v'(g(x))
+& \qquad \qquad \eqvsym \mathsf{tr}_{(t\mapsto P(t)\to Y)}(H(x),u'(f(x)))=v'(g(x))
 \end{align*}
 for any $u$ and $v$ as above, and any $x:S$. 
 By this equivalence we obtain a commuting square
@@ -135,72 +225,14 @@ where $\Psi$ is the type of triples $(u',v',w')$ consisting of
 \begin{align*}
 u' & : \prd{a:A} P(i(a))\to Y \\
 v' & : \prd{b:B} P(j(b))\to Y \\
-w' & : \prd{x:S} \mathsf{tr}_{(t\mapsto P(t)\to Y)}(\glue(x),u'(f(x)))=v'(g(x)),
+w' & : \prd{x:S} \mathsf{tr}_{(t\mapsto P(t)\to Y)}(H(x),u'(f(x)))=v'(g(x)),
 \end{align*}
-Since the dependent action on paths $\mathsf{dgen}_{\mathcal{S}}$ is an equivalence it follows by the 3-for-2 property of equivalences that $\mathsf{cocone\usc{}map}_{\mathcal{S}'}(i',j',H')$ is an equivalence, as desired.
-\end{constr}
-
-\section{The descent property for pushouts}
-
-In the previous section there was a significant role for fiberwise equivalences, and we know by \cref{thm:pb_fibequiv,cor:pb_fibequiv}: when there's a fiberwise equivalence, there's a pullback. In this section we reformulate the results of the previous section using pullbacks where we used fiberwise equivalences before, to obtain new and useful results. We begin by considering the type of descent data from the perspective of pullback squares.
-
-\begin{defn}
-Consider a span $\mathcal{S}$ from $A$ to $B$, and a span $\mathcal{S}'$ from $A'$ to $B'$. A \define{cartesian transformation} from $\mathcal{S}'$ to $\mathcal{S}$ is a diagram of the form
-\begin{equation*}
-\begin{tikzcd}
-A' \arrow[d,swap,"h_A"]  & S' \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] \arrow[d,swap,"h_S"] & B' \arrow[d,"h_B"] \\
-A & S \arrow[l,"f"] \arrow[r,swap,"g"] & B
-\end{tikzcd}
-\end{equation*}
-with $F:f\circ h_S\htpy h_A\circ f'$ and $G:g\circ h_S\htpy h_B\circ g'$, where both squares are pullback squares. 
-
-The type $\mathsf{cart}(\mathcal{S}',\mathcal{S})$ of cartesian transformation is the type of tuples
-\begin{equation*}
-(h_A,h_S,h_B,F,G,p_f,p_g)
-\end{equation*}
-where $p_f:\mathsf{is\usc{}pullback}(h_S,h_A,F)$ and $p_g:\mathsf{is\usc{}pullback}(h_S,h_B,G)$.
-\end{defn}
-
-\begin{lem}
-There is an equivalence
-\begin{equation*}
-\mathsf{cart\usc{}desc}_{\mathcal{S}}:\mathsf{Desc}(\mathcal{S})\to \sm{A',B':\UU}{\mathcal{S}':\mathsf{span}(A',B')}\mathsf{cart}(\mathcal{S}',\mathcal{S}).
-\end{equation*}
-\end{lem}
-
-\begin{proof}
-First we claim that the type $\Theta$ of tuples 
-\begin{equation*}
-((S',h_S),(A',h_A),(f',F,p_f),(B',h_B),(g',G,p_g))
-\end{equation*}
-consisting of types $S'$, $A'$, and $B'$, maps $h_S:S'\to S$, $h_A:A'\to A$, and $h_B:B'\to B$,
-homotopies $F:f\circ h_S\htpy h_A\circ f'$ and $G:g\circ h_S\htpy h_B\circ g'$, and terms $p_f:\mathsf{is\usc{}pullback}(h_S,h_A,F)$ and $p_q:\mathsf{is\usc{}pullback}(h_S,h_B,G)$ witnessing that the squares in the diagram
-\begin{equation*}
-\begin{tikzcd}
-A' \arrow[d,swap,"h_A"]  & S' \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] \arrow[d,swap,"h_S"] & B' \arrow[d,"h_B"] \\
-A & S \arrow[l,"f"] \arrow[r,swap,"g"] & B
-\end{tikzcd}
-\end{equation*}
-are pullback squares, is equivalent to the type of triples $(P_A,P_B,P_S)$ as in \cref{cor:desc_fam}. To see this, note that by \cref{thm:pb_fibequiv_complete} it follows that the types of triples $(f',F,p_f)$ and $(g',G,p_g)$ are equivalent to the types of fiberwise equivalences
-\begin{align*}
-& \prd{x:S}{\fib{h_S}{x}}{\fib{h_A}{f(x)}} \\
-& \prd{x:S}{\fib{h_S}{x}}{\fib{h_B}{g(x)}}
-\end{align*} 
-respectively. Furthermore, by \cref{thm:fam_proj} the types of pairs $(S',h_S)$, $(A',h_A)$, and $(B',h_B)$ are equivalent to the types $S\to \UU$, $A\to \UU$, and $B\to \UU$, respectively. Therefore it follows that the type $\Theta$ is equivalent to the type of tuples $(Q,P_A,\varphi,P_B,\psi)$ consisting of
-\begin{align*}
-Q & : S\to \UU \\
-P_A & : A \to \UU \\
-P_B & : B \to \UU \\
-\varphi & : \prd{x:S}\eqv{Q(x)}{P_A(f(x))} \\
-P_S & : \prd{x:S}\eqv{Q(x)}{P_B(g(x))}
-\end{align*}
-However, the type of $\varphi$ is equivalent to the type $P_A\circ f=Q$. Thus we see that the type of pairs $(Q,\varphi)$ is contractible, and our claim follows.
+Since the dependent action on generators $\mathsf{dgen}_{\mathcal{S}}$ is an equivalence it follows by the 3-for-2 property of equivalences that $\mathsf{cocone\usc{}map}_{\mathcal{S}'}(i',j',H')$ is an equivalence, as desired.
 \end{proof}
 
-We will encounter commuting cubes in this section. In the following definition we give the full specification of a commuting cube.
-
-\begin{defn}
-A commuting cube
+\section{Commuting cubes}
+\begin{defn}\label{defn:cube}
+A \define{commuting cube}\index{commuting cube|textbf}
 \begin{equation*}
 \begin{tikzcd}
 & A_{111} \arrow[dl] \arrow[dr] \arrow[d] \\
@@ -215,7 +247,8 @@ consists of
 \begin{equation*}
 A_{111},A_{110},A_{101},A_{011},A_{100},A_{010},A_{001},A_{000},
 \end{equation*}
-\item maps
+\item \begin{samepage}%
+maps
 \begin{align*}
 f_{11\check{1}} & : A_{111}\to A_{110} & f_{\check{1}01} & : A_{101}\to A_{001} \\
 f_{1\check{1}1} & : A_{111}\to A_{101} & f_{01\check{1}} & : A_{011}\to A_{010} \\
@@ -224,6 +257,7 @@ f_{1\check{1}0} & : A_{110}\to A_{100} & f_{\check{1}00} & : A_{100}\to A_{000} 
 f_{\check{1}10} & : A_{110}\to A_{010} & f_{0\check{1}0} & : A_{010}\to A_{000} \\
 f_{10\check{1}} & : A_{101}\to A_{100} & f_{00\check{1}} & : A_{001}\to A_{000},
 \end{align*}
+\end{samepage}%
 \item homotopies
 \begin{align*}
 H_{1\check{1}\check{1}} & : f_{1\check{1}0}\circ f_{11\check{1}} \htpy f_{10\check{1}}\circ f_{1\check{1}1} & H_{0\check{1}\check{1}} & : f_{0\check{1}0}\circ f_{01\check{1}} \htpy f_{00\check{1}}\circ f_{0\check{1}1} \\
@@ -239,10 +273,91 @@ filling the cube.
 \end{enumerate}
 \end{defn}
 
-\begin{defn}
-There is an operation $\mathsf{cart\usc{}map}$ of type
+\begin{lem}
+Given a commuting cube as in \cref{defn:cube} we obtain a commuting square
 \begin{equation*}
-{\Big(\sm{X':\UU}X'\to X\Big)}\to {\Big(\sm{A',B':\UU}{\mathcal{S}':\mathsf{span}(A',B')}\mathsf{cart}(\mathcal{S}',\mathcal{S})\Big)}
+\begin{tikzcd}
+\fib{f_{1\check{1}1}}{x} \arrow[r] \arrow[d] & \fib{f_{0\check{1}1}}{f_{\check{1}01}(x)} \arrow[d] \\
+\fib{f_{1\check{1}0}}{f_{10\check{1}}(x)} \arrow[r] & \fib{f_{0\check{1}0}}{f_{00\check{1}}(x)}
+\end{tikzcd}
+\end{equation*}
+for any $x:A_{101}$. 
+\end{lem}
+
+\begin{lem}
+Consider a commuting cube
+\begin{equation*}
+\begin{tikzcd}
+& A_{111} \arrow[dl] \arrow[dr] \arrow[d] \\
+A_{110} \arrow[d] & A_{101} \arrow[dl] \arrow[dr] & A_{011} \arrow[dl,crossing over] \arrow[d] \\
+A_{100} \arrow[dr] & A_{010} \arrow[d] \arrow[from=ul,crossing over] & A_{001} \arrow[dl] \\
+& A_{000}.
+\end{tikzcd}
+\end{equation*}
+If the bottom and front right squares are pullback squares, then the back left square is a pullback if and only if the top square is.
+\end{lem}
+
+\begin{rmk}
+By rotating the cube we also obtain:
+\begin{enumerate}
+\item If the bottom and front left squares are pullback squares, then the back right square is a pullback if and only if the top square is.
+\item If the front left and front right squares are pullback, then the back left square is a pullback if and only if the back right square is.
+\end{enumerate}
+By combining these statements it also follows that if the front left, front right, and bottom squares are pullback squares, then if any of the remaining three squares are pullback squares, all of them are. Cubes that consist entirely of pullback squares are sometimes called \define{strongly cartesian}\index{strongly cartesian cube}.
+\end{rmk}
+
+\section{The descent property for pushouts}
+
+In the previous section there was a significant role for fiberwise equivalences, and we know by \cref{thm:pb_fibequiv,cor:pb_fibequiv}: fiberwise equivalences indicate the presence of pullbacks. In this section we reformulate the results of the previous section using pullbacks where we used fiberwise equivalences before, to obtain new and useful results. We begin by considering the type of descent data from the perspective of pullback squares.
+
+\begin{defn}
+Consider a span $\mathcal{S}$ from $A$ to $B$, and a span $\mathcal{S}'$ from $A'$ to $B'$. A \define{cartesian transformation}of spans\index{cartesian transformation!of spans|textbf} from $\mathcal{S}'$ to $\mathcal{S}$ is a diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A' \arrow[d,swap,"h_A"]  & S' \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] \arrow[d,swap,"h_S"] & B' \arrow[d,"h_B"] \\
+A & S \arrow[l,"f"] \arrow[r,swap,"g"] & B
+\end{tikzcd}
+\end{equation*}
+with $F:f\circ h_S\htpy h_A\circ f'$ and $G:g\circ h_S\htpy h_B\circ g'$, where both squares are pullback squares. 
+
+The type $\mathsf{cart}(\mathcal{S}',\mathcal{S})$\index{cart(S,S')@{$\mathsf{cart}(\mathcal{S},\mathcal{S}')$}|textbf} of cartesian transformation is the type of tuples
+\begin{equation*}
+(h_A,h_S,h_B,F,G,p_f,p_g)
+\end{equation*}
+where $p_f:\mathsf{is\usc{}pullback}(h_S,h_A,F)$ and $p_g:\mathsf{is\usc{}pullback}(h_S,h_B,G)$, and we write
+\begin{equation*}
+\mathsf{Cart}(\mathcal{S}) \defeq \sm{A',B':\UU}{\mathcal{S}':\mathsf{span}(A',B')}\mathsf{cart}(\mathcal{S}',\mathcal{S}).
+\end{equation*}
+\end{defn}
+
+\begin{lem}\label{lem:cart_desc}
+There is an equivalence\index{cart_desc@{$\mathsf{cart\usc{}desc}_{\mathcal{S}}$}|textit}
+\begin{equation*}
+\mathsf{cart\usc{}desc}_{\mathcal{S}}:\mathsf{Desc}(\mathcal{S})\to \mathsf{Cart}(\mathcal{S}).
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+Note that by \cref{thm:pb_fibequiv_complete} it follows that the types of triples $(f',F,p_f)$ and $(g',G,p_g)$ are equivalent to the types of fiberwise equivalences
+\begin{align*}
+& \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_A}{f(x)}} \\
+& \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_B}{g(x)}}
+\end{align*} 
+respectively. Furthermore, by \cref{thm:fam_proj} the types of pairs $(S',h_S)$, $(A',h_A)$, and $(B',h_B)$ are equivalent to the types $S\to \UU$, $A\to \UU$, and $B\to \UU$, respectively. Therefore it follows that the type $\mathsf{Cart}(\mathcal{S})$ is equivalent to the type of tuples $(Q,P_A,\varphi,P_B,P_S)$ consisting of
+\begin{align*}
+Q & : S\to \UU \\
+P_A & : A \to \UU \\
+P_B & : B \to \UU \\
+\varphi & : \prd{x:S}\eqv{Q(x)}{P_A(f(x))} \\
+P_S & : \prd{x:S}\eqv{Q(x)}{P_B(g(x))}.
+\end{align*}
+However, the type of $\varphi$ is equivalent to the type $P_A\circ f=Q$. Thus we see that the type of pairs $(Q,\varphi)$ is contractible, so our claim follows.
+\end{proof}
+
+\begin{defn}
+We define an operation\index{cart map!{$\mathsf{cart\usc{}map}_{\mathcal{S}}$}|textbf}
+\begin{equation*}
+\mathsf{cart\usc{}map}_{\mathcal{S}}:{\Big(\sm{X':\UU}X'\to X\Big)}\to \mathsf{Cart}(\mathcal{S}).
 \end{equation*}
 \end{defn}
 
@@ -252,32 +367,78 @@ Let $X':\UU$ and $h_X:X'\to X$. Then we define the types
 A' & \defeq A\times_X X' \\
 B' & \defeq B\times_X X'.
 \end{align*}
-Next, we define a span $\mathcal{S'}$ from $A'$ to $B'$ by
+Next, we define a span $\mathcal{S'}\defeq(S',f',g')$ from $A'$ to $B'$. We take
 \begin{align*}
 S' & \defeq S\times_A A' \\
-f' & \defeq \pi_2 \\
-g' & \defeq \lam{(s,(a,x',p),q)}(g(s),x',\ct{H(s)^{-1}}{(\ct{\ap{i}{q}}{p})})
+f' & \defeq \pi_2.
 \end{align*}
+To define $g'$, let $s:S$, let $(a,x',p):A\times_X X'$, and let $q:f(s)=a$. Our goal is to construct a term of type $B\times_X X'$. We have $g(s):B$ and $x':X'$, so it remains to show that $j(g(s))=h_X(x')$. We construct such an identification as a concatenation
+\begin{equation*}
+\begin{tikzcd}
+j(g(s)) \arrow[r,equals,"H(s)^{-1}"] &[1ex] i(f(s)) \arrow[r,equals,"\ap{i}{q}"] &[1ex] i(a) \arrow[r,equals,"p"] & h_X(x').
+\end{tikzcd}
+\end{equation*}
+To summaze, the map $g'$ is defined as
+\begin{equation*}
+g' \defeq \lam{(s,(a,x',p),q)}(g(s),x',\ct{H(s)^{-1}}{(\ct{\ap{i}{q}}{p})}).
+\end{equation*}
+Then we have commuting squares
+\begin{equation*}
+\begin{tikzcd}
+A\times_X X' \arrow[d] & S\times_A A' \arrow[d] \arrow[l] \arrow[r] & B\times_X X' \arrow[d] \\
+A & S \arrow[l] \arrow[r] & B.
+\end{tikzcd}
+\end{equation*}
+Moreover, these squares are pullback squares by \cref{thm:pb_pasting}.
 \end{constr}
 
-\begin{thm}
-There is an equivalence
+The following theorem is analogous to \cref{thm:desc_fam}.
+
+\begin{thm}[The descent theorem for pushouts]\label{thm:cart_map}\index{descent theorem!for pushouts|textit}
+The operation $\mathsf{cart\usc{}map}_{\mathcal{S}}$\index{cart map!{$\mathsf{cart\usc{}map}_{\mathcal{S}}$}!is an equivalence|textit} is an equivalence
 \begin{equation*}
-\eqv{\Big(\sm{X':\UU}X'\to X\Big)}{\Big(\sm{A',B':\UU}{\mathcal{S}':\mathsf{span}(A',B')}\mathsf{cart}(\mathcal{S}',\mathcal{S})\Big)}
+\eqv{\Big(\sm{X':\UU}X'\to X\Big)}{\mathsf{Cart}(\mathcal{S})}
 \end{equation*}
 \end{thm}
 
 \begin{proof}
-We will show that the square
+It suffices to show that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
-X\to \UU \arrow[r,"{\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H)}"] \arrow[d] & \mathsf{Desc}(\mathcal{S}) \arrow[d] \\
-\sm{X':\UU}X'\to X \arrow[r,swap,"\mathsf{cart\usc{}map}"] & \sm{A',B':\UU}{\mathcal{S}':\mathsf{span}(A',B')}\mathsf{cart}(\mathcal{S}',\mathcal{S})
+X\to \UU \arrow[r,"{\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H)}"] \arrow[d,swap,"\mathsf{map\usc{}fam}_X"] & \mathsf{Desc}(\mathcal{S}) \arrow[d,"\mathsf{cart\usc{}desc}_{\mathcal{S}}"] \\
+\sm{X':\UU}X'\to X \arrow[r,swap,"\mathsf{cart\usc{}map}_{\mathcal{S}}"] & \mathsf{Cart}(\mathcal{S})
 \end{tikzcd}
 \end{equation*}
-commutes.
+commutes. To see that this suffices, note that the operation $\mathsf{map\usc{}fam}_X$ is an equivalence by \cref{thm:fam_proj}, the operation $\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H)$ is an equivalence by \cref{thm:desc_fam}, and the operation $\mathsf{cart\usc{}desc}_{\mathcal{S}}$ is an equivalence by \cref{lem:cart_desc}.
+
+To see that the square commutes, note that the composite
+\begin{equation*}
+\mathsf{cart\usc{}map}_{\mathcal{S}}\circ \mathsf{map\usc{}fam}_X
+\end{equation*}
+takes a family $P:X\to \UU$ to the cartesian transformation of spans
+\begin{equation*}
+\begin{tikzcd}
+A\times_X\tilde{P} \arrow[d,swap,"\pi_1"] & S\times_A\Big(A\times_X\tilde{P}\Big) \arrow[l] \arrow[r] \arrow[d,swap,"\pi_1"] & B\times_X\tilde{P} \arrow[d,"\pi_1"] \\
+A & S \arrow[l] \arrow[r] & B,
+\end{tikzcd}
+\end{equation*}
+where $\tilde{P}\defeq\sm{x:X}P(x)$.
+
+The composite 
+\begin{equation*}
+\mathsf{cart\usc{}desc}_{\mathcal{S}}\circ \mathsf{desc\usc{}fam}_X
+\end{equation*}
+takes a family $P:X\to \UU$ to the cartesian transformation of spans
+\begin{equation*}
+\begin{tikzcd}
+\sm{a:A}P(i(a)) \arrow[d] & \sm{s:S}P(i(f(s))) \arrow[l] \arrow[r] \arrow[d] & \sm{b:B}P(j(b)) \arrow[d] \\
+A & S \arrow[l] \arrow[r] & B
+\end{tikzcd}
+\end{equation*}
+These cartesian natural transformations are equal by \cref{lem:pb_subst}
 \end{proof}
 
+Since $\mathsf{cart\usc{}map}_{\mathcal{S}}$ is an equivalence it follows that its fibers are contractible. This is essentially the content of the following corollary.
 
 \begin{cor}
 Consider a diagram of the form 
@@ -336,7 +497,9 @@ commutes,
 is contractible.
 \end{cor}
 
-\begin{thm}[The descent theorem for pushouts]
+The following theorem should be compared to the flattening lemma, \cref{lem:flattening}.\index{flattening lemma!for pushouts}
+
+\begin{thm}
 Consider a commuting cube
 \begin{equation*}
 \begin{tikzcd}
@@ -350,25 +513,49 @@ If each of the vertical squares is a pullback, and the bottom square  is a pusho
 \end{thm}
 
 \begin{proof}
-Suppose the homotopies filling the faces of the cubes are
+By \cref{cor:pb_fibequiv} we have fiberwise equivalences
 \begin{align*}
-H  & : i\circ f \htpy j\circ g \\
-H' & : i'\circ f'\htpy j'\circ g'
+F & : \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_A}{f(x)}} \\
+G & : \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_B}{g(x)}} \\
+I & : \prd{a:A}\eqv{\fib{h_A}{a}}{\fib{h_X}{i(a)}} \\
+J & : \prd{b:B}\eqv{\fib{h_B}{b}}{\fib{h_X}{j(b)}}. 
 \end{align*}
-and
-\begin{align*}
-K_f & : f\circ h_S \htpy h_A \circ f' \\
-K_g & : g\circ h_S \htpy h_B \circ g' \\
-K_i & : i\circ h_A \htpy h_X \circ i' \\
-K_j & : j\circ h_B \htpy h_X \circ j'.
-\end{align*}
-Furthermore, suppose $C$ is the homotopy filling the cube. 
-
-First we observe that the tuple
+Moreover, since the cube commutes we obtain a fiberwise homotopy
 \begin{equation*}
-(A',B',(S',f',g'),(h_S,h_A,h_B,K_f,K_g,p_f,p_g))
+K : \prd{x:S} I(f(x))\circ F(x) \htpy J(g(x))\circ G(x).
 \end{equation*}
-is equal to $\mathsf{cart\usc{}map}(X',h_X)$. 
+We define the descent data $(P_A,P_B,P_S)$ consisting of $P_A:A\to\UU$, $P_B:B\to\UU$, and $P_S:\prd{x:S}\eqv{P_A(f(x))}{P_B(g(x))}$ by
+\begin{align*}
+P_A(a) & \defeq \fib{h_A}{a} \\
+P_B(b) & \defeq \fib{h_B}{b} \\
+P_S(x) & \defeq G(x)\circ F(x)^{-1}.
+\end{align*}
+We have
+\begin{align*}
+P & \defeq \fibf{h_X} \\
+e_A & \defeq I \\
+e_B & \defeq J \\
+e_S & \defeq K.
+\end{align*}
+Now consider the diagram
+\begin{equation*}
+\begin{tikzcd}
+\sm{s:S}\fib{h_S}{s} \arrow[r] \arrow[d] & \sm{s:S}\fib{h_A}{f(s)} \arrow[r] \arrow[d] & \sm{b:B}\fib{h_B}{b} \arrow[d] \\
+\sm{a:A}\fib{h_A}{a} \arrow[r] & \sm{a:A}\fib{h_A}{a} \arrow[r] & \sm{x:X}\fib{h_X}{x}
+\end{tikzcd}
+\end{equation*}
+Since the top and bottom map in the left square are equivalences, we obtain from \cref{ex:pushout_equiv} that the left square is a pushout square. Moreover, the right square is a pushout by \cref{lem:flattening}. Therefore it follows by \cref{thm:pushout_pasting} that the outer rectangle is a pushout square.
+
+Now consider the commuting cube
+\begin{equation*}
+\begin{tikzcd}
+& \sm{s:S}\fib{h_S}{s} \arrow[dl] \arrow[dr] \arrow[d] \\
+\sm{a:A}\fib{h_A}{a} \arrow[d] & S' \arrow[dl] \arrow[dr] & \sm{b:B}\fib{h_B}{b} \arrow[dl,crossing over] \arrow[d] \\
+A' \arrow[dr,swap] & \sm{x:X}\fib{h_X}{x} \arrow[d] \arrow[from=ul,crossing over] & B' \arrow[dl] \\
+& X'.
+\end{tikzcd}
+\end{equation*}
+We have seen that the top square is a pushout. The vertical maps are all equivalences, so the vertical squares are all pushout squares. Thus it follows from one more application of \cref{thm:pushout_pasting} that the bottom square is a pushout.
 \end{proof}
 
 %\begin{cor}
@@ -407,7 +594,7 @@ It suffices to show that the pullback
 \begin{equation*}
 (A\sqcup^{S} B)\times_{X}X'
 \end{equation*}
-has the universal property of the pushout. This follows by the descent theorem, since by the pasting lemma for pullbacks we also have that the vertical squares in the cube
+has the universal property of the pushout. This follows by the descent theorem, since the vertical squares in the cube
 \begin{equation*}
 \begin{tikzcd}
 & S' \arrow[dl] \arrow[dr] \arrow[d] \\
@@ -416,19 +603,19 @@ A \arrow[dr] & (A\sqcup^{S} B)\times_{X}X' \arrow[d] \arrow[from=ul,crossing ove
 & A\sqcup^{S} B
 \end{tikzcd}
 \end{equation*}
-are pullback squares.
+are pullback squares by \cref{thm:pb_pasting}.
 \end{proof}
 
 \begin{exercises}
-\item Use the flattening lemma (\cref{lem:flattening}) and the characterization of the circle as a pushout given in \cref{eg:circle_pushout} to show that the square
+\item Use the characterization of the circle\index{circle} as a pushout given in \cref{eg:circle_pushout} to show that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
-\sphere{1}+\sphere{1} \arrow[r,"{[\idfunc,\idfunc]}"] \arrow[d,swap,"{[\idfunc,\idfunc]}"] & \sphere{1} \arrow[d,"{\lam{t}(\base,t)}"] \\
+\sphere{1}+\sphere{1} \arrow[r,"{[\idfunc,\idfunc]}"] \arrow[d,swap,"{[\idfunc,\idfunc]}"] & \sphere{1} \arrow[d,"{\lam{t}(t,\base)}"] \\
 \sphere{1} \arrow[r,swap,"{\lam{t}(t,\base)}"] & \sphere{1}\times\sphere{1}
 \end{tikzcd}
 \end{equation*}
 is a pushout square.
-\item Let $f:A\to B$ be a map. The \define{codiagonal} $\nabla_f$ of $f$ is the map obtained from the universal property of the pushout, as indicated in the diagram
+\item Let $f:A\to B$ be a map. The \define{codiagonal}\index{codiagonal}\index{nabla@{$\nabla_f$}} $\nabla_f$ of $f$ is the map obtained from the universal property of the pushout, as indicated in the diagram
 \begin{equation*}
 \begin{tikzcd}
 A \arrow[d,swap,"f"] \arrow[r,"f"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\idfunc[B]}"] \\
@@ -437,7 +624,7 @@ A \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\idfunc[B]}"] & B\sqcup^{A} B
 \end{tikzcd}
 \end{equation*}
 Show that $\fib{\nabla_f}{b}\eqvsym \susp(\fib{f}{b})$ for any $b:B$.
-\item Consider two maps $f:A\to X$ and $g:B\to X$. The \define{join} $\join{f}{g}$ is defined by the universal property of the pushout as the unique map rendering the diagram
+\item \label{ex:fib_join}Consider two maps $f:A\to X$ and $g:B\to X$. The \define{fiberwise join}\index{fiberwise join} $\join{f}{g}$ is defined by the universal property of the pushout as the unique map rendering the diagram
 \begin{equation*}
 \begin{tikzcd}
 A\times_X B \arrow[d,"\pi_1"] \arrow[r,"\pi_2"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"g"] \\
@@ -452,15 +639,15 @@ Construct an equivalence
 \end{equation*}
 for any $x:X$. 
 \item Consider two maps $f:A\to B$ and $g:C\to D$.
-The \define{pushout-product}
+The \define{pushout-product}\index{pushout-product}
 \begin{equation*}
-f\square g : (A\times D)\sqcup^{A\times B} (B\times C)\to B\times D
+f\square g : (A\times D)\sqcup^{A\times C} (B\times C)\to B\times D
 \end{equation*}
 of $f$ and $g$ is defined by the universal property of the pushout as the unique map rendering the diagram
 \begin{equation*}
 \begin{tikzcd}
 A\times C \arrow[r,"{f\times \idfunc[C]}"] \arrow[d,swap,"{\idfunc[A]\times g}"] & B\times C \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\idfunc[B]\times g}"] \\
-A\times D \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{f\times\idfunc[D]}"] & (A\times D)\sqcup^{A\times B} (B\times C) \arrow[dr,densely dotted,swap,near start,"f\square g"] \\
+A\times D \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{f\times\idfunc[D]}"] & (A\times D)\sqcup^{A\times C} (B\times C) \arrow[dr,densely dotted,swap,near start,"f\square g"] \\
 & & B\times D
 \end{tikzcd}
 \end{equation*}
@@ -469,5 +656,22 @@ commutative. Construct an equivalence
 \eqv{\fib{f\square g}{b,d}}{\join{\fib{f}{b}}{\fib{g}{d}}}
 \end{equation*}
 for all $b:B$ and $d:D$.
-\item Show that the fiber of the wedge inclusion $A\vee B\to A\times B$ is equivalent to $\join{\loopspace{A}}{\loopspace{B}}$.
+\item Let $A$ and $B$ be pointed types with base points $a_0:A$ and $b_0:B$. The \define{wedge inclusion}\index{wedge inclusion} is defined as follows by the universal property of the wedge:
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+\unit \arrow[r] \arrow[d] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\lam{b}(a_0,b)}"] \\
+A \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\lam{a}(a,b_0)}"] & A\vee B \arrow[dr,densely dotted,swap,"{\mathsf{wedge\usc{}in}_{A,B}}"{near start,xshift=1ex}] \\
+& & A\times B
+\end{tikzcd}
+\end{equation*}
+Show that the fiber of the wedge inclusion $A\vee B\to A\times B$ is equivalent to $\join{\loopspace{B}}{\loopspace{A}}$.
+\item Let $f:X\vee X\to X$ be the map defined by the universal property of the wedge as indicated in the diagram
+\begin{equation*}
+\begin{tikzcd}
+\unit \arrow[d,swap,"x_0"] \arrow[r,"x_0"] \arrow[dr, phantom, "\ulcorner", very near end] & X \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\idfunc[X]}"] \\
+X \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\idfunc[X]}"] & X\vee X \arrow[dr,densely dotted,near start,swap,"f"] \\
+& & X.
+\end{tikzcd}
+\end{equation*}
+Show that $\eqv{\fib{f}{x_0}}{\susp\loopspace{X}}$. 
 \end{exercises}

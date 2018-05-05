@@ -5,7 +5,7 @@
 \begin{defn}
 \begin{enumerate}
 \item A pointed type consists of a type $X$ equipped with a base point $x:X$. We will write $\UU_\ast$ for the type $\sm{X:\UU}X$ of all pointed types.
-\item Let $(X,\ast_X)$ be a pointed type. A \define{pointed family} over $(X,\ast_X)$ consists of a type family $P:X\to \UU_\ast$ equipped with a base point $\ast_P:P(\ast_X)$. 
+\item Let $(X,\ast_X)$ be a pointed type. A \define{pointed family} over $(X,\ast_X)$ consists of a type family $P:X\to \UU$ equipped with a base point $\ast_P:P(\ast_X)$. 
 \item Let $(P,\ast_P)$ be a pointed family over $(X,\ast_X)$. A \define{pointed section} of $(P,\ast_P)$ consists of a dependent function $f:\prd{x:X}P(x)$ and an identification $p:f(\ast_X)=\ast_P$. We define the \define{pointed $\Pi$-type} to be the type of pointed sections:
 \begin{equation*}
 \Pi^\ast_{(x:X)}P(x) \defeq \sm{f:\prd{x:X}P(x)}f(\ast_X)=\ast_P
@@ -69,6 +69,23 @@ of pointed types commutes.
 \end{enumerate}
 \end{defn}
 
+\begin{thm}
+Consider two pointed types $(X,x_0)$ and $(Y,y_0)$. Then there is an equivalence
+\begin{equation*}
+\eqv{(\susp X \to_\ast Y)}{(X \to_\ast \loopspace Y)}
+\end{equation*}
+\end{thm}
+
+\begin{proof}
+Computing with the universal property of the suspension
+\begin{align*}
+\susp X \to_\ast Y & \eqvsym \sm{y,y':Y} (X \to (y=y'))\times (y'=y_0) \\
+& \eqvsym \sm{y:Y} X\to (y=y_0) \\
+& \eqvsym \sm{f:X\to (y=y_0)}f(x_0)=\refl{y_0}.
+\end{align*}
+In the last equivalence we used \cref{ex:coh_intro}.
+\end{proof}
+
 \section{Homotopy groups}
 In homotopy type theory we use $0$-types to define groups.
 \begin{defn}
@@ -92,7 +109,7 @@ For $n\jdeq 0$ we define $\pi_0(X,x)\defeq \trunc{0}{X}$.
 \end{defn}
 
 \begin{eg}
-In \autoref{circle_loopspace} we established that $\loopspace{\sphere{1}}=\Z$. It follows that
+In \cref{cor:circle_loopspace} we established that $\eqv{\loopspace{\sphere{1}}}{\Z}$. It follows that
 \begin{equation*}
 \pi_1(\sphere{1})=\Z \qquad\text{ and }\qquad\pi_n(\sphere{1})=0\qquad\text{for $n\geq 2$.}
 \end{equation*}
@@ -100,9 +117,128 @@ Furthermore, we have seen in \autoref{circle_conn} that $\trunc{0}{\sphere{1}}$ 
 Therefore we also have $\pi_0(\sphere{1})=0$.
 \end{eg}
 
-\begin{thm}[The Eckmann-Hilton argument]
+\section{The Eckmann-Hilton argument}
+
+Given a diagram of identifications
+\begin{equation*}
+\begin{tikzcd}[column sep=7em]
+x \arrow[r,equals,bend left=60,"p",""{name=A,below}] \arrow[r,equals,""{name=B},""{name=E,below},"{p'}"{near end}] \arrow[r,equals,bend right=60,"{p''}"{below},""{name=F,above}] \arrow[from=A,to=B,phantom,"r\Downarrow"] \arrow[from=E,to=F,phantom,"{r'\Downarrow}"] 
+& y
+\end{tikzcd}
+\end{equation*}
+in a type $A$, where $r:p=p'$ and $r':p'=p''$,
+we obtain by concatenation an identification $\ct{r}{r'}:p=p''$. This operation on identifications of identifications is sometimes called the \define{vertical concatenation}, because there is also a \emph{horizontal} concatenation operation.
+
+\begin{defn}
+Consider identifications of identifications $r:p=p'$ and $s:q=q'$, where $p,p':x=y$, and $q,q':y=z$ are identifications in a type $A$, as indicated in the diagram
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+x \arrow[r,equals,bend left=30,"p",""{name=A,below}] \arrow[r,equals,bend right=30,""{name=B,above},"{p'}"{below}] \arrow[from=A,to=B,phantom,"r\Downarrow"] & y \arrow[r,equals,bend left=30,"q",""{name=C,below}] \arrow[r,equals,bend right=30,""{name=D,above},"{q'}"{below}] \arrow[from=C,to=D,phantom,"s\Downarrow"] & z.
+\end{tikzcd}
+\end{equation*}
+We define the \define{horizontal concatenation} $\ct[h]{r}{s}:\ct{p}{q}=\ct{p'}{q'}$ of $r$ and $s$.
+\end{defn}
+
+\begin{proof}
+First we induct on $r$, so it suffices to define $\ct[h]{\refl{p}}{s}:\ct{p}{q}=\ct{p}{q'}$. 
+Next, we induct on $p$, so it suffices to define $\ct[h]{\refl{\refl{y}}}{s}:\ct{\refl{y}}{q}=\ct{\refl{y}}{q'}$. 
+Since $\ct{\refl{y}}{q}\jdeq q$ and $\ct{\refl{y}}{q'}\jdeq q'$, we take $\ct[h]{\refl{\refl{y}}}{s}\defeq s$. 
+\end{proof}
+
+\begin{lem}
+Horizontal concatenation satisfies the left and right unit laws.
+\end{lem}
+
+In the following lemma we establish the \define{interchange law} for horizontal and vertical concatenation.
+
+\begin{lem}
+Consider a diagram of the form
+\begin{equation*}
+\begin{tikzcd}[column sep=7em]
+x \arrow[r,equals,bend left=60,"p",""{name=A,below}] \arrow[r,equals,""{name=B},""{name=E,below}] \arrow[r,equals,bend right=60,"{p''}"{below},""{name=F,above}] \arrow[from=A,to=B,phantom,"r\Downarrow"] \arrow[from=E,to=F,phantom,"{r'\Downarrow}"] 
+& y \arrow[r,equals,bend left=60,"q",""{name=C,below}] \arrow[r,equals,""{name=G,above},""{name=H,below}] \arrow[r,equals,bend right=60,""{name=D,above},"{q''}"{below}] \arrow[from=C,to=G,phantom,"s\Downarrow"] \arrow[from=H,to=D,phantom,"{s'\Downarrow}"] & z.
+\end{tikzcd}
+\end{equation*}
+Then there is an identification
+\begin{equation*}
+\ct[h]{(\ct{r}{r'})}{(\ct{s}{s'})}=\ct{(\ct[h]{r}{s})}{(\ct[h]{r'}{s'})}.
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+We use path induction on both $r$ and $r'$, followed by path induction on $p$. Then it suffices to show that
+\begin{equation*}
+\ct[h]{(\ct{\refl{\refl{y}}}{\refl{\refl{y}}})}{(\ct{s}{s'})}=\ct{(\ct[h]{\refl{\refl{y}}}{s})}{(\ct[h]{\refl{\refl{y}}}{s'})}.
+\end{equation*}
+Using the computation rules, we see that this reduces to
+\begin{equation*}
+\ct{s}{s'}=\ct{s}{s'},
+\end{equation*}
+which we have by reflexivity.
+\end{proof}
+
+\begin{thm}
 For $n\geq 2$, the $n$-th homotopy group is abelian.
 \end{thm}
+
+\begin{proof}
+Our goal is to show that 
+\begin{equation*}
+\prd{r,s:\pi_2(X)} r\cdot s=s\cdot r.
+\end{equation*}
+Since we are constructing an identification in a set, we can use the universal property of $0$-truncation on both $r$ and $s$. Therefore it suffices to show that
+\begin{equation*}
+\prd{r,s:\refl{x_0}=\refl{x_0}} \tproj{0}r\cdot \tproj{0}s=\tproj{0}s\cdot \tproj{0}r.
+\end{equation*}
+Now we use that $\tproj{0}{r}\cdot\tproj{0}{s}\jdeq \tproj{0}{\ct{r}{s}}$ and $\tproj{0}{s}\cdot\tproj{0}{r}\jdeq \tproj{0}{\ct{s}{r}}$, to see that it suffices to show that $\ct{r}{s}=\ct{s}{r}$, for every $r,s:\refl{x}=\refl{x}$. Using the unit laws and the interchange law, this is a simple computation:
+\begin{align*}
+\ct{r}{s} & = \ct{(\ct[h]{r}{\refl{x}})}{(\ct[h]{\refl{x}}{s})} \\
+& = \ct[h]{(\ct{r}{\refl{x}})}{(\ct{\refl{x}}{s})} \\
+& = \ct[h]{(\ct{\refl{x}}{r})}{(\ct{s}{\refl{x}})} \\
+& = \ct{(\ct[h]{\refl{x}}{s})}{(\ct[h]{r}{\refl{x}})} \\
+& = \ct{s}{r}.\qedhere
+\end{align*}
+\end{proof}
+
+\section{Simply connectedness of the $2$-sphere}
+
+\begin{defn}
+A pointed type $X$ is said to be \define{$n$-connected} if its homotopy groups $\pi_i(X)$ are trivial for $i\leq n$. A $0$-connected type is also just called \define{connected}, and a $1$-connected type is also called \define{simply connected}. 
+\end{defn}
+
+We write $\ast$ for the base point of the sphere $\sphere{n}$.
+
+\begin{thm}
+For any $n:\N$ and any family $P$ of $n$-types over the $(n+2)$-sphere $\sphere{n+2}$, the function
+\begin{equation*}
+\Big(\prd{x:\sphere{n+2}}P(x)\Big)\to P(\ast)
+\end{equation*}
+given by $f\mapsto f(\ast)$, is an equivalence.
+\end{thm}
+
+\begin{cor}
+The $2$-sphere is simply connected.
+\end{cor}
+
+\begin{proof}
+Our goal is to show that $\pi_1(\sphere{2})$ is contractible. In other words, we have to show that $\trunc{0}{\loopspace{\sphere{2}}}$ is contractible. We do this by constructing a term of type
+\begin{equation*}
+\prd{t:\sphere{2}}\iscontr(\trunc{0}{\ast=t}).
+\end{equation*}
+First we note that
+\begin{equation*}
+\prd{t:\sphere{2}}\trunc{0}{\ast=t}
+\end{equation*}
+is equivalent to the type $\trunc{0}{\ast=\ast}$, of which we have the term $\tproj{0}{\refl{\ast}}$. Thus we obtain a dependent function $\alpha:\prd{t:\sphere{2}}\trunc{0}{\ast=t}$ equipped with $\alpha(\ast)=\tproj{0}{\refl{\ast}}$. Now we proceed to show that
+\begin{equation*}
+\prd{t:\sphere{2}}{p:\trunc{0}{\ast=t}} \alpha(t)=p
+\end{equation*}
+by the dependent universal property of $0$-truncation. Therefore it suffices to construct a term of type
+\begin{equation*}
+\prd{t:\sphere{2}}{p:\ast=t}\alpha(t)=\tproj{0}{p}.
+\end{equation*}
+This is immediate by path induction and the fact that $\alpha(\ast)=\tproj{0}{\refl{\ast}}$.
+\end{proof}
 
 \begin{exercises}
 \item Show that the type of pointed families over a pointed type $(X,x)$ is equivalent to the type
@@ -170,4 +306,10 @@ is a pullback square of pointed types, then so is
 \loopspace{A} \arrow[r] & \loopspace{X}.
 \end{tikzcd}
 \end{equation*}
+\item 
+\begin{subexenum}
+\item Show that if $X$ is $k$-truncated, then its $n$-th homotopy group $\pi_n(X)$ is trivial for each choice of base point, and each $n> k$.
+\item Show that if $X$ is $(k+l)$-truncated, and for each $0< i\leq l$ the $(k+i)$-th homotopy groups $\pi_{k+i}(X)$ are trivial for each choice of base point, then $X$ is $k$-trunctated.
+\end{subexenum}
+It is consistent to assume that there are types for which all homotopy groups are trivial, but which aren't contractible nontheless. Such types are called \define{$\infty$-connected}.
 \end{exercises}
