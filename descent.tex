@@ -673,5 +673,16 @@ X \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\idfunc[X]}"] & X\vee X \arro
 & & X.
 \end{tikzcd}
 \end{equation*}
-Show that $\eqv{\fib{f}{x_0}}{\susp\loopspace{X}}$. 
+\begin{subexenum}
+\item Show that $\eqv{\fib{f}{x_0}}{\susp\loopspace{X}}$. 
+\item Show that $\eqv{\mathsf{cof}_f}{\susp X}$.
+\end{subexenum}
+\item Consider a pushout square
+\begin{equation*}
+\begin{tikzcd}
+S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+A \arrow[r,swap,"i"] & X,
+\end{tikzcd}
+\end{equation*}
+and suppose that $f$ is an embedding. Show that $j$ is an embedding, and that the square is also a pullback square.
 \end{exercises}
