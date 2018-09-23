@@ -254,21 +254,26 @@ Note that we may proceed here by path induction on $p$. That is, it suffices to 
 hold, then so does the third.
 \end{subexenum}
 \item \label{ex:contr_in_sigma} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B$ be a type family over $C$. Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
-\item \label{ex:coh_intro}Consider a type $A$ with base point $a:A$, and let $B$ be a type family on $A$ that implies the identity type, i.e.~there is a term
+\item Show that for any $p:\id{x}{y}$ in $X$, and any $q:\id{g(b)}{x}$, there is an identification
 \begin{equation*}
-\alpha : \prd{x:A} B(x)\to (a=x).
-\end{equation*}
-Construct an equivalence
-\begin{equation*}
-\eqv{\Big(\sm{x:A}B(x)\Big)}{\Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big)}.
+\mathsf{tr\usc{}fiber}(g,p,q) : \mathsf{tr}_{\mathsf{fib}_g}(p,(b,q))=(b,\ct{q}{p}).
 \end{equation*}
 \item \label{ex:fib_replacement}Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
 \begin{equation*}
-\begin{tikzcd}[column sep=small]
+\begin{tikzcd}[column sep=0em]
 A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"] \\
-& B
+\phantom{\sm{y:B}\fib{f}{y}} & B
 \end{tikzcd}
 \end{equation*}
 commutes. The projection $\proj 1 : (\sm{y:B}\fib{f}{y})\to B$ is sometimes also called the \define{fibrant replacement}\index{fibrant replacement} of $f$.
 \item Use \cref{ex:contr_retr} to show that if $A\times B$ is contractible, then $A$ and $B$ are contractible. 
+\item \label{ex:proj_fiber}Let $B$ be a family of types over $A$, and consider the projection map 
+\begin{equation*}
+\proj 1 : \big(\sm{x:A}B(x)\big)\to A.
+\end{equation*}
+Show that for any $a:A$, the map
+\begin{equation*}
+\lam{((x,y),p)} \mathsf{tr}_B(p,y) : \fib{\proj 1}{a} \to B(a),
+\end{equation*}
+is an equivalence. Conclude that $\proj 1$ is an equivalence if and only if each $B(a)$ is contractible.
 \end{exercises}

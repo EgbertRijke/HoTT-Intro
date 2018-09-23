@@ -262,8 +262,16 @@ with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle commutes.
 \begin{subexenum}
 \item Construct a fiberwise transformation
 \begin{equation*}
-\mathsf{fib\usc{}triangle}(h,H):\prd{x:X}\fib{f}{x}\to\fib{g}{x}.
+\mathsf{fib\usc{}triangle}(h,H):\prd{x:X}\fib{f}{x}\to\fib{g}{x},
 \end{equation*}
+for which the square
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\sm{x:X}\fib{f}{x} \arrow[r,"\total{\mathsf{fib\usc{}triangle}(h,H)}"] \arrow[d] & \sm{x:X}\fib{g}{x} \arrow[d] \\
+A \arrow[r,swap,"h"] & B
+\end{tikzcd}
+\end{equation*}
+commutes, where the vertical maps are as constructed in \cref{ex:fib_replacement}.
 \item Show that $h$ is an equivalence if and only if $\mathsf{fib\usc{}triangle}(h,H)$ is a fiberwise equivalence.
 \end{subexenum}
 \item Let $f:A\to B$ be a map. Then for each $y:B$, and each $(x,p),(x',p'):\fib{f}{y}$, the map
@@ -325,4 +333,13 @@ for every $(b,c):\sm{y:B}C(y)$.
 \item $f'$ is a fiberwise equivalence.
 \end{enumerate}
 \end{subexenum}
+\item \label{ex:coh_intro}Consider a type $A$ with base point $a:A$, and let $B$ be a type family on $A$ that implies the identity type, i.e.~there is a term
+\begin{equation*}
+\alpha : \prd{x:A} B(x)\to (a=x).
+\end{equation*}
+Show that the \define{coherence reduction map}
+\begin{equation*}
+\mathsf{coh\usc{}red} : \Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big) \to \Big(\sm{x:A}B(x)\Big)
+\end{equation*}
+defined by $\lam{(y,q)}(a,y)$ is an equivalence.
 \end{exercises}
