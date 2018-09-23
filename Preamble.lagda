@@ -2,7 +2,7 @@
 
 {-# OPTIONS --without-K #-}
 
-module Basics where
+module Preamble where
 
 open import Agda.Primitive using (Level; lzero; lsuc; _⊔_) public
 
