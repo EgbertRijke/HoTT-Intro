@@ -2,10 +2,10 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture6 where
+module Lecture06 where
 
-import Lecture5
-open Lecture5 public
+import Lecture05
+open Lecture05 public
 
 -- Section 6.1 Contractible types
 

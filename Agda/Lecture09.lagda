@@ -2,10 +2,10 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture9 where
+module Lecture09 where
 
-import Lecture8
-open Lecture8 public
+import Lecture08
+open Lecture08 public
 
 htpy-id : {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x} →
   (Id f g) → (f ~ g)

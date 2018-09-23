@@ -4,8 +4,8 @@
 
 module Lecture10 where
 
-import Lecture9
-open Lecture9 public
+import Lecture09
+open Lecture09 public
 
 ftr-square : {i1 i2 i3 i4 : Level} {A : UU i1} {X : UU i2} {B : UU i3} {Y : UU i4} {f : A → X} {g : B → Y} {i : X → Y} (h : A → B) (H : (i ∘ f) ~ (g ∘ h)) (x : X) → fib f x → fib g (i x)
 ftr-square h H _ (dpair a refl) = dpair (h a) (inv (H a))

@@ -2,7 +2,7 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture2 where
+module Lecture02 where
 
 import Preamble
 open Preamble public

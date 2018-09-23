@@ -2,10 +2,10 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture7 where
+module Lecture07 where
 
-import Lecture6
-open Lecture6 public
+import Lecture06
+open Lecture06 public
 
 -- Section 7.1 Fiberwise equivalences
 tot : {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} → ((x : A) → B x → C x) → ( Σ A B → Σ A C)

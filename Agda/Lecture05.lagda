@@ -2,10 +2,10 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture5 where
+module Lecture05 where
 
-import Lecture4
-open Lecture4 public
+import Lecture04
+open Lecture04 public
 
 
 -- Section 5.1 Homotopies

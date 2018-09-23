@@ -2,10 +2,10 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture8 where
+module Lecture08 where
 
-import Lecture7
-open Lecture7 public
+import Lecture07
+open Lecture07 public
 
 -- Section 8.1 Propositions
 

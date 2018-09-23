@@ -2,10 +2,10 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture4 where
+module Lecture04 where
 
-import Lecture3
-open Lecture3 public
+import Lecture03
+open Lecture03 public
 
 data Id {i : Level} {A : UU i} (x : A) : A → UU i where
   refl : Id x x

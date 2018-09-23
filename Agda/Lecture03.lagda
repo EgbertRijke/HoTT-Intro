@@ -2,10 +2,10 @@
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture3 where
+module Lecture03 where
 
-import Lecture2
-open Lecture2 public
+import Lecture02
+open Lecture02 public
 
 data unit : U where
   star : unit
