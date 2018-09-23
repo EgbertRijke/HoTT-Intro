@@ -11,6 +11,6 @@ The course notes can be found in the Notes folder.
 * To generate the index, run `makeindex hott_intro.idx`.
 
 ## Agda formalization
-The Agda formalization can be found in the Agda folder. The files of the formalization correspond 1-to-1 with the Lectures in the course notes, and the formalization follows the course material as closely as possible. A formalization of all the exercises is included, since many of them are essential in the development of the theory.
+The Agda formalization can be found in the Agda folder. Except for the first lecture, which explains the rules for dependent type theory, the files of the formalization correspond 1-to-1 with the Lectures in the course notes, and the formalization follows the course material as closely as possible. A formalization of all the exercises is included, since many of them are essential in the development of the theory.
 
 [1]: http://www.andrew.cmu.edu/user/erijke/hott/
