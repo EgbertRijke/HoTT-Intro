@@ -183,7 +183,20 @@ is-equiv-triangle-is-fiberwise-equiv f g h H E =
     ( square-tot-fib-triangle f g h H)
     ( is-equiv-Σ-fib-to-domain f)
     ( is-equiv-Σ-fib-to-domain g)
-    ( is-equiv-tot-is-fiberwise-equiv (fib-triangle f g h H) E) 
+    ( is-equiv-tot-is-fiberwise-equiv (fib-triangle f g h H) E)
+
+-- Exercise 7.4
+fib-ap-eq-fib : {i j : Level} {A : UU i} {B : UU i} (f : A → B) {y : B} (s t : fib f y) → Id s t → fib (ap f {pr1 s} {pr1 t}) (concat _ (pr2 s) (inv (pr2 t)))
+fib-ap-eq-fib f s = ind-Id s {!λ t p → fib (ap f {pr1 s} {pr2 t}) (concat _ pr2 s) (inv (pr2 t))!} {!!}
+
+-- is-equiv-fib-ap-eq-fib : {i j : Level} {A : UU i} {B : UU i} (f : A → B) {y : B} (s t : fib f y) → is-equiv (fib-ap-eq-fib f s t)
+-- is-equiv-fib-ap-eq-fib f s t = {!id-fundamental s ? ?!}
+
+eq-fib-map : {i j : Level} {A : UU i} {B : UU j} (f : A → B) {y : B} {s t : fib f y} → Id s t → Σ (Id (pr1 s) (pr1 t)) (λ q → Id (pr2 s) (concat _ (ap f q) (pr2 t)))
+eq-fib-map f refl = dpair refl refl
+
+is-equiv-eq-fib-map : {i j : Level} {A : UU i} {B : UU j} (f : A → B) {y : B} {s t : fib f y} → is-equiv (eq-fib-map f {y} {s} {t})
+is-equiv-eq-fib-map f {y} {s} {t} = {!is-equiv-comp (eq-fib-map f {y} {s} {t}) (!}
 
 -- Exercise 7.7
 id-fundamental-retr : {i j : Level} {A : UU i} {B : A → UU j} (a : A) →

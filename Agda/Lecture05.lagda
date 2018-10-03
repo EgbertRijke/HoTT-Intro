@@ -335,16 +335,9 @@ retraction-comp' f g h H (dpair rg rg-isretr) (dpair rh rh-isretr) =
 is-equiv-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   is-equiv h → is-equiv g → is-equiv f
-is-equiv-comp f g h H (dpair (dpair hs hs-issec) (dpair hr hr-isretr))
-  (dpair (dpair gs gs-issec) (dpair gr gr-isretr)) =
-  is-equiv-htpy H
-    (pair
-      (dpair (hs ∘ gs)
-        (htpy-concat (g ∘ gs)
-          (htpy-left-whisk g (htpy-right-whisk hs-issec gs)) gs-issec))
-      (dpair (hr ∘ gr)
-        (htpy-concat (hr ∘ h)
-          (htpy-left-whisk hr (htpy-right-whisk gr-isretr h)) hr-isretr)))
+is-equiv-comp f g h H (dpair hsec hretr)
+  (dpair gsec gretr) =
+  pair (section-comp' f g h H hsec gsec) (retraction-comp' f g h H gretr hretr)
 
 is-equiv-left-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
@@ -353,9 +346,7 @@ is-equiv-left-factor f g h H
   ( dpair (dpair sf sf-issec) (dpair rf rf-isretr))
   ( dpair (dpair sh sh-issec) (dpair rh rh-isretr)) =
   pair
-    ( dpair
-      (h ∘ sf)
-      (htpy-concat _ (htpy-right-whisk (htpy-inv H) sf) sf-issec))
+    ( section-comp f g h H (dpair sh sh-issec) (dpair sf sf-issec))
     ( dpair
       ( h ∘ rf)
       ( htpy-concat _
@@ -382,11 +373,7 @@ is-equiv-right-factor f g h H
           ( htpy-concat (rg ∘ g)
             ( htpy-left-whisk rg (htpy-right-whisk sf-issec g))
              rg-isretr))))
-    ( dpair
-      ( rf ∘ g)
-      ( htpy-concat (rf ∘ f)
-        ( htpy-left-whisk rf (htpy-inv H))
-          rf-isretr))
+    ( retraction-comp f g h H (dpair rg rg-isretr) (dpair rf rf-isretr))
 
 -- Exercise 5.6
 neg-𝟚 : bool → bool

@@ -1,0 +1,2508 @@
+% AUTHOR: Egbert Rijke
+% LAST MODIFIED: December 2017
+
+% This package is designed to work with the amsart, amsbook or amsproc document
+% classes. It provides a set of macros to facilitate homotopy type theorists.
+% Macros are provided for the topics of foundations of homotopy type theory,
+% synthetic homotopy theory, internal category theory and set theory, syntax
+% and some internal models like the graph model.
+%
+% This package is based on the preamble of the HoTT book, written by the
+% Univalent Foundations Project. 
+
+\NeedsTeXFormat{LaTeX2e}[2016/10/01]
+\ProvidesPackage{hott}[2016/10/22 Notation and style package for HoTT]
+
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\RequirePackage{amssymb}
+
+%The following packages are loaded just to compress the document to well below 300 pages. Also the font size needs to be set to its default 10pt
+\RequirePackage[letterpaper,twoside,inner margin=1in,outer margin=1.7in,vmargin=1.15in,marginparwidth=1.3in,marginparsep=.1in]{geometry}
+\RequirePackage{marginnote}
+%\RequirePackage{mathptmx}
+
+%\PassOptionsToPackage{colorlinks,citecolor=darkblue,linkcolor=darkblue,unicode}{hyperref}
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{comment}
+%\RequirePackage{geometry}
+
+\RequirePackage[english]{babel}
+
+\RequirePackage{csquotes}
+\RequirePackage{microtype}
+\RequirePackage{booktabs}
+\RequirePackage{enumitem}
+\RequirePackage{xspace}
+\RequirePackage[stable]{footmisc}
+\RequirePackage{ifthen}
+
+\RequirePackage{stmaryrd}
+\RequirePackage{mathrsfs}
+\RequirePackage{mathtools} % for :=
+\RequirePackage{wasysym}
+\RequirePackage{mathpartir}
+\RequirePackage{tikz-cd}
+\RequirePackage{tikz}
+\usetikzlibrary{decorations.pathmorphing,arrows}
+%\RequirePackage[inference]{semantic}
+\RequirePackage{bussproofs}
+\RequirePackage{tipa} % for textesh
+\RequirePackage{marginnote}
+
+\RequirePackage[hyphens]{url} % This package has to be loaded *before* hyperref and biblatex
+\RequirePackage[style=numeric,maxnames=10,backend=biber,hyperref=true]{biblatex}
+\definecolor{darkblue}{rgb}{0,0.4,0.4}
+\RequirePackage[pdfpagelabels,colorlinks,citecolor=orange,linkcolor=darkblue,unicode]{hyperref}
+\hypersetup{pdfpagemode=UseOutlines}
+
+\RequirePackage{fancyvrb}
+
+ \DefineVerbatimEnvironment
+   {code}{Verbatim}
+   {}
+
+
+%\RequirePackage{caption}
+%\DeclareCaptionFormat{myformat}{{\bf #1}#2#3{\color{black!20}\hrulefill}}
+%\captionsetup[figure]{format=myformat}
+
+
+% For some reason the following can't be above hyperref.
+\RequirePackage{aliascnt}
+\RequirePackage[capitalize]{cleveref}
+
+% The following is to avoid overfull hboxes in the table of contents.
+% https://tex.stackexchange.com/questions/49887/overfull-hbox-warning-for-toc-entries-when-using-memoir-documentclass
+%\renewcommand*{\cftdotsep}{1}
+\setpnumwidth{3em}
+\setrmarg{4em}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% THEOREM ENVIRONMENTS %%%%
+
+% Hyperref includes the command \autoref{...} which is like \ref{...}
+% except that it automatically inserts the type of the thing you're
+% referring to, e.g. it produces "Theorem 3.8" instead of just "3.8"
+% (and makes the whole thing a hyperlink).  This saves a slight amount
+% of typing, but more importantly it means that if you decide later on
+% that 3.8 should be a Lemma or a Definition instead of a Theorem, you
+% don't have to change the name in all the places you referred to it.
+
+% The following hack improves on this by using the same counter for
+% all theorem-type environments, so that after Theorem 1.1 comes
+% Corollary 1.2 rather than Corollary 1.1.  This makes it much easier
+% for the reader to find a particular theorem when flipping through
+% the document.
+
+\newtheorem{thm}{Theorem}[section]
+\crefname{thm}{Theorem}{Theorems}
+
+\def\defthm#1#2#3{%
+  %% Ensure all theorem types are numbered with the same counter
+  \newaliascnt{#1}{thm}
+  \newtheorem{#1}[#1]{#2}
+  \aliascntresetthe{#1}
+  %% This command tells cleveref's \cref what to call things
+  \crefname{#1}{#2}{#3}}
+
+% Now define a bunch of theorem-type environments.
+\defthm{cor}{Corollary}{Corollaries}
+\defthm{lem}{Lemma}{Lemmas}
+\defthm{prp}{Proposition}{Propositions}
+\defthm{axiom}{Axiom}{Axioms}
+\theoremstyle{definition}
+\defthm{defn}{Definition}{Definitions}
+\theoremstyle{remark}
+\defthm{rmk}{Remark}{Remarks}
+\defthm{eg}{Example}{Examples}
+\defthm{egs}{Examples}{Examples}
+\defthm{notes}{Notes}{Notes}
+\defthm{task}{Task}{Tasks}
+\defthm{proposal}{Proposal}{Proposals}
+% Number exercises within chapters, with their own counter.
+%\newtheorem{ex}{Exercise}[chapter]
+%\crefname{ex}{Exercise}{Exercises}
+
+% Display format for sections
+\crefformat{section}{\S#2#1#3}
+\Crefformat{section}{Section~#2#1#3}
+\crefrangeformat{section}{\S\S#3#1#4--#5#2#6}
+\Crefrangeformat{section}{Sections~#3#1#4--#5#2#6}
+\crefmultiformat{section}{\S\S#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\Crefmultiformat{section}{Sections~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\crefrangemultiformat{section}{\S\S#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
+\Crefrangemultiformat{section}{Sections~#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
+
+% Display format for appendices
+\crefformat{appendix}{Appendix~#2#1#3}
+\Crefformat{appendix}{Appendix~#2#1#3}
+\crefrangeformat{appendix}{Appendices~#3#1#4--#5#2#6}
+\Crefrangeformat{appendix}{Appendices~#3#1#4--#5#2#6}
+\crefmultiformat{appendix}{Appendices~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\Crefmultiformat{appendix}{Appendices~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\crefrangemultiformat{appendix}{Appendices~#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
+\Crefrangemultiformat{appendix}{Appendices~#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
+
+\crefname{part}{Part}{Parts}
+
+\crefformat{paragraph}{\S#2#1#3}
+\Crefformat{paragraph}{Paragraph~#2#1#3}
+\crefrangeformat{paragraph}{\S\S#3#1#4--#5#2#6}
+\Crefrangeformat{paragraph}{Paragraphs~#3#1#4--#5#2#6}
+\crefmultiformat{paragraph}{\S\S#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\Crefmultiformat{paragraph}{Paragraphs~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\crefrangemultiformat{paragraph}{\S\S#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
+\Crefrangemultiformat{paragraph}{Paragraphs~#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
+
+% Number subsubsections
+\setcounter{secnumdepth}{5}
+
+% Display format for figures
+\crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+
+% Use cleveref instead of hyperref's \autoref
+\let\autoref\cref
+
+
+%%%% EQUATION NUMBERING %%%%
+
+% The following hack uses the single theorem counter to number
+% equations as well, so that we don't have both Theorem 1.1 and
+% equation (1.1).
+
+%\let\c@equation\c@thm
+%\numberwithin{equation}{section}
+
+
+%%%% ENUMERATE NUMBERING %%%%
+
+% Number the first level of enumerates as (i), (ii), ...
+\renewcommand{\theenumi}{(\roman{enumi})}
+\renewcommand{\labelenumi}{\theenumi}
+
+
+%%%% MARGINS %%%%
+
+% This is a matter of personal preference, but I think the left
+% margins on enumerates and itemizes are too wide.
+%\setitemize[1]{leftmargin=2em}
+%\setenumerate[1]{leftmargin=*}
+
+% Likewise that they are too spaced out.
+%\setitemize[1]{itemsep=-0.2em}
+%\setenumerate[1]{itemsep=-0.2em}
+
+%%% Notes %%%
+\def\noteson{%
+\gdef\note##1{\mbox{}\marginpar{\color{blue}\textasteriskcentered\ ##1}}}
+\gdef\notesoff{\gdef\note##1{\null}}
+\noteson
+
+%%%% CITATIONS %%%%
+
+% \let \cite \citep
+
+%%%% INDEX %%%%
+
+\newcommand{\footstyle}[1]{{\hyperpage{#1}}n} % If you index something that is in a footnote
+\newcommand{\defstyle}[1]{\textbf{\hyperpage{#1}}}  % Style for pageref to a definition
+
+\newcommand{\indexdef}[1]{\index{#1|defstyle}}   % Index a definition
+\newcommand{\indexfoot}[1]{\index{#1|footstyle}} % Index a term in a footnote
+\newcommand{\indexsee}[2]{\index{#1|see{#2}}}    % Index "see also"
+
+%% Use \symlabel instead of \label to mark a pageref that you need in the index of symbols
+\newcounter{symindex}
+\newcommand{\symlabel}[1]{\refstepcounter{symindex}\label{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% MACROS FOR NOTATION %%%%
+% Use these for any notation where there are multiple options.
+
+%%% Definitional equality (used infix) %%%
+\newcommand{\jdeq}{\equiv}      % An equality judgment
+\newcommand{\defeq}{\vcentcolon\equiv}  % A judgmental equality currently being defined
+
+%%% Term being defined
+\newcommand{\define}[1]{\textbf{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Type constructors and quantifiers
+
+%%% Universal quantification of mere propositions
+\newcommand{\fall}[1]{\forall_{(#1)}\,\@ifnextchar\bgroup{\fall}{}}
+
+%%% Existential quantifier %%%
+\newcommand{\exis}[1]{\exists_{(#1)}\,\@ifnextchar\bgroup{\exis}{}}
+
+%%% Unique existence %%%
+\newcommand{\uexis}[1]{\exists!_{(#1)}\,\@ifnextchar\bgroup{\uexis}{}}
+
+%%% Dependent sums %%%
+\def\smsym{\sum}
+\newcommand{\@thesum}[1]{\smsym_{(#1)}}
+\newcommand{\sm}[1]{\@ifnextchar\bgroup{\@sm{#1}\sm}{\@sm{#1}}}
+\newcommand{\@sm}[1]{\mathchoice{{\textstyle\@thesum{#1}}}{\@thesum{#1}}{\@thesum{#1}}{\@thesum{#1}}}
+\newcommand{\tsm}{\sm}
+\newcommand{\tprd}{\prd}
+
+% Other notations related to dependent sums
+\newcommand{\pair}{\ensuremath{\mathsf{pair}}\xspace}
+\newcommand{\pairr}[1]{{\mathopen{}(#1)\mathclose{}}}
+\newcommand{\Pairr}[1]{{\mathopen{}\left(#1\right)\mathclose{}}}
+\newcommand{\tup}[2]{(#1,#2)}
+\newcommand{\proj}[1]{\ensuremath{\mathsf{pr}_{#1}}\xspace}
+\newcommand{\fst}{\ensuremath{\proj1}\xspace}
+\newcommand{\snd}{\ensuremath{\proj2}\xspace}
+
+%%%% Dependent products
+\def\prdsym{\prod}
+
+%% Call the macro like \prd{x,y:A}{p:x=y} with any number of
+%% arguments.  Make sure that whatever comes *after* the call doesn't
+%% begin with an open-brace, or it will be parsed as another argument.
+
+%%%% Implicit arguments are possible. In the above example, if x and y are to be
+%%%% implicit, then one should write \prd*{x,y:A}{p:x=y}
+%%%%
+%%%% If one wants to use implicit arguments in the notation for product types,
+%%%% a * has to be put before the argument that has to be implicit.
+%%%% For example: in $\prd{x:A}*{y:B}{u:P(y)}Q(x,y,u)$, the argument y is
+%%%% implicit. Any of the arguments can be made implicit this way.
+
+%%%% First of all, we should make the command \prd search not only for a
+%%%% brace, but also for a star. We introduce an auxiliary command that
+%%%% determines whether the next character is a star or brace.
+
+\newcommand{\@ifnextchar@starorbrace}[2]
+  {\@ifnextchar*{#1}{\@ifnextchar\bgroup{#1}{#2}}}
+
+\newcommand{\@theprd}[1]{\prdsym_{(#1)}}
+\newcommand{\@theiprd}[1]{\prdsym_{\{#1\}}}
+
+%%%% When encountering the \prd command, latex should determine whether it
+%%%% should print implicit argument brackets or not.
+%%%% First, we have the following switch. Set it to true if implicit arguments
+%%%% are desired, or to false if not. Note turning off implicit arguments
+%%%% might render some parts of the text harder to comprehend, since in the
+%%%% text might appear $f(x)$ where we would have $f(i,x)$ without implicit
+%%%% arguments.
+
+\DeclareOption{implicit_arguments_on}%
+  {\newcommand{\implicitargumentson}{\boolean{true}}}
+\DeclareOption{implicit_arguments_off}%
+  {\newcommand{\implicitargumentson}{\boolean{false}}}
+
+\ExecuteOptions{implicit_arguments_off}
+
+\ProcessOptions\relax
+
+\newcommand{\prd}{\@ifnextchar*{\@iprd}{\@prd}}
+\newcommand{\@prd}[1]
+  {\@ifnextchar@starorbrace
+    {\@tprd{#1}\prd}
+    {\@tprd{#1}}}
+\newcommand{\@tprd}[1]{%
+  \mathchoice{%
+    {{\textstyle\@theprd{#1}}}}{\@theprd{#1}}{\@theprd{#1}}{\@theprd{#1}}}
+
+\newcommand{\@iprd}[2]{\@ifnextchar@starorbrace%
+  {\@tiprd{#2}\prd}%
+  {\@tiprd{#2}}}
+\newcommand{\@tiprd}[1]{
+  \ifthenelse{\implicitargumentson}
+    {\@@tiprd{#1}}%\@ifnextchar\bgroup{\@tiprd}{}}
+    {\@tprd{#1}}}
+\newcommand{\@@tiprd}[1]{\mathchoice{{\textstyle\@theiprd{#1}}}{\@theiprd{#1}}{\@theiprd{#1}}{\@theiprd{#1}}}
+
+%%% Lambda abstractions.
+% Each variable being abstracted over is a separate argument.  If
+% there is more than one such argument, they *must* be enclosed in
+% braces.  Arguments can be untyped, as in \lam{x}{y}, or typed with a
+% colon, as in \lam{x:A}{y:B}. In the latter case, the colons are
+% automatically noticed and (with current implementation) the space
+% around the colon is reduced.  You can even give more than one variable
+% the same type, as in \lam{x,y:A}.
+\def\lam#1{{\lambda}\@lamarg#1:\@endlamarg\@ifnextchar\bgroup{.\,\lam}{.\,}}
+\def\@lamarg#1:#2\@endlamarg{\if\relax\detokenize{#2}\relax #1\else\@lamvar{\@lameatcolon#2},#1\@endlamvar\fi}
+\def\@lamvar#1,#2\@endlamvar{(#2\,{:}\,#1)}
+% \def\@lamvar#1,#2{{#2}^{#1}\@ifnextchar,{.\,{\lambda}\@lamvar{#1}}{\let\@endlamvar\relax}}
+\def\@lameatcolon#1:{#1}
+\let\lamt\lam
+% This version silently eats any typing annotation.
+\def\lamu#1{{\lambda}\@lamuarg#1:\@endlamuarg\@ifnextchar\bgroup{.\,\lamu}{.\,}}
+\def\@lamuarg#1:#2\@endlamuarg{#1}
+
+
+%%%% W-types
+\def\wtypesym{{\mathrm{W}}}
+\def\wtype#1{\@ifnextchar\bgroup%
+  {\mathchoice{\@twtype{#1}}{\@twtype{#1}}{\@twtype{#1}}{\@twtype{#1}}\wtype}%
+  {\mathchoice{\@twtype{#1}}{\@twtype{#1}}{\@twtype{#1}}{\@twtype{#1}}}}
+\def\lwtype#1{\@ifnextchar\bgroup{\@lwtype{#1}\lwtype}{\@@lwtype{#1}}}
+\def\@lwtype#1{\mathchoice{{\textstyle\wtypesym}}{\wtypesym}{\wtypesym}{\wtypesym}({\textstyle #1})\;}
+\def\@@lwtype#1{\mathchoice{{\textstyle\wtypesym}}{\wtypesym}{\wtypesym}{\wtypesym}({\textstyle #1}),\ }
+\def\twtype#1{\@twtype{#1}\@ifnextchar\bgroup{\twtype}{}}
+\def\@twtype#1{\mathchoice{{\textstyle\wtypesym_{(#1)}}}{\wtypesym_{(#1)}}{\wtypesym_{(#1)}}{\wtypesym_{(#1)}}}
+\def\dwtype#1{\@dwtype{#1}\@ifnextchar\bgroup{\dwtype}{}}
+\def\@dwtype#1{\wtypesym_{(#1)}\,}
+
+\newcommand{\suppsym}{{\mathsf{sup}}}
+\newcommand{\supp}{\ensuremath\suppsym\xspace}
+
+\def\wtypeh#1{\@ifnextchar\bgroup%
+  {\mathchoice{\@lwtypeh{#1}}{\@twtypeh{#1}}{\@twtypeh{#1}}{\@twtypeh{#1}}\wtypeh}%
+  {\mathchoice{\@@lwtypeh{#1}}{\@twtypeh{#1}}{\@twtypeh{#1}}{\@twtypeh{#1}}}}
+\def\lwtypeh#1{\@ifnextchar\bgroup{\@lwtypeh{#1}\lwtypeh}{\@@lwtypeh{#1}}}
+\def\@lwtypeh#1{\mathchoice{{\textstyle\wtypesym^h}}{\wtypesym^h}{\wtypesym^h}{\wtypesym^h}({\textstyle #1})\;}
+\def\@@lwtypeh#1{\mathchoice{{\textstyle\wtypesym^h}}{\wtypesym^h}{\wtypesym^h}{\wtypesym^h}({\textstyle #1}),\ }
+\def\twtypeh#1{\@twtypeh{#1}\@ifnextchar\bgroup{\twtypeh}{}}
+\def\@twtypeh#1{\mathchoice{{\textstyle\wtypesym^h_{(#1)}}}{\wtypesym^h_{(#1)}}{\wtypesym^h_{(#1)}}{\wtypesym^h_{(#1)}}}
+\def\dwtypeh#1{\@dwtypeh{#1}\@ifnextchar\bgroup{\dwtypeh}{}}
+\def\@dwtypeh#1{\wtypesym^h_{(#1)}\,}
+
+\newcommand{\ac}{\ensuremath{\mathsf{ac}}\xspace} % not needed in symbol index
+\newcommand{\un}{\ensuremath{\mathsf{upun}}\xspace} % not needed in symbol index, uniqueness principle for unit type
+
+\newcommand{\usc}{\underline{\ }}
+
+\newcommand{\idfunc}[1][]{\mathsf{id}_{#1}}
+\newcommand{\const}{\mathsf{const}}
+\newcommand{\evpair}{\mathsf{ev\usc{}pair}}
+\newcommand{\evpt}{\mathsf{ev\usc{}pt}}
+\newcommand{\evtruefalse}{\mathsf{ev\usc{}true\usc{}false}}
+\newcommand{\evrefl}{\mathsf{ev\usc{}refl}}
+\newcommand{\evunit}{\mathsf{ev\usc{}unit}}
+\newcommand{\suc}{\mathsf{succ}}
+\newcommand{\rec}[1]{\mathsf{rec}_{#1}}
+\newcommand{\ind}[1]{\mathsf{ind}_{#1}}
+\newcommand{\indid}[1]{\ind{=_{#1}}} % (Martin-Lof) path induction principle for identity types
+\newcommand{\indidb}[1]{\ind{=_{#1}}'} % (Paulin-Mohring) based path induction principle for identity types 
+\newcommand{\singind}{\mathsf{sing\usc{}ind}}
+\newcommand{\singcomp}{\mathsf{sing\usc{}comp}}
+\newcommand{\refl}[1]{\mathsf{refl}_{#1}}
+\newcommand{\concat}{\mathsf{concat}}
+\newcommand{\leftunit}{\mathsf{left\usc{}unit}}
+\newcommand{\rightunit}{\mathsf{right\usc{}unit}}
+\newcommand{\cohunit}{\mathsf{coh\usc{}unit}}
+\newcommand{\invfunc}{\mathsf{inv}}
+\newcommand{\leftinv}{\mathsf{left\usc{}inv}}
+\newcommand{\rightinv}{\mathsf{right\usc{}inv}}
+\newcommand{\cohinv}{\mathsf{coh\usc{}inv}}
+\newcommand{\assoc}{\mathsf{assoc}}
+\newcommand{\apid}{\mathsf{ap\usc{}id}}
+\newcommand{\apcomp}{\mathsf{ap\usc{}comp}}
+\newcommand{\aprefl}{\mathsf{ap\usc{}refl}}
+\newcommand{\apinv}{\mathsf{ap\usc{}inv}}
+\newcommand{\apconcat}{\mathsf{ap\usc{}concat}}
+\newcommand{\tr}{\mathsf{tr}}
+\newcommand{\htpy}{\sim}
+\newcommand{\htpyrefl}{\mathsf{htpy\usc{}refl}}
+\newcommand{\htpyinv}{\mathsf{htpy\usc{}inv}}
+\newcommand{\htpyconcat}{\mathsf{htpy\usc{}concat}}
+\newcommand{\sections}{\mathsf{sec}}
+\newcommand{\retractions}{\mathsf{retr}}
+\newcommand{\isequiv}{\typefont{is\usc{}equiv}}
+\newcommand{\eqvsym}{\simeq}    % infix symbol
+\newcommand{\eqv}[2]{\@ifnextchar\bgroup{#1 \eqvsym \eqv{#2}}{#1 \eqvsym #2}}
+\newcommand{\hasinverse}{\mathsf{has\usc{}inverse}}
+\newcommand{\paireq}{\mathsf{pair\usc{}eq}}
+\newcommand{\eqpair}{\mathsf{eq\usc{}pair}}
+\newcommand{\iscontr}{\ensuremath{\mathsf{is\usc{}contr}}}
+\newcommand{\fibf}[1]{\mathsf{fib}_{#1}}
+\newcommand{\fib}[2]{\mathsf{fib}_{#1}(#2)}
+\newcommand{\Fib}[2]{\mathsf{fib}_{#1}\left(#2\right)}
+\newcommand{\isset}{\ensuremath{\mathsf{is\usc{}set}}}
+\newcommand{\isprop}{\ensuremath{\mathsf{is\usc{}prop}}}
+\newcommand{\istrunc}[1]{\mathsf{is\usc{}trunc}_{#1}}
+\newcommand{\isemb}{\typefont{is\usc{}emb}}
+\newcommand{\eqequiv}{\mathsf{eq\usc{}equiv}}
+\newcommand{\equiveq}{\mathsf{equiv\usc{}eq}}
+\newcommand{\eqhtpy}{\mathsf{eq\usc{}htpy}}
+\newcommand{\htpyeq}{\mathsf{htpy\usc{}eq}}
+\newcommand{\esssmall}{\mathsf{ess\usc{}small}}
+\newcommand{\locsmall}{\mathsf{loc\usc{}small}}
+\newcommand{\isclassified}{\mathsf{is\usc{}classified}}
+\newcommand{\universalfam}{\mathrm{El}}
+\newcommand{\ispullback}{\mathsf{is\usc{}pullback}}
+\newcommand{\precomp}[1]{{#1}^\ast}
+\newcommand{\pathsplit}{\mathsf{path\usc{}split}}
+\newcommand{\halfadj}{\mathsf{half\usc{}adj}}
+\newcommand{\tottriangle}{\mathsf{tot\usc{}triangle}}
+\newcommand{\fibtriangle}{\mathsf{fib\usc{}triangle}}
+\newcommand{\cone}{\mathsf{cone}}
+\newcommand{\conemap}{\typefont{cone\usc{}map}}
+\newcommand{\gap}{\mathsf{gap}}
+\newcommand{\idp}{\mathsf{id}^\ast}
+\newcommand{\FibSeq}{\mathsf{Fib\usc{}Seq}}
+\newcommand{\equivpt}{\mathsf{equiv\usc{}pt}}
+\newcommand{\ptequiv}{\mathsf{pt\usc{}equiv}}
+\newcommand{\prop}{\mathsf{Prop}}
+
+\newcommand{\cocone}{\mathsf{cocone}}
+\newcommand{\coconemap}{\typefont{cocone\usc{}map}}
+
+\newcommand{\truncunit}[1]{|#1|}
+
+%%% the uniqueness principle for product types, formerly called surjective pairing and named \spr:
+\newcommand{\uppt}{\ensuremath{\mathsf{uppt}}\xspace}
+
+% Paths in pairs
+\newcommand{\pairpath}{\ensuremath{\mathsf{pair}^{\mathord{=}}}\xspace}
+% \newcommand{\projpath}[1]{\proj{#1}^{\mathord{=}}}
+\newcommand{\projpath}[1]{\ensuremath{\apfunc{\proj{#1}}}\xspace}
+
+% \newcommand{\type}{\ensuremath{\mathsf{Type}}} % this command is overridden below, so it's commented out
+\DeclareMathOperator{\im}{im} % the image
+
+%%% 2D path operations
+\newcommand{\leftwhisker}{\mathbin{{\ct}_{\ell}}}
+\newcommand{\rightwhisker}{\mathbin{{\ct}_{r}}}
+\newcommand{\hct}{\star}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Identity types %%%
+\newcommand{\idsymbin}{=}
+\newcommand{\idsym}{{\idsymbin}}
+\newcommand{\id}[3][]{
+  \@ifnextchar\bgroup
+    {#2 \mathbin{\idsym_{#1}} \id[#1]{#3}}
+    {#2 \mathbin{\idsym_{#1}} #3}
+  }
+\newcommand{\idtype}[3][]{\ensuremath{\mathsf{Id}_{#1}(#2,#3)}\xspace}
+\newcommand{\idtypevar}[1]{\ensuremath{\mathsf{Id}_{#1}}\xspace}
+% A propositional equality currently being defined
+\newcommand{\defid}{\coloneqq}
+
+\newcommand{\totalpath}[1]{P_{#1}}
+
+%%% Dependent paths
+\newcommand{\dpath}[4]{#3 =^{#1}_{#2} #4}
+
+%%% Path concatenation (used infix, in diagrammatic order) %%%
+\newcommand{\ctsym}{%
+  \mathchoice{\mathbin{\raisebox{0.5ex}{$\displaystyle\centerdot$}}}%
+             {\mathbin{\raisebox{0.5ex}{$\centerdot$}}}%
+             {\mathbin{\raisebox{0.25ex}{$\scriptstyle\,\centerdot\,$}}}%
+             {\mathbin{\raisebox{0.1ex}{$\scriptscriptstyle\,\centerdot\,$}}}
+  }
+\newcommand{\ct}[3][]{
+  \@ifnextchar\bgroup
+    {#2 \mathbin{\ctsym_{#1}} \ct[#1]{#3}}
+    {#2 \mathbin{\ctsym_{#1}} #3}
+  }
+
+%%% Path reversal %%%
+\newcommand{\opp}[1]{\mathord{{#1}^{-1}}}
+\let\rev\opp
+
+%%% Transport (covariant) %%%
+\newcommand{\trans}[2]{\ensuremath{{#1}_{*}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
+\let\Trans\trans
+%\newcommand{\Trans}[2]{\ensuremath{{#1}_{*}\left({#2}\right)}\xspace}
+\newcommand{\transf}[1]{\ensuremath{{#1}_{*}}\xspace} % Without argument
+%\newcommand{\transport}[2]{\ensuremath{\mathsf{transport}_{*} \: {#2}\xspace}}
+\newcommand{\transfib}[3]{\ensuremath{\mathsf{transport}^{#1}(#2,#3)\xspace}}
+\newcommand{\Transfib}[3]{\ensuremath{\mathsf{transport}^{#1}\Big(#2,\, #3\Big)\xspace}}
+\newcommand{\transfibf}[1]{\ensuremath{\mathsf{transport}^{#1}\xspace}}
+
+%%% 2D transport
+\newcommand{\transtwo}[2]{\ensuremath{\mathsf{transport}^2\mathopen{}\left({#1},{#2}\right)\mathclose{}}\xspace}
+
+%%% Constant transport
+\newcommand{\transconst}[3]{\ensuremath{\mathsf{transportconst}}^{#1}_{#2}(#3)\xspace}
+\newcommand{\transconstf}{\ensuremath{\mathsf{transportconst}}\xspace}
+
+%%% Map on paths %%%
+\newcommand{\mapfunc}[1]{\ensuremath{\mathsf{ap}_{#1}}\xspace} % Without argument
+\newcommand{\map}[2]{\mapfunc{#1}\left({#2}\right)\xspace}
+\let\Ap\map
+%\newcommand{\Ap}[2]{\ensuremath{{#1}\left({#2}\right)}\xspace}
+\newcommand{\mapdepfunc}[1]{\ensuremath{\mathsf{apd}_{#1}}\xspace} % Without argument
+% \newcommand{\mapdep}[2]{\ensuremath{{#1}\llparenthesis{#2}\rrparenthesis}\xspace}
+\newcommand{\mapdep}[2]{\ensuremath{\mapdepfunc{#1}\mathopen{}\left(#2\right)\mathclose{}}\xspace}
+\let\apfunc\mapfunc
+\let\ap\map
+\let\apdfunc\mapdepfunc
+\let\apd\mapdep
+
+%%% 2D map on paths
+\newcommand{\aptwofunc}[1]{\ensuremath{\mathsf{ap}^2_{#1}}\xspace}
+\newcommand{\aptwo}[2]{\ensuremath{\aptwofunc{#1}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
+\newcommand{\apdtwofunc}[1]{\ensuremath{\mathsf{apd}^2_{#1}}\xspace}
+\newcommand{\apdtwo}[2]{\ensuremath{\apdtwofunc{#1}\mathopen{}\left(#2\right)\mathclose{}}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Basic types
+
+%%% The empty type
+\newcommand{\emptyt}{\ensuremath{\mathbf{0}}\xspace}
+
+%%% The unit type
+\newcommand{\unit}{\ensuremath{\mathbf{1}}\xspace}
+\newcommand{\ttt}{\ensuremath{\star}\xspace}
+
+%%% The two-element type
+\newcommand{\bool}{\ensuremath{\mathbf{2}}\xspace}
+\newcommand{\btrue}{{1_{\bool}}}
+\newcommand{\bfalse}{{0_{\bool}}}
+\newcommand{\bneg}{\mathsf{neg}}
+
+%%% Injections into binary sums and pushouts
+\newcommand{\inlsym}{{\mathsf{inl}}}
+\newcommand{\inrsym}{{\mathsf{inr}}}
+\newcommand{\inl}{\ensuremath\inlsym\xspace}
+\newcommand{\inr}{\ensuremath\inrsym\xspace}
+
+\newcommand{\seqin}{\mathsf{seq\usc{}in}}
+\newcommand{\quotientrestr}{\mathsf{quotient\usc{}restr}}
+
+%%% The interval
+\newcommand{\interval}{\ensuremath{I}\xspace}
+\newcommand{\izero}{\ensuremath{0_{\interval}}\xspace}
+\newcommand{\ione}{\ensuremath{1_{\interval}}\xspace}
+\newcommand{\seg}{\ensuremath{\mathsf{seg}}\xspace}
+
+%%% Free groups
+\newcommand{\freegroup}[1]{F(#1)}
+\newcommand{\freegroupx}[1]{F'(#1)} % the "other" free group
+
+%%% Glue of a pushout
+\newcommand{\gluesym}{{\mathsf{glue}}}
+\newcommand{\jglue}{\ensuremath\gluesym\xspace}
+\newcommand{\glue}{\mathsf{glue}}
+
+%%% Circles and spheres
+\newcommand{\sphere}[1]{\mathbb{S}^{#1}}
+\newcommand{\Sn}{\mathbb{S}}
+\newcommand{\base}{\ensuremath{\mathsf{base}}\xspace}
+\newcommand{\lloop}{\ensuremath{\mathsf{loop}}\xspace}
+\newcommand{\surf}{\ensuremath{\mathsf{surf}}\xspace}
+\newcommand{\Thom}{\mathrm{Th}}
+
+%%% Suspension
+\newcommand{\susp}[1][]{\typefont{\Sigma}^{#1}}
+\newcommand{\suspspec}{\susp[\infty]}
+\newcommand{\north}{\mathsf{N}}
+\newcommand{\south}{\mathsf{S}}
+\newcommand{\merid}{\mathsf{merid}}
+\newcommand{\spectrify}{L_{\mathrm{Spec}}}
+\newcommand{\spshift}[1]{\typefont{\Sigma}^{#1}}
+\newcommand{\mapsp}{\typefont{Map}_\ast}
+
+\newcommand{\sequence}[3][n]{({#2}_{#1},{#3}_{#1})_{#1}}
+
+%%% Natural numbers
+\newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
+%\newcommand{\N}{\textbf{N}}
+\let\nat\N
+\newcommand{\natp}{\ensuremath{\nat'}\xspace} % alternative nat in induction chapter
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\zerop}{\ensuremath{0'}\xspace}   % alternative zero in induction chapter
+\newcommand{\sucp}{\ensuremath{\suc'}\xspace} % alternative suc in induction chapter
+\newcommand{\add}{\mathsf{add}}
+\newcommand{\ack}{\mathsf{ack}}
+\newcommand{\ite}{\mathsf{iter}}
+\newcommand{\dbl}{\ensuremath{\mathsf{double}}}
+\newcommand{\dblp}{\ensuremath{\dbl'}\xspace} % alternative double in induction chapter
+
+
+%%% Lists
+\newcommand{\lst}[1]{\mathsf{List}(#1)}
+\newcommand{\nil}{\mathsf{nil}}
+\newcommand{\cons}{\mathsf{cons}}
+
+%%% Vectors of given length, used in induction chapter
+\newcommand{\vect}[2]{\ensuremath{\mathsf{Vec}_{#1}(#2)}\xspace}
+
+%%% Integers
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\Zmodtwo}{\Z_2}
+\newcommand{\Zsuc}{\mathsf{succ}}
+\newcommand{\Zpred}{\mathsf{pred}}
+
+%%% Rationals
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}\xspace}
+
+%%% Macros for real numbers
+\newcommand{\RC}{\ensuremath{\mathbb{R}_\mathsf{c}}\xspace} % Cauchy
+\newcommand{\RD}{\ensuremath{\mathbb{R}_\mathsf{d}}\xspace} % Dedekind
+\newcommand{\bbR}{\ensuremath{\mathbb{R}}\xspace}  
+\newcommand{\bbC}{\ensuremath{\mathbb{C}}\xspace}
+\newcommand{\bbH}{\ensuremath{\mathbb{H}}\xspace}
+\newcommand{\barRD}{\ensuremath{\bar{\mathbb{R}}_\mathsf{d}}\xspace} % Dedekind completion of Dedekind
+
+\newcommand{\close}[1]{\sim_{#1}} % Relation of closeness
+\newcommand{\closesym}{\mathord\sim}
+\newcommand{\rclim}{\mathsf{lim}} % HIT constructor for Cauchy reals
+\newcommand{\rcrat}{\mathsf{rat}} % Embedding of rationals into Cauchy reals
+\newcommand{\rceq}{\mathsf{eq}_{\RC}} % HIT path constructor
+\newcommand{\CAP}{\mathcal{C}}    % The type of Cauchy approximations
+\newcommand{\Qp}{\Q_{+}}
+\newcommand{\apart}{\mathrel{\#}}  % apartness
+\newcommand{\dcut}{\mathsf{isCut}}  % Dedekind cut
+\newcommand{\cover}{\triangleleft} % inductive cover
+\newcommand{\intfam}[3]{(#2, \lam{#1} #3)} % family of rational intervals
+
+% Macros for the Cauchy reals construction
+\newcommand{\bsim}{\frown}
+\newcommand{\bbsim}{\smile}
+
+\newcommand{\hapx}{\diamondsuit\approx}
+\newcommand{\hapname}{\diamondsuit}
+\newcommand{\hapxb}{\heartsuit\approx}
+\newcommand{\hapbname}{\heartsuit}
+\newcommand{\tap}[1]{\bullet\approx_{#1}\triangle}
+\newcommand{\tapname}{\triangle}
+\newcommand{\tapb}[1]{\bullet\approx_{#1}\square}
+\newcommand{\tapbname}{\square}
+
+%%% Macros for surreals
+\newcommand{\NO}{\ensuremath{\mathsf{No}}\xspace}
+\newcommand{\surr}[2]{\{\,#1\,\big|\,#2\,\}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\RR}{\mathcal{R}}
+\newcommand{\noeq}{\mathsf{eq}_{\NO}} % HIT path constructor
+
+\newcommand{\ble}{\trianglelefteqslant}
+\newcommand{\blt}{\vartriangleleft}
+\newcommand{\bble}{\sqsubseteq}
+\newcommand{\bblt}{\sqsubset}
+
+\newcommand{\hle}{\diamondsuit\preceq}
+\newcommand{\hlt}{\diamondsuit\prec}
+\newcommand{\hlname}{\diamondsuit}
+\newcommand{\hleb}{\heartsuit\preceq}
+\newcommand{\hltb}{\heartsuit\prec}
+\newcommand{\hlbname}{\heartsuit}
+% \newcommand{\tle}{(\bullet\preceq\triangle)}
+% \newcommand{\tlt}{(\bullet\prec\triangle)}
+\newcommand{\tle}{\triangle\preceq}
+\newcommand{\tlt}{\triangle\prec}
+\newcommand{\tlname}{\triangle}
+% \newcommand{\tleb}{(\bullet\preceq\square)}
+% \newcommand{\tltb}{(\bullet\prec\square)}
+\newcommand{\tleb}{\square\preceq}
+\newcommand{\tltb}{\square\prec}
+\newcommand{\tlbname}{\square}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Functions
+
+%%% Map on total spaces %%%
+\newcommand{\total}[2][]{\ensuremath{\mathsf{tot}_{#1}(#2)}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Binary relations
+
+%%% Other meanings of \sim
+\newcommand{\bisim}{\sim}       % bisimulation
+\newcommand{\eqr}{\sim}         % an equivalence relation
+
+\newcommand{\eqvspaced}[2]{\ensuremath{#1 \;\simeq\; #2}\xspace}
+\newcommand{\texteqv}[2]{\ensuremath{\mathsf{Equiv}(#1,#2)}\xspace}
+\newcommand{\ptdeqvsym}{\simeq_\ast}    % infix symbol
+\newcommand{\ptdeqv}[2]{
+  \@ifnextchar\bgroup
+    {#1 \ptdeqvsym \ptdeqv{#2}}
+    {#1 \ptdeqvsym #2}
+  }
+
+%%% Isomorphism of set-level structures
+\newcommand{\isomsym}{\cong}
+\newcommand{\isom}[2]{
+  \@ifnextchar\bgroup
+    {#1 \isomsym \eqv{#2}}
+    {#1 \isomsym #2}
+  }
+
+%%% Sets
+\newcommand{\bin}{\ensuremath{\mathrel{\widetilde{\in}}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Universes, subuniverses and modal operators
+
+%%% Universe types %%%
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\type}{\mathsf{Type}}
+
+% Universes of truncated types
+\newcommand{\typele}[1]{\ensuremath{{#1}\text-\mathsf{Type}}\xspace}
+\newcommand{\typeleU}[1]{\ensuremath{{#1}\text-\mathsf{Type}_\UU}\xspace}
+\newcommand{\typelep}[1]{\ensuremath{{(#1)}\text-\mathsf{Type}}\xspace}
+\newcommand{\typelepU}[1]{\ensuremath{{(#1)}\text-\mathsf{Type}_\UU}\xspace}
+\let\ntype\typele
+\let\ntypeU\typeleU
+\let\ntypep\typelep
+\let\ntypepU\typelepU
+\newcommand{\set}{\ensuremath{\mathsf{Set}}\xspace}
+\newcommand{\setU}{\ensuremath{\mathsf{Set}_\UU}\xspace}
+\newcommand{\propU}{\ensuremath{\mathsf{Prop}_\UU}\xspace}
+
+%Pointed types
+\newcommand{\pointed}[1]{\ensuremath{#1_\bullet}}
+%%% (pointed) mapping spaces
+\newcommand{\Map}{\mathsf{Map}}
+
+%%% Univalence
+\newcommand{\ua}{\ensuremath{\mathsf{ua}}\xspace} % the inverse of idtoeqv
+\newcommand{\idtoeqv}{\ensuremath{\mathsf{idtoeqv}}\xspace}
+\newcommand{\univalence}{\ensuremath{\mathsf{univalence}}\xspace} % the full axiom
+
+
+\newcommand{\trunc}[2]{\Vert #2\Vert_{#1}}
+\newcommand{\ttrunc}[2]{\bigl\Vert #2\bigr\Vert_{#1}}
+\newcommand{\Trunc}[2]{\left\Vert #2\right\Vert_{#1}}
+\newcommand{\truncf}[1]{\Vert \blank \Vert_{#1}}
+\newcommand{\tproj}[3][]{\mathopen{}\left|#3\right|_{#2}^{#1}\mathclose{}}
+\newcommand{\tprojf}[2][]{|\blank|_{#2}^{#1}}
+\def\pizero{\trunc0}
+
+%%% Macros for n-types
+\newcommand{\istype}[1]{\mathsf{is\usc{}}{#1}\mbox{-}\mathsf{type}}
+\newcommand{\nplusone}{\ensuremath{(n+1)}}
+\newcommand{\nminusone}{\ensuremath{(n-1)}}
+\newcommand{\fact}{\mathsf{fact}}
+
+\newcommand{\brck}[1]{\trunc{}{#1}}
+\newcommand{\bbrck}[1]{\ttrunc{}{#1}}
+\newcommand{\Brck}[1]{\Trunc{}{#1}}
+\newcommand{\bproj}[1]{\tproj{}{#1}}
+\newcommand{\bprojf}{\tprojf{}}
+
+%%% modalities %%%
+\newcommand{\modal}{\ensuremath{\ocircle}}
+\let\reflect\modal
+\newcommand{\modaltype}{\ensuremath{\type_\modal}}
+\newcommand{\modalUU}{\ensuremath{\UU_\modal}}
+% \newcommand{\ism}[1]{\ensuremath{\mathsf{is}_{#1}}}
+% \newcommand{\ismodal}{\ism{\modal}}
+% \newcommand{\existsmodal}{\ensuremath{{\exists}_{\modal}}}
+% \newcommand{\existsmodalunique}{\ensuremath{{\exists!}_{\modal}}}
+% \newcommand{\modalfunc}{\textsf{\modal-fun}}
+% \newcommand{\Ecirc}{\ensuremath{\mathsf{E}_\modal}}
+% \newcommand{\Mcirc}{\ensuremath{\mathsf{M}_\modal}}
+\newcommand{\mreturn}{\ensuremath{\eta}}
+\let\project\mreturn
+%\newcommand{\mbind}[1]{\ensuremath{\hat{#1}}}
+\newcommand{\ext}{\mathsf{ext}}
+%\newcommand{\mmap}[1]{\ensuremath{\bar{#1}}}
+%\newcommand{\mjoin}{\ensuremath{\mreturn^{-1}}}
+% Subuniverse
+\renewcommand{\P}{\ensuremath{\type_{P}}\xspace}
+\newcommand{\islocal}[1]{\mathsf{is\usc{}local}_{#1}}
+\newcommand{\modalunit}[1][]{{\eta_{#1}}}
+\newcommand{\plus}[1]{{{#1}^+}}
+\newcommand{\localization}[1]{\mathcal{L}_{#1}}
+\newcommand{\ismodal}{\ensuremath{\mathsf{is\usc{}modal}}}
+\newcommand{\natunit}{\mathsf{nat\usc{}unit}}
+\newcommand{\isetale}{\mathsf{is\usc{}etale}}
+\newcommand{\etmap}{\mathsf{etale\usc{}map}}
+
+% Projection and extension for truncations
+\let\extendsmb\ext
+\newcommand{\extend}[1]{\extendsmb(#1)}
+
+%%% Ordinals and cardinals
+\newcommand{\card}{\ensuremath{\mathsf{Card}}\xspace}
+\newcommand{\ord}{\ensuremath{\mathsf{Ord}}\xspace}
+\newcommand{\ordsl}[2]{{#1}_{/#2}}
+
+%%% Some categories
+\newcommand{\uset}{\ensuremath{\mathcal{S}et}\xspace}
+\newcommand{\ucat}{\ensuremath{{\mathcal{C}at}}\xspace}
+\newcommand{\urel}{\ensuremath{\mathcal{R}el}\xspace}
+\newcommand{\uhilb}{\ensuremath{\mathcal{H}ilb}\xspace}
+\newcommand{\utype}{\ensuremath{\mathcal{T}\!ype}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Miscellaneous stuff
+
+\newcommand{\fibration}{\twoheadrightarrow}
+\newcommand{\Sq}[1]{\mathrm{Sq}^{#1}}
+
+%%% Function extensionality
+\newcommand{\funext}{\typefont{funExt}}
+\newcommand{\happly}{\typefont{hApply}}
+
+%%% A naturality lemma
+\newcommand{\com}[3]{\mathsf{swap}_{#1,#2}(#3)}
+
+% Function definition with domain and codomain
+\newcommand{\function}[4]{\left\{\begin{array}{rcl}#1 &
+      \longrightarrow & #2 \\ #3 & \longmapsto & #4 \end{array}\right.}
+
+% Apply a function to a cocone
+\newcommand{\composecocone}[2]{#1\circ#2}
+\newcommand{\composecone}[2]{#2\circ#1}
+%%% Diagrams
+\newcommand{\Ddiag}{\mathscr{D}}
+
+\newcommand{\qinv}{\ensuremath{\mathsf{qinv}}}
+\newcommand{\ishae}{\ensuremath{\mathsf{ishae}}}
+\newcommand{\linv}{\ensuremath{\mathsf{linv}}}
+\newcommand{\rinv}{\ensuremath{\mathsf{rinv}}}
+\newcommand{\biinv}{\ensuremath{\mathsf{biinv}}}
+\newcommand{\lcoh}[3]{\mathsf{lcoh}_{#1}(#2,#3)}
+\newcommand{\rcoh}[3]{\mathsf{rcoh}_{#1}(#2,#3)}
+
+%%% Macros for the formal type theory
+\newcommand{\emptyctx}{\ensuremath{\cdot}}
+\newcommand{\production}{\vcentcolon\vcentcolon=}
+\newcommand{\conv}{\downarrow}
+\newcommand{\wfctx}[1]{#1\ \ctx}
+\newcommand{\oftp}[3]{#1 \vdash #2 : #3}
+\newcommand{\jdeqtp}[4]{#1 \vdash #2 \jdeq #3 : #4}
+\newcommand{\judg}[2]{#1 \vdash #2}
+\newcommand{\tmtp}[2]{#1 \mathord{:} #2}
+
+% rule names
+\newcommand{\form}{\textsc{form}}
+\newcommand{\intro}{\textsc{intro}}
+\newcommand{\elim}{\textsc{elim}}
+\newcommand{\comp}{\textsc{comp}}
+\newcommand{\uniq}{\textsc{uniq}}
+\newcommand{\Weak}{\mathsf{Wkg}}
+\newcommand{\Vble}{\mathsf{Vble}}
+\newcommand{\Exch}{\mathsf{Exch}}
+\newcommand{\Subst}{\mathsf{Subst}}
+
+%%% Macros for induction
+\newcommand{\natw}{\ensuremath{\mathbf{N^w}}\xspace}
+\newcommand{\zerow}{\ensuremath{0^\mathbf{w}}\xspace}
+\newcommand{\sucw}{\ensuremath{\mathbf{s^w}}\xspace}
+\newcommand{\nalg}{\nat\mathsf{Alg}}
+\newcommand{\nhom}{\nat\mathsf{Hom}}
+\newcommand{\ishinitw}{\mathsf{is\usc{}hinit}_{\wtypesym}}
+\newcommand{\ishinitn}{\mathsf{is\usc{}hinit}_\nat}
+\newcommand{\w}{\wtypesym}
+\newcommand{\walg}{\w\mathsf{Alg}}
+\newcommand{\whom}{\w\mathsf{Hom}}
+
+\newcommand{\Vect}{\ensuremath{\mathsf{Vec}}}
+\newcommand{\Fin}{\ensuremath{\mathsf{Fin}}}
+\newcommand{\fmax}{\ensuremath{\mathsf{fmax}}}
+\newcommand{\seq}[1]{\langle #1\rangle}
+
+\newcommand{\Hq}{\mathbb{H}}
+\newcommand{\Oc}{\mathbb{O}}
+\newcommand{\rprojective}[1]{\mathbb{R}\mathsf{P}^{#1}}
+\newcommand{\cprojective}[1]{\mathbb{C}\mathsf{P}^{#1}}
+\newcommand{\hprojective}[1]{\mathbb{H}\mathsf{P}^{#1}}
+\newcommand{\oprojective}[1]{\mathbb{O}\mathsf{P}^{#1}}
+\newcommand{\antipodal}[1]{\mathsf{antipodal}_{#1}}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\BAut}{Baut}
+
+\newcommand{\tautfam}[2][]{\gamma_{#1}^{#2}}
+\newcommand{\orthcomp}[2][]{\beta_{#1}^{#2}}
+
+\newcommand{\dirsum}[2]{#1\oplus #2}
+\newcommand{\tensor}[2]{#1\otimes #2}
+
+% Big parentheses
+\newcommand{\Parens}[1]{\Bigl(#1\Bigr)}
+
+%%% Blanks (shorthand for lambda abstractions)
+\newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
+
+%%% Nameless objects
+\newcommand{\nameless}{\mathord{\hspace{1pt}\underline{\hspace{1ex}}\hspace{1pt}}}
+
+\newcommand{\mentalpause}{\medskip} % Use for "mental" pause, instead of \smallskip or \medskip
+
+\newcommand{\Coq}{\textsc{Coq}\xspace}
+\newcommand{\Agda}{\textsc{Agda}\xspace}
+\newcommand{\NuPRL}{\textsc{NuPRL}\xspace}
+
+%%%% Standard phrasing or spelling of common phrases %%%%
+
+\newcommand{\ZF}{Zermelo--Fraenkel}
+\newcommand{\CZF}{Constructive \ZF{} Set Theory}
+
+\newcommand{\LEM}[1]{\ensuremath{\mathsf{LEM}_{#1}}\xspace}
+\newcommand{\choice}[1]{\ensuremath{\mathsf{AC}_{#1}}\xspace}
+
+\newcommand{\spectrum}{\mathbf}
+\newcommand{\smashpr}[2]{#1 \wedge #2}
+\newcommand{\wedgepr}[2]{#1 \vee #2}
+\newcommand{\cuppr}[2]{#1 \mathbin{\cupsym} #2}
+\newcommand{\cupsym}{\smallsmile}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% The following is a big unorganized list of new macros that we use in the
+%%%% notes. 
+
+\newcommand{\tfW}{\typefont{W}}
+\newcommand{\tfM}{\typefont{M}}
+\newcommand{\mfM}{\modelfont{M}}
+\newcommand{\mfN}{\modelfont{N}}
+\newcommand{\tfctx}{\typefont{ctx}}
+\newcommand{\mftypfunc}[1]{{\modelfont{typ}^{#1}}}
+\newcommand{\mftyp}[2]{{\mftypfunc{#1}(#2)}}
+\newcommand{\tftypfunc}[1]{{\typefont{typ}^{#1}}}
+\newcommand{\tftyp}[2]{{\tftypfunc{#1}(#2)}}
+\newcommand{\hfibfunc}[1]{\typefont{fib}_{#1}}
+\newcommand{\mappingcone}[1]{\mathcal{C}_{#1}}
+\newcommand{\equifib}{\typefont{equiFib}}
+\newcommand{\eqfop}{\typefont{EqF}}
+\newcommand{\eqf}[1]{\eqfop(#1)}
+\newcommand{\tfcolim}{\typefont{colim}}
+\newcommand{\colim}{\typefont{colim}}
+\renewcommand{\lim}{\typefont{lim}}
+\newcommand{\tflim}{\typefont{lim}}
+\newcommand{\tfdiag}{\typefont{diag}}
+\newcommand{\tfGraph}{\typefont{Graph}}
+\newcommand{\mfGraph}{\modelfont{Graph}}
+\newcommand{\unitGraph}{\unit^\mfGraph}
+\newcommand{\UUGraph}{\UU^\mfGraph}
+\newcommand{\tfrGraph}{\typefont{rGraph}}
+\newcommand{\mfrGraph}{\modelfont{rGraph}}
+\newcommand{\isfunction}{\typefont{is\usc{}function}}
+\newcommand{\tflimits}{\typefont{limits}}
+\newcommand{\tfcolimits}{\typefont{colimits}}
+\newcommand{\islimiting}{\typefont{is\usc{}limiting}}
+\newcommand{\iscolimiting}{\typefont{is\usc{}colimiting}}
+\newcommand{\islimit}{\typefont{is\usc{}limit}}
+\newcommand{\iscolimit}{\typefont{is\usc{}colimit}}
+\newcommand{\pbcone}{\typefont{cone_{pb}}}
+\newcommand{\tfinj}{\typefont{inj}}
+\newcommand{\tfsurj}{\typefont{surj}}
+\newcommand{\issurj}{\mathsf{is\usc{}surj}}
+\newcommand{\tfepi}{\typefont{epi}}
+\newcommand{\tftop}{\typefont{top}}
+%\newcommand{\sbrck}[1]{\Vert #1\Vert}
+%\newcommand{\strunc}[2]{\Vert #2\Vert_{#1}}
+\newcommand{\gobjclass}{{\typefont{U}^\mfGraph}}
+\newcommand{\gcharmap}{\typefont{fib}}
+\newcommand{\diagclass}{\typefont{T}}
+\newcommand{\opdiagclass}{\op{\diagclass}}
+\newcommand{\equifibclass}{\diagclass^{\eqv{}{}}}
+\newcommand{\universe}{\typefont{U}}
+\newcommand{\catid}[1]{{\catfont{id}_{#1}}}
+\newcommand{\isleftfib}{\typefont{is\usc{}left\usc{}fib}}
+\newcommand{\isrightfib}{\typefont{is\usc{}right\usc{}fib}}
+\newcommand{\leftLiftings}{\typefont{leftLiftings}}
+\newcommand{\rightLiftings}{\typefont{rightLiftings}}
+\newcommand{\psh}{\typefont{Psh}}
+\newcommand{\rgclass}{\typefont{\Omega^{RG}}}
+\newcommand{\terms}[2][]{| #2 |^{#1}}
+\newcommand{\grconstr}[2]
+             {\mathchoice % max size is textstyle size.
+             {{\textstyle \int_{#1}}#2}% 
+             {\int_{#1}#2}%
+             {\int_{#1}#2}%
+             {\int_{#1}#2}}
+\newcommand{\ctxhom}[3][]{\typefont{hom}_{#1}(#2,#3)}
+\newcommand{\graphcharmapfunc}[1]{\gcharmap_{#1}}
+\newcommand{\graphcharmap}[2][]{\graphcharmapfunc{#1}(#2)}
+\newcommand{\tfexp}[1]{\typefont{exp}_{#1}}
+\newcommand{\tffamfunc}{\typefont{fam}}
+\newcommand{\tffam}[1]{\tffamfunc(#1)}
+\newcommand{\tfev}{\typefont{ev}}
+\newcommand{\tfcomp}{\typefont{comp}}
+\newcommand{\isDec}[1]{\typefont{is\usc{}decidable}(#1)}
+\newcommand{\smal}{\mathcal{S}}
+\renewcommand{\modal}{{\ensuremath{\ocircle}}}
+\newcommand{\eqrel}{\typefont{EqRel}}
+\newcommand{\piw}{\ensuremath{\Pi\typefont{W}}} %% to be used in conjunction with -pretopos.
+\renewcommand{\sslash}{/\!\!/}
+\newcommand{\mprd}[3][]{\Pi^{#1}(#2,#3)}
+\newcommand{\msmsym}{\Sigma}
+\newcommand{\msm}[2]{\msmsym(#1,#2)}
+\newcommand{\mw}[2]{\wtypesym(#1,#2)}
+\newcommand{\midt}[1]{\idvartype_#1}
+\newcommand{\reflf}[1]{\typefont{refl}^{#1}}
+\newcommand{\tfJ}{\typefont{J}}
+\newcommand{\tftrans}{\typefont{trans}}
+\newcommand{\shapem}{\mathop{\textesh}}
+
+\newcommand{\@gcomp}{\underline}
+\newcommand{\gcomp}[1]{{
+\renewcommand{\msmsym}{\@gcomp{\Sigma}}
+\def\idtypevar##1{\@gcomp{\mathsf{Id}}_{##1}}
+\renewcommand{\unit}{\@gcomp{\mathbf{1}}}
+\renewcommand{\wtypesym}{\@gcomp{\mathsf{W}}}
+\def\reflf##1{\@gcomp{\mathsf{refl}}^{##1}}
+#1}}
+
+\newcommand{\tfT}{\typefont{T}}
+\newcommand{\reflsym}{{\mathsf{refl}}}
+\newcommand{\strans}[2]{\ensuremath{{#1}_{*}({#2})}}
+\newcommand{\eqtype}[1]{\typefont{Eq}_{#1}}
+\newcommand{\eqtoid}[1]{\typefont{eqtoid}(#1)}
+\newcommand{\greek}{\mathrm}
+\newcommand{\product}[2]{{#1}\times{#2}}
+\newcommand{\pairp}[1]{(#1)}
+\newcommand{\jequalizer}[3]{\{#1|#2\jdeq #3\}}
+\newcommand{\jequalizerin}[2]{\iota_{#1,#2}}
+\newcommand{\tounit}[1]{{!_{#1}}}
+\newcommand{\trwk}{\typefont{trwk}}
+\newcommand{\trext}{\typefont{trext}}
+\newcommand{\tfindf}[2][]{\typefont{ind}_{#2}^{#1}}
+\newcommand{\thom}[2]{\mathrm{thom}(#1,#2)}
+\newcommand{\thomd}[3]{\mathrm{thom}_{#1}(#2,#3)}
+
+\newcommand{\tfind}[3][]{\tfindf[#1]{#2}(\default@ctxext #3)}
+\newcommand{\famtoequifib}{\typefont{famToEquifib}}
+\newcommand{\struct}[1]{\mathop{#1\textnormal{-Struct}}}
+\newcommand{\loopspacesym}{\typefont{\Omega}}
+\newcommand{\loopspace}[2][]{\loopspacesym^{#1}(#2)}
+\newcommand{\join}[3][]{{#2}\ast_{#1}{#3}}
+\newcommand{\bigjoinsym}{\mathop{{\scalebox{2.2}{\raisebox{-0.2ex}{$\ast$}}}}}
+\newcommand{\@bigjoin}[2]{\bigjoinsym_{(#1)}\,#2}
+\newcommand{\bigjoin}[2]{\mathchoice{\textstyle{\@bigjoin{#1}{#2}}}{\@bigjoin{#1}{#2}}{\@bigjoin{#1}{#2}}{\@bigjoin{#1}{#2}}}
+\newcommand{\higherequifibsf}{\mathcal}
+\newcommand{\higherequifib}[2]{\higherequifibsf{#1}(#2)}
+\newcommand{\underlyinggraph}[1]{U(#1)}
+\newcommand{\theequifib}[1]{{\def\higherequifibsf{}#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Categories
+
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\idtoiso}{\ensuremath{\mathsf{idtoiso}}\xspace}
+\newcommand{\isotoid}{\ensuremath{\mathsf{isotoid}}\xspace}
+\newcommand{\op}[1]{{{#1}^\typefont{op}}}
+\newcommand{\y}{\ensuremath{\mathbf{y}}\xspace}
+\newcommand{\dgr}[1]{{#1}^{\dagger}}
+\newcommand{\unitaryiso}{\mathrel{\cong^\dagger}}
+\newcommand{\cteqv}[2]{\ensuremath{#1 \simeq #2}\xspace}
+\newcommand{\cteqvsym}{\simeq}     % Symbol for equivalence of categories
+
+%%% Arrows
+\newcommand{\epi}{\ensuremath{\twoheadrightarrow}}
+\newcommand{\mono}{\ensuremath{\rightarrowtail}}
+
+%%% Semigroup structure
+\newcommand{\semigroupstrsym}{\ensuremath{\mathsf{SemigroupStr}}}
+\newcommand{\semigroupstr}[1]{\ensuremath{\mathsf{SemigroupStr}}(#1)}
+\newcommand{\semigroup}[0]{\ensuremath{\mathsf{Semigroup}}}
+
+%%% Macros for HITs
+\newcommand{\cc}{\mathsf{c}}
+\newcommand{\pp}{\mathsf{p}}
+\newcommand{\cct}{\widetilde{\mathsf{c}}}
+\newcommand{\ppt}{\widetilde{\mathsf{p}}}
+\newcommand{\Wtil}{\ensuremath{\widetilde{W}}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Set theory
+
+\newcommand{\vset}{\mathsf{set}}  % point constructor for cummulative hierarchy V
+\def\cd{\tproj0}
+\newcommand{\inj}{\ensuremath{\mathsf{inj}}} % type of injections
+\newcommand{\acc}{\ensuremath{\mathsf{acc}}} % accessibility
+
+\newcommand{\atMostOne}{\mathsf{atMostOne}}
+
+\newcommand{\power}[1]{\mathcal{P}(#1)} % power set
+\newcommand{\powerp}[1]{\mathcal{P}_+(#1)} % inhabited power set
+
+\newcommand{\ucomp}[1]{\hat{#1}}
+\newcommand{\fin}{\mathsf{Fin}}
+\newcommand{\finsetf}{\typefont{Fin}}
+\newcommand{\finset}[1]{\finsetf(#1)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Group theory
+
+\newcommand{\symmetric}[1]{S_{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%
+
+\newcommand{\famsym}{\mathcal{F}}
+\newcommand{\tmsym}{\mathcal{T}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% UNFOLD
+%%%%
+%%%% For each definition in the type theory we make two versions of the macro:
+%%%% the macro introducing the new notation and an @unfold version of the macro
+%%%% which outputs the meaning of that new notation. Thus, we can use the
+%%%% following construction to write our text. When we introduce \macro, we can
+%%%% write \unfold{\macro} and the output will be the result of \macro@unfold.
+
+\newcommand{\unfold}{%
+  \unfoldnext}
+\newcommand{\unfoldall}[1]{%
+  \begingroup%
+  \renewcommand{\jhom}{\jhom@unfold}%
+  \renewcommand{\jhomeq}{\jhomeq@unfold}%
+  \renewcommand{\jhomdefn}{\jhomdefn@unfold}%
+  \renewcommand{\jfhom}{\jfhom@unfold}%
+  \renewcommand{\jcomp}{\jcomp@unfold}%
+  \renewcommand{\@jcomp@nested}{\@jcomp@unfold@nested}%
+  \renewcommand{\@jcomp@parens}{\@jcomp@unfold@parens}%
+  \renewcommand{\tmext}{\tmext@unfold}%
+  \renewcommand{\@tmext@nested}{\@tmext@unfold@nested}%
+  \renewcommand{\@tmext@parens}{\@tmext@unfold@parens}%
+  \renewcommand{\cprojfstf}{\cprojfstf@unfold}%
+  \renewcommand{\cprojfst}{\cprojfst@unfold}%
+  \renewcommand{\cprojsndf}{\cprojsndf@unfold}%
+  \renewcommand{\cprojsnd}{\cprojsnd@unfold}%
+  \renewcommand{\jfcomp}{\jfcomp@unfold}%
+%  \renewcommand{\@jfcomp@nested}{\@jfcomp@unfold@nested}%
+%  \renewcommand{\@jfcomp@parens}{\@jfcomp@unfold@parens}%
+  \renewcommand{\finc}{\finc@unfold}%
+  \renewcommand{\jvcomp}{\jvcomp@unfold}%
+  \renewcommand{\jfvcomp}{\jfvcomp@unfold}
+  \renewcommand{\subst@type@unfold}[1]{
+    \@ifnextchar\cprojfstf{\@eatdo{\cprojfstf@parens}}{%
+      ##1}
+    }
+  #1%
+  \endgroup%
+  }
+
+%%%% The following command is useful when you have checked with '\@ifnextchar'
+%%%% that the next character is a macro '\firstmacro' and you want to replace
+%%%% it by '\secondmacro'. To establish this, simply call for
+%%%% '\@ifnextchar\firstmacro{\@eatdo{\secondmacro}}{}' with the second 
+%%%% argument of \@eatdo left unspecified.
+\newcommand{\@eatdo}[2]{#1}
+
+%%%% The intention of '\unfoldnext' is to unfold only the definition of the
+%%%% next character, provided that it is in the list of unfoldable macros.
+\newcommand{\unfoldnext}[1]{%
+  \unfold@#1%
+}
+\newcommand*{\unfold@}[1]{%
+  \@ifundefined{unfold@@\detokenize{#1}}{#1}{%
+    \csname unfold@@\detokenize{#1}\endcsname
+  }%
+}
+\newcommand*{\unfold@def}[1]{%
+  \expandafter\def\csname unfold@@\detokenize{#1}\expandafter\endcsname
+  \expandafter{%
+    \csname\expandafter\@gobble\string#1@unfold\endcsname
+  }%
+}
+
+%%%% Unfolding the \jhom judgment and relatives
+\newcommand{\jhom@unfold}[4]{%
+  \jterm%
+    {{#1}{#2}}%
+    {\ctxwk{\default@ctxext #2}{\default@ctxext@parens #3}}%
+    {#4}%
+  }
+\unfold@def\jhom
+
+\newcommand{\jhomeq@unfold}[5]{%
+  \jtermeq%
+    {{#1}{#2}}%
+    {\ctxwk{\default@ctxext #2}{\default@ctxext@parens #3}}%
+    {#4}%
+    {#5}%
+  }
+\unfold@def\jhomeq
+
+\newcommand{\jhomdefn@unfold}[5]{%
+  \jtermdefn%
+    {{#1}{#2}}%
+    {\ctxwk{\default@ctxext #2}{\default@ctxext@parens #3}}%
+    {#4}%
+    {#5}%
+  }
+\unfold@def\jhomdefn
+
+\newcommand{\jfhom@unfold}[7]{%
+  \jterm
+    {{{#1}{#2}}{#5}}
+    {\ctxwk{\default@ctxext #5}{\jcomp{#2}{#4}{#6}}}
+    {#7}}
+\unfold@def\jfhom
+
+%%%% Unfolding the \jcomp judgment and relatives
+\newcommand{\jcomp@unfold}[3]{%
+  \subst
+    {\jcomp@unfold@test@preside #2}
+    {\ctxwk{\default@ctxext #1}{\jcomp@unfold@test@postside #3}}}
+\newcommand{\jcomp@unfold@test@preside}{%
+  \@ifnextchar\bgroup{\@jcomp@unfold@parens}{}}
+\newcommand{\jcomp@unfold@test@postside}{%
+  \@ifnextchar\bgroup{\@jcomp@unfold@parens}{%
+  \@ctxwk@pass
+  }}
+\unfold@def\jcomp
+
+\newcommand{\@jcomp@unfold@nested}[4]{%
+  \@jcomp@unfold@parens{#2}{#3}{#4}}
+\unfold@def\@jcomp@nested
+
+\newcommand{\@jcomp@unfold@parens}[3]{%
+  (\jcomp@unfold{#1}{#2}{#3})}
+\unfold@def\@jcomp@parens
+
+%%%% The unfolded term extension commands
+\newcommand{\tmext@unfold}[2]{%
+  \@ifnextchar\bgroup{\tmext@unfold@full{#1}{#2}}{\tmext@short{#1}{#2}}}
+\newcommand{\tmext@unfold@full}[4]{%  
+  \subst{#4}{{#3}{\idtm{\ctxext{#1}{#2}}}}}
+\unfold@def\tmext
+
+\newcommand{\@tmext@unfold@nested}[1]{%
+  \@tmext@unfold@parens}
+\unfold@def\@tmext@nested
+
+\newcommand{\@tmext@unfold@parens}[4]{%
+  (\tmext@unfold{#1}{#2}{#3}{#4})}
+\unfold@def\@tmext@parens
+
+%%%% Unfolding the \jvcomp judgment and relatives
+\newcommand{\jvcomp@unfold}[3]{%
+  \tmext{}{}{\ctxwk{#1}{#2}}{#3}
+  }
+\newcommand{\jvcomp@unfold@test@preside}{%
+  \@ifnextchar\bgroup{\@jvcomp@unfold@parens}{}}
+\newcommand{\jvcomp@unfold@test@postside}{%
+  \@ifnextchar\bgroup{\@jvcomp@unfold@parens}{}}
+\newcommand{\@jvcomp@unfold@nested}[4]{%
+  \@jvcomp@unfold@parens{#2}{#3}{#4}}
+\newcommand{\@jvcomp@unfold@parens}[3]{%
+  (\jvcomp@unfold{#1}{#2}{#3})}
+\unfold@def\jvcomp
+
+%%%% Unfolding \jfcomp
+\newcommand{\jfcomp@unfold}[5]{%
+  \jcomp{#3}{#4}{{#1}{#2}{#5}}}
+\unfold@def\jfcomp
+
+%%%% Unfolding the \jfvcomp judgment and relatives
+\newcommand{\jfvcomp@unfold}[3]{%
+  \tmext{}{}{\ctxwk{#1}{#2}}{#3}
+  }
+\newcommand{\jfvcomp@unfold@test@preside}{%
+  \@ifnextchar\bgroup{\@jfvcomp@unfold@parens}{}}
+\newcommand{\jfvcomp@unfold@test@postside}{%
+  \@ifnextchar\bgroup{\@jfvcomp@unfold@parens}{}}
+\newcommand{\@jfvcomp@unfold@nested}[4]{%
+  \@jfvcomp@unfold@parens{#2}{#3}{#4}}
+\newcommand{\@jfvcomp@unfold@parens}[3]{%
+  (\jfvcomp@unfold{#1}{#2}{#3})}
+\unfold@def\jfvcomp
+
+%%%% Unfolding the projections
+\newcommand{\cprojfstf@unfold}[2]{%
+  \ctxwk{\default@ctxext #2}\idtm{\default@ctxext #1}}
+\unfold@def\cprojfstf
+
+\newcommand{\cprojfst@unfold}[3]{%
+  \subst{#3}{(\cprojfstf@unfold{#1}{#2})}}
+\unfold@def\cprojfst
+
+\newcommand{\cprojsndf@unfold}[2]{%
+  \idtm{\default@ctxext #2}}
+\unfold@def\cprojsndf
+
+\newcommand{\cprojsnd@unfold}[3]{%
+  \subst{#3}{\cprojsnd@unfold{#1}{#2}}}
+\unfold@def\cprojsnd
+
+%%%% Unfolding the fiber inclusion
+\newcommand{\finc@unfold}[3][]{%
+  \tmext%
+    {\ctxwk{\subst{#2}{#3}}{#1}}%
+    {\ctxwk{\subst{#2}{#3}}{#3}}%
+    {\ctxwk{\subst{#2}{#3}}{#2}}%
+    {\idtm{\subst{#2}{#3}}}%
+  }
+\unfold@def\finc
+
+%%%% Unfolding jtermashom
+\newcommand{\jtermashom@unfold}[1]{\tmext{\idtm{A}}{#1}}
+\unfold@def\jtermashom
+
+%%%% Unfolding algebras
+\newcommand{\cftalg@unfold}[1]{%
+  ( \cftalgc{\cftalg{#1}},
+    \cftalgf{\cftalg{#1}},
+    \cftalgt{\cftalg{#1}},
+    \cftctxext[\cftalg{#1}],
+    \cftfamext[\cftalg{#1}],
+    \cftempc{\cftalg{#1}},
+    \cftempf{\cftalg{#1}})
+  }
+\unfold@def\cftalg
+
+\newcommand{\extalg@unfold}[1]{%
+  (\cftalgc{\algfont{#1}},
+    \cftalgf{\algfont{#1}},
+    \cftalgt{\algfont{#1}},
+    \cftctxext[\algfont{#1}],
+    \cftfamext[\algfont{#1}])
+  }
+\unfold@def\extalg
+
+\newcommand{\cfthom@unfold}[1]{%
+  ( \cfthomc{\cfthom{#1}},
+    \cfthomf{\cfthom{#1}},
+    \cfthomt{\cfthom{#1}})
+  }
+\unfold@def\cfthom
+
+\newcommand{\cftidhom@unfold}[1]{
+  ( \idtm{\cftalgc{#1}},
+    \idtm{\cftalgf{#1}},
+    \idtm{\cftalgt{#1}})
+  }
+\unfold@def\cftidhom
+
+\newcommand{\cfthomcomp@unfold}[2]{%
+  ( \jcomp{}{\cfthomc{#1}}{\cfthomc{#2}},
+    \jfcomp{}{}{}{\cfthomf{#1}}{\cfthomf{#2}},
+    \jfcomp{}{}{}{\cfthomf{#1}}{\cfthomt{#2}})
+  }
+\unfold@def\cfthomcomp
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% THE APPLY MACRO
+%%%%
+%%%% The apply macro is used in front of a command which are applicable. Here,
+%%%% applicable means that there is a version \macro@apply of \macro. The
+%%%% apply macro is mainly used in the macros for article-models-ttinternal.tex
+%%%% where there appear abstracted versions of the type theoretical operations.
+%%%% Those are operations with possibly many arguments, which are rendered
+%%%% invisible for the internalization. When one does want to apply the 
+%%%% arguments, the apply macro provides a clean syntax compared to using
+%%%% \subst directly.
+
+\newcommand{\apply}[1]{%
+\apply@#1%
+}
+
+\newcommand*{\apply@}[1]{%
+  \@ifundefined{apply@@\detokenize{#1}}{#1}{%
+    \csname apply@@\detokenize{#1}\endcsname
+  }%
+}
+
+\newcommand*{\apply@def}[1]{%
+  \expandafter\def\csname apply@@\detokenize{#1}\expandafter\endcsname
+  \expandafter{%
+    \csname\expandafter\@gobble\string#1@apply\endcsname
+  }%
+}
+
+%%%% Now we make @apply versions of various macros
+
+\newcommand{\cftctxext@apply}[3][]{\subst{#3}{{#2}{\cftctxext[#1]}}}
+\apply@def\cftctxext
+
+\newcommand{\cftfamext@apply}[4][]{\subst{#4}{{#3}{{#2}{\cftfamext[#1]}}}}
+\apply@def\cftfamext
+
+\newcommand{\cftwk@apply}[3]{\subst{#3}{{#2}{\cftwk{#1}}}}
+\apply@def\cftwk
+
+\newcommand{\cftwkc@apply}[4]{\subst{#4}{{#3}{{#2}{\cftwkc{#1}}}}}
+\apply@def\cftwkc
+
+\newcommand{\cftwkf@apply}[5]{\subst{#5}{{#4}{{#3}{{#2}{\cftwkf{#1}}}}}}
+\apply@def\cftwkf
+
+\newcommand{\cftwkt@apply}[6]{\subst{#6}{{#5}{{#4}{{#3}{{#2}{\cftwkt{#1}}}}}}}
+\apply@def\cftwkt
+
+\newcommand{\cftsubst@apply}[4]{\subst{#4}{{#3}{{#2}{\cftsubst{#1}}}}}
+\apply@def\cftsubst
+
+\newcommand{\cftsubstc@apply}[5]{\subst{#5}{{#4}{{#3}{{#2}{\cftsubstc{#1}}}}}}
+\apply@def\cftsubstc
+
+\newcommand{\cftsubstf@apply}[6]{\subst{#6}{{#5}{{#4}{{#3}{{#2}{\cftsubstf{#1}}}}}}}
+\apply@def\cftsubstf
+
+\newcommand{\cftsubstt@apply}[7]{\subst{#7}{{#6}{{#5}{{#4}{{#3}{{#2}{\cftsubstt{#1}}}}}}}}
+\apply@def\cftsubstt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% A PRETTY PRINTER
+%%%%
+%%%% We write a \pretty command that pretty prints judgments or types by
+%%%% diplaying variables and omitting explicit notation for weakening.
+%%%%
+%%%% This command should work similar to the \unfold command
+%%%%
+%%%% -- UNDER CONSTRUCTION
+
+\newcommand{\vardis}[2]{\@vardis@type #2{}(\@vardis@term #1)}
+\newcommand{\@vardis}{\@ifnextchar\bgroup{\@@vardis}{}}
+\newcommand{\@@vardis}[1]{\@ifnextchar\bgroup{\vardis{#1}}{#1}}
+\newcommand{\@vardis@term}{\@vardis}
+\newcommand{\@vardis@type}{\@ifnextchar\ctxext{\@ctxext@nested}{\@ifnextchar\ctxwk{\@ctxwk@nested}{\@vardis}}}
+\newcommand{\@vardis@nested}[3]{\@vardis@parens{#2}{#3}}
+\newcommand{\@vardis@parens}[2]{(\vardis{#1}{#2})}
+
+\newcommand{\jvctx}{\jctx}
+\newcommand{\jvctxeq}{\jctxeq}
+
+\newcommand{\cctxextcombi}[2]{\@ifnextchar\bgroup{\@cctxextcombi #1}{#1:}#2}
+\newcommand{\@cctxextcombi}[4]{\cctxext{{\cctxextcombi{#1}{#3}}{\@@cctxextcombi{#1}{#2}{#4}}}}
+\newcommand{\@@cctxextcombi}[3]{\@ifnextchar\bgroup{\@@@ctxextcombi #2}{#2(#1):}#3(\cctxext{#1})}
+\newcommand{\@@@ctxextcombi}[8] % the 5th argument is (, the 6th is \cctxext and the 8th is ).
+  {\@@ctxextcombi{#7}{#1}{#3},\@@ctxextcombi{{#7}{#3}}{#2}{#4}}
+\newcommand{\cctxext}[1]{\@ifnextchar\bgroup{\@cctxext}{}#1}
+\newcommand{\@cctxext}[2]{\cctxext{#1},\cctxext{#2}}
+
+\newcommand{\jvfamcombi}[3]{
+  \cctxextcombi{#1}{#2} \vdash \vardis{\cctxext{#1}}{#3}
+}
+
+\newcommand{\jvfam}{\@ifnextchar*{\@jvfamAlignTrue}{\@jvfamAlignFalse}}
+\newcommand{\@jvfamAlignTrue}[4]{\jfam*{#2:#3}{\vardis{#2}{#4}}}
+\newcommand{\@jvfamAlignFalse}[3]{\jfam{#1:#2}{\vardis{#1}{#3}}\quad@test}
+
+\newcommand{\jvfameq}{\@ifnextchar*{\@jvfameqAlignTrue}{\@jvfameqAlignFalse}}
+\newcommand{\@jvfameqAlignTrue}[5]{\jfameq*{#2:#3}{\vardis{#2}{#4}}{\vardis{#2}{#5}}}
+\newcommand{\@jvfameqAlignFalse}[4]{\jfameq{#1:#2}{\vardis{#1}{#3}}{\vardis{#1}{#4}}\quad@test}
+
+\newcommand{\jvtype}{\@ifnextchar*{\@jvtypeAlignTrue}{\@jvtypeAlignFalse}}
+\newcommand{\@jvtypeAlignTrue}[4]{\jtype*{#2:#3}{\vardis{#2}{#4}}}
+\newcommand{\@jvtypeAlignFalse}[3]{\jtype{#1:#2}{\vardis{#1}{#3}}\quad@test}
+
+\newcommand{\jvtypeeq}{\@ifnextchar*{\@jvtypeeqAlignTrue}{\@jvtypeeqAlignFalse}}
+\newcommand{\@jvtypeeqAlignTrue}[5]{\jtypeeq*{#2:#3}{\vardis{#2}{#4}}{\vardis{#2}{#5}}}
+\newcommand{\@jvtypeeqAlignFalse}[4]{\jtypeeq{#1:#2}{\vardis{#1}{#3}}{\vardis{#1}{#4}}\quad@test}
+
+\newcommand{\jvterm}{\@ifnextchar*{\@jvtermAlignTrue}{\@jvtermAlignFalse}}
+\newcommand{\@jvtermAlignTrue}[5]{\jterm*{#2:#3}{\vardis{#2}{#4}}{\vardis{#2}{#5}}}
+\newcommand{\@jvtermAlignFalse}[4]{\jterm{#1:#2}{\vardis{#1}{#3}}{\vardis{#1}{#4}}\quad@test}
+
+\newcommand{\jvtermeq}{\@ifnextchar*{\@jvtermeqAlignTrue}{\@jvtermeqAlignFalse}}
+\newcommand{\@jvtermeqAlignTrue}[6]{\jtermeq*{#2:#3}{\vardis{#2}{#4}}{\vardis{#2}{#5}}{\vardis{#2}{#6}}}
+\newcommand{\@jvtermeqAlignFalse}[5]{\jtermeq{#1:#2}{\vardis{#1}{#3}}{\vardis{#1}{#4}}{\vardis{#1}{#5}}\quad@test}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% JUDGMENTS
+%%%%
+%%%% Below we define several commands for the judgments of type theory. There
+%%%% are commands
+%%%% * \jctx for the judgment that something is a context.
+%%%% * \jctxeq for the judgment that two contexts are the same
+%%%% * \jtype for the judgment that something is a type in a context
+%%%% * \jtypeeq for the judgment that two types in the same context are the same
+%%%% * \jterm for the judgment that something is a term of a type in a context
+%%%% * \jtermeq for the judgment that two terms of the same type are the same
+
+% We first make a generic judgment command
+\newcommand{\judgment}[7]{%
+  \@judgment@ctx{#1} \vdash \@judgment@rel{#2}{#3}{#4}{#5}{#6} #7\quad@test}
+\newcommand{\@judgment@ctx}{\@judgment@ext}
+\newcommand{\@judgment@rel}[5]{
+  { \default@ctxext #1
+    }
+  #2 
+  { \default@ctxext #3
+    }
+  #4
+  { \default@ctxext #5
+    }}
+\newcommand{\@judgment@kind}[1]{~~\textit{#1}}
+\newcommand{\@judgment@ext}[1]{\default@ctxext #1}
+
+\newcommand{\quad@test}{%
+  \@ifnextchar\jctx{\quad}{%
+  \@ifnextchar\jctxeq{\quad}{%
+  \@ifnextchar\jvctx{\quad}{%
+  \@ifnextchar\jvctxeq{\quad}{%
+  \@ifnextchar\jfam{\quad}{%
+  \@ifnextchar\jfameq{\quad}{%
+  \@ifnextchar\jvfam{\quad}{%
+  \@ifnextchar\jvfameq{\quad}{%
+  \@ifnextchar\jtype{\quad}{%
+  \@ifnextchar\jtypeeq{\quad}{%
+  \@ifnextchar\jvtype{\quad}{%
+  \@ifnextchar\jvtypeeq{\quad}{%
+  \@ifnextchar\jterm{\quad}{%
+  \@ifnextchar\jtermeq{\quad}{%
+  \@ifnextchar\jvterm{\quad}{%
+  \@ifnextchar\jvtermeq{\quad}{%
+  \@ifnextchar\jhom{\quad}{%
+  \@ifnextchar\jhomeq{\quad}{%
+  \@ifnextchar\jfhom{\quad}{%
+  \@ifnextchar\jfhomeq{\quad}{%
+  \@ifnextchar\jany{\quad}{%
+  }}}}}}}}}}}}}}}}}}}}}}
+
+%%%% Judgments about contexts
+\newcommand{\jctx@sym}{%
+  \@judgment@kind{ctx}}
+\newcommand{\jctx}[1]{%
+  \judgment{}{}{}{}{}{#1}{\jctx@sym}}
+\newcommand{\jctxeq}[2]{%
+  \judgment{}{#1}{\jdeq}{#2}{}{}{\jctx@sym}}
+\newcommand{\jctxdefn}[2]{%
+  \judgment{}{#1}{\defeq}{#2}{}{}{\jctx@sym}}
+
+%%%% Judgments about families
+\newcommand{\jfam@sym}{%
+  \@judgment@kind{dctx}}
+\newcommand{\jfam}[2]{%
+  \judgment{#1}{}{}{}{}{#2}{\jfam@sym}}
+\newcommand{\jfameq}[3]{%
+  \judgment{#1}{#2}{\jdeq}{#3}{}{}{\jfam@sym}}
+\newcommand{\jfamdefn}[3]{%
+  \judgment{#1}{#2}{\defeq}{#3}{}{}{\jfam@sym}}
+
+%%%% Judgments about types
+\newcommand{\jtype@sym}{%
+  \@judgment@kind{type}}
+\newcommand{\jtype}[2]{%
+  \judgment{#1}{}{}{}{}{#2}{\jtype@sym}}
+\newcommand{\jtypeeq}[3]{%
+  \judgment{#1}{#2}{\jdeq}{#3}{}{}{\jtype@sym}}
+\newcommand{\jtypedefn}[3]{%
+  \judgment{#1}{#2}{\defeq}{#3}{}{}{\jtype@sym}}
+  
+%%%% Judgments about terms
+\newcommand{\jterm}[3]{%
+  \judgment{#1}{}{}{#3}{:}{#2}{}}
+\newcommand{\jtermeq}[4]{%
+  \judgment{#1}{#3}{\jdeq}{#4}{:}{#2}{}}
+\newcommand{\jtermdefn}[4]{%
+  \judgment{#1}{#3}{\defeq}{#4}{:}{#2}{}}
+
+%%%% The judgment that f is a morphism from A to B in context \Gamma.
+\newcommand{\jhomsym}[3][]{%
+  ~~\textit{hom}_{#1}(\default@ctxext #2,\default@ctxext #3)}
+\newcommand{\jhom}[4]{%
+  \judgment{#1}{}{}{#4}{}{}{\jhomsym{#2}{#3}}}
+\newcommand{\jhomeq}[5]{%
+  \judgment{#1}{#4}{\jdeq}{#5}{}{}{\jhomsym{#2}{#3}}}
+\newcommand{\jhomdefn}[5]{%
+  \judgment{#1}{#4}{\defeq}{#5}{}{}{\jhomsym{#2}{#3}}}
+  
+%%%% The judgment that e is anything
+\newcommand{\anything}{\mathcal{E}}
+\newcommand{\janysym}{:\anything}
+\newcommand{\jany}[2]{\judgment{#1}{}{}{#2}{}{}{\janysym}}
+\newcommand{\janyeq}[3]{\judgment{#1}{#2}{\jdeq}{#3}{}{}{\janysym}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% THE EMPTY CONTEXT
+
+\newcommand{\emptysym}{[\;]}
+\newcommand{\emptyc}{{\emptysym}}
+\newcommand{\emptyf}[1][]{{\emptysym}_{#1}}
+\newcommand{\emptytm}[1][]{\typefont{\#}_{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% CONTEXT EXTENSION 
+%%%%
+%%%% The context extension command.
+%%%%
+%%%% To get a feeling of how the command works, here are a few examples.
+%%%% \ctxext{A}{B} will print A.B
+%%%% \ctxext{{A}{B}}{C} will print (A.B).C
+%%%% \ctxext{{{A}{B}}{C}}{{D}{E}} will print ((A.B).C).(D.E)
+
+\newcommand{\ctxext}[2]{\@ctxext@ctx #1.\@ctxext@type #2}
+\newcommand{\@ctxext}{\@ifnextchar\bgroup{\@@ctxext}{}}
+\newcommand{\@ctxext@ctx}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\ctxwk{\@ctxwk@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  \@ctxext
+  }}}}}}}
+\newcommand{\@ctxext@type}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\subst{\@subst@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  \@ctxext
+  }}}}}}}
+\newcommand{\@@ctxext}[1]{\@ifnextchar\bgroup{\@ctxext@parens{#1}}{#1}}
+\newcommand{\@ctxext@parens}[2]{(\ctxext{#1}{#2})}
+\newcommand{\@ctxext@nested}[3]{\@ctxext@parens{#2}{#3}}
+
+%%%% We want that some commands accept binary trees as arguments that default
+%%%% into extensions. We make the following command to realize this
+\newcommand{\default@ctxext}{\@ifnextchar\bgroup{\ctxext}{}}
+\newcommand{\default@ctxext@parens}{\@ifnextchar\bgroup{\@ctxext@parens}{}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% SUBSTITUTION
+
+%%%% The substitution command will act the following way
+%%%%
+%%%% \subst{x}{P} will print P[x]
+%%%% \subst{x}{{f}{Q}} will print Q[f][x]
+%%%% \subst{{x}{f}}{{x}{Q}} will print Q[x][f[x]]
+
+\newcommand{\subst}[3][]{%
+  \@subst@type #3{}[\@subst@term #2]^{#1}}
+\newcommand{\@subst}{%
+  \@ifnextchar\bgroup{\@@subst}{}}
+\newcommand{\@@subst}[1]{%
+  \@ifnextchar\bgroup{\subst{#1}}{#1}}
+\newcommand{\@subst@term}{%
+  \@subst}
+\newcommand{\@subst@type}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\ctxwk{\@ctxwk@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+%  \@ifnextchar\mfam{\@mfam@nested}{%
+%  \@ifnextchar\mtm{\@mtm@nested}{%
+  \subst@type@unfold{\@subst}
+  }}}}}}}}%}}
+\newcommand{\subst@type@unfold}[1]{#1}
+\newcommand{\@subst@nested}[3]{%
+  \@subst@parens{#2}{#3}}
+\newcommand{\@subst@parens}[2]{%
+  (\subst{#1}{#2})}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% WEAKENING
+
+%%%% The weakening command is very much like the substitution command.
+
+\newcommand{\ctxwk}[3][]{%
+  \langle\@ctxwk@act #2\rangle^{#1} \@ctxwk@pass #3}
+\newcommand{\@ctxwk}{%
+  \@ifnextchar\bgroup{\@@ctxwk}{}}
+\newcommand{\@@ctxwk}[1]{%
+  \@ifnextchar\bgroup{\ctxwk{#1}}{#1}}
+\newcommand{\@ctxwk@act}{%
+  \@ctxwk}
+\newcommand{\@ctxwk@pass}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\subst{\@subst@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+%  \@ifnextchar\mfam{\@mfam@nested}{%
+%  \@ifnextchar\mtm{\@mtm@nested}{%
+  \@ctxwk
+  }}}}}}}}%}}
+\newcommand{\@ctxwk@parens}[2]{%
+  (\ctxwk{#1}{#2})}
+\newcommand{\@ctxwk@nested}[3]{%
+  \@ctxwk@parens{#2}{#3}}
+
+%%%% Not sure if we're gonna need the following.
+\newcommand{\ctxwkop}[2]{%
+  \ctxwk{#2}{#1}}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% IDENTITY TERMS
+
+\newcommand{\idtm}[1]{\typefont{idtm}_{\default@ctxext #1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% TERM EXTENSION
+%%%%
+%%%% The term extension command \tmext is slightly complicated because 
+%%%% \tmext@unfold should do different things depending on whether it has two
+%%%% or four arguments. Thus \tmext has a full form and a short form, where
+%%%% the short form has two arguments and the full form has four. 
+
+%%%% The basic term extension commands
+\newcommand{\default@tmext}{\@ifnextchar\bgroup{\tmext}{}}
+\newcommand{\tmext}[2]{%
+  \@ifnextchar\bgroup{\tmext@full{#1}{#2}}{\tmext@short{#1}{#2}}}
+\newcommand{\tmext@full}[4]{%
+  \ctxext{\tmext@testleft #3}{\tmext@testright #4}}
+\newcommand{\tmext@short}[2]{%
+  \ctxext{\tmext@testleft #1}{\tmext@testright #2}}
+\newcommand{\tmext@testleft}{%
+  \@ifnextchar\bgroup{\@tmext@parens}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\ctxwk{\@ctxwk@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+%  \default@tmext
+  }}}}}}}}
+\newcommand{\tmext@testright}{%
+  \@ifnextchar\bgroup{\@tmext@parens}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\subst{\@subst@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  \@ifnextchar\cprojfst{\cprojfst@nested}{%
+  \@ifnextchar\cprojsnd{\cprojsnd@nested}{%
+%  \default@tmext
+  }}}}}}}}}}
+\newcommand{\@tmext@nested}[1]{%
+  \@tmext@parens}
+\newcommand{\@tmext@parens}[2]{%
+  \@ifnextchar\bgroup
+    {\tmext@full@parens{#1}{#2}}
+    {(\tmext@short{#1}{#2})}}
+\newcommand{\tmext@full@parens}[4]{%
+  (\tmext@full{#1}{#2}{#3}{#4})}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% JUDGMENTAL MORPHISMS
+
+%%%% Composition of morphisms
+\newcommand{\comp@testtonest}[1]{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  #1
+  }}}}}
+
+\newcommand{\jcomp}[3]{%
+  \jcomp@testleft #3 \circ \jcomp@testright #2}
+\newcommand{\jcomp@testleft}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\ctxwk{\@ctxwk@nested}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\bgroup{\@jcomp@parens}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  }}}}}}}}}
+\newcommand{\jcomp@testright}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\subst{\@subst@nested}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\bgroup{\@jcomp@parens}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  }}}}}}}}}
+\newcommand{\@jcomp@nested}[4]{%
+  \@jcomp@parens{#2}{#3}{#4}}
+\newcommand{\@jcomp@parens}[3]{%
+  (\jcomp{#1}{#2}{#3})}
+
+%%%% Vertical composition of morphisms.
+\newcommand{\jvcomp}[3]{%
+  \jvcomp@testleft #2 \triangleright \jvcomp@testright #3}
+\newcommand{\jvcomp@testleft}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  \@ifnextchar\ctxwk{\@ctxwk@nested}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\bgroup{\@jvcomp@parens}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  }}}}}}}}}
+\newcommand{\jvcomp@testright}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  \@ifnextchar\subst{\@subst@nested}{%
+  \@ifnextchar\ctxext{\@ctxext@nested}{%
+  \@ifnextchar\bgroup{\@jvcomp@parens}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  }}}}}}}}}
+\newcommand{\@jvcomp@nested}[4]{%
+  \@jvcomp@parens{#2}{#3}{#4}}
+\newcommand{\@jvcomp@parens}[3]{%
+  (\jvcomp{#1}{#2}{#3})}
+
+%%%% Vertical family composition
+\newcommand{\jfvcomp}[3]{%
+  \jfvcomp@testleft #2 \circledast \jfvcomp@testright #3}
+\newcommand{\jfvcomp@testleft}{%
+  \jvcomp@testleft}
+\newcommand{\jfvcomp@testright}{%
+  \jvcomp@testright}
+\newcommand{\@jfvcomp@nested}[4]{%
+  \@jfvcomp@parens{#2}{#3}{#4}}
+\newcommand{\@jfvcomp@parens}[3]{%
+  (\jfvcomp{#1}{#2}{#3})}
+
+%%%% The judgment that F is a morphism from P to Q over f in context \Gamma.
+\newcommand{\jfhomsym}[3]{\jhomsym[{#1}]{#2}{#3}}
+\newcommand{\jfhom}[7]{
+  \judgment{#1}{}{}{#7}{}{}{\jfhomsym{#4}{#5}{#6}}}
+\newcommand{\jfhomeq}[8]{%
+  \judgment{#1}{#7}{\jdeq}{#8}{}{}{\jhomsym[{#4}]{#5}{#6}}}
+\newcommand{\jfhomdefn}[8]{%
+  \judgment{#1}{#7}{\defeq}{#8}{}{}{\jhomsym[{#4}]{#5}{#6}}}
+    
+\newcommand{\jfcomp}[5]{%
+%  \jfcomp@testleft #5 \circledcirc \jfcomp@testright #4}
+  \jfcomp@testleft #5 \bullet \jfcomp@testright #4}
+\newcommand{\jfcomp@testleft}{%
+  \@ifnextchar\bgroup{\@jfcomp@parens}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\ctxwk{\@ctxwk@nested}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  }}}}}}}}
+\newcommand{\jfcomp@testright}{%
+  \@ifnextchar\bgroup{\@jfcomp@parens}{%
+  \@ifnextchar\jfcomp{\@jfcomp@nested}{%
+  \@ifnextchar\jcomp{\@jcomp@nested}{%
+  \@ifnextchar\subst{\@subst@nested}{%
+  \@ifnextchar\tmext{\@tmext@nested}{%
+  \@ifnextchar\jvcomp{\@jvcomp@nested}{%
+  \@ifnextchar\jfvcomp{\@jfvcomp@nested}{%
+  }}}}}}}}
+\newcommand{\@jfcomp@nested}[1]{%
+  \@jfcomp@parens}
+\newcommand{\@jfcomp@parens}[5]{%
+  (\jfcomp{#1}{#2}{#3}{#4}{#5})}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% TERMS AS MORPHISMS
+
+\newcommand{\jtermashom}[1]{\hat{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% JUDGMENTAL TRIVIAL COFIBRATIONS
+
+\newcommand{\jtcext}{\tilde}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% CONTEXT PROJECTIONS
+
+\newcommand{\cprojgenf}[3]{%
+  \typefont{pr}^{%
+    \@ifnextchar\bgroup{\@ctxext@parens}{%
+    \@ifnextchar\ctxext{\@ctxext@nested}{%
+    }}
+    #2,
+    \@ifnextchar\bgroup{\@ctxext@parens}{%
+    \@ifnextchar\ctxext{\@ctxext@nested}{%
+    }}
+    #3
+    }_{#1}}
+\newcommand{\cprojgen}[4]{%
+  \subst{#4}{\cprojgenf{#1}{#2}{#3}}}
+\newcommand{\cprojgenf@nested}[1]{%
+  \cprojgenf@parens}
+\newcommand{\cprojgenf@parens}[3]{%
+  (\cprojgenf{#1}{#2}{#3})}
+\newcommand{\cprojgen@nested}[1]{%
+  \cprojgen@parens}
+\newcommand{\cprojgen@parens}[4]{%
+  (\cprojgen{#1}{#2}{#3}{#4})}
+
+\newcommand{\cprojfstf}[2]{%
+  \cprojgenf{0}{#1}{#2}}
+\newcommand{\cprojfstf@nested}[1]{%
+  \cprojfstf@parens}
+\newcommand{\cprojfstf@parens}[2]{%
+  (\cprojfstf{#1}{#2})}
+
+\newcommand{\cprojfst}[3]{%
+  \cprojgen{0}{#1}{#2}{#3}}
+\newcommand{\cprojfst@nested}[1]{%
+  \cprojfst@parens}
+\newcommand{\cprojfst@parens}[3]{%
+  (\cprojfst{#1}{#2}{#3})}
+
+\newcommand{\cprojsndf}[2]{%
+  \cprojgenf{1}{#1}{#2}}
+\newcommand{\cprojsndf@nested}[1]{%
+  \cprojsndf@parens}
+\newcommand{\cprojsndf@parens}[2]{%
+  (\cprojsndf{#1}{#2})}
+
+\newcommand{\cprojsnd}[3]{%
+  \cprojgen{1}{#1}{#2}{#3}}
+\newcommand{\cprojsnd@nested}[1]{%
+  \cprojsnd@parens}
+\newcommand{\cprojsnd@parens}[3]{%
+  (\cprojsnd{#1}{#2}{#3})}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% FIBER INCLUSIONS
+
+\newcommand{\finc}[3][]{\typefont{in}^{#3}_{#2}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% DEPENDENT FUNCTION TYPES
+
+\newcommand{\sprd}[2]{\Pi(\default@ctxext #1,\default@ctxext #2)}
+\begin{comment}
+\newcommand{\@sprd@test@cod}[2]{%
+  \@ifnextchar\bgroup{\@sprd@do@cod{#1}}{%
+  \Pi(\@sprd@test@dom{#1}{#2} #1,
+  }}
+\newcommand{\@sprd@do@cod}[4]{%
+  \ctxext{\@sprd{#1}{#2}}{\@sprd{#1}{#3}}
+  }
+\newcommand{\@sprd}[2]{
+  \@ifnextchar\bgroup{\@@sprd}{%
+    \Pi(}
+    #1,{#2})
+  }
+\newcommand{\@@sprd}[5]{%
+  \sprd{#1}{\sprd{#2}{#4}}
+  }
+\end{comment}
+
+\newcommand{\slam}[3]{%
+  \lambda^{{\default@ctxext@parens #1},{\default@ctxext@parens #2}}
+  (\default@ctxext #3)
+  }
+\newcommand{\sev}[3]{\tfev^{{\default@ctxext@parens #1},{\default@ctxext@parens #2}}(#3)}
+
+\newcommand{\evtm}[2]{\mathsf{ev}^{#1,#2}}
+
+\newcommand{\ctxev}[4][]{\varepsilon^{#1}_{#2,#3}(#4)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% NON-DEPENDENT FUNCTION TYPES
+
+\newcommand{\jfun}[2]{#1\to#2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% THE UNIT TYPE
+
+\newcommand{\unitc}[1]{%
+  \unit^0_{\default@ctxext #1}}
+\newcommand{\unitct}[1]{%
+  \ttt^0_{\default@ctxext #1}}
+\newcommand{\unitf}[2]{%
+  \unit^1_{\default@ctxext #1,\default@ctxext #2}}
+\newcommand{\unitft}[2]{%
+  \ttt^1_{\default@ctxext #1,\default@ctxext #2}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% ALIGNING JUDGMENTS
+%%%%
+%%%% Sometimes judgments need to be aligned and we wish to do so without
+%%%% having to break the usual macros for judgments. Therefore we provide the
+%%%% \jalign macro. Alignment will always be at the turnstyle symbol.
+
+\newcommand{\jalign}[1]{%
+\jalign@#1%
+}
+
+\newcommand*{\jalign@}[1]{%
+  \@ifundefined{jalign@@\detokenize{#1}}{#1}{%
+    \csname jalign@@\detokenize{#1}\endcsname
+  }%
+}
+
+\newcommand*{\jalign@def}[1]{%
+  \expandafter\def\csname jalign@@\detokenize{#1}\expandafter\endcsname
+  \expandafter{%
+    \csname\expandafter\@gobble\string#1@jalign\endcsname
+  }%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\judgment@jalign}[7]{%
+  \@judgment@ctx{#1} & \vdash \@judgment@rel{#2}{#3}{#4}{#5}{#6} #7}
+\jalign@def\judgment
+
+\newcommand{\jctx@jalign}[1]{%
+  \jalign\judgment{}{}{}{}{}{#1}{\jctx@sym}}
+\jalign@def\jctx
+
+\newcommand{\jctxeq@jalign}[2]{%
+  \jalign\judgment{}{#1}{\jdeq}{#2}{}{}{\jctx@sym}}
+\jalign@def\jctxeq
+
+\newcommand{\jctxdefn@jalign}[2]{%
+  \jalign\judgment{}{#1}{\defeq}{#2}{}{}{\jctx@sym}}
+\jalign@def\jctxdefn
+
+\newcommand{\jfam@jalign}[2]{%
+  \jalign\judgment{#1}{}{}{}{}{#2}{\jfam@sym}}
+\jalign@def\jfam
+
+\newcommand{\jfameq@jalign}[3]{%
+  \jalign\judgment{#1}{#2}{\jdeq}{#3}{}{}{\jfam@sym}}
+\jalign@def\jfameq
+
+\newcommand{\jfamdefn@jalign}[3]{%
+  \jalign\judgment{#1}{#2}{\defeq}{#3}{}{}{\jfam@sym}}
+\jalign@def\jfamdefn
+
+\newcommand{\jtype@jalign}[2]{%
+  \jalign\judgment{#1}{}{}{}{}{#2}{\jtype@sym}}
+\jalign@def\jtype
+
+\newcommand{\jtypeeq@jalign}[3]{%
+  \jalign\judgment{#1}{#2}{\jdeq}{#3}{}{}{\jtype@sym}}
+\jalign@def\jtypeeq
+
+\newcommand{\jtypedefn@jalign}[3]{%
+  \jalign\judgment{#1}{#2}{\defeq}{#3}{}{}{\jtype@sym}}
+\jalign@def\jtypedefn
+
+\newcommand{\jterm@jalign}[3]{%
+  \jalign\judgment{#1}{}{}{#3}{:}{#2}{}}
+\jalign@def\jterm
+
+\newcommand{\jtermeq@jalign}[4]{%
+  \jalign\judgment{#1}{#3}{\jdeq}{#4}{:}{#2}{}}
+\jalign@def\jtermeq
+
+\newcommand{\jtermdefn@jalign}[4]{%
+  \jalign\judgment{#1}{#3}{\defeq}{#4}{:}{#2}{}}
+\jalign@def\jtermdefn
+
+\newcommand{\jhom@jalign}[4]{%
+  \jalign\judgment{#1}{}{}{#4}{}{}{\jhomsym{#2}{#3}}}
+\jalign@def\jhom
+
+\newcommand{\jhomeq@jalign}[5]{%
+  \jalign\judgment{#1}{#4}{\jdeq}{#5}{}{}{\jhomsym{#2}{#3}}}
+\jalign@def\jhomeq
+
+\newcommand{\jhomdefn@jalign}[5]{%
+  \jalign\judgment{#1}{#4}{\defeq}{#5}{}{}{\jhomsym{#2}{#3}}}
+\jalign@def\jhomdefn
+
+\newcommand{\jfhom@jalign}[7]{
+  \jalign\judgment{#1}{}{}{#7}{}{}{\jfhomsym{#4}{#5}{#6}}}
+\jalign@def\jfhom
+
+\newcommand{\jfhomeq@jalign}[8]{%
+  \jalign\judgment{#1}{#7}{\jdeq}{#8}{}{}{\jhomsym[{#4}]{#5}{#6}}}
+\jalign@def\jfhomeq
+
+\newcommand{\jfhomdefn@jalign}[8]{%
+  \jalign\judgment{#1}{#7}{\defeq}{#8}{}{}{\jhomsym[{#4}]{#5}{#6}}}
+\jalign@def\jfhomdefn
+
+\newcommand{\jextalg@jalign}[2]{%
+  \jalign\judgment{#1}{}{}{}{}{\extalg{#2}}{\extalg@sym}}
+\jalign@def\jextalg
+
+\newcommand{\jextalgctx@jalign}[2]{%
+  \jalign\jfam{#1}{\cftalgc{\cftalg{#2}}}}
+\jalign@def\jextalgctx
+
+\newcommand{\jextalgfam@jalign}[2]{%
+  \jalign\jfam{#1}{\cftalgf{\cftalg{#2}}}}
+\jalign@def\jextalgfam
+
+\newcommand{\jextalgtm@jalign}[2]{%
+  \jalign\jfam{{#1}{\cftalgf{\cftalg{#2}}}}{\cftalgt{\cftalg{#2}}}}
+\jalign@def\jextalgtm
+
+\newcommand{\jextalgctxext@jalign}[2]{%
+  \jalign\jhom%
+    {#1}%
+    {{\cftalgc{\cftalg{#2}}}{\cftalgf{\cftalg{#2}}}}%
+    {\cftalgc{\cftalg{#2}}}%
+    {\cftctxext[\cftalg{#2}]}}
+\jalign@def\jextalgctxext
+
+\newcommand{\jextalgfamext@jalign}[2]{%
+  \jalign\jhom
+    { {#1}{\cftalgc{\cftalg{#2}}}}
+    { {\cftalgf{\cftalg{#2}}}
+      {\jcomp{}{\cftctxext{\cftalg{#2}}}{\cftalgf{\cftalg{#2}}}}}
+    { \cftalgf{\cftalg{#2}}}
+    { \cftfamext[\cftalg{#2}]}}
+\jalign@def\jextalgfamext
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% ALGEBRAS FOR THE THEORY OF CONTEXTS, FAMILIES AND TERMS
+
+\newcommand{\algfont}{\mathbf}
+
+%%%% EXTENSION ALGEBRAS
+\newcommand{\extalg}{\algfont}
+\newcommand{\extalg@sym}{\@judgment@kind{ExtAlg}}
+\newcommand{\jextalg}[2]{\judgment{#1}{}{}{}{}{\extalg{#2}}{\extalg@sym}}
+
+\newcommand{\jextalgctx}[2]{%
+  \jfam{#1}{\cftalgc{\cftalg{#2}}}}
+
+\newcommand{\jextalgfam}[2]{%
+  \jfam{{#1}{\cftalgc{\cftalg{#2}}}}{\cftalgf{\cftalg{#2}}}}
+
+\newcommand{\jextalgtm}[2]{%
+  \jfam{{{#1}{\cftalgc{\cftalg{#2}}}}{\cftalgf{\cftalg{#2}}}}{\cftalgt{\cftalg{#2}}}}
+
+\newcommand{\jextalgctxext}[2]{%
+  \jhom{#1}{{\cftalgc{\cftalg{#2}}}{\cftalgf{\cftalg{#2}}}}{\cftalgc{\cftalg{#2}}}{\cftctxext[\cftalg{#2}]}}
+
+\newcommand{\jextalgfamext}[2]{%
+  \jhom{{#1}{\cftalgc{\cftalg{#2}}}}{{\cftalgf{\cftalg{#2}}}{\jcomp{}{\cftctxext[\cftalg{#2}]}{\cftalgf{\cftalg{#2}}}}}{\cftalgf{\cftalg{#2}}}{\cftfamext[\cftalg{#2}]}}
+  
+\newcommand{\extalgc}[1]{{\renewcommand\extalg[1]{##1}#1}}
+\newcommand{\extalgf}[1]{\mathcal{F}_{#1}}
+\newcommand{\extalgt}[1]{\mathcal{T}_{#1}}
+
+%%%% EXTENSION TERMS
+\newcommand{\cftext}[2][]{\epsilon_{#1}^{#2}}
+\newcommand{\cftctxext}[1][]{\cftext[0]{#1}}
+\newcommand{\cftfamext}[1][]{\cftext[1]{#1}}
+
+%%%% THE FAMILY EXTENSION ALGEBRA
+\newcommand{\extfamalg}[1]{\algfont{F}_{#1}}
+
+%%%% EXTENSION HOMOMORPHISMS
+\newcommand{\exthom}[1]{\algfont{#1}}
+\newcommand{\exthomc}[1]{{\renewcommand\exthom[1]{##1}#1}}
+\newcommand{\exthomf}[1]{\mathcal{F}_{#1}}
+\newcommand{\exthomt}[1]{\mathcal{T}_{#1}}
+\newcommand{\extfamhom}[1]{\algfont{F}_{#1}}
+
+%%%% CFT-ALGEBRAS
+\newcommand{\cftalg}{\algfont}
+
+%%%% The intended use of `\cftctx` is `\cftctx{\cftalg{#1}}`.
+\newcommand{\cftalgc}[1]{\@gobble #1}
+
+%%%% The intended use of `\cftfam` is `\cftfam{\cftalg{#1}}`.
+\newcommand{\cftalgf}[1]{\mathcal{F}_{#1}}
+\newcommand{\cftalgt}[1]{\mathcal{T}_{#1}}
+
+\newcommand{\cftemp}[2][]{\phi_{#1}^{#2}}
+\newcommand{\cftempc}{\cftemp[0]}
+\newcommand{\cftempf}{\cftemp[1]}
+
+\newcommand{\cftfamalg}[1]{\algfont{F}_{#1}}
+
+%%%% CFT-HOMOMORPHISMS
+\newcommand{\cfthom}{\algfont}
+
+\newcommand{\cfthomc}[1]{%
+  { \renewcommand{\cfthom}[1]{##1}
+    #1
+    }
+  }
+
+\newcommand{\cfthomf}[1]{\mathcal{F}_{#1}}
+
+\newcommand{\cfthomcomp}[2]{#2\circ #1}
+
+\newcommand{\cfthomt}[1]{\mathcal{T}_{#1}}
+
+\newcommand{\cftfamhom}[1]{\algfont{F}_{#1}}
+
+\newcommand{\cftidhom}[1]{\algfont{id}_{#1}}
+
+%%%% THE WEAKENING TERM
+\newcommand{\cftwk}[1]{\boldsymbol\omega^{#1}}
+\newcommand{\cftwkc}[1]{\omega^{#1}}
+\newcommand{\cftwkf}[1]{\mathcal{F}_{\boldsymbol\omega^{#1}}}
+\newcommand{\cftwkt}[1]{\mathcal{T}_{\boldsymbol\omega^{#1}}}
+
+%%%% THE SUBSTITUTION TERM
+\newcommand{\cftsubst}[1]{\boldsymbol\sigma^{#1}}
+\newcommand{\cftsubstc}[1]{\sigma^{#1}}
+\newcommand{\cftsubstf}[1]{\mathcal{F}_{\cftsubst{#1}}}
+\newcommand{\cftsubstt}[1]{\mathcal{T}_{\cftsubst{#1}}}
+
+%%%% THE IDENTITY TERM
+\newcommand{\cftidtm}[1]{\boldsymbol\iota^{#1}}
+
+\newcommand{\genealg}[3]{\algfont{E}(#1,#2,#3)}
+\newcommand{\genealgc}[3]{E(#1,#2,#3)}
+\newcommand{\genealgf}[3]{\cftalgf{\genealg{#1}{#2}{#3}}}
+\newcommand{\genealgt}[3]{\cftalgt{\genealg{#1}{#2}{#3}}}
+\newcommand{\genealgincl}[3]{\boldsymbol\eta_{#1,#2,#3}}
+
+\newcommand{\cat}{\mathbb}
+
+\newcommand{\pullback@test}{%
+  \@ifnextchar\pullback{\@eatdo{\pullback@parens}}{%
+  \@ifnextchar\stesysff{\@eatdo{(\stesysff)}}{}}}
+\newcommand{\pullback@parens}[4]{(\pullback{#1}{#2}{#3}{#4})}
+\newcommand{\pullback}[4]{
+  \pullback@test #1\times_{\pullback@test #3,\pullback@test #4} \pullback@test #2}
+\newcommand{\pullbackpr}[3]{\pi_{#1}(#2,#3)}
+
+\newcommand{\eft}[1][]{\mathrm{ft}_{#1}}
+\newcommand{\ebd}[1][]{\partial_{#1}}
+\newcommand{\esys}[3]{\mathrm{#1#2#3}}
+\newcommand{\stesysc}{C}
+\newcommand{\stesysf}{F}
+\newcommand{\stesyst}{T}
+\newcommand{\stesys}{\esys{\stesysc}{\stesysf}{\stesyst}}
+\newcommand{\stesysff}{\pullback{\stesysf}{\stesysf}{\ectxext}{\eft}}
+\newcommand{\stesysft}{\pullback{\stesysf}{\stesysf}{\ectxext}{\eft\circ\utmb}\to \stesyst}
+\newcommand{\esysc}[1]{\@ifnextchar\esys\esys@c{\@ifnextchar\stesys{\@eatdo{\stesysc}}{}} #1}
+\newcommand{\esys@c}[4]{#2}
+\newcommand{\esysf}[1]{\@ifnextchar\esys\esys@f{\@ifnextchar\stesys{\@eatdo{\stesysf}}{}} #1}
+\newcommand{\esys@f}[4]{#3}
+\newcommand{\esyst}[1]{\@ifnextchar\esys\esys@t{\@ifnextchar\stesys{\@eatdo{\stesyst}}{}} #1}
+\newcommand{\esys@t}[4]{#4}
+\newcommand{\famesys}[1]{\mathbf{F}_{#1}}
+\newcommand{\cobesys}{\pullback} %Change of base
+
+\newcommand{\ehom}{\mathbf}
+\newcommand{\famehom}[1]{\mathbf{F}_{#1}}
+\newcommand{\ehomc}[1]{\@gobble #1_0}
+\newcommand{\ehomf}[1]{\@gobble #1_1}
+\newcommand{\ehomt}[1]{\@gobble #1_2}
+\newcommand{\eext}[1]{\mathrm{e}_{#1}}
+\newcommand{\ectxext}{\eext{0}}
+\newcommand{\efamext}{\eext{1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% THE CONSTRUCTORS OF THE TYPE THEORY OF MODELS
+
+%%%% The initial model
+\newcommand{\mctx}{%
+  \mathcal{C}}
+
+%%%% The family constructor
+\newcommand{\mfam}[2][]{%
+  \mathcal{F}_{\default@ctxext #2}^{#1}}
+\newcommand{\@mfam@nested}[1]{\@mfam@parens}
+\newcommand{\@mfam@parens}[2][]{(\mfam[#1]{#2})}
+
+%%%% The terms constructor
+\newcommand{\mtm}[2][]{%
+  \mathcal{T}_{\default@ctxext #2}^{#1}}
+\newcommand{\@mtm@nested}[1]{\@mtm@parens}
+\newcommand{\@mtm@parens}[2][]{(\mtm[#1]{#2})}
+
+%%%% The empty type constructor
+\newcommand{\tfemp}[1]{%
+  \typefont{emp}_{\default@ctxext #1}}
+\newcommand{\tft}[1]{%
+  \typefont{t}_{\default@ctxext #1}}
+
+%%%% The extension constructor
+\newcommand{\tfext}[1]{%
+  \typefont{ext}_{\default@ctxext #1}}
+
+%%%% The substitution constructor
+\newcommand{\tfsubst}{\typefont{subst}}
+  
+%%%% The weakening constructor
+\newcommand{\tfwk}[1]{%
+  \typefont{wk}_{\default@ctxext #1}}
+
+%%%% The identity function constructor
+\newcommand{\tfid}[1]{%
+  \typefont{idtm}_{\default@ctxext #1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Introducing logical usage of fonts.
+\newcommand{\modelfont}{\mathit} % use 'mf' in command to indicate model font
+\newcommand{\typefont}{\mathsf} % use 'tf' in command to indicate type font
+\newcommand{\catfont}{\mathrm} % use 'cf' in command to indicate cat font
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% When investigation pointed structures we use the \pt macro.
+
+\newcommand*{\pt}{\ast}
+\newcommand*{\bN}{{\mathbb{N}}}
+\newcommand*{\bF}{{\mathbb{F}}}
+\newcommand*{\bZ}{{\mathbb{Z}}}
+\newcommand*{\bR}{{\mathbb{R}}}
+\newcommand*{\bC}{{\mathbb{C}}}
+\newcommand*{\bH}{{\mathbb{H}}}
+\newcommand*{\bS}{{\mathbb{S}}}
+\newcommand*{\RP}{{\mathbb{R}\mathrm{P}}}
+\newcommand*{\CP}{{\mathbb{C}\mathrm{P}}}
+\newcommand*{\HP}{{\mathbb{H}\mathrm{P}}}
+\newcommand*{\GType}{\mathrm{GType}} % (k-tuply groupal) n-types
+\newcommand*{\Grp}{\mathrm{\texthyphen Group}} % higher groups
+\newcommand*{\Group}{\mathrm{Group}}
+\newcommand*{\AbGroup}{\mathrm{AbGroup}}
+\newcommand*{\iDecat}{\mathrm{\infty\text{-}\mathrm{Decat}}}
+\newcommand*{\iDisc}{\mathrm{\infty\text{-}\mathrm{Disc}}}
+\newcommand*{\leanref}[1]{}
+\newcommand*{\ditto}{--- \raisebox{-0.5ex}{''} ---}
+\newcommand*\Sym{S}
+\DeclareMathOperator\B{B}
+\newcommand*\BS{\mathop{BS}} 
+\newcommand*{\dblslash}{\mathbin{/\kern-3pt/}}
+\DeclareMathOperator\Th{Th}
+\DeclareMathOperator\Decat{Decat}
+\DeclareMathOperator\Disc{Disc}
+\DeclareMathOperator\aut{Aut}
+\DeclarePairedDelimiter\angled{\langle}{\rangle}
+\newcommand{\texthyphen}{\text{-}}
+\newcommand{\kersym}{\mathcal{K}}
+\newcommand{\qsym}{\mathcal{Q}}
+\mathchardef\hyph="2D
+\newcommand{\kshiftequiv}{\mathsf{kshift\underline{~}equiv}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% OPERATIONS ON GRAPHS
+%%%%
+%%%% First of all, each graph has a type of vertices and a type of edges. The
+%%%% type of vertices of a graph $\Gamma$ is denoted by $\pts{\Gamma}$;
+%%%% and likewise for the type of edges.
+
+\makeatletter
+\newcommand{\pts}[1]{{\@graphop@nested{#1}}_{0}}
+\newcommand{\edg}[1]{{\@graphop@nested{#1}}_{1}}
+\newcommand{\rfx}[1]{\mathsf{rfx}_{\@graphop@nested{#1}}}
+\newcommand{\@graphop@nested}[1]
+  {\@ifnextchar\ctxext{\@ctxext@nested}
+      {\@ifnextchar\undergraph{\@undergraph@nested}
+         {\@ifnextchar\underovergraph{\@underovergraph@nested}{}}}
+    #1}
+\makeatother
+
+%%%% The following operations of \undergraph and \underovergraph are used to
+%%%% define the free category and the free groupoid of a graph, respectively
+
+\makeatletter
+\newcommand{\@undergraphtest}[2]{\@ifnextchar({#1}{#2}}
+\newcommand{\undergraph}[2]{\@undergraphtest{\@undergraph@parens{#1}{#2}}{\@undergraph{#1}{#2}}}
+\newcommand{\@undergraph}[2]{{#2/#1}}
+\newcommand{\@undergraph@nested}[3]{\@undergraph@parens{#2}{#3}}
+\newcommand{\@undergraph@parens}[2]{(\@undergraph{#1}{#2})}
+\makeatother
+
+\makeatletter
+\newcommand{\underovergraph}[2]{\@underovergraphtest{\@underovergraph@parens{#1}{#2}}{\@underovergraph{#1}{#2}}}
+\newcommand{\@underovergraph}[2]{{#2}\,{\parallel}\,{#1}}
+\newcommand{\@underovergraphtest}{\@undergraphtest}
+\newcommand{\@underovergraph@parens}[2]{(\@underovergraph{#1}{#2})}
+\newcommand{\@underovergraph@nested}[3]{\@underovergraph@parens{#2}{#3}}
+\makeatother
+
+\newcommand{\graphid}[1]{\mathrm{id}_{#1}}
+\newcommand{\freecat}[1]{\mathcal{C}(#1)}
+\newcommand{\freegrpd}[1]{\mathcal{G}(#1)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\prekersym}{k}
+\newtheorem{prob}[thm]{Problem}
+
+\newcommand{\pto}{\to_{\ast}}
+\newcommand{\suspsym}{\mathsf{\Sigma}}
+\newcommand{\lra}       {\longrightarrow}
+\newcommand{\LLL}{\mathcal{L}}
+\newcommand{\RRR}{\mathcal{R}}
+\newcommand{\sto}{\!\to\!}
+\newcommand{\degg}{\mathsf{deg}}
+\newcommand{\Hom}{\mathsf{Hom}}
+\newcommand{\llra}[1]   {\stackrel{#1}{\lra}}  % labelled long right arrow
+\newcommand{\longhookrightarrow}{\lhook\joinrel\lra}
+\newcommand{\open}[1]{\mathsf{Op}_{#1}}
+\newcommand{\closed}[1]{\mathsf{Cl}_{#1}}
+\newcommand{\truncmod}[1]{\mathcal{T}_{#1}}
+\newcommand{\shmod}[1]{\mathcal{S}\mathit{h}_{#1}}
+
+\newcommand{\fillers}[1]{\mathsf{fill}_{\mathcal{L},\mathcal{R}}(#1)}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\rsu}[1][\UU]{\mathsf{RSU}_{#1}}
+\newcommand{\mdl}[1][\UU]{\mathsf{Mdl}_{#1}}
+\newcommand{\lex}[1][\UU]{\mathsf{Lex}_{#1}}
+\newcommand{\tpl}[1][\UU]{\mathsf{Top}_{#1}}
+\newcommand{\accrsu}[1][\UU]{\mathsf{AccRSU}_{#1}}
+\newcommand{\accmdl}[1][\UU]{\mathsf{AccMdl}_{#1}}
+\newcommand{\acclex}[1][\UU]{\mathsf{AccLex}_{#1}}
+
+\newcommand{\rcoeq}{\mathsf{rcoeq}}
+
+\newcommand{\tftmfunc}{\typefont{tm}}
+\newcommand{\tftm}[1]{\tftmfunc(#1)}
+
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Some tikz macros to typeset diagrams uniformly.
+
+\tikzset{patharrow/.style={double,double equal sign distance,-,font=\scriptsize}}
+\tikzset{description/.style={fill=white,inner sep=2pt}}
+\tikzset{fib/.style={->>,font=\scriptsize}}
+\tikzset{%
+    adjunction/.style={%
+        draw=none,
+        every to/.append style={%
+            edge node={node [sloped, allow upside down, auto=false]{$\dashv$}}}
+    }
+}
+
+%% Used for extra wide diagrams, e.g. when the label is too large otherwise.
+\tikzset{commutative diagrams/column sep/Huge/.initial=18ex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% New environment for constructions.
+
+%\expandafter\let\expandafter\oldproof\csname\string\proof\endcsname
+%\let\oldendproof\endproof
+\newenvironment{constr}{%
+  \begin{proof}[Construction]%
+}{\end{proof}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% New theorem environment for conjectures.
+
+\defthm{conj}{Conjecture}{Conjectures}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% The following environment for desiderata should not be there. It is better
+%%%% to use the issue tracker for desiderata.
+
+\newenvironment{desiderata}{\begingroup\color{blue}\textbf{Desiderata.}}
+{\endgroup}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% The following piece of code from tex.stackexchange:
+%%%%
+%%%% http://tex.stackexchange.com/a/55180/14653
+%%%%
+%%%% We include it so that inference rules in align environments have enough
+%%%% vertical space.
+
+\newlength\minalignvsep
+
+\def\align@preamble{%
+   &\hfil
+    \setboxz@h{\@lign$\m@th\displaystyle{##}$}%
+    \ifnum\row@>\@ne
+    \ifdim\ht\z@>\ht\strutbox@
+    \dimen@\ht\z@
+    \advance\dimen@\minalignvsep
+    \ht\strutbox\dimen@
+    \fi\fi
+    \strut@
+    \ifmeasuring@\savefieldlength@\fi
+    \set@field
+    \tabskip\z@skip
+   &\setboxz@h{\@lign$\m@th\displaystyle{{}##}$}%
+    \ifnum\row@>\@ne
+    \ifdim\ht\z@>\ht\strutbox@
+    \dimen@\ht\z@
+    \advance\dimen@\minalignvsep
+    \ht\strutbox@\dimen@
+    \fi\fi
+    \strut@
+    \ifmeasuring@\savefieldlength@\fi
+    \set@field
+    \hfil
+    \tabskip\alignsep@
+}
+
+\minalignvsep.2em
+
+\allowdisplaybreaks
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\setdescription[1]{itemsep=-0.2em}
+
+\endinput
