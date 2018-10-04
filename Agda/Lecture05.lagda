@@ -325,10 +325,20 @@ is-equiv-htpy : {i j : Level} {A : UU i} {B : UU j} {f g : A → B} →
   f ~ g → is-equiv g → is-equiv f
 is-equiv-htpy H (dpair (dpair gs issec) (dpair gr isretr)) =
   pair
-    (dpair gs (htpy-concat _ (htpy-right-whisk H gs) issec))
-    (dpair gr (htpy-concat (gr ∘ _) (htpy-left-whisk gr H) isretr))
+    ( dpair gs (htpy-concat _ (htpy-right-whisk H gs) issec))
+    ( dpair gr (htpy-concat (gr ∘ _) (htpy-left-whisk gr H) isretr))
 
 -- Exercise 5.5
+triangle-section : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (S : sec h) →
+  g ~ (f ∘ (pr1 S))
+triangle-section f g h H (dpair s issec) =
+  htpy-inv
+    ( htpy-concat
+      ( g ∘ (h ∘ s))
+      ( htpy-right-whisk H s)
+      ( htpy-left-whisk g issec))
+
 section-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   sec h → sec f → sec g
@@ -346,6 +356,16 @@ section-comp' f g h H (dpair sh sh-issec) (dpair sg sg-issec) =
       ( htpy-concat _
         ( htpy-left-whisk g (htpy-right-whisk sh-issec sg))
         ( sg-issec)))
+
+triangle-retraction : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (R : retr g) →
+  h ~ ((pr1 R) ∘ f)
+triangle-retraction f g h H (dpair r isretr) =
+  htpy-inv
+    ( htpy-concat
+      ( r ∘ (g ∘ h))
+      ( htpy-left-whisk r H)
+      ( htpy-right-whisk isretr h))
 
 retraction-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
@@ -374,41 +394,41 @@ is-equiv-comp f g h H (dpair hsec hretr)
   (dpair gsec gretr) =
   pair (section-comp' f g h H hsec gsec) (retraction-comp' f g h H gretr hretr)
 
+{- Needs to go where it is first needed:
+
+eqv-concat : {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
+  (A ≃ B) → (B ≃ X) → (A ≃ X)
+eqv-concat (dpair h is-equiv-h) (dpair g is-equiv-g) =
+  dpair
+    ( g ∘ h)
+    ( is-equiv-comp (g ∘ h) g h (htpy-refl (g ∘ h)) is-equiv-h is-equiv-g)
+-}
+
 is-equiv-left-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   is-equiv f → is-equiv h → is-equiv g
 is-equiv-left-factor f g h H
-  ( dpair (dpair sf sf-issec) (dpair rf rf-isretr))
-  ( dpair (dpair sh sh-issec) (dpair rh rh-isretr)) =
+  ( dpair sec-f retr-f)
+  ( dpair (dpair sh sh-issec) retr-h) =
   pair
-    ( section-comp f g h H (dpair sh sh-issec) (dpair sf sf-issec))
-    ( dpair
-      ( h ∘ rf)
-      ( htpy-concat _
-        ( htpy-left-whisk ((h ∘ rf) ∘ g) (htpy-inv sh-issec))
-        ( htpy-concat _
-          ( htpy-left-whisk (h ∘ rf) (htpy-right-whisk (htpy-inv H) sh))
-          ( htpy-concat _
-            ( htpy-left-whisk h (htpy-right-whisk rf-isretr sh))
-              sh-issec))))
+    ( section-comp f g h H (dpair sh sh-issec) sec-f)
+    ( retraction-comp' g f sh
+      ( triangle-section f g h H (dpair sh sh-issec))
+      ( retr-f)
+      ( dpair h sh-issec))
 
 is-equiv-right-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   is-equiv g → is-equiv f → is-equiv h
 is-equiv-right-factor f g h H
-  ( dpair (dpair sg sg-issec) (dpair rg rg-isretr))
-  ( dpair (dpair sf sf-issec) (dpair rf rf-isretr)) =
+  ( dpair sec-g (dpair rg rg-isretr))
+  ( dpair sec-f retr-f) =
   pair
-    ( dpair
-      ( sf ∘ g)
-      ( htpy-concat (rg ∘ (((g ∘ h) ∘ sf) ∘ g))
-        ( htpy-right-whisk (htpy-inv rg-isretr) ((h ∘ sf) ∘ g))
-        ( htpy-concat (rg ∘ ((f ∘ sf) ∘ g))
-          ( htpy-left-whisk rg (htpy-right-whisk (htpy-inv H) (sf ∘ g)))
-          ( htpy-concat (rg ∘ g)
-            ( htpy-left-whisk rg (htpy-right-whisk sf-issec g))
-             rg-isretr))))
-    ( retraction-comp f g h H (dpair rg rg-isretr) (dpair rf rf-isretr))
+    ( section-comp' h rg f
+      ( triangle-retraction f g h H (dpair rg rg-isretr))
+      ( sec-f)
+      ( dpair g rg-isretr))
+    ( retraction-comp f g h H (dpair rg rg-isretr) retr-f)
 
 -- Exercise 5.6
 neg-𝟚 : bool → bool
