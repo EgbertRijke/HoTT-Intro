@@ -329,6 +329,9 @@ is-equiv-htpy H (dpair (dpair gs issec) (dpair gr isretr)) =
     ( dpair gr (htpy-concat (gr ∘ _) (htpy-left-whisk gr H) isretr))
 
 -- Exercise 5.5
+
+-- Exercise 5.5 (a) asks to show that, given a commuting triangle f ~ g ∘ h and a section s of h, we get a new commuting triangle g ~ f ∘ s. Moreover, under the same assumptions it follows that f has a section if and only if g has a section.
+
 triangle-section : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (S : sec h) →
   g ~ (f ∘ (pr1 S))
@@ -356,6 +359,8 @@ section-comp' f g h H (dpair sh sh-issec) (dpair sg sg-issec) =
       ( htpy-concat _
         ( htpy-left-whisk g (htpy-right-whisk sh-issec sg))
         ( sg-issec)))
+
+-- Exercise 5.5 (b) is dual to exercise 5.5 (a). It asks to show that, given a commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f has a retraction if and only if h has a retraction.
 
 triangle-retraction : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (R : retr g) →
@@ -387,22 +392,15 @@ retraction-comp' f g h H (dpair rg rg-isretr) (dpair rh rh-isretr) =
         ( htpy-left-whisk rh (htpy-right-whisk rg-isretr h))
         ( rh-isretr)))
 
+-- In Exercise 5.5 (c) we use the constructions of parts (a) and (b) to derive the 3-for-2 property of equivalences.
+
 is-equiv-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   is-equiv h → is-equiv g → is-equiv f
-is-equiv-comp f g h H (dpair hsec hretr)
-  (dpair gsec gretr) =
-  pair (section-comp' f g h H hsec gsec) (retraction-comp' f g h H gretr hretr)
-
-{- Needs to go where it is first needed:
-
-eqv-concat : {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
-  (A ≃ B) → (B ≃ X) → (A ≃ X)
-eqv-concat (dpair h is-equiv-h) (dpair g is-equiv-g) =
-  dpair
-    ( g ∘ h)
-    ( is-equiv-comp (g ∘ h) g h (htpy-refl (g ∘ h)) is-equiv-h is-equiv-g)
--}
+is-equiv-comp f g h H (dpair sec-h retr-h) (dpair sec-g retr-g) =
+  pair
+    ( section-comp' f g h H sec-h sec-g)
+    ( retraction-comp' f g h H retr-g retr-h)
 
 is-equiv-left-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
@@ -431,6 +429,9 @@ is-equiv-right-factor f g h H
     ( retraction-comp f g h H (dpair rg rg-isretr) retr-f)
 
 -- Exercise 5.6
+
+-- In this exercise we show that the negation function on the booleans is an equivalence. Moreover, we show that any constant function on the booleans is not an equivalence.
+
 neg-𝟚 : bool → bool
 neg-𝟚 true = false
 neg-𝟚 false = true
@@ -458,6 +459,8 @@ not-equiv-const false (dpair (dpair s issec) (dpair r isretr)) =
 
 -- Exercise 5.7
 
+-- In this exercise we show that the successor function on the integers is an equivalence. 
+
 left-inverse-pred-ℤ : (k : ℤ) → Id (pred-ℤ (succ-ℤ k)) k
 left-inverse-pred-ℤ (inl zero-ℕ) = refl
 left-inverse-pred-ℤ (inl (succ-ℕ x)) = refl
@@ -479,6 +482,9 @@ is-equiv-succ-ℤ =
   ( dpair pred-ℤ left-inverse-pred-ℤ)
 
 -- Exercise 5.8
+
+-- In this exercise we construct an equivalence from A + B to B + A, showing that the coproduct is commutative.
+
 swap-coprod : {i j : Level} (A : UU i) (B : UU j) → coprod A B → coprod B A
 swap-coprod A B (inl x) = inr x
 swap-coprod A B (inr x) = inl x
@@ -510,6 +516,9 @@ is-equiv-swap-prod A B =
     ( dpair (swap-prod B A) (swap-swap-prod A B))
 
 -- Exercise 5.9
+
+-- In this exercise we show that if A is a retract of B, then so are its identity types.
+
 ap-retraction : {i j : Level} {A : UU i} {B : UU j}
   (i : A → B) (r : B → A) (H : (r ∘ i) ~ id)
   (x y : A) → Id (i x) (i y) → Id x y
