@@ -186,8 +186,30 @@ is-equiv-triangle-is-fiberwise-equiv f g h H E =
     ( is-equiv-tot-is-fiberwise-equiv (fib-triangle f g h H) E)
 
 -- Exercise 7.4
+fib-ap-eq-fib-fiberwise : {i j : Level} {A : UU i} {B : UU i}
+  (f : A → B) (b : B) (s t : fib f b) (p : Id (pr1 s) (pr1 t)) →
+  (Id (tr (λ (a : A) → Id (f a) b) p (pr2 s)) (pr2 t)) →
+  (Id (ap f p) (concat b (pr2 s) (inv (pr2 t))))
+fib-ap-eq-fib-fiberwise f b (dpair x p) (dpair .x p') refl = {!!}
+
+is-fiberwise-equiv-fib-ap-eq-fib-fiberwise :
+  {i j : Level} {A : UU i} {B : UU i} (f : A → B) (b : B) (s t : fib f b) →
+  is-fiberwise-equiv (fib-ap-eq-fib-fiberwise f b s t)
+is-fiberwise-equiv-fib-ap-eq-fib-fiberwise
+  f b (dpair x y) (dpair .x refl) refl =
+  is-equiv-comp
+    ( fib-ap-eq-fib-fiberwise f b (dpair x y) (dpair x refl) refl)
+    ( inv)
+    ( concat y (right-unit y))
+    ( htpy-refl (fib-ap-eq-fib-fiberwise f b (dpair x y) (dpair x refl) refl))
+    ( is-equiv-concat (right-unit y) refl)
+    ( is-equiv-inv (concat (f x) y refl) refl)
+
 fib-ap-eq-fib : {i j : Level} {A : UU i} {B : UU i} (f : A → B) {y : B} (s t : fib f y) → Id s t → fib (ap f {pr1 s} {pr1 t}) (concat _ (pr2 s) (inv (pr2 t)))
-fib-ap-eq-fib f s = ind-Id s {!λ t p → fib (ap f {pr1 s} {pr2 t}) (concat _ pr2 s) (inv (pr2 t))!} {!!}
+fib-ap-eq-fib f s .s refl = dpair refl (inv (right-inv (pr2 s)))
+
+eq-fib-fib-ap : {i j : Level} {A : UU i} {B : UU i} (f : A → B) {y : B} (s t : fib f y) → fib (ap f {pr1 s} {pr1 t}) (concat _ (pr2 s) (inv (pr2 t))) → Id s t
+eq-fib-fib-ap f (dpair x p) (dpair .x refl) (dpair refl β) = eq-pair (dpair refl (concat _ (inv (right-unit p)) (inv β)))
 
 -- is-equiv-fib-ap-eq-fib : {i j : Level} {A : UU i} {B : UU i} (f : A → B) {y : B} (s t : fib f y) → is-equiv (fib-ap-eq-fib f s t)
 -- is-equiv-fib-ap-eq-fib f s t = {!id-fundamental s ? ?!}

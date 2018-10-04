@@ -221,7 +221,14 @@ are homotopic.
 \mathsf{ap}_{\mathsf{const}_b}(x,y)\htpy \mathsf{const}_{\refl{b}}
 \end{equation*}
 for any $x,y:A$.
-\item \label{ex:equiv_grpd_ops}Show that $\mathsf{inv}:(\id{x}{y})\to(\id{y}{x})$, $\mathsf{concat}(p):(\id{y}{z})\to(\id{x}{z})$, and $\mathsf{tr}_B(p):B(x)\to B(y)$ are equivalences. What are their inverses?
+\item \label{ex:equiv_grpd_ops}Show that the functions
+\begin{align*}
+\mathsf{inv} & :(\id{x}{y})\to(\id{y}{x}) \\
+\mathsf{concat}(p) & : (\id{y}{z})\to(\id{x}{z}) \\
+\mathsf{concat'}(q) & : (\id{x}{y}) \to (\id{x}{z}) \\
+\mathsf{tr}_B(p) & :B(x)\to B(y)
+\end{align*}
+are equivalences, where $\mathsf{concat'}(q,p)\defeq \ct{p}{q}$\index{concat'@{$\mathsf{concat'}$}}. Give their inverses explicitly.
 \item \label{ex:htpy_equiv}\index{equivalence!homotopic maps} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
 \begin{equation*}
 \isequiv(f)\leftrightarrow\isequiv(g).
@@ -236,11 +243,25 @@ A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 \end{equation*}
 with $H:f\htpy g\circ h$.
 \begin{subexenum}
-\item Suppose that the map $h$ has a section. Show that $f$ has a section if and only if $g$ has a section.
-\item Suppose that the map $g$ has a retraction. Show that $f$ has a retraction if and only if $h$ has a retraction.
+\item Suppose that the map $h$ has a section $s:B \to A$. Show that the triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+B \arrow[rr,"s"] \arrow[dr,swap,"g"] & & A \arrow[dl,"f"] \\
+& X.
+\end{tikzcd}
+\end{equation*}
+commutes, and that $f$ has a section if and only if $g$ has a section.
+\item Suppose that the map $g$ has a retraction $r:X\to B$. Show that the triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+A \arrow[rr,"f"] \arrow[dr,swap,"h"] & & X \arrow[dl,"r"] \\
+& B.
+\end{tikzcd}
+\end{equation*}
+commutes, and that $f$ has a retraction if and only if $h$ has a retraction.
 \item (The \define{3-for-2 property} for equivalences.) Show that if any two of the functions
 \begin{equation*}
-f,\qquad g,\qquad g\circ f
+f,\qquad g,\qquad h
 \end{equation*}
 are equivalences, then so is the third.
 \end{subexenum}

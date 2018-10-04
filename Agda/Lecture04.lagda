@@ -86,16 +86,15 @@ tr-id-right-subst : {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A} 
 tr-id-right-subst refl b q = inv (right-unit q)
 
 -- Exercise 4.5
-inv-con : {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z) (r : Id x z) → (Id (concat _ p q) r) → Id q (concat _ (inv p) r)
-inv-con refl q r s = s
+inv-con : {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z) (r : Id x z) → (Id (concat y p q) r) → Id q (concat x (inv p) r)
+inv-con refl q r = id 
 
-con-inv : {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z) (r : Id x z) → (Id (concat _ p q) r) → Id p (concat _ r (inv q))
-con-inv refl refl _ refl = refl
+con-inv : {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z) (r : Id x z) → (Id (concat y p q) r) → Id p (concat z r (inv q))
+con-inv p refl r =  (λ α → concat r α (inv (right-unit r))) ∘ (concat (concat _ p refl) (inv (right-unit p)))
 
 -- Exercise 4.6
 lift : {i j : Level} {A : UU i} {B : A → UU j} {x y : A} (p : Id x y) (b : B x) → Id (dpair x b) (dpair y (tr B p b))
-lift p b = {!!}
--- lift refl b = refl
+lift refl b = refl
 
 -- Exercise 4.7
 associative-add-ℕ : (x y z : ℕ) → Id (add-ℕ (add-ℕ x y) z) (add-ℕ x (add-ℕ y z))

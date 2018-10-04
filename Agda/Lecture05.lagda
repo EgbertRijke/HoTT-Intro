@@ -249,7 +249,7 @@ is-equiv-inv x y = pair (dpair inv inv-inv) (dpair inv inv-inv)
 
 inv-concat : {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
   (Id x z) → (Id y z)
-inv-concat p z q = concat _ (inv p) q
+inv-concat p z = concat _ (inv p)
 
 left-inv-inv-concat : {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
   ((inv-concat p z) ∘ (concat y {z} p)) ~ id
@@ -265,6 +265,41 @@ is-equiv-concat p z =
   pair
     ( dpair (inv-concat p z) (right-inv-inv-concat p z))
     ( dpair (inv-concat p z) (left-inv-inv-concat p z))
+
+concat' : {i : Level} {A : UU i} {x : A} (y : A) {z : A} → Id y z → Id x y → Id x z
+concat' y q p = concat y p q
+
+inv-concat' : {i : Level} {A : UU i} (x : A) {y z : A} → Id y z →
+  Id x z → Id x y
+inv-concat' x q = concat' _ (inv q)
+
+left-inv-inv-concat' : {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
+  ((inv-concat' x q) ∘ (concat' y q)) ~ id
+left-inv-inv-concat' x q p =
+  concat
+    ( concat _ p (concat _ q (inv q)))
+    ( inv (assoc p q (inv q)))
+    ( concat
+      ( concat _ p refl)
+      ( ap (concat _ p) (right-inv q))
+      ( right-unit p))
+
+right-inv-inv-concat' : {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
+  ((concat' y q) ∘ (inv-concat' x q)) ~ id
+right-inv-inv-concat' x q r =
+  concat
+    ( concat _ r (concat _ (inv q) q))
+    ( inv (assoc r (inv q) q))
+    ( concat
+      ( concat _ r refl)
+      ( ap (concat _ r) (left-inv q))
+      ( right-unit r))
+
+is-equiv-concat' : {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) → is-equiv (concat' {x = x} y q)
+is-equiv-concat' x q =
+  pair
+    ( dpair (inv-concat' x q) (right-inv-inv-concat' x q))
+    ( dpair (inv-concat' x q) (left-inv-inv-concat' x q))
 
 inv-tr : {i j : Level} {A : UU i} (B : A → UU j) {x y : A} →
   Id x y → B y → B x
@@ -717,5 +752,22 @@ is-equiv-add-ℤ-right x =
 is-equiv-add-ℤ-left : (y : ℤ) → is-equiv (λ x → add-ℤ x y)
 is-equiv-add-ℤ-left y =
   is-equiv-htpy (λ x → commutative-add-ℤ x y) (is-equiv-add-ℤ-right y)
+
+-- Extra material
+
+is-equiv-inv-con : {i : Level} {A : UU i} {x y z : A} (p : Id x y)
+  (q : Id y z) (r : Id x z) → is-equiv (inv-con p q r)
+is-equiv-inv-con refl q r = is-equiv-id (Id q r)
+
+is-equiv-con-inv : {i : Level} {A : UU i} {x y z : A} (p : Id x y)
+  (q : Id y z) (r : Id x z) → is-equiv (con-inv p q r)
+is-equiv-con-inv p refl r =
+  is-equiv-comp
+    ( con-inv p refl r)
+    ( concat' r (inv (right-unit r)))
+    ( concat (concat _ p refl) (inv (right-unit p)))
+    ( htpy-refl _)
+    ( is-equiv-concat (inv (right-unit p)) r)
+    ( is-equiv-concat' p (inv (right-unit r)))
 
 \end{code}
