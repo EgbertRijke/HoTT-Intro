@@ -113,11 +113,15 @@ is-equiv-is-contr-map H =
 
 -- The goal in this section is to show that all equivalences are contractible maps. This theorem is much harder than anything we've seen so far, but many future results will depend on it.
 
+-- Before we start we will develop some of the ingredients of the construction.
+
+-- We will need the naturality of homotopies.
 htpy-nat : {i j : Level} {A : UU i} {B : UU j} {f g : A → B} (H : f ~ g)
   {x y : A} (p : Id x y) →
   Id (concat _ (H x) (ap g p)) (concat _ (ap f p) (H y))
 htpy-nat H refl = right-unit (H _)
 
+-- We will also need to undo concatenation on the left and right. One might notice that, in the terminology of Lecture 7, we almost show here that concat p and concat' q are embeddings.
 left-unwhisk : {i : Level} {A : UU i} {x y z : A} (p : Id x y) {q r : Id y z} →
   Id (concat _ p q) (concat _ p r) → Id q r
 left-unwhisk refl s = concat _ (inv (left-unit _)) (concat _ s (left-unit _))
@@ -126,25 +130,12 @@ right-unwhisk : {i : Level} {A : UU i} {x y z : A} {p q : Id x y}
   (r : Id y z) → Id (concat _ p r) (concat _ q r) → Id p q
 right-unwhisk refl s = concat _ (inv (right-unit _)) (concat _ s (right-unit _))
 
+-- We will also need to compute with homotopies to the identity function. 
 htpy-red : {i : Level} {A : UU i} {f : A → A} (H : f ~ id) →
   (x : A) → Id (H (f x)) (ap f (H x))
 htpy-red {_} {A} {f} H x = right-unwhisk (H x)
   (concat (concat (f x) (H (f x)) (ap id (H x)))
     (ap (concat (f x) (H (f x))) (inv (ap-id (H x)))) (htpy-nat H (H x)))
-
-center-is-invertible : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  is-invertible f → (y : B) → fib f y
-center-is-invertible {i} {j} {A} {B} {f}
-  (dpair g (dpair issec isretr)) y =
-    (dpair (g y)
-      (concat _
-        (inv (ap (f ∘ g) (issec y)))
-        (concat _ (ap f (isretr (g y))) (issec y))))
-
-mv-left : {i : Level} {A : UU i} {x y z : A}
-  (p : Id x y) {q : Id y z} {r : Id x z} →
-  Id (concat _ p q) r → Id q (concat _ (inv p) r)
-mv-left refl s = s
 
 square : {i : Level} {A : UU i} {x y1 y2 z : A}
   (p1 : Id x y1) (q1 : Id y1 z) (p2 : Id x y2) (q2 : Id y2 z) → UU i
@@ -161,6 +152,17 @@ sq-top-whisk : {i : Level} {A : UU i} {x y1 y2 z : A}
   square p1 q1 p2 q2 → square p1 q1 p2' q2
 sq-top-whisk refl sq = sq
 
+-- Now the proof that equivalences are contractible maps really begins. Note that we have already shown that any equivalence has an inverse. Our strategy is therefore to first show that maps with inverses are contractible, and then deduce the claim about equivalences.
+
+center-is-invertible : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  is-invertible f → (y : B) → fib f y
+center-is-invertible {i} {j} {A} {B} {f}
+  (dpair g (dpair issec isretr)) y =
+    (dpair (g y)
+      (concat _
+        (inv (ap (f ∘ g) (issec y)))
+        (concat _ (ap f (isretr (g y))) (issec y))))
+
 contraction-is-invertible : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   (I : is-invertible f) → (y : B) → (t : fib f y) →
   Id (center-is-invertible I y) t
@@ -173,11 +175,19 @@ contraction-is-invertible {i} {j} {A} {B} {f}
         ( pr2 (center-is-invertible
           ( dpair g (dpair issec isretr))
           ( f x))))
-      ( inv (mv-left (ap f (isretr x))
+      ( inv (inv-con
+        ( ap f (isretr x))
+        ( refl)
+        ( concat
+          ( f (g (f (g (f x)))))
+          ( inv (ap (λ z → f (g z)) (issec (f x))))
+          ( concat (f (g (f x))) (ap f (isretr (g (f x)))) (issec (f x))))
         ( concat _
           ( right-unit (ap f (isretr x)))
-          ( mv-left
+          ( inv-con
             ( ap (f ∘ g) (issec y))
+            ( ap f (isretr x))
+            ( concat (f (g (f x))) (ap f (isretr (g (f x)))) (issec (f x)))
             ( sq-left-whisk
               {_} {_} {f(g(f(g(f x))))} {f(g(f x))} {f(g(f x))} {f x}
               { issec (f(g(f x)))} {ap (f ∘ g) (issec (f x))}
