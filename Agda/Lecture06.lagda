@@ -18,11 +18,13 @@ center (dpair c C) = c
 -- We make sure that the contraction is coherent in a straightforward way
 contraction : {i : Level} {A : UU i} (H : is-contr A) →
   (const A A (center H) ~ id)
-contraction (dpair c C) x = concat _ (inv (C c)) (C x)
+contraction (dpair c C) x = concat c (inv (C c)) (C x)
 
 coh-contraction : {i : Level} {A : UU i} (H : is-contr A) →
   Id (contraction H (center H)) refl
 coh-contraction (dpair c C) = left-inv (C c)
+
+-- We show that contractible types satisfy an induction principle akin to the induction principle of the unit type: singleton induction. This can be helpful to give short proofs of many facts.
 
 ev-pt : {i j : Level} (A : UU i) (a : A) (B : A → UU j) → ((x : A) → B x) → B a
 ev-pt A a B f = f a
@@ -64,9 +66,11 @@ is-contr-total-path A a = is-contr-is-sing _ _ (is-sing-total-path A a)
 
 -- Section 6.2 Contractible maps
 
+-- We first introduce the notion of a fiber of a map.
 fib : {i j : Level} {A : UU i} {B : UU j} (f : A → B) (b : B) → UU (i ⊔ j)
 fib f b = Σ _ (λ x → Id (f x) b)
 
+-- A map is said to be contractible if its fibers are contractible in the usual sense.
 is-contr-map : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 is-contr-map f = (y : _) → is-contr (fib f y)
 
@@ -106,6 +110,8 @@ is-equiv-is-contr-map H =
     (dpair (inv-is-contr-map H) (isretr-is-contr-map H))
 
 -- Section 6.3 Equivalences are contractible maps
+
+-- The goal in this section is to show that all equivalences are contractible maps. This theorem is much harder than anything we've seen so far, but many future results will depend on it.
 
 htpy-nat : {i j : Level} {A : UU i} {B : UU j} {f g : A → B} (H : f ~ g)
   {x y : A} (p : Id x y) →
