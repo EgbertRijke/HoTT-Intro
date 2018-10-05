@@ -197,6 +197,13 @@ is-equiv-eq-pair : {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
   is-equiv (eq-pair {i} {j} {A} {B} {s} {t})
 is-equiv-eq-pair = is-equiv-eq-pair'
 
+is-equiv-pair-eq' : {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
+  is-equiv (pair-eq' s t)
+is-equiv-pair-eq' s t =
+  pair
+    ( dpair (eq-pair {s = s} {t = t}) (isretr-pair-eq s t))
+    ( dpair (eq-pair {s = s} {t = t}) (issec-pair-eq s t))
+
 -- We also define a function eq-pair-triv, which is like eq-pair but simplified for the case where B is just a type.
 
 eq-pair-triv : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
