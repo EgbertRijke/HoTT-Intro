@@ -154,25 +154,26 @@ sq-top-whisk refl sq = sq
 
 -- Now the proof that equivalences are contractible maps really begins. Note that we have already shown that any equivalence has an inverse. Our strategy is therefore to first show that maps with inverses are contractible, and then deduce the claim about equivalences.
 
-center-is-invertible : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  is-invertible f → (y : B) → fib f y
-center-is-invertible {i} {j} {A} {B} {f}
+center-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  has-inverse f → (y : B) → fib f y
+center-has-inverse {i} {j} {A} {B} {f}
   (dpair g (dpair issec isretr)) y =
-    (dpair (g y)
-      (concat _
-        (inv (ap (f ∘ g) (issec y)))
-        (concat _ (ap f (isretr (g y))) (issec y))))
+  dpair
+    ( g y)
+    ( concat _
+      ( inv (ap (f ∘ g) (issec y)))
+        ( concat _ (ap f (isretr (g y))) (issec y)))
 
-contraction-is-invertible : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (I : is-invertible f) → (y : B) → (t : fib f y) →
-  Id (center-is-invertible I y) t
-contraction-is-invertible {i} {j} {A} {B} {f}
+contraction-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (I : has-inverse f) → (y : B) → (t : fib f y) →
+  Id (center-has-inverse I y) t
+contraction-has-inverse {i} {j} {A} {B} {f}
   ( dpair g (dpair issec isretr)) y (dpair x refl) =
   eq-pair (dpair
     ( isretr x)
     ( concat _
       ( tr-id-left-subst (isretr x) (f x)
-        ( pr2 (center-is-invertible
+        ( pr2 (center-has-inverse
           ( dpair g (dpair issec isretr))
           ( f x))))
       ( inv (inv-con
@@ -201,14 +202,14 @@ contraction-is-invertible {i} {j} {A} {B} {f}
                   ( inv (ap (ap f) (htpy-red isretr x))))
                 ( htpy-nat (htpy-right-whisk issec f) (isretr x))))))))))
 
-is-contr-map-is-invertible : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  is-invertible f → is-contr-map f
-is-contr-map-is-invertible {i} {j} {A} {B} {f} I y =
-    dpair (center-is-invertible I y) (contraction-is-invertible I y)
+is-contr-map-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  has-inverse f → is-contr-map f
+is-contr-map-has-inverse {i} {j} {A} {B} {f} I y =
+    dpair (center-has-inverse I y) (contraction-has-inverse I y)
 
 is-contr-map-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → is-contr-map f
-is-contr-map-is-equiv = is-contr-map-is-invertible ∘ is-invertible-is-equiv
+is-contr-map-is-equiv = is-contr-map-has-inverse ∘ has-inverse-is-equiv
 
 is-contr-total-path' : {i : Level} (A : UU i) (a : A) →
   is-contr (Σ A (λ x → Id x a))

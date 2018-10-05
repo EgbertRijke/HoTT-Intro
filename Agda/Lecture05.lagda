@@ -99,13 +99,13 @@ eqv-retrh : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   (e : is-equiv f) → (((eqv-retrf e) ∘ f) ~ id)
 eqv-retrh e = pr2 (eqv-retr e)
 
-is-invertible : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
-is-invertible {i} {j} {A} {B} f =
+has-inverse : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
+has-inverse {i} {j} {A} {B} f =
   Σ (B → A) (λ g → ((f ∘ g) ~ id) × ((g ∘ f) ~ id))
 
-is-equiv-is-invertible : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  is-invertible f → is-equiv f
-is-equiv-is-invertible (dpair g (dpair H K)) = pair (dpair g H) (dpair g K)
+is-equiv-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  has-inverse f → is-equiv f
+is-equiv-has-inverse (dpair g (dpair H K)) = pair (dpair g H) (dpair g K)
 
 htpy-secf-retrf : {i j : Level} {A : UU i} {B : UU j} {f : A → B}
   (e : is-equiv f) → (eqv-secf e ~ eqv-retrf e)
@@ -115,9 +115,9 @@ htpy-secf-retrf {i} {j} {A} {B} {f} (dpair (dpair g issec) (dpair h isretr)) =
     ( htpy-inv (htpy-right-whisk isretr g))
     ( htpy-left-whisk h issec)
 
-is-invertible-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  is-equiv f → is-invertible f
-is-invertible-is-equiv {i} {j} {A} {B} {f}
+has-inverse-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  is-equiv f → has-inverse f
+has-inverse-is-equiv {i} {j} {A} {B} {f}
   ( dpair (dpair g issec) (dpair h isretr)) =
   dpair g
     ( pair issec
@@ -130,15 +130,15 @@ is-invertible-is-equiv {i} {j} {A} {B} {f}
 
 inv-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → B → A
-inv-is-equiv E = pr1 (is-invertible-is-equiv E)
+inv-is-equiv E = pr1 (has-inverse-is-equiv E)
 
 issec-inv-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   (E : is-equiv f) → (f ∘ (inv-is-equiv E)) ~ id
-issec-inv-is-equiv E = pr1 (pr2 (is-invertible-is-equiv E))
+issec-inv-is-equiv E = pr1 (pr2 (has-inverse-is-equiv E))
 
 isretr-inv-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   (E : is-equiv f) → ((inv-is-equiv E) ∘ f) ~ id
-isretr-inv-is-equiv E = pr2 (pr2 (is-invertible-is-equiv E))
+isretr-inv-is-equiv E = pr2 (pr2 (has-inverse-is-equiv E))
 
 is-equiv-inv-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   (E : is-equiv f) → is-equiv (inv-is-equiv E)
