@@ -21,19 +21,19 @@ In the following definition we define the groupoid-like structure of homotopies.
 \begin{defn}\label{defn:htpy_groupoid}\index{groupoid laws!of homotopies|textbf}
 For any dependent type $B:A\to\type$ there are operations
 \begin{align*}
-& \mathsf{htpy.refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
-& \mathsf{htpy.inv} & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
-& \mathsf{htpy.concat} & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to (g\htpy h)\to (f\htpy h).
+& \mathsf{htpy\usc{}refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
+& \mathsf{htpy\usc{}inv} & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
+& \mathsf{htpy\usc{}concat} & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to (g\htpy h)\to (f\htpy h).
 \end{align*}
-We will write $H^{-1}$ for $\mathsf{htpy.inv}(H)$, and $\ct{H}{K}$ for $\mathsf{htpy.concat}(H,K)$. 
+We will write $H^{-1}$ for $\mathsf{htpy\usc{}inv}(H)$, and $\ct{H}{K}$ for $\mathsf{htpy\usc{}concat}(H,K)$. 
 
 Furthermore, we define
 \begin{align*}
-& \mathsf{htpy.assoc}(H,K,L) & & : \ct{(\ct{H}{K})}{L}\htpy\ct{H}{(\ct{K}{L})} \\
-& \mathsf{htpy.left\usc{}unit}(H) & & : \ct{\mathsf{htpy.refl}_f}{H}\htpy H \\
-& \mathsf{htpy.right\usc{}unit}(H) & & : \ct{H}{\mathsf{htpy.refl}_g}\htpy H \\
-& \mathsf{htpy.left\usc{}inv}(H) & & : \ct{H^{-1}}{H} \htpy \mathsf{htpy.refl}_g \\
-& \mathsf{htpy.right\usc{}inv}(H) & & : \ct{H}{H^{-1}} \htpy \mathsf{htpy.refl}_f
+& \mathsf{htpy\usc{}assoc}(H,K,L) & & : \ct{(\ct{H}{K})}{L}\htpy\ct{H}{(\ct{K}{L})} \\
+& \mathsf{htpy\usc{}left\usc{}unit}(H) & & : \ct{\mathsf{htpy\usc{}refl}_f}{H}\htpy H \\
+& \mathsf{htpy\usc{}right\usc{}unit}(H) & & : \ct{H}{\mathsf{htpy\usc{}refl}_g}\htpy H \\
+& \mathsf{htpy\usc{}left\usc{}inv}(H) & & : \ct{H^{-1}}{H} \htpy \mathsf{htpy\usc{}refl}_g \\
+& \mathsf{htpy\usc{}right\usc{}inv}(H) & & : \ct{H}{H^{-1}} \htpy \mathsf{htpy\usc{}refl}_f
 \end{align*}
 for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x)$.
 \end{defn}
@@ -41,17 +41,17 @@ for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x
 \begin{constr}
 We define
 \begin{align*}
-\mathsf{htpy.refl}(f) & \defeq \lam{x} \refl{f(x)} \\
-\mathsf{htpy.inv}(H) & \defeq \lam{x} H(x)^{-1} \\
-\mathsf{htpy.concat}(H,K) & \defeq \lam{x}\ct{H(x)}{K(x)},
+\mathsf{htpy\usc{}refl}(f) & \defeq \lam{x} \refl{f(x)} \\
+\mathsf{htpy\usc{}inv}(H) & \defeq \lam{x} H(x)^{-1} \\
+\mathsf{htpy\usc{}concat}(H,K) & \defeq \lam{x}\ct{H(x)}{K(x)},
 \end{align*}
 where $H:f\htpy g$ and $K:g\htpy h$ are homotopies. Furthermore, we define
 \begin{align*}
-\mathsf{htpy.assoc}(H,K,L) & \defeq \lam{x}\mathsf{assoc}(H(x),K(x),L(x)) \\
-\mathsf{htpy.left\usc{}unit}(H) & \defeq \lam{x}\mathsf{left\usc{}unit}(H(x)) \\
-\mathsf{htpy.right\usc{}unit}(H) & \defeq \lam{x}\mathsf{right\usc{}unit}(H(x)) \\
-\mathsf{htpy.left\usc{}inv}(H) & \defeq \lam{x}\mathsf{left\usc{}inv}(H(x)) \\
-\mathsf{htpy.right\usc{}inv}(H) & \defeq \lam{x}\mathsf{right\usc{}inv}(H(x)).\qedhere
+\mathsf{htpy\usc{}assoc}(H,K,L) & \defeq \lam{x}\mathsf{assoc}(H(x),K(x),L(x)) \\
+\mathsf{htpy\usc{}left\usc{}unit}(H) & \defeq \lam{x}\mathsf{left\usc{}unit}(H(x)) \\
+\mathsf{htpy\usc{}right\usc{}unit}(H) & \defeq \lam{x}\mathsf{right\usc{}unit}(H(x)) \\
+\mathsf{htpy\usc{}left\usc{}inv}(H) & \defeq \lam{x}\mathsf{left\usc{}inv}(H(x)) \\
+\mathsf{htpy\usc{}right\usc{}inv}(H) & \defeq \lam{x}\mathsf{right\usc{}inv}(H(x)).\qedhere
 \end{align*}
 \end{constr}
 
