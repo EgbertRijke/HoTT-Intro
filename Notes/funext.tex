@@ -19,9 +19,9 @@ The following are equivalent:
 \end{equation*}
 the map
 \begin{equation*}
-\Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\mathsf{htpy.refl}_f)
+\Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\mathsf{htpy\usc{}refl}_f)
 \end{equation*}
-given by $s\mapsto s(f,\mathsf{htpy.refl}_f)$ has a section.
+given by $s\mapsto s(f,\mathsf{htpy\usc{}refl}_f)$ has a section.
 \item The \define{function extensionality principle}\index{function extensionality}: For every type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map\index{htpy_eq@{$\mathsf{htpy\usc{}eq}$}|textbf}
 \begin{equation*}
 \mathsf{htpy\usc{}eq}(f,g) : (\id{f}{g})\to (f\htpy g)
@@ -37,7 +37,7 @@ by path induction (sending $\refl{f}$ to $\lam{x}\refl{f(x)}$) is an equivalence
 \begin{proof}
 To show that homotopy induction implies function extensionality, note that from homotopy induction and $\Sigma$-induction combined, we obtain that for any type family $P$ over $\sm{g:\prd{x:A}B(x)}f\htpy g$, the evaluation map
 \begin{equation*}
-\Big(\prd{t:\sm{g:\prd{x:A}B(x)}f\htpy g} P(t)\Big)\to P((f,\mathsf{htpy.refl}_f))
+\Big(\prd{t:\sm{g:\prd{x:A}B(x)}f\htpy g} P(t)\Big)\to P((f,\mathsf{htpy\usc{}refl}_f))
 \end{equation*}
 has a section. In other words, the type $\sm{g:\prd{x:A}B(x)}f\htpy g$ satisfies singleton induction and therefore it is contractible. Now we conclude by \cref{thm:id_fundamental} that the canonical map $(f=g)\to (f\htpy g)$ is an equivalence, i.e.~that function extensionality holds.
 
