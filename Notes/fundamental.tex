@@ -304,12 +304,16 @@ is contractible.
 for any $f,g:A\to B$.
 \item \label{ex:emb_triangle}Consider a commuting triangle
 \begin{equation*}
-\begin{tikzcd}
-A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+\begin{tikzcd}[column sep=tiny]
+A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 & X
 \end{tikzcd}
 \end{equation*}
-with $H:f\htpy g\circ e$, where $e$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.
+with $H:f\htpy g\circ h$. 
+\begin{subexenum}
+\item Suppose that $g$ is an embedding. Show that $f$ is an embedding if and only if $h$ is an embedding.
+\item Supose that $h$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.
+\end{subexenum}
 \item \label{ex:eqv_sigma_mv}Consider a map
 \begin{equation*}
 f:A \to \sm{y:B}C(y).

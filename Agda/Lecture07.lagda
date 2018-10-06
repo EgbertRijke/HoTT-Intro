@@ -295,20 +295,39 @@ is-emb-htpy f g H is-emb-g x y =
 
 -- Exercise 7.9
 
-is-emb-triangle-is-emb : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
-  is-emb e → is-emb g → is-emb f
-is-emb-triangle-is-emb f g e H is-emb-e is-emb-g =
-  is-emb-htpy f (g ∘ e) H
-    ( λ x y → is-equiv-comp (ap (g ∘ e)) (ap g) (ap e) (ap-comp g e)
-      ( is-emb-e x y)
-      ( is-emb-g (e x) (e y)))
+is-emb-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) → is-emb g →
+  is-emb h → is-emb f
+is-emb-comp f g h H is-emb-g is-emb-h =
+  is-emb-htpy f (g ∘ h) H
+    ( λ x y → is-equiv-comp (ap (g ∘ h)) (ap g) (ap h) (ap-comp g h)
+      ( is-emb-h x y)
+      ( is-emb-g (h x) (h y)))
+
+is-emb-right-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) → is-emb g →
+  is-emb f → is-emb h
+is-emb-right-factor f g h H is-emb-g is-emb-f x y =
+  is-equiv-right-factor (ap (g ∘ h)) (ap g) (ap h) (ap-comp g h) (is-emb-g (h x) (h y)) (is-emb-htpy (g ∘ h) f (htpy-inv H) is-emb-f x y )
 
 is-emb-triangle-is-equiv : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
   is-equiv e → is-emb g → is-emb f
 is-emb-triangle-is-equiv f g e H is-equiv-e is-emb-g =
-  is-emb-triangle-is-emb f g e H (is-emb-is-equiv e is-equiv-e) is-emb-g
+  is-emb-comp f g e H is-emb-g (is-emb-is-equiv e is-equiv-e)
+
+is-emb-triangle-is-equiv' : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
+  is-equiv e → is-emb f → is-emb g
+is-emb-triangle-is-equiv' f g e H is-equiv-e is-emb-f =
+  is-emb-triangle-is-equiv g f
+    ( inv-is-equiv is-equiv-e)
+    ( triangle-section f g e H
+      ( dpair
+        ( inv-is-equiv is-equiv-e)
+        ( issec-inv-is-equiv is-equiv-e)))
+    ( is-equiv-inv-is-equiv is-equiv-e)
+    ( is-emb-f)
 
 -- Exercise 7.12
 
