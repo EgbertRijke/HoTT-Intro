@@ -127,7 +127,7 @@ is-equiv-fib'-fib f y =
 
 -- Exercise 7.3
 is-equiv-top-is-equiv-bottom-square :
-  {i j k l : Level} {A : UU i} {B : UU j} {C : UU k} {D : UU l}
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
   (is-equiv f) → (is-equiv g) → (is-equiv i) → (is-equiv h)
 is-equiv-top-is-equiv-bottom-square f g h i H Ef Eg Ei =
@@ -135,7 +135,7 @@ is-equiv-top-is-equiv-bottom-square f g h i H Ef Eg Ei =
     (is-equiv-comp (i ∘ f) i f (htpy-refl _) Ef Ei)
 
 is-equiv-bottom-is-equiv-top-square :
-  {i j k l : Level} {A : UU i} {B : UU j} {C : UU k} {D : UU l}
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
   (is-equiv f) → (is-equiv g) → (is-equiv h) → (is-equiv i)
 is-equiv-bottom-is-equiv-top-square f g h i H Ef Eg Eh =
@@ -240,9 +240,13 @@ is-equiv-eq-fib-fib-ap f x y q =
     ( fib-ap-eq-fib f (dpair x q) (dpair y refl))
     ( htpy-refl _)
     ( is-equiv-fib-ap-eq-fib f (dpair x q) (dpair y refl))
-    ( is-equiv-tr (fib (ap f)) (right-unit q)) 
+    ( is-equiv-tr (fib (ap f)) (right-unit q))
 
--- Exercise 7.7
+-- Exercise 7.5
+
+-- This exercise was already done in id-fundamental-gen above.
+
+-- Exercise 7.6
 id-fundamental-retr : {i j : Level} {A : UU i} {B : A → UU j} (a : A) →
   (i : (x : A) → B x → Id a x) → (R : (x : A) → retr (i x)) →
   is-fiberwise-equiv i
@@ -260,6 +264,41 @@ id-fundamental-retr {_} {_} {A} {B} a i R =
                   ( tot-id B)))))
         ( is-contr-total-path _ a))
       ( is-contr-total-path _ a))
+
+-- Exercise 7.7
+
+is-emb-empty : {i : Level} (A : UU i) → is-emb (ind-empty {P = λ x → A})
+is-emb-empty A = ind-empty
+
+-- Exercise 7.8
+
+is-equiv-top-is-equiv-left-square :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+  is-equiv i → is-equiv f → is-equiv g → is-equiv h
+is-equiv-top-is-equiv-left-square f g h i H Ei Ef Eg =
+  is-equiv-right-factor (i ∘ f) g h H Eg
+    ( is-equiv-comp (i ∘ f) i f (htpy-refl _) Ef Ei)
+
+is-emb-htpy : {i j : Level} {A : UU i} {B : UU j} (f g : A → B) → (f ~ g) →
+  is-emb g → is-emb f
+is-emb-htpy f g H Eg x y =
+  is-equiv-top-is-equiv-left-square
+    ( ap g)
+    ( concat' (f y) (H y))
+    ( ap f)
+    ( concat (g x) (H x))
+    ( htpy-nat H)
+    ( is-equiv-concat (H x) (g y))
+    ( Eg x y)
+    ( is-equiv-concat' (f x) (H y))
+
+-- Exercise 7.9
+
+is-emb-triangle-eqv : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
+  is-equiv e → is-emb g → is-emb f
+is-emb-triangle-eqv f g e H is-equiv-e is-emb-g = {!!}
 
 -- Exercise 7.12
 
