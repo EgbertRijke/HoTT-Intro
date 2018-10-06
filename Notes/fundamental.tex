@@ -274,11 +274,14 @@ A \arrow[r,swap,"h"] & B
 commutes, where the vertical maps are as constructed in \cref{ex:fib_replacement}.
 \item Show that $h$ is an equivalence if and only if $\mathsf{fib\usc{}triangle}(h,H)$ is a fiberwise equivalence.
 \end{subexenum}
-\item Let $f:A\to B$ be a map. Then for each $y:B$, and each $(x,p),(x',p'):\fib{f}{y}$, the map
+\item Let $f:A\to B$ be a map, and let $s,t : \fib{f}{b}$. Consider the fiberwise map
 \begin{equation*}
-\id{\pairr{x,p}}{\pairr{x',p'}}\to \sm{q:\id{x}{x'}} \id{p}{\ct{\ap{f}{q}}{p'}}
+\varphi : (s=t)\to \fib{\apfunc{f}}{\ct{\proj 2(s)}{\proj 2(t)^{-1}}}
 \end{equation*}
-is an equivalence. 
+given by $\varphi(\refl{s})=(\refl{\proj 1(s)},\mathsf{right\usc{}inv}(\proj 2(s))^{-1})$. Show that this map is an equivalence. Conclude that for any $q:f(x)=f(y)$ we have an equivalence
+\begin{equation*}
+((x,q)=(y,\refl{f(y)})) \simeq \fib{\apfunc{f}}{q}.
+\end{equation*}
 \item \label{ex:id_fundamental_gen}Let $A$ be a type with $a:A$, and let $B$ be a type family over $A$. Show that for \emph{any} family of maps
 \begin{equation*}
 f:\prd{x:A} (a=x)\to B(x)

@@ -326,9 +326,9 @@ where $W_A(B)$ is the family $B$ weakened by $A$.
 \end{equation*}
 witnessing that the triangle
 \begin{equation*}
-\begin{tikzcd}
-\mathsf{tr}_{W_A(B)}(p,f(x)) \arrow[dr,equals,swap,"\apd{f}{p}"] \arrow[rr,equals,"{\mathsf{tr\usc{}triv}(p,f(x))}"] &[-1.5em] & f(x) \arrow[dl,equals,"\ap{f}{p}"] \\
-& f(y)
+\begin{tikzcd}[trim right=(a),column sep=0em]
+\mathsf{tr}_{W_A(B)}(p,f(x)) \arrow[dr,equals,swap,"\apd{f}{p}"] \arrow[rr,equals,"{\mathsf{tr\usc{}triv}(p,f(x))}"] & & |[alias=a,right]|f(x) \arrow[dl,equals,"\ap{f}{p}"] \\
+& f(y) & \phantom{\mathsf{tr}_{W_A(B)}(p,f(x))}
 \end{tikzcd}
 \end{equation*}
 commutes.

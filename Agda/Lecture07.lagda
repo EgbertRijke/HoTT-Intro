@@ -229,6 +229,19 @@ is-equiv-fib-ap-eq-fib f s t =
       ( fib-ap-eq-fib-fiberwise f s t)
       ( is-fiberwise-equiv-fib-ap-eq-fib-fiberwise f s t))
 
+eq-fib-fib-ap : {i j : Level} {A : UU i} {B : UU j} (f : A → B) (x y : A) (q : Id (f x) (f y)) → Id (dpair x q) (dpair y (refl {x = f y})) → fib (ap f {x = x} {y = y}) q
+eq-fib-fib-ap f x y q = (tr (fib (ap f)) (right-unit q)) ∘ (fib-ap-eq-fib f (dpair x q) (dpair y refl))
+
+is-equiv-eq-fib-fib-ap : {i j : Level} {A : UU i} {B : UU j} (f : A → B) (x y : A) (q : Id (f x) (f y)) → is-equiv (eq-fib-fib-ap f x y q)
+is-equiv-eq-fib-fib-ap f x y q =
+  is-equiv-comp
+    ( eq-fib-fib-ap f x y q)
+    ( tr (fib (ap f)) (right-unit q))
+    ( fib-ap-eq-fib f (dpair x q) (dpair y refl))
+    ( htpy-refl _)
+    ( is-equiv-fib-ap-eq-fib f (dpair x q) (dpair y refl))
+    ( is-equiv-tr (fib (ap f)) (right-unit q)) 
+
 -- Exercise 7.7
 id-fundamental-retr : {i j : Level} {A : UU i} {B : A → UU j} (a : A) →
   (i : (x : A) → B x → Id a x) → (R : (x : A) → retr (i x)) →
