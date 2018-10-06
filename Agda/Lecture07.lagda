@@ -282,7 +282,7 @@ is-equiv-top-is-equiv-left-square f g h i H Ei Ef Eg =
 
 is-emb-htpy : {i j : Level} {A : UU i} {B : UU j} (f g : A → B) → (f ~ g) →
   is-emb g → is-emb f
-is-emb-htpy f g H Eg x y =
+is-emb-htpy f g H is-emb-g x y =
   is-equiv-top-is-equiv-left-square
     ( ap g)
     ( concat' (f y) (H y))
@@ -290,15 +290,25 @@ is-emb-htpy f g H Eg x y =
     ( concat (g x) (H x))
     ( htpy-nat H)
     ( is-equiv-concat (H x) (g y))
-    ( Eg x y)
+    ( is-emb-g x y)
     ( is-equiv-concat' (f x) (H y))
 
 -- Exercise 7.9
 
-is-emb-triangle-eqv : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+is-emb-triangle-is-emb : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
+  is-emb e → is-emb g → is-emb f
+is-emb-triangle-is-emb f g e H is-emb-e is-emb-g =
+  is-emb-htpy f (g ∘ e) H
+    ( λ x y → is-equiv-comp (ap (g ∘ e)) (ap g) (ap e) (ap-comp g e)
+      ( is-emb-e x y)
+      ( is-emb-g (e x) (e y)))
+
+is-emb-triangle-is-equiv : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
   is-equiv e → is-emb g → is-emb f
-is-emb-triangle-eqv f g e H is-equiv-e is-emb-g = {!!}
+is-emb-triangle-is-equiv f g e H is-equiv-e is-emb-g =
+  is-emb-triangle-is-emb f g e H (is-emb-is-equiv e is-equiv-e) is-emb-g
 
 -- Exercise 7.12
 
