@@ -26,17 +26,17 @@ Identity type & Path fibration\\
 
 \section{The inductive definition of identity types}
 
-Let $A$ be a type in context $\Gamma$. The \define{identity type}\index{identity type|textbf} of $A$ at $a:A$ is the inductive type family 
+Let $a:A$ be a term in context $\Gamma$. The \define{identity type}\index{identity type|textbf} of $A$ at $a:A$ is the inductive type family 
 \begin{equation*}
-\Gamma,x:A,y:A\vdash x =_A y~\mathrm{type}
+\Gamma,x:A\vdash a =_A x~\mathrm{type}
 \end{equation*}
 with constructor
 \begin{equation*}
-\Gamma,x:A\vdash \refl{x} : x=_A x.
+\Gamma\vdash \refl{a} : a=_A a.
 \end{equation*}
-The induction principle that for any type family
+The induction principle postulates that for any type family
 \begin{equation*}
-\Gamma,x:A,y:A,\alpha: x=_A y\vdash P(x,y,\alpha)~\mathrm{type}
+\Gamma,x:A,p: a=_A x\vdash P(x,p)~\mathrm{type}
 \end{equation*}
 %we can derive
 %\begin{prooftree}
@@ -45,13 +45,13 @@ The induction principle that for any type family
 %\end{prooftree}
 there is a term
 \begin{equation*}
-\ind{x=} : P(x,x,\refl{x})\to \prd{y:A}{\alpha:x=_A y}P(x,y,\alpha)
+\ind{a=} : P(a,\refl{a})\to \prd{x:A}{p:a=_A x}P(x,p)
 \end{equation*}
-in context $\Gamma,x:A$, satisfying the computation rule
+in context $\Gamma$, satisfying the computation rule
 \begin{equation*}
-\ind{x=}(p,x,\refl{x})\jdeq p.
+\ind{a=}(y,x,p)\jdeq y.
 \end{equation*}
-A term of type $x=_A y$ is also called an \define{identification}\index{identification|textbf} of $x$ with $y$, and sometimes it is called a \define{path}\index{path|textbf} from $x$ to $y$.
+A term of type $a=_A x$ is also called an \define{identification}\index{identification|textbf} of $a$ with $x$, and sometimes it is called a \define{path}\index{path|textbf} from $a$ to $x$.
 The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination|textbf} or \define{path induction}\index{path induction|textbf}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}|textbf} for the identity type on $A$. 
 
 We also assume that the universe $\UU$ is closed under identity types, i.e. that there is a map
@@ -60,7 +60,7 @@ We also assume that the universe $\UU$ is closed under identity types, i.e. that
 \end{equation*}
 satisfying
 \begin{equation*}
-\mathrm{El}(\check{\mathsf{Id}}(A,x,y))\jdeq x=_{\mathrm{El}(A)} y.
+\mathrm{El}(\check{\mathsf{Id}}(A,a,x))\jdeq a=_{\mathrm{El}(A)} x.
 \end{equation*}
 
 In the following lemma we show that the identity type on $A$ is contained in any reflexive relation on $A$.
