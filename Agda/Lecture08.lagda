@@ -156,8 +156,20 @@ is-trunc-map : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j} →
   (A → B) → UU (i ⊔ j)
 is-trunc-map k f = (y : _) → is-trunc k (fib f y)
 
-is-trunc-pr1 : {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU j) →
+is-trunc-pr1-is-trunc-fam : {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU j) →
   ((x : A) → is-trunc k (B x)) → is-trunc-map k (pr1 {i} {j} {A} {B})
-is-trunc-pr1 k B H x = is-trunc-is-equiv k {!!} {!!} (H x)
+is-trunc-pr1-is-trunc-fam k B H x =
+  is-trunc-is-equiv k
+    ( fib-fam-fib-pr1 B x)
+    ( is-equiv-fib-fam-fib-pr1 B x)
+    ( H x)
+
+is-trunc-fam-is-trunc-pr1 : {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU j) →
+  is-trunc-map k (pr1 {i} {j} {A} {B}) → ((x : A) → is-trunc k (B x))
+is-trunc-fam-is-trunc-pr1 k B is-trunc-pr1 x =
+  is-trunc-is-equiv k
+    ( fib-pr1-fib-fam B x)
+    ( is-equiv-fib-pr1-fib-fam B x)
+    ( is-trunc-pr1 x)
 
 \end{code}

@@ -423,6 +423,13 @@ is-equiv-fib-fam-fib-pr1 B a =
     ( dpair (fib-pr1-fib-fam B a) (right-inverse-fib-pr1-fib-fam B a))
     ( dpair (fib-pr1-fib-fam B a) (left-inverse-fib-pr1-fib-fam B a))
 
+is-equiv-fib-pr1-fib-fam : {i j : Level} {A : UU i} (B : A → UU j)
+  (a : A) → is-equiv (fib-pr1-fib-fam B a)
+is-equiv-fib-pr1-fib-fam B a =
+  pair
+    ( dpair (fib-fam-fib-pr1 B a) (left-inverse-fib-pr1-fib-fam B a))
+    ( dpair (fib-fam-fib-pr1 B a) (right-inverse-fib-pr1-fib-fam B a))
+
 is-equiv-pr1-is-contr : {i j : Level} {A : UU i} (B : A → UU j) →
   ((a : A) → is-contr (B a)) → is-equiv (pr1 {i} {j} {A} {B})
 is-equiv-pr1-is-contr B H =
