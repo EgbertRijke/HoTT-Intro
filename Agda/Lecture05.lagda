@@ -75,29 +75,29 @@ is-equiv-eqv-map : {i j : Level} {A : UU i} {B : UU j}
   (e : A ≃ B) → is-equiv (eqv-map e)
 is-equiv-eqv-map e = pr2 e
 
-eqv-sec : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+sec-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → sec f
-eqv-sec e = pr1 e
+sec-is-equiv e = pr1 e
 
-eqv-secf : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+map-sec-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → B → A
-eqv-secf e = pr1 (eqv-sec e)
+map-sec-is-equiv e = pr1 (sec-is-equiv e)
 
-eqv-sech : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (e : is-equiv f) → ((f ∘ eqv-secf e) ~ id)
-eqv-sech e = pr2 (eqv-sec e)
+issec-map-sec-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (e : is-equiv f) → ((f ∘ map-sec-is-equiv e) ~ id)
+issec-map-sec-is-equiv e = pr2 (sec-is-equiv e)
 
-eqv-retr : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+retr-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → retr f
-eqv-retr e = pr2 e
+retr-is-equiv e = pr2 e
 
-eqv-retrf : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+map-retr-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → B → A
-eqv-retrf e = pr1 (eqv-retr e)
+map-retr-is-equiv e = pr1 (retr-is-equiv e)
 
-eqv-retrh : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (e : is-equiv f) → (((eqv-retrf e) ∘ f) ~ id)
-eqv-retrh e = pr2 (eqv-retr e)
+isretr-map-retr-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (e : is-equiv f) → (((map-retr-is-equiv e) ∘ f) ~ id)
+isretr-map-retr-is-equiv e = pr2 (retr-is-equiv e)
 
 has-inverse : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 has-inverse {i} {j} {A} {B} f =
@@ -108,7 +108,7 @@ is-equiv-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
 is-equiv-has-inverse (dpair g (dpair H K)) = pair (dpair g H) (dpair g K)
 
 htpy-secf-retrf : {i j : Level} {A : UU i} {B : UU j} {f : A → B}
-  (e : is-equiv f) → (eqv-secf e ~ eqv-retrf e)
+  (e : is-equiv f) → (map-sec-is-equiv e ~ map-retr-is-equiv e)
 htpy-secf-retrf {i} {j} {A} {B} {f} (dpair (dpair g issec) (dpair h isretr)) =
   htpy-concat
     ( h ∘ (f ∘ g))
