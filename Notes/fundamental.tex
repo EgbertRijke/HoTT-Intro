@@ -295,7 +295,15 @@ the following are logically equivalent:
 \end{equation*}
 is contractible.
 \end{enumerate}
-\item \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. Use \autoref{ex:htpy_total,ex:contr_retr,ex:id_fundamental_gen} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
+\item \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. 
+\begin{subexenum}
+\item Use \autoref{ex:htpy_total,ex:contr_retr,ex:id_fundamental_gen} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
+\item Conclude that for any fiberwise transformation
+\begin{equation*}
+f : \prd{x:A} (a=x) \to B(x),
+\end{equation*}
+if each $f(x)$ has a section, then $f$ is a fiberwise equivalence.
+\end{subexenum}
 \item Show that the map $\emptyt\to A$ is an embedding for every type $A$.
 \item Show that 
 \begin{equation*}
@@ -314,6 +322,11 @@ with $H:f\htpy g\circ h$.
 \item Suppose that $g$ is an embedding. Show that $f$ is an embedding if and only if $h$ is an embedding.
 \item Supose that $h$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.
 \end{subexenum}
+\item Use \cref{ex:id_fundamental_retr} to show that for any map $f:A\to B$, if
+\begin{equation*}
+\apfunc{f} : (x=y) \to (f(x)=f(y))
+\end{equation*}
+has a section for each $x,y:A$, then $f$ is an embedding.
 \item \label{ex:eqv_sigma_mv}Consider a map
 \begin{equation*}
 f:A \to \sm{y:B}C(y).
@@ -343,9 +356,4 @@ Show that the \define{coherence reduction map}
 \mathsf{coh\usc{}red} : \Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big) \to \Big(\sm{x:A}B(x)\Big)
 \end{equation*}
 defined by $\lam{(y,q)}(a,y)$ is an equivalence.
-\item Use \cref{ex:id_fundamental_retr} to show that for any map $f:A\to B$, if
-\begin{equation*}
-\apfunc{f} : (x=y) \to (f(x)=f(y))
-\end{equation*}
-has a section for each $x,y:A$, then $f$ is an embedding.
 \end{exercises}
