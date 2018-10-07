@@ -142,10 +142,19 @@ is-trunc-succ-is-trunc (succ-𝕋 k) A H =
 
 is-trunc-is-equiv : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
   (f : A → B) → is-equiv f → is-trunc k B → is-trunc k A
-is-trunc-is-equiv neg-two-𝕋 f Ef H = is-contr-is-equiv _ f Ef H
-is-trunc-is-equiv (succ-𝕋 k) f Ef H x y =
+is-trunc-is-equiv neg-two-𝕋 f is-equiv-f H =
+  is-contr-is-equiv _ f is-equiv-f H
+is-trunc-is-equiv (succ-𝕋 k) f is-equiv-f H x y =
   is-trunc-is-equiv k (ap f {x} {y})
-    (is-emb-is-equiv f Ef x y) (H (f x) (f y))
+    (is-emb-is-equiv f is-equiv-f x y) (H (f x) (f y))
+
+is-trunc-is-equiv' : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
+  (f : A → B) → is-equiv f → is-trunc k A → is-trunc k B
+is-trunc-is-equiv' k f is-equiv-f is-trunc-A =
+  is-trunc-is-equiv k
+    ( inv-is-equiv is-equiv-f)
+    ( is-equiv-inv-is-equiv is-equiv-f)
+    ( is-trunc-A)
 
 is-trunc-succ-is-emb : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
   (f : A → B) → is-emb f → is-trunc (succ-𝕋 k) B → is-trunc (succ-𝕋 k) A
@@ -171,5 +180,23 @@ is-trunc-fam-is-trunc-pr1 k B is-trunc-pr1 x =
     ( fib-pr1-fib-fam B x)
     ( is-equiv-fib-pr1-fib-fam B x)
     ( is-trunc-pr1 x)
+
+is-trunc-map-is-trunc-ap : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
+  (f : A → B) → ((x y : A) → is-trunc-map k (ap f {x = x} {y = y})) →
+  is-trunc-map (succ-𝕋 k) f
+is-trunc-map-is-trunc-ap k f is-trunc-ap-f b (dpair x p) (dpair x' p') =
+  is-trunc-is-equiv k
+    ( fib-ap-eq-fib f (dpair x p) (dpair x' p'))
+    ( is-equiv-fib-ap-eq-fib f (dpair x p) (dpair x' p'))
+    ( is-trunc-ap-f x x' (concat _ p (inv p')))
+
+is-trunc-ap-is-trunc-map : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
+  (f : A → B) → is-trunc-map (succ-𝕋 k) f →
+  ((x y : A) → is-trunc-map k (ap f {x = x} {y = y}))
+is-trunc-ap-is-trunc-map k f is-trunc-map-f x y p =
+  is-trunc-is-equiv' k
+    ( eq-fib-fib-ap f x y p)
+    ( is-equiv-eq-fib-fib-ap f x y p)
+    ( is-trunc-map-f (f y) (dpair x p) (dpair y refl))
 
 \end{code}
