@@ -265,6 +265,29 @@ id-fundamental-retr {_} {_} {A} {B} a i R =
         ( is-contr-total-path _ a))
       ( is-contr-total-path _ a))
 
+is-equiv-sec-is-equiv : {i j : Level} {A : UU i} {B : UU j} (f : A → B) (sec-f : sec f) → is-equiv (pr1 sec-f) → is-equiv f
+is-equiv-sec-is-equiv {A = A} {B = B} f (dpair g issec-g) is-equiv-sec-f =
+  let h : A → B
+      h = inv-is-equiv is-equiv-sec-f
+  in is-equiv-htpy
+    ( htpy-concat
+      ( f ∘ (g ∘ h))
+      ( htpy-left-whisk f (htpy-inv (issec-inv-is-equiv is-equiv-sec-f)))
+      ( htpy-right-whisk issec-g h))
+    ( is-equiv-inv-is-equiv is-equiv-sec-f)
+
+id-fundamental-sec : {i j : Level} {A : UU i} {B : A → UU j} (a : A)
+  (f : (x : A) → Id a x → B x) → ((x : A) → sec (f x)) →
+  is-fiberwise-equiv f
+id-fundamental-sec {A = A} {B = B} a f sec-f x =
+  let i : (x : A) → B x → Id a x
+      i = λ x → pr1 (sec-f x)
+      retr-i : (x : A) → retr (i x)
+      retr-i = λ x → dpair (f x) (pr2 (sec-f x))
+      is-fiberwise-equiv-i : is-fiberwise-equiv i
+      is-fiberwise-equiv-i = id-fundamental-retr a i retr-i
+  in is-equiv-sec-is-equiv (f x) (sec-f x) (is-fiberwise-equiv-i x)
+
 -- Exercise 7.7
 
 is-emb-empty : {i : Level} (A : UU i) → is-emb (ind-empty {P = λ x → A})
@@ -330,29 +353,6 @@ is-emb-triangle-is-equiv' f g e H is-equiv-e is-emb-f =
     ( is-emb-f)
 
 -- Exercise 7.10
-is-equiv-sec-is-equiv : {i j : Level} {A : UU i} {B : UU j} (f : A → B) (sec-f : sec f) → is-equiv (pr1 sec-f) → is-equiv f
-is-equiv-sec-is-equiv {A = A} {B = B} f (dpair g issec-g) is-equiv-sec-f =
-  let h : A → B
-      h = inv-is-equiv is-equiv-sec-f
-  in is-equiv-htpy
-    ( htpy-concat
-      ( f ∘ (g ∘ h))
-      ( htpy-left-whisk f (htpy-inv (issec-inv-is-equiv is-equiv-sec-f)))
-      ( htpy-right-whisk issec-g h))
-    ( is-equiv-inv-is-equiv is-equiv-sec-f)
-
-id-fundamental-sec : {i j : Level} {A : UU i} {B : A → UU j} (a : A)
-  (f : (x : A) → Id a x → B x) → ((x : A) → sec (f x)) →
-  is-fiberwise-equiv f
-id-fundamental-sec {A = A} {B = B} a f sec-f x =
-  let i : (x : A) → B x → Id a x
-      i = λ x → pr1 (sec-f x)
-      retr-i : (x : A) → retr (i x)
-      retr-i = λ x → dpair (f x) (pr2 (sec-f x))
-      is-fiberwise-equiv-i : is-fiberwise-equiv i
-      is-fiberwise-equiv-i = id-fundamental-retr a i retr-i
-  in is-equiv-sec-is-equiv (f x) (sec-f x) (is-fiberwise-equiv-i x)
-
 is-emb-sec-ap : {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
   ((x y : A) → sec (ap f {x = x} {y = y})) → is-emb f
 is-emb-sec-ap f sec-ap-f x =
