@@ -192,11 +192,26 @@ is-trunc-map-is-trunc-ap k f is-trunc-ap-f b (dpair x p) (dpair x' p') =
 
 is-trunc-ap-is-trunc-map : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
   (f : A → B) → is-trunc-map (succ-𝕋 k) f →
-  ((x y : A) → is-trunc-map k (ap f {x = x} {y = y}))
+  (x y : A) → is-trunc-map k (ap f {x = x} {y = y})
 is-trunc-ap-is-trunc-map k f is-trunc-map-f x y p =
   is-trunc-is-equiv' k
     ( eq-fib-fib-ap f x y p)
     ( is-equiv-eq-fib-fib-ap f x y p)
     ( is-trunc-map-f (f y) (dpair x p) (dpair y refl))
+
+is-prop-map : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
+is-prop-map f = (b : _) → is-trunc neg-one-𝕋 (fib f b)
+
+is-emb-is-prop-map : {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
+  is-prop-map f → is-emb f
+is-emb-is-prop-map f is-prop-map-f x y =
+  is-equiv-is-contr-map
+    ( is-trunc-ap-is-trunc-map neg-two-𝕋 f is-prop-map-f x y)
+
+is-prop-map-is-emb : {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
+  is-emb f → is-prop-map f
+is-prop-map-is-emb f is-emb-f =
+  is-trunc-map-is-trunc-ap neg-two-𝕋 f
+    ( λ x y → is-contr-map-is-equiv (is-emb-f x y))
 
 \end{code}
