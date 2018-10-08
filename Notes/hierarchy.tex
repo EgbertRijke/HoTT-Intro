@@ -443,4 +443,16 @@ Use $D$ to show that any type with decidable equality is a set.
 \item Show that a map between sets is injective if and only if it is an embedding.
 \end{subexenum}
 \item Show that a type $A$ is a $(k+1)$-type if and only if the map $\mathsf{const}_x:\unit\to A$ is $k$-truncated for every $x:A$.
+\item Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $H: f \htpy g \circ h$. 
+\begin{subexenum}
+\item Suppose that $g$ is $k$-truncated. Show that $f$ is $k$-truncated if and only if $h$ is $k$-truncated.
+\item Suppose that $h$ is $k$-truncated. Show that $f$ is $(k+1)$-truncated if and only if $g$ is $(k+1)$-truncated.
+\end{subexenum}
 \end{exercises}
