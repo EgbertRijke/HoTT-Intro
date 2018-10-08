@@ -214,4 +214,21 @@ is-prop-map-is-emb f is-emb-f =
   is-trunc-map-is-trunc-ap neg-two-𝕋 f
     ( λ x y → is-contr-map-is-equiv (is-emb-f x y))
 
+is-emb-pr1-is-subtype : {i j : Level} {A : UU i} {B : A → UU j} →
+  is-subtype B → is-emb (pr1 {B = B})
+is-emb-pr1-is-subtype is-subtype-B =
+  is-emb-is-prop-map pr1
+    ( λ x → is-trunc-is-equiv neg-one-𝕋
+      ( fib-fam-fib-pr1 _ x)
+      ( is-equiv-fib-fam-fib-pr1 _ x)
+      ( is-subtype-B x))
+
+is-subtype-is-emb-pr1 : {i j : Level} {A : UU i} {B : A → UU j} →
+  is-emb (pr1 {B = B}) → is-subtype B
+is-subtype-is-emb-pr1 is-emb-pr1-B x =
+  is-trunc-is-equiv neg-one-𝕋
+    ( fib-pr1-fib-fam _ x)
+    ( is-equiv-fib-pr1-fib-fam _ x)
+    ( is-prop-map-is-emb pr1 is-emb-pr1-B x)
+
 \end{code}
