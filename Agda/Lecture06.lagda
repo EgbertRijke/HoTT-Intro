@@ -38,6 +38,10 @@ sing-comp-is-contr : {i j : Level} (A : UU i) (H : is-contr A) (B : A → UU j) 
 sing-comp-is-contr A H B b =
   ap (λ (ω : Id (center H) (center H)) → tr B ω b) (coh-contraction H)
 
+sec-ev-pt-is-contr : {i j : Level} (A : UU i) (H : is-contr A) (B : A → UU j) →
+  sec (ev-pt A (center H) B)
+sec-ev-pt-is-contr A H B = dpair (sing-ind-is-contr A H B) (sing-comp-is-contr A H B)
+
 is-sing-is-contr : {i j : Level} (A : UU i) (H : is-contr A) (B : A → UU j) →
   sec (ev-pt A (center H) B)
 is-sing-is-contr A H B =

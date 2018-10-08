@@ -73,6 +73,16 @@ id-fundamental-gen {_} {_} {A} {B} a b C f x =
   is-fiberwise-equiv-is-equiv-tot f
     (is-equiv-is-contr _ (is-contr-total-path A a) C) x
 
+id-fundamental-gen' : {i j : Level} {A : UU i} {B : A → UU j}
+  (a : A) (b : B a) (f : (x : A) → Id a x → B x) → is-fiberwise-equiv f →
+  is-contr (Σ A B)
+id-fundamental-gen' {A = A} {B = B} a b f is-fiberwise-equiv-f =
+  is-contr-is-equiv'
+    ( Σ A (Id a))
+    ( tot f)
+    ( is-equiv-tot-is-fiberwise-equiv f is-fiberwise-equiv-f)
+    ( is-contr-total-path A a)
+
 -- The canonical form of the fundamental theorem of identity types
 id-fundamental : {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
   is-contr (Σ A B) → is-fiberwise-equiv (ind-Id a (λ x p → B x) b)
