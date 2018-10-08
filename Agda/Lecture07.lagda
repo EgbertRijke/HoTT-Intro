@@ -32,6 +32,12 @@ is-equiv-fib-ftr-fib-tot f t =
     (dpair (fib-tot-fib-ftr f t) (issec-fib-tot-fib-ftr f t))
     (dpair (fib-tot-fib-ftr f t) (isretr-fib-tot-fib-ftr f t))
 
+is-equiv-fib-tot-fib-ftr : {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} → (f : (x : A) → B x → C x) → (t : Σ A C) → is-equiv (fib-tot-fib-ftr f t)
+is-equiv-fib-tot-fib-ftr f t =
+  pair
+    ( dpair (fib-ftr-fib-tot f t) (isretr-fib-tot-fib-ftr f t))
+    ( dpair (fib-ftr-fib-tot f t) (issec-fib-tot-fib-ftr f t))
+
 -- Any fiberwise equivalence induces an equivalence on total spaces
 is-fiberwise-equiv : {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} → ((x : A) → B x → C x) → UU (i ⊔ (j ⊔ k))
 is-fiberwise-equiv f = (x : _) → is-equiv (f x)

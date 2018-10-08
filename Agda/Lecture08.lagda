@@ -85,7 +85,8 @@ is-set-prop-in-id : {i j : Level} {A : UU i}
   (ρ : (x : A) → R x x)
   (i : (x y : A) → R x y → Id x y)
   → is-set A
-is-set-prop-in-id R p ρ i x y = is-prop-is-equiv' (R x y) (i x y) (is-equiv-prop-in-id R p ρ i x y) (p x y)
+is-set-prop-in-id R p ρ i x y =
+  is-prop-is-equiv' (R x y) (i x y) (is-equiv-prop-in-id R p ρ i x y) (p x y)
 
 is-prop-Eq-ℕ : (n m : ℕ) → is-prop (Eq-ℕ n m)
 is-prop-Eq-ℕ zero-ℕ zero-ℕ = is-prop-unit
@@ -230,5 +231,27 @@ is-subtype-is-emb-pr1 is-emb-pr1-B x =
     ( fib-pr1-fib-fam _ x)
     ( is-equiv-fib-pr1-fib-fam _ x)
     ( is-prop-map-is-emb pr1 is-emb-pr1-B x)
+
+is-fiberwise-trunc : {l1 l2 l3 : Level} (k : 𝕋)  {A : UU l1} {B : A → UU l2}
+  {C : A → UU l3} (f : (x : A) → B x → C x) → UU (l1 ⊔ (l2 ⊔ l3))
+is-fiberwise-trunc k f = (x : _) → is-trunc-map k (f x)
+
+is-trunc-tot-is-fiberwise-trunc : {l1 l2 l3 : Level} (k : 𝕋)
+  {A : UU l1} {B : A → UU l2} {C : A → UU l3} (f : (x : A) → B x → C x) →
+  is-fiberwise-trunc k f → is-trunc-map k (tot f)
+is-trunc-tot-is-fiberwise-trunc k f is-fiberwise-trunc-f (dpair x z) =
+  is-trunc-is-equiv k
+    ( fib-ftr-fib-tot f (dpair x z))
+    ( is-equiv-fib-ftr-fib-tot f (dpair x z))
+    ( is-fiberwise-trunc-f x z)
+
+is-fiberwise-trunc-is-trunc-tot : {l1 l2 l3 : Level} (k : 𝕋)
+  {A : UU l1} {B : A → UU l2} {C : A → UU l3} (f : (x : A) → B x → C x) →
+  is-trunc-map k (tot f) → is-fiberwise-trunc k f
+is-fiberwise-trunc-is-trunc-tot k f is-trunc-tot-f x z =
+  is-trunc-is-equiv k
+    ( fib-tot-fib-ftr f (dpair x z))
+    ( is-equiv-fib-tot-fib-ftr f (dpair x z))
+    ( is-trunc-tot-f (dpair x z))
 
 \end{code}
