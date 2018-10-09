@@ -177,4 +177,33 @@ is-equiv-mapping-into-Σ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {C : B → UU l3} → is-equiv (mapping-into-Σ {A = A} {C = C})
 is-equiv-mapping-into-Σ = is-equiv-choice-∞
 
+-- Section 9.2 Universal properties
+
+is-equiv-ev-pair : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : Σ A B → UU l3} → is-equiv (ev-pair {C = C})
+is-equiv-ev-pair =
+  dpair
+    ( sec-ev-pair _ _ _)
+    ( dpair ind-Σ
+      ( λ f → eq-htpy
+        ( ind-Σ
+          {C = (λ t → Id (ind-Σ (ev-pair f) t) (f t))}
+          (λ x y → refl))))
+
+ev-refl : {l1 l2 : Level} {A : UU l1} (a : A) {B : (x : A) → Id a x → UU l2} →
+  ((x : A) (p : Id a x) → B x p) → B a refl
+ev-refl a f = f a refl
+
+is-equiv-ev-refl : {l1 l2 : Level} {A : UU l1} (a : A)
+  {B : (x : A) → Id a x → UU l2} → is-equiv (ev-refl a {B = B})
+is-equiv-ev-refl a =
+  is-equiv-has-inverse
+    ( dpair (ind-Id a _)
+      ( dpair
+        ( λ b → refl)
+        ( λ f → eq-htpy
+          ( λ x → eq-htpy
+            ( ind-Id a
+              ( λ x' p' → Id (ind-Id a _ (f a refl) x' p') (f x' p'))
+              ( refl) x)))))
+
 \end{code}
