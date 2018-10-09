@@ -206,4 +206,36 @@ is-equiv-ev-refl a =
               ( λ x' p' → Id (ind-Id a _ (f a refl) x' p') (f x' p'))
               ( refl) x)))))
 
+-- Section 9.3 Composing with equivalences.
+
+is-half-adjoint-equivalence : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → UU (l1 ⊔ l2)
+is-half-adjoint-equivalence {A = A} {B = B} f =
+  Σ (B → A)
+    ( λ g → Σ ((f ∘ g) ~ id)
+      ( λ G → Σ ((g ∘ f) ~ id)
+        ( λ H → (htpy-right-whisk G f) ~ (htpy-left-whisk f H))))
+
+is-path-split : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → UU (l1 ⊔ l2)
+is-path-split {A = A} {B = B} f =
+  sec f × ((x y : A) → sec (ap f {x = x} {y = y}))
+
+is-path-split-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-equiv f → is-path-split f
+is-path-split-is-equiv f (dpair sec-f retr-f) =
+  pair sec-f (λ x y → pr1 (is-emb-is-equiv f (dpair sec-f retr-f) x y))
+
+is-half-adjoint-equivalence-is-path-split : {l1 l2 : Level} {A : UU l1}
+  {B : UU l2} (f : A → B) → is-path-split f → is-half-adjoint-equivalence f
+is-half-adjoint-equivalence-is-path-split {A = A} {B = B} f
+  ( dpair (dpair g issec-g) sec-ap-f) =
+  let φ : ((x : A) → fib (ap f) (issec-g (f x))) → Σ ((g ∘ f) ~ id) (λ H → (htpy-right-whisk issec-g f) ~ (htpy-left-whisk f H))
+      φ =  (tot (λ H' → htpy-inv)) ∘ choice-∞ in
+  dpair g
+    ( dpair issec-g
+      ( φ (λ x → dpair
+        ( pr1 (sec-ap-f (g (f x)) x) (issec-g (f x)))
+        ( pr2 (sec-ap-f (g (f x)) x) (issec-g (f x))))))
+
 \end{code}
