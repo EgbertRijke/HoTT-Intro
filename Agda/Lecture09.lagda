@@ -83,6 +83,17 @@ Funext-Ind-htpy f ind-htpy-f =
     ( pr1 (ind-htpy-f (λ h H → Id (htpy-eq (eq-htpy-f h H)) H))
       ( ap htpy-eq (pr2 (ind-htpy-f (λ h H → Id f h)) refl)) g))
 
+Weak-Funext-Funext : {l1 l2 : Level} →
+  ((A : UU l1) (B : A → UU l2) (f : (x : A) → B x) → Funext f) →
+  ((A : UU l1) (B : A → UU l2) → Weak-Funext A B)
+Weak-Funext-Funext funext A B is-contr-B =
+  let pi-center = (λ x → center (is-contr-B x)) in
+  dpair
+    ( pi-center)
+    ( λ f → inv-is-equiv (funext A B pi-center f)
+      ( λ x → contraction (is-contr-B x) (f x)))
+
+
 -- From now on we will be assuming that function extensionality holds
 
 postulate funext : {i j : Level} {A : UU i} {B : A → UU j} (f : (x : A) → B x) → Funext f
@@ -106,5 +117,9 @@ is-equiv-eq-htpy f g = is-equiv-inv-is-equiv (funext _ _)
 ind-htpy : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   (f : (x : A) → B x) → Ind-htpy {l3 = l3} f
 ind-htpy f C = Ind-htpy-Funext f (funext f) C
+
+is-contr-Π : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
+  ((x : A) → is-contr (B x)) → is-contr ((x : A) → B x)
+is-contr-Π {A = A} {B = B} = Weak-Funext-Funext (λ X Y → funext) A B
 
 \end{code}
