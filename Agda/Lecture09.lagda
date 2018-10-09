@@ -93,6 +93,21 @@ Weak-Funext-Funext funext A B is-contr-B =
     ( λ f → inv-is-equiv (funext A B pi-center f)
       ( λ x → contraction (is-contr-B x) (f x)))
 
+Funext-Weak-Funext : {l1 l2 : Level} →
+  ((A : UU l1) (B : A → UU l2) → Weak-Funext A B) →
+  ((A : UU l1) (B : A → UU l2) (f : (x : A) → B x) → Funext f)
+Funext-Weak-Funext weak-funext A B f =
+  id-fundamental-gen f (htpy-refl f)
+    ( is-contr-retract-of
+      ( (x : A) → Σ (B x) (λ b → Id (f x) b))
+      ( dpair
+        ( λ t x → dpair (pr1 t x) (pr2 t x))
+        ( dpair (λ t → dpair (λ x → pr1 (t x)) (λ x → pr2 (t x)))
+        ( λ t → eq-pair (dpair refl refl))))
+      ( weak-funext A
+        ( λ x → Σ (B x) (λ b → Id (f x) b))
+        ( λ x → is-contr-total-path (B x) (f x))))
+    ( λ g → htpy-eq {g = g})
 
 -- From now on we will be assuming that function extensionality holds
 
