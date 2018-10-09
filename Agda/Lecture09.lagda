@@ -137,4 +137,17 @@ is-contr-Π : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
   ((x : A) → is-contr (B x)) → is-contr ((x : A) → B x)
 is-contr-Π {A = A} {B = B} = Weak-Funext-Funext (λ X Y → funext) A B
 
+is-trunc-Π : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : A → UU l2} →
+  ((x : A) → is-trunc k (B x)) → is-trunc k ((x : A) → B x)
+is-trunc-Π neg-two-𝕋 is-trunc-B = is-contr-Π is-trunc-B
+is-trunc-Π (succ-𝕋 k) is-trunc-B f g =
+  is-trunc-is-equiv k htpy-eq
+    ( funext f g)
+    ( is-trunc-Π k (λ x → is-trunc-B x (f x) (g x)))
+
+is-trunc-function-type : {l1 l2 : Level} (k : 𝕋) (A : UU l1) (B : UU l2) →
+  is-trunc k B → is-trunc k (A → B)
+is-trunc-function-type k A B is-trunc-B =
+  is-trunc-Π k {B = λ (x : A) → B} (λ x → is-trunc-B)
+
 \end{code}
