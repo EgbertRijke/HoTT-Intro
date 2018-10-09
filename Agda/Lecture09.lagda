@@ -150,4 +150,23 @@ is-trunc-function-type : {l1 l2 : Level} (k : 𝕋) (A : UU l1) (B : UU l2) →
 is-trunc-function-type k A B is-trunc-B =
   is-trunc-Π k {B = λ (x : A) → B} (λ x → is-trunc-B)
 
+choice-∞ : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
+  {C : (x : A) → B x → UU l3} → ((x : A) → Σ (B x) (λ y → C x y)) →
+  Σ ((x : A) → B x) (λ f → (x : A) → C x (f x))
+choice-∞ φ = dpair (λ x → pr1 (φ x)) (λ x → pr2 (φ x))
+
+is-equiv-choice-∞ : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
+  {C : (x : A) → B x → UU l3} → is-equiv (choice-∞ {A = A} {B = B} {C = C})
+is-equiv-choice-∞ {A = A} {B = B} {C = C} =
+  is-equiv-has-inverse
+    ( dpair
+      ( λ ψ x → dpair ((pr1 ψ) x) ((pr2 ψ) x))
+      ( dpair
+        ( λ ψ → eq-pair (dpair
+          ( eq-htpy (λ x → refl))
+          ( ap
+            ( λ t → tr (λ f → (x : A) → C x (f x)) t (λ x → (pr2 ψ) x))
+            ( isretr-eq-htpy refl))))
+        ( λ φ → eq-htpy λ x → eq-pair (dpair refl refl))))
+
 \end{code}
