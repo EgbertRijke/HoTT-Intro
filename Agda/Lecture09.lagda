@@ -243,10 +243,10 @@ tr-precompose-fam : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
 tr-precompose-fam C f refl = htpy-refl _
 
 is-equiv-precomp-Π-is-half-adjoint-equivalence : {l1 l2 l3 : Level} {A : UU l1}
-  {B : UU l2} (C : B → UU l3) (f : A → B) → is-half-adjoint-equivalence f →
-  is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))
-is-equiv-precomp-Π-is-half-adjoint-equivalence C f
-  ( dpair g (dpair issec-g (dpair isretr-g coh))) =
+  {B : UU l2} (f : A → B) → is-half-adjoint-equivalence f →
+  (C : B → UU l3) → is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))
+is-equiv-precomp-Π-is-half-adjoint-equivalence f
+  ( dpair g (dpair issec-g (dpair isretr-g coh))) C =
   is-equiv-has-inverse
     ( dpair (λ s y → tr C (issec-g y) (s (g y)))
       ( dpair
@@ -257,6 +257,44 @@ is-equiv-precomp-Π-is-half-adjoint-equivalence C f
             ( tr (λ x → C (f x)) (isretr-g x) (s (g (f x))))
             ( tr-precompose-fam C f (isretr-g x) (s (g (f x))))
             ( apd s (isretr-g x)))))
-        λ s → eq-htpy λ y → apd s (issec-g y)))
+        ( λ s → eq-htpy λ y → apd s (issec-g y))))
+
+is-equiv-precomp-Π-is-equiv : {l1 l2 l3 : Level} {A : UU l1}
+  {B : UU l2} (f : A → B) → is-equiv f →
+  (C : B → UU l3) → is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))
+is-equiv-precomp-Π-is-equiv f is-equiv-f =
+  is-equiv-precomp-Π-is-half-adjoint-equivalence f
+    ( is-half-adjoint-equivalence-is-path-split f
+      ( is-path-split-is-equiv f is-equiv-f))
+
+is-equiv-precomp-is-equiv-precomp-Π : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) →
+  ((C : B → UU l3) → is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))) →
+  ((C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f))
+is-equiv-precomp-is-equiv-precomp-Π f is-equiv-precomp-Π-f C =
+  is-equiv-precomp-Π-f (λ y → C)
+
+is-equiv-precomp-is-equiv : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) → is-equiv f →
+  (C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f)
+is-equiv-precomp-is-equiv f is-equiv-f =
+  is-equiv-precomp-is-equiv-precomp-Π f
+    ( is-equiv-precomp-Π-is-equiv f is-equiv-f)
+
+is-equiv-is-equiv-precomp : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) →
+  ({l3 : Level} (C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f)) →
+  is-equiv f
+is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
+  let retr-f = center (is-contr-map-is-equiv (is-equiv-precomp-f A) id) in
+  is-equiv-has-inverse
+    ( dpair
+      ( pr1 retr-f)
+      ( pair
+        ( htpy-eq (ap pr1 (center (is-prop-is-contr
+          ( is-contr-map-is-equiv (is-equiv-precomp-f B) f)
+          ( dpair (f ∘ (pr1 retr-f)) (ap (λ (g : A → A) → f ∘ g) (pr2 retr-f)))
+          ( dpair id refl)))))
+        ( htpy-eq (pr2 retr-f))))
 
 \end{code}
