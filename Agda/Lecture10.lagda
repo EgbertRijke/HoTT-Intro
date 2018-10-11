@@ -95,7 +95,26 @@ is-fiberwise-equiv-Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1}
   {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
   is-fiberwise-equiv (Eq-cone-eq-cone f g c)
-is-fiberwise-equiv-Eq-cone-eq-cone f g {C = C} c = id-fundamental-gen c (Eq-cone-eq-cone f g c c refl) (is-contr-total-Eq-cone f g c) (Eq-cone-eq-cone f g c)
+is-fiberwise-equiv-Eq-cone-eq-cone f g {C = C} c =
+  id-fundamental-gen c
+    ( Eq-cone-eq-cone f g c c refl)
+    ( is-contr-total-Eq-cone f g c)
+    ( Eq-cone-eq-cone f g c)
+
+is-contr-universal-property-pullback : {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
+  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  universal-property-pullback {l5 = l5} f g C c →
+  (C' : UU l5) (c' : cone f g C') →
+  is-contr (Σ (C' → C) (λ h → Eq-cone f g (cone-map f g c h) c'))
+is-contr-universal-property-pullback {C = C} f g c up C' c' =
+  is-contr-is-equiv'
+    ( Σ (C' → C) (λ h → Id (cone-map f g c h) c'))
+    ( tot (λ h → Eq-cone-eq-cone f g (cone-map f g c h) c'))
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ h → Eq-cone-eq-cone f g (cone-map f g c h) c')
+      ( λ h → is-fiberwise-equiv-Eq-cone-eq-cone f g (cone-map f g c h) c'))
+    (is-contr-map-is-equiv (up C')  c')
+
 
 
 \end{code}
