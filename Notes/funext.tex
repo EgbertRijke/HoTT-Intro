@@ -359,6 +359,13 @@ Now we conclude by the contractibility of the fiber that $(\idfunc[B],\refl{f})=
 \end{proof}
 
 \begin{exercises}
+\item Show that the functions
+\begin{align*}
+\mathsf{htpy\usc{}inv} & : (f \htpy g) \to (g \htpy f)
+\mathsf{htpy\usc{}concat}(H) & : (g \htpy h) \to (f \htpy h)
+\mathsf{htpy\usc{}concat}'(K) & : (f \htpy g) \to (f \htpy h)
+\end{align*}
+are equivalences for every $f,g,h : \prd{x:A}B(x)$. Here, $\mathsf{htpy\usc{}concat}'(K)$ is the function defined by $H\mapsto \ct{H}{K}$.
 \item \label{ex:prop_equiv}
 \begin{subexenum}
 \item Let $P$ and $Q$ be propositions. Show that
