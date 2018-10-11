@@ -50,9 +50,12 @@ is-sing-is-contr A H B =
 is-sing : {i : Level} (A : UU i) → A → UU (lsuc i)
 is-sing {i} A a = (B : A → UU i) → sec (ev-pt A a B)
 
+is-contr-sing-ind : {i : Level} (A : UU i) (a : A) → ((P : A → UU i) → P a → (x : A) → P x) → is-contr A
+is-contr-sing-ind A a S = dpair a (S (λ x → Id a x) refl)
+
 is-contr-is-sing : {i : Level} (A : UU i) (a : A) →
   is-sing A a → is-contr A
-is-contr-is-sing A a S = dpair a (pr1 (S (λ y → Id a y)) refl)
+is-contr-is-sing A a S = is-contr-sing-ind A a (λ P → pr1 (S P))
 
 is-sing-unit : is-sing unit star
 is-sing-unit B = dpair ind-unit (λ b → refl)
