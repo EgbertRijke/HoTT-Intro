@@ -196,7 +196,7 @@ is-equiv-choice-∞ {A = A} {B = B} {C = C} =
 
 mapping-into-Σ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3} →
   (A → Σ B C) → Σ (A → B) (λ f → (x : A) → C (f x))
-mapping-into-Σ = choice-∞
+mapping-into-Σ {B = B} = choice-∞ {B = λ x → B}
 
 is-equiv-mapping-into-Σ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {C : B → UU l3} → is-equiv (mapping-into-Σ {A = A} {C = C})

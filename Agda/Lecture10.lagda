@@ -115,6 +115,41 @@ is-contr-universal-property-pullback {C = C} f g c up C' c' =
       ( λ h → is-fiberwise-equiv-Eq-cone-eq-cone f g (cone-map f g c h) c'))
     (is-contr-map-is-equiv (up C')  c')
 
+-- Section 10.2
 
+canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) → UU ((l1 ⊔ l2) ⊔ l3)
+canonical-pullback {A = A} {B = B} f g = Σ A (λ x → Σ B (λ y → Id (f x) (g y)))
+
+π₁ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  {f : A → X} {g : B → X} → canonical-pullback f g → A
+π₁ = pr1
+
+π₂ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  {f : A → X} {g : B → X} → canonical-pullback f g → B
+π₂ t = pr1 (pr2 t)
+
+π₃ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {f : A → X}
+  {g : B → X} → (f ∘ (π₁ {f = f} {g = g})) ~ (g ∘ (π₂ {f = f} {g = g}))
+π₃ t = pr2 (pr2 t)
+
+cone-canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) → cone f g (canonical-pullback f g)
+cone-canonical-pullback f g = dpair π₁ (dpair π₂ π₃)
+
+universal-property-pullback-canonical-pullback : {l1 l2 l3 l4 : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X) →
+  universal-property-pullback {l5 = l4} f g (canonical-pullback f g)
+    (cone-canonical-pullback f g)
+universal-property-pullback-canonical-pullback f g C =
+  is-equiv-comp
+    ( cone-map f g (cone-canonical-pullback f g))
+    ( tot (λ p → choice-∞))
+    ( mapping-into-Σ)
+    ( htpy-refl (cone-map f g (cone-canonical-pullback f g)))
+    ( is-equiv-mapping-into-Σ)
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ p → choice-∞)
+      ( λ p → is-equiv-choice-∞))
 
 \end{code}
