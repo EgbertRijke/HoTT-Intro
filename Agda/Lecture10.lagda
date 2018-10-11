@@ -22,8 +22,12 @@ cone {l4 = l4} {A = A} {B = B} f g C =
 cone-map : {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) {C : UU l4} {C' : UU l5} →
   cone f g C → (C' → C) → cone f g C'
-cone-map f g (dpair p (dpair q H)) h =
-  dpair (p ∘ h) (dpair (q ∘ h) (htpy-right-whisk H h))
+cone-map f g c h =
+  dpair
+    ( (pr1 c) ∘ h)
+    ( dpair
+      ( (pr1 (pr2 c)) ∘ h)
+      ( htpy-right-whisk (pr2 (pr2 c)) h))
 
 universal-property-pullback : {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X) (C : UU l4) → cone f g C → UU _
@@ -101,6 +105,12 @@ is-fiberwise-equiv-Eq-cone-eq-cone f g {C = C} c =
     ( is-contr-total-Eq-cone f g c)
     ( Eq-cone-eq-cone f g c)
 
+eq-cone-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  {f : A → X} {g : B → X} {C : UU l4} (c c' : cone f g C) →
+  Eq-cone f g c c' → Id c c'
+eq-cone-Eq-cone {f = f} {g = g} c c' =
+  inv-is-equiv (is-fiberwise-equiv-Eq-cone-eq-cone f g c c')
+
 is-contr-universal-property-pullback : {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
   {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
   universal-property-pullback {l5 = l5} f g C c →
@@ -151,5 +161,37 @@ universal-property-pullback-canonical-pullback f g C =
     ( is-equiv-tot-is-fiberwise-equiv
       ( λ p → choice-∞)
       ( λ p → is-equiv-choice-∞))
+
+--  (k : D → C') → Id (cone-map f g c' k) (cone-map f g c (h ∘ k))
+
+triangle-cone-cone : {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
+  {f : A → X} {g : B → X} (c : cone f g C) (c' : cone f g C')
+  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') (D : UU l6) →
+  (cone-map f g {C' = D} c') ~ ((cone-map f g c) ∘ (λ (k : D → C') → h ∘ k))
+triangle-cone-cone {C' = C'} {f = f} {g = g} c c' h KLM D k = 
+  inv (ap
+    ( λ t → cone-map f g {C' = D} t k)
+    { x = (cone-map f g c h)}
+    { y = c'}
+    ( eq-cone-Eq-cone (cone-map f g c h) c' KLM))
+
+
+is-equiv-up-pullback-up-pullback : {l1 l2 l3 l4 l5 : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
+  (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
+  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') →
+  universal-property-pullback {l5 = l5} f g C c →
+  universal-property-pullback {l5 = l4} f g C' c' → is-equiv h
+is-equiv-up-pullback-up-pullback f g c c' h KLM up up' =
+  let α : Id (cone-map f g c h) c'
+      α = eq-cone-Eq-cone (cone-map f g c h) c' KLM
+  in
+  is-equiv-has-inverse
+    ( dpair
+      {!!}
+      ( dpair
+        {!!}
+        {!!}))
 
 \end{code}
