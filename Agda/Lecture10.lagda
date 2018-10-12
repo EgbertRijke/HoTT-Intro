@@ -162,8 +162,6 @@ universal-property-pullback-canonical-pullback f g C =
       ( λ p → choice-∞)
       ( λ p → is-equiv-choice-∞))
 
---  (k : D → C') → Id (cone-map f g c' k) (cone-map f g c (h ∘ k))
-
 triangle-cone-cone : {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   {f : A → X} {g : B → X} (c : cone f g C) (c' : cone f g C')
@@ -176,22 +174,50 @@ triangle-cone-cone {C' = C'} {f = f} {g = g} c c' h KLM D k =
     { y = c'}
     ( eq-cone-Eq-cone (cone-map f g c h) c' KLM))
 
-
 is-equiv-up-pullback-up-pullback : {l1 l2 l3 l4 l5 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
   (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') →
-  universal-property-pullback {l5 = l5} f g C c →
-  universal-property-pullback {l5 = l4} f g C' c' → is-equiv h
-is-equiv-up-pullback-up-pullback f g c c' h KLM up up' =
-  let α : Id (cone-map f g c h) c'
-      α = eq-cone-Eq-cone (cone-map f g c h) c' KLM
-  in
-  is-equiv-has-inverse
-    ( dpair
-      {!!}
-      ( dpair
-        {!!}
-        {!!}))
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c) →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c') → is-equiv h
+is-equiv-up-pullback-up-pullback {C = C} {C' = C'} f g c c' h KLM up up' =
+  is-equiv-is-equiv-post-comp h
+    ( λ D → is-equiv-right-factor
+      ( cone-map f g {C' = D} c')
+      ( cone-map f g c)
+      ( λ (k : D → C') → h ∘ k)
+      ( triangle-cone-cone {C = C} {C' = C'} {f = f} {g = g} c c' h KLM D)
+      ( up D) (up' D))
+
+up-pullback-up-pullback-is-equiv : {l1 l2 l3 l4 l5 : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
+  (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
+  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') → is-equiv h →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c) →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c')
+up-pullback-up-pullback-is-equiv f g c c' h KLM is-equiv-h up D =
+  is-equiv-comp
+    ( cone-map f g c')
+    ( cone-map f g c)
+    ( λ k → h ∘ k)
+    ( triangle-cone-cone {f = f} {g = g} c c' h KLM D)
+    ( is-equiv-post-comp-is-equiv h is-equiv-h D)
+    ( up D)
+
+up-pullback-is-equiv-up-pullback : {l1 l2 l3 l4 l5 : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
+  (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
+  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c') →
+  is-equiv h →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c)
+up-pullback-is-equiv-up-pullback f g c c' h KLM up' is-equiv-h D =
+  is-equiv-left-factor
+    ( cone-map f g c')
+    ( cone-map f g c)
+    ( λ k → h ∘ k)
+    ( triangle-cone-cone {f = f} {g = g} c c' h KLM D)
+    ( up' D)
+    ( is-equiv-post-comp-is-equiv h is-equiv-h D)
 
 \end{code}
