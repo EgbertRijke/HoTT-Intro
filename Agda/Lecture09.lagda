@@ -322,4 +322,33 @@ is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
           ( dpair id refl)))))
         ( htpy-eq (pr2 retr-f))))
 
+-- Exercises
+
+-- Exercise 9.11
+
+is-equiv-is-equiv-post-comp : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
+  (f : X → Y) →
+  ({l3 : Level} (A : UU l3) → is-equiv (λ (h : A → X) → f ∘ h)) → is-equiv f
+is-equiv-is-equiv-post-comp {X = X} {Y = Y} f post-comp-equiv-f =
+  let sec-f = center (is-contr-map-is-equiv (post-comp-equiv-f Y) id) in
+  is-equiv-has-inverse
+    ( dpair
+      ( pr1 sec-f)
+      ( dpair
+        ( htpy-eq (pr2 sec-f))
+        ( htpy-eq (ap pr1 (center (is-prop-is-contr
+          ( is-contr-map-is-equiv (post-comp-equiv-f X) f)
+          ( dpair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
+          ( dpair id refl)))))))
+
+is-equiv-post-comp-is-equiv : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
+  (f : X → Y) → is-equiv f →
+  ({l3 : Level} (A : UU l3) → is-equiv (λ (h : A → X) → f ∘ h))
+is-equiv-post-comp-is-equiv {X = X} {Y = Y} f is-equiv-f A =
+  is-equiv-has-inverse (dpair
+    ( λ (g : A → Y) → (inv-is-equiv is-equiv-f) ∘ g)
+    ( dpair
+      ( λ g → eq-htpy (htpy-right-whisk (issec-inv-is-equiv is-equiv-f) g))
+      ( λ h → eq-htpy (htpy-right-whisk (isretr-inv-is-equiv is-equiv-f) h))))
+
 \end{code}
