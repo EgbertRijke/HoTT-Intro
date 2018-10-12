@@ -55,8 +55,27 @@ IND-EQUIV-is-contr-total-equiv {i} {j} A c P =
     ( triangle-ev-id P)
     ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
     ( is-sing-is-contr (Σ (UU i) (λ X → A ≃ X))
-      (dpair (dpair A (dpair id (is-equiv-id A))) (λ t → concat (center c) (inv (contraction c (dpair A (dpair id (is-equiv-id A))))) (contraction c t))) P)
+      ( dpair
+        ( dpair A (dpair id (is-equiv-id A)))
+        ( λ t → concat (center c)
+          ( inv (contraction c (dpair A (dpair id (is-equiv-id A)))))
+          ( contraction c t))) P)
 
+is-contr-total-equiv-IND-EQUIV : {i : Level} (A : UU i) →
+  ( {j : Level} (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) →
+    IND-EQUIV (λ B e → P (dpair B e))) →
+  is-contr (Σ (UU i) (λ X → A ≃ X))
+is-contr-total-equiv-IND-EQUIV {i} A ind =
+  is-contr-is-sing
+    ( Σ (UU i) (λ X → A ≃ X))
+    ( dpair A (dpair id (is-equiv-id A)))
+    ( λ P → section-comp'
+      ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (dpair A (dpair id (is-equiv-id A))) P)
+      ( ev-id (λ X e → P (dpair X e)))
+      ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
+      ( triangle-ev-id P)
+      ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
+      ( ind P))
 
 postulate univalence : {i : Level} (A B : UU i) → UNIVALENCE A B
 
@@ -66,5 +85,16 @@ eq-equiv A B = inv-is-equiv (univalence A B)
 is-contr-total-equiv : {i : Level} (A : UU i) →
   is-contr (Σ (UU i) (λ X → A ≃ X))
 is-contr-total-equiv A = is-contr-total-equiv-UNIVALENCE A (univalence A)
+
+Ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
+  sec (ev-id P)
+Ind-equiv A P =
+  IND-EQUIV-is-contr-total-equiv A
+   ( is-contr-total-equiv A)
+   ( λ t → P (pr1 t) (pr2 t))
+
+ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
+  P A (dpair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
+ind-equiv A P = pr1 (Ind-equiv A P)
 
 \end{code}
