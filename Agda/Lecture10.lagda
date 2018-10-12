@@ -262,4 +262,51 @@ uniquely-unique-pullback {C = C} {C' = C'} f g c c' up up' =
                 (pr1 t) (pr2 t) up' up)))
           ( is-contr-universal-property-pullback f g c up' C' c'))))
 
+gap : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) → cone f g C → C → canonical-pullback f g
+gap f g c z = dpair ((pr1 c) z) (dpair ((pr1 (pr2 c)) z) ((pr2 (pr2 c)) z))
+
+is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  {C : UU l4} (f : A → X) (g : B → X) → cone f g C → UU _
+is-pullback f g c = is-equiv (gap f g c)
+
+Eq-cone-up-pullback-canonical-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
+  {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
+  (c : cone f g C) →
+  Eq-cone f g (cone-map f g (cone-canonical-pullback f g) (gap f g c)) c
+Eq-cone-up-pullback-canonical-pullback f g c =
+  dpair
+    ( htpy-refl (pr1 c))
+    ( dpair
+      ( htpy-refl (pr1 (pr2 c)))
+      ( htpy-right-unit (pr2 (pr2 c))))
+
+is-pullback-up-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
+  {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
+  (c : cone f g C) →
+  ({l5 : Level} → universal-property-pullback {l5 = l5} f g C c) →
+  is-pullback f g c
+is-pullback-up-pullback f g c up =
+  is-equiv-up-pullback-up-pullback f g
+    ( cone-canonical-pullback f g)
+    ( c)
+    ( gap f g c)
+    ( Eq-cone-up-pullback-canonical-pullback f g c)
+    ( universal-property-pullback-canonical-pullback f g)
+    ( up)
+
+up-pullback-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
+  {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
+  (c : cone f g C) →
+  is-pullback f g c →
+  ({l5 : Level} → universal-property-pullback {l5 = l5} f g C c)
+up-pullback-is-pullback f g c is-pullback-c =
+  up-pullback-up-pullback-is-equiv f g
+    ( cone-canonical-pullback f g)
+    ( c)
+    ( gap f g c)
+    ( Eq-cone-up-pullback-canonical-pullback f g c)
+    ( is-pullback-c)
+    ( universal-property-pullback-canonical-pullback f g)
+
 \end{code}
