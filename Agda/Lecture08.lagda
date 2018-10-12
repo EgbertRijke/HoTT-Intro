@@ -35,6 +35,9 @@ is-prop'-is-prop H x y = pr1 (H x y)
 is-contr-is-prop-inh : {i : Level} {A : UU i} → is-prop A → A → is-contr A
 is-contr-is-prop-inh H a = dpair a (is-prop'-is-prop H a)
 
+is-prop-is-contr-if-inh : {i : Level} {A : UU i} → (A → is-contr A) → is-prop A
+is-prop-is-contr-if-inh H x y = is-prop-is-contr (H x) x y
+
 is-subtype : {i j : Level} {A : UU i} (B : A → UU j) → UU (i ⊔ j)
 is-subtype B = (x : _) → is-prop (B x)
 

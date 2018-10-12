@@ -375,4 +375,18 @@ is-contr-retr-is-equiv {A = A} {B = B} {f = f} is-equiv-f =
       ( λ h → funext (h ∘ f) id))
     ( is-contr-map-is-equiv (is-equiv-precomp-is-equiv f is-equiv-f A) id)
 
+is-contr-is-equiv-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  {f : A → B} → is-equiv f → is-contr (is-equiv f)
+is-contr-is-equiv-is-equiv is-equiv-f =
+  is-contr-prod
+    ( is-contr-sec-is-equiv is-equiv-f)
+    ( is-contr-retr-is-equiv is-equiv-f)
+
+is-subtype-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  is-subtype (is-equiv {A = A} {B = B})
+is-subtype-is-equiv f = is-prop-is-contr-if-inh
+  ( λ is-equiv-f → is-contr-prod
+    ( is-contr-sec-is-equiv is-equiv-f)
+    ( is-contr-retr-is-equiv is-equiv-f))
+
 \end{code}

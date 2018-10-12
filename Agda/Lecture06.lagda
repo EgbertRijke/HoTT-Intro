@@ -403,6 +403,14 @@ is-contr-right-factor-prod A B H =
   is-contr-left-factor-prod B A
     ( is-contr-is-equiv (A × B) (swap-prod B A) (is-equiv-swap-prod B A) H)
 
+is-contr-prod : {i j : Level} {A : UU i} {B : UU j} →
+  is-contr A → is-contr B → is-contr (A × B)
+is-contr-prod {A = A} {B = B} is-contr-A is-contr-B =
+  is-contr-is-equiv' B
+    ( left-unit-law-Σ-map (λ x → B) is-contr-A)
+    ( is-equiv-left-unit-law-Σ-map (λ x → B) is-contr-A)
+    ( is-contr-B)
+
 -- Exercise 6.8
 
 -- Given any family B over A, there is a map from the fiber of the projection map (pr1 : Σ A B → A) to the type (B a), i.e. the fiber of B at a. In this exercise we define this map, and show that it is an equivalence, for every a : A.
