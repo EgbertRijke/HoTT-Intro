@@ -181,7 +181,7 @@ is-equiv-up-pullback-up-pullback : {l1 l2 l3 l4 l5 : Level}
   ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c) →
   ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c') → is-equiv h
 is-equiv-up-pullback-up-pullback {C = C} {C' = C'} f g c c' h KLM up up' =
-  is-equiv-is-equiv-post-comp h
+  is-equiv-is-equiv-postcomp h
     ( λ D → is-equiv-right-factor
       ( cone-map f g {C' = D} c')
       ( cone-map f g c)
@@ -201,7 +201,7 @@ up-pullback-up-pullback-is-equiv f g c c' h KLM is-equiv-h up D =
     ( cone-map f g c)
     ( λ k → h ∘ k)
     ( triangle-cone-cone {f = f} {g = g} c c' h KLM D)
-    ( is-equiv-post-comp-is-equiv h is-equiv-h D)
+    ( is-equiv-postcomp-is-equiv h is-equiv-h D)
     ( up D)
 
 up-pullback-is-equiv-up-pullback : {l1 l2 l3 l4 l5 : Level}
@@ -218,6 +218,48 @@ up-pullback-is-equiv-up-pullback f g c c' h KLM up' is-equiv-h D =
     ( λ k → h ∘ k)
     ( triangle-cone-cone {f = f} {g = g} c c' h KLM D)
     ( up' D)
-    ( is-equiv-post-comp-is-equiv h is-equiv-h D)
+    ( is-equiv-postcomp-is-equiv h is-equiv-h D)
+
+uniquely-unique-pullback : {l1 l2 l3 l4 l5 : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
+  (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c') →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c) →
+  is-contr (Σ (C' ≃ C) (λ h → Eq-cone f g (cone-map f g c (eqv-map h)) c'))
+uniquely-unique-pullback {C = C} {C' = C'} f g c c' up up' =
+  is-contr-is-equiv
+    ( Σ (C' → C) (λ h → (is-equiv h) × (Eq-cone f g (cone-map f g c h) c')))
+    ( Σ-assoc
+      ( C' → C)
+      ( is-equiv)
+      ( λ t → Eq-cone f g (cone-map f g c (eqv-map t)) c'))
+    ( is-equiv-Σ-assoc
+      ( C' → C)
+      ( is-equiv)
+      ( λ t → Eq-cone f g (cone-map f g c (eqv-map t)) c'))
+    ( is-contr-is-equiv
+      ( Σ (C' → C) (λ h → (Eq-cone f g (cone-map f g c h) c') × (is-equiv h)))
+      ( tot (λ h → swap-prod (is-equiv h) (Eq-cone f g (cone-map f g c h) c')))
+      ( is-equiv-tot-is-fiberwise-equiv _
+        ( λ h → is-equiv-swap-prod
+          ( is-equiv h)
+          ( Eq-cone f g (cone-map f g c h) c')))
+      ( is-contr-is-equiv'
+        ( Σ (Σ (C' → C) (λ h → Eq-cone f g (cone-map f g c h) c'))
+          ( λ t → is-equiv (pr1 t)))
+        ( Σ-assoc
+          ( C' → C)
+          ( λ h → Eq-cone f g (cone-map f g c h) c')
+          ( λ t → is-equiv (pr1 t)))
+        ( is-equiv-Σ-assoc _ _ _)
+        ( is-contr-is-equiv
+          ( Σ (C' → C) (λ h → Eq-cone f g (cone-map f g c h) c'))
+          ( pr1)
+          ( is-equiv-pr1-is-contr
+            ( λ t → is-equiv (pr1 t))
+            ( λ t → is-contr-is-equiv-is-equiv
+              ( is-equiv-up-pullback-up-pullback f g c c'
+                (pr1 t) (pr2 t) up' up)))
+          ( is-contr-universal-property-pullback f g c up' C' c'))))
 
 \end{code}
