@@ -266,7 +266,11 @@ A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"]
 \end{tikzcd}
 \end{equation*}
 commutes. The projection $\proj 1 : (\sm{y:B}\fib{f}{y})\to B$ is sometimes also called the \define{fibrant replacement}\index{fibrant replacement} of $f$.
-\item Use \cref{ex:contr_retr} to show that if $A\times B$ is contractible, then $A$ and $B$ are contractible. 
+\item Show that for any two types $A$ and $B$, the following are equivalent:
+\begin{enumerate}
+\item Both $A$ and $B$ are contractible.
+\item The type $A\times B$ is contractible.
+\end{enumerate}
 \item \label{ex:proj_fiber}Let $B$ be a family of types over $A$, and consider the projection map 
 \begin{equation*}
 \proj 1 : \big(\sm{x:A}B(x)\big)\to A.

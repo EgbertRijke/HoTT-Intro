@@ -324,12 +324,12 @@ is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
 
 -- Exercises
 
--- Exercise 9.11
+-- Exercise 9.4
 
-is-equiv-is-equiv-post-comp : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
+is-equiv-is-equiv-postcomp : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
   (f : X → Y) →
   ({l3 : Level} (A : UU l3) → is-equiv (λ (h : A → X) → f ∘ h)) → is-equiv f
-is-equiv-is-equiv-post-comp {X = X} {Y = Y} f post-comp-equiv-f =
+is-equiv-is-equiv-postcomp {X = X} {Y = Y} f post-comp-equiv-f =
   let sec-f = center (is-contr-map-is-equiv (post-comp-equiv-f Y) id) in
   is-equiv-has-inverse
     ( dpair
@@ -341,14 +341,38 @@ is-equiv-is-equiv-post-comp {X = X} {Y = Y} f post-comp-equiv-f =
           ( dpair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
           ( dpair id refl)))))))
 
-is-equiv-post-comp-is-equiv : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
+is-equiv-postcomp-is-equiv : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
   (f : X → Y) → is-equiv f →
   ({l3 : Level} (A : UU l3) → is-equiv (λ (h : A → X) → f ∘ h))
-is-equiv-post-comp-is-equiv {X = X} {Y = Y} f is-equiv-f A =
+is-equiv-postcomp-is-equiv {X = X} {Y = Y} f is-equiv-f A =
   is-equiv-has-inverse (dpair
     ( λ (g : A → Y) → (inv-is-equiv is-equiv-f) ∘ g)
     ( dpair
       ( λ g → eq-htpy (htpy-right-whisk (issec-inv-is-equiv is-equiv-f) g))
       ( λ h → eq-htpy (htpy-right-whisk (isretr-inv-is-equiv is-equiv-f) h))))
+
+-- Exercise 9.5
+
+is-contr-sec-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2} {f : A → B} →
+  is-equiv f → is-contr (sec f)
+is-contr-sec-is-equiv {A = A} {B = B} {f = f} is-equiv-f =
+  is-contr-is-equiv'
+    ( Σ (B → A) (λ g → Id (f ∘ g) id))
+    ( tot (λ g → htpy-eq))
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ g → htpy-eq)
+      ( λ g → funext (f ∘ g) id))
+    ( is-contr-map-is-equiv (is-equiv-postcomp-is-equiv f is-equiv-f B) id)
+
+is-contr-retr-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2} {f : A → B} →
+  is-equiv f → is-contr (retr f)
+is-contr-retr-is-equiv {A = A} {B = B} {f = f} is-equiv-f =
+  is-contr-is-equiv'
+    ( Σ (B → A) (λ h → Id (h ∘ f) id))
+    ( tot (λ h → htpy-eq))
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ h → htpy-eq)
+      ( λ h → funext (h ∘ f) id))
+    ( is-contr-map-is-equiv (is-equiv-precomp-is-equiv f is-equiv-f A) id)
 
 \end{code}

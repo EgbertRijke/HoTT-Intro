@@ -379,6 +379,12 @@ are equivalences for every $f,g,h : \prd{x:A}B(x)$. Here, $\mathsf{htpy\usc{}con
 \item Show that for any type $A$ the type $\iscontr(A)$ is a proposition. %There's an easy proof using double singleton induction. This is a nice application of weak funext.
 \item Show that for any type $A$ and any $k\geq-2$, the type $\istrunc{k}(A)$ is a proposition.
 \end{subexenum}
+\item \label{lem:postcomp_equiv}
+Let $f:X\to Y$ be a map. Show that the following are equivalent:
+\begin{enumerate}
+\item $f$ is an equivalence.\index{equivalence!post-composition|textit}
+\item For any type $A$, the map $f\circ\blank : X^A\to Y^A$ is an equivalence.
+\end{enumerate}
 \item \label{ex:isprop_isequiv}Let $f:A\to B$ be a function.
 \begin{subexenum}
 \item Show that if $f$ is an equivalence, then the type $\sm{g:B\to A}f\circ g\htpy \idfunc$ of sections of $f$ is contractible.
@@ -403,12 +409,6 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 %\end{equation*}
 %\item Show that this map is an equivalence.
 %\end{subexenum}
-\item \label{lem:postcomp_equiv}
-Let $f:X\to Y$ be a map. Show that the following are equivalent:
-\begin{enumerate}
-\item $f$ is an equivalence.\index{equivalence!post-composition|textit}
-\item For any type $A$, the map $f\circ\blank : X^A\to Y^A$ is an equivalence.
-\end{enumerate}
 \item \label{ex:idfunc_autohtpy}Construct for any type $A$ an equivalence
 \begin{equation*}
 \eqv{\mathsf{is\usc{}invertible}(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
