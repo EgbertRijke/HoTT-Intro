@@ -309,4 +309,53 @@ up-pullback-is-pullback f g c is-pullback-c =
     ( is-pullback-c)
     ( universal-property-pullback-canonical-pullback f g)
 
+-- Section 10.3 Fiber products
+
+cone-prod : {i j : Level} (A : UU i) (B : UU j) →
+  cone (const A unit star) (const B unit star) (A × B)
+cone-prod A B = dpair pr1 (dpair pr2 (htpy-refl (const (A × B) unit star)))
+
+is-pullback-prod : {i j : Level} (A : UU i) (B : UU j) →
+  is-pullback (const A unit star) (const B unit star) (cone-prod A B)
+is-pullback-prod A B =
+  is-equiv-has-inverse
+    ( dpair
+      ( λ t → dpair (pr1 t) (pr1 (pr2 t)))
+      ( dpair
+        ( λ t → eq-pair (dpair refl
+          ( eq-pair (dpair refl
+            ( center (is-prop-is-contr
+              ( is-prop-is-contr is-contr-unit star star)
+                refl (pr2 (pr2 t))))))))
+        ( λ t → eq-pair (dpair refl refl))))
+
+universal-property-pullback-prod : {i j : Level} (A : UU i) (B : UU j) →
+  {k : Level} → universal-property-pullback {l5 = k}
+    ( const A unit star)
+    ( const B unit star)
+    ( A × B)
+    ( cone-prod A B)
+universal-property-pullback-prod A B =
+  up-pullback-is-pullback
+    ( const A unit star)
+    ( const B unit star)
+    ( cone-prod A B)
+    ( is-pullback-prod A B)
+
+cone-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
+  (Q : X → UU l3) →
+  cone (pr1 {A = X} {B = P}) (pr1 {A = X} {B = Q}) (Σ X (λ x → (P x) × (Q x)))
+cone-fiberwise-prod P Q =
+  dpair
+    ( tot (λ x → pr1))
+    ( dpair
+      ( tot (λ x → pr2))
+      ( htpy-refl pr1))
+
+is-pullback-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
+  (Q : X → UU l3) →
+  is-pullback (pr1 {A = X} {B = P}) (pr1 {A = X} {B = Q})
+    (cone-fiberwise-prod P Q)
+is-pullback-fiberwise-prod P Q = {!!}
+
 \end{code}

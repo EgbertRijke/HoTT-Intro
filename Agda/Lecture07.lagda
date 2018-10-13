@@ -9,7 +9,7 @@ open Lecture06 public
 
 -- Section 7.1 Fiberwise equivalences
 tot : {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} → ((x : A) → B x → C x) → ( Σ A B → Σ A C)
-tot f (dpair x y) = dpair x (f x y)
+tot f t = dpair (pr1 t) (f (pr1 t) (pr2 t))
 
 -- There is a function from the fibers of the induced map on total spaces, to the fibers of the fiberwise transformation
 fib-ftr-fib-tot : {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} → (f : (x : A) → B x → C x) → (t : Σ A C) → fib (tot f) t → fib (f (pr1 t)) (pr2 t)
