@@ -23,9 +23,13 @@ htpy-concat : {i j : Level} {A : UU i} {B : A → UU j} {f : (x : A) → B x}
   (g : (x : A) → B x) {h : (x : A) → B x} → (f ~ g) → (g ~ h) → (f ~ h)
 htpy-concat g H K x = concat (g x) (H x) (K x)
 
+_∙h_ : {i j : Level} {A : UU i} {B : A → UU j} {f g h : (x : A) → B x} →
+  (f ~ g) → (g ~ h) → (f ~ h)
+_∙h_ {g = g} = htpy-concat g
+
 htpy-assoc : {i j : Level} {A : UU i} {B : A → UU j} {f g h k : (x : A) → B x} →
   (H : f ~ g) → (K : g ~ h) → (L : h ~ k) →
-  htpy-concat g H (htpy-concat h K L) ~ htpy-concat h (htpy-concat g H K) L
+  (H ∙h (K ∙h L)) ~ ((H ∙h K) ∙h L)
 htpy-assoc H K L x = assoc (H x) (K x) (L x)
 
 htpy-left-unit : {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
@@ -328,9 +332,9 @@ is-equiv-tr B p =
     ( dpair (inv-tr B p) (left-inv-inv-tr B p))
 
 -- Exercise 5.4
-is-equiv-htpy : {i j : Level} {A : UU i} {B : UU j} {f g : A → B} →
+is-equiv-htpy : {i j : Level} {A : UU i} {B : UU j} {f : A → B} (g : A → B) →
   f ~ g → is-equiv g → is-equiv f
-is-equiv-htpy H (dpair (dpair gs issec) (dpair gr isretr)) =
+is-equiv-htpy g H (dpair (dpair gs issec) (dpair gr isretr)) =
   pair
     ( dpair gs (htpy-concat _ (htpy-right-whisk H gs) issec))
     ( dpair gr (htpy-concat (gr ∘ _) (htpy-left-whisk gr H) isretr))
@@ -787,7 +791,9 @@ is-equiv-add-ℤ-right x =
 
 is-equiv-add-ℤ-left : (y : ℤ) → is-equiv (λ x → add-ℤ x y)
 is-equiv-add-ℤ-left y =
-  is-equiv-htpy (λ x → commutative-add-ℤ x y) (is-equiv-add-ℤ-right y)
+  is-equiv-htpy (add-ℤ y)
+    ( λ x → commutative-add-ℤ x y)
+    ( is-equiv-add-ℤ-right y)
 
 -- Extra material
 

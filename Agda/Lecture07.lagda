@@ -285,7 +285,8 @@ is-equiv-sec-is-equiv : {i j : Level} {A : UU i} {B : UU j} (f : A → B) (sec-f
 is-equiv-sec-is-equiv {A = A} {B = B} f (dpair g issec-g) is-equiv-sec-f =
   let h : A → B
       h = inv-is-equiv is-equiv-sec-f
-  in is-equiv-htpy
+  in
+  is-equiv-htpy h
     ( htpy-concat
       ( f ∘ (g ∘ h))
       ( htpy-left-whisk f (htpy-inv (issec-inv-is-equiv is-equiv-sec-f)))
