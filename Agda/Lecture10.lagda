@@ -352,10 +352,44 @@ cone-fiberwise-prod P Q =
       ( tot (λ x → pr2))
       ( htpy-refl pr1))
 
+inv-gap-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
+  (Q : X → UU l3) → canonical-pullback (pr1 {B = P}) (pr1 {B = Q}) →
+  Σ X (λ x → (P x) × (Q x))
+inv-gap-fiberwise-prod P Q (dpair (dpair x p) (dpair (dpair .x q) refl)) =
+  dpair x (dpair p q)
+
+issec-inv-gap-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
+  (Q : X → UU l3) →
+  ((gap (pr1 {B = P}) (pr1 {B = Q}) (cone-fiberwise-prod P Q)) ∘
+  (inv-gap-fiberwise-prod P Q)) ~ id
+issec-inv-gap-fiberwise-prod P Q (dpair (dpair x p) (dpair (dpair .x q) refl)) =
+  eq-pair (dpair refl (eq-pair (dpair refl refl)))
+
+isretr-inv-gap-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
+  (Q : X → UU l3) →
+  ((inv-gap-fiberwise-prod P Q) ∘
+  (gap (pr1 {B = P}) (pr1 {B = Q}) (cone-fiberwise-prod P Q))) ~ id
+isretr-inv-gap-fiberwise-prod P Q (dpair x (dpair p q)) = refl
+
 is-pullback-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
   (Q : X → UU l3) →
   is-pullback (pr1 {A = X} {B = P}) (pr1 {A = X} {B = Q})
     (cone-fiberwise-prod P Q)
-is-pullback-fiberwise-prod P Q = {!!}
+is-pullback-fiberwise-prod P Q =
+  is-equiv-has-inverse
+    ( dpair
+      ( inv-gap-fiberwise-prod P Q)
+      ( dpair
+        ( issec-inv-gap-fiberwise-prod P Q)
+        ( isretr-inv-gap-fiberwise-prod P Q)))
+
+universal-property-pullback-fiberwise-prod : {l1 l2 l3 l4 : Level}
+  {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
+  universal-property-pullback {l5 = l4} (pr1 {B = P}) (pr1 {B = Q})
+    (Σ X (λ x → (P x) × (Q x))) (cone-fiberwise-prod P Q)
+universal-property-pullback-fiberwise-prod P Q =
+  up-pullback-is-pullback pr1 pr1
+    ( cone-fiberwise-prod P Q)
+    ( is-pullback-fiberwise-prod P Q)
 
 \end{code}
