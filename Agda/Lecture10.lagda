@@ -30,8 +30,8 @@ cone-map f g c h =
       ( htpy-right-whisk (pr2 (pr2 c)) h))
 
 universal-property-pullback : {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
-  {X : UU l3} (f : A → X) (g : B → X) (C : UU l4) → cone f g C → UU _
-universal-property-pullback {l5 = l5} f g C cone-f-g-C =
+  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} → cone f g C → UU _
+universal-property-pullback {l5 = l5} f g cone-f-g-C =
   (C' : UU l5) → is-equiv (cone-map f g {C' = C'} cone-f-g-C)
 
 Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -116,7 +116,7 @@ eq-cone-Eq-cone {f = f} {g = g} c c' =
 abstract 
   is-contr-universal-property-pullback : {l1 l2 l3 l4 l5 : Level} {A : UU l1}
     {B : UU l2} {C : UU l3} {X : UU l4} (f : A → X) (g : B → X)
-    (c : cone f g C) → universal-property-pullback {l5 = l5} f g C c →
+    (c : cone f g C) → universal-property-pullback {l5 = l5} f g c →
     (C' : UU l5) (c' : cone f g C') →
     is-contr (Σ (C' → C) (λ h → Eq-cone f g (cone-map f g c h) c'))
   is-contr-universal-property-pullback {C = C} f g c up C' c' =
@@ -152,8 +152,7 @@ cone-canonical-pullback f g = dpair π₁ (dpair π₂ π₃)
 
 universal-property-pullback-canonical-pullback : {l1 l2 l3 l4 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X) →
-  universal-property-pullback {l5 = l4} f g (canonical-pullback f g)
-    (cone-canonical-pullback f g)
+  universal-property-pullback {l5 = l4} f g (cone-canonical-pullback f g)
 universal-property-pullback-canonical-pullback f g C =
   is-equiv-comp
     ( cone-map f g (cone-canonical-pullback f g))
@@ -182,8 +181,8 @@ abstract
     {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
     (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
     (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') →
-    ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c) →
-    ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c') →
+    ({l6 : Level} → universal-property-pullback {l5 = l6} f g c) →
+    ({l6 : Level} → universal-property-pullback {l5 = l6} f g c') →
     is-equiv h
   is-equiv-up-pullback-up-pullback {C = C} {C' = C'} f g c c' h KLM up up' =
     is-equiv-is-equiv-postcomp h
@@ -198,8 +197,8 @@ up-pullback-up-pullback-is-equiv : {l1 l2 l3 l4 l5 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
   (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') → is-equiv h →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c) →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c')
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c) →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c')
 up-pullback-up-pullback-is-equiv f g c c' h KLM is-equiv-h up D =
   is-equiv-comp
     ( cone-map f g c')
@@ -213,9 +212,9 @@ up-pullback-is-equiv-up-pullback : {l1 l2 l3 l4 l5 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
   (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c') →
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c') →
   is-equiv h →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c)
+  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c)
 up-pullback-is-equiv-up-pullback f g c c' h KLM up' is-equiv-h D =
   is-equiv-left-factor
     ( cone-map f g c')
@@ -229,8 +228,8 @@ abstract
   uniquely-unique-pullback : {l1 l2 l3 l4 l5 : Level}
     {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
     (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
-    ({l6 : Level} → universal-property-pullback {l5 = l6} f g C' c') →
-    ({l6 : Level} → universal-property-pullback {l5 = l6} f g C c) →
+    ({l6 : Level} → universal-property-pullback {l5 = l6} f g c') →
+    ({l6 : Level} → universal-property-pullback {l5 = l6} f g c) →
     is-contr (Σ (C' ≃ C) (λ h → Eq-cone f g (cone-map f g c (eqv-map h)) c'))
   uniquely-unique-pullback {C = C} {C' = C'} f g c c' up up' =
     is-contr-is-equiv
@@ -292,7 +291,7 @@ abstract
   is-pullback-up-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
     {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
     (c : cone f g C) →
-    ({l5 : Level} → universal-property-pullback {l5 = l5} f g C c) →
+    ({l5 : Level} → universal-property-pullback {l5 = l5} f g c) →
     is-pullback f g c
   is-pullback-up-pullback f g c up =
     is-equiv-up-pullback-up-pullback f g
@@ -307,7 +306,7 @@ up-pullback-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
   {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
   (c : cone f g C) →
   is-pullback f g c →
-  ({l5 : Level} → universal-property-pullback {l5 = l5} f g C c)
+  ({l5 : Level} → universal-property-pullback {l5 = l5} f g c)
 up-pullback-is-pullback f g c is-pullback-c =
   up-pullback-up-pullback-is-equiv f g
     ( cone-canonical-pullback f g)
@@ -356,7 +355,6 @@ universal-property-pullback-prod : {i j : Level} (A : UU i) (B : UU j) →
   {k : Level} → universal-property-pullback {l5 = k}
     ( const A unit star)
     ( const B unit star)
-    ( A × B)
     ( cone-prod A B)
 universal-property-pullback-prod A B =
   up-pullback-is-pullback
@@ -409,7 +407,7 @@ is-pullback-fiberwise-prod P Q =
 universal-property-pullback-fiberwise-prod : {l1 l2 l3 l4 : Level}
   {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
   universal-property-pullback {l5 = l4} (pr1 {B = P}) (pr1 {B = Q})
-    (Σ X (λ x → (P x) × (Q x))) (cone-fiberwise-prod P Q)
+    (cone-fiberwise-prod P Q)
 universal-property-pullback-fiberwise-prod P Q =
   up-pullback-is-pullback pr1 pr1
     ( cone-fiberwise-prod P Q)
@@ -508,8 +506,7 @@ is-pullback-cone-fiber f b =
 
 universal-property-pullback-cone-fiber : {l1 l2 l3 : Level} {A : UU l1} →
   {B : UU l2} (f : A → B) (b : B) →
-  universal-property-pullback {l5 = l3} f
-    ( const unit B b) (fib f b) (cone-fiber f b)
+  universal-property-pullback {l5 = l3} f (const unit B b) (cone-fiber f b)
 universal-property-pullback-cone-fiber {B = B} f b =
   up-pullback-is-pullback f (const unit B b)
     ( cone-fiber f b)
@@ -530,5 +527,87 @@ is-pullback-cone-fiber-fam {A = A} B a =
     ( λ y → refl)
     ( is-equiv-fib-pr1-fib-fam B a)
     ( is-pullback-cone-fiber pr1 a)
+
+-- Section 10.5 Fiberwise equivalences
+
+cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) (Q : B → UU l3) → cone f (pr1 {B = Q}) (Σ A (λ x → Q (f x)))
+cone-subst f Q = dpair pr1 (dpair (Σ-map-base-map f Q) (λ t → refl))
+
+inv-gap-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) (Q : B → UU l3) →
+  canonical-pullback f (pr1 {B = Q}) → Σ A (λ x → Q (f x))
+inv-gap-cone-subst f Q (dpair x (dpair (dpair .(f x) q) refl)) = dpair x q
+
+issec-inv-gap-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) (Q : B → UU l3) →
+  ((gap f (pr1 {B = Q}) (cone-subst f Q)) ∘ (inv-gap-cone-subst f Q)) ~ id
+issec-inv-gap-cone-subst f Q (dpair x (dpair (dpair .(f x) q) refl)) = refl
+
+isretr-inv-gap-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) (Q : B → UU l3) →
+  ((inv-gap-cone-subst f Q) ∘ (gap f (pr1 {B = Q}) (cone-subst f Q))) ~ id
+isretr-inv-gap-cone-subst f Q (dpair x q) = refl
+
+is-pullback-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) (Q : B → UU l3) → is-pullback f (pr1 {B = Q}) (cone-subst f Q)
+is-pullback-cone-subst f Q =
+  is-equiv-has-inverse
+    ( dpair
+      ( inv-gap-cone-subst f Q)
+      ( dpair
+        ( issec-inv-gap-cone-subst f Q)
+        ( isretr-inv-gap-cone-subst f Q)))
+
+cone-toto : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3}
+  (Q : B → UU l4) (f : A → B) (g : (x : A) → (P x) → (Q (f x))) →
+  cone f (pr1 {B = Q}) (Σ A P)
+cone-toto Q f g = dpair pr1 (dpair (toto Q f g) (λ t → refl))
+
+is-pullback-is-fiberwise-equiv : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {P : A → UU l3} (Q : B → UU l4) (f : A → B)
+  (g : (x : A) → (P x) → (Q (f x))) →
+  is-fiberwise-equiv g → is-pullback f (pr1 {B = Q}) (cone-toto Q f g)
+is-pullback-is-fiberwise-equiv Q f g is-equiv-g =
+  is-equiv-comp
+    ( gap f pr1 (cone-toto Q f g))
+    ( gap f pr1 (cone-subst f Q))
+    ( tot g)
+    ( λ t → refl)
+    ( is-equiv-tot-is-fiberwise-equiv g is-equiv-g)
+    ( is-pullback-cone-subst f Q)
+
+universal-property-pullback-is-fiberwise-equiv : {l1 l2 l3 l4 l5 : Level}
+  {A : UU l1} {B : UU l2} {P : A → UU l3} (Q : B → UU l4) (f : A → B)
+  (g : (x : A) → (P x) → (Q (f x))) →
+  is-fiberwise-equiv g →
+  universal-property-pullback {l5 = l5} f (pr1 {B = Q}) (cone-toto Q f g)
+universal-property-pullback-is-fiberwise-equiv Q f g is-equiv-g =
+  up-pullback-is-pullback f pr1 (cone-toto Q f g)
+    ( is-pullback-is-fiberwise-equiv Q f g is-equiv-g)
+
+is-fiberwise-equiv-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {P : A → UU l3} (Q : B → UU l4) (f : A → B)
+  (g : (x : A) → (P x) → (Q (f x))) →
+  is-pullback f (pr1 {B = Q}) (cone-toto Q f g) → is-fiberwise-equiv g
+is-fiberwise-equiv-is-pullback Q f g is-pullback-cone-toto =
+  is-fiberwise-equiv-is-equiv-tot g
+    ( is-equiv-right-factor
+      ( gap f pr1 (cone-toto Q f g))
+      ( gap f pr1 (cone-subst f Q))
+      ( tot g)
+      ( λ t → refl)
+      ( is-pullback-cone-subst f Q)
+      ( is-pullback-cone-toto))
+
+is-fiberwise-equiv-universal-property-pullback : {l1 l2 l3 l4 : Level}
+  {A : UU l1} {B : UU l2} {P : A → UU l3} (Q : B → UU l4) (f : A → B)
+  (g : (x : A) → (P x) → (Q (f x))) →
+  ( {l5 : Level} → universal-property-pullback {l5 = l5} f (pr1 {B = Q})
+    (cone-toto Q f g)) →
+  is-fiberwise-equiv g
+is-fiberwise-equiv-universal-property-pullback Q f g up =
+  is-fiberwise-equiv-is-pullback Q f g
+    ( is-pullback-up-pullback f pr1 (cone-toto Q f g) up)
 
 \end{code}
