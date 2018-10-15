@@ -355,11 +355,11 @@ tr-fiber f refl a refl = refl
 
 Σ-fib-to-domain : {i j : Level} {A : UU i} {B : UU j} (f : A → B ) →
   (Σ B (fib f)) → A
-Σ-fib-to-domain f (dpair y (dpair x p)) = x
+Σ-fib-to-domain f t = pr1 (pr2 t)
 
 triangle-Σ-fib-to-domain : {i j : Level} {A : UU i} {B : UU j} (f : A → B ) →
   pr1 ~ (f ∘ (Σ-fib-to-domain f))
-triangle-Σ-fib-to-domain f (dpair y (dpair x p)) = inv p
+triangle-Σ-fib-to-domain f t = inv (pr2 (pr2 t))
 
 domain-to-Σ-fib : {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
   A → Σ B (fib f)

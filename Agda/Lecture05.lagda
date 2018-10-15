@@ -52,9 +52,13 @@ htpy-left-whisk : {i j k : Level} {A : UU i} {B : UU j} {C : UU k}
   (h : B → C) {f g : A → B} → (f ~ g) → ((h ∘ f) ~ (h ∘ g))
 htpy-left-whisk h H x = ap h (H x)
 
+_·l_ = htpy-left-whisk
+
 htpy-right-whisk : {i j k : Level} {A : UU i} {B : UU j} {C : UU k}
   {g h : B → C} (H : g ~ h) (f : A → B) → ((g ∘ f) ~ (h ∘ f))
 htpy-right-whisk H f x = H (f x)
+
+_·r_ = htpy-right-whisk
 
 -- Section 5.2 Bi-invertible maps
 sec : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)

@@ -75,8 +75,7 @@ IND-HTPY-FUNEXT {l3 = l3} {A = A} {B = B} f funext-f C =
 
 abstract
   FUNEXT-IND-HTPY : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
-    (f : (x : A) → B x) →
-    IND-HTPY {l3 = l1 ⊔ l2} f → FUNEXT f
+    (f : (x : A) → B x) → IND-HTPY {l3 = l1 ⊔ l2} f → FUNEXT f
   FUNEXT-IND-HTPY f ind-htpy-f =
     let eq-htpy-f = pr1 (ind-htpy-f (λ h H → Id f h)) refl in
     id-fundamental-sec f (λ h → htpy-eq {g = h}) (λ g → dpair
@@ -84,7 +83,7 @@ abstract
       ( pr1 (ind-htpy-f (λ h H → Id (htpy-eq (eq-htpy-f h H)) H))
         ( ap htpy-eq (pr2 (ind-htpy-f (λ h H → Id f h)) refl)) g))
 
-abstract 
+abstract
   WEAK-FUNEXT-FUNEXT : {l1 l2 : Level} →
     ((A : UU l1) (B : A → UU l2) (f : (x : A) → B x) → FUNEXT f) →
     ((A : UU l1) (B : A → UU l2) → WEAK-FUNEXT A B)
