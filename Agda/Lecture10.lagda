@@ -487,4 +487,48 @@ is-pullback-total-prod-fibers f g =
         ( is-equiv-concat' (pr1 s) (inv (pr2 (pr2 t))))
         ( is-equiv-concat (pr2 (pr2 s)) (g (pr1 (pr2 t))))))
 
+-- Section 10.4 Fibers as pullbacks
+
+square-fiber : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (b : B) →
+  (f ∘ (pr1 {B = λ x → Id (f x) b})) ~
+  ((const unit B b) ∘ (const (fib f b) unit star))
+square-fiber f b = pr2
+
+cone-fiber : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (b : B) →
+  cone f (const unit B b) (fib f b)
+cone-fiber f b =
+  dpair pr1 (dpair (const (fib f b) unit star) (square-fiber f b))
+
+is-pullback-cone-fiber : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (b : B) → is-pullback f (const unit B b) (cone-fiber f b)
+is-pullback-cone-fiber f b =
+  is-equiv-tot-is-fiberwise-equiv
+    ( λ a p → dpair star p)
+    ( λ a → is-equiv-left-unit-law-Σ-map (λ t → Id (f a) b) is-contr-unit)
+
+universal-property-pullback-cone-fiber : {l1 l2 l3 : Level} {A : UU l1} →
+  {B : UU l2} (f : A → B) (b : B) →
+  universal-property-pullback {l5 = l3} f
+    ( const unit B b) (fib f b) (cone-fiber f b)
+universal-property-pullback-cone-fiber {B = B} f b =
+  up-pullback-is-pullback f (const unit B b)
+    ( cone-fiber f b)
+    ( is-pullback-cone-fiber f b)
+
+cone-fiber-fam : {l1 l2 : Level} {A : UU l1} (B : A → UU l2) (a : A) →
+  cone (pr1 {B = B}) (const unit A a) (B a)
+cone-fiber-fam B a =
+  dpair (λ b → dpair a b) (dpair (const (B a) unit star) (λ b → refl))
+
+is-pullback-cone-fiber-fam : {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+ (a : A) → is-pullback (pr1 {B = B}) (const unit A a) (cone-fiber-fam B a)
+is-pullback-cone-fiber-fam {A = A} B a =
+  is-equiv-comp
+    ( gap (pr1 {B = B}) (const unit A a) (cone-fiber-fam B a))
+    ( gap (pr1 {B = B}) (const unit A a) (cone-fiber (pr1 {B = B}) a))
+    ( fib-pr1-fib-fam B a)
+    ( λ y → refl)
+    ( is-equiv-fib-pr1-fib-fam B a)
+    ( is-pullback-cone-fiber pr1 a)
+
 \end{code}

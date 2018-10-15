@@ -439,28 +439,7 @@ By \cref{thm:is_pullback} it suffices to show that the gap map is an equivalence
 The map $\lam{x}{p}(\ttt,p)$ is a fiberwise equivalence by \cref{ex:contr_in_sigma}, so it induces an equivalence on total spaces by \cref{thm:fib_equiv}.
 \end{proof}
 
-\cref{lem:fib_pb} motivates the following definition of \emph{fiber sequences}, which play an important role in synthetic homotopy theory (and in algebraic topology). 
-
-\begin{defn}
-A \define{fiber sequence}\index{fiber sequence|textbf} consists of types $F$, $E$, and $B$ with \define{base points}\index{base point} $x:F$, $y:E$, and $b:B$, and maps
-\begin{equation*}
-\begin{tikzcd}
-F \arrow[r,"i"] & E \arrow[r,"p"] & B
-\end{tikzcd}
-\end{equation*}
-preserving the base points in the sense that $i(x)=y$ and $p(y)=b$, such that the square
-\begin{equation*}
-\begin{tikzcd}
-F \arrow[r,"i"] \arrow[d] & E \arrow[d,"p"] \\
-\unit \arrow[r,swap,"b"] & B
-\end{tikzcd}
-\end{equation*}
-is a pullback square. We often write $F\hookrightarrow E \twoheadrightarrow B$ to indicate that we have a fiber sequence. 
-
-Given a fiber sequence $F\hookrightarrow E\twoheadrightarrow B$, we call $B$ the \define{base space}\index{base space!of fiber sequence|textbf}, $E$ the \define{total space}\index{total space!of fiber sequence|textbf}, and $F$ the \define{fiber}\index{fiber!of fiber sequence|textbf}.
-\end{defn}
-
-\begin{eg}
+\begin{cor}
 For any type family $B$ over $A$ and any $a:A$ the square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
@@ -468,21 +447,19 @@ B(a) \arrow[d,swap,"{\lam{y}(a,y)}"] \arrow[r,"\mathsf{const}_\ttt"] & \unit \ar
 \sm{x:A}B(x) \arrow[r,swap,"\proj 1"] & A
 \end{tikzcd}
 \end{equation*}
-is a pullback square. 
+is a pullback square.
+\end{cor}
 
-To see this, note that the gap map is homotopic to the function
-\begin{equation*}
-e \defeq \lam{y}((a,y),\refl{a}).
-\end{equation*}
-This function is an equivalence by \cref{ex:proj_fiber}.
-
-Thus we see that if we additionally suppose that there is a term $b:B(a)$, then we obtain a fiber sequence
-\begin{equation*}
-\begin{tikzcd}
-B(a) \arrow[r,hookrightarrow] & \sm{x:A}B(x) \arrow[r,->>] & A.
-\end{tikzcd}
-\end{equation*}
-\end{eg}
+\begin{proof}
+  To see this, note that the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=0]
+      B(a) \arrow[rr,"{\lam{b}((a,b),\refl{a})}"] \arrow[dr,swap,"\mathsf{gap}"] & & \fib{\proj 1}{a} \arrow[dl,"\mathsf{gap}"] \\
+      & \Big(\sm{x:A}B(x)\Big)\times_A\unit.
+    \end{tikzcd}
+  \end{equation*}
+  Since the top map is an equivalence by \cref{ex:fib_replacement}, and the map on the right is an equivalence by \cref{lem:fib_pb}, it follows that the map on the left is an equivalence. The claim follows.
+\end{proof}
 
 \section{Fiberwise equivalences}
 
