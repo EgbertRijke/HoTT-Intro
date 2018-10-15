@@ -110,6 +110,114 @@ is-emb-is-equiv {i} {j} {A} {B} f E x =
       (is-contr-map-is-equiv E (f x)))
     (λ y p → ap f p)
 
+-- Section 7.3 Fiberwise equivalences over an equivalence
+
+Σ-map-base-map : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) (C : B → UU l3) → Σ A (λ x → C (f x)) → Σ B C
+Σ-map-base-map f C s = dpair (f (pr1 s)) (pr2 s)
+
+abstract
+  is-contr-Σ-×-Σ-rearrange-is-contr : {l1 l2 l3 l4 : Level}
+    ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
+    ( D : Σ (Σ A B) (λ t → C (pr1 t)) → UU l4) →
+    ( is-contr-AC : is-contr (Σ A C)) →
+    ( is-contr
+      ( Σ (B (pr1 (center is-contr-AC)))
+        ( λ y → D (dpair
+          ( dpair (pr1 (center is-contr-AC)) y)
+          ( pr2 (center is-contr-AC)))))) →
+    is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (λ z → D (dpair t z))))
+  is-contr-Σ-×-Σ-rearrange-is-contr A B C D is-contr-AC is-contr-BD =
+    is-contr-is-equiv
+      ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair (dpair x y) z)))))
+      ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (λ z → D (dpair t z))))
+      ( is-equiv-Σ-assoc A B (λ t → Σ (C (pr1 t)) (λ z → D (dpair t z))))
+      ( is-contr-is-equiv
+        ( Σ A (λ x → Σ (C x) (λ z → Σ (B x) (λ y → D (dpair (dpair x y) z)))))
+        ( tot (λ x → Σ-swap (B x) (C x) (λ y z → D (dpair (dpair x y) z))))
+        ( is-equiv-tot-is-fiberwise-equiv _
+          ( λ x → is-equiv-Σ-swap (B x) (C x) (λ y z → D (dpair (dpair x y) z))))
+        ( is-contr-is-equiv
+          ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y →
+            D (dpair (dpair (pr1 t) y) (pr2 t)))))
+          ( inv-is-equiv (is-equiv-Σ-assoc A C (λ t → Σ (B (pr1 t)) (λ y →
+            D (dpair (dpair (pr1 t) y) (pr2 t))))))
+          ( is-equiv-inv-is-equiv (is-equiv-Σ-assoc A C
+            ( λ t → Σ (B (pr1 t)) (λ y →
+              D (dpair (dpair (pr1 t) y) (pr2 t))))))
+          ( is-contr-is-equiv'
+            ( Σ (B (pr1 (center (is-contr-AC)))) (λ y →
+              D (dpair
+                ( dpair (pr1 (center is-contr-AC)) y)
+                ( pr2 (center is-contr-AC)))))
+            ( left-unit-law-Σ-map
+              ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (dpair (pr1 t) y) (pr2 t))))
+              ( is-contr-AC))
+            ( is-equiv-left-unit-law-Σ-map _ is-contr-AC)
+            ( is-contr-BD))))
+
+is-equiv-Σ-map-is-equiv-base-map : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {C : B → UU l3} (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
+is-equiv-Σ-map-is-equiv-base-map {A = A} {C = C} f is-equiv-f =
+  is-equiv-is-contr-map (λ t →
+    is-contr-is-equiv
+      ( Σ (Σ A (λ x → C (f x)))
+          ( λ s → Σ (Id (f (pr1 s)) (pr1 t))
+            ( λ p → Id (tr C p (pr2 s)) (pr2 t))))
+      ( tot (λ s → pair-eq))
+      ( is-equiv-tot-is-fiberwise-equiv
+        ( λ s → pair-eq)
+        ( λ s → is-equiv-pair-eq' (Σ-map-base-map f C s) t))
+      ( let s = is-contr-map-is-equiv is-equiv-f (pr1 t) in
+        is-contr-Σ-×-Σ-rearrange-is-contr
+        ( A)
+        ( λ x → C (f x))
+        ( λ x → Id (f x) (pr1 t))
+        ( λ acb → Id (tr C (pr2 acb) (pr2 (pr1 acb))) (pr2 t))
+        ( s)
+        ( is-contr-map-is-equiv (is-equiv-tr C (pr2 (center s))) (pr2 t))))
+
+toto : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : A → UU l3} (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
+  Σ A C → Σ B D
+toto D f g t = dpair (f (pr1 t)) (g (pr1 t) (pr2 t))
+
+triangle-toto : {l1 l2 l3 l4 : Level} {A : UU l1}
+  {B : UU l2} {C : A → UU l3} (D : B → UU l4)
+  (f : A → B) (g : (x : A) → C x → D (f x)) →
+  (toto D f g) ~ ((Σ-map-base-map f D) ∘ (tot g))
+triangle-toto D f g t = refl
+
+is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map : {l1 l2 l3 l4 : Level}
+  {A : UU l1} {B : UU l2} {C : A → UU l3} (D : B → UU l4)
+  (f : A → B) (g : (x : A) → C x → D (f x)) →
+  is-equiv f → (is-fiberwise-equiv g) →
+  is-equiv (toto D f g)
+is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
+  D f g is-equiv-f is-fiberwise-equiv-g =
+  is-equiv-comp
+    ( toto D f g)
+    ( Σ-map-base-map f D)
+    ( tot g)
+    ( triangle-toto D f g)
+    ( is-equiv-tot-is-fiberwise-equiv g is-fiberwise-equiv-g)
+    ( is-equiv-Σ-map-is-equiv-base-map f is-equiv-f)
+
+is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map : {l1 l2 l3 l4 : Level}
+  {A : UU l1} {B : UU l2} {C : A → UU l3} (D : B → UU l4)
+  (f : A → B) (g : (x : A) → C x → D (f x)) →
+  is-equiv f → is-equiv (toto D f g) → is-fiberwise-equiv g
+is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
+  D f g is-equiv-f is-equiv-toto-fg =
+  is-fiberwise-equiv-is-equiv-tot g
+    ( is-equiv-right-factor
+      ( toto D f g)
+      ( Σ-map-base-map f D)
+      ( tot g)
+      ( triangle-toto D f g)
+      ( is-equiv-Σ-map-is-equiv-base-map f is-equiv-f)
+      ( is-equiv-toto-fg))
+
 -- Exercises
 
 -- Exercise 7.1
@@ -374,71 +482,5 @@ is-emb-sec-ap : {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
   ((x y : A) → sec (ap f {x = x} {y = y})) → is-emb f
 is-emb-sec-ap f sec-ap-f x =
   id-fundamental-sec x (λ y → ap f {y = y}) (sec-ap-f x)
-
--- Extra Material
-
-Σ-map-base-map : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (C : B → UU l3) → Σ A (λ x → C (f x)) → Σ B C
-Σ-map-base-map f C s = dpair (f (pr1 s)) (pr2 s)
-
-is-contr-Σ-×-Σ-rearrange-is-contr : {l1 l2 l3 l4 : Level}
-  ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
-  ( D : Σ (Σ A B) (λ t → C (pr1 t)) → UU l4) →
-  ( is-contr-AC : is-contr (Σ A C)) →
-  ( is-contr
-    ( Σ (B (pr1 (center is-contr-AC)))
-      ( λ y → D (dpair
-        ( dpair (pr1 (center is-contr-AC)) y)
-        ( pr2 (center is-contr-AC)))))) →
-  is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (λ z → D (dpair t z))))
-is-contr-Σ-×-Σ-rearrange-is-contr A B C D is-contr-AC is-contr-BD =
-  is-contr-is-equiv
-    ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair (dpair x y) z)))))
-    ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (λ z → D (dpair t z))))
-    ( is-equiv-Σ-assoc A B (λ t → Σ (C (pr1 t)) (λ z → D (dpair t z))))
-    ( is-contr-is-equiv
-      ( Σ A (λ x → Σ (C x) (λ z → Σ (B x) (λ y → D (dpair (dpair x y) z)))))
-      ( tot (λ x → Σ-swap (B x) (C x) (λ y z → D (dpair (dpair x y) z))))
-      ( is-equiv-tot-is-fiberwise-equiv _
-        ( λ x → is-equiv-Σ-swap (B x) (C x) (λ y z → D (dpair (dpair x y) z))))
-      ( is-contr-is-equiv
-        ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y →
-          D (dpair (dpair (pr1 t) y) (pr2 t)))))
-        ( inv-is-equiv (is-equiv-Σ-assoc A C (λ t → Σ (B (pr1 t)) (λ y →
-          D (dpair (dpair (pr1 t) y) (pr2 t))))))
-        ( is-equiv-inv-is-equiv (is-equiv-Σ-assoc A C
-          ( λ t → Σ (B (pr1 t)) (λ y →
-            D (dpair (dpair (pr1 t) y) (pr2 t))))))
-        ( is-contr-is-equiv'
-          ( Σ (B (pr1 (center (is-contr-AC)))) (λ y →
-            D (dpair
-              ( dpair (pr1 (center is-contr-AC)) y)
-              ( pr2 (center is-contr-AC)))))
-          ( left-unit-law-Σ-map
-            ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (dpair (pr1 t) y) (pr2 t))))
-            ( is-contr-AC))
-          ( is-equiv-left-unit-law-Σ-map _ is-contr-AC)
-          ( is-contr-BD))))
-
-is-equiv-Σ-map-is-equiv-base-map : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  {C : B → UU l3} (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
-is-equiv-Σ-map-is-equiv-base-map {A = A} {C = C} f is-equiv-f =
-  is-equiv-is-contr-map (λ t →
-    is-contr-is-equiv
-      ( Σ (Σ A (λ x → C (f x)))
-          ( λ s → Σ (Id (f (pr1 s)) (pr1 t))
-            ( λ p → Id (tr C p (pr2 s)) (pr2 t))))
-      ( tot (λ s → pair-eq))
-      ( is-equiv-tot-is-fiberwise-equiv
-        ( λ s → pair-eq)
-        ( λ s → is-equiv-pair-eq' (Σ-map-base-map f C s) t))
-      ( let s = is-contr-map-is-equiv is-equiv-f (pr1 t) in
-        is-contr-Σ-×-Σ-rearrange-is-contr
-        ( A)
-        ( λ x → C (f x))
-        ( λ x → Id (f x) (pr1 t))
-        ( λ acb → Id (tr C (pr2 acb) (pr2 (pr1 acb))) (pr2 t))
-        ( s)
-        ( is-contr-map-is-equiv (is-equiv-tr C (pr2 (center s))) (pr2 t))))
 
 \end{code}
