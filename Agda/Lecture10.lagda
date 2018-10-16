@@ -610,4 +610,78 @@ is-fiberwise-equiv-universal-property-pullback Q f g up =
   is-fiberwise-equiv-is-pullback Q f g
     ( is-pullback-up-pullback f pr1 (cone-toto Q f g) up)
 
+fib-square : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) → (x : A) → fib (pr1 c) x → fib g (f x)
+fib-square f g c x t =
+  let p = pr1 c
+      q = pr1 (pr2 c)
+      H = pr2 (pr2 c)
+  in
+  dpair (q (pr1 t) ) (concat (f (p (pr1 t))) (inv (H (pr1 t))) (ap f (pr2 t)))
+
+square-tot-fib-square : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  ((gap f g c) ∘ (Σ-fib-to-domain (pr1 c))) ~
+  ((tot (λ a → tot (λ b → inv))) ∘ (tot (fib-square f g c)))
+square-tot-fib-square f g c (dpair .((pr1 c) x) (dpair x refl)) =
+  let p = pr1 c
+      q = pr1 (pr2 c)
+      H = pr2 (pr2 c)
+  in
+  eq-pair
+    ( dpair refl
+      ( eq-pair
+        ( dpair refl
+          ( inv
+            ( concat
+              ( inv (inv (H x)))
+              ( ap inv (right-unit (inv (H x))))
+              ( inv-inv (H x)))))))
+
+is-fiberwise-equiv-fib-square-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
+  {B : UU l2} {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  is-pullback f g c → is-fiberwise-equiv (fib-square f g c)
+is-fiberwise-equiv-fib-square-is-pullback f g c pb =
+  let p = pr1 c
+      q = pr1 (pr2 c)
+      H = pr2 (pr2 c)
+  in
+  is-fiberwise-equiv-is-equiv-tot
+    ( fib-square f g c)
+    ( is-equiv-top-is-equiv-bottom-square
+      ( Σ-fib-to-domain p)
+      ( tot (λ x → tot (λ y → inv)))
+      ( tot (fib-square f g c))
+      ( gap f g c)
+      ( square-tot-fib-square f g c)
+      ( is-equiv-Σ-fib-to-domain p)
+      ( is-equiv-tot-is-fiberwise-equiv
+        ( λ x → tot (λ y → inv))
+        ( λ x → is-equiv-tot-is-fiberwise-equiv
+          ( λ y → inv)
+          ( λ y → is-equiv-inv (g y) (f x))))
+      ( pb))
+
+is-pullback-is-fiberwise-equiv-fib-square : {l1 l2 l3 l4 : Level} {A : UU l1}
+  {B : UU l2} {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  is-fiberwise-equiv (fib-square f g c) → is-pullback f g c
+is-pullback-is-fiberwise-equiv-fib-square f g c is-equiv-fsq =
+  let p = pr1 c
+      q = pr1 (pr2 c)
+      H = pr2 (pr2 c)
+  in
+  is-equiv-bottom-is-equiv-top-square
+    ( Σ-fib-to-domain p)
+    ( tot (λ x → tot (λ y → inv)))
+    ( tot (fib-square f g c))
+    ( gap f g c)
+    ( square-tot-fib-square f g c)
+    ( is-equiv-Σ-fib-to-domain p)
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ x → tot (λ y → inv))
+      ( λ x → is-equiv-tot-is-fiberwise-equiv
+        ( λ y → inv)
+        ( λ y → is-equiv-inv (g y) (f x))))
+    ( is-equiv-tot-is-fiberwise-equiv _ is-equiv-fsq)
+
 \end{code}

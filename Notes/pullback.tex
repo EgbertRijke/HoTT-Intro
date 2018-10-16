@@ -507,52 +507,64 @@ The gap map is homotopic to the composite
 where $\mathsf{gap}'$ is the gap map for the square in \cref{lem:pb_subst}. Since $\mathsf{gap}'$ is an equivalence, it follows by \cref{ex:3_for_2,thm:fib_equiv} that the gap map is an equivalence if and only if $g$ is a fiberwise equivalence.
 \end{proof}
 
-\begin{lem}
+Our goal is now to extend \cref{thm:pb_fibequiv} to
+arbitrary pullback squares. Note that every commuting
+square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r,"h"] & B \arrow[d,"g"] \\
+X \arrow[r,swap,"i"] & Y
+\end{tikzcd}
+\end{equation*}
+with $H: i\circ f ~ g \circ h$ induces a map
+\begin{equation*}
+\mathsf{fib\usc{}sq} : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
+\end{equation*}
+on the fibers, by
+\begin{equation*}
+\mathsf{fib\usc{}sq}(x,(a,p))\defeq (h(a),\ct{H(a)^{-1}}{\ap{i}{p}}).
+\end{equation*}
+
+\begin{thm}\label{cor:pb_fibequiv}
 Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X
+A \arrow[d,swap,"f"] \arrow[r,"h"] & B \arrow[d,"g"] \\
+X \arrow[r,swap,"i"] & Y
 \end{tikzcd}
 \end{equation*}
-with $H:f\circ p\htpy g\circ q$, and consider the fiberwise transformation
-\begin{equation*}
-\fibf{(f,q,H)} : \prd{a:A} \fib{p}{a}\to \fib{g}{f(a)}
-\end{equation*}
-given by $\lam{a}{(c,u)}(q(c),\ct{H(c)^{-1}}{\ap{f}{u}})$. Then there is an equivalence
-\begin{equation*}
-\eqv{\fib{\mathsf{gap}(p,q,H)}{(a,b,\alpha)}}{\fib{\fibf{(f,q,H)}(a)}{(b,\alpha^{-1})}}
-\end{equation*}
-\end{lem}
-
-\begin{proof}
-To obtain an equivalence of the desired type we simply concatenate known equivalences:
-\begin{align*}
-\fib{h}{(a,b,\alpha)} & \jdeq \sm{z:C} (p(z),q(z),H(z))=(a,b,\alpha) \\
-& \eqvsym \sm{z:C}{u:p(z)=a}{v:q(z)=b}\ct{H(z)}{\ap{g}{v}}=\ct{\ap{f}{u}}{\alpha} \\
-& \eqvsym \sm{(z,u):\fib{p}{a}}{v:q(z)=b} \ct{H(z)^{-1}}{\ap{f}{u}}=\ct{\ap{g}{v}}{\alpha^{-1}} \\
-& \eqvsym \fib{\varphi(a)}{(b,\alpha^{-1})}\qedhere
-\end{align*}
-\end{proof}
-
-\begin{cor}\label{cor:pb_fibequiv}
-Consider a commuting square
-\begin{equation*}
-\begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X
-\end{tikzcd}
-\end{equation*}
-with $H:f\circ p\htpy g\circ q$. The following are equivalent:
+with $H: i\circ f ~ g \circ h$. The following are equivalent:
 \begin{enumerate}
 \item The square is a pullback square.\index{pullback square!characterized by fiberwise equivalence|textit}
 \item The induced map on fibers
 \begin{equation*}
-\lam{x}{(z,\alpha)}(q(z),\ct{H(z)^{-1}}{\ap{f}{\alpha}}):\prd{x:A}\fib{p}{x}\to \fib{g}{f(x)}
+\mathsf{fib\usc{}sq} : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
 \end{equation*}
 is a fiberwise equivalence.
 \end{enumerate}
-\end{cor}
+\end{thm}
+
+\begin{proof}
+First we observe that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+\sm{x:X}\fib{f}{x} \arrow[d,swap,"\eqvsym"] \arrow[r,"\total{\mathsf{fib\usc{}sq}}"] &
+\sm{x:X}\fib{g}{f(x)} \arrow[d,"\total{\total{\mathsf{inv}}}"] \\
+A \arrow[r,swap,"\mathsf{gap}"] & X \times_Y B
+\end{tikzcd}
+\end{equation*}
+commutes. To construct such a homotopy, we need to construct an identification
+\begin{equation*}
+(f(a),h(a),H(a))=(x,h(a),(\ct{H(a)^{-1}}{\ap{i}{p}})^{-1})
+\end{equation*}
+for every $x : X$, $a : A$, and $p : f(a) = x$. This is shown by path induction on $p : f(a)=x$. Thus, it suffices to show that
+\begin{equation*}
+(f(a),h(a),H(a))=(f(a),h(a),(\ct{H(a)^{-1}}{\refl{i(f(a))}})^{-1}),
+\end{equation*}
+which is a routine exercise. 
+
+Now we note that the left and right maps in this square are both equivalences. Therefore it follows that the top map is an equivalence if and only if the bottom map is. The claim now follows by \cref{thm:fib_equiv}.
+\end{proof}
 
 \begin{cor}\label{cor:pb_trunc}
 Consider a pullback square
