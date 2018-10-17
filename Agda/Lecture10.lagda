@@ -719,4 +719,27 @@ is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
       ( is-contr-map-is-equiv is-equiv-p a)
       ( is-contr-map-is-equiv is-equiv-g (f a)))
 
+-- Section 10.6 The pullback pasting property
+
+square-comp-horizontal : {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  {f : A → X} {g : B → Y} {h : C → Z} {i : X → Y} {j : Y → Z} {k : A → B}
+  {l : B → C} → ((i ∘ f) ~ (g ∘ k)) → ((j ∘ g) ~ (h ∘ l)) →
+  ((j ∘ (i ∘ f)) ~ (h ∘ (l ∘ k)))
+square-comp-horizontal {g = g} {j = j} {k = k} H K = htpy-concat (j ∘ (g ∘ k)) (dhtpy-whisk-left j H) (htpy-whisk-right K k)
+
+cone-comp-horizontal : {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (i : X → Y) (j : Y → Z) (h : C → Z) →
+  (c : cone j h B) → (cone i (pr1 c) A) → cone (j ∘ i) h A
+cone-comp-horizontal = {!!}
+
+is-pullback-rectangle-is-pullback-left-square : {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (i : X → Y) (j : Y → Z) (h : C → Z)
+  (c : cone j h B) (d : cone i (pr1 c) A) →
+  is-pullback j h c → is-pullback i (pr1 c) d →
+  is-pullback (j ∘ i) h (cone-comp-horizontal i j h c d)
+is-pullback-rectangle-is-pullback-left-square = {!!}
+
 \end{code}
