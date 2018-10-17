@@ -693,10 +693,30 @@ is-trunc-is-pullback k f g c pb is-trunc-g a =
     ( is-fiberwise-equiv-fib-square-is-pullback f g c pb a)
     (is-trunc-g (f a))
 
-is-emb-is-pullback : {l1 l2 l3 l4 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
+is-emb-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
   {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
   is-pullback f g c → is-emb g → is-emb (pr1 c)
-is-emb-is-pullback k f g c pb is-emb-g = is-emb-is-prop-map (pr1 c) (is-trunc-is-pullback neg-one-𝕋 f g c pb (is-prop-map-is-emb g is-emb-g))
+is-emb-is-pullback f g c pb is-emb-g =
+  is-emb-is-prop-map
+    ( pr1 c)
+    ( is-trunc-is-pullback neg-one-𝕋 f g c pb (is-prop-map-is-emb g is-emb-g))
 
+is-equiv-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  is-equiv g → is-pullback f g c → is-equiv (pr1 c)
+is-equiv-is-pullback f g c is-equiv-g pb =
+  is-equiv-is-contr-map
+    ( is-trunc-is-pullback neg-two-𝕋 f g c pb
+      ( is-contr-map-is-equiv is-equiv-g))
+
+is-pullback-is-equiv : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  is-equiv g → is-equiv (pr1 c) → is-pullback f g c
+is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
+  is-pullback-is-fiberwise-equiv-fib-square f g c
+    ( λ a → is-equiv-is-contr
+      ( fib-square f g c a)
+      ( is-contr-map-is-equiv is-equiv-p a)
+      ( is-contr-map-is-equiv is-equiv-g (f a)))
 
 \end{code}
