@@ -3,6 +3,30 @@ This repository contains the material for a first introduction course to Homotop
 
 The [course][1] was taught by Egbert Rijke at Carnegie Mellon University during the spring semester of 2018, and was aimed at advanced undergraduate students and graduate students from the Mathematics, Philosophy, and Computer Science departments.
 
+## Topics
+
+The course consisted of 27 one-hour lectures, in which we covered the following topics:
+
+1. Dependent type theory
+2. Dependent function types and the natural numbers
+3. Inductive types
+4. Identity types
+5. Equivalences
+6. Contractible types and maps
+7. The fundamental theorem of identity types
+8. The hierarchy of homotopical complexity
+9. Function extensionality
+10. Homotopy pullbacks
+11. The univalence axiom
+12. The circle
+13. Homotopy pushouts
+14. Descent
+15. Sequential colimits
+16. The homotopy image of a map
+17. Set quotients
+18. Homotopy groups of types
+19. The Hopf fibration
+
 ## Course notes
 The course notes can be found in the Notes folder. 
 
