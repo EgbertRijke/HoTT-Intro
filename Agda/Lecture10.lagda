@@ -1,4 +1,4 @@
-\begin{code}
+ \begin{code}
 
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
@@ -48,53 +48,48 @@ Eq-cone f g c c' =
       ( htpy-concat (f ∘ p') (htpy-left-whisk f K) H')))
 
 Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) {C : UU l4} (cone-f-g-C cone-f-g-C' : cone f g C) →
-  Id cone-f-g-C cone-f-g-C' → Eq-cone f g cone-f-g-C cone-f-g-C'
-Eq-cone-eq-cone f g (dpair p (dpair q H)) .(dpair p (dpair q H)) refl =
-  dpair (htpy-refl p) (dpair (htpy-refl q) (htpy-right-unit H))
+  (f : A → X) (g : B → X) {C : UU l4} (c c' : cone f g C) →
+  Id c c' → Eq-cone f g c c'
+Eq-cone-eq-cone f g c .c refl =
+  dpair
+    ( htpy-refl (pr1 c))
+    ( dpair
+      ( htpy-refl (pr1 (pr2 c)))
+      ( htpy-right-unit (pr2 (pr2 c))))
 
-is-equiv-htpy-concat : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
-  {f g h : (x : A) → B x} (H : f ~ g) → is-equiv (htpy-concat g {h = h} H)
-is-equiv-htpy-concat {l1} {l2} {f = f} {g = g} {h = h} =
-  ind-htpy {l3 = l1 ⊔ l2} f (λ g H → is-equiv (htpy-concat g {h = h} H))
-    (is-equiv-id (f ~ h)) g
+abstract
 
-abstract 
+  -- The following definition is very slow to type-check.
   is-contr-total-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
     {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
     is-contr (Σ (cone f g C) (Eq-cone f g c))
   is-contr-total-Eq-cone {A = A} {B} f g {C} (dpair p (dpair q H)) =
-    is-contr-Σ-×-Σ-rearrange-is-contr
+    is-contr-total-Eq-structure
       ( C → A)
       ( λ p' → Σ (C → B) (λ q' → (f ∘ p') ~ (g ∘ q')))
       ( λ p' → p ~ p')
       ( λ t →
-        let q' = pr1 (pr2 (pr1 t)) in
-        let H' = pr2 (pr2 (pr1 t)) in
-        let p' = pr1 (pr1 t) in
-        let K = pr2 t in
-        Σ ( q ~ q')
+        Σ ( q ~ (pr1 (pr2 (pr1 t))))
           ( λ L →
-            ( htpy-concat (g ∘ q) H (htpy-left-whisk g L)) ~
-              ( htpy-concat (f ∘ p') (htpy-left-whisk f K) H')))
+            ( H ∙h (htpy-left-whisk g L)) ~
+              ( (htpy-left-whisk f (pr2 t)) ∙h (pr2 (pr2 (pr1 t))))))
       ( is-contr-total-htpy-nondep p)
-      ( is-contr-Σ-×-Σ-rearrange-is-contr
+      ( is-contr-total-Eq-structure
         ( C → B)
         ( λ q' → (f ∘ p) ~ (g ∘ q'))
         ( λ q' → q ~ q')
-        ( λ t →
-          let L = pr2 t in
-          let H' = pr2 (pr1 t) in
-          ( htpy-concat (g ∘ q) H (htpy-left-whisk g L)) ~ H')
+        ( λ t → (H ∙h (htpy-left-whisk g (pr2 t))) ~ (pr2 (pr1 t)))
         ( is-contr-total-htpy-nondep q)
-        ( let E = λ (H' : (f ∘ p) ~ (g ∘ q)) →
-                  is-equiv-htpy-concat {h = H'} (htpy-right-unit H) in
-              is-contr-is-equiv
-              ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
-              ( tot (λ H' → inv-is-equiv (E H')))
-              ( is-equiv-tot-is-fiberwise-equiv (λ H' → inv-is-equiv (E H'))
-              ( λ H' → is-equiv-inv-is-equiv (E H')))
-              ( is-contr-total-htpy H)))
+        ( is-contr-is-equiv
+            ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
+            ( tot (λ H' → inv-is-equiv
+              ( is-equiv-htpy-concat (htpy-right-unit H) H')))
+            ( is-equiv-tot-is-fiberwise-equiv
+              ( λ H' → inv-is-equiv
+                ( is-equiv-htpy-concat (htpy-right-unit H) H'))
+              ( λ H' → is-equiv-inv-is-equiv
+                ( is-equiv-htpy-concat (htpy-right-unit H) H')))
+            ( is-contr-total-htpy {B = λ z → Id (f (p z)) (g (q z))} H)))
 
 abstract 
   is-fiberwise-equiv-Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1}
@@ -812,6 +807,15 @@ map-coprod f g (inr y) = g y
 coprod-functor : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   {Y : UU l4} → (A → X) → (B → Y) → (coprod A B → coprod X Y)
 coprod-functor f g (inl x) = inl (f x)
-coprod-functor f g (inr y) = {!inr (g y)!}
+coprod-functor f g (inr y) = inr (g y)
+
+cone-const-true-true : {l : Level} (X : UU l) →
+  cone (const X bool true) (const unit bool true) X
+cone-const-true-true X = dpair id (dpair (const X unit star) (λ x → refl))
+
+is-pullback-cone-const-true-true : {l : Level} (X : UU l) →
+  is-pullback (const X bool true) (const unit bool true)
+    (cone-const-true-true X)
+is-pullback-cone-const-true-true X = {!!}
 
 \end{code}

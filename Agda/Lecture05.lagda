@@ -517,7 +517,7 @@ is-equiv-swap-coprod A B =
     ( dpair (swap-coprod B A) (swap-swap-coprod A B))
 
 swap-prod : {i j : Level} (A : UU i) (B : UU j) → prod A B → prod B A
-swap-prod A B (dpair x y) = dpair y x
+swap-prod A B t = dpair (pr2 t) (pr1 t)
 
 swap-swap-prod : {i j : Level} (A : UU i) (B : UU j) →
   ((swap-prod B A) ∘ (swap-prod A B)) ~ id
@@ -561,7 +561,7 @@ retr-ap i r H x y =
 
 Σ-assoc' : {i j k : Level} (A : UU i) (B : A → UU j) (C : (Σ A B) → UU k) →
   Σ A (λ x → Σ (B x) (λ y → C (dpair x y))) → Σ (Σ A B) C
-Σ-assoc' A B C (dpair x (dpair y z)) = dpair (dpair x y) z
+Σ-assoc' A B C t = dpair (dpair (pr1 t) (pr1 (pr2 t))) (pr2 (pr2 t))
 
 Σ-assoc-assoc : {i j k : Level} (A : UU i) (B : A → UU j)
   (C : (Σ A B) → UU k) → ((Σ-assoc' A B C) ∘ (Σ-assoc A B C)) ~ id
@@ -581,7 +581,7 @@ is-equiv-Σ-assoc A B C =
 -- Exercise 5.11
 Σ-swap : {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
   Σ A (λ x → Σ B (C x)) → Σ B (λ y → Σ A (λ x → C x y))
-Σ-swap A B C (dpair x (dpair y z)) = dpair y (dpair x z)
+Σ-swap A B C t = dpair (pr1 (pr2 t)) (dpair (pr1 t) (pr2 (pr2 t)))
 
 Σ-swap' : {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
   Σ B (λ y → Σ A (λ x → C x y)) → Σ A (λ x → Σ B (C x))

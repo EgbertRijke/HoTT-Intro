@@ -339,6 +339,17 @@ is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
 
 -- Exercises
 
+-- Exercise 9.1
+
+is-equiv-htpy-concat : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  {f g : (x : A) → B x} (H : f ~ g) →
+  (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H)
+is-equiv-htpy-concat {A = A} {B = B} {f} {g} H =
+  ind-htpy f
+    ( λ g H → (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H))
+    ( λ h → is-equiv-id (f ~ h))
+    g H
+
 -- Exercise 9.4
 
 is-equiv-is-equiv-postcomp : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
@@ -403,5 +414,7 @@ is-subtype-is-equiv f = is-prop-is-contr-if-inh
   ( λ is-equiv-f → is-contr-prod
     ( is-contr-sec-is-equiv is-equiv-f)
     ( is-contr-retr-is-equiv is-equiv-f))
+
+
 
 \end{code}

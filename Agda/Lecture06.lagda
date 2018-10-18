@@ -336,6 +336,17 @@ is-equiv-left-unit-law-Σ-map B H =
       ( left-unit-law-Σ-map-conv B H)
       ( left-inverse-left-unit-law-Σ-map-conv B H))
 
+is-equiv-left-unit-law-Σ-map-conv : {i j : Level} {C : UU i}
+  (B : C → UU j) (H : is-contr C) → is-equiv (left-unit-law-Σ-map-conv B H)
+is-equiv-left-unit-law-Σ-map-conv B H =
+  pair
+    ( dpair
+      ( left-unit-law-Σ-map B H)
+      ( left-inverse-left-unit-law-Σ-map-conv B H))
+    ( dpair
+      ( left-unit-law-Σ-map B H)
+      ( right-inverse-left-unit-law-Σ-map-conv B H))
+
 left-unit-law-Σ : {i j : Level} {C : UU i} (B : C → UU j) (H : is-contr C) →
   B (center H) ≃ Σ C B
 left-unit-law-Σ B H =
