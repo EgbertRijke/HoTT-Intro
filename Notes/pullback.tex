@@ -1,3 +1,5 @@
+% !TEX root = hott_intro.tex
+
 \chapter{Homotopy pullbacks}
 
 Suppose we are given a map $f:A\to B$, and type families $P$ over $A$, and $Q$ over $B$.
@@ -668,24 +670,18 @@ witnessing that the outer rectangle commutes. Furthermore, suppose that the squa
 \end{thm}
 
 \begin{proof}
-The commutativity of the two squares induces fiberwise transformations
-\begin{align*}
-& \prd{x:X}\fib{f}{x}\to \fib{g}{i(x)} \\
-& \prd{y:Y}\fib{g}{y}\to \fib{h}{j(y)}.
-\end{align*}
-By the assumption that the square on the right is a pullback square, it follows from \cref{cor:pb_fibequiv} that the fiberwise transformation
+The commutativity of the two squares and the outer rectangle induces a commuting triangle
 \begin{equation*}
-\prd{y:Y}\fib{g}{y}\to\fib{h}{j(y)}
+\begin{tikzcd}[column sep=tiny]
+\fib{f}{x} \arrow[rr,"\mathsf{fib\usc{}sq}_{(f,k,H)}(x)"] \arrow[dr,swap,"\mathsf{fib\usc{}sq}_{f,l\circ k,\ct{(j\cdot H)}{(K\cdot k)}}(x)"] & & \fib{g}{i(x)} \arrow[dl,"\mathsf{fib\usc{}sq}_{(g,l,K)}(i(x))"] \\
+& \fib{h}{j(i(x))}.
+\end{tikzcd}
 \end{equation*}
-is a fiberwise equivalence. Therefore it follows from 3-for-2 property of equivalences that the fiberwise transformation
-\begin{equation*}
-\prd{x:X}\fib{f}{x}\to\fib{g}{i(x)}
-\end{equation*}
-is a fiberwise equivalence if and only if the fiberwise transformation
-\begin{equation*}
-\prd{x:X}\fib{f}{x}\to\fib{h}{j(i(x))}
-\end{equation*}
-is a fiberwise equivalence. Now the claim follows from one more application of \cref{cor:pb_fibequiv}.
+A homotopy witnessing that the triangle commutes is constructed by a routine calculation.
+
+Since the triangle commutes, and since the map $\mathsf{fib\usc{}sq}_{(g,l,K)}(i(x))$ is an equivalence for each $x:X$ by \cref{cor:pb_fibequiv}, it follows
+by the 3-for-2 property of equivalences that for each $x:X$ the top map in the triangle is an equivalence if and only if the left map is an equivalence.
+The claim now follows by a second application of \cref{cor:pb_fibequiv}.
 \end{proof}
 
 \section{The disjointness of coproducts}

@@ -802,4 +802,16 @@ is-pullback-left-square-is-pullback-rectangle i j h c d is-pb-c is-pb-rect =
       ( is-fiberwise-equiv-fib-square-is-pullback (j ∘ i) h
         ( cone-comp-horizontal i j h c d) is-pb-rect x))
 
+-- Section 10.7 Disjointness of coproducts
+
+map-coprod : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3} →
+  (A → X) → (B → X) → (coprod A B → X)
+map-coprod f g (inl x) = f x
+map-coprod f g (inr y) = g y
+
+coprod-functor : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  {Y : UU l4} → (A → X) → (B → Y) → (coprod A B → coprod X Y)
+coprod-functor f g (inl x) = inl (f x)
+coprod-functor f g (inr y) = {!inr (g y)!}
+
 \end{code}
