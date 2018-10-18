@@ -721,18 +721,52 @@ is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
 
 -- Section 10.6 The pullback pasting property
 
-square-comp-horizontal : {l1 l2 l3 l4 l5 l6 : Level}
+htpy-square-comp-horizontal : {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
   {f : A → X} {g : B → Y} {h : C → Z} {i : X → Y} {j : Y → Z} {k : A → B}
   {l : B → C} → ((i ∘ f) ~ (g ∘ k)) → ((j ∘ g) ~ (h ∘ l)) →
   ((j ∘ (i ∘ f)) ~ (h ∘ (l ∘ k)))
-square-comp-horizontal {g = g} {j = j} {k = k} H K = htpy-concat (j ∘ (g ∘ k)) (dhtpy-whisk-left j H) (htpy-whisk-right K k)
+htpy-square-comp-horizontal {g = g} {j = j} {k = k} H K =
+  htpy-concat (j ∘ (g ∘ k)) (htpy-left-whisk j H) (htpy-right-whisk K k)
 
 cone-comp-horizontal : {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
   (i : X → Y) (j : Y → Z) (h : C → Z) →
   (c : cone j h B) → (cone i (pr1 c) A) → cone (j ∘ i) h A
-cone-comp-horizontal = {!!}
+cone-comp-horizontal i j h c d =
+  dpair
+   ( pr1 d)
+   ( dpair
+     ( (pr1 (pr2 c)) ∘ (pr1 (pr2 d)))
+     ( htpy-square-comp-horizontal
+       {f = pr1 d} {g = pr1 c} {h = h} {i = i} {j = j} {k = pr1 (pr2 d)}
+       (pr2 (pr2 d)) (pr2 (pr2 c))))
+
+triangle-fib-square : {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (i : X → Y) (j : Y → Z) (h : C → Z) →
+  (c : cone j h B) (d : cone i (pr1 c) A) → (x : X) →
+  ((fib-square (j ∘ i) h (cone-comp-horizontal i j h c d) x) ~
+    ((fib-square j h c (i x)) ∘ (fib-square i (pr1 c) d x)))
+triangle-fib-square i j h c d .(pr1 d a) (dpair a refl) =
+  let f = pr1 d
+      k = pr1 (pr2 d)
+      H = pr2 (pr2 d)
+      g = pr1 c
+      l = pr1 (pr2 c)
+      K = pr2 (pr2 c)
+  in
+  eq-pair (dpair refl
+    ( concat
+      ( ((inv (K (k a))) ∙ (inv (ap j (H a)))) ∙ refl)
+      ( ap (concat' _ refl) (inv-assoc (ap j (H a)) (K (k a))))
+      ( concat ((inv (K (k a))) ∙ ((inv (ap j (H a))) ∙ refl))
+        ( inv (assoc (inv (K (k a))) (inv (ap j (H a))) refl))
+        ( ap (concat _ (inv (K (k a))))
+          ( concat
+            ( (ap j (inv (H a))) ∙ refl)
+            ( ap (concat' _ refl) (inv (ap-inv j (H a))))
+            ( inv (ap-concat j (inv (H a)) refl)))))))
 
 is-pullback-rectangle-is-pullback-left-square : {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
@@ -740,6 +774,32 @@ is-pullback-rectangle-is-pullback-left-square : {l1 l2 l3 l4 l5 l6 : Level}
   (c : cone j h B) (d : cone i (pr1 c) A) →
   is-pullback j h c → is-pullback i (pr1 c) d →
   is-pullback (j ∘ i) h (cone-comp-horizontal i j h c d)
-is-pullback-rectangle-is-pullback-left-square = {!!}
+is-pullback-rectangle-is-pullback-left-square i j h c d is-pb-c is-pb-d =
+  is-pullback-is-fiberwise-equiv-fib-square (j ∘ i) h
+    ( cone-comp-horizontal i j h c d)
+    ( λ x → is-equiv-comp
+      ( fib-square (j ∘ i) h (cone-comp-horizontal i j h c d) x)
+      ( fib-square j h c (i x))
+      ( fib-square i (pr1 c) d x)
+      ( triangle-fib-square i j h c d x)
+      ( is-fiberwise-equiv-fib-square-is-pullback i (pr1 c) d is-pb-d x)
+      ( is-fiberwise-equiv-fib-square-is-pullback j h c is-pb-c (i x)))
+
+is-pullback-left-square-is-pullback-rectangle : {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (i : X → Y) (j : Y → Z) (h : C → Z)
+  (c : cone j h B) (d : cone i (pr1 c) A) →
+  is-pullback j h c → is-pullback (j ∘ i) h (cone-comp-horizontal i j h c d) →
+  is-pullback i (pr1 c) d
+is-pullback-left-square-is-pullback-rectangle i j h c d is-pb-c is-pb-rect =
+  is-pullback-is-fiberwise-equiv-fib-square i (pr1 c) d
+    ( λ x → is-equiv-right-factor
+      ( fib-square (j ∘ i) h (cone-comp-horizontal i j h c d) x)
+      ( fib-square j h c (i x))
+      ( fib-square i (pr1 c) d x)
+      ( triangle-fib-square i j h c d x)
+      ( is-fiberwise-equiv-fib-square-is-pullback j h c is-pb-c (i x))
+      ( is-fiberwise-equiv-fib-square-is-pullback (j ∘ i) h
+        ( cone-comp-horizontal i j h c d) is-pb-rect x))
 
 \end{code}
