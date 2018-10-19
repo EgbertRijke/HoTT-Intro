@@ -352,7 +352,6 @@ is-contr-sec-is-equiv {A = A} {B = B} {f = f} is-equiv-f =
     ( Σ (B → A) (λ g → Id (f ∘ g) id))
     ( tot (λ g → htpy-eq))
     ( is-equiv-tot-is-fiberwise-equiv
-      ( λ g → htpy-eq)
       ( λ g → funext (f ∘ g) id))
     ( is-contr-map-is-equiv (is-equiv-postcomp-is-equiv f is-equiv-f B) id)
 
@@ -363,7 +362,6 @@ is-contr-retr-is-equiv {A = A} {B = B} {f = f} is-equiv-f =
     ( Σ (B → A) (λ h → Id (h ∘ f) id))
     ( tot (λ h → htpy-eq))
     ( is-equiv-tot-is-fiberwise-equiv
-      ( λ h → htpy-eq)
       ( λ h → funext (h ∘ f) id))
     ( is-contr-map-is-equiv (is-equiv-precomp-is-equiv f is-equiv-f A) id)
 

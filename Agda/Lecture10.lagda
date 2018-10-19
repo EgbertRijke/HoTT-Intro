@@ -75,27 +75,25 @@ abstract
   is-contr-total-Eq-cone {A = A} {B} f g {C} (dpair p (dpair q H)) =
     is-contr-total-Eq-structure
       ( C → A)
-      ( λ p' → Σ (C → B) (λ q' → (f ∘ p') ~ (g ∘ q')))
-      ( λ p' → p ~ p')
-      ( λ t →
-        Σ ( q ~ (pr1 (pr2 (pr1 t))))
+      ( λ (p' : C → A) → Σ (C → B) (λ q' → (f ∘ p') ~ (g ∘ q')))
+      ( λ (p' : C → A) → p ~ p')
+      ( λ t (K : p ~ (pr1 t)) →
+        Σ ( q ~ (pr1 (pr2 t)))
           ( λ L →
             ( H ∙h (htpy-left-whisk g L)) ~
-              ( (htpy-left-whisk f (pr2 t)) ∙h (pr2 (pr2 (pr1 t))))))
+              ( (htpy-left-whisk f K) ∙h (pr2 (pr2 t)))))
       ( is-contr-total-htpy-nondep p)
       ( is-contr-total-Eq-structure
         ( C → B)
-        ( λ q' → (f ∘ p) ~ (g ∘ q'))
-        ( λ q' → q ~ q')
-        ( λ t → (H ∙h (htpy-left-whisk g (pr2 t))) ~ (pr2 (pr1 t)))
+        ( λ (q' : C → B) → (f ∘ p) ~ (g ∘ q'))
+        ( λ (q' : C → B) → q ~ q')
+        ( λ t (L : q ~ (pr1 t)) → (H ∙h (htpy-left-whisk g L)) ~ (pr2 t))
         ( is-contr-total-htpy-nondep q)
         ( is-contr-is-equiv
             ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
             ( tot (λ H' → inv-is-equiv
               ( is-equiv-htpy-concat (htpy-right-unit H) H')))
             ( is-equiv-tot-is-fiberwise-equiv
-              ( λ H' → inv-is-equiv
-                ( is-equiv-htpy-concat (htpy-right-unit H) H'))
               ( λ H' → is-equiv-inv-is-equiv
                 ( is-equiv-htpy-concat (htpy-right-unit H) H')))
             ( is-contr-total-htpy {B = λ z → Id (f (p z)) (g (q z))} H)))
@@ -106,7 +104,11 @@ abstract
     (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
     is-fiberwise-equiv (Eq-cone-eq-cone f g c)
   is-fiberwise-equiv-Eq-cone-eq-cone f g {C = C} c =
-
+    id-fundamental-gen c
+      ( Eq-cone-eq-cone f g c c refl)
+      ( is-contr-total-Eq-cone f g c)
+      ( Eq-cone-eq-cone f g c)
+      
 {-
     is-fiberwise-equiv-id-to-Eq-structure c
       ( λ t → Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 (pr1 t)))) (λ L →
@@ -127,11 +129,6 @@ abstract
         {!!})
 -}
 
-    id-fundamental-gen c
-      ( Eq-cone-eq-cone f g c c refl)
-      ( is-contr-total-Eq-cone f g c)
-      ( Eq-cone-eq-cone f g c)
-
 
 eq-cone-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   {f : A → X} {g : B → X} {C : UU l4} (c c' : cone f g C) →
@@ -150,7 +147,6 @@ abstract
       ( Σ (C' → C) (λ h → Id (cone-map f g c h) c'))
       ( tot (λ h → Eq-cone-eq-cone f g (cone-map f g c h) c'))
       ( is-equiv-tot-is-fiberwise-equiv
-        ( λ h → Eq-cone-eq-cone f g (cone-map f g c h) c')
         ( λ h → is-fiberwise-equiv-Eq-cone-eq-cone f g (cone-map f g c h) c'))
       ( is-contr-map-is-equiv (up C')  c')
 
@@ -187,7 +183,6 @@ universal-property-pullback-canonical-pullback f g C =
     ( htpy-refl (cone-map f g (cone-canonical-pullback f g)))
     ( is-equiv-mapping-into-Σ)
     ( is-equiv-tot-is-fiberwise-equiv
-      ( λ p → choice-∞)
       ( λ p → is-equiv-choice-∞))
 
 triangle-cone-cone : {l1 l2 l3 l4 l5 l6 : Level}
@@ -272,7 +267,7 @@ abstract
         ( Σ (C' → C) (λ h → (Eq-cone f g (cone-map f g c h) c') × (is-equiv h)))
         ( tot
           ( λ h → swap-prod (is-equiv h) (Eq-cone f g (cone-map f g c h) c')))
-        ( is-equiv-tot-is-fiberwise-equiv _
+        ( is-equiv-tot-is-fiberwise-equiv
           ( λ h → is-equiv-swap-prod
             ( is-equiv h)
             ( Eq-cone f g (cone-map f g c h) c')))
@@ -527,7 +522,6 @@ is-pullback-cone-fiber : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) �
   (b : B) → is-pullback f (const unit B b) (cone-fiber f b)
 is-pullback-cone-fiber f b =
   is-equiv-tot-is-fiberwise-equiv
-    ( λ a p → dpair star p)
     ( λ a → is-equiv-left-unit-law-Σ-map (λ t → Id (f a) b) is-contr-unit)
 
 universal-property-pullback-cone-fiber : {l1 l2 l3 : Level} {A : UU l1} →
@@ -600,7 +594,7 @@ is-pullback-is-fiberwise-equiv Q f g is-equiv-g =
     ( gap f pr1 (cone-subst f Q))
     ( tot g)
     ( λ t → refl)
-    ( is-equiv-tot-is-fiberwise-equiv g is-equiv-g)
+    ( is-equiv-tot-is-fiberwise-equiv is-equiv-g)
     ( is-pullback-cone-subst f Q)
 
 universal-property-pullback-is-fiberwise-equiv : {l1 l2 l3 l4 l5 : Level}
@@ -682,9 +676,7 @@ is-fiberwise-equiv-fib-square-is-pullback f g c pb =
       ( square-tot-fib-square f g c)
       ( is-equiv-Σ-fib-to-domain p)
       ( is-equiv-tot-is-fiberwise-equiv
-        ( λ x → tot (λ y → inv))
         ( λ x → is-equiv-tot-is-fiberwise-equiv
-          ( λ y → inv)
           ( λ y → is-equiv-inv (g y) (f x))))
       ( pb))
 
@@ -704,11 +696,9 @@ is-pullback-is-fiberwise-equiv-fib-square f g c is-equiv-fsq =
     ( square-tot-fib-square f g c)
     ( is-equiv-Σ-fib-to-domain p)
     ( is-equiv-tot-is-fiberwise-equiv
-      ( λ x → tot (λ y → inv))
       ( λ x → is-equiv-tot-is-fiberwise-equiv
-        ( λ y → inv)
         ( λ y → is-equiv-inv (g y) (f x))))
-    ( is-equiv-tot-is-fiberwise-equiv _ is-equiv-fsq)
+    ( is-equiv-tot-is-fiberwise-equiv is-equiv-fsq)
 
 is-trunc-is-pullback : {l1 l2 l3 l4 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
   {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
