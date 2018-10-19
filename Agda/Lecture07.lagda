@@ -273,58 +273,45 @@ is-fiberwise-equiv-id-to-Eq-structure
           ( λ y' → is-equiv-g y')) x α y)
         ( t)))
 
-abstract
-  is-contr-total-Eq-structure : {l1 l2 l3 l4 : Level}
-    ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
-    ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
-    ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
-    is-contr
-      ( Σ (B (pr1 t))
-        ( λ y → D 
-          ( dpair (pr1 t) y)
-          ( pr2 t))) →
-    is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
-  is-contr-total-Eq-structure A B C D is-contr-AC t is-contr-BD = {!!}
-
-  is-contr-total-Eq-structure' : {l1 l2 l3 l4 : Level}
-    ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
-    ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
-    ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
-    is-contr (Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t))) →
-    is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
-  is-contr-total-Eq-structure' A B C D is-contr-AC t is-contr-BD =
-    is-contr-is-equiv
-      ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair x y) z))))
-      ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
-      ( is-equiv-Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
+is-contr-total-Eq-structure : {l1 l2 l3 l4 : Level}
+  ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
+  ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
+  ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
+  is-contr (Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t))) →
+  is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
+is-contr-total-Eq-structure A B C D is-contr-AC t is-contr-BD =
+  is-contr-is-equiv
+    ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair x y) z))))
+    ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
+    ( is-equiv-Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
+    ( is-contr-is-equiv
+      ( Σ A (λ x → Σ (C x) (λ z → Σ (B x) (λ y → D (dpair x y) z))))
+      ( tot (λ x → Σ-swap (B x) (C x) (λ y → D (dpair x y))))
+      ( is-equiv-tot-is-fiberwise-equiv
+        ( λ x → is-equiv-Σ-swap (B x) (C x) (λ y → D (dpair x y))))
       ( is-contr-is-equiv
-        ( Σ A (λ x → Σ (C x) (λ z → Σ (B x) (λ y → D (dpair x y) z))))
-        ( tot (λ x → Σ-swap (B x) (C x) (λ y → D (dpair x y))))
-        ( is-equiv-tot-is-fiberwise-equiv
-          ( λ x → is-equiv-Σ-swap (B x) (C x) (λ y → D (dpair x y))))
-        ( is-contr-is-equiv
-          ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y →
-            D (dpair (pr1 t) y) (pr2 t))))
-          ( inv-is-equiv (is-equiv-Σ-assoc A C (λ t → Σ (B (pr1 t)) (λ y →
+        ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y →
+          D (dpair (pr1 t) y) (pr2 t))))
+        ( inv-is-equiv (is-equiv-Σ-assoc A C (λ t → Σ (B (pr1 t)) (λ y →
+          D (dpair (pr1 t) y) (pr2 t)))))
+        ( is-equiv-inv-is-equiv (is-equiv-Σ-assoc A C
+          ( λ t → Σ (B (pr1 t)) (λ y →
             D (dpair (pr1 t) y) (pr2 t)))))
-          ( is-equiv-inv-is-equiv (is-equiv-Σ-assoc A C
-            ( λ t → Σ (B (pr1 t)) (λ y →
-              D (dpair (pr1 t) y) (pr2 t)))))
-          ( is-contr-is-equiv
-            ( Σ (B (pr1 t)) (λ y →
-              D ( dpair (pr1 t) y)
-                ( pr2 t)))
-            ( left-unit-law-Σ-map-conv
-              ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
-              ( dpair t (λ t' →
-                ( inv (contraction is-contr-AC t)) ∙
-                ( contraction is-contr-AC t'))))
-            ( is-equiv-left-unit-law-Σ-map-conv
-              ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
-              ( dpair t (λ t' →
-                ( inv (contraction is-contr-AC t)) ∙
-                ( contraction is-contr-AC t'))))
-            ( is-contr-BD))))
+        ( is-contr-is-equiv
+          ( Σ (B (pr1 t)) (λ y →
+            D ( dpair (pr1 t) y)
+              ( pr2 t)))
+          ( left-unit-law-Σ-map-conv
+            ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
+            ( dpair t (λ t' →
+              ( inv (contraction is-contr-AC t)) ∙
+              ( contraction is-contr-AC t'))))
+          ( is-equiv-left-unit-law-Σ-map-conv
+            ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
+            ( dpair t (λ t' →
+              ( inv (contraction is-contr-AC t)) ∙
+              ( contraction is-contr-AC t'))))
+          ( is-contr-BD))))
 
 is-equiv-Σ-map-is-equiv-base-map' : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   (C : B → UU l3) (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
