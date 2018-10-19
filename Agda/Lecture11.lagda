@@ -9,18 +9,18 @@ open Lecture10 public
 
 -- Section 11.1 Type extensionality
 
-equiv-eq : {i : Level} (A : UU i) (B : UU i) → Id A B → A ≃ B
-equiv-eq A .A refl = dpair id (is-equiv-id A)
+equiv-eq : {i : Level} {A : UU i} {B : UU i} → Id A B → A ≃ B
+equiv-eq {A = A} refl = dpair id (is-equiv-id A)
 
 UNIVALENCE : {i : Level} (A B : UU i) → UU (lsuc i)
-UNIVALENCE A B = is-equiv (equiv-eq A B)
+UNIVALENCE A B = is-equiv (equiv-eq {A = A} {B = B})
 
 is-contr-total-equiv-UNIVALENCE : {i : Level} (A : UU i) →
   ((B : UU i) → UNIVALENCE A B) → is-contr (Σ (UU i) (λ X → A ≃ X))
 is-contr-total-equiv-UNIVALENCE A UA =
   id-fundamental-gen' A
     ( dpair id (is-equiv-id A))
-    ( equiv-eq A)
+    ( λ B → equiv-eq {B = B})
     ( UA)
 
 UNIVALENCE-is-contr-total-equiv : {i : Level} (A : UU i) →
@@ -29,7 +29,7 @@ UNIVALENCE-is-contr-total-equiv A c =
   id-fundamental-gen A
     ( dpair id (is-equiv-id A))
     ( c)
-    ( equiv-eq A)
+    ( λ B → equiv-eq {B = B})
 
 ev-id : {i j : Level} {A : UU i} (P : (B : UU i) → (A ≃ B) → UU j) →
   ((B : UU i) (e : A ≃ B) → P B e) → P A (dpair id (is-equiv-id A))
@@ -96,5 +96,57 @@ Ind-equiv A P =
 ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
   P A (dpair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
 ind-equiv A P = pr1 (Ind-equiv A P)
+
+-- Exercises
+
+-- Exercise 11.1
+
+tr-equiv-eq-ap : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {x y : A}
+  (p : Id x y) → (eqv-map (equiv-eq (ap B p))) ~ tr B p
+tr-equiv-eq-ap refl = htpy-refl id
+
+-- Exercise 11.2
+
+postulate joseph : {l1 l2 : Level} → (A : UU l1) → Σ (UU (l1 ⊔ l2)) (λ X → A ≃ X)
+
+is-equiv-raise : {l1 l2 : Level} (A : UU l1) → is-equiv (raise {j = l2} {A = A})
+is-equiv-raise A =
+  is-equiv-has-inverse (dpair lower (dpair (htpy-refl id) (htpy-refl id))) 
+
+is-subtype-is-contr : {l : Level} (X : UU l) → is-prop (is-contr X)
+is-subtype-is-contr = {!!}
+
+is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
+is-contr-UU-contr i =
+  let UNIT-i = joseph {l2 = i} unit
+      unit-i = (pr1 UNIT-i)
+      e = pr2 UNIT-i
+      f = eqv-map e
+      is-equiv-f = is-equiv-eqv-map e
+  in 
+  dpair
+    ( dpair unit-i
+      ( is-contr-is-equiv' unit
+        ( eqv-map e)
+        ( is-equiv-eqv-map e)
+        is-contr-unit))
+     (λ T → let X = pr1 T
+                is-contr-X = pr2 T
+            in
+       eq-pair (dpair
+         ( inv
+           ( eq-equiv X unit-i
+             ( dpair
+               ( f ∘ (const X unit star))
+               ( is-equiv-comp
+                 ( f ∘ (const X unit star))
+                 f
+                 (const X unit star)
+                 (htpy-refl _)
+                 (is-equiv-const-is-contr is-contr-X)
+                 is-equiv-f))))
+         (center ((is-subtype-is-contr X) _ is-contr-X))))
+
+
 
 \end{code}

@@ -7,7 +7,7 @@ module Lecture03 where
 import Lecture02
 open Lecture02 public
 
-data unit : U where
+data unit : UU lzero where
   star : unit
   
 𝟙 = unit
@@ -15,7 +15,7 @@ data unit : U where
 ind-unit : {i : Level} {P : unit → UU i} → P star → ((x : unit) → P x)
 ind-unit p star = p
 
-data empty : U where
+data empty : UU lzero where
 
 𝟘 = empty
 
@@ -57,16 +57,16 @@ pair : {i j : Level} {A : UU i} {B : UU j} → A → (B → prod A B)
 pair a b = dpair a b
 
 -- Pointed types
-U-pt : Type
-U-pt = Sigma U (λ X → X)
+U-pt : (i : Level) → UU (lsuc i)
+U-pt i = Sigma (UU i) (λ X → X)
  
 -- Graphs
-Gph : Type
-Gph = Sigma U (λ X → (X → X → U))
+Gph : (i : Level) → UU (lsuc i)
+Gph i = Sigma (UU i) (λ X → (X → X → (UU i)))
 
 -- Reflexive graphs
-rGph : Type
-rGph = Sigma U (λ X → Sigma (X → X → U) (λ R → (x : X) → R x x))
+rGph : (i : Level) →  UU (lsuc i)
+rGph i = Sigma (UU i) (λ X → Sigma (X → X → (UU i)) (λ R → (x : X) → R x x))
 
 -- Finite sets
 Fin : ℕ → U
