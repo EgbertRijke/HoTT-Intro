@@ -155,9 +155,9 @@ tr-precompose-fam : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
   (f : A → B) {x y : A} (p : Id x y) → tr C (ap f p) ~ tr (λ x → C (f x)) p
 tr-precompose-fam C f refl = htpy-refl _
 
-is-equiv-Σ-map-is-equiv-base-map' : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+is-equiv-Σ-map-is-equiv-base-map : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   (C : B → UU l3) (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
-is-equiv-Σ-map-is-equiv-base-map' C f is-equiv-f =
+is-equiv-Σ-map-is-equiv-base-map C f is-equiv-f =
   let is-hae-f = is-half-adjoint-equivalence-is-path-split f
                  ( is-path-split-is-equiv f is-equiv-f)
       g = pr1 (is-hae-f)
@@ -218,7 +218,7 @@ is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
     ( tot g)
     ( triangle-toto D f g)
     ( is-equiv-tot-is-fiberwise-equiv is-fiberwise-equiv-g)
-    ( is-equiv-Σ-map-is-equiv-base-map' D f is-equiv-f)
+    ( is-equiv-Σ-map-is-equiv-base-map D f is-equiv-f)
 
 is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map : {l1 l2 l3 l4 : Level}
   {A : UU l1} {B : UU l2} {C : A → UU l3} (D : B → UU l4)
@@ -232,7 +232,7 @@ is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
       ( Σ-map-base-map f D)
       ( tot g)
       ( triangle-toto D f g)
-      ( is-equiv-Σ-map-is-equiv-base-map' D f is-equiv-f)
+      ( is-equiv-Σ-map-is-equiv-base-map D f is-equiv-f)
       ( is-equiv-toto-fg))
 
 is-fiberwise-equiv-id-to-Eq-structure : {l1 l2 l3 l4 : Level}
@@ -277,14 +277,22 @@ abstract
   is-contr-total-Eq-structure : {l1 l2 l3 l4 : Level}
     ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
     ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
-    ( is-contr-AC : is-contr (Σ A C)) →
+    ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
     is-contr
-      ( Σ (B (pr1 (center is-contr-AC)))
+      ( Σ (B (pr1 t))
         ( λ y → D 
-          ( dpair (pr1 (center is-contr-AC)) y)
-          ( pr2 (center is-contr-AC)))) →
+          ( dpair (pr1 t) y)
+          ( pr2 t))) →
     is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
-  is-contr-total-Eq-structure A B C D is-contr-AC is-contr-BD =
+  is-contr-total-Eq-structure A B C D is-contr-AC t is-contr-BD = {!!}
+
+  is-contr-total-Eq-structure' : {l1 l2 l3 l4 : Level}
+    ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
+    ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
+    ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
+    is-contr (Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t))) →
+    is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
+  is-contr-total-Eq-structure' A B C D is-contr-AC t is-contr-BD =
     is-contr-is-equiv
       ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair x y) z))))
       ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
@@ -303,20 +311,24 @@ abstract
             ( λ t → Σ (B (pr1 t)) (λ y →
               D (dpair (pr1 t) y) (pr2 t)))))
           ( is-contr-is-equiv
-            ( Σ (B (pr1 (center (is-contr-AC)))) (λ y →
-              D ( dpair (pr1 (center is-contr-AC)) y)
-                ( pr2 (center is-contr-AC))))
+            ( Σ (B (pr1 t)) (λ y →
+              D ( dpair (pr1 t) y)
+                ( pr2 t)))
             ( left-unit-law-Σ-map-conv
               ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
-              ( is-contr-AC))
+              ( dpair t (λ t' →
+                ( inv (contraction is-contr-AC t)) ∙
+                ( contraction is-contr-AC t'))))
             ( is-equiv-left-unit-law-Σ-map-conv
               ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
-              ( is-contr-AC))
+              ( dpair t (λ t' →
+                ( inv (contraction is-contr-AC t)) ∙
+                ( contraction is-contr-AC t'))))
             ( is-contr-BD))))
 
-is-equiv-Σ-map-is-equiv-base-map : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+is-equiv-Σ-map-is-equiv-base-map' : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   (C : B → UU l3) (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
-is-equiv-Σ-map-is-equiv-base-map {A = A} C f is-equiv-f =
+is-equiv-Σ-map-is-equiv-base-map' {A = A} C f is-equiv-f =
   is-equiv-is-contr-map (λ t →
     is-contr-is-equiv
       ( Σ (Σ A (λ x → C (f x)))
@@ -332,6 +344,7 @@ is-equiv-Σ-map-is-equiv-base-map {A = A} C f is-equiv-f =
         ( λ x → Id (f x) (pr1 t))
         ( λ ab c → Id (tr C c (pr2 ab)) (pr2 t))
         ( s)
+        ( center s)
         ( is-contr-map-is-equiv (is-equiv-tr C (pr2 (center s))) (pr2 t))))
 
 -- Exercises

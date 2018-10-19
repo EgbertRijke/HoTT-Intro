@@ -72,7 +72,11 @@ abstract
   is-contr-total-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
     {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
     is-contr (Σ (cone f g C) (Eq-cone f g c))
-  is-contr-total-Eq-cone {A = A} {B} f g {C} (dpair p (dpair q H)) =
+  is-contr-total-Eq-cone {A = A} {B} f g {C} c =
+    let p = (pr1 c)
+        q = (pr1 (pr2 c))
+        H = (pr2 (pr2 c))
+    in
     is-contr-total-Eq-structure
       ( C → A)
       ( λ (p' : C → A) → Σ (C → B) (λ q' → (f ∘ p') ~ (g ∘ q')))
@@ -83,20 +87,20 @@ abstract
             ( H ∙h (htpy-left-whisk g L)) ~
               ( (htpy-left-whisk f K) ∙h (pr2 (pr2 t)))))
       ( is-contr-total-htpy-nondep p)
+      ( dpair p (htpy-refl p))
       ( is-contr-total-Eq-structure
         ( C → B)
         ( λ (q' : C → B) → (f ∘ p) ~ (g ∘ q'))
         ( λ (q' : C → B) → q ~ q')
         ( λ t (L : q ~ (pr1 t)) → (H ∙h (htpy-left-whisk g L)) ~ (pr2 t))
         ( is-contr-total-htpy-nondep q)
-        ( is-contr-is-equiv
+        ( dpair q (htpy-refl q))
+        ( is-contr-is-equiv'
             ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
-            ( tot (λ H' → inv-is-equiv
-              ( is-equiv-htpy-concat (htpy-right-unit H) H')))
+            ( tot (λ H' → htpy-concat H {h = H'} (htpy-right-unit H)))
             ( is-equiv-tot-is-fiberwise-equiv
-              ( λ H' → is-equiv-inv-is-equiv
-                ( is-equiv-htpy-concat (htpy-right-unit H) H')))
-            ( is-contr-total-htpy {B = λ z → Id (f (p z)) (g (q z))} H)))
+              ( λ H' → is-equiv-htpy-concat (htpy-right-unit H) H'))
+            ( is-contr-total-htpy H)))
 
 abstract 
   is-fiberwise-equiv-Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1}

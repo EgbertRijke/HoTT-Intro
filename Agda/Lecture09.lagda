@@ -143,21 +143,24 @@ expected thing:
 
 -}
 
-is-contr-total-htpy : {i j : Level} {A : UU i} {B : A → UU j}
-  (f : (x : A) → B x) → is-contr (Σ ((x : A) → B x) (λ g → f ~ g))
-is-contr-total-htpy f =
-  dpair
-    ( dpair f (htpy-refl f))
-    ( λ t → concat
-      ( center (is-contr-total-htpy-Funext f (funext f)))
-      ( inv (contraction
-        ( is-contr-total-htpy-Funext f (funext f))
-        ( dpair f (htpy-refl f))))
-      ( contraction (is-contr-total-htpy-Funext f (funext f)) t))
+abstract
+  is-contr-total-htpy : {i j : Level} {A : UU i} {B : A → UU j}
+    (f : (x : A) → B x) → is-contr (Σ ((x : A) → B x) (λ g → f ~ g))
+  is-contr-total-htpy f =
+    dpair
+      ( dpair f (htpy-refl f))
+      ( λ t → concat
+        ( center (is-contr-total-htpy-Funext f (funext f)))
+        ( inv (contraction
+          ( is-contr-total-htpy-Funext f (funext f))
+          ( dpair f (htpy-refl f))))
+        ( contraction (is-contr-total-htpy-Funext f (funext f)) t))
 
-is-contr-total-htpy-nondep : {i j : Level} {A : UU i} {B : UU j}
-  (f : A → B) → is-contr (Σ (A → B) (λ g → f ~ g))
-is-contr-total-htpy-nondep {B = B} f = is-contr-total-htpy-Funext {B = λ x → B} f (funext f)
+abstract
+  is-contr-total-htpy-nondep : {i j : Level} {A : UU i} {B : UU j}
+    (f : A → B) → is-contr (Σ (A → B) (λ g → f ~ g))
+  is-contr-total-htpy-nondep {B = B} f =
+    is-contr-total-htpy-Funext {B = λ x → B} f (funext f)
 
 Ind-htpy : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   (f : (x : A) → B x) → IND-HTPY {l3 = l3} f
