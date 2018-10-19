@@ -76,9 +76,6 @@ is-contr-total-Eq-cone {A = A} {B} f g {C} c =
       H = (pr2 (pr2 c))
   in
   is-contr-total-Eq-structure
-    ( C → A)
-    ( λ (p' : C → A) → Σ (C → B) (λ q' → (f ∘ p') ~ (g ∘ q')))
-    ( λ (p' : C → A) → p ~ p')
     ( λ t (K : p ~ (pr1 t)) →
       Σ ( q ~ (pr1 (pr2 t)))
         ( λ L →
@@ -87,9 +84,6 @@ is-contr-total-Eq-cone {A = A} {B} f g {C} c =
     ( is-contr-total-htpy-nondep p)
     ( dpair p (htpy-refl p))
     ( is-contr-total-Eq-structure
-      ( C → B)
-      ( λ (q' : C → B) → (f ∘ p) ~ (g ∘ q'))
-      ( λ (q' : C → B) → q ~ q')
       ( λ t (L : q ~ (pr1 t)) → (H ∙h (htpy-left-whisk g L)) ~ (pr2 t))
       ( is-contr-total-htpy-nondep q)
       ( dpair q (htpy-refl q))

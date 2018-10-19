@@ -238,11 +238,11 @@ is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
 is-fiberwise-equiv-id-to-Eq-structure : {l1 l2 l3 l4 : Level}
   {A : UU l1} {B : A → UU l2} (s : Σ A B)
   {C : A → UU l3}
-  (D : Σ (Σ A B) (λ t → C (pr1 t)) → UU l4)
-  (h : (t : Σ A B) → Id s t → Σ (C (pr1 t)) (λ z → D (dpair t z)))
+  (D : (t : Σ A B) → C (pr1 t) → UU l4)
+  (h : (t : Σ A B) → Id s t → Σ (C (pr1 t)) (D t))
   (f : (x : A) → Id (pr1 s) x → C x)
   (g : (t : Σ A B) (α : Id (pr1 s) (pr1 t)) → Id (tr B α (pr2 s)) (pr2 t) →
-       D (dpair t (f (pr1 t) α)))
+       D t (f (pr1 t) α))
   (H : Id (h s refl) (dpair (f (pr1 s) refl) (g s refl refl))) →
   is-fiberwise-equiv f →
   ((y : B (pr1 s)) → is-equiv (g (dpair (pr1 s) y) refl)) →
@@ -251,17 +251,17 @@ is-fiberwise-equiv-id-to-Eq-structure
   {A = A} {B = B} s {C} D h f g H is-equiv-f is-equiv-g t =
   is-equiv-comp
     ( h t)
-    ( toto (λ z → D (dpair t z)) (f (pr1 t)) (g t))
+    ( toto (D t) (f (pr1 t)) (g t))
     ( pair-eq)
     ( ind-Id s
       ( λ t α → Id
         (h t α)
-        (((toto (λ z → D (dpair t z)) (f (pr1 t)) (g t)) ∘ pair-eq) α))
+        (((toto (D t) (f (pr1 t)) (g t)) ∘ pair-eq) α))
         ( H)
         ( t))
     ( is-equiv-pair-eq' s t)
     ( is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
-      ( λ z → D (dpair t z))
+      ( D t)
       ( f (pr1 t))
       ( g t)
       ( is-equiv-f (pr1 t))
@@ -274,12 +274,12 @@ is-fiberwise-equiv-id-to-Eq-structure
         ( t)))
 
 is-contr-total-Eq-structure : {l1 l2 l3 l4 : Level}
-  ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
+  { A : UU l1} {B : A → UU l2} {C : A → UU l3}
   ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
   ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
   is-contr (Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t))) →
   is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
-is-contr-total-Eq-structure A B C D is-contr-AC t is-contr-BD =
+is-contr-total-Eq-structure {A = A} {B = B} {C = C} D is-contr-AC t is-contr-BD =
   is-contr-is-equiv
     ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair x y) z))))
     ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
@@ -326,9 +326,6 @@ is-equiv-Σ-map-is-equiv-base-map' {A = A} C f is-equiv-f =
         ( λ s → is-equiv-pair-eq' (Σ-map-base-map f C s) t))
       ( let s = is-contr-map-is-equiv is-equiv-f (pr1 t) in
         is-contr-total-Eq-structure
-        ( A)
-        ( λ x → C (f x))
-        ( λ x → Id (f x) (pr1 t))
         ( λ ab c → Id (tr C c (pr2 ab)) (pr2 t))
         ( s)
         ( center s)
