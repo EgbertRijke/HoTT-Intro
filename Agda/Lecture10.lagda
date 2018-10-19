@@ -47,6 +47,16 @@ Eq-cone f g c c' =
     ( htpy-concat (g ∘ q) H (htpy-left-whisk g L)) ~
       ( htpy-concat (f ∘ p') (htpy-left-whisk f K) H')))
 
+Eq-cone-eq-cone' : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) {C : UU l4} (c c' : cone f g C)
+  (α : Id (pr1 c) (pr1 c')) →
+  Id (tr (λ p → Σ (C → B) (λ q' → (f ∘ p) ~ (g ∘ q'))) α (pr2 c)) (pr2 c') →
+  Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 c')))
+    (λ L → ((pr2 (pr2 c)) ∙h (htpy-left-whisk g L)) ~
+      ((htpy-left-whisk f (htpy-eq α)) ∙h (pr2 (pr2 c'))))
+Eq-cone-eq-cone' f g (dpair p qH) (dpair .p .qH) refl refl =
+  dpair (htpy-refl (pr1 qH)) (htpy-right-unit (pr2 qH))
+
 Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) {C : UU l4} (c c' : cone f g C) →
   Id c c' → Eq-cone f g c c'
@@ -58,7 +68,6 @@ Eq-cone-eq-cone f g c .c refl =
       ( htpy-right-unit (pr2 (pr2 c))))
 
 abstract
-
   -- The following definition is very slow to type-check.
   is-contr-total-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
     {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
@@ -97,10 +106,32 @@ abstract
     (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
     is-fiberwise-equiv (Eq-cone-eq-cone f g c)
   is-fiberwise-equiv-Eq-cone-eq-cone f g {C = C} c =
+
+{-
+    is-fiberwise-equiv-id-to-Eq-structure c
+      ( λ t → Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 (pr1 t)))) (λ L →
+        ( (pr2 (pr2 c)) ∙h (htpy-left-whisk g L)) ~
+        ( (htpy-left-whisk f (pr2 t)) ∙h (pr2 (pr2 (pr1 t))))))
+      ( Eq-cone-eq-cone f g c)
+      ( λ p' → htpy-eq)
+      ( Eq-cone-eq-cone' f g c)
+      ( eq-pair (dpair refl (eq-pair (dpair (eq-htpy (λ z → {!!})) {!!}))))
+      ( funext (pr1 c))
+      ( is-fiberwise-equiv-id-to-Eq-structure (pr2 c)
+        {!!}
+        {!!}
+        {!!}
+        {!!}
+        {!!}
+        {!!}
+        {!!})
+-}
+
     id-fundamental-gen c
       ( Eq-cone-eq-cone f g c c refl)
       ( is-contr-total-Eq-cone f g c)
       ( Eq-cone-eq-cone f g c)
+
 
 eq-cone-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   {f : A → X} {g : B → X} {C : UU l4} (c c' : cone f g C) →

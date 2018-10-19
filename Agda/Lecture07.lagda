@@ -116,6 +116,163 @@ is-emb-is-equiv {i} {j} {A} {B} f E x =
   (f : A → B) (C : B → UU l3) → Σ A (λ x → C (f x)) → Σ B C
 Σ-map-base-map f C s = dpair (f (pr1 s)) (pr2 s)
 
+is-half-adjoint-equivalence : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → UU (l1 ⊔ l2)
+is-half-adjoint-equivalence {A = A} {B = B} f =
+  Σ (B → A)
+    ( λ g → Σ ((f ∘ g) ~ id)
+      ( λ G → Σ ((g ∘ f) ~ id)
+        ( λ H → (htpy-right-whisk G f) ~ (htpy-left-whisk f H))))
+
+is-path-split : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → UU (l1 ⊔ l2)
+is-path-split {A = A} {B = B} f =
+  sec f × ((x y : A) → sec (ap f {x = x} {y = y}))
+
+is-path-split-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-equiv f → is-path-split f
+is-path-split-is-equiv f is-equiv-f =
+  pair (pr1 is-equiv-f) (λ x y → pr1 (is-emb-is-equiv f is-equiv-f x y))
+
+is-half-adjoint-equivalence-is-path-split : {l1 l2 : Level} {A : UU l1}
+  {B : UU l2} (f : A → B) →
+  is-path-split f → is-half-adjoint-equivalence f
+is-half-adjoint-equivalence-is-path-split {A = A} {B = B} f
+  ( dpair (dpair g issec-g) sec-ap-f) =
+  let φ : ((x : A) → fib (ap f) (issec-g (f x))) →
+            Σ ((g ∘ f) ~ id)
+              ( λ H → (htpy-right-whisk issec-g f) ~ (htpy-left-whisk f H))
+      φ =  ( tot (λ H' → htpy-inv)) ∘
+             ( λ s → dpair (λ x → pr1 (s x)) (λ x → pr2 (s x)))
+  in
+  dpair g
+    ( dpair issec-g
+      ( φ (λ x → dpair
+        ( pr1 (sec-ap-f (g (f x)) x) (issec-g (f x)))
+        ( pr2 (sec-ap-f (g (f x)) x) (issec-g (f x))))))
+
+tr-precompose-fam : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
+  (f : A → B) {x y : A} (p : Id x y) → tr C (ap f p) ~ tr (λ x → C (f x)) p
+tr-precompose-fam C f refl = htpy-refl _
+
+is-equiv-Σ-map-is-equiv-base-map' : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (C : B → UU l3) (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
+is-equiv-Σ-map-is-equiv-base-map' C f is-equiv-f =
+  let is-hae-f = is-half-adjoint-equivalence-is-path-split f
+                 ( is-path-split-is-equiv f is-equiv-f)
+      g = pr1 (is-hae-f)
+      G = pr1 (pr2 is-hae-f)
+      H = pr1 (pr2 (pr2 is-hae-f))
+      coh = pr2 (pr2 (pr2 is-hae-f))
+  in
+  is-equiv-has-inverse
+    ( dpair
+      ( λ t → dpair (g (pr1 t)) (tr C (inv (G (pr1 t))) (pr2 t)))
+      ( dpair
+        ( λ t → eq-pair (dpair
+          ( G (pr1 t))
+          ( concat
+            ( tr C ((inv (G (pr1 t))) ∙ (G (pr1 t))) (pr2 t))
+            ( tr-concat (inv (G (pr1 t))) (G (pr1 t)) (pr2 t))
+            ( ap (λ α → tr C α (pr2 t)) (left-inv (G (pr1 t)))))))
+        ( λ t → eq-pair (dpair
+          ( H (pr1 t))
+          ( concat
+            ( tr C (ap f (H (pr1 t))) (tr C (inv (G (f (pr1 t)))) (pr2 t)))
+            ( inv
+              ( tr-precompose-fam C f (H (pr1 t))
+                ( tr C (inv (G (f (pr1 t)))) (pr2 t))))
+            ( concat
+              ( tr C ((inv (G (f (pr1 t)))) ∙ (ap f (H (pr1 t)))) (pr2 t))
+              ( tr-concat (inv (G (f (pr1 t)))) (ap f (H (pr1 t))) (pr2 t))
+              ( ap
+                ( λ α → tr C α (pr2 t))
+                ( inv
+                  ( inv-con
+                    ( G (f (pr1 t)))
+                    ( refl)
+                    ( ap f (H (pr1 t)))
+                    ( (right-unit (G (f (pr1 t)))) ∙ (coh (pr1 t))))))))))))
+
+toto : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : A → UU l3} (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
+  Σ A C → Σ B D
+toto D f g t = dpair (f (pr1 t)) (g (pr1 t) (pr2 t))
+
+triangle-toto : {l1 l2 l3 l4 : Level} {A : UU l1}
+  {B : UU l2} {C : A → UU l3} (D : B → UU l4)
+  (f : A → B) (g : (x : A) → C x → D (f x)) →
+  (toto D f g) ~ ((Σ-map-base-map f D) ∘ (tot g))
+triangle-toto D f g t = refl
+
+is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map : {l1 l2 l3 l4 : Level}
+  {A : UU l1} {B : UU l2} {C : A → UU l3} (D : B → UU l4)
+  (f : A → B) (g : (x : A) → C x → D (f x)) →
+  is-equiv f → (is-fiberwise-equiv g) →
+  is-equiv (toto D f g)
+is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
+  D f g is-equiv-f is-fiberwise-equiv-g =
+  is-equiv-comp
+    ( toto D f g)
+    ( Σ-map-base-map f D)
+    ( tot g)
+    ( triangle-toto D f g)
+    ( is-equiv-tot-is-fiberwise-equiv g is-fiberwise-equiv-g)
+    ( is-equiv-Σ-map-is-equiv-base-map' _ f is-equiv-f)
+
+is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map : {l1 l2 l3 l4 : Level}
+  {A : UU l1} {B : UU l2} {C : A → UU l3} (D : B → UU l4)
+  (f : A → B) (g : (x : A) → C x → D (f x)) →
+  is-equiv f → is-equiv (toto D f g) → is-fiberwise-equiv g
+is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
+  D f g is-equiv-f is-equiv-toto-fg =
+  is-fiberwise-equiv-is-equiv-tot g
+    ( is-equiv-right-factor
+      ( toto D f g)
+      ( Σ-map-base-map f D)
+      ( tot g)
+      ( triangle-toto D f g)
+      ( is-equiv-Σ-map-is-equiv-base-map' _ f is-equiv-f)
+      ( is-equiv-toto-fg))
+
+is-fiberwise-equiv-id-to-Eq-structure : {l1 l2 l3 l4 : Level}
+  {A : UU l1} {B : A → UU l2} (s : Σ A B)
+  {C : A → UU l3}
+  (D : Σ (Σ A B) (λ t → C (pr1 t)) → UU l4)
+  (h : (t : Σ A B) → Id s t → Σ (C (pr1 t)) (λ z → D (dpair t z)))
+  (f : (x : A) → Id (pr1 s) x → C x)
+  (g : (t : Σ A B) (α : Id (pr1 s) (pr1 t)) → Id (tr B α (pr2 s)) (pr2 t) →
+       D (dpair t (f (pr1 t) α)))
+  (H : Id (h s refl) (dpair (f (pr1 s) refl) (g s refl refl))) →
+  is-fiberwise-equiv f →
+  ((y : B (pr1 s)) → is-equiv (g (dpair (pr1 s) y) refl)) →
+  is-fiberwise-equiv h
+is-fiberwise-equiv-id-to-Eq-structure
+  {A = A} {B = B} s {C} D h f g H is-equiv-f is-equiv-g t =
+  is-equiv-comp
+    ( h t)
+    ( toto (λ z → D (dpair t z)) (f (pr1 t)) (g t))
+    ( pair-eq)
+    ( ind-Id s
+      ( λ t α → Id
+        (h t α)
+        (((toto (λ z → D (dpair t z)) (f (pr1 t)) (g t)) ∘ pair-eq) α))
+        ( H)
+        ( t))
+    ( is-equiv-pair-eq' s t)
+    ( is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
+      ( λ z → D (dpair t z))
+      ( f (pr1 t))
+      ( g t)
+      ( is-equiv-f (pr1 t))
+      ( ind-Σ
+        { C = λ t → (α : Id (pr1 s) (pr1 t)) → is-equiv (g t α)}
+        ( λ x y α → (ind-Id (pr1 s)
+          ( λ (x' : A) (α : Id (pr1 s) x') →
+            (y' : B x') → is-equiv (g (dpair x' y') α))
+          ( λ y' → is-equiv-g y')) x α y)
+        ( t)))
+
 abstract
   is-contr-total-Eq-structure : {l1 l2 l3 l4 : Level}
     ( A : UU l1) (B : A → UU l2) (C : A → UU l3)
@@ -160,8 +317,8 @@ abstract
             ( is-contr-BD))))
 
 is-equiv-Σ-map-is-equiv-base-map : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  {C : B → UU l3} (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
-is-equiv-Σ-map-is-equiv-base-map {A = A} {C = C} f is-equiv-f =
+  (C : B → UU l3) (f : A → B) → is-equiv f → is-equiv (Σ-map-base-map f C)
+is-equiv-Σ-map-is-equiv-base-map {A = A} C f is-equiv-f =
   is-equiv-is-contr-map (λ t →
     is-contr-is-equiv
       ( Σ (Σ A (λ x → C (f x)))
@@ -179,47 +336,6 @@ is-equiv-Σ-map-is-equiv-base-map {A = A} {C = C} f is-equiv-f =
         ( λ acb → Id (tr C (pr2 acb) (pr2 (pr1 acb))) (pr2 t))
         ( s)
         ( is-contr-map-is-equiv (is-equiv-tr C (pr2 (center s))) (pr2 t))))
-
-toto : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {C : A → UU l3} (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
-  Σ A C → Σ B D
-toto D f g t = dpair (f (pr1 t)) (g (pr1 t) (pr2 t))
-
-triangle-toto : {l1 l2 l3 l4 : Level} {A : UU l1}
-  {B : UU l2} {C : A → UU l3} (D : B → UU l4)
-  (f : A → B) (g : (x : A) → C x → D (f x)) →
-  (toto D f g) ~ ((Σ-map-base-map f D) ∘ (tot g))
-triangle-toto D f g t = refl
-
-is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map : {l1 l2 l3 l4 : Level}
-  {A : UU l1} {B : UU l2} {C : A → UU l3} (D : B → UU l4)
-  (f : A → B) (g : (x : A) → C x → D (f x)) →
-  is-equiv f → (is-fiberwise-equiv g) →
-  is-equiv (toto D f g)
-is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
-  D f g is-equiv-f is-fiberwise-equiv-g =
-  is-equiv-comp
-    ( toto D f g)
-    ( Σ-map-base-map f D)
-    ( tot g)
-    ( triangle-toto D f g)
-    ( is-equiv-tot-is-fiberwise-equiv g is-fiberwise-equiv-g)
-    ( is-equiv-Σ-map-is-equiv-base-map f is-equiv-f)
-
-is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map : {l1 l2 l3 l4 : Level}
-  {A : UU l1} {B : UU l2} {C : A → UU l3} (D : B → UU l4)
-  (f : A → B) (g : (x : A) → C x → D (f x)) →
-  is-equiv f → is-equiv (toto D f g) → is-fiberwise-equiv g
-is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
-  D f g is-equiv-f is-equiv-toto-fg =
-  is-fiberwise-equiv-is-equiv-tot g
-    ( is-equiv-right-factor
-      ( toto D f g)
-      ( Σ-map-base-map f D)
-      ( tot g)
-      ( triangle-toto D f g)
-      ( is-equiv-Σ-map-is-equiv-base-map f is-equiv-f)
-      ( is-equiv-toto-fg))
 
 -- Exercises
 
