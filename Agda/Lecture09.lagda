@@ -300,6 +300,15 @@ is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
 
 -- Exercise 9.1
 
+is-equiv-htpy-inv : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f g : (x : A) → B x) → is-equiv (htpy-inv {f = f} {g = g})
+is-equiv-htpy-inv f g =
+  is-equiv-has-inverse
+    ( dpair htpy-inv
+      ( dpair
+        ( λ H → eq-htpy (λ x → inv-inv (H x)))
+        ( λ H → eq-htpy (λ x → inv-inv (H x)))))
+
 is-equiv-htpy-concat : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
   {f g : (x : A) → B x} (H : f ~ g) →
   (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H)
@@ -308,6 +317,39 @@ is-equiv-htpy-concat {A = A} {B = B} {f} {g} H =
     ( λ g H → (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H))
     ( λ h → is-equiv-id (f ~ h))
     g H
+
+htpy-concat' : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) {g h : (x : A) → B x} →
+  (g ~ h) → (f ~ g) → (f ~ h)
+htpy-concat' f K H = H ∙h K
+
+inv-htpy-concat' : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) {g h : (x : A) → B x} →
+  (g ~ h) → (f ~ h) → (f ~ g)
+inv-htpy-concat' f K = htpy-concat' f (htpy-inv K)
+
+issec-inv-htpy-concat' : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) {g h : (x : A) → B x}
+  (K : g ~ h) → ((htpy-concat' f K) ∘ (inv-htpy-concat' f K)) ~ id
+issec-inv-htpy-concat' f K L =
+  eq-htpy (λ x → right-inv-inv-concat' (f x) (K x) (L x))
+
+isretr-inv-htpy-concat' : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) {g h : (x : A) → B x}
+  (K : g ~ h) → ((inv-htpy-concat' f K) ∘ (htpy-concat' f K)) ~ id
+isretr-inv-htpy-concat' f K L =
+  eq-htpy (λ x → left-inv-inv-concat' (f x) (K x) (L x))
+
+is-equiv-htpy-concat' : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) {g h : (x : A) → B x} (K : g ~ h) →
+  is-equiv (htpy-concat' f K)
+is-equiv-htpy-concat' f K =
+  is-equiv-has-inverse
+    ( dpair
+      ( inv-htpy-concat' f K)
+      ( dpair
+        ( issec-inv-htpy-concat' f K)
+        ( isretr-inv-htpy-concat' f K)))
 
 -- Exercise 9.4
 

@@ -17,7 +17,7 @@ comp = λ g f a → g(f(a)) -- the lambda extends to cover g, f and a
 _∘_ : {i j k : Level} {A : UU i} {B : UU j} {C : UU k} → (B → C) → ((A → B) → (A → C))
 g ∘ f = comp g f
 
-data ℕ : U where
+data ℕ : UU lzero where
   zero-ℕ : ℕ
   succ-ℕ : ℕ → ℕ
 

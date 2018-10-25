@@ -77,6 +77,8 @@ is-contr-total-equiv-IND-EQUIV {i} A ind =
       ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
       ( ind P))
 
+-- The univalence axiom
+
 postulate univalence : {i : Level} (A B : UU i) → UNIVALENCE A B
 
 eq-equiv : {i : Level} (A B : UU i) → (A ≃ B) → Id A B
@@ -97,6 +99,23 @@ ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
   P A (dpair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
 ind-equiv A P = pr1 (Ind-equiv A P)
 
+-- Raising universe levels
+
+postulate Raise : {l1 : Level} (l2 : Level) → (A : UU l1) → Σ (UU (l1 ⊔ l2)) (λ X → A ≃ X)
+
+raise : {l1 : Level} (l2 : Level) → UU l1 → UU (l1 ⊔ l2)
+raise l2 A = pr1 (Raise l2 A)
+
+eqv-raise : {l1 : Level} (l2 : Level) (A : UU l1) → A ≃ raise l2 A
+eqv-raise l2 A = pr2 (Raise l2 A)
+
+map-raise : {l1 : Level} (l2 : Level) (A : UU l1) → A → raise l2 A
+map-raise l2 A = eqv-map (eqv-raise l2 A)
+
+is-equiv-map-raise : {l1 : Level} (l2 : Level) (A : UU l1) →
+  is-equiv (map-raise l2 A)
+is-equiv-map-raise l2 A = is-equiv-eqv-map (eqv-raise l2 A)
+
 -- Exercises
 
 -- Exercise 11.1
@@ -107,18 +126,12 @@ tr-equiv-eq-ap refl = htpy-refl id
 
 -- Exercise 11.2
 
-postulate joseph : {l1 l2 : Level} → (A : UU l1) → Σ (UU (l1 ⊔ l2)) (λ X → A ≃ X)
-
-is-equiv-raise : {l1 l2 : Level} (A : UU l1) → is-equiv (raise {j = l2} {A = A})
-is-equiv-raise A =
-  is-equiv-has-inverse (dpair lower (dpair (htpy-refl id) (htpy-refl id))) 
-
 is-subtype-is-contr : {l : Level} (X : UU l) → is-prop (is-contr X)
 is-subtype-is-contr = {!!}
 
 is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
 is-contr-UU-contr i =
-  let UNIT-i = joseph {l2 = i} unit
+  let UNIT-i = Raise i unit
       unit-i = (pr1 UNIT-i)
       e = pr2 UNIT-i
       f = eqv-map e

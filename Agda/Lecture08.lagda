@@ -107,7 +107,7 @@ is-set-nat =
 
 -- Section 8.3 General truncation levels
 
-data 𝕋 : U where
+data 𝕋 : UU lzero where
   neg-two-𝕋 : 𝕋
   succ-𝕋 : 𝕋 → 𝕋
 

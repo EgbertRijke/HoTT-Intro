@@ -25,7 +25,7 @@ ind-empty ()
 ¬ : {i : Level} → UU i → UU i
 ¬ A = A → empty
 
-data bool : U where
+data bool : UU lzero where
   true false : bool
 
 data coprod {i j : Level} (A : UU i) (B : UU j) : UU (i ⊔ j)  where
@@ -69,19 +69,19 @@ rGph : (i : Level) →  UU (lsuc i)
 rGph i = Sigma (UU i) (λ X → Sigma (X → X → (UU i)) (λ R → (x : X) → R x x))
 
 -- Finite sets
-Fin : ℕ → U
+Fin : ℕ → UU lzero
 Fin zero-ℕ = empty
 Fin (succ-ℕ n) = coprod (Fin n) unit
 
 -- Observational equality on the natural numbers
-Eq-ℕ : ℕ → (ℕ → U)
+Eq-ℕ : ℕ → (ℕ → UU lzero)
 Eq-ℕ zero-ℕ zero-ℕ = 𝟙
 Eq-ℕ zero-ℕ (succ-ℕ n) = 𝟘
 Eq-ℕ (succ-ℕ m) zero-ℕ = 𝟘
 Eq-ℕ (succ-ℕ m) (succ-ℕ n) = Eq-ℕ m n
 
 -- The integers
-ℤ : U
+ℤ : UU lzero
 ℤ = coprod ℕ (coprod unit ℕ)
 
 -- Inclusion of the negative integers
@@ -174,7 +174,7 @@ preserve_Eq-ℕ f =
 -- In this exercise we were asked to construct the relations ≤ and < on the natural numbers, and show basic properties about them.
 
 -- Definition of ≤ 
-leq-ℕ : ℕ → ℕ → U
+leq-ℕ : ℕ → ℕ → UU lzero
 leq-ℕ zero-ℕ zero-ℕ = unit
 leq-ℕ zero-ℕ (succ-ℕ m) = unit
 leq-ℕ (succ-ℕ n) zero-ℕ = empty
@@ -183,7 +183,7 @@ leq-ℕ (succ-ℕ n) (succ-ℕ m) = leq-ℕ n m
 _≤_ = leq-ℕ
 
 -- Definition of <
-le-ℕ : ℕ → ℕ → U
+le-ℕ : ℕ → ℕ → UU lzero
 le-ℕ zero-ℕ zero-ℕ = empty
 le-ℕ zero-ℕ (succ-ℕ m) = unit
 le-ℕ (succ-ℕ n) zero-ℕ = empty
@@ -223,12 +223,12 @@ succ-le-ℕ (succ-ℕ n) = succ-le-ℕ n
 
 -- Exercise 3.7
 -- With the construction of the divisibility relation we open the door to basic number theory.
-divides : (d n : ℕ) → U
+divides : (d n : ℕ) → UU lzero
 divides d n = Σ ℕ (λ m → Eq-ℕ (d ** m) n)
 
 -- Exercise 3.8
 -- In this exercise we were asked to construct observational equality on the booleans. This construction is analogous to, but simpler than, the construction of observational equality on the natural numbers.
-Eq-𝟚 : bool → bool → U
+Eq-𝟚 : bool → bool → UU lzero
 Eq-𝟚 true true = unit
 Eq-𝟚 true false = empty
 Eq-𝟚 false true = empty
@@ -262,7 +262,7 @@ ind-coprod-unit-unit p0 p1 (inr star) = p1
 -- Exercise 3.10
 -- In this exercise we were asked to define the relations ≤ and < on the integers. As a criterion of correctness, we were then also asked to show that the type of all integers l satisfying k ≤ l satisfy the induction principle of the natural numbers.
 
-leq-ℤ : ℤ → ℤ → U
+leq-ℤ : ℤ → ℤ → UU lzero
 leq-ℤ (inl zero-ℕ) (inl zero-ℕ) = unit
 leq-ℤ (inl zero-ℕ) (inl (succ-ℕ x)) = empty
 leq-ℤ (inl zero-ℕ) (inr l) = unit
@@ -341,7 +341,7 @@ succ-leq-ℤ (inr (inr (succ-ℕ x))) = succ-leq-ℤ (inr (inr x))
 leq-ℤ-succ-leq-ℤ : (k l : ℤ) → leq-ℤ k l → leq-ℤ k (succ-ℤ l)
 leq-ℤ-succ-leq-ℤ k l p = transitive-leq-ℤ k l (succ-ℤ l) p (succ-leq-ℤ l)
 
-le-ℤ : ℤ → ℤ → U
+le-ℤ : ℤ → ℤ → UU lzero
 le-ℤ (inl zero-ℕ) (inl x) = empty
 le-ℤ (inl zero-ℕ) (inr y) = unit
 le-ℤ (inl (succ-ℕ x)) (inl zero-ℕ) = unit
