@@ -153,6 +153,8 @@ An \define{embedding}\index{embedding|textbf} is a map $f:A\to B$ satisfying the
 is an equivalence for every $x,y:A$. We write $\mathsf{is\usc{}emb}(f)$ for the type of witnesses that $f$ is an embedding.
 \end{defn}
 
+Another way of phrasing the following statement is that equivalent types have equivalent identity types.
+
 \begin{thm}
 \label{cor:emb_equiv} 
 Any equivalence is an embedding.\index{embedding!equivalences are embeddings|textit}\index{equivalence!is an embedding|textit}
@@ -183,8 +185,7 @@ The fiber $\fib{e}{e(x)}$ is contractible by \cref{thm:contr_equiv}, so it follo
 \end{proof}
 
 \begin{comment}
-As a first application of the fundamental theorem, we compute the identity type of a disjoint sum.
-This illustrates in a simple case the most important technique of computing the identity type of a type, that is also called the \emph{encode-decode method}.
+As a first application of the fundamental theorem, we compute the identity type of a coproduct.
 
 \begin{defn}
 Let $A$ and $B$ be types in $\UU$. We construct equivalences
@@ -229,6 +230,172 @@ This is done by induction on $s$ and $t$, so we have to show that
 The first and fourth case are easily shown by path induction on $p$, and the second and third case are easily shown by induction on the empty type.
 \end{constr}
 \end{comment}
+
+\section{Equivalences in the base}
+
+Given a map $f : A \to B$ and a type family $C : B \to \UU$, there is an induced map
+\begin{equation*}
+\lambda{(x,z)}{f(x),z} : \sm{x:A}C(f(x)) \to \sm{y:B}C(y).
+\end{equation*}
+Using the results of this lecture, we will show in this section that this map is an equivalence whenever $f$ is an equivalence. 
+As a first step we show that if $f$ has a section, then also the induced map on total spaces has a section.
+
+\begin{lem}
+Consider a type family $C:B\to\UU$, and a map $f:A\to B$. If $f$
+has a section, then so does the map
+\begin{equation*}
+\lam{(x,z)}(f(x),z) : \sm{x:A}C(f(x)) \to \sm{y:B}C(y).
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+Suppose $g:B\to A$ is a map equipped with a homotopy $G : f \circ g \htpy \idfunc$. We define a map
+\begin{equation*}
+\sm{y:B} C(y) \to \sm{x:A} C(f(x))
+\end{equation*}
+by $\lam{(y,z)}(g(y),\mathsf{tr}_C(G(y)^{-1},z))$. To see that this map is a section of $\lam{(x,z)}(f(x),z)$, we have to construct an identification
+\begin{equation*}
+(f(g(x)),\mathsf{tr}_C(G(y))^{-1},z)=(x,z). 
+\end{equation*}
+We construct an identification of the form $\mathsf{eq\usc{}pair}(p,q)$ where $p:f(g(y))=y$ and $q:\mathsf{tr}_C(p,tr_C(G(y))^{-1},z))=z$. Of course, we take $p\defeq G(y)$.
+Then we calculate
+\begin{align*}
+\mathsf{tr}_C(p,tr_C(G(y)^{-1},z))
+& = \mathsf{tr}_C(\ct{G(y)^{-1}}{G(y)},z) \\
+& = z
+\end{align*}
+to obtain the identification $q$.
+\end{proof}
+
+\begin{rmk}
+To see that $\lam{(x,z)}(f(x),z)$ is an equivalence whenever $f$ is an equivalence, it remains to show that the function $\lam{(y,z)}(g(y),\mathsf{tr}_C(G(y)^{-1},z))$ is a retraction. However, in order to construct an identification
+\begin{equation*}
+(g(f(x)),\mathsf{tr}_C(G(y)^{-1},z)) = (x,z)
+\end{equation*}
+for any $x:A$ and $z:C(f(x))$, we run into a coherence problem, which we will now describe. First we note that we have a homotopy $H:g\circ f ~ \idfunc$, so we obtain an identification $H(x): g(f(x))= x$. However, now it remains to show that
+\begin{equation*}
+\mathsf{tr}_{C\circ f}(H(x),\mathsf{tr}_C(G(y)^{-1},z))=z.
+\end{equation*}
+We have the following lemma to compute transports in families of the form $C\circ f$.
+\end{rmk}
+
+\begin{lem}
+Consider a map $f:A\to B$ and a type family $C:B\to \UU$. Then, for any path $p:x=y$ in $A$, and any $z:C(f(x))$, there is an identification
+\begin{equation*}
+\mathsf{tr})_{C\circ f}(p,z)=\mathsf{tr}_C(\ap{f}{p},z).
+\end{equation*}
+\end{lem}
+
+\begin{proof}
+Immediate by identification elimination on $p:x=y$.
+\end{proof}
+
+Thus, we see that it suffices to construct an identification
+\begin{equation*}
+\mathsf{tr}_{C}(\ap{f}{H(x)},\mathsf{tr}_C(G(f(x))^{-1},z))=z.
+\end{equation*}
+We note that this iterated transport can be identified with
+\begin{equation*}
+\mathsf{tr}_C(\ct{G(f(x))^{-1}}{\ap{f}{H(x)}},z),
+\end{equation*}
+so it suffices to show that 
+\begin{equation*}
+G(f(x)) = \ap{f}{H(x)}.
+\end{equation*}
+This is a coherence condition between the homotopies $G$ and $H$ that needs to be satisfied.
+
+\begin{defn}
+A map $f:A\to B$ is said to be a \define{half-adjoint equivalence} if it comes equipped with
+\begin{align*}
+g & : B \to A\\
+G & : f\circ g \htpy \idfunc[B] \\
+H & : g\circ f \htpy \idfunc[A] \\
+K & : G\cdot f \htpy f\cdot H.
+\end{align*}
+We write $\mathsf{half\usc{}adj}(f)$\index{half_adj(f)@{$\mathsf{half\usc{}adj}(f)$}|textbf} for the type of such quadruples $(g,G,H,K)$.
+\end{defn}
+
+To show that every equivalence is a half-adjoint equivalence, we also introduce the notion of \emph{path-split} maps.
+
+\begin{defn}
+We say that a map $f:A\to B$ is \define{path-split}\index{path-split|textbf} if $f$ has a section, and for each $x,y:A$ the map
+\begin{equation*}
+\apfunc{f}(x,y):(x=y)\to (f(x)=f(y))
+\end{equation*}
+also has a section. We write $\mathsf{path\usc{}split}(f)$\index{path_split(f)@{$\mathsf{path\usc{}split}(f)$}|textbf} for the type
+\begin{equation*}
+\mathsf{sec}(f)\times\prd{x,y:A}\mathsf{sec}(\apfunc{f}(x,y)).
+\end{equation*}
+\end{defn}
+
+\begin{thm}\label{thm:half_adj}
+Let $f:A\to B$ be a map. Then the following are equivalent:
+\begin{enumerate}
+\item $f$ is an equivalence.
+\item $f$ is path-split.
+\item $f$ is a half-adjoint equivalence.
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+To see that (i) implies (ii) we note that any equivalence has a section, and its action on paths is an equivalence by \cref{cor:emb_equiv} so again it has a section.
+
+To show that (ii) implies (iii), assume that $f$ is path-split. Thus we have $(g,G):\mathsf{sec}(f)$, and the assumption that $\apfunc{f}:(x=y)\to (f(x)=f(y))$ has a section for every $x,y:A$ gives us a term
+\begin{equation*}
+s : \prd{x:A}\fib{\apfunc{f}}{G(f(x))}.
+\end{equation*}
+Using $s$, we obtain the term
+\begin{equation*}
+((\lam{x}\proj 1(s(x))),(\lam{x}\proj 2(s (x)))) : \sm{H:\prd{x:A}g(f(x))=x}\prd{x:A}G(f(x))=\ap{f}{H(x)}.
+\end{equation*}
+In other words, we obtain a homotopy $H:g\circ f\htpy \idfunc[A]$ and a homotopy $K:G\cdot f\htpy f\cdot H$, showing that $f$ is a half-adjoint equivalence.
+
+To see that (iii) implies (i), we simply note that any half-adjoint equivalence has in particular an inverse, from which we obtain that $f$ is an equivalence.
+\end{proof}
+
+\begin{rmk}
+Note that \cref{thm:half_adj} does \emph{not} show that it is possible to construct a homotopy $K : G\cdot f \htpy f\cdot H$ for any
+\begin{align*}
+g & : B \to A\\
+G & : f\circ g \htpy \idfunc[B] \\
+H & : g\circ f \htpy \idfunc[A].
+\end{align*}
+Indeed, in the proof of \cref{thm:half_adj} we construct a \emph{particular} homotopy $H:g\circ f \htpy \idfunc[A]$ for which we can also construct a further homotopy $K : G\cdot f \htpy f\cdot H$.
+\end{rmk}
+
+We now reach the main result of the current section.
+
+\begin{thm}
+Suppose $f:A\to B$ is an equivalence, and that $C$ is a type family over $B$. Then the map
+\begin{equation*}
+\lam{(x,z)}(f(x),z) : \sm{x:A}C(f(x)) \to \sm{y:B}C(y)
+\end{equation*}
+is an equivalence.
+\end{thm}
+
+\begin{defn}
+Consider type families $P:A\to \UU$ and $Q:B\to\UU$, and consider a map $f:A\to B$ and a fiberwise transformation $g:\prd{x:A}P(x)\to Q(f(x))$. Then we define a map $\total[f]{g}$ equipped with a homotopy witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+\sm{x:A}C(x) \arrow[r,"{\total[f]{g}}"] \arrow[d,swap,"\proj 1"] &
+\sm{y:B}D(y) \arrow[d,"\proj 1"] \\
+A \arrow[r,swap,"f"] & B
+\end{tikzcd}
+\end{equation*}
+commutes, by $\total[f]{g}(x,y)\defeq (f(x),g(x,y))$, with the obvious homotopy $\lam{(x,y)}\refl{f(x)}$. 
+\end{defn}
+
+\begin{cor}
+Consider type families $C:A\to \UU$ and $D:B\to\UU$, and consider a map $f:A\to B$ and a fiberwise transformation $g:\prd{x:A}C(x)\to D(f(x))$. If $f$ is an equivalence, then the following are equivalent:
+\begin{enumerate}
+\item $g$ is a fiberwise equivalence.
+\item the induced map on total spaces
+\begin{equation*}
+\total[f]{g} : \sm{x:A}C(x) \to \sm{y:B}D(y)
+\end{equation*}
+is an equivalence.
+\end{enumerate}
+\end{cor}
 
 \begin{exercises}
 \item \label{ex:htpy_total} 

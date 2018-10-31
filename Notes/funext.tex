@@ -246,38 +246,12 @@ is an equivalence. Moreover, we will show in \cref{ex:equiv_precomp} that the `d
 \begin{equation*}
 \blank\circ f: \Big(\prd{y:B}P(y)\Big)\to\Big(\prd{x:A}P(f(x))\Big)
 \end{equation*}
-is an equivalence. However, in our proof of this fact we will rely on a piece of data that every equivalence satisfies in addition to being invertible.
-
-\begin{defn}
-We say that a map $f:A\to B$ is a \define{half-adjoint equivalence}\index{half-adjoint equivalence|textbf}, in the sense that there are
-\begin{align*}
-g & : B \to A\\
-G & : f\circ g \htpy \idfunc[B] \\
-H & : g\circ f \htpy \idfunc[A] \\
-K & : G\cdot f \htpy f\cdot H.
-\end{align*}
-We write $\mathsf{half\usc{}adj}(f)$\index{half_adj(f)@{$\mathsf{half\usc{}adj}(f)$}|textbf} for the type of such quadruples $(g,G,H,K)$.
-\end{defn}
-
-To show that every equivalence is a half-adjoint equivalence, we also introduce the notion of \emph{path-split} maps.
-
-\begin{defn}
-We say that a map $f:A\to B$ is \define{path-split}\index{path-split|textbf} if $f$ has a section, and for each $x,y:A$ the map
-\begin{equation*}
-\apfunc{f}(x,y):(x=y)\to (f(x)=f(y))
-\end{equation*}
-also has a section. We write $\mathsf{path\usc{}split}(f)$\index{path_split(f)@{$\mathsf{path\usc{}split}(f)$}|textbf} for the type
-\begin{equation*}
-\mathsf{sec}(f)\times\prd{x,y:A}\mathsf{sec}(\apfunc{f}(x,y)).
-\end{equation*}
-\end{defn}
+is an equivalence.
 
 \begin{thm}\label{ex:equiv_precomp}
 For any map $f:A\to B$, the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
-\item $f$ is path-split.
-\item $f$ is a half-adjoint equivalence.
 \item For any type family $P$ over $B$ the map
 \begin{equation*}
 \Big(\prd{y:B}P(y)\Big)\to\Big(\prd{x:A}P(f(x))\Big)
@@ -292,19 +266,14 @@ given by $g\mapsto g\circ f$ is an equivalence.
 \end{thm}
 
 \begin{proof}
-To see that (i) implies (ii) we note that any equivalence has a section, and its action on paths is an equivalence by \cref{cor:emb_equiv} so again it has a section.
-
-To show that (ii) implies (iii), assume that $f$ is path-split. Thus we have $(g,G):\mathsf{sec}(f)$, and the assumption that $\apfunc{f}:(x=y)\to (f(x)=f(y))$ has a section for every $x,y:A$ gives us a term of type
-\begin{equation*}
-\prd{x:A}\fib{\apfunc{f}}{G(f(x))}.
-\end{equation*}
-By \cref{thm:choice} this type is equivalent to
-\begin{equation*}
-\sm{H:\prd{x:A}g(f(x))=x}\prd{x:A}G(f(x))=\ap{f}{H(x)},
-\end{equation*}
-so we obtain $H:g\circ f\htpy \idfunc[A]$ and $K:G\cdot f\htpy f\cdot H$, showing that $f$ is a half-adjoint equivalence.
-
-To show that (iii) implies (iv), suppose that $f$ comes equipped with $(g,G,H,K)$ witnessing that $f$ is a half-adjoint equivalence. Then we define the inverse of $\blank\circ f$ to be the map
+To show that (i) implies (ii), we first recall from \cref{thm:half_adj} that any equivalence is also a half-adjoint equivalence, so $f$ comes equipped with
+\begin{align*}
+g & : B \to A\\
+G & : f\circ g \htpy \idfunc[B] \\
+H & : g\circ f \htpy \idfunc[A] \\
+K & : G\cdot f \htpy f\cdot H.
+\end{align*}
+Then we define the inverse of $\blank\circ f$ to be the map
 \begin{equation*}
 \varphi:\Big(\prd{x:A}P(f(x))\Big)\to\Big(\prd{y:B}P(y)\Big)
 \end{equation*}
