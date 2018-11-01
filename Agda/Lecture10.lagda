@@ -67,6 +67,46 @@ Eq-cone-eq-cone f g c .c refl =
       ( htpy-refl (pr1 (pr2 c)))
       ( htpy-right-unit (pr2 (pr2 c))))
 
+is-contr-total-Eq-structure : {l1 l2 l3 l4 : Level}
+  { A : UU l1} {B : A → UU l2} {C : A → UU l3}
+  ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
+  ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
+  is-contr (Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t))) →
+  is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
+is-contr-total-Eq-structure {A = A} {B = B} {C = C} D is-contr-AC t is-contr-BD =
+  is-contr-is-equiv
+    ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair x y) z))))
+    ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
+    ( is-equiv-Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
+    ( is-contr-is-equiv
+      ( Σ A (λ x → Σ (C x) (λ z → Σ (B x) (λ y → D (dpair x y) z))))
+      ( tot (λ x → Σ-swap (B x) (C x) (λ y → D (dpair x y))))
+      ( is-equiv-tot-is-fiberwise-equiv
+        ( λ x → is-equiv-Σ-swap (B x) (C x) (λ y → D (dpair x y))))
+      ( is-contr-is-equiv
+        ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y →
+          D (dpair (pr1 t) y) (pr2 t))))
+        ( inv-is-equiv (is-equiv-Σ-assoc A C (λ t → Σ (B (pr1 t)) (λ y →
+          D (dpair (pr1 t) y) (pr2 t)))))
+        ( is-equiv-inv-is-equiv (is-equiv-Σ-assoc A C
+          ( λ t → Σ (B (pr1 t)) (λ y →
+            D (dpair (pr1 t) y) (pr2 t)))))
+        ( is-contr-is-equiv
+          ( Σ (B (pr1 t)) (λ y →
+            D ( dpair (pr1 t) y)
+              ( pr2 t)))
+          ( left-unit-law-Σ-map-conv
+            ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
+            ( dpair t (λ t' →
+              ( inv (contraction is-contr-AC t)) ∙
+              ( contraction is-contr-AC t'))))
+          ( is-equiv-left-unit-law-Σ-map-conv
+            ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
+            ( dpair t (λ t' →
+              ( inv (contraction is-contr-AC t)) ∙
+              ( contraction is-contr-AC t'))))
+          ( is-contr-BD))))
+
 is-contr-total-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
   is-contr (Σ (cone f g C) (Eq-cone f g c))

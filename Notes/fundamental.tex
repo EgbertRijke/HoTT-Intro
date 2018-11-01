@@ -376,7 +376,7 @@ is an equivalence.
 \begin{defn}
 Consider type families $P:A\to \UU$ and $Q:B\to\UU$, and consider a map $f:A\to B$ and a fiberwise transformation $g:\prd{x:A}P(x)\to Q(f(x))$. Then we define a map $\total[f]{g}$ equipped with a homotopy witnessing that the square
 \begin{equation*}
-\begin{tikzcd}
+\begin{tikzcd}[column sep=large]
 \sm{x:A}C(x) \arrow[r,"{\total[f]{g}}"] \arrow[d,swap,"\proj 1"] &
 \sm{y:B}D(y) \arrow[d,"\proj 1"] \\
 A \arrow[r,swap,"f"] & B
@@ -494,6 +494,8 @@ with $H:f\htpy g\circ h$.
 \apfunc{f} : (x=y) \to (f(x)=f(y))
 \end{equation*}
 has a section for each $x,y:A$, then $f$ is an embedding.
+\item Show that for any two types $A$ and $B$, the coproduct inclusion maps $\inl:A \to A + B$ and $\inr : B \to A + B$ are embeddings.
+\begin{comment}
 \item \label{ex:eqv_sigma_mv}Consider a map
 \begin{equation*}
 f:A \to \sm{y:B}C(y).
@@ -523,4 +525,5 @@ Show that the \define{coherence reduction map}
 \mathsf{coh\usc{}red} : \Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big) \to \Big(\sm{x:A}B(x)\Big)
 \end{equation*}
 defined by $\lam{(y,q)}(a,y)$ is an equivalence.
+\end{comment}
 \end{exercises}

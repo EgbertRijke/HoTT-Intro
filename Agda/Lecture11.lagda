@@ -99,23 +99,6 @@ ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
   P A (dpair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
 ind-equiv A P = pr1 (Ind-equiv A P)
 
--- Raising universe levels
-
-postulate Raise : {l1 : Level} (l2 : Level) → (A : UU l1) → Σ (UU (l1 ⊔ l2)) (λ X → A ≃ X)
-
-raise : {l1 : Level} (l2 : Level) → UU l1 → UU (l1 ⊔ l2)
-raise l2 A = pr1 (Raise l2 A)
-
-eqv-raise : {l1 : Level} (l2 : Level) (A : UU l1) → A ≃ raise l2 A
-eqv-raise l2 A = pr2 (Raise l2 A)
-
-map-raise : {l1 : Level} (l2 : Level) (A : UU l1) → A → raise l2 A
-map-raise l2 A = eqv-map (eqv-raise l2 A)
-
-is-equiv-map-raise : {l1 : Level} (l2 : Level) (A : UU l1) →
-  is-equiv (map-raise l2 A)
-is-equiv-map-raise l2 A = is-equiv-eqv-map (eqv-raise l2 A)
-
 -- Exercises
 
 -- Exercise 11.1
