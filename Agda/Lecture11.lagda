@@ -127,7 +127,7 @@ tr-equiv-eq-ap refl = htpy-refl id
 -- Exercise 11.2
 
 is-subtype-is-contr : {l : Level} (X : UU l) → is-prop (is-contr X)
-is-subtype-is-contr = {!!}
+is-subtype-is-contr X = {!!}
 
 is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
 is-contr-UU-contr i =

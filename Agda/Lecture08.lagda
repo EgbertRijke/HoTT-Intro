@@ -257,4 +257,59 @@ is-fiberwise-trunc-is-trunc-tot k f is-trunc-tot-f x z =
     ( is-equiv-fib-tot-fib-ftr f (dpair x z))
     ( is-trunc-tot-f (dpair x z))
 
+-- Exercises
+
+-- Exercise 8.1
+
+diagonal : {l : Level} (A : UU l) → A → A × A
+diagonal A x = dpair x x
+
+is-prop-is-equiv-diagonal : {l : Level} (A : UU l) →
+  is-equiv (diagonal A) → is-prop A
+is-prop-is-equiv-diagonal A is-equiv-d =
+  is-prop-is-prop' ( λ x y →
+    let α = issec-inv-is-equiv is-equiv-d (dpair x y) in
+    ( inv (ap pr1 α)) ∙ (ap pr2 α))
+
+eq-fib-diagonal : {l : Level} (A : UU l) (t : A × A) →
+  fib (diagonal A) t → Id (pr1 t) (pr2 t)
+eq-fib-diagonal A (dpair x y) (dpair z α) = (inv (ap pr1 α)) ∙ (ap pr2 α)
+
+fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
+  Id (pr1 t) (pr2 t) → fib (diagonal A) t
+fib-diagonal-eq A (dpair x y) β =
+  dpair x (eq-pair-triv (pair x x) (pair x y) (dpair refl β))
+
+issec-fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
+  ((eq-fib-diagonal A t) ∘ (fib-diagonal-eq A t)) ~ id
+issec-fib-diagonal-eq A (dpair x .x) refl = refl
+
+isretr-fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
+  ((fib-diagonal-eq A t) ∘ (eq-fib-diagonal A t)) ~ id
+isretr-fib-diagonal-eq A .(dpair z z) (dpair z refl) = refl
+
+is-equiv-eq-fib-diagonal : {l : Level} (A : UU l) (t : A × A) →
+  is-equiv (eq-fib-diagonal A t)
+is-equiv-eq-fib-diagonal A t =
+  is-equiv-has-inverse
+    ( dpair
+      ( fib-diagonal-eq A t)
+      ( dpair (issec-fib-diagonal-eq A t) (isretr-fib-diagonal-eq A t)))
+
+is-trunc-is-trunc-diagonal : {l : Level} (k : 𝕋) (A : UU l) →
+  is-trunc-map k (diagonal A) → is-trunc (succ-𝕋 k) A
+is-trunc-is-trunc-diagonal k A is-trunc-d x y =
+  is-trunc-is-equiv' k
+    ( eq-fib-diagonal A (dpair x y))
+    ( is-equiv-eq-fib-diagonal A (dpair x y))
+    ( is-trunc-d (dpair x y))
+
+is-trunc-diagonal-is-trunc : {l : Level} (k : 𝕋) (A : UU l) →
+  is-trunc (succ-𝕋 k) A → is-trunc-map k (diagonal A)
+is-trunc-diagonal-is-trunc k A is-trunc-A t =
+  is-trunc-is-equiv k
+    ( eq-fib-diagonal A t)
+    ( is-equiv-eq-fib-diagonal A t)
+    ( is-trunc-A (pr1 t) (pr2 t))
+
 \end{code}
