@@ -312,4 +312,31 @@ is-trunc-diagonal-is-trunc k A is-trunc-A t =
     ( is-equiv-eq-fib-diagonal A t)
     ( is-trunc-A (pr1 t) (pr2 t))
 
+-- Exercise 8.2
+
+is-contr-Σ : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
+  is-contr A → ((x : A) → is-contr (B x)) → is-contr (Σ A B)
+is-contr-Σ {A = A} {B = B} is-contr-A is-contr-B =
+  is-contr-is-equiv'
+    ( B (center is-contr-A))
+    ( left-unit-law-Σ-map B is-contr-A)
+    ( is-equiv-left-unit-law-Σ-map B is-contr-A)
+    ( is-contr-B (center is-contr-A))
+
+is-trunc-Σ : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : A → UU l2} →
+  is-trunc k A → ((x : A) → is-trunc k (B x)) → is-trunc k (Σ A B)
+is-trunc-Σ neg-two-𝕋 is-trunc-A is-trunc-B =
+  is-contr-Σ is-trunc-A is-trunc-B
+is-trunc-Σ (succ-𝕋 k) {B = B} is-trunc-A is-trunc-B s t =
+  is-trunc-is-equiv k pair-eq
+    ( is-equiv-pair-eq' s t)
+    ( is-trunc-Σ k
+      ( is-trunc-A (pr1 s) (pr1 t))
+      ( λ p → is-trunc-B (pr1 t) (tr B p (pr2 s)) (pr2 t)))
+
+is-trunc-prod : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
+  is-trunc k A → is-trunc k B → is-trunc k (A × B)
+is-trunc-prod k is-trunc-A is-trunc-B =
+  is-trunc-Σ k is-trunc-A (λ x → is-trunc-B)
+
 \end{code}
