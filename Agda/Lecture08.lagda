@@ -339,4 +339,21 @@ is-trunc-prod : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
 is-trunc-prod k is-trunc-A is-trunc-B =
   is-trunc-Σ k is-trunc-A (λ x → is-trunc-B)
 
+-- Exercise 8.3
+
+is-prop-Eq-𝟚 : (x y : bool) → is-prop (Eq-𝟚 x y)
+is-prop-Eq-𝟚 true true = is-prop-unit
+is-prop-Eq-𝟚 true false = is-prop-empty
+is-prop-Eq-𝟚 false true = is-prop-empty
+is-prop-Eq-𝟚 false false = is-prop-unit
+
+eq-Eq-𝟚 : (x y : bool) → Eq-𝟚 x y → Id x y
+eq-Eq-𝟚 true true star = refl
+eq-Eq-𝟚 true false ()
+eq-Eq-𝟚 false true ()
+eq-Eq-𝟚 false false star = refl
+
+is-set-bool : is-set bool
+is-set-bool = is-set-prop-in-id Eq-𝟚 is-prop-Eq-𝟚 reflexive-Eq-𝟚 eq-Eq-𝟚
+
 \end{code}
