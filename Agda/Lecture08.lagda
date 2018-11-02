@@ -538,4 +538,42 @@ is-trunc-retract-of (succ-𝕋 k) (dpair i retr-i) is-trunc-B x y =
     ( dpair (ap i) (retr-ap i retr-i x y))
     ( is-trunc-B (i x) (i y))
 
+-- Exercise 8.9
+
+is-injective : {l1 l2 : Level} {A : UU l1} (is-set-A : is-set A) {B : UU l2}
+  (is-set-B : is-set B) (f : A → B) → UU (l1 ⊔ l2)
+is-injective {A = A} is-set-A is-set-B f = (x y : A) → Id (f x) (f y) → Id x y
+
+is-injective-const-true : is-injective is-set-unit is-set-bool
+  (const unit bool true)
+is-injective-const-true x y p = center (is-prop-unit x y)
+
+is-injective-const-false : is-injective is-set-unit is-set-bool
+  (const unit bool false)
+is-injective-const-false x y p = center (is-prop-unit x y)
+
+is-equiv-is-prop : {l1 l2 : Level} {A : UU l1} {B : UU l2} → is-prop A →
+  is-prop B → {f : A → B} → (B → A) → is-equiv f
+is-equiv-is-prop is-prop-A is-prop-B {f} g =
+  is-equiv-has-inverse
+    ( dpair g
+      ( dpair
+        ( λ y → center (is-prop-B (f (g y)) y))
+        ( λ x → center (is-prop-A (g (f x)) x))))
+
+is-emb-is-injective : {l1 l2 : Level} {A : UU l1} (is-set-A : is-set A)
+  {B : UU l2} (is-set-B : is-set B) (f : A → B) →
+  is-injective is-set-A is-set-B f → is-emb f
+is-emb-is-injective is-set-A is-set-B f is-injective-f x y =
+  is-equiv-is-prop
+    ( is-set-A x y)
+    ( is-set-B (f x) (f y))
+    ( is-injective-f x y)
+
+is-injective-is-emb : {l1 l2 : Level} {A : UU l1} (is-set-A : is-set A)
+  {B : UU l2} (is-set-B : is-set B) (f : A → B) →
+  is-emb f → is-injective is-set-A is-set-B f
+is-injective-is-emb is-set-A is-set-B f is-emb-f x y =
+  inv-is-equiv (is-emb-f x y)
+
 \end{code}
