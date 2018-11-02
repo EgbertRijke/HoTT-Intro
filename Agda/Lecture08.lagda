@@ -97,13 +97,11 @@ is-prop-Eq-ℕ zero-ℕ (succ-ℕ m) = is-prop-empty
 is-prop-Eq-ℕ (succ-ℕ n) zero-ℕ = is-prop-empty
 is-prop-Eq-ℕ (succ-ℕ n) (succ-ℕ m) = is-prop-Eq-ℕ n m
 
+eq-Eq-ℕ : (n m : ℕ) → Eq-ℕ n m → Id n m
+eq-Eq-ℕ = least-reflexive-Eq-ℕ (λ n → refl)
+
 is-set-ℕ : is-set ℕ
-is-set-ℕ =
-  is-set-prop-in-id
-    Eq-ℕ
-    is-prop-Eq-ℕ
-    reflexive-Eq-ℕ
-    (least-reflexive-Eq-ℕ (λ n → refl))
+is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ reflexive-Eq-ℕ eq-Eq-ℕ
 
 -- Section 8.3 General truncation levels
 
@@ -412,40 +410,74 @@ is-set-ℤ = is-set-coprod is-set-ℕ (is-set-coprod is-set-unit is-set-ℕ)
 has-decidable-equality : {l : Level} (A : UU l) → UU l
 has-decidable-equality A = (x y : A) → coprod (Id x y) (¬ (Id x y))
 
-split-decidable-equality : {l : Level} (A : UU l) (x y : A) →
+splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
   coprod (Id x y) (¬ (Id x y)) → UU lzero
-split-decidable-equality A x y (inl p) = unit
-split-decidable-equality A x y (inr f) = empty
+splitting-decidable-equality A x y (inl p) = unit
+splitting-decidable-equality A x y (inr f) = empty
 
-is-prop-split-decidable-equality : {l : Level} (A : UU l) (x y : A) →
+is-prop-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
   (t : coprod (Id x y) (¬ (Id x y))) →
-  is-prop (split-decidable-equality A x y t)
-is-prop-split-decidable-equality A x y (inl p) = is-prop-unit
-is-prop-split-decidable-equality A x y (inr f) = is-prop-empty
+  is-prop (splitting-decidable-equality A x y t)
+is-prop-splitting-decidable-equality A x y (inl p) = is-prop-unit
+is-prop-splitting-decidable-equality A x y (inr f) = is-prop-empty
 
-reflexive-split-decidable-equality : {l : Level} (A : UU l) (x : A) →
-  (t : coprod (Id x x) (¬ (Id x x))) → split-decidable-equality A x x t
-reflexive-split-decidable-equality A x (inl p) = star
-reflexive-split-decidable-equality A x (inr f) =
-  ind-empty {P = λ t → split-decidable-equality A x x (inr f)} (f refl)
+reflexive-splitting-decidable-equality : {l : Level} (A : UU l) (x : A) →
+  (t : coprod (Id x x) (¬ (Id x x))) → splitting-decidable-equality A x x t
+reflexive-splitting-decidable-equality A x (inl p) = star
+reflexive-splitting-decidable-equality A x (inr f) =
+  ind-empty {P = λ t → splitting-decidable-equality A x x (inr f)} (f refl)
 
-eq-split-decidable-equality : {l : Level} (A : UU l) (x y : A) →
+eq-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
   (t : coprod (Id x y) (¬ (Id x y))) →
-  split-decidable-equality A x y t → Id x y
-eq-split-decidable-equality A x y (inl p) t = p
-eq-split-decidable-equality A x y (inr f) t = ind-empty {P = λ s → Id x y} t 
-
-Eq-decidable-equality : {l : Level} (A : UU l) (d : has-decidable-equality A) →
-  A → A → UU lzero
-Eq-decidable-equality A d x y = split-decidable-equality A x y (d x y)
+  splitting-decidable-equality A x y t → Id x y
+eq-splitting-decidable-equality A x y (inl p) t = p
+eq-splitting-decidable-equality A x y (inr f) t =
+  ind-empty {P = λ s → Id x y} t 
 
 is-set-has-decidable-equality : {l : Level} (A : UU l) →
   has-decidable-equality A → is-set A
 is-set-has-decidable-equality A d =
   is-set-prop-in-id
-    ( λ x y → split-decidable-equality A x y (d x y))
-    ( λ x y → is-prop-split-decidable-equality A x y (d x y))
-    ( λ x → reflexive-split-decidable-equality A x (d x x))
-    ( λ x y → eq-split-decidable-equality A x y (d x y))
+    ( λ x y → splitting-decidable-equality A x y (d x y))
+    ( λ x y → is-prop-splitting-decidable-equality A x y (d x y))
+    ( λ x → reflexive-splitting-decidable-equality A x (d x x))
+    ( λ x y → eq-splitting-decidable-equality A x y (d x y))
+
+-- Exercise 8.6
+
+Eq-𝟚-eq : (x y : bool) → Id x y → Eq-𝟚 x y
+Eq-𝟚-eq x .x refl = reflexive-Eq-𝟚 x
+
+has-decidable-equality-𝟚 : has-decidable-equality bool
+has-decidable-equality-𝟚 true true = inl refl
+has-decidable-equality-𝟚 true false = inr (Eq-𝟚-eq true false)
+has-decidable-equality-𝟚 false true = inr (Eq-𝟚-eq false true)
+has-decidable-equality-𝟚 false false = inl refl
+
+Eq-ℕ-eq : (x y : ℕ) → Id x y → Eq-ℕ x y
+Eq-ℕ-eq x .x refl = reflexive-Eq-ℕ x
+
+injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y
+injective-succ-ℕ zero-ℕ zero-ℕ p = refl
+injective-succ-ℕ zero-ℕ (succ-ℕ y) p =
+  ind-empty
+    { P = λ t → Id zero-ℕ (succ-ℕ y)}
+    ( Eq-ℕ-eq one-ℕ (succ-ℕ (succ-ℕ y)) p)
+injective-succ-ℕ (succ-ℕ x) zero-ℕ p =
+  ind-empty
+    { P = λ t → Id (succ-ℕ x) zero-ℕ}
+    ( Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) one-ℕ p)
+injective-succ-ℕ (succ-ℕ x) (succ-ℕ y) p =
+  ap succ-ℕ (eq-Eq-ℕ x y (Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) (succ-ℕ (succ-ℕ y)) p))
+
+has-decidable-equality-ℕ : has-decidable-equality ℕ
+has-decidable-equality-ℕ zero-ℕ zero-ℕ = inl refl
+has-decidable-equality-ℕ zero-ℕ (succ-ℕ y) = inr (Eq-ℕ-eq zero-ℕ (succ-ℕ y))
+has-decidable-equality-ℕ (succ-ℕ x) zero-ℕ = inr (Eq-ℕ-eq (succ-ℕ x) zero-ℕ)
+has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
+  functor-coprod
+    ( ap succ-ℕ)
+    ( λ (f : ¬ (Id x y)) p → f (injective-succ-ℕ x y p))
+    ( has-decidable-equality-ℕ x y)
 
 \end{code}
