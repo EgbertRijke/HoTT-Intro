@@ -415,7 +415,13 @@ commutes. This square commutes by the naturality of homotopies, proven in \autor
 \item Show that $A$ is $(k+1)$-truncated if and only if $\delta_A:A\to A\times A$ is $k$-truncated.
 \end{subexenum}
 \item \label{ex:istrunc_sigma}
-Let $B$ be a type family over $A$. Show that if $A$ is a $k$-type, and $B(x)$ is a $k$-type for each $x:A$, then so is $\sm{x:A}B(x)$. Conclude that for any two $k$-types $A$ and $B$, the type $A\times B$ is also a $k$-type. Hint: for the base case, use \cref{ex:contr_in_sigma,ex:contr_equiv}.
+\begin{subexenum}
+\item Let $B$ be a type family over $A$. Show that if $A$ is a $k$-type, and $B(x)$ is a $k$-type for each $x:A$, then so is $\sm{x:A}B(x)$. Conclude that for any two $k$-types $A$ and $B$, the type $A\times B$ is also a $k$-type. Hint: for the base case, use \cref{ex:contr_in_sigma,ex:contr_equiv}.
+\item Show that for any $k$-type $A$, the identity types of $A$ are also $k$-types.
+\item Show that any maps $f:A\to B$ between $k$-types $A$ and $B$
+is a $k$-truncated map.
+\item Use \cref{ex:proj_fiber} to show that for any type family $B:A\to \UU$, if $A$ and $\sm{x:A}B(x)$ are $k$-types, then so is $B(x)$ for each $x:A$. 
+\end{subexenum}
 \item \label{ex:eq_bool}Show that $\bool$ is a set by applying \cref{lem:prop_to_id} with the observational equality on $\bool$ defined in \cref{ex:obs_bool}.
 \item \label{ex:set_coprod}Show that for any two $(k+2)$-types $A$ and $B$, the disjoint sum $A+B$ is again a $(k+2)$-type. Conclude that $\mathbb{Z}$ is a set.
 \item \label{ex:hedberg}(Hedberg's theorem) A type $A$ is said to have \define{decidable equality} if there is a term of type

@@ -312,6 +312,8 @@ is-trunc-diagonal-is-trunc k A is-trunc-A t =
 
 -- Exercise 8.2
 
+-- Exercise 8.2(a)
+
 is-contr-Σ : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
   is-contr A → ((x : A) → is-contr (B x)) → is-contr (Σ A B)
 is-contr-Σ {A = A} {B = B} is-contr-A is-contr-B =
@@ -336,6 +338,31 @@ is-trunc-prod : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
   is-trunc k A → is-trunc k B → is-trunc k (A × B)
 is-trunc-prod k is-trunc-A is-trunc-B =
   is-trunc-Σ k is-trunc-A (λ x → is-trunc-B)
+
+-- Exercise 8.2 (b)
+
+is-trunc-Id : {l : Level} (k : 𝕋) {A : UU l} →
+  is-trunc k A → (x y : A) → is-trunc k (Id x y)
+is-trunc-Id neg-two-𝕋 is-trunc-A = is-prop-is-contr is-trunc-A
+is-trunc-Id (succ-𝕋 k) is-trunc-A x y =
+  is-trunc-succ-is-trunc k (Id x y) (is-trunc-A x y)
+
+-- Exercise 8.2 (c)
+
+is-trunc-map-is-trunc-domain-codomain : {l1 l2 : Level} (k : 𝕋) {A : UU l1}
+  {B : UU l2} {f : A → B} → is-trunc k A → is-trunc k B → is-trunc-map k f
+is-trunc-map-is-trunc-domain-codomain k {f = f} is-trunc-A is-trunc-B b =
+  is-trunc-Σ k is-trunc-A (λ x → is-trunc-Id k is-trunc-B (f x) b)
+
+-- Exercise 8.2 (d)
+
+is-trunc-fam-is-trunc-Σ : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : A → UU l2} →
+  is-trunc k A → is-trunc k (Σ A B) → (x : A) → is-trunc k (B x)
+is-trunc-fam-is-trunc-Σ k {B = B} is-trunc-A is-trunc-ΣAB x =
+  is-trunc-is-equiv' k
+    ( fib-fam-fib-pr1 B x)
+    ( is-equiv-fib-fam-fib-pr1 B x)
+    ( is-trunc-map-is-trunc-domain-codomain k is-trunc-ΣAB is-trunc-A x)
 
 -- Exercise 8.3
 
@@ -651,5 +678,10 @@ is-trunc-map-comp k f g h H is-trunc-g is-trunc-h =
       ( is-trunc-Σ k
         ( is-trunc-g x)
         ( λ t → is-trunc-h (pr1 t))))
+
+is-trunc-map-right-factor : {l1 l2 l3 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+  is-trunc-map k g → is-trunc-map k f → is-trunc-map k h
+is-trunc-map-right-factor k f g h H is-trunc-g is-trunc-f = {!!}
 
 \end{code}
