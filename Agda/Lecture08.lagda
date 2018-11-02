@@ -480,4 +480,51 @@ has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
     ( λ (f : ¬ (Id x y)) p → f (injective-succ-ℕ x y p))
     ( has-decidable-equality-ℕ x y)
 
+-- Exercise 8.7
+
+has-decidable-equality-coprod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  has-decidable-equality A → has-decidable-equality B →
+  has-decidable-equality (coprod A B)
+has-decidable-equality-coprod dec-A dec-B (inl x) (inl y) =
+  functor-coprod
+    ( ap inl)
+    ( λ f p → f (inv-is-equiv (is-emb-inl _ _ x y) p))
+    ( dec-A x y)
+has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inl x) (inr y) =
+  inr
+    ( λ p →
+      inv-is-equiv
+        ( is-equiv-map-raise _ empty)
+        ( Eq-coprod-eq A B (inl x) (inr y) p))
+has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inr x) (inl y) =
+  inr
+    ( λ p →
+      inv-is-equiv
+        ( is-equiv-map-raise _ empty)
+        ( Eq-coprod-eq A B (inr x) (inl y) p))
+has-decidable-equality-coprod dec-A dec-B (inr x) (inr y) =
+  functor-coprod
+    ( ap inr)
+    ( λ f p → f (inv-is-equiv (is-emb-inr _ _ x y) p))
+    ( dec-B x y)
+
+has-decidable-equality-prod-aux : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (x x' : A) (y y' : B) → coprod (Id x x') (¬ (Id x x')) →
+  coprod (Id y y') (¬ (Id y y')) →
+  coprod (Id (pair x y) (pair x' y')) (¬ (Id (pair x y) (pair x' y')))
+has-decidable-equality-prod-aux x x' y y' (inl p) (inl q) =
+  inl (eq-pair-triv (pair x y) (pair x' y') (pair p q))
+has-decidable-equality-prod-aux x x' y y' (inl p) (inr g) =
+  inr (λ h → g (ap pr2 h))
+has-decidable-equality-prod-aux x x' y y' (inr f) (inl q) =
+  inr (λ h → f (ap pr1 h))
+has-decidable-equality-prod-aux x x' y y' (inr f) (inr g) =
+  inr (λ h → f (ap pr1 h))
+
+has-decidable-equality-prod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  has-decidable-equality A → has-decidable-equality B →
+  has-decidable-equality (A × B)
+has-decidable-equality-prod dec-A dec-B (dpair x y) (dpair x' y') =
+  has-decidable-equality-prod-aux x x' y y' (dec-A x x') (dec-B y y')
+
 \end{code}
