@@ -97,8 +97,8 @@ is-prop-Eq-ℕ zero-ℕ (succ-ℕ m) = is-prop-empty
 is-prop-Eq-ℕ (succ-ℕ n) zero-ℕ = is-prop-empty
 is-prop-Eq-ℕ (succ-ℕ n) (succ-ℕ m) = is-prop-Eq-ℕ n m
 
-is-set-nat : is-set ℕ
-is-set-nat =
+is-set-ℕ : is-set ℕ
+is-set-ℕ =
   is-set-prop-in-id
     Eq-ℕ
     is-prop-Eq-ℕ
@@ -355,5 +355,56 @@ eq-Eq-𝟚 false false star = refl
 
 is-set-bool : is-set bool
 is-set-bool = is-set-prop-in-id Eq-𝟚 is-prop-Eq-𝟚 reflexive-Eq-𝟚 eq-Eq-𝟚
+
+-- Exercise 8.4
+
+is-trunc-succ-empty : (k : 𝕋) → is-trunc (succ-𝕋 k) empty
+is-trunc-succ-empty k = ind-empty
+
+is-trunc-coprod : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
+  is-trunc (succ-𝕋 (succ-𝕋 k)) A → is-trunc (succ-𝕋 (succ-𝕋 k)) B →
+  is-trunc (succ-𝕋 (succ-𝕋 k)) (coprod A B)
+is-trunc-coprod k {A} {B} is-trunc-A is-trunc-B (inl x) (inl y) =
+  is-trunc-is-equiv (succ-𝕋 k)
+    ( Eq-coprod-eq A B (inl x) (inl y))
+    ( is-equiv-Eq-coprod-eq A B (inl x) (inl y))
+    ( is-trunc-is-equiv' (succ-𝕋 k)
+      ( map-raise _ (Id x y))
+      ( is-equiv-map-raise _ (Id x y))
+      ( is-trunc-A x y))
+is-trunc-coprod k {A} {B} is-trunc-A is-trunc-B (inl x) (inr y) =
+   is-trunc-is-equiv (succ-𝕋 k)
+     ( Eq-coprod-eq A B (inl x) (inr y))
+     ( is-equiv-Eq-coprod-eq A B (inl x) (inr y))
+     ( is-trunc-is-equiv' (succ-𝕋 k)
+       ( map-raise _ empty)
+       ( is-equiv-map-raise _ empty)
+       ( is-trunc-succ-empty k))
+is-trunc-coprod k {A} {B} is-trunc-A is-trunc-B (inr x) (inl y) =
+  is-trunc-is-equiv (succ-𝕋 k)
+    ( Eq-coprod-eq A B (inr x) (inl y))
+    ( is-equiv-Eq-coprod-eq A B (inr x) (inl y))
+    ( is-trunc-is-equiv' (succ-𝕋 k)
+      ( map-raise _ empty)
+      ( is-equiv-map-raise _ empty)
+      ( is-trunc-succ-empty k))
+is-trunc-coprod k {A} {B} is-trunc-A is-trunc-B (inr x) (inr y) =
+   is-trunc-is-equiv (succ-𝕋 k)
+     ( Eq-coprod-eq A B (inr x) (inr y))
+     ( is-equiv-Eq-coprod-eq A B (inr x) (inr y))
+     ( is-trunc-is-equiv' (succ-𝕋 k)
+       ( map-raise _ (Id x y))
+       ( is-equiv-map-raise _ (Id x y))
+       ( is-trunc-B x y))
+
+is-set-coprod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  is-set A → is-set B → is-set (coprod A B)
+is-set-coprod = is-trunc-coprod neg-two-𝕋
+
+is-set-unit : is-set unit
+is-set-unit = is-trunc-succ-is-trunc neg-one-𝕋 unit is-prop-unit
+
+is-set-ℤ : is-set ℤ
+is-set-ℤ = is-set-coprod is-set-ℕ (is-set-coprod is-set-unit is-set-ℕ)
 
 \end{code}

@@ -834,5 +834,4 @@ is-emb-inr A B x =
         ( is-contr-total-path B x)))
     ( λ y → ap inr)
 
-
 \end{code}
