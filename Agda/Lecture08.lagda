@@ -527,4 +527,15 @@ has-decidable-equality-prod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
 has-decidable-equality-prod dec-A dec-B (dpair x y) (dpair x' y') =
   has-decidable-equality-prod-aux x x' y y' (dec-A x x') (dec-B y y')
 
+-- Exercise 8.8
+
+is-trunc-retract-of : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
+  A retract-of B → is-trunc k B → is-trunc k A
+is-trunc-retract-of neg-two-𝕋 (dpair i (dpair r H)) is-trunc-B =
+  is-contr-retract-of _ (dpair i (dpair r H)) is-trunc-B
+is-trunc-retract-of (succ-𝕋 k) (dpair i retr-i) is-trunc-B x y =
+  is-trunc-retract-of k
+    ( dpair (ap i) (retr-ap i retr-i x y))
+    ( is-trunc-B (i x) (i y))
+
 \end{code}

@@ -549,9 +549,8 @@ isretr-ap-retraction : {i j : Level} {A : UU i} {B : UU j}
 isretr-ap-retraction i r H x .x refl = left-inv (H x)
 
 retr-ap : {i j : Level} {A : UU i} {B : UU j}
-  (i : A → B) (r : B → A) (H : (r ∘ i) ~ id)
-  (x y : A) → retr (ap i {x} {y})
-retr-ap i r H x y =
+  (i : A → B) → retr i → (x y : A) → retr (ap i {x} {y})
+retr-ap i (dpair r H) x y =
   dpair (ap-retraction i r H x y) (isretr-ap-retraction i r H x y)
 
 -- Exercise 5.10
