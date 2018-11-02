@@ -407,4 +407,45 @@ is-set-unit = is-trunc-succ-is-trunc neg-one-𝕋 unit is-prop-unit
 is-set-ℤ : is-set ℤ
 is-set-ℤ = is-set-coprod is-set-ℕ (is-set-coprod is-set-unit is-set-ℕ)
 
+-- Exercise 8.5
+
+has-decidable-equality : {l : Level} (A : UU l) → UU l
+has-decidable-equality A = (x y : A) → coprod (Id x y) (¬ (Id x y))
+
+split-decidable-equality : {l : Level} (A : UU l) (x y : A) →
+  coprod (Id x y) (¬ (Id x y)) → UU lzero
+split-decidable-equality A x y (inl p) = unit
+split-decidable-equality A x y (inr f) = empty
+
+is-prop-split-decidable-equality : {l : Level} (A : UU l) (x y : A) →
+  (t : coprod (Id x y) (¬ (Id x y))) →
+  is-prop (split-decidable-equality A x y t)
+is-prop-split-decidable-equality A x y (inl p) = is-prop-unit
+is-prop-split-decidable-equality A x y (inr f) = is-prop-empty
+
+reflexive-split-decidable-equality : {l : Level} (A : UU l) (x : A) →
+  (t : coprod (Id x x) (¬ (Id x x))) → split-decidable-equality A x x t
+reflexive-split-decidable-equality A x (inl p) = star
+reflexive-split-decidable-equality A x (inr f) =
+  ind-empty {P = λ t → split-decidable-equality A x x (inr f)} (f refl)
+
+eq-split-decidable-equality : {l : Level} (A : UU l) (x y : A) →
+  (t : coprod (Id x y) (¬ (Id x y))) →
+  split-decidable-equality A x y t → Id x y
+eq-split-decidable-equality A x y (inl p) t = p
+eq-split-decidable-equality A x y (inr f) t = ind-empty {P = λ s → Id x y} t 
+
+Eq-decidable-equality : {l : Level} (A : UU l) (d : has-decidable-equality A) →
+  A → A → UU lzero
+Eq-decidable-equality A d x y = split-decidable-equality A x y (d x y)
+
+is-set-has-decidable-equality : {l : Level} (A : UU l) →
+  has-decidable-equality A → is-set A
+is-set-has-decidable-equality A d =
+  is-set-prop-in-id
+    ( λ x y → split-decidable-equality A x y (d x y))
+    ( λ x y → is-prop-split-decidable-equality A x y (d x y))
+    ( λ x → reflexive-split-decidable-equality A x (d x x))
+    ( λ x y → eq-split-decidable-equality A x y (d x y))
+
 \end{code}
