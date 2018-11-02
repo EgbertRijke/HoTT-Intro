@@ -570,10 +570,27 @@ is-emb-is-injective is-set-A is-set-B f is-injective-f x y =
     ( is-set-B (f x) (f y))
     ( is-injective-f x y)
 
-is-injective-is-emb : {l1 l2 : Level} {A : UU l1} (is-set-A : is-set A)
-  {B : UU l2} (is-set-B : is-set B) (f : A → B) →
+is-injective-is-emb : {l1 l2 : Level} {A : UU l1} {is-set-A : is-set A}
+  {B : UU l2} {is-set-B : is-set B} {f : A → B} →
   is-emb f → is-injective is-set-A is-set-B f
-is-injective-is-emb is-set-A is-set-B f is-emb-f x y =
-  inv-is-equiv (is-emb-f x y)
+is-injective-is-emb is-emb-f x y = inv-is-equiv (is-emb-f x y)
+
+-- Exercise 8.10
+
+is-trunc-const-is-trunc : {l : Level} (k : 𝕋) {A : UU l} →
+  is-trunc (succ-𝕋 k) A → (x : A) → is-trunc-map k (const unit A x)
+is-trunc-const-is-trunc k is-trunc-A x y =
+  is-trunc-is-equiv' k
+    ( left-unit-law-Σ-map (λ t → Id x y) is-contr-unit)
+    ( is-equiv-left-unit-law-Σ-map (λ t → Id x y) is-contr-unit)
+    ( is-trunc-A x y)
+
+is-trunc-is-trunc-const : {l : Level} (k : 𝕋) {A : UU l} →
+  ((x : A) → is-trunc-map k (const unit A x)) → is-trunc (succ-𝕋 k) A
+is-trunc-is-trunc-const k is-trunc-const x y =
+  is-trunc-is-equiv k
+    ( left-unit-law-Σ-map (λ t → Id x y) is-contr-unit)
+    ( is-equiv-left-unit-law-Σ-map (λ t → Id x y) is-contr-unit)
+    ( is-trunc-const x y)
 
 \end{code}
