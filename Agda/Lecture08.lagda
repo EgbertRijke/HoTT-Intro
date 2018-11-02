@@ -593,4 +593,63 @@ is-trunc-is-trunc-const k is-trunc-const x y =
     ( is-equiv-left-unit-law-Σ-map (λ t → Id x y) is-contr-unit)
     ( is-trunc-const x y)
 
+-- Exercise 8.11
+
+map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (g : B → X) (h : A → B) →
+  (x : X) → fib (g ∘ h) x → Σ (fib g x) (λ t → fib h (pr1 t))
+map-fib-comp g h x (dpair a p) =
+  dpair
+    ( dpair (h a) p)
+    ( dpair a refl)
+
+inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (g : B → X) (h : A → B) →
+  (x : X) → Σ (fib g x) (λ t → fib h (pr1 t)) → fib (g ∘ h) x
+inv-map-fib-comp g h .(g (h a))
+  (dpair (dpair .(h a) refl) (dpair a refl)) = dpair a refl
+
+issec-inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (g : B → X) (h : A → B) →
+  (x : X) →
+  ((map-fib-comp g h x) ∘ (inv-map-fib-comp g h x)) ~ id
+issec-inv-map-fib-comp g h x
+  (dpair (dpair .(h a) refl) (dpair a refl)) = refl
+
+isretr-inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (g : B → X) (h : A → B) (x : X) →
+  ((inv-map-fib-comp g h x) ∘ (map-fib-comp g h x)) ~ id
+isretr-inv-map-fib-comp g h .(g (h a)) (dpair a refl) = refl
+
+is-equiv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (g : B → X) (h : A → B) (x : X) →
+  is-equiv (map-fib-comp g h x)
+is-equiv-map-fib-comp g h x =
+  is-equiv-has-inverse
+    ( dpair
+      ( inv-map-fib-comp g h x)
+      ( dpair
+        ( issec-inv-map-fib-comp g h x)
+        ( isretr-inv-map-fib-comp g h x)))
+
+is-trunc-map-htpy : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
+  (f g : A → B) → f ~ g → is-trunc-map k g → is-trunc-map k f
+is-trunc-map-htpy k f g H is-trunc-g b =
+  is-trunc-is-equiv k
+    ( fib-triangle f g id H b)
+    ( is-fiberwise-equiv-is-equiv-triangle f g id H (is-equiv-id _) b)
+    ( is-trunc-g b)
+
+is-trunc-map-comp : {l1 l2 l3 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+  is-trunc-map k g → is-trunc-map k h → is-trunc-map k f
+is-trunc-map-comp k f g h H is-trunc-g is-trunc-h =
+  is-trunc-map-htpy k f (g ∘ h) H
+    ( λ x → is-trunc-is-equiv k
+      ( map-fib-comp g h x)
+      ( is-equiv-map-fib-comp g h x)
+      ( is-trunc-Σ k
+        ( is-trunc-g x)
+        ( λ t → is-trunc-h (pr1 t))))
+
 \end{code}
