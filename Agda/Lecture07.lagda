@@ -151,6 +151,15 @@ is-half-adjoint-equivalence-is-path-split {A = A} {B = B} f
         ( pr1 (sec-ap-f (g (f x)) x) (issec-g (f x)))
         ( pr2 (sec-ap-f (g (f x)) x) (issec-g (f x))))))
 
+is-equiv-is-half-adjoint-equivalence : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) → is-half-adjoint-equivalence f → is-equiv f
+is-equiv-is-half-adjoint-equivalence f (dpair g (dpair G (dpair H K))) =
+  is-equiv-has-inverse (dpair g (dpair G H))
+
+is-equiv-is-path-split : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-path-split f → is-equiv f
+is-equiv-is-path-split f = (is-equiv-is-half-adjoint-equivalence f) ∘ (is-half-adjoint-equivalence-is-path-split f)
+
 tr-precompose-fam : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
   (f : A → B) {x y : A} (p : Id x y) → tr C (ap f p) ~ tr (λ x → C (f x)) p
 tr-precompose-fam C f refl = htpy-refl _

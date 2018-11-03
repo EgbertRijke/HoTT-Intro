@@ -494,4 +494,48 @@ is-contr-endomaps-is-prop : {l : Level} (P : UU l) →
 is-contr-endomaps-is-prop P is-prop-P =
   is-contr-is-prop-inh (is-prop-function-type P P is-prop-P) id
 
+-- Exercise 9.6
+
+is-prop-is-path-split : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-prop (is-path-split f)
+is-prop-is-path-split f =
+  is-prop-is-contr-if-inh (λ is-path-split-f →
+    let is-equiv-f = is-equiv-is-path-split f is-path-split-f in
+    is-contr-prod
+      ( is-contr-sec-is-equiv is-equiv-f)
+      ( is-contr-Π
+        ( λ x → is-contr-Π
+          ( λ y → is-contr-sec-is-equiv (is-emb-is-equiv f is-equiv-f x y)))))
+
+is-prop-is-half-adjoint-equivalence : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) → is-prop (is-half-adjoint-equivalence f)
+is-prop-is-half-adjoint-equivalence {l1} {l2} {A} {B} f =
+  is-prop-is-contr-if-inh (λ is-hae-f →
+    let is-equiv-f = is-equiv-is-half-adjoint-equivalence f is-hae-f in
+    is-contr-is-equiv'
+      ( Σ (sec f)
+        ( λ sf → Σ (((pr1 sf) ∘ f) ~ id)
+          ( λ H → (htpy-right-whisk (pr2 sf) f) ~ (htpy-left-whisk f H))))
+      ( Σ-assoc (B → A)
+        ( λ g → ((f ∘ g) ~ id))
+        ( λ sf → Σ (((pr1 sf) ∘ f) ~ id)
+          ( λ H → (htpy-right-whisk (pr2 sf) f) ~ (htpy-left-whisk f H))))
+      ( is-equiv-Σ-assoc _ _ _)
+      ( is-contr-Σ
+        ( is-contr-sec-is-equiv is-equiv-f)
+        ( λ sf → is-contr-is-equiv'
+          ( (x : A) →
+            Σ (Id ((pr1 sf) (f x)) x) (λ p → Id ((pr2 sf) (f x)) (ap f p)))
+          ( choice-∞)
+          ( is-equiv-choice-∞)
+          ( is-contr-Π (λ x →
+             is-contr-is-equiv'
+               ( fib (ap f) ((pr2 sf) (f x)))
+               ( tot (λ p → inv))
+               ( is-equiv-tot-is-fiberwise-equiv
+                 ( λ p → is-equiv-inv (ap f p) ((pr2 sf) (f x))))
+               ( is-contr-map-is-equiv
+                 ( is-emb-is-equiv f is-equiv-f ((pr1 sf) (f x)) x)
+                 ( (pr2 sf) (f x))))))))
+
 \end{code}
