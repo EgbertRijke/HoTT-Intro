@@ -32,23 +32,27 @@ data coprod {i j : Level} (A : UU i) (B : UU j) : UU (i ⊔ j)  where
   inl : A → coprod A B
   inr : B → coprod A B
 
-data Sigma {i j : Level} (A : UU i) (B : A → UU j) : UU (i ⊔ j) where
-  dpair : (x : A) → (B x → Sigma A B)
+ind-coprod : {i j k : Level} {A : UU i} {B : UU j} (C : coprod A B → UU k) →
+  ((x : A) → C (inl x)) → ((y : B) → C (inr y)) →
+  (t : coprod A B) → C t
+ind-coprod C f g (inl x) = f x
+ind-coprod C f g (inr x) = g x
 
-Σ = Sigma
+data Σ {i j : Level} (A : UU i) (B : A → UU j) : UU (i ⊔ j) where
+  dpair : (x : A) → (B x → Σ A B)
 
 ind-Σ : {i j k : Level} {A : UU i} {B : A → UU j} {C : Σ A B → UU k} →
   ((x : A) (y : B x) → C (dpair x y)) → ((t : Σ A B) → C t)
 ind-Σ f (dpair x y) = f x y
 
-pr1 : {i j : Level} {A : UU i} {B : A → UU j} → Sigma A B → A
+pr1 : {i j : Level} {A : UU i} {B : A → UU j} → Σ A B → A
 pr1 (dpair a b) = a
 
-pr2 : {i j : Level} {A : UU i} {B : A → UU j} → (t : Sigma A B) → B (pr1 t)
+pr2 : {i j : Level} {A : UU i} {B : A → UU j} → (t : Σ A B) → B (pr1 t)
 pr2 (dpair a b) = b
 
 prod : {i j : Level} (A : UU i) (B : UU j) → UU (i ⊔ j)
-prod A B = Sigma A (λ a → B)
+prod A B = Σ A (λ a → B)
 
 _×_ :  {i j : Level} (A : UU i) (B : UU j) → UU (i ⊔ j)
 A × B = prod A B
@@ -58,15 +62,15 @@ pair a b = dpair a b
 
 -- Pointed types
 U-pt : (i : Level) → UU (lsuc i)
-U-pt i = Sigma (UU i) (λ X → X)
+U-pt i = Σ (UU i) (λ X → X)
  
 -- Graphs
 Gph : (i : Level) → UU (lsuc i)
-Gph i = Sigma (UU i) (λ X → (X → X → (UU i)))
+Gph i = Σ (UU i) (λ X → (X → X → (UU i)))
 
 -- Reflexive graphs
 rGph : (i : Level) →  UU (lsuc i)
-rGph i = Sigma (UU i) (λ X → Sigma (X → X → (UU i)) (λ R → (x : X) → R x x))
+rGph i = Σ (UU i) (λ X → Σ (X → X → (UU i)) (λ R → (x : X) → R x x))
 
 -- Finite sets
 Fin : ℕ → UU lzero

@@ -460,7 +460,7 @@ is-pullback-cone-span-is-equiv : {l1 l2 l3 l4 l5 l6 : Level} {A : UU l1} {B : UU
   is-pullback f g (cone-span f g i j k)
 is-pullback-cone-span-is-equiv {B = B} f g i j k is-equiv-i is-equiv-j is-equiv-k =
   is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
-    ( λ x → Sigma B (λ y → Id (f x) (g y)))
+    ( λ x → Σ B (λ y → Id (f x) (g y)))
     ( i)
     ( λ x' → toto (λ y → Id (f (i x')) (g y)) j (k x'))
     ( is-equiv-i)
@@ -700,6 +700,7 @@ is-trunc-is-pullback : {l1 l2 l3 l4 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
   is-pullback f g c → is-trunc-map k g → is-trunc-map k (pr1 c)
 is-trunc-is-pullback k f g c pb is-trunc-g a =
   is-trunc-is-equiv k
+    ( fib g (f a))
     ( fib-square f g c a)
     ( is-fiberwise-equiv-fib-square-is-pullback f g c pb a)
     (is-trunc-g (f a))
@@ -813,25 +814,44 @@ is-pullback-left-square-is-pullback-rectangle i j h c d is-pb-c is-pb-rect =
       ( is-fiberwise-equiv-fib-square-is-pullback (j ∘ i) h
         ( cone-comp-horizontal i j h c d) is-pb-rect x))
 
--- Section 10.7 Disjointness of coproducts
+-- Section 10.7 Descent for coproducts and Σ-types
 
-map-coprod : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3} →
-  (A → X) → (B → X) → (coprod A B → X)
-map-coprod f g (inl x) = f x
-map-coprod f g (inr y) = g y
-
-coprod-functor : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  {Y : UU l4} → (A → X) → (B → Y) → (coprod A B → coprod X Y)
-coprod-functor f g (inl x) = inl (f x)
-coprod-functor f g (inr y) = inr (g y)
-
-cone-const-true-true : {l : Level} (X : UU l) →
-  cone (const X bool true) (const unit bool true) X
-cone-const-true-true X = dpair id (dpair (const X unit star) (λ x → refl))
-
-is-pullback-cone-const-true-true : {l : Level} (X : UU l) →
-  is-pullback (const X bool true) (const unit bool true)
-    (cone-const-true-true X)
-is-pullback-cone-const-true-true X = {!!}
+descent-coprod : {l1 l2 l3 l1' l2' l3' : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X)
+  {A' : UU l1'} {B' : UU l2'} {X' : UU l3'} (f' : A' → X') (g' : B' → X')
+  (i : X' → X) (h : A' → A) (k : B' → B)
+  (H : (f ∘ h) ~ (i ∘ f')) (K : (g ∘ k) ~ (i ∘ g')) →
+  is-pullback f i (dpair h (dpair f' H)) →
+  is-pullback g i (dpair k (dpair g' K)) →
+  is-pullback
+    ( ind-coprod (λ t → X) f g)
+    ( i)
+    ( dpair
+      ( functor-coprod h k)
+      ( dpair
+        ( ind-coprod (λ t → X') f' g')
+        ( ind-coprod
+          ( λ t → Id
+            ( ind-coprod (λ s → X) f g (functor-coprod h k t))
+            ( i (ind-coprod (λ s → X') f' g' t)))
+          ( H)
+          ( K))))
+descent-coprod {X = X} f g {X' = X'} f' g' i h k H K is-pb-H is-pb-K =
+  is-pullback-is-fiberwise-equiv-fib-square
+    ( ind-coprod (λ t → X) f g)
+    ( i)
+    ( dpair
+      ( functor-coprod h k)
+      ( dpair
+        ( ind-coprod (λ t → X') f' g')
+        ( ind-coprod
+          ( λ t → Id
+            ( ind-coprod (λ s → X) f g (functor-coprod h k t))
+            ( i (ind-coprod (λ s → X') f' g' t)))
+          ( H)
+          ( K))))
+    ( ind-coprod _
+      {!!}
+      {!!})
 
 \end{code}

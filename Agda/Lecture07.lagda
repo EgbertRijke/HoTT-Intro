@@ -475,12 +475,12 @@ is-contr-total-Eq-coprod-inl A B x =
          ( coprod (Σ A (Id x)) empty)
          ( functor-coprod id (map-Σ-empty-fam B))
          ( is-equiv-functor-coprod
-           ( is-equiv-id (Sigma A (Id x)))
+           ( is-equiv-id (Σ A (Id x)))
          ( is-equiv-map-Σ-empty-fam B))
          ( is-contr-is-equiv'
            ( Σ A (Id x))
            ( inl)
-           ( is-equiv-inl-coprod-empty (Sigma A (Id x)))
+           ( is-equiv-inl-coprod-empty (Σ A (Id x)))
            ( is-contr-total-path A x))))
 
 is-contr-total-Eq-coprod-inr : {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : B) →
@@ -507,11 +507,11 @@ is-contr-total-Eq-coprod-inr A B x =
         ( functor-coprod (map-Σ-empty-fam A) id)
         ( is-equiv-functor-coprod
           ( is-equiv-map-Σ-empty-fam A)
-          ( is-equiv-id (Sigma B (Id x))))
+          ( is-equiv-id (Σ B (Id x))))
         ( is-contr-is-equiv'
           ( Σ B (Id x))
           ( inr)
-          ( is-equiv-inr-coprod-empty (Sigma B (Id x)))
+          ( is-equiv-inr-coprod-empty (Σ B (Id x)))
           ( is-contr-total-path B x))))
 
 is-equiv-Eq-coprod-eq-inl : {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : A) →

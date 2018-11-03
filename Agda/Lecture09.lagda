@@ -174,14 +174,30 @@ is-trunc-Π : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : A → UU l2} →
   ((x : A) → is-trunc k (B x)) → is-trunc k ((x : A) → B x)
 is-trunc-Π neg-two-𝕋 is-trunc-B = is-contr-Π is-trunc-B
 is-trunc-Π (succ-𝕋 k) is-trunc-B f g =
-  is-trunc-is-equiv k htpy-eq
+  is-trunc-is-equiv k (f ~ g) htpy-eq
     ( funext f g)
     ( is-trunc-Π k (λ x → is-trunc-B x (f x) (g x)))
+
+is-prop-Π : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
+  is-subtype B → is-prop ((x : A) → B x)
+is-prop-Π = is-trunc-Π neg-one-𝕋
+
+is-set-Π : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
+  ((x : A) → is-set (B x)) → is-set ((x : A) → (B x))
+is-set-Π = is-trunc-Π zero-𝕋
 
 is-trunc-function-type : {l1 l2 : Level} (k : 𝕋) (A : UU l1) (B : UU l2) →
   is-trunc k B → is-trunc k (A → B)
 is-trunc-function-type k A B is-trunc-B =
   is-trunc-Π k {B = λ (x : A) → B} (λ x → is-trunc-B)
+
+is-prop-function-type : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  is-prop B → is-prop (A → B)
+is-prop-function-type = is-trunc-function-type neg-one-𝕋
+
+is-set-function-type : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  is-set B → is-set (A → B)
+is-set-function-type = is-trunc-function-type zero-𝕋
 
 choice-∞ : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   {C : (x : A) → B x → UU l3} → ((x : A) → Σ (B x) (λ y → C x y)) →
@@ -351,7 +367,22 @@ is-equiv-htpy-concat' f K =
         ( issec-inv-htpy-concat' f K)
         ( isretr-inv-htpy-concat' f K)))
 
--- Exercise 9.4
+-- Exercise 9.2
+
+is-subtype-is-contr : {l : Level} → is-subtype {lsuc l} {A = UU l} is-contr
+is-subtype-is-contr A =
+  is-prop-is-contr-if-inh
+    ( λ is-contr-A →
+      is-contr-Σ
+        ( is-contr-A)
+        ( λ x → is-contr-Π (is-prop-is-contr is-contr-A x)))
+
+is-prop-is-trunc : {l : Level} (k : 𝕋) (A : UU l) → is-prop (is-trunc k A)
+is-prop-is-trunc neg-two-𝕋 = is-subtype-is-contr
+is-prop-is-trunc (succ-𝕋 k) A =
+  is-prop-Π (λ x → is-prop-Π (λ y → is-prop-is-trunc k (Id x y)))
+
+-- Exercise 9.3
 
 is-equiv-is-equiv-postcomp : {l1 l2 : Level} {X : UU l1} {Y : UU l2}
   (f : X → Y) →
@@ -376,9 +407,9 @@ is-equiv-postcomp-is-equiv {X = X} {Y = Y} f is-equiv-f A =
     ( λ (g : A → Y) → (inv-is-equiv is-equiv-f) ∘ g)
     ( dpair
       ( λ g → eq-htpy (htpy-right-whisk (issec-inv-is-equiv is-equiv-f) g))
-      ( λ h → eq-htpy (htpy-right-whisk (isretr-inv-is-equiv is-equiv-f) h))))
+      ( λ h → eq-htpy (htpy-right-whisk (isretr-inv-is-equiv is-equiv-f) h)))) 
 
--- Exercise 9.5
+-- Exercise 9.4
 
 is-contr-sec-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2} {f : A → B} →
   is-equiv f → is-contr (sec f)
@@ -414,6 +445,53 @@ is-subtype-is-equiv f = is-prop-is-contr-if-inh
     ( is-contr-sec-is-equiv is-equiv-f)
     ( is-contr-retr-is-equiv is-equiv-f))
 
+is-emb-eqv-map : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  is-emb (eqv-map {A = A} {B = B})
+is-emb-eqv-map = is-emb-pr1-is-subtype is-subtype-is-equiv
 
+-- Exercise 9.5
+
+_↔_ : {l1 l2 : Level} → Prop l1 → Prop l2 → UU (l1 ⊔ l2)
+P ↔ Q = (pr1 P → pr1 Q) × (pr1 Q → pr1 P)
+
+equiv-iff : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+  (P ↔ Q) → (pr1 P ≃ pr1 Q)
+equiv-iff P Q t = dpair (pr1 t) (is-equiv-is-prop (pr2 P) (pr2 Q) (pr2 t))
+
+iff-equiv : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+  (pr1 P ≃ pr1 Q) → (P ↔ Q)
+iff-equiv P Q equiv-PQ = dpair (pr1 equiv-PQ) (inv-is-equiv (pr2 equiv-PQ))
+
+is-prop-iff : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) → is-prop (P ↔ Q)
+is-prop-iff P Q =
+  is-prop-prod
+    ( is-prop-function-type (pr1 P) (pr1 Q) (pr2 Q))
+    ( is-prop-function-type (pr1 Q) (pr1 P) (pr2 P))
+
+is-prop-equiv-is-prop : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+  is-prop ((pr1 P) ≃ (pr1 Q))
+is-prop-equiv-is-prop P Q =
+  is-prop-Σ
+    ( is-prop-function-type (pr1 P) (pr1 Q) (pr2 Q))
+    ( is-subtype-is-equiv)
+
+is-equiv-equiv-iff : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+  is-equiv (equiv-iff P Q)
+is-equiv-equiv-iff P Q =
+  is-equiv-is-prop
+    ( is-prop-iff P Q)
+    ( is-prop-equiv-is-prop P Q)
+    ( iff-equiv P Q)
+
+is-prop-is-contr-endomaps : {l : Level} (P : UU l) →
+  is-contr (P → P) → is-prop P
+is-prop-is-contr-endomaps P H =
+  is-prop-is-prop'
+    ( λ x → htpy-eq (center (is-prop-is-contr H (const P P x) id)))
+
+is-contr-endomaps-is-prop : {l : Level} (P : UU l) →
+  is-prop P → is-contr (P → P)
+is-contr-endomaps-is-prop P is-prop-P =
+  is-contr-is-prop-inh (is-prop-function-type P P is-prop-P) id
 
 \end{code}

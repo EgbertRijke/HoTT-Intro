@@ -10,7 +10,7 @@ open Lecture05 public
 -- Section 6.1 Contractible types
 
 is-contr : {i : Level} → UU i → UU i
-is-contr A = Sigma A (λ a → (x : A) → Id a x)
+is-contr A = Σ A (λ a → (x : A) → Id a x)
 
 center : {i : Level} {A : UU i} → is-contr A → A
 center (dpair c C) = c
