@@ -691,4 +691,9 @@ is-trunc-map-right-factor k f g h H is-trunc-g is-trunc-f b =
       ( is-trunc-map-htpy k (g ∘ h) f (htpy-inv H) is-trunc-f (g b)))
     ( dpair b refl)
 
+is-trunc-map-succ-is-trunc-map : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
+  (f : A → B) → is-trunc-map k f → is-trunc-map (succ-𝕋 k) f
+is-trunc-map-succ-is-trunc-map k f is-trunc-f b =
+  is-trunc-succ-is-trunc k (fib f b) (is-trunc-f b)
+
 \end{code}
