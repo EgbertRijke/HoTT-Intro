@@ -682,6 +682,13 @@ is-trunc-map-comp k f g h H is-trunc-g is-trunc-h =
 is-trunc-map-right-factor : {l1 l2 l3 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   is-trunc-map k g → is-trunc-map k f → is-trunc-map k h
-is-trunc-map-right-factor k f g h H is-trunc-g is-trunc-f = {!!}
+is-trunc-map-right-factor k f g h H is-trunc-g is-trunc-f b =
+  is-trunc-fam-is-trunc-Σ k
+    ( is-trunc-g (g b))
+    ( is-trunc-is-equiv' k
+      ( map-fib-comp g h (g b))
+      ( is-equiv-map-fib-comp g h (g b))
+      ( is-trunc-map-htpy k (g ∘ h) f (htpy-inv H) is-trunc-f (g b)))
+    ( dpair b refl)
 
 \end{code}
