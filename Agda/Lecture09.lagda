@@ -585,4 +585,61 @@ is-equiv-invertible-id-htpy-id-id A =
        ( dpair id (htpy-refl id)))
      ( is-equiv-Σ-assoc _ _ _)
 
+-- Exercise 9.8
+
+dependent-universal-property-empty : {l : Level} (P : empty → UU l) →
+  is-contr ((x : empty) → P x)
+dependent-universal-property-empty P =
+  dpair
+    ( ind-empty {P = P})
+    ( λ f → eq-htpy ind-empty)
+
+universal-property-empty : {l : Level} (X : UU l) → is-contr (empty → X)
+universal-property-empty X = dependent-universal-property-empty (λ t → X)
+
+uniqueness-empty : {l : Level} (Y : UU l) → ((l' : Level) (X : UU l') →
+  is-contr (Y → X)) → is-equiv (ind-empty {P = λ t → Y})
+uniqueness-empty Y H =
+  is-equiv-is-equiv-precomp ind-empty
+    ( λ X → is-equiv-is-contr
+      ( λ g → g ∘ ind-empty)
+      ( H _ X)
+      ( universal-property-empty X))
+
+-- Exercise 9.9
+
+ev-inl-inr : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (P : coprod A B → UU l3) →
+  ((t : coprod A B) → P t) → ((x : A) → P (inl x)) × ((y : B) → P (inr y))
+ev-inl-inr P s = pair (λ x → s (inl x)) (λ y → s (inr y))
+
+dependent-universal-property-coprod : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (P : coprod A B → UU l3) → is-equiv (ev-inl-inr P)
+dependent-universal-property-coprod P =
+  is-equiv-has-inverse
+    ( dpair
+      ( λ p → ind-coprod P (pr1 p) (pr2 p))
+      ( dpair
+        ( ind-Σ (λ f g → eq-pair-triv _ (pair f g) (pair refl refl)))
+        ( λ s → eq-htpy (ind-coprod _ (λ x → refl) λ y → refl))))
+
+universal-property-coprod : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (X : UU l3) → is-equiv (ev-inl-inr (λ (t : coprod A B) → X))
+universal-property-coprod X = dependent-universal-property-coprod (λ t → X)
+
+uniqueness-coprod : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {Y : UU l3}
+  (i : A → Y) (j : B → Y) →
+  ((l : Level) (X : UU l) → is-equiv (λ (s : Y → X) → pair (s ∘ i) (s ∘ j))) →
+  is-equiv (ind-coprod (λ t → Y) i j)
+uniqueness-coprod {Y = Y} i j H =
+  is-equiv-is-equiv-precomp
+    ( ind-coprod _ i j)
+    ( λ X → is-equiv-right-factor
+      ( λ (s : Y → X) → pair (s ∘ i) (s ∘ j))
+      ( ev-inl-inr (λ t → X))
+      ( λ s → s ∘ (ind-coprod (λ t → Y) i j))
+      ( λ s → refl)
+      ( universal-property-coprod X)
+      ( H _ X))
+
 \end{code}
