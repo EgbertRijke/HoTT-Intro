@@ -538,4 +538,51 @@ is-prop-is-half-adjoint-equivalence {l1} {l2} {A} {B} f =
                  ( is-emb-is-equiv f is-equiv-f ((pr1 sf) (f x)) x)
                  ( (pr2 sf) (f x))))))))
 
+-- Exercise 9.7
+
+left-unit-law-Σ-map-gen : {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+  is-contr A → (x : A) → B x → Σ A B
+left-unit-law-Σ-map-gen B is-contr-A x y = dpair x y
+
+is-equiv-left-unit-law-Σ-map-gen : {l1 l2 : Level} {A : UU l1}
+  (B : A → UU l2) → (is-contr-A : is-contr A) → (x : A) →
+  is-equiv (left-unit-law-Σ-map-gen B is-contr-A x)
+is-equiv-left-unit-law-Σ-map-gen B is-contr-A x =
+   is-equiv-comp
+     ( left-unit-law-Σ-map-gen B is-contr-A x)
+     ( left-unit-law-Σ-map B is-contr-A)
+     ( tr B (inv (contraction is-contr-A x)))
+     ( λ y → eq-pair (dpair (inv (contraction is-contr-A x)) refl))
+     ( is-equiv-tr B (inv (contraction is-contr-A x)))
+     ( is-equiv-left-unit-law-Σ-map B is-contr-A)
+
+is-invertible-id-htpy-id-id : {l : Level} (A : UU l) →
+  (id {A = A} ~ id {A = A}) → has-inverse (id {A = A})
+is-invertible-id-htpy-id-id A H = dpair id (dpair (htpy-refl id) H)
+
+triangle-is-invertible-id-htpy-id-id : {l : Level} (A : UU l) →
+  ( is-invertible-id-htpy-id-id A) ~
+    ( (Σ-assoc (A → A) (λ g → (id ∘ g) ~ id) (λ s → ((pr1 s) ∘ id) ~ id)) ∘
+      ( left-unit-law-Σ-map-gen
+        ( λ s → ((pr1 s) ∘ id) ~ id)
+        ( is-contr-sec-is-equiv (is-equiv-id A)) (dpair id (htpy-refl id))))
+triangle-is-invertible-id-htpy-id-id A H = refl
+
+is-equiv-invertible-id-htpy-id-id : {l : Level} (A : UU l) →
+  is-equiv (is-invertible-id-htpy-id-id A)
+is-equiv-invertible-id-htpy-id-id A =
+   is-equiv-comp
+     ( is-invertible-id-htpy-id-id A)
+     ( Σ-assoc (A → A) (λ g → (id ∘ g) ~ id) (λ s → ((pr1 s) ∘ id) ~ id))
+     ( left-unit-law-Σ-map-gen
+       ( λ s → ((pr1 s) ∘ id) ~ id)
+       ( is-contr-sec-is-equiv (is-equiv-id A))
+       ( dpair id (htpy-refl id)))
+     ( triangle-is-invertible-id-htpy-id-id A)
+     ( is-equiv-left-unit-law-Σ-map-gen
+       ( λ s → ((pr1 s) ∘ id) ~ id)
+       ( is-contr-sec-is-equiv (is-equiv-id A))
+       ( dpair id (htpy-refl id)))
+     ( is-equiv-Σ-assoc _ _ _)
+
 \end{code}
