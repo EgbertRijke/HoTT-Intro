@@ -606,6 +606,16 @@ uniqueness-empty Y H =
       ( H _ X)
       ( universal-property-empty X))
 
+universal-property-empty-is-equiv-ind-empty : {l : Level} (X : UU l) →
+  is-equiv (ind-empty {P = λ t → X}) →
+  ((l' : Level) (Y : UU l') → is-contr (X → Y))
+universal-property-empty-is-equiv-ind-empty X is-equiv-ind-empty l' Y =
+  is-contr-is-equiv
+    ( empty → Y)
+    ( λ f → f ∘ ind-empty)
+    ( is-equiv-precomp-is-equiv ind-empty is-equiv-ind-empty Y)
+    ( universal-property-empty Y)
+
 -- Exercise 9.9
 
 ev-inl-inr : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
@@ -641,5 +651,21 @@ uniqueness-coprod {Y = Y} i j H =
       ( λ s → refl)
       ( universal-property-coprod X)
       ( H _ X))
+
+universal-property-coprod-is-equiv-ind-coprod : {l1 l2 l3 : Level} {A : UU l1}
+  {B : UU l2} (X : UU l3) (i : A → X) (j : B → X) →
+  is-equiv (ind-coprod (λ t → X) i j) →
+  ((l4 : Level) (Y : UU l4) → is-equiv (λ (s : X → Y) → pair (s ∘ i) (s ∘ j)))
+universal-property-coprod-is-equiv-ind-coprod X i j is-equiv-ind-coprod l Y =
+  is-equiv-comp
+    ( λ s → pair (s ∘ i) (s ∘ j))
+    ( ev-inl-inr (λ t → Y))
+    ( λ s → s ∘ (ind-coprod (λ t → X) i j))
+    ( λ s → refl)
+    ( is-equiv-precomp-is-equiv
+      ( ind-coprod (λ t → X) i j)
+      ( is-equiv-ind-coprod)
+      ( Y))
+    ( universal-property-coprod Y)
 
 \end{code}

@@ -362,7 +362,10 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 \end{equation*}
 \item Show that $P$ is a proposition if and only if $P\to P$ is contractible.
 \end{subexenum}
-\item Show that $\mathsf{path\usc{}split}(f)$ and $\mathsf{half\usc{}adj}(f)$ are propositions for any map $f:A\to B$. 
+\item Show that $\mathsf{path\usc{}split}(f)$ and $\mathsf{half\usc{}adj}(f)$ are propositions for any map $f:A\to B$. Conclude that we have equivalences
+  \begin{equation*}
+    \isequiv(f) \eqvsym \mathsf{path\usc{}split}(f) \eqvsym \mathsf{half\usc{}adj}(f).
+  \end{equation*}
 %\item Let $B$ and $C$ be type families over $A$, suppose that $p:\id{a}{a'}$ in $A$, and consider two functions $f:B(a)\to C(a)$ and $g:B(a')\to C(a')$.
 %\begin{subexenum}
 %\item Show that the square
@@ -382,31 +385,38 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 \begin{equation*}
 \eqv{\mathsf{is\usc{}invertible}(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
 \end{equation*}
+Note: We will use this fact in \cref{ex:is_invertible_id_S1} to show that there
+are types for which $\mathsf{is\usc{}invertible}(\idfunc[A])\not\eqvsym\isequiv(\idfunc[A])$.
 \item 
 \begin{subexenum}
-\item Show that the map
+\item Show that the type
 \begin{equation*}
-(\emptyt \to X)\to \unit
+\prd{t:\emptyt}P(t)
 \end{equation*}
-given by $\lam{f}\ttt$ is an equivalence. 
-\item Show that any type $Y$ satisfying the property that the map 
-\begin{equation*}
-\lam{f}\ttt: (Y\to X)\to \unit
-\end{equation*} 
-is an equivalence for any $X$, is itself equivalent to $\emptyt$.
+is contractible for any $P:\emptyt\to \UU$.
+\item Show that for any type $X$ the following are equivalent:
+  \begin{enumerate}
+  \item the unique map $\emptyt \to X$ is an equivalence.
+  \item The type $Y^X$ is contractible for any type $Y$.
+  \end{enumerate}
 \end{subexenum}
-\item 
+\item Consider two types $A$ and $B$.
 \begin{subexenum}
 \item Show that the map
 \begin{equation*}
-(A+B\to X)\to \Big((A\to X)\times (B\to X)\Big)
+  \mathsf{ev\usc{}inl\usc{}inr}: \Big(\prd{t:A+B}P(t)\Big) \to
+  \Big(\prd{x:A}P(\inl(x))\Big)\times\Big(\prd{y:B}P(\inr(y))\Big)
 \end{equation*}
 given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
-\item Show that any type $Y$ that is equipped with functions $i:A\to Y$ and $j:B\to Y$ and satisfies the condition that the map
-\begin{equation*}
-\lam{f}(f\circ i,f\circ j): (Y\to X)\to \Big((A\to X)\times (B\to X)\Big)
-\end{equation*}
-is an equivalence for any $X$, is itself equivalent to $A+B$.
+\item Show that the following are equivalent for any type $X$ equipped with maps $i:A\to X$ and $j:B\to X$:
+  \begin{enumerate}
+  \item The map $\mathsf{ind\usc{}coprod}(i,j) :A+B\to X$ is an equivalence.
+  \item For any type $Y$, the map
+    \begin{equation*}
+      \lam{f}(f\circ i,f\circ j):(X\to Y)\to (A\to Y)\times (B \to Y)
+    \end{equation*}
+    is an equivalence.
+  \end{enumerate}
 \end{subexenum}
 \item 
 \begin{subexenum}
