@@ -668,4 +668,49 @@ universal-property-coprod-is-equiv-ind-coprod X i j is-equiv-ind-coprod l Y =
       ( Y))
     ( universal-property-coprod Y)
 
+-- Exercise 9.10
+
+ev-star : {l : Level} (P : unit → UU l) → ((x : unit) → P x) → P star
+ev-star P f = f star
+
+dependent-universal-property-unit : {l : Level} (P : unit → UU l) →
+  is-equiv (ev-star P)
+dependent-universal-property-unit P =
+  is-equiv-has-inverse
+    ( dpair
+      ( ind-unit)
+      ( dpair
+        ( λ p → refl)
+        ( λ f → eq-htpy (ind-unit refl))))
+  
+universal-property-unit : {l : Level} (Y : UU l) →
+  is-equiv (ev-star (λ t → Y))
+universal-property-unit Y = dependent-universal-property-unit (λ t → Y)
+
+is-equiv-ind-unit-universal-property-unit : {l1 : Level} (X : UU l1) (x : X) →
+  ((l2 : Level) (Y : UU l2) → is-equiv (λ (f : X → Y) → f x)) →
+  is-equiv (ind-unit {P = λ t → X} x)
+is-equiv-ind-unit-universal-property-unit X x H =
+   is-equiv-is-equiv-precomp
+     ( ind-unit x)
+     ( λ Y → is-equiv-right-factor
+       ( λ f → f x)
+       ( ev-star (λ t → Y))
+       ( λ f → f ∘ (ind-unit x))
+       ( λ f → refl)
+       ( universal-property-unit Y)
+       ( H _ Y))
+
+universal-property-unit-is-equiv-ind-unit : {l1 : Level} (X : UU l1) (x : X) →
+  is-equiv (ind-unit {P = λ t → X} x) →
+  ((l2 : Level) (Y : UU l2) → is-equiv (λ (f : X → Y) → f x))
+universal-property-unit-is-equiv-ind-unit X x is-equiv-ind-unit l2 Y =
+  is-equiv-comp
+    ( λ f → f x)
+    ( ev-star (λ t → Y))
+    ( λ f → f ∘ (ind-unit x))
+    ( λ f → refl)
+    ( is-equiv-precomp-is-equiv (ind-unit x) is-equiv-ind-unit Y)
+    ( universal-property-unit Y)
+
 \end{code}

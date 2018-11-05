@@ -422,14 +422,18 @@ given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
 \begin{subexenum}
 \item Show that the map
 \begin{equation*}
-(\unit\to X)\to X
+\Big(\prd{t:\unit}P(t)\Big)\to P(\ttt)
 \end{equation*}
 given by $\lam{f}f(\ttt)$ is an equivalence. 
-\item Show that a type $C$ is contractible if and only if it comes equipped with a term $c:C$ and satisfies the condition that the map
+\item Consider a type $X$ equipped with a point $x:X$. Show that the following are equivalent: 
+\begin{enumerate}
+\item The map $\mathsf{ind\usc{}unit}(x):\unit\to X$ is an equivalent (i.e.~$X$ is contractible).
+\item For any type $Y$ the map
 \begin{equation*}
-\lam{f}f(c) :(C\to X)\to X
+\lam{f}f(x) : (X\to Y)\to Y
 \end{equation*}
-is an equivalence for any $X$.
+is an equivalence.
+\end{enumerate}
 \end{subexenum}
 \item \label{ex:sec_retr}Consider a commuting triangle 
 \begin{equation*}
