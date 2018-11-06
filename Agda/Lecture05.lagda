@@ -360,20 +360,20 @@ triangle-section f g h H (dpair s issec) =
 section-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   sec h → sec f → sec g
-section-comp f g h H (dpair sh sh-issec) (dpair sf sf-issec) =
-  dpair (h ∘ sf) (htpy-concat _ (htpy-inv (htpy-right-whisk H sf)) sf-issec)
+section-comp f g h H sec-h sec-f =
+  dpair (h ∘ (pr1 sec-f)) (htpy-concat _ (htpy-inv (htpy-right-whisk H (pr1 sec-f))) (pr2 sec-f))
 
 section-comp' : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   sec h → sec g → sec f
-section-comp' f g h H (dpair sh sh-issec) (dpair sg sg-issec) =
+section-comp' f g h H sec-h sec-g =
   dpair
-    ( sh ∘ sg)
+    ( (pr1 sec-h) ∘ (pr1 sec-g))
     ( htpy-concat _
-      ( htpy-right-whisk H (sh ∘ sg))
+      ( htpy-right-whisk H ((pr1 sec-h) ∘ (pr1 sec-g)))
       ( htpy-concat _
-        ( htpy-left-whisk g (htpy-right-whisk sh-issec sg))
-        ( sg-issec)))
+        ( htpy-left-whisk g (htpy-right-whisk (pr2 sec-h) (pr1 sec-g)))
+        ( (pr2 sec-g))))
 
 -- Exercise 5.5 (b) is dual to exercise 5.5 (a). It asks to show that, given a commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f has a retraction if and only if h has a retraction.
 

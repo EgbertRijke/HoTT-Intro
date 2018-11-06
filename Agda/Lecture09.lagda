@@ -128,6 +128,10 @@ is-equiv-eq-htpy : {i j : Level} {A : UU i} {B : A → UU j}
   (f g : (x : A) → B x) → is-equiv (eq-htpy {f = f} {g = g})
 is-equiv-eq-htpy f g = is-equiv-inv-is-equiv (funext _ _)
 
+eq-htpy-htpy-refl : {i j : Level} {A : UU i} {B : A → UU j}
+  (f : (x : A) → B x) → Id (eq-htpy (htpy-refl f)) refl
+eq-htpy-htpy-refl f = isretr-eq-htpy refl
+
 {-
 The immediate proof of the following theorem would be
 
@@ -712,5 +716,40 @@ universal-property-unit-is-equiv-ind-unit X x is-equiv-ind-unit l2 Y =
     ( λ f → refl)
     ( is-equiv-precomp-is-equiv (ind-unit x) is-equiv-ind-unit Y)
     ( universal-property-unit Y)
+
+-- Exercise 9.11
+
+tr-issec-eq-htpy : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (g g' : B → A) (H : g ~ g') (G : (f ∘ g) ~ id) →
+  (tr (λ (h : B → A) → (f ∘ h) ~ id) (eq-htpy H) G) ~ ((htpy-inv (f ·l H)) ∙h G)
+tr-issec-eq-htpy {A = A} {B = B} f g =
+  let P = λ (h : B → A) → (f ∘ h) ~ id in
+  ind-htpy g
+    ( λ g' H → (G : (f ∘ g) ~ id) →
+      ( tr P (eq-htpy H) G) ~ ((htpy-inv (f ·l H)) ∙h G))
+    ( λ G → htpy-eq (ap (λ t → tr P t G) (eq-htpy-htpy-refl g))) 
+
+sec-left-factor-retract-of-sec-composition : {l1 l2 l3 : Level} {A : UU l1}
+  {B : UU l2} {X : UU l3} (f : A → X) (g : B → X) (h : A → B)
+  (H : f ~ (g ∘ h)) → sec h → (sec g) retract-of (sec f)
+sec-left-factor-retract-of-sec-composition {X = X} f g h H sec-h =
+  dpair
+    ( section-comp' f g h H sec-h)
+    ( dpair
+      ( section-comp f g h H sec-h)
+      ( λ sec-g →
+        let K = htpy-right-whisk (pr2 sec-h) (pr1 sec-g) in
+        eq-pair
+          ( dpair
+          ( eq-htpy K)
+          ( eq-htpy
+            ( ( tr-issec-eq-htpy g
+              ( h ∘ ((pr1 sec-h) ∘ (pr1 sec-g)))
+              ( pr1 sec-g)
+              ( K)
+              ( pr2
+                ( section-comp f g h H sec-h
+                  ( section-comp' f g h H sec-h sec-g)))) ∙h
+              {!!})))))
 
 \end{code}
