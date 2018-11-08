@@ -815,4 +815,62 @@ is-equiv-con-inv p refl r =
     ( is-equiv-concat (inv (right-unit p)) r)
     ( is-equiv-concat' p (inv (right-unit r)))
 
+-- Exercise 5.13
+
+-- We construct the functoriality of coproducts
+
+functor-coprod : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'} →
+  (A → A') → (B → B') → coprod A B → coprod A' B'
+functor-coprod f g (inl x) = inl (f x)
+functor-coprod f g (inr y) = inr (g y)
+
+htpy-functor-coprod : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  {f f' : A → A'} (H : f ~ f') {g g' : B → B'} (K : g ~ g') →
+  (functor-coprod f g) ~ (functor-coprod f' g')
+htpy-functor-coprod H K (inl x) = ap inl (H x)
+htpy-functor-coprod H K (inr y) = ap inr (K y)
+
+id-functor-coprod : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  (functor-coprod (id {A = A}) (id {A = B})) ~ id
+id-functor-coprod A B (inl x) = refl
+id-functor-coprod A B (inr x) = refl
+
+compose-functor-coprod : {l1 l2 l1' l2' l1'' l2'' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  {A'' : UU l1''} {B'' : UU l2''}
+  (f : A → A') (f' : A' → A'') (g : B → B') (g' : B' → B'') →
+  (functor-coprod (f' ∘ f) (g' ∘ g)) ~
+  ((functor-coprod f' g') ∘ (functor-coprod f g))
+compose-functor-coprod f f' g g' (inl x) = refl
+compose-functor-coprod f f' g g' (inr y) = refl
+
+is-equiv-functor-coprod : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  {f : A → A'} {g : B → B'} →
+  is-equiv f → is-equiv g → is-equiv (functor-coprod f g)
+is-equiv-functor-coprod {A = A} {B = B} {A' = A'} {B' = B'} {f = f} {g = g}
+  (dpair (dpair sf issec-sf) (dpair rf isretr-rf))
+  (dpair (dpair sg issec-sg) (dpair rg isretr-rg)) =
+  dpair
+    ( dpair
+      ( functor-coprod sf sg)
+      ( htpy-concat
+        ( functor-coprod id id)
+        ( htpy-concat
+          ( functor-coprod (f ∘ sf) (g ∘ sg))
+          ( htpy-inv (compose-functor-coprod sf f sg g))
+          ( htpy-functor-coprod issec-sf issec-sg))
+        ( id-functor-coprod A' B')))
+    ( dpair
+      ( functor-coprod rf rg)
+      ( htpy-concat
+        ( functor-coprod id id)
+        ( htpy-concat
+          ( functor-coprod (rf ∘ f) (rg ∘ g))
+          ( htpy-inv (compose-functor-coprod f rf g rg))
+          ( htpy-functor-coprod isretr-rf isretr-rg))
+        ( id-functor-coprod A B)))
+        
 \end{code}

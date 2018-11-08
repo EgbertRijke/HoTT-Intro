@@ -303,6 +303,8 @@ is-equiv-map-raise : {l1 : Level} (l2 : Level) (A : UU l1) →
   is-equiv (map-raise l2 A)
 is-equiv-map-raise l2 A = is-equiv-eqv-map (eqv-raise l2 A)
 
+-- Functoriality of coproducts
+
 functor-coprod : {l1 l2 l1' l2' : Level}
   {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'} →
   (A → A') → (B → B') → coprod A B → coprod A' B'
@@ -357,21 +359,7 @@ is-equiv-functor-coprod {A = A} {B = B} {A' = A'} {B' = B'} {f = f} {g = g}
           ( htpy-functor-coprod isretr-rf isretr-rg))
         ( id-functor-coprod A B)))
 
-Eq-coprod : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
-  coprod A B → coprod A B → UU (l1 ⊔ l2)
-Eq-coprod {l1} {l2} A B (inl x) (inl y) = raise (l1 ⊔ l2) (Id x y)
-Eq-coprod {l1} {l2} A B (inl x) (inr y) = raise (l1 ⊔ l2) empty
-Eq-coprod {l1} {l2} A B (inr x) (inl y) = raise (l1 ⊔ l2) empty
-Eq-coprod {l1} {l2} A B (inr x) (inr y) = raise (l1 ⊔ l2) (Id x y)
-
-reflexive-Eq-coprod : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
-  (t : coprod A B) → Eq-coprod A B t t
-reflexive-Eq-coprod {l1} {l2} A B (inl x) = map-raise (l1 ⊔ l2) (Id x x) refl
-reflexive-Eq-coprod {l1} {l2} A B (inr x) = map-raise (l1 ⊔ l2) (Id x x) refl
-
-Eq-coprod-eq : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
-  (s t : coprod A B) → Id s t → Eq-coprod A B s t
-Eq-coprod-eq A B s .s refl = reflexive-Eq-coprod A B s
+-- Lemmas about coproducts
 
 left-distributive-coprod-Σ-map : {l1 l2 l3 : Level} (A : UU l1) (B : UU l2)
   (C : coprod A B → UU l3) → Σ (coprod A B) C →
@@ -460,6 +448,24 @@ is-equiv-inr-coprod-empty B =
       ( dpair
         ( issec-inv-inr-coprod-empty B)
         ( λ x → refl)))
+
+-- The identity types of coproducts
+
+Eq-coprod : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  coprod A B → coprod A B → UU (l1 ⊔ l2)
+Eq-coprod {l1} {l2} A B (inl x) (inl y) = raise (l1 ⊔ l2) (Id x y)
+Eq-coprod {l1} {l2} A B (inl x) (inr y) = raise (l1 ⊔ l2) empty
+Eq-coprod {l1} {l2} A B (inr x) (inl y) = raise (l1 ⊔ l2) empty
+Eq-coprod {l1} {l2} A B (inr x) (inr y) = raise (l1 ⊔ l2) (Id x y)
+
+reflexive-Eq-coprod : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  (t : coprod A B) → Eq-coprod A B t t
+reflexive-Eq-coprod {l1} {l2} A B (inl x) = map-raise (l1 ⊔ l2) (Id x x) refl
+reflexive-Eq-coprod {l1} {l2} A B (inr x) = map-raise (l1 ⊔ l2) (Id x x) refl
+
+Eq-coprod-eq : {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  (s t : coprod A B) → Id s t → Eq-coprod A B s t
+Eq-coprod-eq A B s .s refl = reflexive-Eq-coprod A B s
 
 is-contr-total-Eq-coprod-inl : {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : A) →
   is-contr (Σ (coprod A B) (Eq-coprod A B (inl x)))

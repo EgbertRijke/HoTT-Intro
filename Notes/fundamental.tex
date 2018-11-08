@@ -397,6 +397,93 @@ is an equivalence.
 \end{enumerate}
 \end{cor}
 
+\section{Disjointness of coproducts}
+
+To illustrate the usage of the fundamental theorem of identity types, we compute the identity types of coproducts.
+The goal of the current section is to prove the following theorem.
+
+\begin{thm}\label{thm:id-coprod-compute}
+Let $A$ and $B$ be types. Then there are equivalences
+\begin{align*}
+(\inl(x)=\inl(x')) & \eqvsym (x = x')\\
+(\inl(x)=\inr(y')) & \eqvsym \emptyt \\
+(\inr(y)=\inl(x')) & \eqvsym \emptyt \\
+(\inr(y)=\inr(y')) & \eqvsym (y=y')
+\end{align*}
+for any $x,x':A$ and $y,y':B$.
+\end{thm}
+
+In order to prove \cref{thm:id-coprod-compute}, we first define
+a binary relation $\mathsf{Eq\usc{}coprod}_{A,B}$ on the coproduct $A+B$.
+
+\begin{defn}
+Let $A$ and $B$ be types. We define 
+\begin{equation*}
+\mathsf{Eq\usc{}coprod}_{A,B} : (A+B)\to (A+B)\to\UU
+\end{equation*}
+by double induction on the coproduct, postulating
+\begin{align*}
+\mathsf{Eq\usc{}coprod}_{A,B}(\inl(x),\inl(x')) & \defeq (x=x') \\
+\mathsf{Eq\usc{}coprod}_{A,B}(\inl(x),\inr(y')) & \defeq \emptyt \\
+\mathsf{Eq\usc{}coprod}_{A,B}(\inr(y),\inl(x')) & \defeq \emptyt \\
+\mathsf{Eq\usc{}coprod}_{A,B}(\inr(y),\inr(y')) & \defeq (y=y')
+\end{align*}
+The relation $\mathsf{Eq\usc{}coprod}_{A,B}$ is also called the \define{observational equality of coproducts}\index{observational equality!of coproducts}
+\end{defn}
+
+\begin{lem}
+The observational equality relation $\mathsf{Eq\usc{}coprod}_{A,B}$ on $A+B$ is reflexive, and therefore there is a map
+\begin{equation*}
+\mathsf{Eq\usc{}coprod\usc{}eq}:\prd{s,t:A+B} (s=t)\to \mathsf{Eq\usc{}coprod}_{A,B}(s,t)
+\end{equation*}
+\end{lem}
+
+\begin{constr}
+The reflexivity term $\rho$ is constructed by induction on $t:A+B$, using
+\begin{align*}
+\rho(\inl(x))\defeq \refl{\inl(x)}  & : \mathsf{Eq\usc{}coprod}_{A,B}(\inl(x)) \\
+\rho(\inr(y))\defeq \refl{\inr(y)} & : \mathsf{Eq\usc{}coprod}_{A,B}(\inr(y)).
+\end{align*}
+\end{constr}
+
+To show that $\mathsf{Eq\usc{}coprod\usc{}eq}$ is a fiberwise equivalence, we will use the fundamental theorem, \cref{thm:id_fundamental}. Moreover, we will use the functoriality of coproducts (established in \cref{ex:coproduct_functor}), along with the following facts about $\Sigma$-types, coproducts, and the empty type:
+\begin{align*}
+\sm{t:A+B}P(t) & \eqvsym \Big(\sm{x:A}P(\inl(x))\Big)+\Big(\sm{y:B}P(\inr(y))\Big)\\
+\sm{x:A}\emptyt & \eqvsym \emptyt \\
+A+\emptyt & \eqvsym A.
+\end{align*}
+All of these equivalences are straightforward to construct, so we leave them as an exercise to the reader. 
+
+\begin{lem}\label{lem:is-contr-total-eq-coprod}
+For any $s:A+B$ the total space
+\begin{equation*}
+\sm{t:A+B}\mathsf{Eq\usc{}coprod}_{A,B}(s,t)
+\end{equation*}
+is contractible.
+\end{lem}
+
+\begin{proof}
+We will do the proof by induction on $s$. The two cases are similar, so we only show that the total space
+\begin{equation*}
+\sm{t:A+B}\mathsf{Eq\usc{}coprod}_{A,B}(\inl(x),t)
+\end{equation*}
+is contractible. Note that we have equivalences
+\begin{samepage}
+\begin{align*}
+& \sm{t:A+B}\mathsf{Eq\usc{}coprod}_{A,B}(\inl(x),t) \\
+& \eqvsym \Big(\sm{x':A}\mathsf{Eq\usc{}coprod}_{A,B}(\inl(x),\inl(x'))\Big)+\Big(\sm{y':B}\mathsf{Eq\usc{}coprod}_{A,B}(\inl(x),\inr(y'))\Big) \\
+& \eqvsym \Big(\sm{x':A}x=x'\Big)+\Big(\sm{y':B}\emptyt\Big) \\
+& \eqvsym \Big(\sm{x':A}x=x'\Big)+\emptyt \\
+& \eqvsym \sm{x':A}x=x'.
+\end{align*}%
+\end{samepage}%
+The latter type is contractible by \cref{thm:total_path}.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:id-coprod-compute}]
+The proof is now concluded with an application of \cref{thm:id_fundamental}, using \cref{lem:is-contr-total-eq-coprod}.
+\end{proof}
+
 \begin{exercises}
 \item \label{ex:htpy_total} 
 \begin{subexenum}
