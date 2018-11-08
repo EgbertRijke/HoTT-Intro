@@ -428,7 +428,7 @@ by double induction on the coproduct, postulating
 \mathsf{Eq\usc{}coprod}_{A,B}(\inr(y),\inl(x')) & \defeq \emptyt \\
 \mathsf{Eq\usc{}coprod}_{A,B}(\inr(y),\inr(y')) & \defeq (y=y')
 \end{align*}
-The relation $\mathsf{Eq\usc{}coprod}_{A,B}$ is also called the \define{observational equality of coproducts}\index{observational equality!of coproducts}
+The relation $\mathsf{Eq\usc{}coprod}_{A,B}$ is also called the \define{observational equality of coproducts}\index{observational equality!of coproducts}.
 \end{defn}
 
 \begin{lem}
@@ -442,7 +442,7 @@ The observational equality relation $\mathsf{Eq\usc{}coprod}_{A,B}$ on $A+B$ is 
 The reflexivity term $\rho$ is constructed by induction on $t:A+B$, using
 \begin{align*}
 \rho(\inl(x))\defeq \refl{\inl(x)}  & : \mathsf{Eq\usc{}coprod}_{A,B}(\inl(x)) \\
-\rho(\inr(y))\defeq \refl{\inr(y)} & : \mathsf{Eq\usc{}coprod}_{A,B}(\inr(y)).
+\rho(\inr(y))\defeq \refl{\inr(y)} & : \mathsf{Eq\usc{}coprod}_{A,B}(\inr(y)).\qedhere
 \end{align*}
 \end{constr}
 
@@ -582,6 +582,11 @@ with $H:f\htpy g\circ h$.
 \end{equation*}
 has a section for each $x,y:A$, then $f$ is an embedding.
 \item Show that for any two types $A$ and $B$, the coproduct inclusion maps $\inl:A \to A + B$ and $\inr : B \to A + B$ are embeddings.
+\item Show that for any two maps $f:A\to A'$ and $g:B \to B'$, if the map
+\begin{equation*}
+f+g:(A+B)\to (A'+B')
+\end{equation*}
+is an equivalence, then so are both $f$ and $g$ (this is the converse of \cref{ex:coproduct_functor_equivalence}). 
 \begin{comment}
 \item \label{ex:eqv_sigma_mv}Consider a map
 \begin{equation*}
