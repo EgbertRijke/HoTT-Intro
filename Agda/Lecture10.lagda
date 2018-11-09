@@ -1056,4 +1056,32 @@ descent-coprod-inr f g f' g' i h k H K is-pb-dsq =
        ( is-fiberwise-equiv-fib-square-is-pullback (ind-coprod _ f g) i
          ( cone-descent-coprod f g f' g' i h k H K) is-pb-dsq (inr b)))
 
+-- Descent for Σ-types
+
+cone-descent-Σ : {l1 l2 l3 l4 l5 : Level}
+  {I : UU l1} {A : I → UU l2} {A' : I → UU l3} {X : UU l4} {X' : UU l5}
+  (f : (i : I) → A i → X) (h : X' → X)
+  (c : (i : I) → cone (f i) h (A' i)) →
+  cone (ind-Σ f) h (Σ I A')
+cone-descent-Σ f h c =
+  dpair
+    ( tot (λ i → (pr1 (c i))))
+    ( dpair
+      ( ind-Σ (λ i → (pr1 (pr2 (c i)))))
+      ( ind-Σ (λ i → (pr2 (pr2 (c i))))))
+
+descent-Σ : {l1 l2 l3 l4 l5 : Level}
+  {I : UU l1} {A : I → UU l2} {A' : I → UU l3} {X : UU l4} {X' : UU l5}
+  (f : (i : I) → A i → X) (h : X' → X)
+  (c : (i : I) → cone (f i) h (A' i)) →
+  ((i : I) → is-pullback (f i) h (c i)) →
+  is-pullback (ind-Σ f) h (cone-descent-Σ f h c)
+descent-Σ f h c is-pb-c =
+  is-pullback-is-fiberwise-equiv-fib-square
+    ( ind-Σ f)
+    ( h)
+    ( cone-descent-Σ f h c)
+    ( ind-Σ
+      ( λ i a → is-equiv-left-factor {!!} {!!} {!!} {!!} {!!} {!!}))
+
 \end{code}

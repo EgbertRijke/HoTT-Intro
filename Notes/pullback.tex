@@ -738,18 +738,18 @@ is an equivalence.
 
 We claim that there is a commuting triangle
 \begin{equation*}
-\begin{tikzcd}
+\begin{tikzcd}[column sep=-1em]
 \fib{f}{x} \arrow[rr] \arrow[dr] & & \fib{f+g}{\inl(x)} \arrow[dl] \\
-& \fib{h}{\alpha_A(x)}
+\phantom{\fib{f+g}{\inl(x)}} & \fib{h}{\alpha_A(x)}
 \end{tikzcd}
 \end{equation*}
 for every $x:A$. [commuting triangle]. We note that the top map is an equivalence, so it follows by the 3-for-2 property of equivalences that the left map is an equivalence if and only if the right map is an equivalence. 
 
 Similarly, there is a commuting triangle
 \begin{equation*}
-\begin{tikzcd}
+\begin{tikzcd}[column sep=-1em]
 \fib{g}{y} \arrow[rr] \arrow[dr] & & \fib{f+g}{\inr(y)} \arrow[dl] \\
-& \fib{h}{\alpha_B(y)}
+\phantom{\fib{f+g}{\inr(y)}} & \fib{h}{\alpha_B(y)}
 \end{tikzcd}
 \end{equation*}
 in which the top map is an equivalence, completing the proof.
@@ -805,12 +805,13 @@ is an eqwuivalence.
 \begin{equation*}
 \mathsf{fib\usc{}sq} : \fib{\total{f}}{i,a}\to \fib{g}{\alpha_i(a)}
 \end{equation*}
+is an equivalence.
 \end{enumerate}
-is an equivalence. To see this, note that we have a commuting triangle
+To see this, note that we have a commuting triangle
 \begin{equation*}
-\begin{tikzcd}[column sep=tiny]
+\begin{tikzcd}[column sep=-1em]
 \fib{f_i}{a} \arrow[rr] \arrow[dr] & & \fib{\total{f}}{i,a} \arrow[dl] \\
-& \fib{g}{\alpha_i(a)},
+\phantom{\fib{\total{f}}{i,a}} & \fib{g}{\alpha_i(a)},
 \end{tikzcd}
 \end{equation*}
 where the top map is an equivalence by \cref{lem:fib_total}. Therefore the claim follows by the 3-for-2 property of equivalences.
