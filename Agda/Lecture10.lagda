@@ -816,11 +816,165 @@ is-pullback-left-square-is-pullback-rectangle i j h c d is-pb-c is-pb-rect =
 
 -- Section 10.7 Descent for coproducts and Σ-types
 
-fib-functor-coprod-fib : {l1 l2 l1' l2' : Level}
+fib-functor-coprod-inl-fib : {l1 l2 l1' l2' : Level}
   {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
   (f : A' → A) (g : B' → B) (x : A) →
   fib f x → fib (functor-coprod f g) (inl x)
-fib-functor-coprod-fib f g x (dpair a' p) = {!!}
+fib-functor-coprod-inl-fib f g x (dpair a' p) =
+  dpair (inl a') (ap inl p)
+
+fib-functor-coprod-inr-fib : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (y : B) →
+  fib g y → fib (functor-coprod f g) (inr y)
+fib-functor-coprod-inr-fib f g y (dpair b' p) =
+  dpair (inr b') (ap inr p)
+
+triangle-descent-square-fib-functor-coprod-inl-fib :
+  {l1 l2 l3 l1' l2' l3' : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3}
+  {A' : UU l1'} {B' : UU l2'} {X' : UU l3'}
+  (f : A' → A) (g : B' → B) (h : X' → X)
+  (αA : A → X) (αB : B → X) (αA' : A' → X') (αB' : B' → X')
+  (HA : (αA ∘ f) ~ (h ∘ αA')) (HB : (αB ∘ g) ~ (h ∘ αB')) (x : A) →
+  (fib-square αA h (dpair f (dpair αA' HA)) x) ~
+    ( (fib-square (ind-coprod _ αA αB) h
+      ( dpair
+        ( functor-coprod f g)
+        ( dpair (ind-coprod _ αA' αB') (ind-coprod _ HA HB))) (inl x)) ∘
+    ( fib-functor-coprod-inl-fib f g x))
+triangle-descent-square-fib-functor-coprod-inl-fib {X = X} {X' = X'} f g h αA αB αA' αB' HA HB x
+  ( dpair a' p) = eq-pair (dpair refl
+    ( ap (concat (αA (f a')) (inv (HA a')))
+      ( ap-comp (ind-coprod _ αA αB) inl p)))
+
+triangle-descent-square-fib-functor-coprod-inr-fib :
+  {l1 l2 l3 l1' l2' l3' : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3}
+  {A' : UU l1'} {B' : UU l2'} {X' : UU l3'}
+  (f : A' → A) (g : B' → B) (h : X' → X)
+  (αA : A → X) (αB : B → X) (αA' : A' → X') (αB' : B' → X')
+  (HA : (αA ∘ f) ~ (h ∘ αA')) (HB : (αB ∘ g) ~ (h ∘ αB')) (y : B) →
+  (fib-square αB h (dpair g (dpair αB' HB)) y) ~
+    ( (fib-square (ind-coprod _ αA αB) h
+      ( dpair
+        ( functor-coprod f g)
+        ( dpair (ind-coprod _ αA' αB') (ind-coprod _ HA HB))) (inr y)) ∘
+    ( fib-functor-coprod-inr-fib f g y))
+triangle-descent-square-fib-functor-coprod-inr-fib
+  {X = X} {X' = X'} f g h αA αB αA' αB' HA HB y ( dpair b' p) =
+  eq-pair (dpair refl
+    ( ap (concat (αB (g b')) (inv (HB b')))
+      ( ap-comp (ind-coprod _ αA αB) inr p)))
+
+fib-fib-functor-coprod-inl : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (x : A) →
+  fib (functor-coprod f g) (inl x) → fib f x
+fib-fib-functor-coprod-inl f g x (dpair (inl a') p) =
+  dpair a' (map-compute-eq-coprod-inl-inl (f a') x p)
+fib-fib-functor-coprod-inl f g x (dpair (inr b') p) =
+  ind-empty {P = λ t → fib f x}
+    ( map-compute-eq-coprod-inr-inl (g b') x p)
+
+issec-fib-fib-functor-coprod-inl : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (x : A) →
+  ( (fib-functor-coprod-inl-fib f g x) ∘
+    ( fib-fib-functor-coprod-inl f g x)) ~ id
+issec-fib-fib-functor-coprod-inl f g .(f a') (dpair (inl a') refl) =
+  eq-pair (dpair refl
+    ( ap (ap inl)
+      ( isretr-inv-is-equiv
+        ( is-equiv-map-raise _ (Id (f a') (f a'))) refl)))
+issec-fib-fib-functor-coprod-inl f g x (dpair (inr b') p) =
+  ind-empty
+    { P = λ t → Id
+      ( fib-functor-coprod-inl-fib f g x
+        ( fib-fib-functor-coprod-inl f g x (dpair (inr b') p)))
+      ( dpair (inr b') p)}
+    ( map-compute-eq-coprod-inr-inl (g b') x p)
+
+isretr-fib-fib-functor-coprod-inl : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (x : A) →
+  ( (fib-fib-functor-coprod-inl f g x) ∘
+    ( fib-functor-coprod-inl-fib f g x)) ~ id
+isretr-fib-fib-functor-coprod-inl f g .(f a') (dpair a' refl) =
+  eq-pair (dpair refl
+    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (f a') (f a'))) refl))
+
+is-equiv-fib-functor-coprod-inl-fib : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (x : A) →
+  is-equiv (fib-functor-coprod-inl-fib f g x)
+is-equiv-fib-functor-coprod-inl-fib f g x =
+  is-equiv-has-inverse (dpair
+    ( fib-fib-functor-coprod-inl f g x)
+    ( dpair
+      ( issec-fib-fib-functor-coprod-inl f g x)
+      ( isretr-fib-fib-functor-coprod-inl f g x)))
+
+fib-fib-functor-coprod-inr : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (y : B) →
+  fib (functor-coprod f g) (inr y) → fib g y
+fib-fib-functor-coprod-inr f g y (dpair (inl a') p) =
+  ind-empty {P = λ t → fib g y}
+    ( map-compute-eq-coprod-inl-inr (f a') y p)
+fib-fib-functor-coprod-inr f g y (dpair (inr b') p) =
+  dpair b' (map-compute-eq-coprod-inr-inr (g b') y p)
+
+issec-fib-fib-functor-coprod-inr : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (y : B) →
+  ( (fib-functor-coprod-inr-fib f g y) ∘
+    ( fib-fib-functor-coprod-inr f g y)) ~ id
+issec-fib-fib-functor-coprod-inr f g .(g b') (dpair (inr b') refl) =
+  eq-pair (dpair refl
+    ( ap (ap inr)
+      ( isretr-inv-is-equiv
+        ( is-equiv-map-raise _ (Id (g b') (g b'))) refl)))
+issec-fib-fib-functor-coprod-inr f g y (dpair (inl a') p) =
+  ind-empty
+    { P = λ t → Id
+      ( fib-functor-coprod-inr-fib f g y
+        ( fib-fib-functor-coprod-inr f g y (dpair (inl a') p)))
+      ( dpair (inl a') p)}
+    ( map-compute-eq-coprod-inl-inr (f a') y p)
+
+isretr-fib-fib-functor-coprod-inr : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (y : B) →
+  ( (fib-fib-functor-coprod-inr f g y) ∘
+    ( fib-functor-coprod-inr-fib f g y)) ~ id
+isretr-fib-fib-functor-coprod-inr f g .(g b') (dpair b' refl) =
+  eq-pair (dpair refl
+    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (g b') (g b'))) refl))
+
+is-equiv-fib-functor-coprod-inr-fib : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (y : B) →
+  is-equiv (fib-functor-coprod-inr-fib f g y)
+is-equiv-fib-functor-coprod-inr-fib f g y =
+  is-equiv-has-inverse (dpair
+    ( fib-fib-functor-coprod-inr f g y)
+    ( dpair
+      ( issec-fib-fib-functor-coprod-inr f g y)
+      ( isretr-fib-fib-functor-coprod-inr f g y)))
+
+cone-descent-coprod : {l1 l2 l3 l1' l2' l3' : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X)
+  {A' : UU l1'} {B' : UU l2'} {X' : UU l3'} (f' : A' → X') (g' : B' → X')
+  (i : X' → X) (h : A' → A) (k : B' → B)
+  (H : (f ∘ h) ~ (i ∘ f')) (K : (g ∘ k) ~ (i ∘ g')) →
+  cone (ind-coprod _ f g) i (coprod A' B')
+cone-descent-coprod f g f' g' i h k H K =
+   dpair
+     ( functor-coprod h k)
+     ( dpair
+       ( ind-coprod _ f' g')
+       ( ind-coprod _ H K))
 
 descent-coprod : {l1 l2 l3 l1' l2' l3' : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X)
@@ -829,35 +983,77 @@ descent-coprod : {l1 l2 l3 l1' l2' l3' : Level}
   (H : (f ∘ h) ~ (i ∘ f')) (K : (g ∘ k) ~ (i ∘ g')) →
   is-pullback f i (dpair h (dpair f' H)) →
   is-pullback g i (dpair k (dpair g' K)) →
-  is-pullback
-    ( ind-coprod (λ t → X) f g)
-    ( i)
-    ( dpair
-      ( functor-coprod h k)
-      ( dpair
-        ( ind-coprod (λ t → X') f' g')
-        ( ind-coprod
-          ( λ t → Id
-            ( ind-coprod (λ s → X) f g (functor-coprod h k t))
-            ( i (ind-coprod (λ s → X') f' g' t)))
-          ( H)
-          ( K))))
+  is-pullback (ind-coprod _ f g) i (cone-descent-coprod f g f' g' i h k H K)
 descent-coprod {X = X} f g {X' = X'} f' g' i h k H K is-pb-H is-pb-K =
   is-pullback-is-fiberwise-equiv-fib-square
     ( ind-coprod (λ t → X) f g)
     ( i)
-    ( dpair
-      ( functor-coprod h k)
-      ( dpair
-        ( ind-coprod (λ t → X') f' g')
-        ( ind-coprod
-          ( λ t → Id
-            ( ind-coprod (λ s → X) f g (functor-coprod h k t))
-            ( i (ind-coprod (λ s → X') f' g' t)))
-          ( H)
-          ( K))))
+    ( cone-descent-coprod f g f' g' i h k H K)
     ( ind-coprod _
-      {!!}
-      {!!})
+      ( λ x → is-equiv-left-factor
+        ( fib-square f i (dpair h (dpair f' H)) x)
+        ( fib-square (ind-coprod _ f g) i
+          ( dpair (functor-coprod h k)
+            ( dpair (ind-coprod _ f' g') (ind-coprod _ H K)))
+          ( inl x))
+        ( fib-functor-coprod-inl-fib h k x)
+        ( triangle-descent-square-fib-functor-coprod-inl-fib
+          h k i f g f' g' H K x)
+        ( is-fiberwise-equiv-fib-square-is-pullback f i
+          ( dpair h (dpair f' H)) is-pb-H x)
+        ( is-equiv-fib-functor-coprod-inl-fib h k x))
+      ( λ y →  is-equiv-left-factor
+        ( fib-square g i (dpair k (dpair g' K)) y)
+        ( fib-square
+          ( ind-coprod _ f g) i
+          ( dpair
+            ( functor-coprod h k)
+            ( dpair (ind-coprod _ f' g') (ind-coprod _ H K))) (inr y))
+          ( fib-functor-coprod-inr-fib h k y)
+          ( triangle-descent-square-fib-functor-coprod-inr-fib
+            h k i f g f' g' H K y)
+          ( is-fiberwise-equiv-fib-square-is-pullback g i
+            ( dpair k (dpair g' K)) is-pb-K y)
+          ( is-equiv-fib-functor-coprod-inr-fib h k y)))
+
+descent-coprod-inl : {l1 l2 l3 l1' l2' l3' : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X)
+  {A' : UU l1'} {B' : UU l2'} {X' : UU l3'} (f' : A' → X') (g' : B' → X')
+  (i : X' → X) (h : A' → A) (k : B' → B)
+  (H : (f ∘ h) ~ (i ∘ f')) (K : (g ∘ k) ~ (i ∘ g')) →
+  is-pullback (ind-coprod _ f g) i (cone-descent-coprod f g f' g' i h k H K) →
+  is-pullback f i (dpair h (dpair f' H))
+descent-coprod-inl f g f' g' i h k H K is-pb-dsq =
+   is-pullback-is-fiberwise-equiv-fib-square f i (dpair h (dpair f' H))
+     ( λ a → is-equiv-comp
+       ( fib-square f i (dpair h (dpair f' H)) a)
+       ( fib-square (ind-coprod _ f g) i
+         ( cone-descent-coprod f g f' g' i h k H K) (inl a))
+       ( fib-functor-coprod-inl-fib h k a)
+       ( triangle-descent-square-fib-functor-coprod-inl-fib
+         h k i f g f' g' H K a)
+       ( is-equiv-fib-functor-coprod-inl-fib h k a)
+       ( is-fiberwise-equiv-fib-square-is-pullback (ind-coprod _ f g) i
+         ( cone-descent-coprod f g f' g' i h k H K) is-pb-dsq (inl a)))
+
+descent-coprod-inr : {l1 l2 l3 l1' l2' l3' : Level}
+  {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X)
+  {A' : UU l1'} {B' : UU l2'} {X' : UU l3'} (f' : A' → X') (g' : B' → X')
+  (i : X' → X) (h : A' → A) (k : B' → B)
+  (H : (f ∘ h) ~ (i ∘ f')) (K : (g ∘ k) ~ (i ∘ g')) →
+  is-pullback (ind-coprod _ f g) i (cone-descent-coprod f g f' g' i h k H K) →
+  is-pullback g i (dpair k (dpair g' K))
+descent-coprod-inr f g f' g' i h k H K is-pb-dsq =
+   is-pullback-is-fiberwise-equiv-fib-square g i (dpair k (dpair g' K))
+     ( λ b → is-equiv-comp
+       ( fib-square g i (dpair k (dpair g' K)) b)
+       ( fib-square (ind-coprod _ f g) i
+         ( cone-descent-coprod f g f' g' i h k H K) (inr b))
+       ( fib-functor-coprod-inr-fib h k b)
+       ( triangle-descent-square-fib-functor-coprod-inr-fib
+         h k i f g f' g' H K b)
+       ( is-equiv-fib-functor-coprod-inr-fib h k b)
+       ( is-fiberwise-equiv-fib-square-is-pullback (ind-coprod _ f g) i
+         ( cone-descent-coprod f g f' g' i h k H K) is-pb-dsq (inr b)))
 
 \end{code}

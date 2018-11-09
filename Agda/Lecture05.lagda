@@ -123,10 +123,11 @@ htpy-secf-retrf {i} {j} {A} {B} {f} (dpair (dpair g issec) (dpair h isretr)) =
     ( htpy-inv (htpy-right-whisk isretr g))
     ( htpy-left-whisk h issec)
 
+-- For some reason Agda takes significantly longer to type-check the files if
+-- the following definition is given directly in terms of E : is-equiv-f.
 has-inverse-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → has-inverse f
-has-inverse-is-equiv {i} {j} {A} {B} {f}
-  ( dpair (dpair g issec) (dpair h isretr)) =
+has-inverse-is-equiv {i} {j} {A} {B} {f} (dpair (dpair g issec) (dpair h isretr)) =
   dpair g
     ( pair issec
       ( htpy-concat
