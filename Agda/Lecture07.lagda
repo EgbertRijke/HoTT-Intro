@@ -498,6 +498,102 @@ is-equiv-Eq-coprod-eq : {l1 l2 : Level} (A : UU l1) (B : UU l2)
 is-equiv-Eq-coprod-eq A B (inl x) = is-equiv-Eq-coprod-eq-inl A B x
 is-equiv-Eq-coprod-eq A B (inr x) = is-equiv-Eq-coprod-eq-inr A B x
 
+map-compute-eq-coprod-inl-inl : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (x x' : A) → Id (inl {B = B} x) (inl {B = B} x') → Id x x'
+map-compute-eq-coprod-inl-inl x x' =
+  ( inv-is-equiv (is-equiv-map-raise _ (Id x x'))) ∘
+    ( Eq-coprod-eq _ _ (inl x) (inl x')) 
+
+is-equiv-map-compute-eq-coprod-inl-inl : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (x x' : A) → is-equiv (map-compute-eq-coprod-inl-inl {B = B} x x')
+is-equiv-map-compute-eq-coprod-inl-inl x x' =
+   is-equiv-comp
+     ( map-compute-eq-coprod-inl-inl x x')
+     ( inv-is-equiv (is-equiv-map-raise _ (Id x x')))
+     ( Eq-coprod-eq _ _ (inl x) (inl x'))
+     ( htpy-refl _)
+     ( is-equiv-Eq-coprod-eq _ _ (inl x) (inl x'))
+     ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id x x')))
+
+compute-eq-coprod-inl-inl : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (x x' : A) → (Id (inl {B = B} x) (inl x')) ≃ (Id x x')
+compute-eq-coprod-inl-inl x x' =
+  dpair
+    ( map-compute-eq-coprod-inl-inl x x')
+    ( is-equiv-map-compute-eq-coprod-inl-inl x x')
+
+map-compute-eq-coprod-inl-inr : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (x : A) (y' : B) → Id (inl x) (inr y') → empty
+map-compute-eq-coprod-inl-inr x y' =
+  ( inv-is-equiv (is-equiv-map-raise _ empty)) ∘
+    ( Eq-coprod-eq _ _ (inl x) (inr y'))
+
+is-equiv-map-compute-eq-coprod-inl-inr : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (x : A) (y' : B) → is-equiv (map-compute-eq-coprod-inl-inr x y')
+is-equiv-map-compute-eq-coprod-inl-inr x y' =
+   is-equiv-comp
+     ( map-compute-eq-coprod-inl-inr x y')
+     ( inv-is-equiv (is-equiv-map-raise _ empty))
+     ( Eq-coprod-eq _ _ (inl x) (inr y'))
+     ( htpy-refl _)
+     ( is-equiv-Eq-coprod-eq _ _ (inl x) (inr y'))
+     ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
+
+compute-eq-coprod-inl-inr : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (x : A) (y' : B) → (Id (inl x) (inr y')) ≃ empty
+compute-eq-coprod-inl-inr x y' =
+  dpair
+    ( map-compute-eq-coprod-inl-inr x y')
+    ( is-equiv-map-compute-eq-coprod-inl-inr x y')
+
+map-compute-eq-coprod-inr-inl : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (y : B) (x' : A) → (Id (inr {A = A} y) (inl x')) → empty
+map-compute-eq-coprod-inr-inl y x' =
+   ( inv-is-equiv (is-equiv-map-raise _ empty)) ∘
+     ( Eq-coprod-eq _ _ (inr y) (inl x'))
+
+is-equiv-map-compute-eq-coprod-inr-inl : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (y : B) (x' : A) → is-equiv (map-compute-eq-coprod-inr-inl y x')
+is-equiv-map-compute-eq-coprod-inr-inl y x' =
+  is-equiv-comp
+    ( map-compute-eq-coprod-inr-inl y x')
+    ( inv-is-equiv (is-equiv-map-raise _ empty))
+    ( Eq-coprod-eq _ _ (inr y) (inl x'))
+    ( htpy-refl _)
+    ( is-equiv-Eq-coprod-eq _ _ (inr y) (inl x'))
+    ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
+
+compute-eq-coprod-inr-inl : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (y : B) (x' : A) → (Id (inr y) (inl x')) ≃ empty
+compute-eq-coprod-inr-inl y x' =
+  dpair
+    ( map-compute-eq-coprod-inr-inl y x')
+    ( is-equiv-map-compute-eq-coprod-inr-inl y x')
+
+map-compute-eq-coprod-inr-inr : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (y y' : B) → (Id (inr {A = A} y) (inr y')) → Id y y'
+map-compute-eq-coprod-inr-inr y y' =
+  ( inv-is-equiv (is-equiv-map-raise _ (Id y y'))) ∘
+    ( Eq-coprod-eq _ _ (inr y) (inr y'))
+
+is-equiv-map-compute-eq-coprod-inr-inr : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (y y' : B) → is-equiv (map-compute-eq-coprod-inr-inr {A = A} y y')
+is-equiv-map-compute-eq-coprod-inr-inr y y' =
+  is-equiv-comp
+    ( map-compute-eq-coprod-inr-inr y y')
+    ( inv-is-equiv (is-equiv-map-raise _ (Id y y')))
+    ( Eq-coprod-eq _ _ (inr y) (inr y'))
+    ( htpy-refl _)
+    ( is-equiv-Eq-coprod-eq _ _ (inr y) (inr y'))
+    ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id y y')))
+
+compute-eq-coprod-inr-inr : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (y y' : B) → (Id (inr {A = A} y) (inr y')) ≃ (Id y y')
+compute-eq-coprod-inr-inr y y' =
+  dpair
+    ( map-compute-eq-coprod-inr-inr y y')
+    ( is-equiv-map-compute-eq-coprod-inr-inr y y')
+
 -- Exercises
 
 -- Exercise 7.1
