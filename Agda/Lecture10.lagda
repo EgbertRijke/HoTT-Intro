@@ -816,6 +816,12 @@ is-pullback-left-square-is-pullback-rectangle i j h c d is-pb-c is-pb-rect =
 
 -- Section 10.7 Descent for coproducts and Σ-types
 
+fib-functor-coprod-fib : {l1 l2 l1' l2' : Level}
+  {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
+  (f : A' → A) (g : B' → B) (x : A) →
+  fib f x → fib (functor-coprod f g) (inl x)
+fib-functor-coprod-fib f g x (dpair a' p) = {!!}
+
 descent-coprod : {l1 l2 l3 l1' l2' l3' : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X)
   {A' : UU l1'} {B' : UU l2'} {X' : UU l3'} (f' : A' → X') (g' : B' → X')

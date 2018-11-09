@@ -684,136 +684,155 @@ by the 3-for-2 property of equivalences that for each $x:X$ the top map in the t
 The claim now follows by a second application of \cref{cor:pb_fibequiv}.
 \end{proof}
 
-\section{The disjointness of coproducts}
+\section{Descent theorems for coproducts and \texorpdfstring{$\Sigma$}{Σ}-types}
 
-As an application of the theory of pullbacks, we show that coproducts are disjoint.\index{coproduct} In this section we will write
-\begin{equation*}
-[f,g] : A+B\to X
-\end{equation*}
-for the unique map satisfying $[f,g](\inl(x))\jdeq f(x)$ and $[f,g](\inr(y))\jdeq g(y)$, where $f:A\to X$ and $g:B\to X$. Furthermore, we will write
-\begin{equation*}
-f+g\defeq [\inl\circ f,\inr\circ g]:A+B\to X+Y
-\end{equation*}
-for any $f:A\to X$ and $g:B\to Y$.
-
-\begin{lem}\label{lem:pb_bool}
-Let $X$ be a type. Then we have the pullback squares
+\begin{thm}
+Consider maps $f:A'\to A$ and $g:B'\to B$, a map $h:X'\to X$, and commuting squares of the form
 \begin{equation*}
 \begin{tikzcd}
-X \arrow[r,"\mathsf{const}_\ttt"] \arrow[d,swap,"\idfunc"] &[2em] \unit \arrow[d,"\mathsf{const}_{\bfalse}"] & \emptyt \arrow[r] \arrow[d] &[2em] \unit \arrow[d,"\mathsf{const}_{\btrue}"] \\
-X \arrow[r,swap,"\mathsf{const}_{\bfalse}"] & \bool & X \arrow[r,swap,"\mathsf{const}_{\bfalse}"] & \bool,
+A' \arrow[r] \arrow[d,swap,"f"] & X' \arrow[d,"h"] & B' \arrow[r] \arrow[d,swap,"g"] & X' \arrow[d,"h"] \\
+A \arrow[r] & X & B \arrow[r] & X.
 \end{tikzcd}
 \end{equation*}
-and we have similar pullback squares with the roles of $\bfalse$ and $\btrue$ reversed.
-\end{lem}
-
-\begin{proof}
-For the first square we observe that both squares and the outer rectangle in the diagram
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-X \arrow[d] \arrow[r] & \unit \arrow[d] \arrow[r] & \unit \arrow[d,"\mathsf{const}_{\bfalse}"] \\
-X \arrow[r,swap,"\mathsf{const}_\ttt"] & \unit \arrow[r,swap,"\mathsf{const}_{\bfalse}"] & \bool.
-\end{tikzcd}
-\end{equation*}
-are pullback squares. To see this, recall that the identity type $\bfalse=\bfalse$ is contractible by \cref{ex:eq_bool}. Therefore it follows that the square on the right is a pullback square by \cref{ex:id_pb}. The square on the left is a pullback square by \cref{cor:pb_equiv}. Therefore the outer rectangle is a pullback square by \cref{thm:pb_pasting}.
-
-For the second square we observe that both squares end the outer rectangle in the diagram
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-\emptyt \arrow[d] \arrow[r] & \emptyt \arrow[d] \arrow[r] & \unit \arrow[d,"\mathsf{const}_{\btrue}"] \\
-X \arrow[r,swap,"\mathsf{const}_\ttt"] & \unit \arrow[r,swap,"\mathsf{const}_{\bfalse}"] & \bool.
-\end{tikzcd}
-\end{equation*}
-are pullback squares.
-To see this, recall that the identity type $\bfalse=\btrue$ is equivalent to the empty type by \cref{ex:eq_bool}. Therefore it follows that the square on the right is a pullback. It is also straightforward to verify that the square on the left is a pullback. Therefore it follows from \cref{thm:pb_pasting} that the outer rectangle is a pullback.
-\end{proof}
-
-\begin{lem}\label{lem:inl_pb}
-For any two types $A$ and $B$, the squares
-\begin{equation*}
-\begin{tikzcd}[column sep=6.5em]
-A \arrow[r,"\mathsf{const}_\ttt"] \arrow[d,swap,"\inl"] & \unit \arrow[d,"\mathsf{const}_{\bfalse}"] &[-3em] B \arrow[r,"\mathsf{const}_\ttt"] \arrow[d,swap,"\inr"] & \unit \arrow[d,"\mathsf{const}_{\btrue}"] \\
-A+B \arrow[r,swap,"{[\mathsf{const}_{\bfalse},\mathsf{const}_{\btrue}]}"] & \bool & A+B \arrow[r,swap,"{[\mathsf{const}_{\bfalse},\mathsf{const}_{\btrue}]}"] & \bool
-\end{tikzcd}
-\end{equation*}
-are pullback squares.
-\end{lem}
-
-\begin{proof}
-The two cases are similar, so we only give the proof that the left square is a pullback. The left square commutes by the homotopy
-\begin{equation*}
-H\defeq \mathsf{htpy\usc{}refl}_{\mathsf{const}_{\bfalse}}.
-\end{equation*}
-To see that the asserted square is a pullback square we use \cref{thm:is_pullback} and show that the gap map is an equivalence. First we note that the gap map is homotopic to the function $e:A\to (A+B)\times_\bool\unit$ is defined by
-\begin{equation*}
-\lam{x}(\inl(x),\ttt,\refl{\bfalse}).
-\end{equation*}
-The inverse is defined by the induction principle of coproducts by
-\begin{align*}
-e^{-1}(\inl(x),t,\alpha) & \defeq x \\
-e^{-1}(\inr(y),t,\alpha) & \defeq \ind{\emptyt}(\zeta(\alpha)),
-\end{align*}
-where $\zeta:\prd{x,y:\bool}(x=y)\to \mathsf{Eq}_\bool(x,y)$ is the canonical map of the identity type of $\bool$ into the observational equality on $\bool$. In the case of $\alpha:\bfalse=\btrue$ we obtain a term of $\mathsf{Eq}_\bool(\bfalse,\btrue)\jdeq \emptyt$. It is immediate from the computation rules that $e^{-1}\circ e\jdeq \idfunc$. 
-
-The homotopy $e\circ e^{-1}\htpy \idfunc$ is again constructed by the induction principle of coproducts. In the $\inl$-case we have $e(e^{-1}(\inl(x),t,\alpha))\jdeq (\inl(x),\ttt,\refl{\bfalse})$. We define the identification
-\begin{equation*}
-(\inl(x),\ttt,\refl{\bfalse})=(\inl(x),t,\alpha)
-\end{equation*}
-by singleton induction on $t:\unit$ and $\alpha:\bfalse=\bfalse$ (both of which are terms of contractible types). Thus, it suffices to provide an identification
-\begin{equation*}
-(\inl(x),\ttt,\refl{\bfalse})=(\inl(x),\ttt,\refl{\bfalse}),
-\end{equation*}
-which we have by reflexivity. The $\inr$-case is again automatic, since we obtain a term of the empty type from $\alpha:\bfalse=\btrue$. This completes the proof that $e$ is an equivalence.
-\end{proof}
-
-\begin{cor}\label{cor:inl_emb}
-The maps $\inl:A\to A+B$ and $\inr:B\to A+B$ are embeddings.\index{embedding!coproduct inclusions|textit}
-\end{cor}
-
-\begin{proof}
-By the pullback squares of \cref{lem:inl_pb} and \cref{cor:pb_trunc} it suffices to show that $\unit\to\bool$ is an embedding. This is \cref{ex:injective}.
-\end{proof}
-
-\begin{thm}\label{thm:pb_disjoint}
-Coproducts are \define{disjoint}\index{disjointness!of coproducts|textbf} in the sense that for any two types $A$ and $B$, the commuting square
+Then the following are equivalent:
+\begin{enumerate}
+\item Both squares are pullback squares.
+\item The commuting square 
 \begin{equation*}
 \begin{tikzcd}
-\emptyt \arrow[r] \arrow[d] & B \arrow[d,"\inr"] \\
-A \arrow[r,swap,"\inl"] & A+B
+A'+B' \arrow[d,swap,"f+g"] \arrow[r] & X' \arrow[d,"h"] \\
+A+B \arrow[r] & X
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
+\end{enumerate}
 \end{thm}
 
 \begin{proof}
-Now consider the commuting diagram
+By \cref{cor:pb_fibequiv} it suffices to show that the following are equivalent:
+\begin{enumerate}
+\item For each $x:A$ the map
+\begin{equation*}
+\mathsf{fib\usc{}sq}:\fib{f}{x}\to\fib{h}{\alpha_A(x)}
+\end{equation*}
+is an equivalence, and for each $y:B$ the map
+\begin{equation*}
+\mathsf{fib\usc{}sq}:\fib{g}{y}\to\fib{h}{\alpha_B(y)}
+\end{equation*}
+is an equivalence.
+\item For each $t:A+B$ the map
+\begin{equation*}
+\mathsf{fib\usc{}sq}:\fib{f+g}{t} \to \fib{h}{\alpha(t)}
+\end{equation*}
+is an equivalence.
+\end{enumerate}
+By the dependent universal property of coproducts, the second claim is equivalent to the claim that both for each $x:A$ the map
+\begin{equation*}
+\mathsf{fib\usc{}sq}:\fib{f+g}{\inl(x)}\to \fib{h}{\alpha_A(x)}
+\end{equation*}
+is an equivalence, and for each $y:B$, the map
+\begin{equation*}
+\mathsf{fib\usc{}sq}:\fib{f+g}{\inr(y)}\to \fib{h}{\alpha_B(y)} 
+\end{equation*}
+is an equivalence.
+
+We claim that there is a commuting triangle
 \begin{equation*}
 \begin{tikzcd}
-\emptyt \arrow[d] \arrow[r] & B \arrow[d,"\inr"] \arrow[r] &[5em] \unit \arrow[d,"\mathsf{const}_\btrue"] \\
-A \arrow[r,swap,"\inl"] & A+B \arrow[r,swap,"{[\mathsf{const}_{\bfalse},\mathsf{const}_{\btrue}]}"] & \bool.
+\fib{f}{x} \arrow[rr] \arrow[dr] & & \fib{f+g}{\inl(x)} \arrow[dl] \\
+& \fib{h}{\alpha_A(x)}
 \end{tikzcd}
 \end{equation*}
-By \cref{lem:pb_bool} it follows that the outer rectangle is a pullback square. The square on the right is a pullback square by \cref{lem:inl_pb}. Therefore the square on the left is a pullback square by \cref{thm:pb_pasting}.
+for every $x:A$. [commuting triangle]. We note that the top map is an equivalence, so it follows by the 3-for-2 property of equivalences that the left map is an equivalence if and only if the right map is an equivalence. 
+
+Similarly, there is a commuting triangle
+\begin{equation*}
+\begin{tikzcd}
+\fib{g}{y} \arrow[rr] \arrow[dr] & & \fib{f+g}{\inr(y)} \arrow[dl] \\
+& \fib{h}{\alpha_B(y)}
+\end{tikzcd}
+\end{equation*}
+in which the top map is an equivalence, completing the proof.
 \end{proof}
 
-\begin{cor}\label{cor:id_coprod}
-Let $A$ and $B$ be types. There are equivalences\index{identity type!of coproducts|textit}
-\begin{align*}
-(\inl(x)=\inl(x')) & \eqvsym (x=_A x') \\
-(\inl(x)=\inr(y')) & \eqvsym \emptyt \\
-(\inr(y)=\inl(x')) & \eqvsym \emptyt \\
-(\inr(y)=\inr(y')) & \eqvsym (y=_B y').
-\end{align*}
+In the following corollary we conclude that coproducts distribute over pullbacks. 
+
+\begin{cor}
+Consider a cospan of the form
+\begin{equation*}
+\begin{tikzcd}
+& Y \arrow[d] \\
+A+B \arrow[r] & X.
+\end{tikzcd}
+\end{equation*}
+Then there is an equivalence
+\begin{equation*}
+(A+B)\times_X Y \simeq (A\times_X Y)+(B\times_X Y).
+\end{equation*}
 \end{cor}
 
+\begin{thm}
+Consider a family of maps $f_i:A'_i\to A_i$ indexed by a type $I$, a map $h:X'\to X$, and a commuting square
+\begin{equation*}
+\begin{tikzcd}
+A'_i \arrow[r] \arrow[d,swap,"f_i"] & X' \arrow[d,"h"] \\
+A_i \arrow[r,swap,"\alpha_i"] & X
+\end{tikzcd}
+\end{equation*}
+for each $i:I$. Then the following are equivalent:
+\begin{enumerate}
+\item For each $i:I$ the square is a pullback square.
+\item The commuting square
+\begin{equation*}
+\begin{tikzcd}
+\sm{i:I}A'_i \arrow[d,swap,"\total{f}"] \arrow[r] & X' \arrow[d,"h"] \\
+\sm{i:I}A_i \arrow[r,"\alpha"] & X
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{enumerate}
+\end{thm}
+
 \begin{proof}
-The cases
-\begin{align*}
-(\inl(x)=\inl(x')) & \eqvsym (x=_A x') \\
-(\inr(y)=\inr(y')) & \eqvsym (y=_B y').
-\end{align*}
-follow from \cref{cor:inl_emb} since both $\inl$ and $\inr$ are embeddings. The remaining cases follow from the disjointness of coproducts, proven in \cref{thm:pb_disjoint}.
+By \cref{cor:pb_fibequiv} it suffices to show that the following are equivalent for each $i:I$ and $a:A_i$:
+\begin{enumerate}
+\item The map
+\begin{equation*}
+\mathsf{fib\usc{}sq} : \fib{f_i}{a} \to \fib{g}{\alpha_i(a)}
+\end{equation*}
+is an eqwuivalence.
+\item The map
+\begin{equation*}
+\mathsf{fib\usc{}sq} : \fib{\total{f}}{i,a}\to \fib{g}{\alpha_i(a)}
+\end{equation*}
+\end{enumerate}
+is an equivalence. To see this, note that we have a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+\fib{f_i}{a} \arrow[rr] \arrow[dr] & & \fib{\total{f}}{i,a} \arrow[dl] \\
+& \fib{g}{\alpha_i(a)},
+\end{tikzcd}
+\end{equation*}
+where the top map is an equivalence by \cref{lem:fib_total}. Therefore the claim follows by the 3-for-2 property of equivalences.
 \end{proof}
+
+In the following corollary we conclude that $\Sigma$ distributes over coproducts.
+
+\begin{cor}
+Consider a cospan of the form
+\begin{equation*}
+\begin{tikzcd}
+& Y \arrow[d] \\
+\sm{i:I}A_i \arrow[r] & X.
+\end{tikzcd}
+\end{equation*}
+Then there is an equivalence
+\begin{equation*}
+\Big(\sm{i:I}A_i\Big)\times_X Y \simeq \sm{i:I} (A_i\times_X Y).
+\end{equation*}
+\end{cor}
+
+
 
 \begin{exercises}
 \item \label{ex:id_pb}\index{identity type!as pullback}
@@ -1056,4 +1075,12 @@ with homotopies filling the (small) squares. Construct an equivalence
 & \qquad \eqvsym (A_0\times_{A_1} A_2) \times_{(B_0\times_{B_1} B_2)} (C_0\times_{C_1} C_2).
 \end{align*}
 This is also known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pullbacks} for pullbacks.
+\item Show that any square of the form
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r] \arrow[d] & B \arrow[d] \\
+\emptyt \arrow[r] & X
+\end{tikzcd}
+\end{equation*}
+is a pullback square. This is the \emph{descent property} of the empty type.\index{descent!empty type}
 \end{exercises}
