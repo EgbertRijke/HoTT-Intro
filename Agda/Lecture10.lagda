@@ -1070,6 +1070,15 @@ cone-descent-Σ f h c =
       ( ind-Σ (λ i → (pr1 (pr2 (c i)))))
       ( ind-Σ (λ i → (pr2 (pr2 (c i))))))
 
+triangle-descent-Σ : {l1 l2 l3 l4 l5 : Level}
+  {I : UU l1} {A : I → UU l2} {A' : I → UU l3} {X : UU l4} {X' : UU l5}
+  (f : (i : I) → A i → X) (h : X' → X)
+  (c : (i : I) → cone (f i) h (A' i)) →
+  (i : I) (a : A i) →
+  ( fib-square (f i) h (c i) a) ~
+  ((fib-square (ind-Σ f) h (cone-descent-Σ f h c) (dpair i a)) ∘ (fib-tot-fib-ftr (λ i → (pr1 (c i))) (dpair i a)))
+triangle-descent-Σ f h c i .(pr1 (c i) a') (dpair a' refl) = refl
+
 descent-Σ : {l1 l2 l3 l4 l5 : Level}
   {I : UU l1} {A : I → UU l2} {A' : I → UU l3} {X : UU l4} {X' : UU l5}
   (f : (i : I) → A i → X) (h : X' → X)
@@ -1082,6 +1091,29 @@ descent-Σ f h c is-pb-c =
     ( h)
     ( cone-descent-Σ f h c)
     ( ind-Σ
-      ( λ i a → is-equiv-left-factor {!!} {!!} {!!} {!!} {!!} {!!}))
+      ( λ i a → is-equiv-left-factor
+        ( fib-square (f i) h (c i) a)
+        ( fib-square (ind-Σ f) h (cone-descent-Σ f h c) (dpair i a))
+        ( fib-tot-fib-ftr (λ i → pr1 (c i)) (dpair i a))
+        ( triangle-descent-Σ f h c i a)
+        ( is-fiberwise-equiv-fib-square-is-pullback (f i) h (c i) (is-pb-c i) a)
+        ( is-equiv-fib-tot-fib-ftr (λ i → pr1 (c i)) (dpair i a))))
+
+descent-Σ' : {l1 l2 l3 l4 l5 : Level}
+  {I : UU l1} {A : I → UU l2} {A' : I → UU l3} {X : UU l4} {X' : UU l5}
+  (f : (i : I) → A i → X) (h : X' → X)
+  (c : (i : I) → cone (f i) h (A' i)) →
+  is-pullback (ind-Σ f) h (cone-descent-Σ f h c) →
+  ((i : I) → is-pullback (f i) h (c i))
+descent-Σ' f h c is-pb-dsq i =
+  is-pullback-is-fiberwise-equiv-fib-square (f i) h (c i)
+    ( λ a → is-equiv-comp
+      ( fib-square (f i) h (c i) a)
+      ( fib-square (ind-Σ f) h (cone-descent-Σ f h c) (dpair i a))
+      ( fib-tot-fib-ftr (λ i → pr1 (c i)) (dpair i a))
+      ( triangle-descent-Σ f h c i a)
+      ( is-equiv-fib-tot-fib-ftr (λ i → pr1 (c i)) (dpair i a))
+      ( is-fiberwise-equiv-fib-square-is-pullback (ind-Σ f) h
+        ( cone-descent-Σ f h c) is-pb-dsq (dpair i a)))
 
 \end{code}
