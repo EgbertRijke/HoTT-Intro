@@ -1,5 +1,3 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture07 where
@@ -890,5 +888,3 @@ is-emb-inr A B x =
           ( λ y → is-equiv-map-raise _ (Id x y)))
         ( is-contr-total-path B x)))
     ( λ y → ap inr)
-
-\end{code}

@@ -1,5 +1,3 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture02 where
@@ -83,5 +81,3 @@ min-ℕ : ℕ → (ℕ → ℕ)
 min-ℕ zero-ℕ n = zero-ℕ
 min-ℕ (succ-ℕ m) zero-ℕ = zero-ℕ
 min-ℕ (succ-ℕ m) (succ-ℕ n) = succ-ℕ (min-ℕ m n)
-
-\end{code}

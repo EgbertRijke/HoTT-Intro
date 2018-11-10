@@ -1,5 +1,3 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture03 where
@@ -398,5 +396,3 @@ neg-ℤ : ℤ → ℤ
 neg-ℤ (inl x) = inr (inr x)
 neg-ℤ (inr (inl star)) = inr (inl star)
 neg-ℤ (inr (inr x)) = inl x
-
-\end{code}

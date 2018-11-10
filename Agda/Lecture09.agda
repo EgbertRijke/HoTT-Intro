@@ -1,5 +1,3 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture09 where
@@ -751,5 +749,3 @@ sec-left-factor-retract-of-sec-composition {X = X} f g h H sec-h =
                 ( section-comp f g h H sec-h
                   ( section-comp' f g h H sec-h sec-g)))) ∙h
               {!!})))))
-
-\end{code}

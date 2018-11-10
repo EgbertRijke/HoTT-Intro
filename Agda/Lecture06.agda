@@ -1,5 +1,3 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture06 where
@@ -481,5 +479,3 @@ right-unit-law-Σ B H =
   dpair
     ( pr1)
     ( is-equiv-pr1-is-contr B H)
-
-\end{code}

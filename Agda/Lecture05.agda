@@ -1,12 +1,9 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture05 where
 
 import Lecture04
 open Lecture04 public
-
 
 -- Section 5.1 Homotopies
 _~_ : {i j : Level} {A : UU i} {B : A → UU j} (f g : (x : A) → B x) → UU (i ⊔ j)
@@ -873,5 +870,3 @@ is-equiv-functor-coprod {A = A} {B = B} {A' = A'} {B' = B'} {f = f} {g = g}
           ( htpy-inv (compose-functor-coprod f rf g rg))
           ( htpy-functor-coprod isretr-rf isretr-rg))
         ( id-functor-coprod A B)))
-        
-\end{code}

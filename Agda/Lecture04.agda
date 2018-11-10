@@ -1,5 +1,3 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture04 where
@@ -148,8 +146,8 @@ right-unit-law-mul-ℕ : (x : ℕ) → Id (mul-ℕ x one-ℕ) x
 right-unit-law-mul-ℕ zero-ℕ = refl
 right-unit-law-mul-ℕ (succ-ℕ x) =
   concat _
-    (right-successor-law-add-ℕ (mul-ℕ x one-ℕ) zero-ℕ)
-    (ap succ-ℕ (concat _ (right-unit-law-add-ℕ _) (right-unit-law-mul-ℕ x)))
+    ( right-successor-law-add-ℕ (mul-ℕ x one-ℕ) zero-ℕ)
+    ( ap succ-ℕ (concat _ (right-unit-law-add-ℕ _) (right-unit-law-mul-ℕ x)))
 
 left-unit-law-mul-ℕ : (x : ℕ) → Id (mul-ℕ one-ℕ x) x
 left-unit-law-mul-ℕ x = refl
@@ -163,28 +161,28 @@ right-successor-law-mul-ℕ : (x y : ℕ) →
 right-successor-law-mul-ℕ zero-ℕ y = refl
 right-successor-law-mul-ℕ (succ-ℕ x) y =
   concat (succ-ℕ (add-ℕ (mul-ℕ x (succ-ℕ y)) y))
-    (right-successor-law-add-ℕ (mul-ℕ x (succ-ℕ y)) y)
-    (concat (succ-ℕ (add-ℕ (add-ℕ x (mul-ℕ x y)) y))
-      (ap (λ t → succ-ℕ (add-ℕ t y)) (right-successor-law-mul-ℕ x y))
-      (ap succ-ℕ (associative-add-ℕ x (mul-ℕ x y) y)))
+    ( right-successor-law-add-ℕ (mul-ℕ x (succ-ℕ y)) y)
+    ( concat (succ-ℕ (add-ℕ (add-ℕ x (mul-ℕ x y)) y))
+      ( ap (λ t → succ-ℕ (add-ℕ t y)) (right-successor-law-mul-ℕ x y))
+      ( ap succ-ℕ (associative-add-ℕ x (mul-ℕ x y) y)))
 
 left-distributive-mul-add-ℕ : (x y z : ℕ) →
   Id (mul-ℕ x (add-ℕ y z)) (add-ℕ (mul-ℕ x y) (mul-ℕ x z))
 left-distributive-mul-add-ℕ zero-ℕ y z = refl
 left-distributive-mul-add-ℕ (succ-ℕ x) y z =
   concat _
-    (left-successor-law-mul-ℕ x (add-ℕ y z))
-    (concat _
-      (ap (λ t → add-ℕ t (add-ℕ y z)) (left-distributive-mul-add-ℕ x y z))
-      (concat (add-ℕ (mul-ℕ x y) (add-ℕ (mul-ℕ x z) (add-ℕ y z)))
-        (associative-add-ℕ (mul-ℕ x y) (mul-ℕ x z) (add-ℕ y z))
-        (concat _
-          (ap (add-ℕ (mul-ℕ x y)) (concat _
-            (inv (associative-add-ℕ (mul-ℕ x z) y z))
-            (concat _
-              (ap (λ t → add-ℕ t z) (commutative-add-ℕ (mul-ℕ x z) y))
-              (associative-add-ℕ y (mul-ℕ x z) z))))
-          (inv (associative-add-ℕ (mul-ℕ x y) y (add-ℕ (mul-ℕ x z) z))))))
+    ( left-successor-law-mul-ℕ x (add-ℕ y z))
+    ( concat _
+      ( ap (λ t → add-ℕ t (add-ℕ y z)) (left-distributive-mul-add-ℕ x y z))
+      ( concat (add-ℕ (mul-ℕ x y) (add-ℕ (mul-ℕ x z) (add-ℕ y z)))
+        ( associative-add-ℕ (mul-ℕ x y) (mul-ℕ x z) (add-ℕ y z))
+        ( concat _
+          ( ap (add-ℕ (mul-ℕ x y)) (concat _
+            ( inv (associative-add-ℕ (mul-ℕ x z) y z))
+            ( concat _
+              ( ap (λ t → add-ℕ t z) (commutative-add-ℕ (mul-ℕ x z) y))
+              ( associative-add-ℕ y (mul-ℕ x z) z))))
+          ( inv (associative-add-ℕ (mul-ℕ x y) y (add-ℕ (mul-ℕ x z) z))))))
 
 left-zero-law-mul-ℕ : (x : ℕ) → Id (mul-ℕ zero-ℕ x) zero-ℕ
 left-zero-law-mul-ℕ x = refl
@@ -192,7 +190,7 @@ left-zero-law-mul-ℕ x = refl
 right-zero-law-mul-ℕ : (x : ℕ) → Id (mul-ℕ x zero-ℕ) zero-ℕ
 right-zero-law-mul-ℕ zero-ℕ = refl
 right-zero-law-mul-ℕ (succ-ℕ x) =
-  (right-unit-law-add-ℕ (mul-ℕ x zero-ℕ)) ∙ (right-zero-law-mul-ℕ x)
+  ( right-unit-law-add-ℕ (mul-ℕ x zero-ℕ)) ∙ (right-zero-law-mul-ℕ x)
 
 commutative-mul-ℕ : (x y : ℕ) → Id (mul-ℕ x y) (mul-ℕ y x)
 commutative-mul-ℕ zero-ℕ y = inv (right-zero-law-mul-ℕ y)
@@ -218,7 +216,5 @@ associative-mul-ℕ : (x y z : ℕ) → Id (mul-ℕ (mul-ℕ x y) z) (mul-ℕ x 
 associative-mul-ℕ zero-ℕ y z = refl
 associative-mul-ℕ (succ-ℕ x) y z =
   concat _
-    (right-distributive-mul-add-ℕ (mul-ℕ x y) y z)
-    (ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))
-
-\end{code}
+    ( right-distributive-mul-add-ℕ (mul-ℕ x y) y z)
+    ( ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))

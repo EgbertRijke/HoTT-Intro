@@ -1,5 +1,3 @@
-\begin{code}
-
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture11 where
@@ -139,7 +137,3 @@ is-contr-UU-contr i =
                  (is-equiv-const-is-contr is-contr-X)
                  is-equiv-f))))
          (center ((is-subtype-is-contr X) _ is-contr-X))))
-
-
-
-\end{code}

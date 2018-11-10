@@ -743,7 +743,18 @@ We claim that there is a commuting triangle
 \phantom{\fib{f+g}{\inl(x)}} & \fib{h}{\alpha_A(x)}
 \end{tikzcd}
 \end{equation*}
-for every $x:A$. [commuting triangle]. We note that the top map is an equivalence, so it follows by the 3-for-2 property of equivalences that the left map is an equivalence if and only if the right map is an equivalence. 
+for every $x:A$. To see that the triangle commutes, we need to construct an identification
+
+
+The top map is given by
+\begin{equation*}
+(a',p)\mapsto (\inl(a'),\ap{\inl}{p}).
+\end{equation*}
+The triangle then commutes by the homotopy
+\begin{equation*}
+(a',p)\mapsto \mathsf{eq\usc{}pair}(\refl,\ap{\mathsf{concat}(H(a')^{-1})}{\mathsf{ap\usc{}comp}_{[\alpha_A,\alpha_B],inl}})
+\end{equation*}
+We note that the top map is an equivalence, so it follows by the 3-for-2 property of equivalences that the left map is an equivalence if and only if the right map is an equivalence. 
 
 Similarly, there is a commuting triangle
 \begin{equation*}
