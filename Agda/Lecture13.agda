@@ -85,6 +85,24 @@ dependent-universal-property-pushout : {l1 l2 l3 l4 : Level}
 dependent-universal-property-pushout f g {X} c l =
   (P : X → UU l) → is-equiv (dgen-pushout f g c {P})
 
+cone-dependent-pullback-property-pushout :
+  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
+  let i = pr1 c
+      j = pr1 (pr2 c)
+      H = pr2 (pr2 c)
+  in
+  cone
+    ( λ (h : (a : A) → P (i a)) → λ s → tr P (H s) (h (f s)))
+    ( λ (h : (b : B) → P (j b)) → λ s → h (g s))
+    ( (x : X) → P x)
+cone-dependent-pullback-property-pushout f g (dpair i (dpair j H)) P =
+  dpair
+    ( λ h → λ a → h (i a))
+    ( dpair
+      ( λ h → λ b → h (j b))
+       λ h → eq-htpy (λ s → apd h (H s)))
+
 dependent-pullback-property-pushout : {l1 l2 l3 l4 : Level}
   {S : UU l1} {A : UU l2} {B : UU l3} (f : S → A) (g : S → B)
   {X : UU l4} (c : cocone f g X) {l : Level} (P : X → UU l) →
@@ -94,11 +112,15 @@ dependent-pullback-property-pushout {l1} {l2} {l3} {l4} {S} {A} {B} f g {X}
   is-pullback
     ( λ (h : (a : A) → P (i a)) → λ s → tr P (H s) (h (f s)))
     ( λ (h : (b : B) → P (j b)) → λ s → h (g s))
-    ( dpair
-      ( λ (h : (x : X) → P x) → λ a → h (i a))
-      ( dpair
-        ( λ (h : (x : X) → P x) → λ b → h (j b))
-        ( λ h → eq-htpy (λ s → apd h (H s)))))
+    ( cone-dependent-pullback-property-pushout f g (dpair i (dpair j H)) P)
+
+-- We will now start proving that the following properties are all equivalent:
+-- 
+-- universal-property-pushout
+-- pullback-property-pushout
+-- Ind-pushout
+-- dependent-universal-property-pushout
+-- dependent-pullback-property-pushout
 
 triangle-pullback-property-pushout-universal-property-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2}
@@ -153,7 +175,11 @@ Eq-generating-data-pushout :
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
   (s t : generating-data-pushout f g c P) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l5)))
 Eq-generating-data-pushout {S = S} f g (dpair i (dpair j H)) P
-  (dpair hA (dpair hB hS)) (dpair kA (dpair kB kS)) =
+  (dpair hA (dpair hB hS)) t =
+  let kA = pr1 t
+      kB = pr1 (pr2 t)
+      kS = pr2 (pr2 t)
+  in
   Σ ( hA ~ kA)
     ( λ K →
     Σ ( hB ~ kB)
@@ -173,6 +199,49 @@ reflexive-Eq-generating-data-pushout f g (dpair i (dpair j H)) P
       ( htpy-refl hB)
       ( htpy-right-unit hS))
 
+is-contr-total-Eq-generating-data-pushout :
+  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
+  (s : generating-data-pushout f g c P) →
+  is-contr
+    ( Σ (generating-data-pushout f g c P)
+      ( Eq-generating-data-pushout f g c P s))
+is-contr-total-Eq-generating-data-pushout
+  {S = S} {A} {B} f g {X} (dpair i (dpair j H)) P (dpair hA (dpair hB hS)) =
+  is-contr-total-Eq-structure
+    {A = (a : A) → P (i a)}
+    {B = λ α →
+             Σ ((x : B) → P (j x))
+             (λ β → (s : S) → Id (tr P (H s) (α (f s))) (β (g s)))}
+    {C = λ α → hA ~ α}
+    ( λ t K →
+      let α = pr1 t
+          β = pr1 (pr2 t)
+          γ = pr2 (pr2 t)
+      in
+      Σ (hB ~ β) (λ L →
+        (s : S) →
+          Id ((hS s) ∙ (L (g s))) ((ap (tr P (H s)) (K (f s))) ∙ (γ s))))
+    ( is-contr-total-htpy hA)
+    ( dpair hA (htpy-refl _))
+    ( is-contr-total-Eq-structure
+      {A = (b : B) → P (j b)}
+      {B = λ β → (s : S) → Id (tr P (H s) (hA (f s))) (β (g s))}
+      {C = λ β → hB ~ β}
+      ( λ t L →
+        let β = pr1 t
+            γ = pr2 t
+        in
+        (s : S) → Id ((hS s) ∙ (L (g s))) (γ s))
+      ( is-contr-total-htpy hB)
+      ( dpair hB (htpy-refl _))
+      ( is-contr-is-equiv
+        ( Σ ((s : S) → Id (tr P (H s) (hA (f s))) (hB (g s))) (λ γ → hS ~ γ))
+        ( tot (λ γ → htpy-concat _ (htpy-inv (htpy-right-unit hS))))
+        ( is-equiv-tot-is-fiberwise-equiv
+          ( is-equiv-htpy-concat (htpy-inv (htpy-right-unit hS))))
+        ( is-contr-total-htpy hS)))
+
 Eq-generating-data-pushout-eq :
   {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
@@ -180,6 +249,17 @@ Eq-generating-data-pushout-eq :
   Id s t → Eq-generating-data-pushout f g c P s t
 Eq-generating-data-pushout-eq f g c P s .s refl =
   reflexive-Eq-generating-data-pushout f g c P s
+
+is-fiberwise-equiv-Eq-generating-data-pushout-eq :
+  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
+  (s : generating-data-pushout f g c P) →
+  is-fiberwise-equiv (Eq-generating-data-pushout-eq f g c P s)
+is-fiberwise-equiv-Eq-generating-data-pushout-eq f g c P s =
+  id-fundamental-gen s
+    ( reflexive-Eq-generating-data-pushout f g c P s)
+    ( is-contr-total-Eq-generating-data-pushout f g c P s)
+    ( Eq-generating-data-pushout-eq f g c P s)
 
 dependent-naturality-square : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
   (f f' : (x : A) → B x)
@@ -228,24 +308,6 @@ dependent-universal-property-pushout-Ind-pushout f g c H l P =
           ( h)
           ( pr2 (H l P) (dgen-pushout f g c h))))))
 
-cone-dependent-pullback-property-pushout :
-  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
-  let i = pr1 c
-      j = pr1 (pr2 c)
-      H = pr2 (pr2 c)
-  in
-  cone
-    ( λ (h : (a : A) → P (i a)) → λ s → tr P (H s) (h (f s)))
-    ( λ (h : (b : B) → P (j b)) → λ s → h (g s))
-    ( (x : X) → P x)
-cone-dependent-pullback-property-pushout f g (dpair i (dpair j H)) P =
-  dpair
-    ( λ h → λ a → h (i a))
-    ( dpair
-      ( λ h → λ b → h (j b))
-       λ h → eq-htpy (λ s → apd h (H s)))
-
 triangle-dependent-pullback-property-pushout :
   {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
@@ -291,3 +353,126 @@ dependent-pullback-property-dependent-universal-property-pushout
       ( λ h → is-equiv-tot-is-fiberwise-equiv
         ( λ h' → funext (λ x → tr P (H x) (h (f x))) (λ x → h' (g x)))))
     ( I l P)
+
+concat-eq-htpy : {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  {f g h : (x : A) → B x} (H : f ~ g) (K : g ~ h) →
+  Id (eq-htpy (H ∙h K)) ((eq-htpy H) ∙ (eq-htpy K))
+concat-eq-htpy {A = A} {B} {f} H K =
+  ind-htpy f
+    ( λ g H →
+      ( h : (x : A) → B x) (K : g ~ h) →
+      Id (eq-htpy (H ∙h K)) ((eq-htpy H) ∙ (eq-htpy K)))
+    ( λ h K → ap (concat' _ (eq-htpy K)) (inv (eq-htpy-htpy-refl _))) _ H _ K
+
+pullback-property-dependent-pullback-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ((l : Level) (P : X → UU l) → dependent-pullback-property-pushout f g c P) →
+  ((l : Level) (Y : UU l) → pullback-property-pushout f g c Y)
+pullback-property-dependent-pullback-property-pushout
+  f g (dpair i (dpair j H)) dpb l Y =
+  is-pullback-htpy
+    ( λ h s → tr (λ x → Y) (H s) (h (f s)))
+    ( λ h → eq-htpy (λ s → inv (tr-triv (H s) (h (f s)))))
+    ( λ h s → h (g s))
+    ( htpy-refl _)
+    ( cone-dependent-pullback-property-pushout
+      f g (dpair i (dpair j H)) (λ x → Y))
+    ( dpair
+      ( λ h → refl)
+      ( dpair
+        ( λ h → refl)
+        ( λ h → (right-unit _) ∙
+          ( ( ap eq-htpy
+              ( eq-htpy (λ s →
+                inv-con
+                  ( tr-triv (H s) (h (i (f s))))
+                  ( ap h (H s))
+                  ( apd h (H s))
+                  ( inv (apd-triv h (H s)))))) ∙
+            ( concat-eq-htpy
+              ( λ s → inv (tr-triv (H s) (h (i (f s)))))
+              ( λ s → apd h (H s)))))))
+    ( dpb l (λ x → Y))
+
+cocone-generating-data-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  (l : Level) (P : X → UU l) →
+  generating-data-pushout f g c P → cocone f g (Σ X P)
+cocone-generating-data-pushout
+  f g (dpair i (dpair j H)) l P (dpair i' (dpair j' H')) =
+  dpair
+    ( λ a → dpair (i a) (i' a))
+    ( dpair
+      ( λ b → dpair (j b) (j' b))
+      ( λ s → eq-pair (dpair (H s) (H' s))))
+
+cocone-map-comp :
+  {l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X)
+  {Y : UU l5} (h : X → Y) {Z : UU l6} (k : Y → Z) →
+  Id (cocone-map f g c (k ∘ h)) ((cocone-map f g (cocone-map f g c h) k))
+cocone-map-comp f g (dpair i (dpair j H)) h k =
+  eq-pair (dpair refl
+    ( eq-pair (dpair refl
+      ( eq-htpy (λ s → ap-comp k h (H s))))))
+
+ap-pr1-eq-pair : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (s t : Σ A B)
+  (p : Id (pr1 s) (pr1 t)) (q : Id (tr B p (pr2 s)) (pr2 t)) →
+  Id (ap pr1 (eq-pair' s t (dpair p q))) p
+ap-pr1-eq-pair (dpair x x₁) (dpair .x .x₁) refl refl = refl
+
+sec-pr1-generating-data-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ((l : Level) (Y : UU l) → universal-property-pushout f g c Y) →
+  (l : Level) (P : X → UU l) →
+  generating-data-pushout f g c P → sec (pr1 {A = X} {B = P})
+sec-pr1-generating-data-pushout
+  f g {X} (dpair i (dpair j H)) up l P (dpair i' (dpair j' H')) =
+  let c = dpair i (dpair j H)
+      c' = dpair i' (dpair j' H')
+      u = inv-is-equiv (up _ (Σ X P))
+          ( cocone-generating-data-pushout f g c l P c')
+      α = issec-inv-is-equiv (up _ (Σ X P))
+          ( cocone-generating-data-pushout f g c l P c')
+  in
+  dpair
+    ( u)
+    ( htpy-eq (ap pr1 (center (is-prop-is-contr
+      ( is-contr-map-is-equiv (up _ X)
+        ( dpair i (dpair j H)))
+      ( dpair (pr1 ∘ u)
+        ( ( cocone-map-comp f g c u pr1) ∙
+          ( ( ap (λ t → cocone-map f g t pr1) α) ∙
+           eq-pair (dpair refl (eq-pair (dpair refl (eq-htpy
+             ( λ s → ap-pr1-eq-pair
+               ( dpair (i (f s)) (i' (f s)))
+               ( dpair (j (g s)) (j' (g s)))
+               ( H s)
+               ( H' s)))))))))
+      ( dpair id
+        ( eq-pair (dpair refl
+          ( eq-pair (dpair refl (eq-htpy (λ s → ap-id (H s))))))))))))
+
+ind-pushout-universal-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ((l : Level) (Y : UU l) → universal-property-pushout f g c Y) →
+  (l : Level) (P : X → UU l) →
+  generating-data-pushout f g c P → (x : X) → P x
+ind-pushout-universal-property-pushout {S = S} {A} {B} f g {X} c up l P c' x =
+  tr P
+    ( pr2 (sec-pr1-generating-data-pushout f g c up l P c') x)
+    ( pr2 (pr1 (sec-pr1-generating-data-pushout f g c up l P c') x))
+
+comp-pushout-universal-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  (up : (l : Level) (Y : UU l) → universal-property-pushout f g c Y) →
+  (l : Level) (P : X → UU l) →
+  ( ( dgen-pushout f g c) ∘
+    ( ind-pushout-universal-property-pushout f g c up l P)) ~ id
+comp-pushout-universal-property-pushout
+  f g (dpair i (dpair j H)) up l P (dpair i' (dpair j' H')) = {!!}

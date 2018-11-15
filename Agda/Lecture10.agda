@@ -1119,3 +1119,62 @@ descent-Σ' f h c is-pb-dsq i =
       ( is-equiv-fib-tot-fib-ftr (λ i → pr1 (c i)) (dpair i a))
       ( is-fiberwise-equiv-fib-square-is-pullback (ind-Σ f) h
         ( cone-descent-Σ f h c) is-pb-dsq (dpair i a)))
+
+-- Extra material
+
+htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  cone f g C → cone f' g' C → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
+htpy-cone
+  {f = f} {f'} Hf {g} {g'} Hg (dpair i (dpair j H)) (dpair i' (dpair j' H')) =
+  Σ ( i ~ i')
+    ( λ Hi → Σ (j ~ j')
+      ( λ Hj →
+        ( H ∙h ((g ·l Hj) ∙h (Hg ·r j'))) ~ (((f ·l Hi) ∙h (Hf ·r i')) ∙h H') ))
+
+is-pullback-htpy :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f : A → X} (f' : A → X) (Hf : f ~ f')
+  {g : B → X} (g' : B → X) (Hg : g ~ g')
+  {c : cone f g C} (c' : cone f' g' C) (Hc : htpy-cone Hf Hg c c') →
+  is-pullback f' g' c' → is-pullback f g c
+is-pullback-htpy
+  {f = f} f' Hf {g} g' Hg
+  {c = dpair p (dpair q H)} (dpair p' (dpair q' H'))
+  (dpair Hp (dpair Hq HH)) is-pb-c' =
+  is-pullback-is-fiberwise-equiv-fib-square _ _ (dpair p (dpair q H))
+    ( λ a →
+      is-equiv-top-is-equiv-bottom-square
+      ( tot (λ c → concat (p c) {z = a} (inv (Hp c))))
+      ( tot (λ b →
+        ( concat' (f a) (Hf a)) ∘ (concat (g b) {z = f a} (inv (Hg b)))))
+      ( fib-square _ _ (dpair p (dpair q H)) a)
+      ( fib-square _ _ (dpair p' (dpair q' H')) a)
+      ( λ t → eq-pair
+        ( dpair
+          ( inv (Hq (pr1 t)))
+          {! !}))
+      {!!}
+      {!!}
+      {!!})
+
+htpy-cone-inv :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  {c : cone f g C} {c' : cone f' g' C} →
+  htpy-cone Hf Hg c c' → htpy-cone (htpy-inv Hf) (htpy-inv Hg) c' c
+htpy-cone-inv Hf Hg {c = dpair i (dpair j H)} {c' = dpair i' (dpair j' H')}
+  (dpair Hi (dpair Hj HH)) =
+  dpair
+    ( htpy-inv Hi)
+    ( dpair
+      ( htpy-inv Hj)
+      ( λ c → {!!}))
+
+is-pullback-htpy' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  {c : cone f g C} {c' : cone f' g' C} (Hc : htpy-cone Hf Hg c c') →
+  is-pullback f g c → is-pullback f' g' c'
+is-pullback-htpy' Hf Hg Hc is-pb-c = {!is-pullback-htpy !}
