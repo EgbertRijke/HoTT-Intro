@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --allow-unsolved-metas --no-prop #-}
 
 module Lecture08 where
 
@@ -10,8 +10,8 @@ open Lecture07 public
 is-prop : {i : Level} (A : UU i) → UU i
 is-prop A = (x y : A) → is-contr (Id x y)
 
-Prop : (l : Level) → UU (lsuc l)
-Prop l = Σ (UU l) is-prop
+hProp : (l : Level) → UU (lsuc l)
+hProp l = Σ (UU l) is-prop
 
 is-prop-empty : is-prop empty
 is-prop-empty ()

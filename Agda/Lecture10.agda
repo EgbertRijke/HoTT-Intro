@@ -1122,16 +1122,154 @@ descent-Σ' f h c is-pb-dsq i =
 
 -- Extra material
 
+coherence-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) (c' : cone f' g' C)
+  (Hp : pr1 c ~ pr1 c') (Hq : pr1 (pr2 c) ~ pr1 (pr2 c')) → UU _
+coherence-htpy-cone {f = f} {f'} Hf {g} {g'} Hg c c' Hp Hq =
+  let p  = pr1 c
+      q  = pr1 (pr2 c)
+      H  = pr2 (pr2 c)
+      p' = pr1 c'
+      q' = pr1 (pr2 c')
+      H' = pr2 (pr2 c')
+  in
+  ( H ∙h ((g ·l Hq) ∙h (Hg ·r q'))) ~ (((f ·l Hp) ∙h (Hf ·r p')) ∙h H')
+
+fam-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) → (c' : cone f' g' C) →
+  (pr1 c ~ pr1 c') → UU _
+fam-htpy-cone {f = f} {f'} Hf {g} {g'} Hg c c' Hp =
+  Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 c'))) (coherence-htpy-cone Hf Hg c c' Hp)
+  
 htpy-cone :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   cone f g C → cone f' g' C → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
 htpy-cone
-  {f = f} {f'} Hf {g} {g'} Hg (dpair i (dpair j H)) (dpair i' (dpair j' H')) =
-  Σ ( i ~ i')
-    ( λ Hi → Σ (j ~ j')
-      ( λ Hj →
-        ( H ∙h ((g ·l Hj) ∙h (Hg ·r j'))) ~ (((f ·l Hi) ∙h (Hf ·r i')) ∙h H') ))
+  {f = f} {f'} Hf {g} {g'} Hg c c' =
+  Σ ((pr1 c) ~ (pr1 c')) (fam-htpy-cone Hf Hg c c')
+
+is-contr-total-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) →
+  is-contr (Σ (cone f' g' C) (htpy-cone Hf Hg c))
+is-contr-total-htpy-cone {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg =
+  ind-htpy
+    { A = A}
+    { B = λ t → X}
+    f
+    ( λ f'' Hf' → (g g' : B → X) (Hg : g ~ g') (c : cone f g C) →
+      is-contr (Σ (cone f'' g' C) (htpy-cone Hf' Hg c)))
+    ( λ g → ind-htpy {A = B} {B = λ t → X} g
+      ( λ g'' Hg' →
+        ( c : cone f g C) →
+        is-contr (Σ (cone f g'' C) (htpy-cone (htpy-refl f) Hg' c)))
+      ( λ (c : cone f g C) → 
+        let p = pr1 c
+            q = pr1 (pr2 c)
+            H = pr2 (pr2 c)
+        in
+        is-contr-total-Eq-structure
+          ( fam-htpy-cone (htpy-refl f) (htpy-refl g) c)
+          ( is-contr-total-htpy p)
+          ( dpair p (htpy-refl p))
+          ( is-contr-total-Eq-structure
+            ( λ t Hq →
+              coherence-htpy-cone (htpy-refl f) (htpy-refl g) c
+              ( dpair p t)
+              ( htpy-refl p)
+              ( Hq))
+            ( is-contr-total-htpy q)
+            ( dpair q (htpy-refl q))
+            ( is-contr-is-equiv'
+              ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
+              ( tot (λ H' → htpy-concat _ {h = H'} (htpy-right-unit H)))
+              ( is-equiv-tot-is-fiberwise-equiv
+                ( λ H' → is-equiv-htpy-concat (htpy-right-unit H) H'))
+              ( is-contr-total-htpy H)))))
+    f' Hf g g' Hg
+
+reflexive-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  htpy-cone (htpy-refl f) (htpy-refl g) c c
+reflexive-htpy-cone f g c =
+  let p = pr1 c
+      q = pr1 (pr2 c)
+      H = pr2 (pr2 c)
+  in
+  dpair (htpy-refl p) (dpair (htpy-refl q) (htpy-right-unit H))
+
+htpy-cone-eq :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) (c' : cone f' g' C) →
+  Id
+    ( tr (λ g'' → cone f' g'' C) (eq-htpy Hg)
+      ( tr ( λ f'' → cone f'' g C) (eq-htpy Hf) c))
+    c' →
+  htpy-cone Hf Hg c c'
+htpy-cone-eq {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' p =
+  ind-htpy f
+  ( λ f'' Hf' →
+    ( g g' : B → X) (Hg : g ~ g') (c : cone f g C) (c' : cone f'' g' C) →
+    ( Id (tr (λ g'' → cone f'' g'' C) (eq-htpy Hg)
+      ( tr (λ f''' → cone f''' g C) (eq-htpy Hf') c)) c') →
+    htpy-cone Hf' Hg c c')
+  ( λ g g' Hg c c' p → ind-htpy g
+    ( λ g'' Hg' →
+      ( c : cone f g C) (c' : cone f g'' C) →
+      Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
+        ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
+      htpy-cone (htpy-refl f) Hg' c c')
+    ( λ c c' p → {!!})
+    g'
+    Hg c c' p) f' Hf g g' Hg c c' p
+
+{-
+square-is-pullback-htpy :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f : A → X} (f' : A → X) (Hf : f ~ f')
+  {g : B → X} (g' : B → X) (Hg : g ~ g')
+  {c : cone f g C} (c' : cone f' g' C) (Hc : htpy-cone Hf Hg c c') →
+  (a : A) →
+  let p = pr1 c
+      q = pr1 (pr2 c)
+      H = pr2 (pr2 c)
+      Hp = pr1 Hc
+      Hq = pr1 (pr2 Hc)
+      HH = pr2 (pr2 Hc)
+  in
+  ( ( fib-square _ _ (dpair p (dpair q H)) a) ∘
+    ( tot (λ c → concat (p c) {z = a} (inv (Hp c))))) ~ ({!!} ∘ {!!})
+square-is-pullback-htpy Hf Hg Hc = {!!}
+-}
+
+map-fib-htpy : {l1 l2 : Level} {A : UU l1} {B : UU l2} {f f' : A → B}
+  (H : f ~ f') → (y : B) → fib f' y → fib f y
+map-fib-htpy H y = tot (λ x → concat _ {z = y} (H x))
+
+is-fiberwise-equiv-map-fib-htpy : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  {f f' : A → B} (H : f ~ f') → is-fiberwise-equiv (map-fib-htpy H)
+is-fiberwise-equiv-map-fib-htpy H y =
+  is-equiv-tot-is-fiberwise-equiv ( λ x → is-equiv-concat (H x) y)
+
+square-is-pullback-htpy :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f : A → X} {f' : A → X} (Hf : f ~ f')
+  {g : B → X} {g' : B → X} (Hg : g ~ g')
+  {c : cone f g C} {c' : cone f' g' C} (Hc : htpy-cone Hf Hg c c') →
+  (x : A) → 
+  ( ( (tot (λ x' → concat' (f x) (Hf x))) ∘
+    ( fib-square f g c x)) ∘ (map-fib-htpy (pr1 Hc) x)) ~
+  ( (map-fib-htpy Hg (f' x)) ∘ (fib-square f' g' c' x))
+square-is-pullback-htpy Hf Hg Hc .(pr1 _ x') (dpair x' refl) =
+  eq-pair (dpair {!!} {!!})
 
 is-pullback-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
@@ -1146,18 +1284,14 @@ is-pullback-htpy
   is-pullback-is-fiberwise-equiv-fib-square _ _ (dpair p (dpair q H))
     ( λ a →
       is-equiv-top-is-equiv-bottom-square
-      ( tot (λ c → concat (p c) {z = a} (inv (Hp c))))
-      ( tot (λ b →
-        ( concat' (f a) (Hf a)) ∘ (concat (g b) {z = f a} (inv (Hg b)))))
-      ( fib-square _ _ (dpair p (dpair q H)) a)
-      ( fib-square _ _ (dpair p' (dpair q' H')) a)
-      ( λ t → eq-pair
-        ( dpair
-          ( inv (Hq (pr1 t)))
-          {! !}))
-      {!!}
-      {!!}
-      {!!})
+        {!!}
+        {!!}
+        {!!}
+        {!!}
+        {!!}
+        {!!}
+        {!!}
+        {!!})
 
 htpy-cone-inv :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}

@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --allow-unsolved-metas --cubical #-}
 
 module Lecture13 where
 
@@ -456,16 +456,18 @@ sec-pr1-generating-data-pushout
         ( eq-pair (dpair refl
           ( eq-pair (dpair refl (eq-htpy (λ s → ap-id (H s))))))))))))
 
+Π-sec-pr1 : {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+  sec (pr1 {A = A} {B = B}) → (x : A) → B x
+Π-sec-pr1 B (dpair f H) x = tr B (H x) (pr2 (f x))
+
 ind-pushout-universal-property-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
   ((l : Level) (Y : UU l) → universal-property-pushout f g c Y) →
   (l : Level) (P : X → UU l) →
   generating-data-pushout f g c P → (x : X) → P x
-ind-pushout-universal-property-pushout {S = S} {A} {B} f g {X} c up l P c' x =
-  tr P
-    ( pr2 (sec-pr1-generating-data-pushout f g c up l P c') x)
-    ( pr2 (pr1 (sec-pr1-generating-data-pushout f g c up l P c') x))
+ind-pushout-universal-property-pushout {S = S} {A} {B} f g {X} c up l P c' =
+  Π-sec-pr1 P (sec-pr1-generating-data-pushout f g c up l P c')
 
 comp-pushout-universal-property-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}

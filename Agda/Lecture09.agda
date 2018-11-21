@@ -453,31 +453,31 @@ is-emb-eqv-map = is-emb-pr1-is-subtype is-subtype-is-equiv
 
 -- Exercise 9.5
 
-_↔_ : {l1 l2 : Level} → Prop l1 → Prop l2 → UU (l1 ⊔ l2)
+_↔_ : {l1 l2 : Level} → hProp l1 → hProp l2 → UU (l1 ⊔ l2)
 P ↔ Q = (pr1 P → pr1 Q) × (pr1 Q → pr1 P)
 
-equiv-iff : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+equiv-iff : {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
   (P ↔ Q) → (pr1 P ≃ pr1 Q)
 equiv-iff P Q t = dpair (pr1 t) (is-equiv-is-prop (pr2 P) (pr2 Q) (pr2 t))
 
-iff-equiv : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+iff-equiv : {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
   (pr1 P ≃ pr1 Q) → (P ↔ Q)
 iff-equiv P Q equiv-PQ = dpair (pr1 equiv-PQ) (inv-is-equiv (pr2 equiv-PQ))
 
-is-prop-iff : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) → is-prop (P ↔ Q)
+is-prop-iff : {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) → is-prop (P ↔ Q)
 is-prop-iff P Q =
   is-prop-prod
     ( is-prop-function-type (pr1 P) (pr1 Q) (pr2 Q))
     ( is-prop-function-type (pr1 Q) (pr1 P) (pr2 P))
 
-is-prop-equiv-is-prop : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+is-prop-equiv-is-prop : {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
   is-prop ((pr1 P) ≃ (pr1 Q))
 is-prop-equiv-is-prop P Q =
   is-prop-Σ
     ( is-prop-function-type (pr1 P) (pr1 Q) (pr2 Q))
     ( is-subtype-is-equiv)
 
-is-equiv-equiv-iff : {l1 l2 : Level} (P : Prop l1) (Q : Prop l2) →
+is-equiv-equiv-iff : {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
   is-equiv (equiv-iff P Q)
 is-equiv-equiv-iff P Q =
   is-equiv-is-prop
