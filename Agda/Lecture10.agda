@@ -1205,15 +1205,101 @@ reflexive-htpy-cone f g c =
   in
   dpair (htpy-refl p) (dpair (htpy-refl q) (htpy-right-unit H))
 
+htpy-cone-eq-htpy-refl :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c c' : cone f g C) →
+  Id c c' → htpy-cone (htpy-refl f) (htpy-refl g) c c'
+htpy-cone-eq-htpy-refl f g c .c refl =
+  dpair (htpy-refl _) (dpair (htpy-refl _) (htpy-right-unit _))
+
+tr-tr-htpy-refl-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
+      tr-tr-c = tr (λ y → cone f y C) (eq-htpy (htpy-refl g)) tr-c
+  in
+  Id tr-tr-c c
+tr-tr-htpy-refl-cone {C = C} f g c =
+  let tr-c = tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c
+      tr-tr-c = tr (λ g'' → cone f g'' C) (eq-htpy (htpy-refl g)) tr-c
+      α : Id tr-tr-c tr-c
+      α = ap (λ t → tr (λ g'' → cone f g'' C) t tr-c) (eq-htpy-htpy-refl g)
+      β : Id tr-c c
+      β = ap (λ t → tr (λ f''' → cone f''' g C) t c) (eq-htpy-htpy-refl f)
+  in
+  α ∙ β
+
+htpy-cone-eq-htpy-refl-htpy-refl :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c c' : cone f g C) →
+  let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
+      tr-tr-c = tr (λ y → cone f y C) (eq-htpy (htpy-refl g)) tr-c
+  in
+  Id tr-tr-c c' → htpy-cone (htpy-refl f) (htpy-refl g) c c'
+htpy-cone-eq-htpy-refl-htpy-refl f g c c' =
+  ind-is-equiv
+    ( λ p → htpy-cone (htpy-refl f) (htpy-refl g) c c')
+    ( λ (p : Id c c') → (tr-tr-htpy-refl-cone f g c) ∙ p)
+    ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c')
+    ( htpy-cone-eq-htpy-refl f g c c')
+
+comp-htpy-cone-eq-htpy-refl-htpy-refl :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c c' : cone f g C) →
+  ( (htpy-cone-eq-htpy-refl-htpy-refl f g c c') ∘
+    (concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
+  ( htpy-cone-eq-htpy-refl f g c c')
+comp-htpy-cone-eq-htpy-refl-htpy-refl f g c c' =
+  htpy-comp-is-equiv
+    ( λ p → htpy-cone (htpy-refl f) (htpy-refl g) c c')
+    ( λ (p : Id c c') → (tr-tr-htpy-refl-cone f g c) ∙ p)
+    ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c')
+    ( htpy-cone-eq-htpy-refl f g c c')
+
+htpy-cone-eq' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) (c' : cone f g' C) →
+  let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
+      tr-tr-c = tr (λ y → cone f y C) (eq-htpy Hg) tr-c
+  in
+  Id tr-tr-c c' → htpy-cone (htpy-refl f) Hg c c'
+htpy-cone-eq' {C = C} f {g} {g'} =
+  ind-htpy g
+    ( λ g'' Hg' →
+      ( c : cone f g C) (c' : cone f g'' C) →
+      Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
+        ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
+      htpy-cone (htpy-refl f) Hg' c c')
+    ( htpy-cone-eq-htpy-refl-htpy-refl f g)
+    g'
+
+comp-htpy-cone-eq' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c c' : cone f g C) →
+  ( ( htpy-cone-eq' f (htpy-refl g) c c') ∘
+    ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
+  ( htpy-cone-eq-htpy-refl f g c c')
+comp-htpy-cone-eq' {A = A} {B} {X} {C} f g c c' =
+  htpy-right-whisk
+    ( htpy-eq (htpy-eq (htpy-eq (comp-htpy g
+      ( λ g'' Hg' →
+        ( c : cone f g C) (c' : cone f g'' C) →
+          Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
+            ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
+      htpy-cone (htpy-refl f) Hg' c c')
+    ( htpy-cone-eq-htpy-refl-htpy-refl f g)) c) c'))
+    ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
+  ( comp-htpy-cone-eq-htpy-refl-htpy-refl f g c c')
+
 htpy-cone-eq :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) (c' : cone f' g' C) →
-  Id
-    ( tr (λ g'' → cone f' g'' C) (eq-htpy Hg)
-      ( tr ( λ f'' → cone f'' g C) (eq-htpy Hf) c))
-    c' →
-  htpy-cone Hf Hg c c'
+  let tr-c    = tr (λ x → cone x g C) (eq-htpy Hf) c
+      tr-tr-c = tr (λ y → cone f' y C) (eq-htpy Hg) tr-c
+  in
+  Id tr-tr-c c' → htpy-cone Hf Hg c c'
 htpy-cone-eq {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' p =
   ind-htpy f
   ( λ f'' Hf' →
@@ -1221,34 +1307,69 @@ htpy-cone-eq {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' p =
     ( Id (tr (λ g'' → cone f'' g'' C) (eq-htpy Hg)
       ( tr (λ f''' → cone f''' g C) (eq-htpy Hf') c)) c') →
     htpy-cone Hf' Hg c c')
-  ( λ g g' Hg c c' p → ind-htpy g
-    ( λ g'' Hg' →
-      ( c : cone f g C) (c' : cone f g'' C) →
-      Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
-        ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
-      htpy-cone (htpy-refl f) Hg' c c')
-    ( λ c c' p → {!!})
-    g'
-    Hg c c' p) f' Hf g g' Hg c c' p
+  ( λ g g' → htpy-cone-eq' f {g = g} {g' = g'})
+  f' Hf g g' Hg c c' p
 
-{-
-square-is-pullback-htpy :
+comp-htpy-cone-eq : 
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
-  {f : A → X} (f' : A → X) (Hf : f ~ f')
-  {g : B → X} (g' : B → X) (Hg : g ~ g')
-  {c : cone f g C} (c' : cone f' g' C) (Hc : htpy-cone Hf Hg c c') →
-  (a : A) →
-  let p = pr1 c
-      q = pr1 (pr2 c)
-      H = pr2 (pr2 c)
-      Hp = pr1 Hc
-      Hq = pr1 (pr2 Hc)
-      HH = pr2 (pr2 Hc)
+  (f : A → X) (g : B → X) (c c' : cone f g C) →
+  ( ( htpy-cone-eq (htpy-refl f) (htpy-refl g) c c') ∘
+    ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
+  ( htpy-cone-eq-htpy-refl f g c c')
+comp-htpy-cone-eq {A = A} {B} {X} {C} f g c c' =
+  htpy-right-whisk
+    (htpy-eq (htpy-eq (htpy-eq (htpy-eq (htpy-eq (htpy-eq (comp-htpy f
+  ( λ f'' Hf' →
+    ( g g' : B → X) (Hg : g ~ g') (c : cone f g C) (c' : cone f'' g' C) →
+    ( Id (tr (λ g'' → cone f'' g'' C) (eq-htpy Hg)
+      ( tr (λ f''' → cone f''' g C) (eq-htpy Hf') c)) c') →
+    htpy-cone Hf' Hg c c')
+  ( λ g g' → htpy-cone-eq' f {g = g} {g' = g'})) g) g) (htpy-refl g)) c) c'))
+    ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
+  ( comp-htpy-cone-eq' f g c c')
+  
+is-fiberwise-equiv-htpy-cone-eq :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) (c' : cone f' g' C) →
+  is-equiv (htpy-cone-eq Hf Hg c c')
+is-fiberwise-equiv-htpy-cone-eq
+  {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' =
+  ind-htpy f
+    ( λ f' Hf →
+      ( g g' : B → X) (Hg : g ~ g') (c : cone f g C) (c' : cone f' g' C) →
+        is-equiv (htpy-cone-eq Hf Hg c c'))
+    ( λ g g' Hg c c' →
+      ind-htpy g
+        ( λ g' Hg →
+          ( c : cone f g C) (c' : cone f g' C) →
+            is-equiv (htpy-cone-eq (htpy-refl f) Hg c c'))
+        ( λ c c' →
+          is-equiv-left-factor
+            ( htpy-cone-eq-htpy-refl f g c c')
+            ( htpy-cone-eq (htpy-refl f) (htpy-refl g) c c')
+            ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))
+            ( htpy-inv (comp-htpy-cone-eq f g c c'))
+            ( id-fundamental-gen c
+              ( reflexive-htpy-cone f g c)
+              ( is-contr-total-htpy-cone (htpy-refl f) (htpy-refl g) c)
+              ( htpy-cone-eq-htpy-refl f g c) c')
+            ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c'))
+        g' Hg c c')
+    f' Hf g g' Hg c c'
+
+eq-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) (c' : cone f' g' C) →
+  let tr-c    = tr (λ x → cone x g C) (eq-htpy Hf) c
+      tr-tr-c = tr (λ y → cone f' y C) (eq-htpy Hg) tr-c
   in
-  ( ( fib-square _ _ (dpair p (dpair q H)) a) ∘
-    ( tot (λ c → concat (p c) {z = a} (inv (Hp c))))) ~ ({!!} ∘ {!!})
-square-is-pullback-htpy Hf Hg Hc = {!!}
--}
+  htpy-cone Hf Hg c c' → Id tr-tr-c c'
+eq-htpy-cone Hf Hg c c' =
+  inv-is-equiv
+    {f = htpy-cone-eq Hf Hg c c'}
+    ( is-fiberwise-equiv-htpy-cone-eq Hf Hg c c')
 
 map-fib-htpy : {l1 l2 : Level} {A : UU l1} {B : UU l2} {f f' : A → B}
   (H : f ~ f') → (y : B) → fib f' y → fib f y

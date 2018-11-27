@@ -168,6 +168,12 @@ ind-htpy : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   C f (htpy-refl f) → (g : (x : A) → B x) (H : f ~ g) → C g H
 ind-htpy f C = pr1 (Ind-htpy f C)
 
+comp-htpy : {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) (C : (g : (x : A) → B x) → (f ~ g) → UU l3) →
+  (c : C f (htpy-refl f)) →
+  Id (ind-htpy f C c f (htpy-refl f)) c
+comp-htpy f C = pr2 (Ind-htpy f C)
+
 is-contr-Π : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
   ((x : A) → is-contr (B x)) → is-contr ((x : A) → B x)
 is-contr-Π {A = A} {B = B} = WEAK-FUNEXT-FUNEXT (λ X Y → funext) A B
@@ -283,6 +289,24 @@ is-equiv-precomp-Π-is-equiv f is-equiv-f =
   is-equiv-precomp-Π-is-half-adjoint-equivalence f
     ( is-half-adjoint-equivalence-is-path-split f
       ( is-path-split-is-equiv f is-equiv-f))
+
+ind-is-equiv : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (C : B → UU l3) (f : A → B) (is-equiv-f : is-equiv f) →
+  ((x : A) → C (f x)) → ((y : B) → C y)
+ind-is-equiv C f is-equiv-f =
+  inv-is-equiv (is-equiv-precomp-Π-is-equiv f is-equiv-f C)
+
+comp-is-equiv : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
+  (f : A → B) (is-equiv-f : is-equiv f) (h : (x : A) → C (f x)) →
+  Id (λ x → (ind-is-equiv C f is-equiv-f h) (f x)) h
+comp-is-equiv C f is-equiv-f h =
+  issec-inv-is-equiv (is-equiv-precomp-Π-is-equiv f is-equiv-f C) h
+
+htpy-comp-is-equiv : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  (C : B → UU l3) (f : A → B) (is-equiv-f : is-equiv f)
+  (h : (x : A) → C (f x)) →
+  (λ x → (ind-is-equiv C f is-equiv-f h) (f x)) ~ h
+htpy-comp-is-equiv C f is-equiv-f h = htpy-eq (comp-is-equiv C f is-equiv-f h)
 
 is-equiv-precomp-is-equiv-precomp-Π : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   (f : A → B) →
