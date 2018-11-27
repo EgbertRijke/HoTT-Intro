@@ -1368,7 +1368,7 @@ eq-htpy-cone :
   htpy-cone Hf Hg c c' → Id tr-tr-c c'
 eq-htpy-cone Hf Hg c c' =
   inv-is-equiv
-    {f = htpy-cone-eq Hf Hg c c'}
+    { f = htpy-cone-eq Hf Hg c c'}
     ( is-fiberwise-equiv-htpy-cone-eq Hf Hg c c')
 
 map-fib-htpy : {l1 l2 : Level} {A : UU l1} {B : UU l2} {f f' : A → B}
@@ -1386,11 +1386,29 @@ square-is-pullback-htpy :
   {g : B → X} {g' : B → X} (Hg : g ~ g')
   {c : cone f g C} {c' : cone f' g' C} (Hc : htpy-cone Hf Hg c c') →
   (x : A) → 
-  ( ( (tot (λ x' → concat' (f x) (Hf x))) ∘
-    ( fib-square f g c x)) ∘ (map-fib-htpy (pr1 Hc) x)) ~
-  ( (map-fib-htpy Hg (f' x)) ∘ (fib-square f' g' c' x))
-square-is-pullback-htpy Hf Hg Hc .(pr1 _ x') (dpair x' refl) =
-  eq-pair (dpair {!!} {!!})
+  ( ( ( tot (λ x' → concat' (f x) (Hf x))) ∘ ( fib-square f g c x)) ∘
+    ( map-fib-htpy (pr1 Hc) x)) ~
+  ( ( map-fib-htpy Hg (f' x)) ∘ (fib-square f' g' c' x))
+square-is-pullback-htpy {f = f} {f'} Hf {g} {g'} Hg {dpair p (dpair q H)} {dpair p' (dpair q' H')} (dpair Hp (dpair Hq HH)) .(p' z) (dpair z refl) =
+  eq-pair
+    ( dpair (Hq z)
+      ( ( tr-id-left-subst (Hq z) (f' (p' z))
+          (((inv (H z)) ∙ (ap f ((Hp z) ∙ refl))) ∙ (Hf (p' z)))) ∙
+        ( con-inv _ (H' z) (Hg (q' z))
+          ( ( inv (assoc (inv (ap g (Hq z))) _ (H' z))) ∙
+            ( inv (inv-con (ap g (Hq (z))) (Hg (q' z)) _
+              ( inv
+                ( ( inv (assoc _ (Hf (p' z)) (H' z))) ∙
+                  ( ( inv (assoc (inv (H z)) _ ((Hf (p' z)) ∙ (H' z)))) ∙
+                    ( inv (inv-con (H z) ((ap g (Hq z)) ∙ (Hg (q' z))) _
+                      ( ( HH z) ∙
+                        (  inv (assoc (ap f (Hp z)) (Hf (p' z)) (H' z)) ∙
+                          ( ap
+                            ( λ t → (ap f t) ∙ (Hf (p' z) ∙ H' z))
+                            ( inv (right-unit (Hp z)))))))))))))) ∙
+          ( ap
+            ( concat (g' (q' z)) {z = f' (p' z)} (Hg (q' z)))
+            ( inv (right-unit (inv (H' z))))))))
 
 is-pullback-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
