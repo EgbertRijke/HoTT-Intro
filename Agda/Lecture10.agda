@@ -711,7 +711,8 @@ is-emb-is-pullback f g c pb is-emb-g =
     ( pr1 c)
     ( is-trunc-is-pullback neg-one-𝕋 f g c pb (is-prop-map-is-emb g is-emb-g))
 
-is-equiv-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+is-equiv-is-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
   {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
   is-equiv g → is-pullback f g c → is-equiv (pr1 c)
 is-equiv-is-pullback f g c is-equiv-g pb =
@@ -719,7 +720,8 @@ is-equiv-is-pullback f g c is-equiv-g pb =
     ( is-trunc-is-pullback neg-two-𝕋 f g c pb
       ( is-contr-map-is-equiv is-equiv-g))
 
-is-pullback-is-equiv : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+is-pullback-is-equiv :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
   {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
   is-equiv g → is-equiv (pr1 c) → is-pullback f g c
 is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
@@ -728,6 +730,41 @@ is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
       ( fib-square f g c a)
       ( is-contr-map-is-equiv is-equiv-p a)
       ( is-contr-map-is-equiv is-equiv-g (f a)))
+
+cone-transpose :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) →
+  cone f g C → cone g f C
+cone-transpose f g c =
+  dpair (pr1 (pr2 c)) (dpair (pr1 c) (htpy-inv (pr2 (pr2 c))))
+  
+is-pullback-transpose :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  is-pullback g f (cone-transpose f g c) → is-pullback f g c
+is-pullback-transpose {A = A} {B} f g (dpair p (dpair q H)) is-pb-transpose =
+  let c = (dpair p (dpair q H)) in
+  is-equiv-right-factor
+    ( gap g f (cone-transpose f g c))
+    ( tot (λ y → (tot (λ x → inv))) ∘ Σ-swap A B (λ x y → Id (f x) (g y)))
+    ( gap f g c)
+    ( λ z → eq-pair (dpair refl (eq-pair (dpair refl refl))))
+    ( is-equiv-comp _
+      ( tot (λ y → tot (λ x → inv)))
+      ( Σ-swap A B (λ x y → Id (f x) (g y)))
+      ( htpy-refl _)
+      ( is-equiv-Σ-swap A B (λ x y → Id (f x) (g y)))
+      ( is-equiv-tot-is-fiberwise-equiv (λ y →
+        ( is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-inv (f x) (g y))))))
+    ( is-pb-transpose)
+
+is-pullback-is-equiv' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
+  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  is-equiv f → is-equiv (pr1 (pr2 c)) → is-pullback f g c
+is-pullback-is-equiv' f g c is-equiv-f is-equiv-q =
+   is-pullback-transpose f g c
+     ( is-pullback-is-equiv g f (cone-transpose f g c) is-equiv-f is-equiv-q)
 
 -- Section 10.6 The pullback pasting property
 
@@ -778,7 +815,8 @@ triangle-fib-square i j h c d .(pr1 d a) (dpair a refl) =
             ( ap (concat' _ refl) (inv (ap-inv j (H a))))
             ( inv (ap-concat j (inv (H a)) refl)))))))
 
-is-pullback-rectangle-is-pullback-left-square : {l1 l2 l3 l4 l5 l6 : Level}
+is-pullback-rectangle-is-pullback-left-square :
+  {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
   (i : X → Y) (j : Y → Z) (h : C → Z)
   (c : cone j h B) (d : cone i (pr1 c) A) →
@@ -795,7 +833,8 @@ is-pullback-rectangle-is-pullback-left-square i j h c d is-pb-c is-pb-d =
       ( is-fiberwise-equiv-fib-square-is-pullback i (pr1 c) d is-pb-d x)
       ( is-fiberwise-equiv-fib-square-is-pullback j h c is-pb-c (i x)))
 
-is-pullback-left-square-is-pullback-rectangle : {l1 l2 l3 l4 l5 l6 : Level}
+is-pullback-left-square-is-pullback-rectangle :
+  {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
   (i : X → Y) (j : Y → Z) (h : C → Z)
   (c : cone j h B) (d : cone i (pr1 c) A) →

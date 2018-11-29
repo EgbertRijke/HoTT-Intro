@@ -438,4 +438,30 @@ B' \arrow[r,swap,"q"] & B,
 in which $q:B'\to B$ is surjective. Show that if $f':A'\to B'$ is an embedding, then so is $f:A\to B$.
 \item Show that a type $A$ is a proposition if and only if the map $\inl:A\to \join{A}{A}$ is an equivalence.
 \item Show that $\inl:\brck{A}\to \join{\brck{A}}{A}$ is an equivalence for any type $A$.
+\item Consider a family of diagrams of the form
+  \begin{equation*}
+    \begin{tikzcd}
+      A_i \arrow[r] \arrow[d,swap,"{f_i}"] &
+        C \arrow[r] \arrow[d,"g"] & X \arrow[d,"h"] \\
+      B_i \arrow[r] & D \arrow[r] & Y 
+    \end{tikzcd}
+  \end{equation*}
+  indexed by $i:I$, and assume that the induced map
+  \begin{equation*}
+    \Big(\sm{i:I}B_i\Big)\to D
+  \end{equation*}
+  is surjective. Show that the following are equivalent:
+  \begin{enumerate}
+  \item For each $i:I$ the outer rectangle is a pullback square.
+  \item The right square is a pullback square.
+  \end{enumerate}
+  Hint: By \cref{thm:descent-Sigma} it suffices to prove this equivalence for a sigle diagram of the form
+    \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r] \arrow[d,swap,"{f}"] &
+        C \arrow[r] \arrow[d,swap,"g"] & X \arrow[d,"h"] \\
+      B \arrow[r] & D \arrow[r] & Y 
+    \end{tikzcd}
+    \end{equation*}
+  where the map $B \to D$ is assumed to be surjective.
 \end{exercises}

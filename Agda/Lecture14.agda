@@ -10,17 +10,17 @@ open Lecture13 public
 cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  {f : A → B} {g : A → C} {h : B → D} {k : C → D}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
   {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  {f' : A' → B'} {g' : A' → C'} {h' : B' → D'} {k' : C' → D'}
-  {hA : A' → A} {hB : B' → B} {hC : C' → C} {hD : D' → D}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
   (top : (h' ∘ f') ~ (k' ∘ g'))
   (back-left : (f ∘ hA) ~ (hB ∘ f'))
   (back-right : (g ∘ hA) ~ (hC ∘ g'))
   (front-left : (h ∘ hB) ~ (hD ∘ h'))
   (front-right : (k ∘ hC) ~ (hD ∘ k'))
   (bottom : (h ∘ f) ~ (k ∘ g)) → UU _
-cube {f = f} {g} {h} {k} {f' = f'} {g'} {h'} {k'} {hA} {hB} {hC} {hD}
+cube f g h k f' g' h' k' hA hB hC hD
    top back-left back-right front-left front-right bottom =
    ((((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top))) ~
    ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
@@ -28,10 +28,10 @@ cube {f = f} {g} {h} {k} {f' = f'} {g'} {h'} {k'} {hA} {hB} {hC} {hD}
 rectangle-back-left-front-left-cube : 
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  {f : A → B} {g : A → C} {h : B → D} {k : C → D}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
   {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  {f' : A' → B'} {g' : A' → C'} {h' : B' → D'} {k' : C' → D'}
-  {hA : A' → A} {hB : B' → B} {hC : C' → C} {hD : D' → D}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
   (top : (h' ∘ f') ~ (k' ∘ g'))
   (back-left : (f ∘ hA) ~ (hB ∘ f'))
   (back-right : (g ∘ hA) ~ (hC ∘ g'))
@@ -39,17 +39,17 @@ rectangle-back-left-front-left-cube :
   (front-right : (k ∘ hC) ~ (hD ∘ k'))
   (bottom : (h ∘ f) ~ (k ∘ g)) →
   ((h ∘ f) ∘ hA) ~ (hD ∘ (h' ∘ f'))
-rectangle-back-left-front-left-cube {h = h} {f' = f'}
+rectangle-back-left-front-left-cube f g h k f' g' h' k' hA hB hC hD
   top back-left back-right front-left front-right bottom =
   (h ·l back-left) ∙h (front-left ·r f')
 
 rectangle-back-right-front-right-cube : 
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  {f : A → B} {g : A → C} {h : B → D} {k : C → D}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
   {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  {f' : A' → B'} {g' : A' → C'} {h' : B' → D'} {k' : C' → D'}
-  {hA : A' → A} {hB : B' → B} {hC : C' → C} {hD : D' → D}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
   (top : (h' ∘ f') ~ (k' ∘ g'))
   (back-left : (f ∘ hA) ~ (hB ∘ f'))
   (back-right : (g ∘ hA) ~ (hC ∘ g'))
@@ -57,17 +57,63 @@ rectangle-back-right-front-right-cube :
   (front-right : (k ∘ hC) ~ (hD ∘ k'))
   (bottom : (h ∘ f) ~ (k ∘ g)) →
   ((k ∘ g) ∘ hA) ~ (hD ∘ (k' ∘ g'))
-rectangle-back-right-front-right-cube {k = k} {g' = g'}
+rectangle-back-right-front-right-cube f g h k f' g' h' k' hA hB hC hD
   top back-left back-right front-left front-right bottom =
   (k ·l back-right) ∙h (front-right ·r g')
+
+coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube : 
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : cube f g h k f' g' h' k' hA hB hC hD
+    top back-left back-right front-left front-right bottom) →
+  coherence-htpy-cone
+    ( bottom)
+    ( htpy-refl hD)
+    ( dpair hA
+      ( dpair
+        ( h' ∘ f')
+        ( rectangle-back-left-front-left-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom)))
+    ( dpair hA
+      ( dpair
+        ( k' ∘ g')
+        ( rectangle-back-right-front-right-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom)))
+    ( htpy-refl hA)
+    ( top)
+coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( λ a' →
+    ( ap
+      ( concat
+        ( hD (h' (f' a')))
+        { z = hD (k' (g' a'))}
+        ( rectangle-back-left-front-left-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom a'))
+      ( right-unit (ap hD (top a'))))) ∙h
+  ( c)
 
 rectangle-top-front-left-cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  {f : A → B} {g : A → C} {h : B → D} {k : C → D}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
   {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  {f' : A' → B'} {g' : A' → C'} {h' : B' → D'} {k' : C' → D'}
-  {hA : A' → A} {hB : B' → B} {hC : C' → C} {hD : D' → D}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
   (top : (h' ∘ f') ~ (k' ∘ g'))
   (back-left : (f ∘ hA) ~ (hB ∘ f'))
   (back-right : (g ∘ hA) ~ (hC ∘ g'))
@@ -76,16 +122,17 @@ rectangle-top-front-left-cube :
   (bottom : (h ∘ f) ~ (k ∘ g)) →
   ((h ∘ hB) ∘ f') ~ ((hD ∘ k') ∘ g') 
 rectangle-top-front-left-cube
-  {f' = f'} {hD = hD} top back-left back-right front-left front-right bottom =
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom =
   (front-left ·r f') ∙h (hD ·l top)
 
 rectangle-back-right-bottom-cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  {f : A → B} {g : A → C} {h : B → D} {k : C → D}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
   {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  {f' : A' → B'} {g' : A' → C'} {h' : B' → D'} {k' : C' → D'}
-  {hA : A' → A} {hB : B' → B} {hC : C' → C} {hD : D' → D}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
   (top : (h' ∘ f') ~ (k' ∘ g'))
   (back-left : (f ∘ hA) ~ (hB ∘ f'))
   (back-right : (g ∘ hA) ~ (hC ∘ g'))
@@ -94,8 +141,71 @@ rectangle-back-right-bottom-cube :
   (bottom : (h ∘ f) ~ (k ∘ g)) →
   ((h ∘ f) ∘ hA) ~ ((k ∘ hC) ∘ g')
 rectangle-back-right-bottom-cube
-  {k = k} {hA = hA} top back-left back-right front-left front-right bottom =
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom =
   ( bottom ·r hA) ∙h (k ·l back-right)
+
+coherence-htpy-cone-rectangle-top-fl-rectangle-br-bot-cube : 
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : cube f g h k f' g' h' k' hA hB hC hD
+    top back-left back-right front-left front-right bottom) →
+  coherence-htpy-cone
+    ( htpy-inv front-right)
+    ( htpy-refl h)
+    ( dpair g' (dpair (hB ∘ f')
+      ( htpy-inv (rectangle-top-front-left-cube f g h k f' g' h' k' hA hB hC hD
+        top back-left back-right front-left front-right bottom))))
+    ( dpair g' (dpair (f ∘ hA)
+      ( htpy-inv
+        ( rectangle-back-right-bottom-cube f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom))))
+    ( htpy-refl g')
+    ( htpy-inv back-left)
+coherence-htpy-cone-rectangle-top-fl-rectangle-br-bot-cube = {!!}
+
+{-
+  coherence-htpy-cone
+    ( bottom)
+    ( htpy-refl hD)
+    ( dpair hA
+      ( dpair
+        ( h' ∘ f')
+        ( rectangle-back-left-front-left-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom)))
+    ( dpair hA
+      ( dpair
+        ( k' ∘ g')
+        ( rectangle-back-right-front-right-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom)))
+    ( htpy-refl hA)
+    ( top)
+coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( λ a' →
+    ( ap
+      ( concat
+        ( hD (h' (f' a')))
+        { z = hD (k' (g' a'))}
+        ( rectangle-back-left-front-left-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom a'))
+      ( right-unit (ap hD (top a'))))) ∙h
+  ( c)
+-}
 
 rectangle-top-front-right-cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
@@ -146,7 +256,8 @@ is-pullback-back-left-is-pullback-back-right-cube :
   (front-left : (h ∘ hB) ~ (hD ∘ h'))
   (front-right : (k ∘ hC) ~ (hD ∘ k'))
   (bottom : (h ∘ f) ~ (k ∘ g)) →
-  (c : cube top back-left back-right front-left front-right bottom) →
+  (c : cube f g h k f' g' h' k' hA hB hC hD
+    top back-left back-right front-left front-right bottom) →
   is-pullback h hD (dpair hB (dpair h' front-left)) →
   is-pullback k hD (dpair hC (dpair k' front-right)) →
   is-pullback g hC (dpair hA (dpair g' back-right)) →
@@ -160,22 +271,113 @@ is-pullback-back-left-is-pullback-back-right-cube
     ( dpair hA (dpair f' back-left))
     ( is-pb-front-left)
     ( is-pullback-htpy
+      { f = h ∘ f}
       ( k ∘ g)
       ( bottom)
+      { g = hD}
       ( hD)
       ( htpy-refl hD)
+      { c = dpair hA (dpair (h' ∘ f')
+        ( rectangle-back-left-front-left-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom))}
       ( dpair hA (dpair (k' ∘ g')
         ( rectangle-back-right-front-right-cube
+          f g h k f' g' h' k' hA hB hC hD
           top back-left back-right front-left front-right bottom)))
-      ( dpair (htpy-refl _) (dpair top c))
-      ( is-pullback-rectangle-is-pullback-left-square
-        g
-        k
-        hD
+      ( dpair
+        ( htpy-refl _)
+        ( dpair top
+          ( coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube
+            f g h k f' g' h' k' hA hB hC hD
+            top back-left back-right front-left front-right bottom c)))
+      ( is-pullback-rectangle-is-pullback-left-square g k hD
         ( dpair hC (dpair k' front-right))
         ( dpair hA (dpair g' back-right))
-         is-pb-front-right
-         is-pb-back-right))
+        ( is-pb-front-right)
+        ( is-pb-back-right)))
+
+is-pullback-back-right-is-pullback-back-left-cube :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  {f : A → B} {g : A → C} {h : B → D} {k : C → D}
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  {f' : A' → B'} {g' : A' → C'} {h' : B' → D'} {k' : C' → D'}
+  {hA : A' → A} {hB : B' → B} {hC : C' → C} {hD : D' → D}
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g)) →
+  (c : cube f g h k f' g' h' k' hA hB hC hD
+    top back-left back-right front-left front-right bottom) →
+  is-pullback h hD (dpair hB (dpair h' front-left)) →
+  is-pullback k hD (dpair hC (dpair k' front-right)) →
+  is-pullback f hB (dpair hA (dpair f' back-left)) →
+  is-pullback g hC (dpair hA (dpair g' back-right))
+is-pullback-back-right-is-pullback-back-left-cube
+  {f = f} {g} {h} {k} {f' = f'} {g'} {h'} {k'} {hA = hA} {hB} {hC} {hD}
+  top back-left back-right front-left front-right bottom c
+  is-pb-front-left is-pb-front-right is-pb-back-left =
+  is-pullback-left-square-is-pullback-rectangle g k hD
+    ( dpair hC (dpair k' front-right))
+    ( dpair hA (dpair g' back-right))
+    ( is-pb-front-right)
+    ( is-pullback-htpy'
+      ( h ∘ f)
+      { f' = k ∘ g}
+      ( bottom)
+      ( hD)
+      { g' = hD}
+      ( htpy-refl hD)
+      ( dpair hA (dpair (h' ∘ f')
+        ( rectangle-back-left-front-left-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom)))
+      { c' = dpair hA (dpair (k' ∘ g')
+        ( rectangle-back-right-front-right-cube
+          f g h k f' g' h' k' hA hB hC hD
+          top back-left back-right front-left front-right bottom))}
+      ( dpair
+        ( htpy-refl _)
+        ( dpair top
+          ( coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube
+            f g h k f' g' h' k' hA hB hC hD
+            top back-left back-right front-left front-right bottom c)))
+      ( is-pullback-rectangle-is-pullback-left-square f h hD
+        ( dpair hB (dpair h' front-left))
+        ( dpair hA (dpair f' back-left))
+        ( is-pb-front-left)
+        ( is-pb-back-left)))
+
+descent-is-equiv :
+  {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (i : X → Y) (j : Y → Z) (h : C → Z)
+  (c : cone j h B) (d : cone i (pr1 c) A) →
+  is-equiv i → is-equiv (pr1 (pr2 d)) →
+  is-pullback (j ∘ i) h (cone-comp-horizontal i j h c d) →
+  is-pullback j h c
+descent-is-equiv i j h c d
+  is-equiv-i is-equiv-k is-pb-rectangle =
+  is-pullback-is-fiberwise-equiv-fib-square j h c
+    ( ind-is-equiv
+      ( λ y → is-equiv (fib-square j h c y))
+      ( i)
+      ( is-equiv-i)
+      ( λ x → is-equiv-left-factor
+        ( fib-square (j ∘ i) h
+          ( cone-comp-horizontal i j h c d) x)
+        ( fib-square j h c (i x))
+        ( fib-square i (pr1 c) d x)
+        ( triangle-fib-square i j h c d x)
+        ( is-fiberwise-equiv-fib-square-is-pullback (j ∘ i) h
+          ( cone-comp-horizontal i j h c d)
+          ( is-pb-rectangle)
+          ( x))
+        ( is-fiberwise-equiv-fib-square-is-pullback i (pr1 c) d
+          ( is-pullback-is-equiv' i (pr1 c) d is-equiv-i is-equiv-k) x)))
 
 is-pullback-bottom-is-pullback-top-cube-is-equiv :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
