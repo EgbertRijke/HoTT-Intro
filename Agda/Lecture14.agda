@@ -350,6 +350,44 @@ descent-is-equiv i j h c d
         ( is-fiberwise-equiv-fib-square-is-pullback i (pr1 c) d
           ( is-pullback-is-equiv' i (pr1 c) d is-equiv-i is-equiv-k) x)))
 
+htpy-inv-con :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
+  (H ∙h K) ~ L → K ~ ((htpy-inv H) ∙h L)
+htpy-inv-con H K L M x = inv-con (H x) (K x) (L x) (M x)
+
+htpy-con-inv :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
+  (H ∙h K) ~ L → H ~ (L ∙h (htpy-inv K))
+htpy-con-inv H K L M x = con-inv (H x) (K x) (L x) (M x)
+
+htpy-ap-concat :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K K' : g ~ h) →
+  K ~ K' → (H ∙h K) ~ (H ∙h K')
+htpy-ap-concat {g = g} {h} H K K' L x =
+  ap (concat (g x) {z = h x} (H x)) (L x)
+
+htpy-ap-concat' :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H H' : f ~ g) (K : g ~ h) →
+  H ~ H' → (H ∙h K) ~ (H' ∙h K)
+htpy-ap-concat' H H' K L x =
+  ap (concat' _ (K x)) (L x)
+
+htpy-left-whisk-htpy-inv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  {f f' : A → B} (g : B → C) (H : f ~ f') →
+  (g ·l (htpy-inv H)) ~ htpy-inv (g ·l H)
+htpy-left-whisk-htpy-inv g H x = ap-inv g (H x)
+
+htpy-right-whisk-htpy-inv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  {g g' : B → C} (H : g ~ g') (f : A → B) →
+  ((htpy-inv H) ·r f) ~ (htpy-inv (H ·r f))
+htpy-right-whisk-htpy-inv H f = htpy-refl _
+
 coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
@@ -382,7 +420,31 @@ coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv :
           top back-left back-right front-left front-right bottom)))
     ( htpy-refl f')
     ( back-right)
-coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv = {!!}
+coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( htpy-inv
+    ( htpy-assoc
+      ( h ·l (htpy-inv back-left))
+      ( bottom ·r hA)
+      ( (k ·l back-right) ∙h (htpy-refl (k ∘ (hC ∘ g')))))) ∙h
+  ( ( htpy-ap-concat'
+      ( h ·l (htpy-inv back-left))
+      ( htpy-inv (h ·l back-left))
+      ( _)
+      ( htpy-left-whisk-htpy-inv h back-left)) ∙h
+      ( htpy-inv (htpy-inv-con (h ·l back-left) _ _
+        ( ( ( htpy-assoc (h ·l back-left) (front-left ·r f') _) ∙h
+            ( htpy-assoc
+                ( (h ·l back-left) ∙h (front-left ·r f'))
+                ( hD ·l top)
+                ( (htpy-inv front-right) ·r g') ∙h
+              htpy-inv
+              ( htpy-con-inv _ (front-right ·r g') _
+                ( htpy-inv (c ∙h (htpy-assoc (bottom ·r hA) _ _)))))) ∙h
+          ( htpy-inv
+            ( htpy-ap-concat (bottom ·r hA) _ _
+              ( htpy-right-unit (k ·l back-right))))))))
 
 is-pullback-bottom-is-pullback-top-cube-is-equiv :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
