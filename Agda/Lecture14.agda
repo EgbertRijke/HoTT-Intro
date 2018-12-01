@@ -7,6 +7,31 @@ open Lecture13 public
 
 -- Cubes
 
+{- 
+  We specify the type of the homotopy witnessing that a cube commutes. Imagine
+  that the cube is presented as a lattice
+
+           *
+         / | \
+        /  |  \
+       /   |   \
+      *    *    *
+      |\ /   \ /| 
+      | \     ‌/ |
+      |/ \   / \|
+      *    *    *
+       \   |   /
+        \  |  /
+         \ | /
+           *
+
+  with all maps pointing in the downwards direction. Presented in this way, a
+  cube of maps has a top face, a back-left face, a back-right face, a front-left
+  face, a front-right face, and a bottom face, all of which are homotopies.
+
+  A term of type coherence-cube is a homotopy filling the cube.
+-}
+
 coherence-cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
@@ -21,9 +46,210 @@ coherence-cube :
   (front-right : (k ∘ hC) ~ (hD ∘ k'))
   (bottom : (h ∘ f) ~ (k ∘ g)) → UU _
 coherence-cube f g h k f' g' h' k' hA hB hC hD
-   top back-left back-right front-left front-right bottom =
-   ((((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top))) ~
-   ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
+  top back-left back-right front-left front-right bottom =
+  ((((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top))) ~
+  ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
+
+{-
+  The symmetry group D_3 acts on a cube. However, the coherence filling a
+  a cube needs to be modified to show that the rotated/reflected cube again
+  commutes. In the following definitions we provide the homotopies witnessing
+  that the rotated/reflected cubes again commute.
+
+  Note: although in principle it ought to be enough to show this for the
+  generators of the symmetry group D_3, in practice it is more straightforward
+  to just do the work for each of the symmetries separately. One reason is
+  that some of the homotopies witnessing that the faces commute will be
+  inverted as the result of an application of a symmetry. Inverting a homotopy
+  twice results in a new homotopy that is only homotopic to the original
+  homotopy.
+
+  We first provide some constructions involving homotopies that will help us
+  manipulating coherences of cubes.
+-}
+
+htpy-inv-con :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
+  (H ∙h K) ~ L → K ~ ((htpy-inv H) ∙h L)
+htpy-inv-con H K L M x = inv-con (H x) (K x) (L x) (M x)
+
+htpy-con-inv :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
+  (H ∙h K) ~ L → H ~ (L ∙h (htpy-inv K))
+htpy-con-inv H K L M x = con-inv (H x) (K x) (L x) (M x)
+
+htpy-ap-concat :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K K' : g ~ h) →
+  K ~ K' → (H ∙h K) ~ (H ∙h K')
+htpy-ap-concat {g = g} {h} H K K' L x =
+  ap (concat (g x) {z = h x} (H x)) (L x)
+
+htpy-ap-concat' :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H H' : f ~ g) (K : g ~ h) →
+  H ~ H' → (H ∙h K) ~ (H' ∙h K)
+htpy-ap-concat' H H' K L x =
+  ap (concat' _ (K x)) (L x)
+
+htpy-left-whisk-htpy-inv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  {f f' : A → B} (g : B → C) (H : f ~ f') →
+  (g ·l (htpy-inv H)) ~ htpy-inv (g ·l H)
+htpy-left-whisk-htpy-inv g H x = ap-inv g (H x)
+
+htpy-right-whisk-htpy-inv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  {g g' : B → C} (H : g ~ g') (f : A → B) →
+  ((htpy-inv H) ·r f) ~ (htpy-inv (H ·r f))
+htpy-right-whisk-htpy-inv H f = htpy-refl _
+
+htpy-cone-htpy-refl-vertical :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  {f f' : A → X} (Hf : f ~ f') (g : B → X)
+  (p : C → A) {q q' : C → B} (Hq : q ~ q') →
+  (H : (f ∘ p) ~ (g ∘ q)) (H' : (f' ∘ p) ~ (g ∘ q')) →
+  (H ∙h (g ·l Hq)) ~ ((Hf ·r p) ∙h H') →
+  htpy-cone Hf (htpy-refl g) (dpair p (dpair q H)) (dpair p (dpair q' H'))
+htpy-cone-htpy-refl-vertical Hf g p Hq H H' K =
+  dpair
+    ( htpy-refl p)
+    ( dpair Hq (htpy-ap-concat H _ _ (htpy-right-unit (g ·l Hq)) ∙h K))
+
+htpy-cone-htpy-refl-horizontal :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) {g g' : B → X} (Hg : g ~ g')
+  {p p' : C → A} (Hp : p ~ p') (q : C → B)
+  (H : (f ∘ p) ~ (g ∘ q)) (H' : (f ∘ p') ~ (g' ∘ q)) →
+  ((H ∙h (Hg ·r q)) ~ ((f ·l Hp) ∙h H')) →
+  htpy-cone (htpy-refl f) Hg (dpair p (dpair q H)) (dpair p' (dpair q H'))
+htpy-cone-htpy-refl-horizontal f Hg Hp q H H' K =
+  dpair Hp
+    ( dpair
+      ( htpy-refl q)
+      ( K ∙h (htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l Hp))))))
+
+-- We show that a rotation of a commuting cube again commutes.
+coherence-cube-rotate-120 :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : coherence-cube
+       f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  coherence-cube
+    hC k' k hD hA f' f hB g' g h' h
+    back-left
+    (htpy-inv back-right) (htpy-inv top)
+    (htpy-inv bottom) (htpy-inv front-left)
+    front-right
+coherence-cube-rotate-120
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( htpy-inv
+    ( htpy-assoc
+      ( k ·l (htpy-inv back-right))
+      ( (htpy-inv bottom) ·r hA)
+      ( h ·l back-left))) ∙h
+      ( ( htpy-ap-concat'
+            ( k ·l (htpy-inv back-right))
+            ( htpy-inv (k ·l back-right))
+            ( _)
+            ( htpy-left-whisk-htpy-inv k back-right)) ∙h
+          ( htpy-inv
+            ( htpy-inv-con
+              ( k ·l back-right)
+              ( _)
+              ( ((htpy-inv bottom) ·r hA) ∙h (h ·l back-left))
+              ( htpy-inv-con
+                ( bottom ·r hA)
+                ( _)
+                ( h ·l back-left)
+                ( ( htpy-assoc (bottom ·r hA) (k ·l back-right) _) ∙h
+                  ( ( htpy-assoc
+                      ( (bottom ·r hA) ∙h (k ·l back-right))
+                      ( front-right ·r g')
+                      ( _)) ∙h
+                    ( ( htpy-assoc
+                        ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
+                          ( front-right ·r g'))
+                        ( hD ·l htpy-inv top)
+                        ( htpy-inv front-left ·r f')) ∙h
+                      ( htpy-inv
+                        ( htpy-con-inv
+                          ( h ·l back-left)
+                          ( front-left ·r f')
+                          ( _)
+                          ( htpy-con-inv _
+                              ( hD ·l top)
+                              ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
+                                  (front-right ·r g'))
+                              ( c ∙h
+                                ( htpy-assoc
+                                    ( bottom ·r hA)
+                                    ( k ·l back-right)
+                                    ( front-right ·r g'))) ∙h
+                            ( htpy-inv
+                              ( htpy-ap-concat _
+                                ( hD ·l (htpy-inv top))
+                                ( htpy-inv (hD ·l top))
+                                ( htpy-left-whisk-htpy-inv hD top)))))))))))))
+
+coherence-cube-rotate-240 :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : coherence-cube
+       f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  coherence-cube
+    h' hB hD h g' hA hC g f' k' f k
+    (htpy-inv back-right)
+    top (htpy-inv back-left)
+    (htpy-inv front-right) bottom
+    (htpy-inv front-left)
+coherence-cube-rotate-240 f g h k f' g' h' k' hA hB hC hD top back-left back-right front-left front-right bottom c = {!!}
+
+-- We show that a reflection through the "z-axis" of a commuting cube again commutes.
+coherence-cube-mirror-z :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : coherence-cube
+       f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  coherence-cube g f k h g' f' k' h' hA hC hB hD
+    (htpy-inv top) back-right back-left front-right front-left (htpy-inv bottom)
+coherence-cube-mirror-z f g h k f' g' h' k' hA hB hC hD top back-left back-right front-left front-right bottom c = {!!}
 
 rectangle-back-left-front-left-cube : 
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
@@ -350,44 +576,6 @@ descent-is-equiv i j h c d
         ( is-fiberwise-equiv-fib-square-is-pullback i (pr1 c) d
           ( is-pullback-is-equiv' i (pr1 c) d is-equiv-i is-equiv-k) x)))
 
-htpy-inv-con :
-  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
-  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
-  (H ∙h K) ~ L → K ~ ((htpy-inv H) ∙h L)
-htpy-inv-con H K L M x = inv-con (H x) (K x) (L x) (M x)
-
-htpy-con-inv :
-  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
-  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
-  (H ∙h K) ~ L → H ~ (L ∙h (htpy-inv K))
-htpy-con-inv H K L M x = con-inv (H x) (K x) (L x) (M x)
-
-htpy-ap-concat :
-  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
-  (H : f ~ g) (K K' : g ~ h) →
-  K ~ K' → (H ∙h K) ~ (H ∙h K')
-htpy-ap-concat {g = g} {h} H K K' L x =
-  ap (concat (g x) {z = h x} (H x)) (L x)
-
-htpy-ap-concat' :
-  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
-  (H H' : f ~ g) (K : g ~ h) →
-  H ~ H' → (H ∙h K) ~ (H' ∙h K)
-htpy-ap-concat' H H' K L x =
-  ap (concat' _ (K x)) (L x)
-
-htpy-left-whisk-htpy-inv :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
-  {f f' : A → B} (g : B → C) (H : f ~ f') →
-  (g ·l (htpy-inv H)) ~ htpy-inv (g ·l H)
-htpy-left-whisk-htpy-inv g H x = ap-inv g (H x)
-
-htpy-right-whisk-htpy-inv :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
-  {g g' : B → C} (H : g ~ g') (f : A → B) →
-  ((htpy-inv H) ·r f) ~ (htpy-inv (H ·r f))
-htpy-right-whisk-htpy-inv H f = htpy-refl _
-
 coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
@@ -486,7 +674,7 @@ is-pullback-bottom-is-pullback-top-cube-is-equiv
           ( rectangle-back-left-bottom-cube
             f g h k f' g' h' k' hA hB hC hD
             top back-left back-right front-left front-right bottom))}
-      ( dpair
+       ( dpair
         ( f')
         ( dpair
           ( hC ∘ g')
