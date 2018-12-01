@@ -94,6 +94,18 @@ htpy-ap-concat' :
 htpy-ap-concat' H H' K L x =
   ap (concat' _ (K x)) (L x)
 
+htpy-inv-assoc :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) →
+  (htpy-inv (H ∙h K)) ~ ((htpy-inv K) ∙h (htpy-inv H))
+htpy-inv-assoc H K x = inv-assoc (H x) (K x)
+
+htpy-ap-inv :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g : (x : A) → B x} →
+  {H H' : f ~ g} →
+  H ~ H' → (htpy-inv H) ~ (htpy-inv H')
+htpy-ap-inv K x = ap inv (K x)
+
 htpy-left-whisk-htpy-inv :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
   {f f' : A → B} (g : B → C) (H : f ~ f') →
@@ -162,49 +174,49 @@ coherence-cube-rotate-120
       ( k ·l (htpy-inv back-right))
       ( (htpy-inv bottom) ·r hA)
       ( h ·l back-left))) ∙h
-      ( ( htpy-ap-concat'
-            ( k ·l (htpy-inv back-right))
-            ( htpy-inv (k ·l back-right))
+  ( ( htpy-ap-concat'
+        ( k ·l (htpy-inv back-right))
+        ( htpy-inv (k ·l back-right))
+        ( _)
+        ( htpy-left-whisk-htpy-inv k back-right)) ∙h
+      ( htpy-inv
+        ( htpy-inv-con
+          ( k ·l back-right)
+          ( _)
+          ( ((htpy-inv bottom) ·r hA) ∙h (h ·l back-left))
+          ( htpy-inv-con
+            ( bottom ·r hA)
             ( _)
-            ( htpy-left-whisk-htpy-inv k back-right)) ∙h
-          ( htpy-inv
-            ( htpy-inv-con
-              ( k ·l back-right)
-              ( _)
-              ( ((htpy-inv bottom) ·r hA) ∙h (h ·l back-left))
-              ( htpy-inv-con
-                ( bottom ·r hA)
-                ( _)
-                ( h ·l back-left)
-                ( ( htpy-assoc (bottom ·r hA) (k ·l back-right) _) ∙h
-                  ( ( htpy-assoc
-                      ( (bottom ·r hA) ∙h (k ·l back-right))
-                      ( front-right ·r g')
-                      ( _)) ∙h
-                    ( ( htpy-assoc
-                        ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
-                          ( front-right ·r g'))
-                        ( hD ·l htpy-inv top)
-                        ( htpy-inv front-left ·r f')) ∙h
-                      ( htpy-inv
-                        ( htpy-con-inv
-                          ( h ·l back-left)
-                          ( front-left ·r f')
-                          ( _)
-                          ( htpy-con-inv _
-                              ( hD ·l top)
-                              ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
-                                  (front-right ·r g'))
-                              ( c ∙h
-                                ( htpy-assoc
-                                    ( bottom ·r hA)
-                                    ( k ·l back-right)
-                                    ( front-right ·r g'))) ∙h
-                            ( htpy-inv
-                              ( htpy-ap-concat _
-                                ( hD ·l (htpy-inv top))
-                                ( htpy-inv (hD ·l top))
-                                ( htpy-left-whisk-htpy-inv hD top)))))))))))))
+            ( h ·l back-left)
+            ( ( htpy-assoc (bottom ·r hA) (k ·l back-right) _) ∙h
+              ( ( htpy-assoc
+                  ( (bottom ·r hA) ∙h (k ·l back-right))
+                  ( front-right ·r g')
+                  ( _)) ∙h
+                ( ( htpy-assoc
+                    ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
+                      ( front-right ·r g'))
+                    ( hD ·l htpy-inv top)
+                    ( htpy-inv front-left ·r f')) ∙h
+                  ( htpy-inv
+                    ( htpy-con-inv
+                      ( h ·l back-left)
+                      ( front-left ·r f')
+                      ( _)
+                      ( htpy-con-inv _
+                          ( hD ·l top)
+                          ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
+                              (front-right ·r g'))
+                          ( c ∙h
+                            ( htpy-assoc
+                                ( bottom ·r hA)
+                                ( k ·l back-right)
+                                ( front-right ·r g'))) ∙h
+                        ( htpy-inv
+                          ( htpy-ap-concat _
+                            ( hD ·l (htpy-inv top))
+                            ( htpy-inv (hD ·l top))
+                            ( htpy-left-whisk-htpy-inv hD top)))))))))))))
 
 coherence-cube-rotate-240 :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
@@ -228,10 +240,51 @@ coherence-cube-rotate-240 :
     top (htpy-inv back-left)
     (htpy-inv front-right) bottom
     (htpy-inv front-left)
-coherence-cube-rotate-240 f g h k f' g' h' k' hA hB hC hD top back-left back-right front-left front-right bottom c = {!!}
+coherence-cube-rotate-240 f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( htpy-ap-concat
+     ( (hD ·l top) ∙h ((htpy-inv front-right) ·r g')) _ _
+     ( htpy-left-whisk-htpy-inv k back-right)) ∙h
+  ( htpy-inv
+    ( htpy-con-inv _
+      ( htpy-left-whisk k back-right)
+      ( (hD ·l top) ∙h ((htpy-inv front-right) ·r g'))
+      ( htpy-con-inv _ (front-right ·r g') (hD ·l top)
+        ( htpy-inv
+          ( ( ( htpy-inv-con
+                ( front-left ·r f')
+                ( hD ·l top) _
+                ( ( ( htpy-inv-con
+                      ( h ·l back-left)
+                      ( (front-left ·r f') ∙h (hD ·l top)) _
+                      ( ( htpy-assoc
+                            ( h ·l back-left)
+                            ( front-left ·r f')
+                            ( hD ·l top)) ∙h
+                          c)) ∙h
+                    ( htpy-ap-concat'
+                      ( htpy-inv (h ·l back-left))
+                      ( h ·l (htpy-inv back-left)) _
+                      ( htpy-inv (htpy-left-whisk-htpy-inv h back-left)))) ∙h
+                  ( htpy-assoc
+                    ( h ·l (htpy-inv back-left))
+                    ( bottom ·r hA)
+                    ( (k ·l back-right) ∙h (front-right ·r g'))))) ∙h
+              ( htpy-assoc
+                ( (htpy-inv front-left) ·r f')
+                ( (h ·l (htpy-inv back-left)) ∙h ( bottom ·r hA))
+                ( (k ·l back-right) ∙h (front-right ·r g')))) ∙h
+            ( htpy-assoc _ (k ·l back-right) (front-right ·r g')))))))
 
--- We show that a reflection through the "z-axis" of a commuting cube again commutes.
-coherence-cube-mirror-z :
+{- 
+  We show that a reflection through the plane spanned by the vertices
+  A', A, and D of a commuting cube again commutes.
+
+  Note: Since the vertices A' and D must always be fixed, the vertex A
+  determines the mirror symmetry.
+-}
+
+coherence-cube-mirror-A :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : A → C) (h : B → D) (k : C → D)
@@ -249,7 +302,125 @@ coherence-cube-mirror-z :
        top back-left back-right front-left front-right bottom) →
   coherence-cube g f k h g' f' k' h' hA hC hB hD
     (htpy-inv top) back-right back-left front-right front-left (htpy-inv bottom)
-coherence-cube-mirror-z f g h k f' g' h' k' hA hB hC hD top back-left back-right front-left front-right bottom c = {!!}
+coherence-cube-mirror-A f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( htpy-ap-concat
+    ( (k ·l back-right) ∙h (front-right ·r g')) _ _
+    ( htpy-left-whisk-htpy-inv hD top)) ∙h
+  ( htpy-inv-con
+    ( bottom ·r hA) _
+    ( (h ·l back-left) ∙h (front-left ·r f'))
+    ( ( htpy-assoc
+        ( bottom ·r hA)
+        ( (k ·l back-right) ∙h (front-right ·r g'))
+        ( htpy-inv (hD ·l top))) ∙h
+      ( htpy-inv
+        ( htpy-con-inv
+          ( (h ·l back-left) ∙h (front-left ·r f'))
+          ( hD ·l top)
+          ( (bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
+          ( c)))))
+
+coherence-cube-mirror-B :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : coherence-cube
+       f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  coherence-cube hB h' h hD hA g' g hC f' f k' k
+  back-right (htpy-inv back-left) top bottom (htpy-inv front-right) front-left
+coherence-cube-mirror-B f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( htpy-inv
+    ( htpy-assoc
+      ( h ·l (htpy-inv back-left))
+      ( bottom ·r hA)
+      ( k ·l back-right))) ∙h
+  ( ( ( htpy-ap-concat' _ _
+        ( (bottom ·r hA) ∙h (k ·l back-right))
+        ( htpy-left-whisk-htpy-inv h back-left)) ∙h
+      ( htpy-con-inv _
+        ( front-right ·r g')
+        ( (front-left ·r f') ∙h (hD ·l top))
+        ( ( htpy-inv
+            ( htpy-assoc (htpy-inv (h ·l back-left)) _ (front-right ·r g'))) ∙h
+          ( htpy-inv
+            ( htpy-inv-con (h ·l back-left) _ _
+              ( ( htpy-assoc (h ·l back-left) (front-left ·r f') (hD ·l top)) ∙h
+                ( c ∙h
+                  ( htpy-assoc
+                    ( bottom ·r hA)
+                    ( k ·l back-right)
+                    ( front-right ·r g'))))))))) ∙h
+    ( htpy-inv
+      ( htpy-assoc
+        ( front-left ·r f')
+        ( hD ·l top)
+        ( (htpy-inv front-right) ·r g'))))
+
+coherence-cube-mirror-C :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : coherence-cube
+       f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  coherence-cube k' hC hD k f' hA hB f g' h' g h
+  (htpy-inv back-left) (htpy-inv top) (htpy-inv back-right)
+  (htpy-inv front-left) (htpy-inv bottom) (htpy-inv front-right)
+coherence-cube-mirror-C f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c =
+  ( htpy-ap-concat
+    ( (hD ·l (htpy-inv top)) ∙h ((htpy-inv front-left) ·r f')) _ _
+    ( htpy-left-whisk-htpy-inv h back-left)) ∙h
+  ( ( htpy-ap-concat' _ _
+      ( htpy-inv (h ·l back-left))
+      ( htpy-ap-concat' _ _
+        ( (htpy-inv front-left) ·r f')
+        ( htpy-left-whisk-htpy-inv hD top))) ∙h
+    ( ( ( htpy-ap-concat' _ _
+          ( htpy-inv (h ·l back-left))
+          ( htpy-inv (htpy-inv-assoc (front-left ·r f') (hD ·l top)))) ∙h
+        ( ( htpy-inv
+            ( htpy-inv-assoc
+              ( h ·l back-left)
+              ( (front-left ·r f') ∙h (hD ·l top)))) ∙h
+          ( ( ( htpy-ap-inv
+                ( ( htpy-assoc
+                    ( h ·l back-left)
+                    ( front-left ·r f')
+                    ( hD ·l top)) ∙h
+                  ( ( c) ∙h
+                    ( htpy-assoc
+                      ( bottom ·r hA)
+                      ( k ·l back-right)
+                      ( front-right ·r g'))))) ∙h
+              ( htpy-inv-assoc _ (front-right ·r g'))) ∙h
+            ( htpy-ap-concat (htpy-inv (front-right ·r g')) _ _
+              ( htpy-inv-assoc (bottom ·r hA) (k ·l back-right)))))) ∙h
+      ( htpy-ap-concat ((htpy-inv front-right) ·r g') _ _
+        ( htpy-ap-concat' _ _
+          ( (htpy-inv bottom) ·r hA)
+          ( htpy-inv (htpy-left-whisk-htpy-inv k back-right))))))
 
 rectangle-back-left-front-left-cube : 
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
@@ -699,3 +870,62 @@ is-pullback-bottom-is-pullback-top-cube-is-equiv
           ( is-equiv-hD)
           ( is-equiv-hC))
         ( is-pb-top)))
+
+is-pullback-front-left-is-pullback-back-right-cube-is-equiv :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g)) →
+  (c : coherence-cube f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  is-equiv f' → is-equiv f → is-equiv k' → is-equiv k →
+  is-pullback g hC (dpair hA (dpair g' back-right)) →
+  is-pullback h hD (dpair hB (dpair h' front-left))
+is-pullback-front-left-is-pullback-back-right-cube-is-equiv
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c
+  is-equiv-f' is-equiv-f is-equiv-k' is-equiv-k is-pb-back-right =
+  is-pullback-bottom-is-pullback-top-cube-is-equiv
+    hB h' h hD hA g' g hC f' f k' k
+    back-right (htpy-inv back-left) top bottom (htpy-inv front-right) front-left
+    ( coherence-cube-mirror-B f g h k f' g' h' k' hA hB hC hD top
+      back-left back-right front-left front-right bottom c)
+    is-equiv-f' is-equiv-f is-equiv-k' is-equiv-k is-pb-back-right
+
+is-pullback-front-right-is-pullback-back-left-cube-is-equiv :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g)) →
+  (c : coherence-cube f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  is-equiv g' → is-equiv h' → is-equiv g → is-equiv h →
+  is-pullback f hB (dpair hA (dpair f' back-left)) →
+  is-pullback k hD (dpair hC (dpair k' front-right))
+is-pullback-front-right-is-pullback-back-left-cube-is-equiv
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c
+  is-equiv-g' is-equiv-h' is-equiv-g is-equiv-h is-pb-back-left =
+  is-pullback-bottom-is-pullback-top-cube-is-equiv
+    hC k' k hD hA f' f hB g' g h' h
+    back-left (htpy-inv back-right) (htpy-inv top)
+    ( htpy-inv bottom) (htpy-inv front-left) front-right
+    ( coherence-cube-rotate-120 f g h k f' g' h' k' hA hB hC hD
+      top back-left back-right front-left front-right bottom c)
+    is-equiv-g' is-equiv-g is-equiv-h' is-equiv-h is-pb-back-left
