@@ -359,7 +359,7 @@ section-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   sec h → sec f → sec g
 section-comp f g h H sec-h sec-f =
-  dpair (h ∘ (pr1 sec-f)) (htpy-concat _ (htpy-inv (htpy-right-whisk H (pr1 sec-f))) (pr2 sec-f))
+  dpair (h ∘ (pr1 sec-f)) ((htpy-inv (H ·r (pr1 sec-f))) ∙h (pr2 sec-f))
 
 section-comp' : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
@@ -367,11 +367,8 @@ section-comp' : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
 section-comp' f g h H sec-h sec-g =
   dpair
     ( (pr1 sec-h) ∘ (pr1 sec-g))
-    ( htpy-concat _
-      ( htpy-right-whisk H ((pr1 sec-h) ∘ (pr1 sec-g)))
-      ( htpy-concat _
-        ( htpy-left-whisk g (htpy-right-whisk (pr2 sec-h) (pr1 sec-g)))
-        ( (pr2 sec-g))))
+    ( ( H ·r ((pr1 sec-h) ∘ (pr1 sec-g))) ∙h
+      ( ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))) ∙h ((pr2 sec-g))))
 
 -- Exercise 5.5 (b) is dual to exercise 5.5 (a). It asks to show that, given a commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f has a retraction if and only if h has a retraction.
 
@@ -388,22 +385,19 @@ triangle-retraction f g h H (dpair r isretr) =
 retraction-comp : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   retr g → retr f → retr h
-retraction-comp f g h H (dpair rg rg-isretr) (dpair rf rf-isretr) =
+retraction-comp f g h H retr-g retr-f =
   dpair
-    ( rf ∘ g)
-    ( htpy-concat _ (htpy-left-whisk rf (htpy-inv H)) rf-isretr)
+    ( (pr1 retr-f) ∘ g)
+    ( (htpy-inv ((pr1 retr-f) ·l H)) ∙h (pr2 retr-f))
 
 retraction-comp' : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   retr g → retr h → retr f
-retraction-comp' f g h H (dpair rg rg-isretr) (dpair rh rh-isretr) =
+retraction-comp' f g h H retr-g retr-h =
   dpair
-    ( rh ∘ rg)
-    ( htpy-concat _
-      ( htpy-left-whisk (rh ∘ rg) H)
-      ( htpy-concat _
-        ( htpy-left-whisk rh (htpy-right-whisk rg-isretr h))
-        ( rh-isretr)))
+    ( (pr1 retr-h) ∘ (pr1 retr-g))
+    ( ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H) ∙h
+      ( ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)) ∙h (pr2 retr-h)))
 
 -- In Exercise 5.5 (c) we use the constructions of parts (a) and (b) to derive the 3-for-2 property of equivalences.
 
@@ -870,3 +864,55 @@ is-equiv-functor-coprod {A = A} {B = B} {A' = A'} {B' = B'} {f = f} {g = g}
           ( htpy-inv (compose-functor-coprod f rf g rg))
           ( htpy-functor-coprod isretr-rf isretr-rg))
         ( id-functor-coprod A B)))
+
+-- Extra material
+
+htpy-inv-con :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
+  (H ∙h K) ~ L → K ~ ((htpy-inv H) ∙h L)
+htpy-inv-con H K L M x = inv-con (H x) (K x) (L x) (M x)
+
+htpy-con-inv :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
+  (H ∙h K) ~ L → H ~ (L ∙h (htpy-inv K))
+htpy-con-inv H K L M x = con-inv (H x) (K x) (L x) (M x)
+
+htpy-ap-concat :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K K' : g ~ h) →
+  K ~ K' → (H ∙h K) ~ (H ∙h K')
+htpy-ap-concat {g = g} {h} H K K' L x =
+  ap (concat (g x) {z = h x} (H x)) (L x)
+
+htpy-ap-concat' :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H H' : f ~ g) (K : g ~ h) →
+  H ~ H' → (H ∙h K) ~ (H' ∙h K)
+htpy-ap-concat' H H' K L x =
+  ap (concat' _ (K x)) (L x)
+
+htpy-inv-assoc :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) →
+  (htpy-inv (H ∙h K)) ~ ((htpy-inv K) ∙h (htpy-inv H))
+htpy-inv-assoc H K x = inv-assoc (H x) (K x)
+
+htpy-ap-inv :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g : (x : A) → B x} →
+  {H H' : f ~ g} →
+  H ~ H' → (htpy-inv H) ~ (htpy-inv H')
+htpy-ap-inv K x = ap inv (K x)
+
+htpy-left-whisk-htpy-inv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  {f f' : A → B} (g : B → C) (H : f ~ f') →
+  (g ·l (htpy-inv H)) ~ htpy-inv (g ·l H)
+htpy-left-whisk-htpy-inv g H x = ap-inv g (H x)
+
+htpy-right-whisk-htpy-inv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  {g g' : B → C} (H : g ~ g') (f : A → B) →
+  ((htpy-inv H) ·r f) ~ (htpy-inv (H ·r f))
+htpy-right-whisk-htpy-inv H f = htpy-refl _
