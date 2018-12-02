@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --allow-unsolved-metas --no-prop #-}
+{-# OPTIONS --without-K #-}
 
 module Lecture08 where
 
