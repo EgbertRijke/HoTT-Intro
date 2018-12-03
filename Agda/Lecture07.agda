@@ -114,13 +114,18 @@ is-emb-is-equiv {i} {j} {A} {B} f E x =
   (f : A → B) (C : B → UU l3) → Σ A (λ x → C (f x)) → Σ B C
 Σ-map-base-map f C s = dpair (f (pr1 s)) (pr2 s)
 
+coherence-is-half-adjoint-equivalence :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (g : B → A)
+  (G : (f ∘ g) ~ id) (H : (g ∘ f) ~ id) → UU (l1 ⊔ l2)
+coherence-is-half-adjoint-equivalence f g G H =
+  (htpy-right-whisk G f) ~ (htpy-left-whisk f H)
+
 is-half-adjoint-equivalence : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
   (A → B) → UU (l1 ⊔ l2)
 is-half-adjoint-equivalence {A = A} {B = B} f =
   Σ (B → A)
     ( λ g → Σ ((f ∘ g) ~ id)
-      ( λ G → Σ ((g ∘ f) ~ id)
-        ( λ H → (htpy-right-whisk G f) ~ (htpy-left-whisk f H))))
+      ( λ G → Σ ((g ∘ f) ~ id) (coherence-is-half-adjoint-equivalence f g G)))
 
 is-path-split : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
   (A → B) → UU (l1 ⊔ l2)
@@ -159,6 +164,11 @@ is-equiv-is-path-split : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) �
 is-equiv-is-path-split f =
   (is-equiv-is-half-adjoint-equivalence f) ∘
     (is-half-adjoint-equivalence-is-path-split f)
+
+is-half-adjoint-equivalence-is-equiv : {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (f : A → B) → is-equiv f → is-half-adjoint-equivalence f
+is-half-adjoint-equivalence-is-equiv f =
+  (is-half-adjoint-equivalence-is-path-split f) ∘ (is-path-split-is-equiv f)
 
 tr-precompose-fam : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
   (f : A → B) {x y : A} (p : Id x y) → tr C (ap f p) ~ tr (λ x → C (f x)) p

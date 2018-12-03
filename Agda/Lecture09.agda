@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K #-}
 
 module Lecture09 where
 
@@ -595,6 +595,15 @@ is-prop-is-path-split f =
         ( λ x → is-contr-Π
           ( λ y → is-contr-sec-is-equiv (is-emb-is-equiv f is-equiv-f x y)))))
 
+is-equiv-is-path-split-is-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-equiv (is-path-split-is-equiv f)
+is-equiv-is-path-split-is-equiv f =
+  is-equiv-is-prop
+    ( is-subtype-is-equiv f)
+    ( is-prop-is-path-split f)
+    ( is-equiv-is-path-split f)
+
 is-prop-is-half-adjoint-equivalence :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
   is-prop (is-half-adjoint-equivalence f)
@@ -626,6 +635,15 @@ is-prop-is-half-adjoint-equivalence {l1} {l2} {A} {B} f =
                ( is-contr-map-is-equiv
                  ( is-emb-is-equiv f is-equiv-f ((pr1 sf) (f x)) x)
                  ( (pr2 sf) (f x))))))))
+
+is-equiv-is-half-adjoint-equivalence-is-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-equiv (is-half-adjoint-equivalence-is-equiv f)
+is-equiv-is-half-adjoint-equivalence-is-equiv f =
+  is-equiv-is-prop
+    ( is-subtype-is-equiv f)
+    ( is-prop-is-half-adjoint-equivalence f)
+    ( is-equiv-is-half-adjoint-equivalence f)
 
 -- Exercise 9.7
 
@@ -1227,3 +1245,60 @@ is-equiv-hom-over-morphism-fiberwise-hom i f g =
       ( dpair
         ( isretr-hom-over-morphism-fiberwise-hom i f g)
         ( issec-hom-over-morphism-fiberwise-hom i f g)))
+
+-- Exercise 9.15
+
+set-isomorphism :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) → UU (l1 ⊔ l2)
+set-isomorphism A B =
+  Σ ((pr1 A) → (pr1 B)) has-inverse
+
+has-inverse-is-half-adjoint-equivalence :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-half-adjoint-equivalence f → has-inverse f
+has-inverse-is-half-adjoint-equivalence f =
+  tot (λ g → tot (λ G → pr1))
+
+set-isomorphism-equiv-fiberwise :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+  (f : (pr1 A) → (pr1 B)) → is-equiv f → has-inverse f
+set-isomorphism-equiv-fiberwise A B f =
+  ( has-inverse-is-half-adjoint-equivalence f) ∘
+  ( is-half-adjoint-equivalence-is-equiv f)
+
+is-equiv-has-inverse-is-half-adjoint-equivalence-is-set :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) (f : (pr1 A) → (pr1 B)) →
+  is-equiv (has-inverse-is-half-adjoint-equivalence f)
+is-equiv-has-inverse-is-half-adjoint-equivalence-is-set
+  (dpair A is-set-A) (dpair B is-set-B) f =
+  is-equiv-tot-is-fiberwise-equiv
+    ( λ g → is-equiv-tot-is-fiberwise-equiv
+      ( λ G → is-equiv-pr1-is-contr
+        ( coherence-is-half-adjoint-equivalence f g G)
+        ( λ H → is-contr-Π
+          ( λ x → is-set-B _ _ (G (f x)) (ap f (H x))))))
+
+is-fiberwise-equiv-set-isomorphism-equiv-fiberwise :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+  is-fiberwise-equiv (set-isomorphism-equiv-fiberwise A B)
+is-fiberwise-equiv-set-isomorphism-equiv-fiberwise A B f =
+  is-equiv-comp
+    ( set-isomorphism-equiv-fiberwise A B f)
+    ( has-inverse-is-half-adjoint-equivalence f)
+    ( is-half-adjoint-equivalence-is-equiv f)
+    ( htpy-refl _)
+    ( is-equiv-is-half-adjoint-equivalence-is-equiv f)
+    ( is-equiv-has-inverse-is-half-adjoint-equivalence-is-set A B f)
+
+set-isomorphism-equiv :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+  ((pr1 A) ≃ (pr1 B)) → set-isomorphism A B
+set-isomorphism-equiv A B =
+  tot (set-isomorphism-equiv-fiberwise A B)
+
+is-equiv-set-isomorphism-equiv :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+  is-equiv (set-isomorphism-equiv A B)
+is-equiv-set-isomorphism-equiv A B =
+  is-equiv-tot-is-fiberwise-equiv
+    ( is-fiberwise-equiv-set-isomorphism-equiv-fiberwise A B)

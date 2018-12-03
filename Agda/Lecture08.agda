@@ -47,6 +47,9 @@ is-subtype B = (x : _) → is-prop (B x)
 is-set : {i : Level} → UU i → UU i
 is-set A = (x y : A) → is-prop (Id x y)
 
+hSet : (i : Level) → UU (lsuc i)
+hSet i = Σ (UU i) is-set
+
 axiom-K : {i : Level} → UU i → UU i
 axiom-K A = (x : A) (p : Id x x) → Id refl p
 
