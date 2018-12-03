@@ -1152,3 +1152,78 @@ is-equiv-fiberwise-equiv-equiv-slice {X = X} {A} {B} f g =
           ( is-equiv-fiberwise-hom-hom-slice f g)
           ( is-equiv-hom-slice-is-fiberwise-equiv-fiberwise-hom-hom-slice
             f g))))
+
+-- Exercise 9.14
+
+hom-over-morphism :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) → UU (l1 ⊔ (l2 ⊔ l4))
+hom-over-morphism i f g = hom-slice _ (i ∘ f) g
+
+fiberwise-hom-hom-over-morphism :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) →
+  hom-over-morphism i f g → (x : X) → (fib f x) → (fib g (i x))
+fiberwise-hom-hom-over-morphism i f g (dpair h H) .(f a) (dpair a refl) =
+  dpair (h a) (inv (H a))
+
+hom-over-morphism-fiberwise-hom :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) →
+  ((x : X) → (fib f x) → (fib g (i x))) → hom-over-morphism i f g
+hom-over-morphism-fiberwise-hom i f g α =
+  dpair
+    ( λ a → pr1 (α (f a) (dpair a refl)))
+    ( λ a → inv (pr2 (α (f a) (dpair a refl))))
+
+issec-hom-over-morphism-fiberwise-hom-eq-htpy :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) →
+  (α : (x : X) → (fib f x) → (fib g (i x))) (x : X) →
+  ( fiberwise-hom-hom-over-morphism i f g
+    ( hom-over-morphism-fiberwise-hom i f g α) x) ~ (α x)
+issec-hom-over-morphism-fiberwise-hom-eq-htpy i f g α .(f a) (dpair a refl) =
+  eq-pair (dpair refl (inv-inv (pr2 (α (f a) (dpair a refl)))))
+
+issec-hom-over-morphism-fiberwise-hom :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) →
+  ( ( fiberwise-hom-hom-over-morphism i f g) ∘
+    ( hom-over-morphism-fiberwise-hom i f g)) ~ id
+issec-hom-over-morphism-fiberwise-hom i f g α =
+  eq-htpy
+    ( λ x →
+      ( eq-htpy
+        ( issec-hom-over-morphism-fiberwise-hom-eq-htpy i f g α x)))
+
+isretr-hom-over-morphism-fiberwise-hom :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) →
+  ( ( hom-over-morphism-fiberwise-hom i f g) ∘
+    ( fiberwise-hom-hom-over-morphism i f g)) ~ id
+isretr-hom-over-morphism-fiberwise-hom i f g (dpair h H) =
+  eq-pair (dpair refl (eq-htpy (λ a → (inv-inv (H a)))))
+
+is-equiv-fiberwise-hom-hom-over-morphism :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) →
+  is-equiv (fiberwise-hom-hom-over-morphism i f g)
+is-equiv-fiberwise-hom-hom-over-morphism i f g =
+  is-equiv-has-inverse
+    ( dpair
+      ( hom-over-morphism-fiberwise-hom i f g)
+      ( dpair
+        ( issec-hom-over-morphism-fiberwise-hom i f g)
+        ( isretr-hom-over-morphism-fiberwise-hom i f g)))
+
+is-equiv-hom-over-morphism-fiberwise-hom :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
+  (i : X → Y) (f : A → X) (g : B → Y) →
+  is-equiv (hom-over-morphism-fiberwise-hom i f g)
+is-equiv-hom-over-morphism-fiberwise-hom i f g =
+  is-equiv-has-inverse
+    ( dpair
+      ( fiberwise-hom-hom-over-morphism i f g)
+      ( dpair
+        ( isretr-hom-over-morphism-fiberwise-hom i f g)
+        ( issec-hom-over-morphism-fiberwise-hom i f g)))
