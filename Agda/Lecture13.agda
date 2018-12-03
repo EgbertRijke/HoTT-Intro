@@ -376,7 +376,9 @@ pullback-property-dependent-pullback-property-pushout
     ( λ h → eq-htpy (λ s → inv (tr-triv (H s) (h (f s)))))
     ( λ h s → h (g s))
     ( htpy-refl _)
-    { c = dpair (λ h a → h (i a)) (dpair (λ h b → h (j b)) (λ h → eq-htpy (h ·l H)))}
+    { c = dpair
+      ( λ h a → h (i a))
+      ( dpair (λ h b → h (j b)) (λ h → eq-htpy (h ·l H)))}
     ( cone-dependent-pullback-property-pushout
       f g (dpair i (dpair j H)) (λ x → Y))
     ( dpair
