@@ -214,10 +214,9 @@ is-contr-total-Eq-generating-data-pushout
              Σ ((x : B) → P (j x))
              (λ β → (s : S) → Id (tr P (H s) (α (f s))) (β (g s)))}
     {C = λ α → hA ~ α}
-    ( λ t K →
-      let α = pr1 t
-          β = pr1 (pr2 t)
-          γ = pr2 (pr2 t)
+    ( λ α βγ K →
+      let β = pr1 βγ
+          γ = pr2 βγ
       in
       Σ (hB ~ β) (λ L →
         (s : S) →
@@ -228,11 +227,7 @@ is-contr-total-Eq-generating-data-pushout
       {A = (b : B) → P (j b)}
       {B = λ β → (s : S) → Id (tr P (H s) (hA (f s))) (β (g s))}
       {C = λ β → hB ~ β}
-      ( λ t L →
-        let β = pr1 t
-            γ = pr2 t
-        in
-        (s : S) → Id ((hS s) ∙ (L (g s))) (γ s))
+      ( λ β γ L → (s : S) → Id ((hS s) ∙ (L (g s))) (γ s))
       ( is-contr-total-htpy hB)
       ( dpair hB (htpy-refl _))
       ( is-contr-is-equiv

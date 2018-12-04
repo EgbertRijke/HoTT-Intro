@@ -65,72 +65,83 @@ Eq-cone-eq-cone f g c .c refl =
       ( htpy-refl (pr1 (pr2 c)))
       ( htpy-right-unit (pr2 (pr2 c))))
 
-is-contr-total-Eq-structure : {l1 l2 l3 l4 : Level}
-  { A : UU l1} {B : A → UU l2} {C : A → UU l3}
-  ( D : (t : Σ A B) → C (pr1 t) → UU l4) →
+swap-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
+  (D : (x : A) → B x → C x → UU l4) →
+  Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D (pr1 t) (pr2 t))) →
+  Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+swap-total-Eq-structure B C D (dpair (dpair a b) (dpair c d)) =
+  dpair (dpair a c) (dpair b d)
+
+htpy-swap-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
+  (D : (x : A) → B x → C x → UU l4) →
+  ( ( swap-total-Eq-structure B C D) ∘
+    ( swap-total-Eq-structure C B (λ x z y → D x y z))) ~ id
+htpy-swap-total-Eq-structure B C D (dpair (dpair a b) (dpair c d)) = refl
+
+is-equiv-swap-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
+  (D : (x : A) → B x → C x → UU l4) →
+  is-equiv (swap-total-Eq-structure B C D)
+is-equiv-swap-total-Eq-structure B C D =
+  is-equiv-has-inverse
+    ( dpair
+      ( swap-total-Eq-structure C B (λ x z y → D x y z))
+      ( dpair
+        ( htpy-swap-total-Eq-structure B C D)
+        ( htpy-swap-total-Eq-structure C B (λ x z y → D x y z))))
+
+is-contr-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} { A : UU l1} {B : A → UU l2} {C : A → UU l3}
+  ( D : (x : A) → B x → C x → UU l4) →
   ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
-  is-contr (Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t))) →
-  is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D t)))
-is-contr-total-Eq-structure {A = A} {B = B} {C = C} D is-contr-AC t is-contr-BD =
+  is-contr (Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))) →
+  is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D (pr1 t) (pr2 t))))
+is-contr-total-Eq-structure
+  {A = A} {B = B} {C = C} D is-contr-AC t is-contr-BD =
   is-contr-is-equiv
-    ( Σ A (λ x → Σ (B x) (λ y → Σ (C x) (λ z → D (dpair x y) z))))
-    ( Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
-    ( is-equiv-Σ-assoc A B (λ t → Σ (C (pr1 t)) (D t)))
+    ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))))
+    ( swap-total-Eq-structure B C D)
+    ( is-equiv-swap-total-Eq-structure B C D)
     ( is-contr-is-equiv
-      ( Σ A (λ x → Σ (C x) (λ z → Σ (B x) (λ y → D (dpair x y) z))))
-      ( tot (λ x → Σ-swap (B x) (C x) (λ y → D (dpair x y))))
-      ( is-equiv-tot-is-fiberwise-equiv
-        ( λ x → is-equiv-Σ-swap (B x) (C x) (λ y → D (dpair x y))))
-      ( is-contr-is-equiv
-        ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y →
-          D (dpair (pr1 t) y) (pr2 t))))
-        ( inv-is-equiv (is-equiv-Σ-assoc A C (λ t → Σ (B (pr1 t)) (λ y →
-          D (dpair (pr1 t) y) (pr2 t)))))
-        ( is-equiv-inv-is-equiv (is-equiv-Σ-assoc A C
-          ( λ t → Σ (B (pr1 t)) (λ y →
-            D (dpair (pr1 t) y) (pr2 t)))))
-        ( is-contr-is-equiv
-          ( Σ (B (pr1 t)) (λ y →
-            D ( dpair (pr1 t) y)
-              ( pr2 t)))
-          ( left-unit-law-Σ-map-conv
-            ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
-            ( dpair t (λ t' →
-              ( inv (contraction is-contr-AC t)) ∙
-              ( contraction is-contr-AC t'))))
-          ( is-equiv-left-unit-law-Σ-map-conv
-            ( λ t → Σ (B (pr1 t)) (λ y → D (dpair (pr1 t) y) (pr2 t)))
-            ( dpair t (λ t' →
-              ( inv (contraction is-contr-AC t)) ∙
-              ( contraction is-contr-AC t'))))
-          ( is-contr-BD))))
+      ( Σ (B (pr1 t)) (λ y →
+        D (pr1 t) y
+          ( pr2 t)))
+      ( left-unit-law-Σ-map-conv
+        ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+        ( dpair t (λ t' →
+          ( inv (contraction is-contr-AC t)) ∙
+          ( contraction is-contr-AC t'))))
+      ( is-equiv-left-unit-law-Σ-map-conv
+        ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+        ( dpair t (λ t' →
+          ( inv (contraction is-contr-AC t)) ∙
+          ( contraction is-contr-AC t'))))
+      ( is-contr-BD))
 
 is-contr-total-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
   is-contr (Σ (cone f g C) (Eq-cone f g c))
-is-contr-total-Eq-cone {A = A} {B} f g {C} c =
-  let p = (pr1 c)
-      q = (pr1 (pr2 c))
-      H = (pr2 (pr2 c))
-  in
+is-contr-total-Eq-cone {A = A} {B} f g {C} (dpair p (dpair q H)) =
   is-contr-total-Eq-structure
-    ( λ t (K : p ~ (pr1 t)) →
-      Σ ( q ~ (pr1 (pr2 t)))
-        ( λ L →
-          ( H ∙h (htpy-left-whisk g L)) ~
-            ( (htpy-left-whisk f K) ∙h (pr2 (pr2 t)))))
+    { A = C → A}
+    { B = λ p' → Σ (C → B) (λ q' → (f ∘ p') ~ (g ∘ q'))}
+    { C = λ p' → p ~ p'}
+    ( λ p' qH' K →
+      Σ (q ~ (pr1 qH')) (λ L → (H ∙h (g ·l L)) ~ ((f ·l K) ∙h (pr2 qH'))))
     ( is-contr-total-htpy-nondep p)
     ( dpair p (htpy-refl p))
     ( is-contr-total-Eq-structure
-      ( λ t (L : q ~ (pr1 t)) → (H ∙h (htpy-left-whisk g L)) ~ (pr2 t))
+      ( λ q' H' L' → (H ∙h (g ·l L')) ~ ((f ·l (htpy-refl p)) ∙h H'))
       ( is-contr-total-htpy-nondep q)
       ( dpair q (htpy-refl q))
       ( is-contr-is-equiv'
-          ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
-          ( tot (λ H' → htpy-concat H {h = H'} (htpy-right-unit H)))
-          ( is-equiv-tot-is-fiberwise-equiv
-            ( λ H' → is-equiv-htpy-concat (htpy-right-unit H) H'))
-          ( is-contr-total-htpy H)))
+        ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
+        ( tot (λ H' → htpy-concat H {h = H'} (htpy-right-unit H)))
+        ( is-equiv-tot-is-fiberwise-equiv
+          ( λ H' → is-equiv-htpy-concat (htpy-right-unit H) H'))
+        ( is-contr-total-htpy H)))
  
 is-fiberwise-equiv-Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1}
   {B : UU l2} {X : UU l3}
@@ -1192,6 +1203,64 @@ htpy-cone
   {f = f} {f'} Hf {g} {g'} Hg c c' =
   Σ ((pr1 c) ~ (pr1 c')) (fam-htpy-cone Hf Hg c c')
 
+htpy-cone-htpy-refl-Eq-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) →
+  (c c' : cone f g C) →
+  Eq-cone f g c c' → htpy-cone (htpy-refl f) (htpy-refl g) c c'
+htpy-cone-htpy-refl-Eq-cone f g
+  (dpair p (dpair q H)) (dpair p' (dpair q' H')) =
+  tot
+    ( λ K → tot
+      ( λ L M → ( htpy-ap-concat H _ _ (htpy-right-unit (g ·l L))) ∙h
+        ( M ∙h htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l K))))))
+
+is-equiv-htpy-cone-htpy-refl-Eq-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) →
+  (c c' : cone f g C) →
+  is-equiv (htpy-cone-htpy-refl-Eq-cone f g c c')
+is-equiv-htpy-cone-htpy-refl-Eq-cone f g
+  (dpair p (dpair q H)) (dpair p' (dpair q' H')) =
+  is-equiv-tot-is-fiberwise-equiv
+    ( λ K → is-equiv-tot-is-fiberwise-equiv
+      ( λ L → is-equiv-comp
+        ( λ M → ( htpy-ap-concat H _ _ (htpy-right-unit (g ·l L))) ∙h
+          ( M ∙h htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l K)))))
+        ( htpy-concat _ (htpy-ap-concat H _ _ (htpy-right-unit (g ·l L))))
+        ( htpy-concat' _
+          ( htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l K)))))
+        ( htpy-refl _)
+        ( is-equiv-htpy-concat' _ _)
+        ( is-equiv-htpy-concat _ _)))
+
+is-contr-total-htpy-cone-htpy-refl-htpy-refl :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) →
+  (c : cone f g C) →
+  is-contr (Σ (cone f g C) (htpy-cone (htpy-refl f) (htpy-refl g) c))
+is-contr-total-htpy-cone-htpy-refl-htpy-refl {A = A} {B} {X} {C}
+  f g (dpair p (dpair q H)) =
+  let c = dpair p (dpair q H) in
+  is-contr-is-equiv'
+    ( Σ (cone f g C) (Eq-cone f g c))
+    ( tot (htpy-cone-htpy-refl-Eq-cone f g c))
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( is-equiv-htpy-cone-htpy-refl-Eq-cone f g c))
+    ( is-contr-total-Eq-cone f g c)
+
+is-contr-total-htpy-cone-htpy-refl :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) {g g' : B → X} (Hg : g ~ g') →
+  (c : cone f g C) →
+  is-contr (Σ (cone f g' C) (htpy-cone (htpy-refl f) Hg c))
+is-contr-total-htpy-cone-htpy-refl {C = C} f {g} {g'} Hg =
+   ind-htpy g
+     ( λ g'' Hg' → ( c : cone f g C) →
+       is-contr (Σ (cone f g'' C) (htpy-cone (htpy-refl f) Hg' c)))
+     ( is-contr-total-htpy-cone-htpy-refl-htpy-refl f g)
+     g' Hg
+
 is-contr-total-htpy-cone :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
@@ -1201,36 +1270,10 @@ is-contr-total-htpy-cone {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg =
   ind-htpy
     { A = A}
     { B = λ t → X}
-    f
+    ( f)
     ( λ f'' Hf' → (g g' : B → X) (Hg : g ~ g') (c : cone f g C) →
       is-contr (Σ (cone f'' g' C) (htpy-cone Hf' Hg c)))
-    ( λ g → ind-htpy {A = B} {B = λ t → X} g
-      ( λ g'' Hg' →
-        ( c : cone f g C) →
-        is-contr (Σ (cone f g'' C) (htpy-cone (htpy-refl f) Hg' c)))
-      ( λ (c : cone f g C) → 
-        let p = pr1 c
-            q = pr1 (pr2 c)
-            H = pr2 (pr2 c)
-        in
-        is-contr-total-Eq-structure
-          ( fam-htpy-cone (htpy-refl f) (htpy-refl g) c)
-          ( is-contr-total-htpy p)
-          ( dpair p (htpy-refl p))
-          ( is-contr-total-Eq-structure
-            ( λ t Hq →
-              coherence-htpy-cone (htpy-refl f) (htpy-refl g) c
-              ( dpair p t)
-              ( htpy-refl p)
-              ( Hq))
-            ( is-contr-total-htpy q)
-            ( dpair q (htpy-refl q))
-            ( is-contr-is-equiv'
-              ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
-              ( tot (λ H' → htpy-concat _ {h = H'} (htpy-right-unit H)))
-              ( is-equiv-tot-is-fiberwise-equiv
-                ( λ H' → is-equiv-htpy-concat (htpy-right-unit H) H'))
-              ( is-contr-total-htpy H)))))
+    ( λ g g' Hg → is-contr-total-htpy-cone-htpy-refl f Hg)
     f' Hf g g' Hg
 
 reflexive-htpy-cone :
@@ -1521,3 +1564,137 @@ is-pullback-htpy'
       {dpair p (dpair q H)} {dpair p' (dpair q' H')} (dpair Hp (dpair Hq HH)))
     ( is-equiv-map-is-pullback-htpy Hf Hg)
     ( is-pb-c)
+
+-- Exercises
+
+-- Exercise 10.1
+
+cone-Id :
+  {l : Level} {A : UU l} (x y : A) →
+  cone (const unit A x) (const unit A y) (Id x y)
+cone-Id x y =
+  dpair
+    ( const (Id x y) unit star)
+    ( dpair
+      ( const (Id x y) unit star)
+      ( id))
+
+inv-gap-cone-Id :
+  {l : Level} {A : UU l} (x y : A) →
+  canonical-pullback (const unit A x) (const unit A y) → Id x y
+inv-gap-cone-Id x y (dpair star (dpair star p)) = p
+
+issec-inv-gap-cone-Id :
+  {l : Level} {A : UU l} (x y : A) →
+  ( ( gap (const unit A x) (const unit A y) (cone-Id x y)) ∘
+    ( inv-gap-cone-Id x y)) ~ id
+issec-inv-gap-cone-Id x y (dpair star (dpair star p)) = refl
+
+isretr-inv-gap-cone-Id :
+  {l : Level} {A : UU l} (x y : A) →
+  ( ( inv-gap-cone-Id x y) ∘
+    ( gap (const unit A x) (const unit A y) (cone-Id x y))) ~ id
+isretr-inv-gap-cone-Id x y p = refl
+
+is-pullback-cone-Id :
+  {l : Level} {A : UU l} (x y : A) →
+  is-pullback (const unit A x) (const unit A y) (cone-Id x y)
+is-pullback-cone-Id x y =
+  is-equiv-has-inverse
+    ( dpair
+      ( inv-gap-cone-Id x y)
+      ( dpair
+        ( issec-inv-gap-cone-Id x y)
+        ( isretr-inv-gap-cone-Id x y)))
+
+{- One way to solve this exercise is to show that Id (pr1 t) (pr2 t) is a
+   pullback for every t : A × A. This allows one to use path induction to
+   show that the inverse of the gap map is a section.
+-}
+
+cone-Id' :
+  {l : Level} {A : UU l} (t : A × A) →
+  cone (const unit (A × A) t) (diagonal A) (Id (pr1 t) (pr2 t))
+cone-Id' {A = A} (dpair x y) =
+  dpair
+    ( const (Id x y) unit star)
+    ( dpair
+      ( const (Id x y) A x)
+      ( λ p → eq-pair (dpair refl (inv p))))
+
+inv-gap-cone-Id' :
+  {l : Level} {A : UU l} (t : A × A) →
+  canonical-pullback (const unit (A × A) t) (diagonal A) → Id (pr1 t) (pr2 t)
+inv-gap-cone-Id' t (dpair star (dpair z p)) =
+  (ap pr1 p) ∙ (inv (ap pr2 p))
+
+issec-inv-gap-cone-Id' :
+  {l : Level} {A : UU l} (t : A × A) →
+  ( ( gap (const unit (A × A) t) (diagonal A) (cone-Id' t)) ∘
+    ( inv-gap-cone-Id' t)) ~ id
+issec-inv-gap-cone-Id' .(dpair z z) (dpair star (dpair z refl)) = refl
+
+isretr-inv-gap-cone-Id' :
+  {l : Level} {A : UU l} (t : A × A) →
+  ( ( inv-gap-cone-Id' t) ∘
+    ( gap (const unit (A × A) t) (diagonal A) (cone-Id' t))) ~ id
+isretr-inv-gap-cone-Id' (dpair x .x) refl = refl
+
+is-pullback-cone-Id' :
+  {l : Level} {A : UU l} (t : A × A) →
+  is-pullback (const unit (A × A) t) (diagonal A) (cone-Id' t)
+is-pullback-cone-Id' t =
+  is-equiv-has-inverse
+    ( dpair
+      ( inv-gap-cone-Id' t)
+      ( dpair
+        ( issec-inv-gap-cone-Id' t)
+        ( isretr-inv-gap-cone-Id' t)))
+
+-- Exercise 10.2
+
+diagonal-map :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  A → canonical-pullback f f
+diagonal-map f x = dpair x (dpair x refl)
+
+fib-ap-fib-diagonal-map :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (t : canonical-pullback f f) →
+  (fib (diagonal-map f) t) → (fib (ap f) (pr2 (pr2 t)))
+fib-ap-fib-diagonal-map f .(dpair z (dpair z refl)) (dpair z refl) =
+  dpair refl refl
+
+fib-diagonal-map-fib-ap :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (t : canonical-pullback f f) →
+  (fib (ap f) (pr2 (pr2 t))) → (fib (diagonal-map f) t)
+fib-diagonal-map-fib-ap f (dpair x (dpair .x .refl)) (dpair refl refl) =
+  dpair x refl
+
+issec-fib-diagonal-map-fib-ap :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (t : canonical-pullback f f) →
+  ((fib-ap-fib-diagonal-map f t) ∘ (fib-diagonal-map-fib-ap f t)) ~ id
+issec-fib-diagonal-map-fib-ap f (dpair x (dpair .x .refl)) (dpair refl refl) =
+  refl
+
+isretr-fib-diagonal-map-fib-ap :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (t : canonical-pullback f f) →
+  ((fib-diagonal-map-fib-ap f t) ∘ (fib-ap-fib-diagonal-map f t)) ~ id
+isretr-fib-diagonal-map-fib-ap f .(dpair x (dpair x refl)) (dpair x refl) =
+  refl
+
+is-equiv-fib-ap-fib-diagonal-map :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (t : canonical-pullback f f) →
+  is-equiv (fib-ap-fib-diagonal-map f t)
+is-equiv-fib-ap-fib-diagonal-map f t =
+  is-equiv-has-inverse
+    ( dpair
+      ( fib-diagonal-map-fib-ap f t)
+      ( dpair
+        ( issec-fib-diagonal-map-fib-ap f t)
+        ( isretr-fib-diagonal-map-fib-ap f t)))
+
