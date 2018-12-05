@@ -209,7 +209,7 @@ contraction-has-inverse {i} {j} {A} {B} {f}
 
 is-contr-map-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   has-inverse f → is-contr-map f
-is-contr-map-has-inverse {i} {j} {A} {B} {f} I y =
+is-contr-map-has-inverse I y =
     dpair (center-has-inverse I y) (contraction-has-inverse I y)
 
 is-contr-map-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →

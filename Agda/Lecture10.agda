@@ -1698,3 +1698,24 @@ is-equiv-fib-ap-fib-diagonal-map f t =
         ( issec-fib-diagonal-map-fib-ap f t)
         ( isretr-fib-diagonal-map-fib-ap f t)))
 
+is-trunc-diagonal-map-is-trunc-map :
+  {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} (f : A → B) →
+  is-trunc-map (succ-𝕋 k) f → is-trunc-map k (diagonal-map f)
+is-trunc-diagonal-map-is-trunc-map k f is-trunc-f (dpair x (dpair y p)) =
+  is-trunc-is-equiv k (fib (ap f) p)
+    ( fib-ap-fib-diagonal-map f (dpair x (dpair y p)))
+    ( is-equiv-fib-ap-fib-diagonal-map f (dpair x (dpair y p)))
+    ( is-trunc-ap-is-trunc-map k f is-trunc-f x y p)
+
+is-trunc-map-is-trunc-diagonal-map :
+  {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} (f : A → B) →
+  is-trunc-map k (diagonal-map f) → is-trunc-map (succ-𝕋 k) f
+is-trunc-map-is-trunc-diagonal-map k f is-trunc-δ b (dpair x p) (dpair x' p') = is-trunc-is-equiv k
+  ( fib (ap f) (p ∙ (inv p')))
+  ( fib-ap-eq-fib f (dpair x p) (dpair x' p'))
+  ( is-equiv-fib-ap-eq-fib f (dpair x p) (dpair x' p'))
+  ( is-trunc-is-equiv' k
+    ( fib (diagonal-map f) (dpair x (dpair x' (p ∙ (inv p')))))
+    ( fib-ap-fib-diagonal-map f (dpair x (dpair x' (p ∙ (inv p')))))
+    ( is-equiv-fib-ap-fib-diagonal-map f (dpair x (dpair x' (p ∙ (inv p')))))
+    ( is-trunc-δ (dpair x (dpair x' (p ∙ (inv p'))))))

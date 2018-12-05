@@ -154,6 +154,8 @@ is-equiv-inv-is-equiv {i} {j} {A} {B} {f} E =
 is-equiv-id : {i : Level} (A : UU i) → is-equiv (id {i} {A})
 is-equiv-id A = pair (dpair id (htpy-refl id)) (dpair id (htpy-refl id))
 
+equiv-id : {i : Level} (A : UU i) → A ≃ A
+equiv-id A = dpair id (is-equiv-id A)
 
 inv-Pi-swap : {i j k : Level} {A : UU i} {B : UU j} (C : A → B → UU k) →
   ((y : B) (x : A) → C x y) → ((x : A) (y : B) → C x y)
@@ -332,6 +334,10 @@ is-equiv-tr B p =
   pair
     ( dpair (inv-tr B p) (right-inv-inv-tr B p))
     ( dpair (inv-tr B p) (left-inv-inv-tr B p))
+
+equiv-tr : {i j : Level} {A : UU i} (B : A → UU j) {x y : A}
+  (p : Id x y) → (B x) ≃ (B y)
+equiv-tr B p = dpair (tr B p) (is-equiv-tr B p)
 
 -- Exercise 5.4
 is-equiv-htpy : {i j : Level} {A : UU i} {B : UU j} {f : A → B} (g : A → B) →
