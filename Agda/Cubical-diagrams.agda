@@ -68,26 +68,26 @@ coherence-cube f g h k f' g' h' k' hA hB hC hD
   manipulating coherences of cubes.
 -}
 
-htpy-cone-htpy-refl-vertical :
+htpy-square-htpy-refl-vertical :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') (g : B → X)
   (p : C → A) {q q' : C → B} (Hq : q ~ q') →
   (H : (f ∘ p) ~ (g ∘ q)) (H' : (f' ∘ p) ~ (g ∘ q')) →
   (H ∙h (g ·l Hq)) ~ ((Hf ·r p) ∙h H') →
-  htpy-cone Hf (htpy-refl g) (dpair p (dpair q H)) (dpair p (dpair q' H'))
-htpy-cone-htpy-refl-vertical Hf g p Hq H H' K =
+  htpy-square Hf (htpy-refl g) (dpair p (dpair q H)) (dpair p (dpair q' H'))
+htpy-square-htpy-refl-vertical Hf g p Hq H H' K =
   dpair
     ( htpy-refl p)
     ( dpair Hq (htpy-ap-concat H _ _ (htpy-right-unit (g ·l Hq)) ∙h K))
 
-htpy-cone-htpy-refl-horizontal :
+htpy-square-htpy-refl-horizontal :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) {g g' : B → X} (Hg : g ~ g')
   {p p' : C → A} (Hp : p ~ p') (q : C → B)
   (H : (f ∘ p) ~ (g ∘ q)) (H' : (f ∘ p') ~ (g' ∘ q)) →
   ((H ∙h (Hg ·r q)) ~ ((f ·l Hp) ∙h H')) →
-  htpy-cone (htpy-refl f) Hg (dpair p (dpair q H)) (dpair p' (dpair q H'))
-htpy-cone-htpy-refl-horizontal f Hg Hp q H H' K =
+  htpy-square (htpy-refl f) Hg (dpair p (dpair q H)) (dpair p' (dpair q H'))
+htpy-square-htpy-refl-horizontal f Hg Hp q H H' K =
   dpair Hp
     ( dpair
       ( htpy-refl q)
@@ -408,7 +408,7 @@ rectangle-back-right-front-right-cube f g h k f' g' h' k' hA hB hC hD
   top back-left back-right front-left front-right bottom =
   (k ·l back-right) ∙h (front-right ·r g')
 
-coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube : 
+coherence-htpy-square-rectangle-bl-fl-rectangle-br-fr-cube : 
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : A → C) (h : B → D) (k : C → D)
@@ -423,7 +423,7 @@ coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube :
   (bottom : (h ∘ f) ~ (k ∘ g))
   (c : coherence-cube f g h k f' g' h' k' hA hB hC hD
     top back-left back-right front-left front-right bottom) →
-  coherence-htpy-cone
+  coherence-htpy-square
     ( bottom)
     ( htpy-refl hD)
     ( dpair hA
@@ -440,7 +440,7 @@ coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube :
           top back-left back-right front-left front-right bottom)))
     ( htpy-refl hA)
     ( top)
-coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube
+coherence-htpy-square-rectangle-bl-fl-rectangle-br-fr-cube
   f g h k f' g' h' k' hA hB hC hD
   top back-left back-right front-left front-right bottom c =
   ( λ a' →
@@ -493,7 +493,7 @@ rectangle-back-right-bottom-cube
   ( bottom ·r hA) ∙h (k ·l back-right)
 
 {-
-coherence-htpy-cone-rectangle-top-fl-rectangle-br-bot-cube : 
+coherence-htpy-square-rectangle-top-fl-rectangle-br-bot-cube : 
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : A → C) (h : B → D) (k : C → D)
@@ -508,7 +508,7 @@ coherence-htpy-cone-rectangle-top-fl-rectangle-br-bot-cube :
   (bottom : (h ∘ f) ~ (k ∘ g))
   (c : coherence-cube f g h k f' g' h' k' hA hB hC hD
     top back-left back-right front-left front-right bottom) →
-  coherence-htpy-cone
+  coherence-htpy-square
     ( htpy-inv front-right)
     ( htpy-refl h)
     ( dpair g' (dpair (hB ∘ f')
@@ -520,7 +520,7 @@ coherence-htpy-cone-rectangle-top-fl-rectangle-br-bot-cube :
           top back-left back-right front-left front-right bottom))))
     ( htpy-refl g')
     ( htpy-inv back-left)
-coherence-htpy-cone-rectangle-top-fl-rectangle-br-bot-cube = {!!}
+coherence-htpy-square-rectangle-top-fl-rectangle-br-bot-cube = {!!}
 -}
 
 rectangle-top-front-right-cube :
@@ -606,7 +606,7 @@ is-pullback-back-left-is-pullback-back-right-cube
       ( dpair
         ( htpy-refl _)
         ( dpair top
-          ( coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube
+          ( coherence-htpy-square-rectangle-bl-fl-rectangle-br-fr-cube
             f g h k f' g' h' k' hA hB hC hD
             top back-left back-right front-left front-right bottom c)))
       ( is-pullback-rectangle-is-pullback-left-square g k hD
@@ -660,7 +660,7 @@ is-pullback-back-right-is-pullback-back-left-cube
       ( dpair
         ( htpy-refl _)
         ( dpair top
-          ( coherence-htpy-cone-rectangle-bl-fl-rectangle-br-fr-cube
+          ( coherence-htpy-square-rectangle-bl-fl-rectangle-br-fr-cube
             f g h k f' g' h' k' hA hB hC hD
             top back-left back-right front-left front-right bottom c)))
       ( is-pullback-rectangle-is-pullback-left-square f h hD
@@ -689,7 +689,7 @@ descent-is-equiv i j h c d
           ( cone-comp-horizontal i j h c d) x)
         ( fib-square j h c (i x))
         ( fib-square i (pr1 c) d x)
-        ( triangle-fib-square i j h c d x)
+        ( fib-square-comp-horizontal i j h c d x)
         ( is-fiberwise-equiv-fib-square-is-pullback (j ∘ i) h
           ( cone-comp-horizontal i j h c d)
           ( is-pb-rectangle)
@@ -697,7 +697,7 @@ descent-is-equiv i j h c d
         ( is-fiberwise-equiv-fib-square-is-pullback i (pr1 c) d
           ( is-pullback-is-equiv' i (pr1 c) d is-equiv-i is-equiv-k) x)))
 
-coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv :
+coherence-htpy-square-is-pullback-bottom-is-pullback-top-cube-is-equiv :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : A → C) (h : B → D) (k : C → D)
@@ -712,7 +712,7 @@ coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv :
   (bottom : (h ∘ f) ~ (k ∘ g)) →
   (c : coherence-cube f g h k f' g' h' k' hA hB hC hD
        top back-left back-right front-left front-right bottom) →
-  coherence-htpy-cone
+  coherence-htpy-square
     ( front-left)
     ( htpy-refl k)
     ( dpair f'
@@ -729,7 +729,7 @@ coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv :
           top back-left back-right front-left front-right bottom)))
     ( htpy-refl f')
     ( back-right)
-coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv
+coherence-htpy-square-is-pullback-bottom-is-pullback-top-cube-is-equiv
   f g h k f' g' h' k' hA hB hC hD
   top back-left back-right front-left front-right bottom c =
   ( htpy-inv
@@ -806,7 +806,7 @@ is-pullback-bottom-is-pullback-top-cube-is-equiv
         ( htpy-refl f')
         ( dpair
           ( back-right)
-          ( coherence-htpy-cone-is-pullback-bottom-is-pullback-top-cube-is-equiv
+          ( coherence-htpy-square-is-pullback-bottom-is-pullback-top-cube-is-equiv
             f g h k f' g' h' k' hA hB hC hD
             top back-left back-right front-left front-right bottom c)))
       ( is-pullback-rectangle-is-pullback-left-square
@@ -879,3 +879,49 @@ is-pullback-front-right-is-pullback-back-left-cube-is-equiv
     ( coherence-cube-rotate-120 f g h k f' g' h' k' hA hB hC hD
       top back-left back-right front-left front-right bottom c)
     is-equiv-g' is-equiv-g is-equiv-h' is-equiv-h is-pb-back-left
+
+{- Next we show that for any commuting cube, if the bottom and top squares are
+   pullback squares, then so is the square of fibers of the vertical maps in
+   cube. -}
+
+square-fib-cube :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g)) →
+  (c : coherence-cube f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  (a : A) →
+  ( ( tot (λ d' p → p ∙ (bottom a)) ∘
+      ( fib-square h hD (dpair hB (dpair h' front-left)) (f a))) ∘
+    ( fib-square f hB (dpair hA (dpair f' back-left)) a)) ~
+  ( ( fib-square k hD (dpair hC (dpair k' front-right)) (g a)) ∘
+    ( fib-square g hC (dpair hA (dpair g' back-right)) a))
+square-fib-cube f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c
+  .(hA a') (dpair a' refl) =
+  eq-pair
+    ( dpair
+      ( top a')
+      ( ( tr-id-left-subst
+          ( top a')
+          ( k (g (hA a')))
+          ( ( ( inv (front-left (f' a'))) ∙
+              ( ap h ((inv (back-left a')) ∙ refl))) ∙
+            ( bottom (hA a')))) ∙
+        ( {!!} ∙
+          ( inv-assoc (ap k (back-right a')) (front-right (g' a')) ∙
+            ( ( ap
+                ( concat _ (inv (front-right (g' a'))))
+                ( inv (ap-inv k (back-right a')))) ∙
+              ( ap
+                ( concat (k (hC (g' a'))) (inv (front-right (g' a'))))
+                ( ap (ap k) (inv (right-unit (inv (back-right a')))))))))))

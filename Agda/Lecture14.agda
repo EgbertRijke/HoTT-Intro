@@ -77,36 +77,6 @@ coherence-htpy-generating-data-fam-pushout {S = S}
     ( (eqv-map (eB (g s))) ∘ (eqv-map (PS s))) ~
     ( (eqv-map (PS' s)) ∘ (eqv-map (eA (f s))))
 
-is-contr-total-Eq-substructure :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {P : A → UU l3} →
-  is-contr (Σ A B) → (is-subtype P) → (a : A) (b : B a) (p : P a) →
-  is-contr (Σ (Σ A P) (λ t → B (pr1 t)))
-is-contr-total-Eq-substructure {A = A} {B} {P} is-contr-AB is-subtype-P a b p =
-  is-contr-is-equiv
-    ( Σ (Σ A B) (λ t → P (pr1 t)))
-    ( double-structure-swap A P B)
-    ( is-equiv-double-structure-swap A P B)
-    ( is-contr-is-equiv'
-      ( P a)
-      ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (dpair a b))
-      ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (dpair a b))
-      ( is-contr-is-prop-inh (is-subtype-P a) p))
-
-htpy-equiv :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} → A ≃ B → A ≃ B → UU (l1 ⊔ l2)
-htpy-equiv e e' = (eqv-map e) ~ (eqv-map e')
-
-is-contr-total-htpy-equiv :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
-  is-contr (Σ (A ≃ B) (λ e' → htpy-equiv e e'))
-is-contr-total-htpy-equiv (dpair f is-equiv-f) =
-  is-contr-total-Eq-substructure
-    ( is-contr-total-htpy f)
-    ( is-subtype-is-equiv)
-    ( f)
-    ( htpy-refl f)
-    ( is-equiv-f)
-
 is-contr-total-coherence-htpy-generating-data-fam-pushout :
   {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) →
@@ -177,3 +147,56 @@ is-contr-total-htpy-generating-data-fam-pushout l {S} {A} {B} f g
       ( is-contr-total-fam-equiv PB)
       ( dpair PB (λ b → equiv-id (PB b)))
       ( is-contr-total-coherence-htpy-generating-data-fam-pushout f g PA PB PS))
+
+reflexive-htpy-generating-data-fam-pushout :
+  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) (s : generating-data-fam-pushout l f g) →
+  htpy-generating-data-fam-pushout l f g s s
+reflexive-htpy-generating-data-fam-pushout l f g (dpair PA (dpair PB PS)) =
+  dpair (λ a → equiv-id (PA a))
+    ( dpair
+      ( λ b → equiv-id (PB b))
+      ( λ s → htpy-refl _))
+
+htpy-generating-data-fam-pushout-eq :
+  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
+  Id s t → htpy-generating-data-fam-pushout l f g s t
+htpy-generating-data-fam-pushout-eq l f g s .s refl =
+  reflexive-htpy-generating-data-fam-pushout l f g s
+
+is-equiv-htpy-generating-data-fam-pushout-eq :
+  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
+  is-equiv (htpy-generating-data-fam-pushout-eq l f g s t)
+is-equiv-htpy-generating-data-fam-pushout-eq l f g s =
+  id-fundamental-gen s
+    ( reflexive-htpy-generating-data-fam-pushout l f g s)
+    ( is-contr-total-htpy-generating-data-fam-pushout l f g s)
+    ( htpy-generating-data-fam-pushout-eq l f g s)
+
+eq-htpy-generating-data-fam-pushout :
+  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
+  (htpy-generating-data-fam-pushout l f g s t) → Id s t
+eq-htpy-generating-data-fam-pushout l f g s t =
+  inv-is-equiv
+    ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
+
+issec-eq-htpy-generating-data-fam-pushout :
+  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
+  ( ( htpy-generating-data-fam-pushout-eq l f g s t) ∘
+    ( eq-htpy-generating-data-fam-pushout l f g s t)) ~ id
+issec-eq-htpy-generating-data-fam-pushout l f g s t =
+  issec-inv-is-equiv
+    ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
+
+isretr-eq-htpy-generating-data-fam-pushout :
+  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
+  ( ( eq-htpy-generating-data-fam-pushout l f g s t) ∘
+    ( htpy-generating-data-fam-pushout-eq l f g s t)) ~ id
+isretr-eq-htpy-generating-data-fam-pushout l f g s t =
+  isretr-inv-is-equiv
+    ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
