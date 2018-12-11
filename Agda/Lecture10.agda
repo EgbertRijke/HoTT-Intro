@@ -1122,27 +1122,19 @@ fib-square-comp-vertical f g h
   eq-pair
     ( dpair refl
       ( ( right-unit (inv ((H (p' a)) ∙ (ap g (H' a))))) ∙
-        ( concat
-          ( ( ap g ((inv (H' a)) ∙ refl)) ∙
-            ( pr2
-              ( fib-square f g
-                ( dpair p (dpair q H))
-                ( p (p' a))
-                ( dpair (p' a) refl))))
-          ( ( inv-assoc (H (p' a)) (ap g (H' a))) ∙
-            ( ( ap
-                ( concat _ (inv (ap g (H' a))))
-                ( inv (right-unit (inv (H (p' a)))))) ∙
-              ( ap
-                ( concat' _
-                  ( pr2
-                    ( fib-square f g
-                      ( dpair p (dpair q H))
-                      ( p (p' a))
-                      ( dpair (p' a) refl))))
-                ( ( inv (ap-inv g (H' a))) ∙
-                  ( ap (ap g) (inv (right-unit (inv (H' a)))))))))
-          ( refl))))
+        ( ( inv-assoc (H (p' a)) (ap g (H' a))) ∙
+          ( ( ap
+              ( concat _ (inv (ap g (H' a))))
+              ( inv (right-unit (inv (H (p' a)))))) ∙
+            ( ap
+              ( concat' _
+                ( pr2
+                  ( fib-square f g
+                    ( dpair p (dpair q H))
+                    ( p (p' a))
+                    ( dpair (p' a) refl))))
+              ( ( inv (ap-inv g (H' a))) ∙
+                ( ap (ap g) (inv (right-unit (inv (H' a)))))))))))
 
 is-pullback-rectangle-is-pullback-left-square :
   {l1 l2 l3 l4 l5 l6 : Level}
