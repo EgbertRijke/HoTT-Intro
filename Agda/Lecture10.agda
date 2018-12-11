@@ -1202,6 +1202,36 @@ is-pullback-top-is-pullback-rectangle f g h c d is-pb-c is-pb-dc =
           ( cone-comp-vertical f g h c d) is-pb-dc ((pr1 c) x)))
       ( dpair x refl))
 
+is-pullback-rectangle-is-pullback-top :
+  {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (f : C → Z) (g : Y → Z) (h : X → Y) →
+  (c : cone f g B) (d : cone (pr1 (pr2 c)) h A) →
+  is-pullback f g c →
+  is-pullback (pr1 (pr2 c)) h d →
+  is-pullback f (g ∘ h) (cone-comp-vertical f g h c d)
+is-pullback-rectangle-is-pullback-top f g h c d is-pb-c is-pb-d =
+  is-pullback-is-fiberwise-equiv-fib-square f (g ∘ h)
+    ( cone-comp-vertical f g h c d)
+    ( λ x → is-equiv-bottom-is-equiv-top-square
+      ( inv-map-fib-comp (pr1 c) (pr1 d) x)
+      ( inv-map-fib-comp g h (f x))
+      ( toto
+        ( λ t → fib h (pr1 t))
+        ( fib-square f g c x)
+        ( λ t → fib-square (pr1 (pr2 c)) h d (pr1 t)))
+      ( fib-square f (g ∘ h) (cone-comp-vertical f g h c d) x)
+      ( fib-square-comp-vertical f g h c d x)
+      ( is-equiv-inv-map-fib-comp (pr1 c) (pr1 d) x)
+      ( is-equiv-inv-map-fib-comp g h (f x))
+      ( is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
+        ( λ t → fib h (pr1 t))
+        ( fib-square f g c x)
+        ( λ t → fib-square (pr1 (pr2 c)) h d (pr1 t))
+        ( is-fiberwise-equiv-fib-square-is-pullback f g c is-pb-c x)
+        ( λ t → is-fiberwise-equiv-fib-square-is-pullback
+          (pr1 (pr2 c)) h d is-pb-d (pr1 t)))) 
+
 -- Section 10.7 Descent for coproducts and Σ-types
 
 fib-functor-coprod-inl-fib : {l1 l2 l1' l2' : Level}
