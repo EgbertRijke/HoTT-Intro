@@ -702,6 +702,17 @@ is-equiv-map-fib-comp g h x =
         ( issec-inv-map-fib-comp g h x)
         ( isretr-inv-map-fib-comp g h x)))
 
+is-equiv-inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (g : B → X) (h : A → B) (x : X) →
+  is-equiv (inv-map-fib-comp g h x)
+is-equiv-inv-map-fib-comp g h x =
+  is-equiv-has-inverse
+    ( dpair
+      ( map-fib-comp g h x)
+      ( dpair
+        ( isretr-inv-map-fib-comp g h x)
+        ( issec-inv-map-fib-comp g h x)))
+
 is-trunc-map-htpy : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
   (f g : A → B) → f ~ g → is-trunc-map k g → is-trunc-map k f
 is-trunc-map-htpy k {A} f g H is-trunc-g b =
