@@ -5,19 +5,43 @@ module Lecture10 where
 import Lecture09
 open Lecture09 public
 
-htpy-square : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
-  {X : UU l4} (f : A → X) (g : B → X) (p : C → A) (q : C → B) → UU _
-htpy-square f g p q = (f ∘ p) ~ (g ∘ q)
+-- Section 10.1 Cartesian squares
 
-cospan : {l1 l2 l3 : Level} (A : UU l1) (B : UU l2) → UU _
-cospan {l3 = l3} A B = Σ (UU l3) (λ X → (A → X) × (B → X))
+{- We introduce the basic concepts of this chapter: commuting squares, cospans,
+   cones, and pullback squares. Pullback squares are also called cartesian
+   squares. -}
 
-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) → UU l4 → UU _
-cone {l4 = l4} {A = A} {B = B} f g C =
-  Σ (C → A) (λ p → Σ (C → B) (λ q → htpy-square f g p q))
+{- Commutativity of squares is expressed with a homotopy. -}
 
-cone-map : {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+coherence-square :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (top : C → B) (left : C → A) (right : B → X) (bottom : A → X) →
+  UU (l3 ⊔ l4)
+coherence-square top left right bottom =
+  (bottom ∘ left) ~ (right ∘ top)
+
+{- A cospan is a pair of functions with a common codomain. -}
+
+cospan :
+  {l1 l2 : Level} (l : Level) (A : UU l1) (B : UU l2) →
+  UU (l1 ⊔ (l2 ⊔ (lsuc l)))
+cospan l A B =
+  Σ (UU l) (λ X → (A → X) × (B → X))
+
+{- A cone on a cospan with a vertex C is a pair of functions from C into the
+   domains of the maps in the cospan, equipped with a homotopy witnessing that
+   the resulting square commutes. -}
+   
+cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) → UU l4 → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
+cone {A = A} {B = B} f g C =
+  Σ (C → A) (λ p → Σ (C → B) (λ q → coherence-square q p g f))
+
+{- A map into the vertex of a cone induces a new cone. -}
+
+cone-map :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) {C : UU l4} {C' : UU l5} →
   cone f g C → (C' → C) → cone f g C'
 cone-map f g c h =
@@ -27,43 +51,93 @@ cone-map f g c h =
       ( (pr1 (pr2 c)) ∘ h)
       ( htpy-right-whisk (pr2 (pr2 c)) h))
 
-universal-property-pullback : {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
-  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} → cone f g C → UU _
-universal-property-pullback {l5 = l5} f g cone-f-g-C =
-  (C' : UU l5) → is-equiv (cone-map f g {C' = C'} cone-f-g-C)
+{- We introduce the universal property of pullbacks. -}
 
-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) {C : UU l4} → cone f g C → cone f g C → UU _
-Eq-cone f g c c' =
-  let p = pr1 c
-      q = pr1 (pr2 c)
-      H = pr2 (pr2 c)
-      p' = pr1 c'
-      q' = pr1 (pr2 c')
-      H' = pr2 (pr2 c') in
-  Σ (p ~ p') (λ K → Σ (q ~ q') (λ L →
-    ( htpy-concat (g ∘ q) H (htpy-left-whisk g L)) ~
-      ( htpy-concat (f ∘ p') (htpy-left-whisk f K) H')))
+universal-property-pullback :
+  {l1 l2 l3 l4 : Level} (l : Level) {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} → cone f g C →
+  UU (l1 ⊔ (l2 ⊔ (l3 ⊔ (l4 ⊔ (lsuc l)))))
+universal-property-pullback l f g c =
+  (C' : UU l) → is-equiv (cone-map f g {C' = C'} c)
 
-Eq-cone-eq-cone' : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+map-universal-property-pullback :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  ({l : Level} → universal-property-pullback l f g c) →
+  {C' : UU l5} (c' : cone f g C') → C' → C
+map-universal-property-pullback f g c up-c {C'} c' =
+  inv-is-equiv (up-c C') c'
+
+eq-map-universal-property-pullback :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  (up-c : {l : Level} → universal-property-pullback l f g c) →
+  {C' : UU l5} (c' : cone f g C') →
+  Id (cone-map f g c (map-universal-property-pullback f g c up-c c')) c'
+eq-map-universal-property-pullback f g c up-c {C'} c' =
+  issec-inv-is-equiv (up-c C') c'
+
+{- Next we characterize the identity type of the type of cones with a given
+   vertex C. Note that in the definition of htpy-cone we do not use pattern 
+   matching on the cones c and c'. This is to ensure that the type
+   htpy-cone f g c c' is a Σ-type for any c and c', not just for c and c' of the
+   form (dpair p (dpair q H)) and (dpair p' (dpair q' H')) respectively. -}
+
+coherence-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) {C : UU l4} (c c' : cone f g C) →
+  (K : (pr1 c) ~ (pr1 c')) (L : (pr1 (pr2 c)) ~ (pr1 (pr2 c'))) → UU (l4 ⊔ l3)
+coherence-htpy-cone f g c c' K L =
+  ( (pr2 (pr2 c)) ∙h (htpy-left-whisk g L)) ~
+  ( (htpy-left-whisk f K) ∙h (pr2 (pr2 c')))
+
+htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) {C : UU l4} → cone f g C → cone f g C →
+  UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
+htpy-cone f g c c' =
+  Σ ( (pr1 c) ~ (pr1 c'))
+    ( λ K → Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 c')))
+      ( λ L → coherence-htpy-cone f g c c' K L))
+
+{-
+htpy-cone-eq' : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) {C : UU l4} (c c' : cone f g C)
   (α : Id (pr1 c) (pr1 c')) →
   Id (tr (λ p → Σ (C → B) (λ q' → (f ∘ p) ~ (g ∘ q'))) α (pr2 c)) (pr2 c') →
   Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 c')))
     (λ L → ((pr2 (pr2 c)) ∙h (htpy-left-whisk g L)) ~
       ((htpy-left-whisk f (htpy-eq α)) ∙h (pr2 (pr2 c'))))
-Eq-cone-eq-cone' f g (dpair p qH) (dpair .p .qH) refl refl =
+htpy-cone-eq' f g (dpair p qH) (dpair .p .qH) refl refl =
   dpair (htpy-refl (pr1 qH)) (htpy-right-unit (pr2 qH))
+-}
 
-Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) {C : UU l4} (c c' : cone f g C) →
-  Id c c' → Eq-cone f g c c'
-Eq-cone-eq-cone f g c .c refl =
+reflexive-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  htpy-cone f g c c
+reflexive-htpy-cone f g c = 
   dpair
     ( htpy-refl (pr1 c))
     ( dpair
       ( htpy-refl (pr1 (pr2 c)))
       ( htpy-right-unit (pr2 (pr2 c))))
+      
+htpy-cone-eq :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) {C : UU l4} (c c' : cone f g C) →
+  Id c c' → htpy-cone f g c c'
+htpy-cone-eq f g c .c refl =
+  reflexive-htpy-cone f g c
+
+{- In order to show that the total space of htpy-cone is contractible, we give
+   a general construction that helps us characterize the identity type of
+   a structure. This construction is called 
+
+   is-contr-total-Eq-structure.
+
+   We first give some definitions that help us with the construction of
+   is-contr-total-Eq-structure. -}
 
 swap-total-Eq-structure :
   {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
@@ -120,20 +194,26 @@ is-contr-total-Eq-structure
           ( contraction is-contr-AC t'))))
       ( is-contr-BD))
 
-is-contr-total-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
-  is-contr (Σ (cone f g C) (Eq-cone f g c))
-is-contr-total-Eq-cone {A = A} {B} f g {C} (dpair p (dpair q H)) =
+{- We are now in a good position to establish that the total space of htpy-cone
+   is contractible. -}
+
+is-contr-total-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  is-contr (Σ (cone f g C) (htpy-cone f g c))
+is-contr-total-htpy-cone {A = A} {B} f g {C} (dpair p (dpair q H)) =
   is-contr-total-Eq-structure
-    { A = C → A}
-    { B = λ p' → Σ (C → B) (λ q' → (f ∘ p') ~ (g ∘ q'))}
-    { C = λ p' → p ~ p'}
     ( λ p' qH' K →
-      Σ (q ~ (pr1 qH')) (λ L → (H ∙h (g ·l L)) ~ ((f ·l K) ∙h (pr2 qH'))))
+      Σ ( q ~ (pr1 qH'))
+        ( coherence-htpy-cone f g (dpair p (dpair q H)) (dpair p' qH') K))
     ( is-contr-total-htpy-nondep p)
     ( dpair p (htpy-refl p))
     ( is-contr-total-Eq-structure
-      ( λ q' H' L' → (H ∙h (g ·l L')) ~ ((f ·l (htpy-refl p)) ∙h H'))
+      ( λ q' H' →
+        coherence-htpy-cone f g
+          ( dpair p (dpair q H))
+          ( dpair p (dpair q' H'))
+          ( htpy-refl p))
       ( is-contr-total-htpy-nondep q)
       ( dpair q (htpy-refl q))
       ( is-contr-is-equiv'
@@ -142,42 +222,61 @@ is-contr-total-Eq-cone {A = A} {B} f g {C} (dpair p (dpair q H)) =
         ( is-equiv-tot-is-fiberwise-equiv
           ( λ H' → is-equiv-htpy-concat (htpy-right-unit H) H'))
         ( is-contr-total-htpy H)))
+
+{- A simple corollary is that the map htpy-cone-eq is a fiberwise 
+   equivalence. -}
  
-is-fiberwise-equiv-Eq-cone-eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1}
-  {B : UU l2} {X : UU l3}
+is-fiberwise-equiv-htpy-cone-eq :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
-  is-fiberwise-equiv (Eq-cone-eq-cone f g c)
-is-fiberwise-equiv-Eq-cone-eq-cone f g {C = C} c =
+  is-fiberwise-equiv (htpy-cone-eq f g c)
+is-fiberwise-equiv-htpy-cone-eq f g {C = C} c =
   id-fundamental-gen c
-    ( Eq-cone-eq-cone f g c c refl)
-    ( is-contr-total-Eq-cone f g c)
-    ( Eq-cone-eq-cone f g c)
+    ( htpy-cone-eq f g c c refl)
+    ( is-contr-total-htpy-cone f g c)
+    ( htpy-cone-eq f g c)
+
+{- The inverse of htpy-cone-eq is the map eq-htpy-cone. -}
       
-eq-cone-Eq-cone : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+eq-htpy-cone :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   {f : A → X} {g : B → X} {C : UU l4} (c c' : cone f g C) →
-  Eq-cone f g c c' → Id c c'
-eq-cone-Eq-cone {f = f} {g = g} c c' =
-  inv-is-equiv (is-fiberwise-equiv-Eq-cone-eq-cone f g c c')
+  htpy-cone f g c c' → Id c c'
+eq-htpy-cone {f = f} {g = g} c c' =
+  inv-is-equiv (is-fiberwise-equiv-htpy-cone-eq f g c c')
+
+{- This completes our characterization of the identity type of the type of
+   cones with a fixed vertex C. -}
+
+{- We now conclude the universal property of pullbacks as the following
+   statement of contractibility. -}
  
-is-contr-universal-property-pullback : {l1 l2 l3 l4 l5 : Level} {A : UU l1}
-  {B : UU l2} {C : UU l3} {X : UU l4} (f : A → X) (g : B → X)
-  (c : cone f g C) → universal-property-pullback {l5 = l5} f g c →
+is-contr-universal-property-pullback :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  universal-property-pullback l5 f g c →
   (C' : UU l5) (c' : cone f g C') →
-  is-contr (Σ (C' → C) (λ h → Eq-cone f g (cone-map f g c h) c'))
+  is-contr (Σ (C' → C) (λ h → htpy-cone f g (cone-map f g c h) c'))
 is-contr-universal-property-pullback {C = C} f g c up C' c' =
   is-contr-is-equiv'
     ( Σ (C' → C) (λ h → Id (cone-map f g c h) c'))
-    ( tot (λ h → Eq-cone-eq-cone f g (cone-map f g c h) c'))
+    ( tot (λ h → htpy-cone-eq f g (cone-map f g c h) c'))
     ( is-equiv-tot-is-fiberwise-equiv
-      ( λ h → is-fiberwise-equiv-Eq-cone-eq-cone f g (cone-map f g c h) c'))
+      ( λ h → is-fiberwise-equiv-htpy-cone-eq f g (cone-map f g c h) c'))
     ( is-contr-map-is-equiv (up C')  c')
 
 -- Section 10.2
+
+{- The canonical pullback is a type which can be equipped with a cone that
+   satisfies the universal property of a pullback. -}
 
 canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) → UU ((l1 ⊔ l2) ⊔ l3)
 canonical-pullback {A = A} {B = B} f g = Σ A (λ x → Σ B (λ y → Id (f x) (g y)))
 
+{- We construct the maps and homotopies that are part of the cone structure of
+   the canonical pullback. -}
+   
 π₁ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   {f : A → X} {g : B → X} → canonical-pullback f g → A
 π₁ = pr1
@@ -194,9 +293,12 @@ cone-canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) → cone f g (canonical-pullback f g)
 cone-canonical-pullback f g = dpair π₁ (dpair π₂ π₃)
 
+{- We show now that the canonical pullback satisfies the universal property of
+   a pullback. -}
+
 universal-property-pullback-canonical-pullback : {l1 l2 l3 l4 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X) →
-  universal-property-pullback {l5 = l4} f g (cone-canonical-pullback f g)
+  universal-property-pullback l4 f g (cone-canonical-pullback f g)
 universal-property-pullback-canonical-pullback f g C =
   is-equiv-comp
     ( cone-map f g (cone-canonical-pullback f g))
@@ -207,24 +309,26 @@ universal-property-pullback-canonical-pullback f g C =
     ( is-equiv-tot-is-fiberwise-equiv
       ( λ p → is-equiv-choice-∞))
 
+{- Next we establish a '3-for-2' property for pullbacks. -}
+
 triangle-cone-cone : {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   {f : A → X} {g : B → X} (c : cone f g C) (c' : cone f g C')
-  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') (D : UU l6) →
+  (h : C' → C) (KLM : htpy-cone f g (cone-map f g c h) c') (D : UU l6) →
   (cone-map f g {C' = D} c') ~ ((cone-map f g c) ∘ (λ (k : D → C') → h ∘ k))
 triangle-cone-cone {C' = C'} {f = f} {g = g} c c' h KLM D k = 
   inv (ap
     ( λ t → cone-map f g {C' = D} t k)
     { x = (cone-map f g c h)}
     { y = c'}
-    ( eq-cone-Eq-cone (cone-map f g c h) c' KLM))
+    ( eq-htpy-cone (cone-map f g c h) c' KLM))
  
 is-equiv-up-pullback-up-pullback : {l1 l2 l3 l4 l5 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
-  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c) →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c') →
+  (h : C' → C) (KLM : htpy-cone f g (cone-map f g c h) c') →
+  ({l : Level} → universal-property-pullback l f g c) →
+  ({l : Level} → universal-property-pullback l f g c') →
   is-equiv h
 is-equiv-up-pullback-up-pullback {C = C} {C' = C'} f g c c' h KLM up up' =
   is-equiv-is-equiv-postcomp h
@@ -238,9 +342,9 @@ is-equiv-up-pullback-up-pullback {C = C} {C' = C'} f g c c' h KLM up up' =
 up-pullback-up-pullback-is-equiv : {l1 l2 l3 l4 l5 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
-  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') → is-equiv h →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c) →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c')
+  (h : C' → C) (KLM : htpy-cone f g (cone-map f g c h) c') → is-equiv h →
+  ({l : Level} → universal-property-pullback l f g c) →
+  ({l : Level} → universal-property-pullback l f g c')
 up-pullback-up-pullback-is-equiv f g c c' h KLM is-equiv-h up D =
   is-equiv-comp
     ( cone-map f g c')
@@ -253,10 +357,10 @@ up-pullback-up-pullback-is-equiv f g c c' h KLM is-equiv-h up D =
 up-pullback-is-equiv-up-pullback : {l1 l2 l3 l4 l5 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
-  (h : C' → C) (KLM : Eq-cone f g (cone-map f g c h) c') →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c') →
+  (h : C' → C) (KLM : htpy-cone f g (cone-map f g c h) c') →
+  ({l : Level} → universal-property-pullback l f g c') →
   is-equiv h →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c)
+  ({l : Level} → universal-property-pullback l f g c)
 up-pullback-is-equiv-up-pullback f g c c' h KLM up' is-equiv-h D =
   is-equiv-left-factor
     ( cone-map f g c')
@@ -266,103 +370,177 @@ up-pullback-is-equiv-up-pullback f g c c' h KLM up' is-equiv-h D =
     ( up' D)
     ( is-equiv-postcomp-is-equiv h is-equiv-h D)
 
-uniquely-unique-pullback : {l1 l2 l3 l4 l5 : Level}
+{- This concludes the '3-for-2-property' of pullbacks. -}
+
+{- The following is a general construction that will help us show that
+   the identity type of a subtype agrees with the identity type of the 
+   original type. We already know that the first projection of a family of
+   propositions is an embedding, but the following lemma still has its uses. -}
+
+is-contr-total-Eq-substructure :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {P : A → UU l3} →
+  is-contr (Σ A B) → (is-subtype P) → (a : A) (b : B a) (p : P a) →
+  is-contr (Σ (Σ A P) (λ t → B (pr1 t)))
+is-contr-total-Eq-substructure {A = A} {B} {P} is-contr-AB is-subtype-P a b p =
+  is-contr-is-equiv
+    ( Σ (Σ A B) (λ t → P (pr1 t)))
+    ( double-structure-swap A P B)
+    ( is-equiv-double-structure-swap A P B)
+    ( is-contr-is-equiv'
+      ( P a)
+      ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (dpair a b))
+      ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (dpair a b))
+      ( is-contr-is-prop-inh (is-subtype-P a) p))
+
+{- For example, we show that homotopies are equivalent to identifications of
+   equivalences. -}
+
+htpy-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} → A ≃ B → A ≃ B → UU (l1 ⊔ l2)
+htpy-equiv e e' = (eqv-map e) ~ (eqv-map e')
+
+reflexive-htpy-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) → htpy-equiv e e
+reflexive-htpy-equiv e = htpy-refl (eqv-map e)
+
+htpy-equiv-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (e e' : A ≃ B) (p : Id e e') → htpy-equiv e e'
+htpy-equiv-eq e .e refl =
+  reflexive-htpy-equiv e
+
+is-contr-total-htpy-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  is-contr (Σ (A ≃ B) (λ e' → htpy-equiv e e'))
+is-contr-total-htpy-equiv (dpair f is-equiv-f) =
+  is-contr-total-Eq-substructure
+    ( is-contr-total-htpy f)
+    ( is-subtype-is-equiv)
+    ( f)
+    ( htpy-refl f)
+    ( is-equiv-f)
+
+is-equiv-htpy-equiv-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e e' : A ≃ B) →
+  is-equiv (htpy-equiv-eq e e')
+is-equiv-htpy-equiv-eq e =
+  id-fundamental-gen e
+    ( reflexive-htpy-equiv e)
+    ( is-contr-total-htpy-equiv e)
+    ( htpy-equiv-eq e)
+
+{- We establish the uniquely uniqueness of pullbacks. -}
+
+htpy-cone-map-universal-property-pullback :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  (up-c : {l : Level} → universal-property-pullback l f g c) →
+  {C' : UU l5} (c' : cone f g C') →
+  htpy-cone f g
+    ( cone-map f g c (map-universal-property-pullback f g c up-c c'))
+    ( c')
+htpy-cone-map-universal-property-pullback f g c up-c c' =
+  htpy-cone-eq f g
+    ( cone-map f g c (map-universal-property-pullback f g c up-c c'))
+    ( c')
+    ( eq-map-universal-property-pullback f g c up-c c')
+
+uniquely-unique-pullback :
+  {l1 l2 l3 l4 l5 : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c') →
-  ({l6 : Level} → universal-property-pullback {l5 = l6} f g c) →
-  is-contr (Σ (C' ≃ C) (λ h → Eq-cone f g (cone-map f g c (eqv-map h)) c'))
-uniquely-unique-pullback {C = C} {C' = C'} f g c c' up up' =
-  is-contr-is-equiv
-    ( Σ (C' → C) (λ h → (is-equiv h) × (Eq-cone f g (cone-map f g c h) c')))
-    ( Σ-assoc
-      ( C' → C)
-      ( is-equiv)
-      ( λ t → Eq-cone f g (cone-map f g c (eqv-map t)) c'))
-    ( is-equiv-Σ-assoc
-      ( C' → C)
-      ( is-equiv)
-      ( λ t → Eq-cone f g (cone-map f g c (eqv-map t)) c'))
-    ( is-contr-is-equiv
-      ( Σ (C' → C) (λ h → (Eq-cone f g (cone-map f g c h) c') × (is-equiv h)))
-      ( tot
-        ( λ h → swap-prod (is-equiv h) (Eq-cone f g (cone-map f g c h) c')))
-      ( is-equiv-tot-is-fiberwise-equiv
-        ( λ h → is-equiv-swap-prod
-          ( is-equiv h)
-          ( Eq-cone f g (cone-map f g c h) c')))
-      ( is-contr-is-equiv'
-        ( Σ (Σ (C' → C) (λ h → Eq-cone f g (cone-map f g c h) c'))
-          ( λ t → is-equiv (pr1 t)))
-        ( Σ-assoc
-          ( C' → C)
-          ( λ h → Eq-cone f g (cone-map f g c h) c')
-          ( λ t → is-equiv (pr1 t)))
-        ( is-equiv-Σ-assoc _ _ _)
-        ( is-contr-is-equiv
-          ( Σ (C' → C) (λ h → Eq-cone f g (cone-map f g c h) c'))
-          ( pr1)
-          ( is-equiv-pr1-is-contr
-            ( λ t → is-equiv (pr1 t))
-            ( λ t → is-contr-is-equiv-is-equiv
-              ( is-equiv-up-pullback-up-pullback f g c c'
-                (pr1 t) (pr2 t) up' up)))
-          ( is-contr-universal-property-pullback f g c up' C' c'))))
+  ({l : Level} → universal-property-pullback l f g c') →
+  ({l : Level} → universal-property-pullback l f g c) →
+  is-contr (Σ (C' ≃ C) (λ h → htpy-cone f g (cone-map f g c (eqv-map h)) c'))
+uniquely-unique-pullback {C = C} {C' = C'} f g c c' up-c' up-c =
+  is-contr-total-Eq-substructure
+    ( is-contr-universal-property-pullback f g c up-c C' c')
+    ( is-subtype-is-equiv)
+    ( map-universal-property-pullback f g c up-c c')
+    ( htpy-cone-map-universal-property-pullback f g c up-c c')
+    ( is-equiv-up-pullback-up-pullback f g c c'
+      ( map-universal-property-pullback f g c up-c c')
+      ( htpy-cone-map-universal-property-pullback f g c up-c c')
+      up-c up-c')
 
-gap : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+{- The gap map of a square is the map fron the vertex of the cone into the
+   canonical pullback. -}
+
+gap :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) → cone f g C → C → canonical-pullback f g
 gap f g c z = dpair ((pr1 c) z) (dpair ((pr1 (pr2 c)) z) ((pr2 (pr2 c)) z))
 
-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  {C : UU l4} (f : A → X) (g : B → X) → cone f g C → UU _
+{- The proposition is-pullback is the assertion that the gap map is an 
+   equivalence. Note that this proposition is small, whereas the universal 
+   property is a large proposition. Of course, we will show below that the
+   proposition is-pullback is equivalent to the universal property of
+   pullbacks. -}
+
+is-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) → cone f g C → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
 is-pullback f g c = is-equiv (gap f g c)
 
-Eq-cone-up-pullback-canonical-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
-  {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
-  (c : cone f g C) →
-  Eq-cone f g (cone-map f g (cone-canonical-pullback f g) (gap f g c)) c
-Eq-cone-up-pullback-canonical-pullback f g c =
+{- We first establish that a cone is equal to the value of cone-map at
+   its own gap map. -}
+
+htpy-cone-up-pullback-canonical-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  htpy-cone f g (cone-map f g (cone-canonical-pullback f g) (gap f g c)) c
+htpy-cone-up-pullback-canonical-pullback f g c =
   dpair
     ( htpy-refl (pr1 c))
     ( dpair
       ( htpy-refl (pr1 (pr2 c)))
       ( htpy-right-unit (pr2 (pr2 c))))
- 
-is-pullback-up-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
-  {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
-  (c : cone f g C) →
-  ({l5 : Level} → universal-property-pullback {l5 = l5} f g c) →
-  is-pullback f g c
+
+{- We show that the universal property of the pullback implies that the gap
+   map is an equivalence. -}
+
+is-pullback-up-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  ({l : Level} → universal-property-pullback l f g c) → is-pullback f g c
 is-pullback-up-pullback f g c up =
   is-equiv-up-pullback-up-pullback f g
     ( cone-canonical-pullback f g)
     ( c)
     ( gap f g c)
-    ( Eq-cone-up-pullback-canonical-pullback f g c)
+    ( htpy-cone-up-pullback-canonical-pullback f g c)
     ( universal-property-pullback-canonical-pullback f g)
     ( up)
 
-up-pullback-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
-  {B : UU l2} {X : UU l3} {C : UU l4} (f : A → X) (g : B → X)
-  (c : cone f g C) →
-  is-pullback f g c →
-  ({l5 : Level} → universal-property-pullback {l5 = l5} f g c)
+{- We show that the universal property follows from the assumption that the
+   the gap map is an equivalence. -}
+
+up-pullback-is-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  is-pullback f g c → ({l : Level} → universal-property-pullback l f g c)
 up-pullback-is-pullback f g c is-pullback-c =
   up-pullback-up-pullback-is-equiv f g
     ( cone-canonical-pullback f g)
     ( c)
     ( gap f g c)
-    ( Eq-cone-up-pullback-canonical-pullback f g c)
+    ( htpy-cone-up-pullback-canonical-pullback f g c)
     ( is-pullback-c)
     ( universal-property-pullback-canonical-pullback f g)
 
 -- Section 10.3 Fiber products
 
-cone-prod : {i j : Level} (A : UU i) (B : UU j) →
+{- We construct the cone for two maps into the unit type. -}
+
+cone-prod :
+  {i j : Level} (A : UU i) (B : UU j) →
   cone (const A unit star) (const B unit star) (A × B)
 cone-prod A B = dpair pr1 (dpair pr2 (htpy-refl (const (A × B) unit star)))
 
-is-pullback-prod : {i j : Level} (A : UU i) (B : UU j) →
+{- Cartesian products are a special case of pullbacks. -}
+
+is-pullback-prod :
+  {i j : Level} (A : UU i) (B : UU j) →
   is-pullback (const A unit star) (const B unit star) (cone-prod A B)
 is-pullback-prod A B =
   is-equiv-has-inverse
@@ -376,8 +554,12 @@ is-pullback-prod A B =
                 refl (pr2 (pr2 t))))))))
         ( λ t → eq-pair (dpair refl refl))))
 
-universal-property-pullback-prod : {i j : Level} (A : UU i) (B : UU j) →
-  {k : Level} → universal-property-pullback {l5 = k}
+{- We conclude that cartesian products satisfy the universal property of 
+   pullbacks. -}
+
+universal-property-pullback-prod :
+  {i j : Level} (A : UU i) (B : UU j) →
+  {l : Level} → universal-property-pullback l
     ( const A unit star)
     ( const B unit star)
     ( cone-prod A B)
@@ -388,8 +570,10 @@ universal-property-pullback-prod A B =
     ( cone-prod A B)
     ( is-pullback-prod A B)
 
-cone-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
-  (Q : X → UU l3) →
+{- Similar as the above, but how fiberwise. -}
+
+cone-fiberwise-prod :
+  {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
   cone (pr1 {A = X} {B = P}) (pr1 {A = X} {B = Q}) (Σ X (λ x → (P x) × (Q x)))
 cone-fiberwise-prod P Q =
   dpair
@@ -398,27 +582,34 @@ cone-fiberwise-prod P Q =
       ( tot (λ x → pr2))
       ( htpy-refl pr1))
 
-inv-gap-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
-  (Q : X → UU l3) → canonical-pullback (pr1 {B = P}) (pr1 {B = Q}) →
-  Σ X (λ x → (P x) × (Q x))
+{- We will show that the fiberwise product is a pullback by showing that the
+   gap map is an equivalence. We do this by directly construct an inverse to
+   the gap map. -}
+
+inv-gap-fiberwise-prod :
+  {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
+  canonical-pullback (pr1 {B = P}) (pr1 {B = Q}) → Σ X (λ x → (P x) × (Q x))
 inv-gap-fiberwise-prod P Q (dpair (dpair x p) (dpair (dpair .x q) refl)) =
   dpair x (dpair p q)
 
-issec-inv-gap-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
-  (Q : X → UU l3) →
+issec-inv-gap-fiberwise-prod :
+  {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
   ((gap (pr1 {B = P}) (pr1 {B = Q}) (cone-fiberwise-prod P Q)) ∘
   (inv-gap-fiberwise-prod P Q)) ~ id
 issec-inv-gap-fiberwise-prod P Q (dpair (dpair x p) (dpair (dpair .x q) refl)) =
   eq-pair (dpair refl (eq-pair (dpair refl refl)))
 
-isretr-inv-gap-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
-  (Q : X → UU l3) →
-  ((inv-gap-fiberwise-prod P Q) ∘
-  (gap (pr1 {B = P}) (pr1 {B = Q}) (cone-fiberwise-prod P Q))) ~ id
+isretr-inv-gap-fiberwise-prod :
+  {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
+  ( ( inv-gap-fiberwise-prod P Q) ∘
+    ( gap (pr1 {B = P}) (pr1 {B = Q}) (cone-fiberwise-prod P Q))) ~ id
 isretr-inv-gap-fiberwise-prod P Q (dpair x (dpair p q)) = refl
 
-is-pullback-fiberwise-prod : {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2)
-  (Q : X → UU l3) →
+{- With all the pieces in place we conclude that the fiberwise product is a
+   pullback. -}
+
+is-pullback-fiberwise-prod :
+  {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
   is-pullback (pr1 {A = X} {B = P}) (pr1 {A = X} {B = Q})
     (cone-fiberwise-prod P Q)
 is-pullback-fiberwise-prod P Q =
@@ -429,16 +620,22 @@ is-pullback-fiberwise-prod P Q =
         ( issec-inv-gap-fiberwise-prod P Q)
         ( isretr-inv-gap-fiberwise-prod P Q)))
 
-universal-property-pullback-fiberwise-prod : {l1 l2 l3 l4 : Level}
-  {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
-  universal-property-pullback {l5 = l4} (pr1 {B = P}) (pr1 {B = Q})
+{- Furthermore we conclude that the fiberwise product satisfies the universal
+   property of pullbacks. -}
+
+universal-property-pullback-fiberwise-prod :
+  {l1 l2 l3 l4 : Level} {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
+  universal-property-pullback l4 (pr1 {B = P}) (pr1 {B = Q})
     (cone-fiberwise-prod P Q)
 universal-property-pullback-fiberwise-prod P Q =
   up-pullback-is-pullback pr1 pr1
     ( cone-fiberwise-prod P Q)
     ( is-pullback-fiberwise-prod P Q)
 
-cone-total-prod-fibers : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+{- We now generalize the above to arbitrary maps and their fibers. -}
+
+cone-total-prod-fibers :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) → cone f g (Σ X (λ x → (fib f x) × (fib g x)))
 cone-total-prod-fibers f g =
   dpair
@@ -447,7 +644,8 @@ cone-total-prod-fibers f g =
       ( λ t → pr1 (pr2 (pr2 t)))
        λ t → concat (pr1 t) (pr2 (pr1 (pr2 t))) (inv (pr2 (pr2 (pr2 t)))))
 
-cone-span : {l1 l2 l3 l4 l5 l6 : Level} {A : UU l1} {B : UU l2}
+cone-span :
+  {l1 l2 l3 l4 l5 l6 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X)
   {A' : UU l4} {B' : UU l5} {C : A' → B' → UU l6}
   (i : A' → A) (j : B' → B)
@@ -460,14 +658,16 @@ cone-span f g i j k =
       ( λ t → j (pr1 (pr2 t)))
       ( λ t → k (pr1 t) (pr1 (pr2 t)) (pr2 (pr2 t))))
 
-is-pullback-cone-span-is-equiv : {l1 l2 l3 l4 l5 l6 : Level} {A : UU l1} {B : UU l2}
+is-pullback-cone-span-is-equiv :
+  {l1 l2 l3 l4 l5 l6 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X)
   {A' : UU l4} {B' : UU l5} {C : A' → B' → UU l6}
   (i : A' → A) (j : B' → B)
   (k : (x' : A') (y' : B') → C x' y' → Id (f (i x')) (g (j y'))) →
   is-equiv i → is-equiv j → ((x : A') (y : B') → is-equiv (k x y)) →
   is-pullback f g (cone-span f g i j k)
-is-pullback-cone-span-is-equiv {B = B} f g i j k is-equiv-i is-equiv-j is-equiv-k =
+is-pullback-cone-span-is-equiv {B = B} f g i j k
+  is-equiv-i is-equiv-j is-equiv-k =
   is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
     ( λ x → Σ B (λ y → Id (f x) (g y)))
     ( i)
@@ -480,8 +680,9 @@ is-pullback-cone-span-is-equiv {B = B} f g i j k is-equiv-i is-equiv-j is-equiv-
       ( is-equiv-j)
       ( is-equiv-k x'))
 
-is-pullback-total-prod-fibers : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  {X : UU l3} (f : A → X) (g : B → X) →
+is-pullback-total-prod-fibers :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) →
   is-pullback f g (cone-total-prod-fibers f g)
 is-pullback-total-prod-fibers f g =
   is-equiv-comp
@@ -512,36 +713,41 @@ is-pullback-total-prod-fibers f g =
 
 -- Section 10.4 Fibers as pullbacks
 
-square-fiber : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (b : B) →
-  (f ∘ (pr1 {B = λ x → Id (f x) b})) ~
-  ((const unit B b) ∘ (const (fib f b) unit star))
+square-fiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (b : B) →
+  ( f ∘ (pr1 {B = λ x → Id (f x) b})) ~
+  ( (const unit B b) ∘ (const (fib f b) unit star))
 square-fiber f b = pr2
 
-cone-fiber : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (b : B) →
+cone-fiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (b : B) →
   cone f (const unit B b) (fib f b)
 cone-fiber f b =
   dpair pr1 (dpair (const (fib f b) unit star) (square-fiber f b))
 
-is-pullback-cone-fiber : {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+is-pullback-cone-fiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
   (b : B) → is-pullback f (const unit B b) (cone-fiber f b)
 is-pullback-cone-fiber f b =
   is-equiv-tot-is-fiberwise-equiv
     ( λ a → is-equiv-left-unit-law-Σ-map (λ t → Id (f a) b) is-contr-unit)
 
-universal-property-pullback-cone-fiber : {l1 l2 l3 : Level} {A : UU l1} →
-  {B : UU l2} (f : A → B) (b : B) →
-  universal-property-pullback {l5 = l3} f (const unit B b) (cone-fiber f b)
+universal-property-pullback-cone-fiber :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (b : B) →
+  universal-property-pullback l3 f (const unit B b) (cone-fiber f b)
 universal-property-pullback-cone-fiber {B = B} f b =
   up-pullback-is-pullback f (const unit B b)
     ( cone-fiber f b)
     ( is-pullback-cone-fiber f b)
 
-cone-fiber-fam : {l1 l2 : Level} {A : UU l1} (B : A → UU l2) (a : A) →
-  cone (pr1 {B = B}) (const unit A a) (B a)
+cone-fiber-fam :
+  {l1 l2 : Level} {A : UU l1} (B : A → UU l2)
+  (a : A) → cone (pr1 {B = B}) (const unit A a) (B a)
 cone-fiber-fam B a =
   dpair (λ b → dpair a b) (dpair (const (B a) unit star) (λ b → refl))
 
-is-pullback-cone-fiber-fam : {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+is-pullback-cone-fiber-fam :
+  {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
  (a : A) → is-pullback (pr1 {B = B}) (const unit A a) (cone-fiber-fam B a)
 is-pullback-cone-fiber-fam {A = A} B a =
   is-equiv-comp
@@ -554,27 +760,33 @@ is-pullback-cone-fiber-fam {A = A} B a =
 
 -- Section 10.5 Fiberwise equivalences
 
-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (Q : B → UU l3) → cone f (pr1 {B = Q}) (Σ A (λ x → Q (f x)))
-cone-subst f Q = dpair pr1 (dpair (Σ-map-base-map f Q) (λ t → refl))
+cone-subst :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (Q : B → UU l3) →
+  cone f (pr1 {B = Q}) (Σ A (λ x → Q (f x)))
+cone-subst f Q =
+  dpair pr1 (dpair (Σ-map-base-map f Q) (λ t → refl))
 
-inv-gap-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (Q : B → UU l3) →
+inv-gap-cone-subst :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (Q : B → UU l3) →
   canonical-pullback f (pr1 {B = Q}) → Σ A (λ x → Q (f x))
-inv-gap-cone-subst f Q (dpair x (dpair (dpair .(f x) q) refl)) = dpair x q
+inv-gap-cone-subst f Q (dpair x (dpair (dpair .(f x) q) refl)) =
+  dpair x q
 
-issec-inv-gap-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (Q : B → UU l3) →
+issec-inv-gap-cone-subst :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (Q : B → UU l3) →
   ((gap f (pr1 {B = Q}) (cone-subst f Q)) ∘ (inv-gap-cone-subst f Q)) ~ id
-issec-inv-gap-cone-subst f Q (dpair x (dpair (dpair .(f x) q) refl)) = refl
+issec-inv-gap-cone-subst f Q (dpair x (dpair (dpair .(f x) q) refl)) =
+  refl
 
-isretr-inv-gap-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (Q : B → UU l3) →
+isretr-inv-gap-cone-subst :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (Q : B → UU l3) →
   ((inv-gap-cone-subst f Q) ∘ (gap f (pr1 {B = Q}) (cone-subst f Q))) ~ id
-isretr-inv-gap-cone-subst f Q (dpair x q) = refl
+isretr-inv-gap-cone-subst f Q (dpair x q) =
+  refl
 
-is-pullback-cone-subst : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) (Q : B → UU l3) → is-pullback f (pr1 {B = Q}) (cone-subst f Q)
+is-pullback-cone-subst :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (Q : B → UU l3) →
+  is-pullback f (pr1 {B = Q}) (cone-subst f Q)
 is-pullback-cone-subst f Q =
   is-equiv-has-inverse
     ( dpair
@@ -583,14 +795,15 @@ is-pullback-cone-subst f Q =
         ( issec-inv-gap-cone-subst f Q)
         ( isretr-inv-gap-cone-subst f Q)))
 
-cone-toto : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3}
+cone-toto :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3}
   (Q : B → UU l4) (f : A → B) (g : (x : A) → (P x) → (Q (f x))) →
   cone f (pr1 {B = Q}) (Σ A P)
 cone-toto Q f g = dpair pr1 (dpair (toto Q f g) (λ t → refl))
 
-is-pullback-is-fiberwise-equiv : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {P : A → UU l3} (Q : B → UU l4) (f : A → B)
-  (g : (x : A) → (P x) → (Q (f x))) →
+is-pullback-is-fiberwise-equiv :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3}
+  (Q : B → UU l4) (f : A → B) (g : (x : A) → (P x) → (Q (f x))) →
   is-fiberwise-equiv g → is-pullback f (pr1 {B = Q}) (cone-toto Q f g)
 is-pullback-is-fiberwise-equiv Q f g is-equiv-g =
   is-equiv-comp
@@ -601,18 +814,18 @@ is-pullback-is-fiberwise-equiv Q f g is-equiv-g =
     ( is-equiv-tot-is-fiberwise-equiv is-equiv-g)
     ( is-pullback-cone-subst f Q)
 
-universal-property-pullback-is-fiberwise-equiv : {l1 l2 l3 l4 l5 : Level}
-  {A : UU l1} {B : UU l2} {P : A → UU l3} (Q : B → UU l4) (f : A → B)
-  (g : (x : A) → (P x) → (Q (f x))) →
+universal-property-pullback-is-fiberwise-equiv :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3}
+  (Q : B → UU l4) (f : A → B) (g : (x : A) → (P x) → (Q (f x))) →
   is-fiberwise-equiv g →
-  universal-property-pullback {l5 = l5} f (pr1 {B = Q}) (cone-toto Q f g)
+  universal-property-pullback l5 f (pr1 {B = Q}) (cone-toto Q f g)
 universal-property-pullback-is-fiberwise-equiv Q f g is-equiv-g =
   up-pullback-is-pullback f pr1 (cone-toto Q f g)
     ( is-pullback-is-fiberwise-equiv Q f g is-equiv-g)
 
-is-fiberwise-equiv-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {P : A → UU l3} (Q : B → UU l4) (f : A → B)
-  (g : (x : A) → (P x) → (Q (f x))) →
+is-fiberwise-equiv-is-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3}
+  (Q : B → UU l4) (f : A → B) (g : (x : A) → (P x) → (Q (f x))) →
   is-pullback f (pr1 {B = Q}) (cone-toto Q f g) → is-fiberwise-equiv g
 is-fiberwise-equiv-is-pullback Q f g is-pullback-cone-toto =
   is-fiberwise-equiv-is-equiv-tot g
@@ -624,18 +837,20 @@ is-fiberwise-equiv-is-pullback Q f g is-pullback-cone-toto =
       ( is-pullback-cone-subst f Q)
       ( is-pullback-cone-toto))
 
-is-fiberwise-equiv-universal-property-pullback : {l1 l2 l3 l4 : Level}
-  {A : UU l1} {B : UU l2} {P : A → UU l3} (Q : B → UU l4) (f : A → B)
-  (g : (x : A) → (P x) → (Q (f x))) →
-  ( {l5 : Level} → universal-property-pullback {l5 = l5} f (pr1 {B = Q})
+is-fiberwise-equiv-universal-property-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3}
+  (Q : B → UU l4) (f : A → B) (g : (x : A) → (P x) → (Q (f x))) →
+  ( {l : Level} → universal-property-pullback l f (pr1 {B = Q})
     (cone-toto Q f g)) →
   is-fiberwise-equiv g
 is-fiberwise-equiv-universal-property-pullback Q f g up =
   is-fiberwise-equiv-is-pullback Q f g
     ( is-pullback-up-pullback f pr1 (cone-toto Q f g) up)
 
-fib-square : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
-  {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) → (x : A) → fib (pr1 c) x → fib g (f x)
+fib-square :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  (x : A) → fib (pr1 c) x → fib g (f x)
 fib-square f g c x t =
   let p = pr1 c
       q = pr1 (pr2 c)
@@ -643,10 +858,17 @@ fib-square f g c x t =
   in
   dpair (q (pr1 t) ) (concat (f (p (pr1 t))) (inv (H (pr1 t))) (ap f (pr2 t)))
 
-square-tot-fib-square : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
-  ((gap f g c) ∘ (Σ-fib-to-domain (pr1 c))) ~
-  ((tot (λ a → tot (λ b → inv))) ∘ (tot (fib-square f g c)))
+fib-square-id :
+  {l1 l2 : Level} {B : UU l1} {X : UU l2} (g : B → X) (x : X) →
+  fib-square id g (dpair g (dpair id (htpy-refl g))) x ~ id
+fib-square-id g .(g b) (dpair b refl) =
+  refl
+
+square-tot-fib-square :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  ( (gap f g c) ∘ (Σ-fib-to-domain (pr1 c))) ~
+  ( (tot (λ a → tot (λ b → inv))) ∘ (tot (fib-square f g c)))
 square-tot-fib-square f g c (dpair .((pr1 c) x) (dpair x refl)) =
   let p = pr1 c
       q = pr1 (pr2 c)
@@ -662,8 +884,9 @@ square-tot-fib-square f g c (dpair .((pr1 c) x) (dpair x refl)) =
               ( ap inv (right-unit (inv (H x))))
               ( inv-inv (H x)))))))
 
-is-fiberwise-equiv-fib-square-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1}
-  {B : UU l2} {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+is-fiberwise-equiv-fib-square-is-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
   is-pullback f g c → is-fiberwise-equiv (fib-square f g c)
 is-fiberwise-equiv-fib-square-is-pullback f g c pb =
   let p = pr1 c
@@ -684,8 +907,9 @@ is-fiberwise-equiv-fib-square-is-pullback f g c pb =
           ( λ y → is-equiv-inv (g y) (f x))))
       ( pb))
 
-is-pullback-is-fiberwise-equiv-fib-square : {l1 l2 l3 l4 : Level} {A : UU l1}
-  {B : UU l2} {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+is-pullback-is-fiberwise-equiv-fib-square :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
   is-fiberwise-equiv (fib-square f g c) → is-pullback f g c
 is-pullback-is-fiberwise-equiv-fib-square f g c is-equiv-fsq =
   let p = pr1 c
@@ -704,8 +928,9 @@ is-pullback-is-fiberwise-equiv-fib-square f g c is-equiv-fsq =
         ( λ y → is-equiv-inv (g y) (f x))))
     ( is-equiv-tot-is-fiberwise-equiv is-equiv-fsq)
 
-is-trunc-is-pullback : {l1 l2 l3 l4 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
-  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+is-trunc-is-pullback :
+  {l1 l2 l3 l4 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
   is-pullback f g c → is-trunc-map k g → is-trunc-map k (pr1 c)
 is-trunc-is-pullback k f g c pb is-trunc-g a =
   is-trunc-is-equiv k
@@ -714,8 +939,9 @@ is-trunc-is-pullback k f g c pb is-trunc-g a =
     ( is-fiberwise-equiv-fib-square-is-pullback f g c pb a)
     (is-trunc-g (f a))
 
-is-emb-is-pullback : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+is-emb-is-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
   is-pullback f g c → is-emb g → is-emb (pr1 c)
 is-emb-is-pullback f g c pb is-emb-g =
   is-emb-is-prop-map
@@ -723,8 +949,8 @@ is-emb-is-pullback f g c pb is-emb-g =
     ( is-trunc-is-pullback neg-one-𝕋 f g c pb (is-prop-map-is-emb g is-emb-g))
 
 is-equiv-is-pullback :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
   is-equiv g → is-pullback f g c → is-equiv (pr1 c)
 is-equiv-is-pullback f g c is-equiv-g pb =
   is-equiv-is-contr-map
@@ -732,8 +958,8 @@ is-equiv-is-pullback f g c is-equiv-g pb =
       ( is-contr-map-is-equiv is-equiv-g))
 
 is-pullback-is-equiv :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) (c : cone f g C) →
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
   is-equiv g → is-equiv (pr1 c) → is-pullback f g c
 is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
   is-pullback-is-fiberwise-equiv-fib-square f g c
@@ -742,12 +968,24 @@ is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
       ( is-contr-map-is-equiv is-equiv-p a)
       ( is-contr-map-is-equiv is-equiv-g (f a)))
 
+coherence-square-transpose :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (top : A → B) (left : A → C) (right : B → D) (bottom : C → D) →
+  coherence-square top left right bottom →
+  coherence-square left top bottom right
+coherence-square-transpose top left right bottom sq =
+  htpy-inv sq
+
 cone-transpose :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
-  {C : UU l3} {X : UU l4} (f : A → X) (g : B → X) →
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) →
   cone f g C → cone g f C
 cone-transpose f g c =
-  dpair (pr1 (pr2 c)) (dpair (pr1 c) (htpy-inv (pr2 (pr2 c))))
+  dpair
+    ( pr1 (pr2 c))
+    ( dpair
+      ( pr1 c)
+      ( coherence-square-transpose (pr1 (pr2 c)) (pr1 c) g f (pr2 (pr2 c))))
   
 is-pullback-transpose :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2}
@@ -779,15 +1017,38 @@ is-pullback-is-equiv' f g c is-equiv-f is-equiv-q =
 
 -- Section 10.6 The pullback pasting property
 
-htpy-square-comp-horizontal : {l1 l2 l3 l4 l5 l6 : Level}
+coherence-square-comp-horizontal :
+  {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
-  {f : A → X} {g : B → Y} {h : C → Z} {i : X → Y} {j : Y → Z} {k : A → B}
-  {l : B → C} → ((i ∘ f) ~ (g ∘ k)) → ((j ∘ g) ~ (h ∘ l)) →
-  ((j ∘ (i ∘ f)) ~ (h ∘ (l ∘ k)))
-htpy-square-comp-horizontal {g = g} {j = j} {k = k} H K =
-  htpy-concat (j ∘ (g ∘ k)) (htpy-left-whisk j H) (htpy-right-whisk K k)
+  (top-left : A → B) (top-right : B → C)
+  (left : A → X) (mid : B → Y) (right : C → Z)
+  (bottom-left : X → Y) (bottom-right : Y → Z) →
+  coherence-square top-left left mid bottom-left →
+  coherence-square top-right mid right bottom-right →
+  coherence-square
+    (top-right ∘ top-left) left right (bottom-right ∘ bottom-left)
+coherence-square-comp-horizontal
+  top-left top-right left mid right bottom-left bottom-right sq-left sq-right =
+  (bottom-right ·l sq-left) ∙h (sq-right ·r top-left)
 
-cone-comp-horizontal : {l1 l2 l3 l4 l5 l6 : Level}
+coherence-square-comp-vertical :
+  {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (top : A → X)
+  (left-top : A → B) (right-top : X → Y)
+  (mid : B → Y)
+  (left-bottom : B → C) (right-bottom : Y → Z)
+  (bottom : C → Z) →
+  coherence-square top left-top right-top mid →
+  coherence-square mid left-bottom right-bottom bottom →
+  coherence-square
+    top (left-bottom ∘ left-top) (right-bottom ∘ right-top) bottom
+coherence-square-comp-vertical
+  top left-top right-top mid left-bottom right-bottom bottom sq-top sq-bottom =
+  (sq-bottom ·r left-top) ∙h (right-bottom ·l sq-top)
+
+cone-comp-horizontal :
+  {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
   (i : X → Y) (j : Y → Z) (h : C → Z) →
   (c : cone j h B) → (cone i (pr1 c) A) → cone (j ∘ i) h A
@@ -796,17 +1057,32 @@ cone-comp-horizontal i j h c d =
    ( pr1 d)
    ( dpair
      ( (pr1 (pr2 c)) ∘ (pr1 (pr2 d)))
-     ( htpy-square-comp-horizontal
-       {f = pr1 d} {g = pr1 c} {h = h} {i = i} {j = j} {k = pr1 (pr2 d)}
+     ( coherence-square-comp-horizontal
+       (pr1 (pr2 d)) (pr1 (pr2 c)) (pr1 d) (pr1 c) h i j
        (pr2 (pr2 d)) (pr2 (pr2 c))))
 
-triangle-fib-square : {l1 l2 l3 l4 l5 l6 : Level}
+cone-comp-vertical :
+  {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (f : C → Z) (g : Y → Z) (h : X → Y) →
+  (c : cone f g B) → cone (pr1 (pr2 c)) h A → cone f (g ∘ h) A
+cone-comp-vertical f g h c d =
+  dpair
+    ( (pr1 c) ∘ (pr1 d))
+    ( dpair
+      ( pr1 (pr2 d))
+      ( coherence-square-comp-vertical
+        ( pr1 (pr2 d)) (pr1 d) h (pr1 (pr2 c)) (pr1 c) g f
+        ( pr2 (pr2 d)) (pr2 (pr2 c))))
+  
+fib-square-comp-horizontal :
+  {l1 l2 l3 l4 l5 l6 : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
   (i : X → Y) (j : Y → Z) (h : C → Z) →
   (c : cone j h B) (d : cone i (pr1 c) A) → (x : X) →
-  ((fib-square (j ∘ i) h (cone-comp-horizontal i j h c d) x) ~
-    ((fib-square j h c (i x)) ∘ (fib-square i (pr1 c) d x)))
-triangle-fib-square i j h c d .(pr1 d a) (dpair a refl) =
+  ( fib-square (j ∘ i) h (cone-comp-horizontal i j h c d) x) ~
+  ( (fib-square j h c (i x)) ∘ (fib-square i (pr1 c) d x))
+fib-square-comp-horizontal i j h c d .(pr1 d a) (dpair a refl) =
   let f = pr1 d
       k = pr1 (pr2 d)
       H = pr2 (pr2 d)
@@ -815,16 +1091,58 @@ triangle-fib-square i j h c d .(pr1 d a) (dpair a refl) =
       K = pr2 (pr2 c)
   in
   eq-pair (dpair refl
-    ( concat
-      ( ((inv (K (k a))) ∙ (inv (ap j (H a)))) ∙ refl)
-      ( ap (concat' _ refl) (inv-assoc (ap j (H a)) (K (k a))))
-      ( concat ((inv (K (k a))) ∙ ((inv (ap j (H a))) ∙ refl))
-        ( inv (assoc (inv (K (k a))) (inv (ap j (H a))) refl))
+    ( ( ap (concat' _ refl) (inv-assoc (ap j (H a)) (K (k a)))) ∙
+      ( ( inv (assoc (inv (K (k a))) (inv (ap j (H a))) refl)) ∙
         ( ap (concat _ (inv (K (k a))))
-          ( concat
-            ( (ap j (inv (H a))) ∙ refl)
-            ( ap (concat' _ refl) (inv (ap-inv j (H a))))
+          ( ( ap (concat' _ refl) (inv (ap-inv j (H a)))) ∙
             ( inv (ap-concat j (inv (H a)) refl)))))))
+{-
+map-fib-comp :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  (f : A → B) (g : B → C) (x : C) →
+  fib (g ∘ f) x → Σ (fib g x) (λ t → fib f (pr1 t))
+map-fib-comp f g x t = ?
+-}
+
+fib-square-comp-vertical : 
+  {l1 l2 l3 l4 l5 l6 : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  (f : C → Z) (g : Y → Z) (h : X → Y) →
+  (c : cone f g B) (d : cone (pr1 (pr2 c)) h A) (x : C) →
+  ( ( fib-square f (g ∘ h) (cone-comp-vertical f g h c d) x) ∘
+    ( inv-map-fib-comp (pr1 c) (pr1 d) x)) ~
+  ( ( inv-map-fib-comp g h (f x)) ∘
+    ( toto
+      ( λ t → fib h (pr1 t))
+      ( fib-square f g c x)
+      ( λ t → fib-square (pr1 (pr2 c)) h d (pr1 t))))
+fib-square-comp-vertical f g h
+  (dpair p (dpair q H)) (dpair p' (dpair q' H')) .(p (p' a))
+  (dpair (dpair .(p' a) refl) (dpair a refl)) =
+  eq-pair
+    ( dpair refl
+      ( ( right-unit (inv ((H (p' a)) ∙ (ap g (H' a))))) ∙
+        ( concat
+          ( ( ap g ((inv (H' a)) ∙ refl)) ∙
+            ( pr2
+              ( fib-square f g
+                ( dpair p (dpair q H))
+                ( p (p' a))
+                ( dpair (p' a) refl))))
+          ( ( inv-assoc (H (p' a)) (ap g (H' a))) ∙
+            ( ( ap
+                ( concat _ (inv (ap g (H' a))))
+                ( inv (right-unit (inv (H (p' a)))))) ∙
+              ( ap
+                ( concat' _
+                  ( pr2
+                    ( fib-square f g
+                      ( dpair p (dpair q H))
+                      ( p (p' a))
+                      ( dpair (p' a) refl))))
+                ( ( inv (ap-inv g (H' a))) ∙
+                  ( ap (ap g) (inv (right-unit (inv (H' a)))))))))
+          ( refl))))
 
 is-pullback-rectangle-is-pullback-left-square :
   {l1 l2 l3 l4 l5 l6 : Level}
@@ -840,7 +1158,7 @@ is-pullback-rectangle-is-pullback-left-square i j h c d is-pb-c is-pb-d =
       ( fib-square (j ∘ i) h (cone-comp-horizontal i j h c d) x)
       ( fib-square j h c (i x))
       ( fib-square i (pr1 c) d x)
-      ( triangle-fib-square i j h c d x)
+      ( fib-square-comp-horizontal i j h c d x)
       ( is-fiberwise-equiv-fib-square-is-pullback i (pr1 c) d is-pb-d x)
       ( is-fiberwise-equiv-fib-square-is-pullback j h c is-pb-c (i x)))
 
@@ -857,7 +1175,7 @@ is-pullback-left-square-is-pullback-rectangle i j h c d is-pb-c is-pb-rect =
       ( fib-square (j ∘ i) h (cone-comp-horizontal i j h c d) x)
       ( fib-square j h c (i x))
       ( fib-square i (pr1 c) d x)
-      ( triangle-fib-square i j h c d x)
+      ( fib-square-comp-horizontal i j h c d x)
       ( is-fiberwise-equiv-fib-square-is-pullback j h c is-pb-c (i x))
       ( is-fiberwise-equiv-fib-square-is-pullback (j ∘ i) h
         ( cone-comp-horizontal i j h c d) is-pb-rect x))
@@ -1172,12 +1490,12 @@ descent-Σ' f h c is-pb-dsq i =
 
 -- Extra material
 
-coherence-htpy-cone :
+coherence-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) (c' : cone f' g' C)
   (Hp : pr1 c ~ pr1 c') (Hq : pr1 (pr2 c) ~ pr1 (pr2 c')) → UU _
-coherence-htpy-cone {f = f} {f'} Hf {g} {g'} Hg c c' Hp Hq =
+coherence-htpy-square {f = f} {f'} Hf {g} {g'} Hg c c' Hp Hq =
   let p  = pr1 c
       q  = pr1 (pr2 c)
       H  = pr2 (pr2 c)
@@ -1187,40 +1505,40 @@ coherence-htpy-cone {f = f} {f'} Hf {g} {g'} Hg c c' Hp Hq =
   in
   ( H ∙h ((g ·l Hq) ∙h (Hg ·r q'))) ~ (((f ·l Hp) ∙h (Hf ·r p')) ∙h H')
 
-fam-htpy-cone :
+fam-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) → (c' : cone f' g' C) →
   (pr1 c ~ pr1 c') → UU _
-fam-htpy-cone {f = f} {f'} Hf {g} {g'} Hg c c' Hp =
-  Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 c'))) (coherence-htpy-cone Hf Hg c c' Hp)
+fam-htpy-square {f = f} {f'} Hf {g} {g'} Hg c c' Hp =
+  Σ ((pr1 (pr2 c)) ~ (pr1 (pr2 c'))) (coherence-htpy-square Hf Hg c c' Hp)
   
-htpy-cone :
+htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   cone f g C → cone f' g' C → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
-htpy-cone
+htpy-square
   {f = f} {f'} Hf {g} {g'} Hg c c' =
-  Σ ((pr1 c) ~ (pr1 c')) (fam-htpy-cone Hf Hg c c')
+  Σ ((pr1 c) ~ (pr1 c')) (fam-htpy-square Hf Hg c c')
 
-htpy-cone-htpy-refl-Eq-cone :
+htpy-square-htpy-refl-htpy-cone :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) →
   (c c' : cone f g C) →
-  Eq-cone f g c c' → htpy-cone (htpy-refl f) (htpy-refl g) c c'
-htpy-cone-htpy-refl-Eq-cone f g
+  htpy-cone f g c c' → htpy-square (htpy-refl f) (htpy-refl g) c c'
+htpy-square-htpy-refl-htpy-cone f g
   (dpair p (dpair q H)) (dpair p' (dpair q' H')) =
   tot
     ( λ K → tot
       ( λ L M → ( htpy-ap-concat H _ _ (htpy-right-unit (g ·l L))) ∙h
         ( M ∙h htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l K))))))
 
-is-equiv-htpy-cone-htpy-refl-Eq-cone :
+is-equiv-htpy-square-htpy-refl-htpy-cone :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) →
   (c c' : cone f g C) →
-  is-equiv (htpy-cone-htpy-refl-Eq-cone f g c c')
-is-equiv-htpy-cone-htpy-refl-Eq-cone f g
+  is-equiv (htpy-square-htpy-refl-htpy-cone f g c c')
+is-equiv-htpy-square-htpy-refl-htpy-cone f g
   (dpair p (dpair q H)) (dpair p' (dpair q' H')) =
   is-equiv-tot-is-fiberwise-equiv
     ( λ K → is-equiv-tot-is-fiberwise-equiv
@@ -1234,64 +1552,64 @@ is-equiv-htpy-cone-htpy-refl-Eq-cone f g
         ( is-equiv-htpy-concat' _ _)
         ( is-equiv-htpy-concat _ _)))
 
-is-contr-total-htpy-cone-htpy-refl-htpy-refl :
+is-contr-total-htpy-square-htpy-refl-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) →
   (c : cone f g C) →
-  is-contr (Σ (cone f g C) (htpy-cone (htpy-refl f) (htpy-refl g) c))
-is-contr-total-htpy-cone-htpy-refl-htpy-refl {A = A} {B} {X} {C}
+  is-contr (Σ (cone f g C) (htpy-square (htpy-refl f) (htpy-refl g) c))
+is-contr-total-htpy-square-htpy-refl-htpy-refl {A = A} {B} {X} {C}
   f g (dpair p (dpair q H)) =
   let c = dpair p (dpair q H) in
   is-contr-is-equiv'
-    ( Σ (cone f g C) (Eq-cone f g c))
-    ( tot (htpy-cone-htpy-refl-Eq-cone f g c))
+    ( Σ (cone f g C) (htpy-cone f g c))
+    ( tot (htpy-square-htpy-refl-htpy-cone f g c))
     ( is-equiv-tot-is-fiberwise-equiv
-      ( is-equiv-htpy-cone-htpy-refl-Eq-cone f g c))
-    ( is-contr-total-Eq-cone f g c)
+      ( is-equiv-htpy-square-htpy-refl-htpy-cone f g c))
+    ( is-contr-total-htpy-cone f g c)
 
-is-contr-total-htpy-cone-htpy-refl :
+is-contr-total-htpy-square-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) →
-  is-contr (Σ (cone f g' C) (htpy-cone (htpy-refl f) Hg c))
-is-contr-total-htpy-cone-htpy-refl {C = C} f {g} {g'} Hg =
+  is-contr (Σ (cone f g' C) (htpy-square (htpy-refl f) Hg c))
+is-contr-total-htpy-square-htpy-refl {C = C} f {g} {g'} Hg =
    ind-htpy g
      ( λ g'' Hg' → ( c : cone f g C) →
-       is-contr (Σ (cone f g'' C) (htpy-cone (htpy-refl f) Hg' c)))
-     ( is-contr-total-htpy-cone-htpy-refl-htpy-refl f g)
+       is-contr (Σ (cone f g'' C) (htpy-square (htpy-refl f) Hg' c)))
+     ( is-contr-total-htpy-square-htpy-refl-htpy-refl f g)
      g' Hg
 
-is-contr-total-htpy-cone :
+is-contr-total-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) →
-  is-contr (Σ (cone f' g' C) (htpy-cone Hf Hg c))
-is-contr-total-htpy-cone {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg =
+  is-contr (Σ (cone f' g' C) (htpy-square Hf Hg c))
+is-contr-total-htpy-square {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg =
   ind-htpy
     { A = A}
     { B = λ t → X}
     ( f)
     ( λ f'' Hf' → (g g' : B → X) (Hg : g ~ g') (c : cone f g C) →
-      is-contr (Σ (cone f'' g' C) (htpy-cone Hf' Hg c)))
-    ( λ g g' Hg → is-contr-total-htpy-cone-htpy-refl f Hg)
+      is-contr (Σ (cone f'' g' C) (htpy-square Hf' Hg c)))
+    ( λ g g' Hg → is-contr-total-htpy-square-htpy-refl f Hg)
     f' Hf g g' Hg
 
-reflexive-htpy-cone :
+reflexive-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c : cone f g C) →
-  htpy-cone (htpy-refl f) (htpy-refl g) c c
-reflexive-htpy-cone f g c =
+  htpy-square (htpy-refl f) (htpy-refl g) c c
+reflexive-htpy-square f g c =
   let p = pr1 c
       q = pr1 (pr2 c)
       H = pr2 (pr2 c)
   in
   dpair (htpy-refl p) (dpair (htpy-refl q) (htpy-right-unit H))
 
-htpy-cone-eq-htpy-refl :
+htpy-square-eq-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
-  Id c c' → htpy-cone (htpy-refl f) (htpy-refl g) c c'
-htpy-cone-eq-htpy-refl f g c .c refl =
+  Id c c' → htpy-square (htpy-refl f) (htpy-refl g) c c'
+htpy-square-eq-htpy-refl f g c .c refl =
   dpair (htpy-refl _) (dpair (htpy-refl _) (htpy-right-unit _))
 
 tr-tr-htpy-refl-cone :
@@ -1311,147 +1629,147 @@ tr-tr-htpy-refl-cone {C = C} f g c =
   in
   α ∙ β
 
-htpy-cone-eq-htpy-refl-htpy-refl :
+htpy-square-eq-htpy-refl-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
   let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
       tr-tr-c = tr (λ y → cone f y C) (eq-htpy (htpy-refl g)) tr-c
   in
-  Id tr-tr-c c' → htpy-cone (htpy-refl f) (htpy-refl g) c c'
-htpy-cone-eq-htpy-refl-htpy-refl f g c c' =
+  Id tr-tr-c c' → htpy-square (htpy-refl f) (htpy-refl g) c c'
+htpy-square-eq-htpy-refl-htpy-refl f g c c' =
   ind-is-equiv
-    ( λ p → htpy-cone (htpy-refl f) (htpy-refl g) c c')
+    ( λ p → htpy-square (htpy-refl f) (htpy-refl g) c c')
     ( λ (p : Id c c') → (tr-tr-htpy-refl-cone f g c) ∙ p)
     ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c')
-    ( htpy-cone-eq-htpy-refl f g c c')
+    ( htpy-square-eq-htpy-refl f g c c')
 
-comp-htpy-cone-eq-htpy-refl-htpy-refl :
+comp-htpy-square-eq-htpy-refl-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
-  ( (htpy-cone-eq-htpy-refl-htpy-refl f g c c') ∘
+  ( (htpy-square-eq-htpy-refl-htpy-refl f g c c') ∘
     (concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
-  ( htpy-cone-eq-htpy-refl f g c c')
-comp-htpy-cone-eq-htpy-refl-htpy-refl f g c c' =
+  ( htpy-square-eq-htpy-refl f g c c')
+comp-htpy-square-eq-htpy-refl-htpy-refl f g c c' =
   htpy-comp-is-equiv
-    ( λ p → htpy-cone (htpy-refl f) (htpy-refl g) c c')
+    ( λ p → htpy-square (htpy-refl f) (htpy-refl g) c c')
     ( λ (p : Id c c') → (tr-tr-htpy-refl-cone f g c) ∙ p)
     ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c')
-    ( htpy-cone-eq-htpy-refl f g c c')
+    ( htpy-square-eq-htpy-refl f g c c')
 
-htpy-cone-eq' :
+htpy-square-eq' :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) (c' : cone f g' C) →
   let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
       tr-tr-c = tr (λ y → cone f y C) (eq-htpy Hg) tr-c
   in
-  Id tr-tr-c c' → htpy-cone (htpy-refl f) Hg c c'
-htpy-cone-eq' {C = C} f {g} {g'} =
+  Id tr-tr-c c' → htpy-square (htpy-refl f) Hg c c'
+htpy-square-eq' {C = C} f {g} {g'} =
   ind-htpy g
     ( λ g'' Hg' →
       ( c : cone f g C) (c' : cone f g'' C) →
       Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
         ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
-      htpy-cone (htpy-refl f) Hg' c c')
-    ( htpy-cone-eq-htpy-refl-htpy-refl f g)
+      htpy-square (htpy-refl f) Hg' c c')
+    ( htpy-square-eq-htpy-refl-htpy-refl f g)
     g'
 
-comp-htpy-cone-eq' :
+comp-htpy-square-eq' :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
-  ( ( htpy-cone-eq' f (htpy-refl g) c c') ∘
+  ( ( htpy-square-eq' f (htpy-refl g) c c') ∘
     ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
-  ( htpy-cone-eq-htpy-refl f g c c')
-comp-htpy-cone-eq' {A = A} {B} {X} {C} f g c c' =
+  ( htpy-square-eq-htpy-refl f g c c')
+comp-htpy-square-eq' {A = A} {B} {X} {C} f g c c' =
   htpy-right-whisk
     ( htpy-eq (htpy-eq (htpy-eq (comp-htpy g
       ( λ g'' Hg' →
         ( c : cone f g C) (c' : cone f g'' C) →
           Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
             ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
-      htpy-cone (htpy-refl f) Hg' c c')
-    ( htpy-cone-eq-htpy-refl-htpy-refl f g)) c) c'))
+      htpy-square (htpy-refl f) Hg' c c')
+    ( htpy-square-eq-htpy-refl-htpy-refl f g)) c) c'))
     ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
-  ( comp-htpy-cone-eq-htpy-refl-htpy-refl f g c c')
+  ( comp-htpy-square-eq-htpy-refl-htpy-refl f g c c')
 
-htpy-cone-eq :
+htpy-square-eq :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) (c' : cone f' g' C) →
   let tr-c    = tr (λ x → cone x g C) (eq-htpy Hf) c
       tr-tr-c = tr (λ y → cone f' y C) (eq-htpy Hg) tr-c
   in
-  Id tr-tr-c c' → htpy-cone Hf Hg c c'
-htpy-cone-eq {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' p =
+  Id tr-tr-c c' → htpy-square Hf Hg c c'
+htpy-square-eq {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' p =
   ind-htpy f
   ( λ f'' Hf' →
     ( g g' : B → X) (Hg : g ~ g') (c : cone f g C) (c' : cone f'' g' C) →
     ( Id (tr (λ g'' → cone f'' g'' C) (eq-htpy Hg)
       ( tr (λ f''' → cone f''' g C) (eq-htpy Hf') c)) c') →
-    htpy-cone Hf' Hg c c')
-  ( λ g g' → htpy-cone-eq' f {g = g} {g' = g'})
+    htpy-square Hf' Hg c c')
+  ( λ g g' → htpy-square-eq' f {g = g} {g' = g'})
   f' Hf g g' Hg c c' p
 
-comp-htpy-cone-eq : 
+comp-htpy-square-eq : 
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
-  ( ( htpy-cone-eq (htpy-refl f) (htpy-refl g) c c') ∘
+  ( ( htpy-square-eq (htpy-refl f) (htpy-refl g) c c') ∘
     ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
-  ( htpy-cone-eq-htpy-refl f g c c')
-comp-htpy-cone-eq {A = A} {B} {X} {C} f g c c' =
+  ( htpy-square-eq-htpy-refl f g c c')
+comp-htpy-square-eq {A = A} {B} {X} {C} f g c c' =
   htpy-right-whisk
     (htpy-eq (htpy-eq (htpy-eq (htpy-eq (htpy-eq (htpy-eq (comp-htpy f
   ( λ f'' Hf' →
     ( g g' : B → X) (Hg : g ~ g') (c : cone f g C) (c' : cone f'' g' C) →
     ( Id (tr (λ g'' → cone f'' g'' C) (eq-htpy Hg)
       ( tr (λ f''' → cone f''' g C) (eq-htpy Hf') c)) c') →
-    htpy-cone Hf' Hg c c')
-  ( λ g g' → htpy-cone-eq' f {g = g} {g' = g'})) g) g) (htpy-refl g)) c) c'))
+    htpy-square Hf' Hg c c')
+  ( λ g g' → htpy-square-eq' f {g = g} {g' = g'})) g) g) (htpy-refl g)) c) c'))
     ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
-  ( comp-htpy-cone-eq' f g c c')
+  ( comp-htpy-square-eq' f g c c')
   
-is-fiberwise-equiv-htpy-cone-eq :
+is-fiberwise-equiv-htpy-square-eq :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) (c' : cone f' g' C) →
-  is-equiv (htpy-cone-eq Hf Hg c c')
-is-fiberwise-equiv-htpy-cone-eq
+  is-equiv (htpy-square-eq Hf Hg c c')
+is-fiberwise-equiv-htpy-square-eq
   {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' =
   ind-htpy f
     ( λ f' Hf →
       ( g g' : B → X) (Hg : g ~ g') (c : cone f g C) (c' : cone f' g' C) →
-        is-equiv (htpy-cone-eq Hf Hg c c'))
+        is-equiv (htpy-square-eq Hf Hg c c'))
     ( λ g g' Hg c c' →
       ind-htpy g
         ( λ g' Hg →
           ( c : cone f g C) (c' : cone f g' C) →
-            is-equiv (htpy-cone-eq (htpy-refl f) Hg c c'))
+            is-equiv (htpy-square-eq (htpy-refl f) Hg c c'))
         ( λ c c' →
           is-equiv-left-factor
-            ( htpy-cone-eq-htpy-refl f g c c')
-            ( htpy-cone-eq (htpy-refl f) (htpy-refl g) c c')
+            ( htpy-square-eq-htpy-refl f g c c')
+            ( htpy-square-eq (htpy-refl f) (htpy-refl g) c c')
             ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))
-            ( htpy-inv (comp-htpy-cone-eq f g c c'))
+            ( htpy-inv (comp-htpy-square-eq f g c c'))
             ( id-fundamental-gen c
-              ( reflexive-htpy-cone f g c)
-              ( is-contr-total-htpy-cone (htpy-refl f) (htpy-refl g) c)
-              ( htpy-cone-eq-htpy-refl f g c) c')
+              ( reflexive-htpy-square f g c)
+              ( is-contr-total-htpy-square (htpy-refl f) (htpy-refl g) c)
+              ( htpy-square-eq-htpy-refl f g c) c')
             ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c'))
         g' Hg c c')
     f' Hf g g' Hg c c'
 
-eq-htpy-cone :
+eq-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f f' : A → X} (Hf : f ~ f') {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) (c' : cone f' g' C) →
   let tr-c    = tr (λ x → cone x g C) (eq-htpy Hf) c
       tr-tr-c = tr (λ y → cone f' y C) (eq-htpy Hg) tr-c
   in
-  htpy-cone Hf Hg c c' → Id tr-tr-c c'
-eq-htpy-cone Hf Hg c c' =
+  htpy-square Hf Hg c c' → Id tr-tr-c c'
+eq-htpy-square Hf Hg c c' =
   inv-is-equiv
-    { f = htpy-cone-eq Hf Hg c c'}
-    ( is-fiberwise-equiv-htpy-cone-eq Hf Hg c c')
+    { f = htpy-square-eq Hf Hg c c'}
+    ( is-fiberwise-equiv-htpy-square-eq Hf Hg c c')
 
 map-is-pullback-htpy :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -1502,7 +1820,7 @@ triangle-is-pullback-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f : A → X} {f' : A → X} (Hf : f ~ f')
   {g : B → X} {g' : B → X} (Hg : g ~ g')
-  {c : cone f g C} {c' : cone f' g' C} (Hc : htpy-cone Hf Hg c c') →
+  {c : cone f g C} {c' : cone f' g' C} (Hc : htpy-square Hf Hg c c') →
   (gap f g c) ~ ((map-is-pullback-htpy Hf Hg) ∘ (gap f' g' c'))
 triangle-is-pullback-htpy {A = A} {B} {X} {C} {f = f} {f'} Hf {g} {g'} Hg
   {dpair p (dpair q H)} {dpair p' (dpair q' H')} (dpair Hp (dpair Hq HH)) z =
@@ -1531,7 +1849,7 @@ is-pullback-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f : A → X} (f' : A → X) (Hf : f ~ f')
   {g : B → X} (g' : B → X) (Hg : g ~ g')
-  {c : cone f g C} (c' : cone f' g' C) (Hc : htpy-cone Hf Hg c c') →
+  {c : cone f g C} (c' : cone f' g' C) (Hc : htpy-square Hf Hg c c') →
   is-pullback f' g' c' → is-pullback f g c
 is-pullback-htpy
   {f = f} f' Hf {g} g' Hg
@@ -1550,7 +1868,7 @@ is-pullback-htpy' :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) {f' : A → X} (Hf : f ~ f')
   (g : B → X) {g' : B → X} (Hg : g ~ g') →
-  (c : cone f g C) {c' : cone f' g' C} (Hc : htpy-cone Hf Hg c c') →
+  (c : cone f g C) {c' : cone f' g' C} (Hc : htpy-square Hf Hg c c') →
   is-pullback f g c → is-pullback f' g' c'
 is-pullback-htpy'
   f {f'} Hf g {g'} Hg

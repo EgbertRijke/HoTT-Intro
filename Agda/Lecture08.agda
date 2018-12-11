@@ -676,8 +676,8 @@ map-fib-comp g h x (dpair a p) =
 inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (g : B → X) (h : A → B) →
   (x : X) → Σ (fib g x) (λ t → fib h (pr1 t)) → fib (g ∘ h) x
-inv-map-fib-comp g h .(g (h a))
-  (dpair (dpair .(h a) refl) (dpair a refl)) = dpair a refl
+inv-map-fib-comp g h c t =
+  dpair (pr1 (pr2 t)) ((ap g (pr2 (pr2 t))) ∙ (pr2 (pr1 t)))
 
 issec-inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (g : B → X) (h : A → B) →
