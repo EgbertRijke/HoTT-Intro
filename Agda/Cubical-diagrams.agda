@@ -917,7 +917,8 @@ square-fib-cube f g h k f' g' h' k' hA hB hC hD
           ( ( ( inv (front-left (f' a'))) ∙
               ( ap h ((inv (back-left a')) ∙ refl))) ∙
             ( bottom (hA a')))) ∙
-        ( {!!} ∙
+        ( ( ( assoc (inv (ap hD (top a'))) _ (bottom (hA a'))) ∙
+            {!!}) ∙
           ( inv-assoc (ap k (back-right a')) (front-right (g' a')) ∙
             ( ( ap
                 ( concat _ (inv (front-right (g' a'))))

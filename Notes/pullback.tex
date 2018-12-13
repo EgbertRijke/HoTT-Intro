@@ -936,28 +936,50 @@ C_1\times C_2 \arrow[r] \arrow[d] & B_1\times B_2 \arrow[d] \\
 A_1 \times A_2 \arrow[r] & X_1\times X_2. 
 \end{tikzcd}
 \end{equation*}
-\item Consider for each $i:I$ a pullback square\index{pullback!Sigma-type of pullbacks@{$\Sigma$-type of pullbacks}}
+\item Consider a pullback square\index{pullback!Sigma-type of pullbacks@{$\Sigma$-type of pullbacks}}
+  \begin{equation*}
+    \begin{tikzcd}
+      C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+      A \arrow[r,swap,"f"] & X
+    \end{tikzcd}
+  \end{equation*}
+  with $H : f \circ p \htpy g \circ h$. Furthermore, consider type families $P_X$, $P_A$, $P_B$, and $P_C$ over $X$, $A$, $B$, and $C$ respectively, equipped with families of maps
+  \begin{align*}
+    f' & : \prd{a:A} P_A(a) \to P_X(f(a)) \\
+    g' & : \prd{b:B} P_B(b) \to P_X(g(b)) \\
+    p' & : \prd{c:C} P_C(c) \to P_A(p(c)) \\
+    q' & : \prd{c:C} P_C(c) \to P_B(q(c)),
+  \end{align*}
+  and for each $c:C$ a homotopy $H'_c$ witnessing that the square
+  \begin{equation}\label{eq:family-squares-pullback}
+    \begin{tikzcd}
+      P_C(c) \arrow[rr,"{q'_c}"] \arrow[d,swap,"{p'_c}"] & &[3em] P_B(q(c)) \arrow[d,"{g'_{q(c)}}"] \\
+      P_A(p(c)) \arrow[r,swap,"{f'_{p(c)}}"] & P_X(f(p(c))) \arrow[r,swap,"{\tr_{P_X}(H(c))}"] & P_X(g(q(c)))
+    \end{tikzcd}
+  \end{equation}
+  commutes. Construct a homotopy witnessing that the square
+  \begin{equation}\label{eq:total-square-pullback}
+    \begin{tikzcd}[column sep=huge]
+      \sm{c:C}P_C(c)
+      \arrow[r,"{\total[q]{q'}}"] \arrow[d,swap,"{\total[p]{p'}}"] &
+      \sm{b:B}P_B(b) \arrow[d,"{\total[g]{g'}}"] \\
+      \sm{a:A}P_A(a) \arrow[r,swap,"{\total[f]{f'}}"] & \sm{x:X}P_X(x)
+    \end{tikzcd}
+  \end{equation}
+  commutes, and show that the following are equivalent:
+  \begin{enumerate}
+  \item For each $c:C$ the square in \cref{eq:family-squares-pullback} is a pullback square.
+  \item The square in \cref{eq:total-square-pullback} is a pullback square.
+  \end{enumerate}
+\item Consider for each $i:I$ a pullback square
 \begin{equation*}
 \begin{tikzcd}
 C_i \arrow[r,"q_i"] \arrow[d,swap,"p_i"] & B_i \arrow[d,"g_i"] \\
 A_i \arrow[r,swap,"f_i"] & X_i
 \end{tikzcd}
 \end{equation*}
-with $H_i: f_i\circ p_i\htpy g_i\circ q_i$. 
-\begin{subexenum}
-\item \label{ex:pb_sigma}Show that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-\sm{i:I}C_i \arrow[r,"\total{q}"] \arrow[d,swap,"\total{p}"] & \sm{i:I}B_i \arrow[d,"\total{g}"] \\
-\sm{i:I}A_i \arrow[r,swap,"\total{f}"] & \sm{i:I}X_i
-\end{tikzcd}
-\end{equation*}
-which commutes by the homotopy
-\begin{equation*}
-\total{H}\defeq \lam{(i,c)}\mathsf{eq\usc{}pair}(\refl{i},H_i(c))
-\end{equation*}
-is a pullback square.\index{pullback!Pi-type of pullbacks@{$\Pi$-type of pullbacks}}
-\item \label{ex:pb_pi}Show that the commuting square
+with $H_i: f_i\circ p_i\htpy g_i\circ q_i$.\index{pullback!Pi-type of pullbacks@{$\Pi$-type of pullbacks}}\label{ex:pb_pi}
+Show that the commuting square
 \begin{equation*}
 \begin{tikzcd}
 \prd{i:I}C_i \arrow[r] \arrow[d] & \prd{i:I}B_i \arrow[d] \\
@@ -965,7 +987,6 @@ is a pullback square.\index{pullback!Pi-type of pullbacks@{$\Pi$-type of pullbac
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
-\end{subexenum}
 %\item 
 %\begin{subexenum}
 %\item Show that \index{equivalence!type of equivalences!as pullback}
