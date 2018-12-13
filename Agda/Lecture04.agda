@@ -218,3 +218,13 @@ associative-mul-ℕ (succ-ℕ x) y z =
   concat _
     ( right-distributive-mul-add-ℕ (mul-ℕ x y) y z)
     ( ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))
+
+-- Stack Exchange question 3038068
+-- Properties over partly specified inductive families (HoTT)
+
+data geq-bool : bool → bool → UU lzero where
+  a₁ : geq-bool false false
+  a₂ : (b : bool) → geq-bool true b
+
+SE3038068-answer : (b : bool) (t : geq-bool false b) → Id false b
+SE3038068-answer false a₁ = refl
