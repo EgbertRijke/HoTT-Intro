@@ -243,20 +243,51 @@ choice-∞ :
   Σ ((x : A) → B x) (λ f → (x : A) → C x (f x))
 choice-∞ φ = dpair (λ x → pr1 (φ x)) (λ x → pr2 (φ x))
 
+inv-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
+  Σ ((x : A) → B x) (λ f → (x : A) → C x (f x)) →
+  (x : A) → Σ (B x) (λ y → C x y)
+inv-choice-∞ ψ x = dpair ((pr1 ψ) x) ((pr2 ψ) x)
+
+issec-inv-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
+  ( ( choice-∞ {A = A} {B = B} {C = C}) ∘
+    ( inv-choice-∞ {A = A} {B = B} {C = C})) ~ id
+issec-inv-choice-∞ {A = A} {C = C} ψ =
+  eq-pair (dpair
+    ( eq-htpy (λ x → refl))
+    ( ap
+      ( λ t → tr (λ f → (x : A) → C x (f x)) t (λ x → (pr2 ψ) x))
+      ( isretr-eq-htpy refl)))
+
+isretr-inv-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
+  ( ( inv-choice-∞ {A = A} {B = B} {C = C}) ∘
+    ( choice-∞ {A = A} {B = B} {C = C})) ~ id
+isretr-inv-choice-∞ φ =
+  eq-htpy (λ x → eq-pair (dpair refl refl))
+            
 is-equiv-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
-  {C : (x : A) → B x → UU l3} → is-equiv (choice-∞ {A = A} {B = B} {C = C})
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
+  is-equiv (choice-∞ {A = A} {B = B} {C = C})
 is-equiv-choice-∞ {A = A} {B = B} {C = C} =
   is-equiv-has-inverse
     ( dpair
-      ( λ ψ x → dpair ((pr1 ψ) x) ((pr2 ψ) x))
+      ( inv-choice-∞ {A = A} {B = B} {C = C})
       ( dpair
-        ( λ ψ → eq-pair (dpair
-          ( eq-htpy (λ x → refl))
-          ( ap
-            ( λ t → tr (λ f → (x : A) → C x (f x)) t (λ x → (pr2 ψ) x))
-            ( isretr-eq-htpy refl))))
-        ( λ φ → eq-htpy λ x → eq-pair (dpair refl refl))))
+        ( issec-inv-choice-∞ {A = A} {B = B} {C = C})
+        ( isretr-inv-choice-∞ {A = A} {B = B} {C = C})))
+
+is-equiv-inv-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
+  is-equiv (inv-choice-∞ {A = A} {B = B} {C = C})
+is-equiv-inv-choice-∞ {A = A} {B = B} {C = C} =
+  is-equiv-has-inverse
+    ( dpair
+      ( choice-∞ {A = A} {B = B} {C = C})
+      ( dpair
+        ( isretr-inv-choice-∞ {A = A} {B = B} {C = C})
+        ( issec-inv-choice-∞ {A = A} {B = B} {C = C})))
 
 mapping-into-Σ :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3} →

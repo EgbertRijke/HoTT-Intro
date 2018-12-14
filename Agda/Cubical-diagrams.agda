@@ -2,8 +2,8 @@
 
 module Cubical-diagrams where
 
-import Lecture13
-open Lecture13 public
+import Lecture10
+open Lecture10 public
 
 -- Cubes
 
@@ -821,6 +821,61 @@ is-pullback-bottom-is-pullback-top-cube-is-equiv
           ( is-equiv-hC))
         ( is-pb-top)))
 
+is-pullback-top-is-pullback-bottom-cube-is-equiv :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g)) →
+  (c : coherence-cube f g h k f' g' h' k' hA hB hC hD
+       top back-left back-right front-left front-right bottom) →
+  is-equiv hA → is-equiv hB → is-equiv hC → is-equiv hD →
+  is-pullback h k (dpair f (dpair g bottom)) →
+  is-pullback h' k' (dpair f' (dpair g' top))
+is-pullback-top-is-pullback-bottom-cube-is-equiv
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom c
+  is-equiv-hA is-equiv-hB is-equiv-hC is-equiv-hD is-pb-bottom =
+  is-pullback-top-is-pullback-rectangle h hD k'
+    ( dpair hB (dpair h' front-left))
+    ( dpair f' (dpair g' top))
+    ( is-pullback-is-equiv h hD
+      ( dpair hB (dpair h' front-left))
+      is-equiv-hD is-equiv-hB)
+    ( is-pullback-htpy' h (htpy-refl h) (k ∘ hC) front-right
+      ( cone-comp-vertical h k hC
+        ( dpair f (dpair g bottom))
+        ( dpair hA (dpair g' back-right)))
+      { c' = cone-comp-vertical h hD k'
+        ( dpair hB (dpair h' front-left))
+        ( dpair f' (dpair g' top))}
+      ( dpair back-left
+        ( dpair
+          ( htpy-refl g')
+          ( ( ( ( htpy-inv
+                  ( htpy-assoc
+                    ( bottom ·r hA) (k ·l back-right) (front-right ·r g'))) ∙h
+                ( htpy-inv c)) ∙h
+              ( htpy-inv
+                ( htpy-assoc
+                  ( h ·l back-left) (front-left ·r f') (hD ·l top)))) ∙h
+            ( htpy-ap-concat' _ _ ((front-left ·r f') ∙h (hD ·l top))
+              ( htpy-inv (htpy-right-unit (h ·l back-left)))))))
+      ( is-pullback-rectangle-is-pullback-top h k hC
+        ( dpair f (dpair g bottom))
+        ( dpair hA (dpair g' back-right))
+        ( is-pb-bottom)
+        ( is-pullback-is-equiv g hC
+          ( dpair hA (dpair g' back-right))
+          is-equiv-hC is-equiv-hA)))
+
 is-pullback-front-left-is-pullback-back-right-cube-is-equiv :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
@@ -884,6 +939,7 @@ is-pullback-front-right-is-pullback-back-left-cube-is-equiv
    pullback squares, then so is the square of fibers of the vertical maps in
    cube. -}
 
+{-
 square-fib-cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
@@ -926,3 +982,4 @@ square-fib-cube f g h k f' g' h' k' hA hB hC hD
               ( ap
                 ( concat (k (hC (g' a'))) (inv (front-right (g' a'))))
                 ( ap (ap k) (inv (right-unit (inv (back-right a')))))))))))
+-}

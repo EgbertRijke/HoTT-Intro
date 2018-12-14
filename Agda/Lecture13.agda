@@ -2,8 +2,8 @@
 
 module Lecture13 where
 
-import Lecture12
-open Lecture12 public
+import Cubical-diagrams
+open Cubical-diagrams public
 
 -- Section 13.1
 
@@ -334,11 +334,11 @@ universal-property-pushout l f g c =
    satisfies the universal property of the pushout of S if and only if the
    square
 
-     X^Y -----> B^Y
+     Y^X -----> Y^B
       |          |
       |          |
       V          V
-     A^Y -----> S^Y
+     Y^A -----> Y^S
 
    is a pullback square for every type Y. Below, we first define the cone of
    this commuting square, and then we introduce the type 
@@ -397,7 +397,7 @@ cone-dependent-pullback-property-pushout f g (dpair i (dpair j H)) P =
     ( λ h → λ a → h (i a))
     ( dpair
       ( λ h → λ b → h (j b))
-       λ h → eq-htpy (λ s → apd h (H s)))
+      ( λ h → eq-htpy (λ s → apd h (H s))))
 
 dependent-pullback-property-pushout :
   {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
@@ -413,13 +413,14 @@ dependent-pullback-property-pushout l {S} {A} {B} f g {X}
 
 {- We will now start proving that the following properties are all equivalent:
  
-   * universal-property-pushout
-   * pullback-property-pushout
-   * Ind-pushout
-   * dependent-universal-property-pushout
-   * dependent-pullback-property-pushout
+   1. universal-property-pushout
+   2. pullback-property-pushout
+   3. Ind-pushout
+   4. dependent-universal-property-pushout
+   5. dependent-pullback-property-pushout
 
-   -}
+   We will first show that 1 ↔ 2, and that 3 ↔ 4 ↔ 5. Finally, we will show
+   that 2 ↔ 5. -}
 
 {- In order to show that the universal property of pushouts is equivalent to 
    the pullback property, we show that the maps cocone-map and the gap map fit 
@@ -523,6 +524,20 @@ dependent-universal-property-pushout-Ind-pushout f g c H l P =
           ( h)
           ( pr2 (H l P) (dgen-pushout f g c h))))))
 
+{- The converse, that the dependent universal property implies the induction
+   principle, is a mere triviality. -}
+   
+Ind-pushout-dependent-universal-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ((l : Level) → dependent-universal-property-pushout l f g c) →
+  ((l : Level) → Ind-pushout l f g c)
+Ind-pushout-dependent-universal-property-pushout f g c dup-c l P =
+  pr1 (dup-c l P)
+
+{- Next, we will show that the dependent pullback property follows from the
+   dependent universal property of pushouts. -}
+
 triangle-dependent-pullback-property-pushout :
   {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (P : X → UU l5) →
@@ -544,15 +559,7 @@ dependent-pullback-property-dependent-universal-property-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
   ((l : Level) → dependent-universal-property-pushout l f g c) →
-  (l : Level) (P : X → UU l) → 
-  let i = pr1 c
-      j = pr1 (pr2 c)
-      H = pr2 (pr2 c)
-  in
-  is-pullback
-    ( λ (h : (a : A) → P (i a)) → λ s → tr P (H s) (h (f s)))
-    ( λ (h : (b : B) → P (j b)) → λ s → h (g s))
-    ( cone-dependent-pullback-property-pushout f g c P)
+  ((l : Level) → dependent-pullback-property-pushout l f g c)
 dependent-pullback-property-dependent-universal-property-pushout
   f g (dpair i (dpair j H)) I l P =
   let c = (dpair i (dpair j H)) in
@@ -568,6 +575,30 @@ dependent-pullback-property-dependent-universal-property-pushout
       ( λ h → is-equiv-tot-is-fiberwise-equiv
         ( λ h' → funext (λ x → tr P (H x) (h (f x))) (λ x → h' (g x)))))
     ( I l P)
+
+dependent-universal-property-dependent-pullback-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ((l : Level) → dependent-pullback-property-pushout l f g c) →
+  ((l : Level) → dependent-universal-property-pushout l f g c)
+dependent-universal-property-dependent-pullback-property-pushout
+  f g (dpair i (dpair j H)) dpullback-c l P =
+  let c = (dpair i (dpair j H)) in
+  is-equiv-comp
+    ( dgen-pushout f g c)
+    ( tot (λ h → tot λ h' → htpy-eq))
+    ( gap
+      ( λ h x → tr P (H x) (h (f x)))
+      ( λ h x → h (g x))
+      ( cone-dependent-pullback-property-pushout f g c P))
+    ( triangle-dependent-pullback-property-pushout f g c P)
+    ( dpullback-c l P)
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ h → is-equiv-tot-is-fiberwise-equiv
+        ( λ h' → funext (λ x → tr P (H x) (h (f x))) (λ x → h' (g x)))))
+
+{- We now show that the dependent pullback property implies the pullback
+   property of pushouts. -}
 
 concat-eq-htpy :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x}
@@ -613,6 +644,155 @@ pullback-property-dependent-pullback-property-pushout
               ( λ s → apd h (H s)))))))
     ( dpb (λ x → Y))
 
+{- Finally, we show that the pullback property of pushouts implies the
+   dependent pullback property of pushouts. -}
+
+square-choice-∞ :
+  {l1 l2 l3 l4 : Level} {A' : UU l1} {A : UU l2} {B : UU l3} {C : B → UU l4}
+  (h : A' → A) →
+  coherence-square
+    ( inv-choice-∞ {A = A} {B = λ x → B} {C = λ x y → C y})
+    ( λ fg → dpair ((pr1 fg) ∘ h) (λ x → (pr2 fg) (h x)))
+    ( λ f → f ∘ h)
+    ( inv-choice-∞)
+square-choice-∞ h (dpair f g) = refl
+
+compute-transport-cone-family-dependent-pullback-property :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
+  {f g : A → B} (H : f ~ g) (f' : (a : A) → C (f a)) → 
+  ( tr (λ (h : A → B) → (a : A) → C (h a)) (eq-htpy H) f') ~
+  ( λ a → tr C (H a) (f' a))
+compute-transport-cone-family-dependent-pullback-property
+  {A = A} {B} C {f} {g} H f' =
+  ind-htpy f
+    ( λ g H →
+      ( tr (λ (h : A → B) → (a : A) → C (h a)) (eq-htpy H) f') ~
+      ( λ a → tr C (H a) (f' a)))
+    ( λ a → ap
+      ( λ t → (tr (λ h → (a' : A) → C (h a')) t f' a))
+      ( eq-htpy-htpy-refl f))
+    g H 
+
+cone-family-dependent-pullback-property :
+  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) (P : X → UU l) →
+  cone-family
+    ( λ (σ : S → X) → (s : S) → P (σ s))
+    ( λ (α : A → X) (α' : (a : A) → P (α a)) (s : S) → α' (f s))
+    ( λ (β : B → X) (β' : (b : B) → P (β b)) (s : S) → β' (g s))
+    ( cone-pullback-property-pushout f g c X)
+    ( λ (γ : X → X) → (x : X) → P (γ x))
+cone-family-dependent-pullback-property f g (dpair i (dpair j H)) P γ =
+  dpair
+    ( λ γ' a → γ' (i a))
+    ( dpair
+      ( λ γ' b → γ' (j b))
+      ( λ γ' → eq-htpy
+        ( λ s →
+          ( compute-transport-cone-family-dependent-pullback-property
+            ( P) (γ ·l H) (λ a → γ' (i (f a))) s) ∙
+          ( ( tr-precompose-fam P γ (H s) (γ' (i (f s)))) ∙
+            ( apd γ' (H s))))))
+
+is-pullback-tot-cone-family-dependent-pullback-property :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  ((l : Level) → pullback-property-pushout l f g c) →
+  {l : Level} (P : X → UU l) →
+  is-pullback
+    ( toto
+      ( λ σ → (s : S) → P (σ s))
+      ( λ (α : A → X) → α ∘ f)
+      ( λ α (α' : (a : A) → P (α a)) s → α' (f s)))
+    ( toto
+      ( λ σ → (s : S) → P (σ s))
+      ( λ (β : B → X) → β ∘ g)
+      ( λ β (β' : (b : B) → P (β b)) s → β' (g s)))
+    ( tot-cone-cone-family
+      ( λ σ → (s : S) → P (σ s))
+      ( λ α α' s → α' (f s))
+      ( λ β β' s → β' (g s))
+      ( cone-pullback-property-pushout f g c X)
+      ( cone-family-dependent-pullback-property f g c P))
+is-pullback-tot-cone-family-dependent-pullback-property
+  {S = S} {A} {B} {X} f g (dpair i (dpair j H)) pb-c P =
+  is-pullback-top-is-pullback-bottom-cube-is-equiv
+    ( λ (φ : X → Σ X P) → φ ∘ i)
+    ( λ (φ : X → Σ X P) → φ ∘ j)
+    ( λ (φ : A → Σ X P) → φ ∘ f)
+    ( λ (φ : B → Σ X P) → φ ∘ g)
+    ( toto
+      ( λ (α : A → X) → (a : A) → P (α a))
+      ( λ (γ : X → X) → γ ∘ i)
+      ( λ (γ : X → X) (γ' : (x : X) → P (γ x)) (a : A) → γ' (i a)))
+    ( toto
+      ( λ (β : B → X) → (b : B) → P (β b))
+      ( λ (γ : X → X) → γ ∘ j)
+      ( λ (γ : X → X) (γ' : (x : X) → P (γ x)) (b : B) → γ' (j b)))
+    ( toto
+      ( λ (σ : S → X) → (s : S) → P (σ s))
+      ( λ (α : A → X) → α ∘ f)
+      ( λ (α : A → X) (α' : (a : A) → P (α a)) (s : S) → α' (f s)))
+    ( toto
+      ( λ (σ : S → X) → (s : S) → P (σ s))
+      ( λ (β : B → X) → β ∘ g)
+      ( λ (β : B → X) (β' : (b : B) → P (β b)) (s : S) → β' (g s)))
+    ( inv-choice-∞) 
+    ( inv-choice-∞)
+    ( inv-choice-∞)
+    ( inv-choice-∞)
+    ( λ t → eq-pair
+      ( dpair
+        ( eq-htpy ((pr1 t) ·l H))
+        ( eq-htpy
+          ( λ s →
+            ( compute-transport-cone-family-dependent-pullback-property
+              ( P) ((pr1 t) ·l H) (λ a → (pr2 t) (i (f a))) s) ∙
+            ( ( tr-precompose-fam P (pr1 t) (H s) ((pr2 t) (i (f s)))) ∙
+              ( apd (pr2 t) (H s)))))))
+    ( square-choice-∞ i)
+    ( square-choice-∞ j)
+    ( square-choice-∞ f)
+    ( square-choice-∞ g)
+    ( λ φ → eq-htpy (φ ·l H))
+    {!!}
+    ( is-equiv-inv-choice-∞)
+    ( is-equiv-inv-choice-∞)
+    ( is-equiv-inv-choice-∞)
+    ( is-equiv-inv-choice-∞)
+    ( pb-c _ (Σ X P))
+
+dependent-pullback-property-pullback-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  ((l : Level) → pullback-property-pushout l f g c) →
+  ((l : Level) → dependent-pullback-property-pushout l f g c)
+dependent-pullback-property-pullback-property-pushout
+  {S = S} {A} {B} {X}
+  f g (dpair i (dpair j H)) pullback-c l P = {!!}
+{-
+  is-pullback-family-is-pullback-tot
+    { X = S → X}
+    { A = A → X}
+    { B = B → X}
+    { C = X → X}
+    ( λ (σ : S → X) → (s : S) → P (σ s))
+    { PA = λ α → (a : A) → P (α a)}
+    { PB = λ β → (b : B) → P (β b)}
+    { PC = λ γ → (x : X) → P x}
+    { f = λ (α : A → X) → α ∘ f}
+    { g = λ (β : B → X) → β ∘ g}
+    ( λ (α : A → X) (α' : (a : A) → P (α a)) (s : S) → α' (f s))
+    ( λ (β : B → X) (β' : (b : B) → P (β b)) (s : S) → β' (g s))
+    {! cone-pullback-property-pushout f g (dpair i (dpair j H)) X!}
+    {!!}
+    {!!}
+    {!!}
+    {!!}
+    ?
+-}
+
+{-
 tot-cocone :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
@@ -721,6 +901,7 @@ htpy-fib-cocone-map f g (dpair i (dpair j H)) (dpair i' (dpair j' H'))
           ( dpair i (dpair j H))
           ( dpair i' (dpair j' H'))
           ( dpair h KLM)
+
           ( dpair h' KLM') α β )))
 
 sec-pr1-generating-data-pushout :
@@ -804,4 +985,5 @@ comp-pushout-universal-property-pushout
       ( dpair
         {!!}
         {!!}))
+-}
 -}
