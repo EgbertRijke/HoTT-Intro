@@ -43,13 +43,13 @@ We define the \define{unit type}\index{1@{$\unit$}|see {unit type}}\index{unit t
 \end{equation*}
 satisfying the induction principle\index{induction principle!of unit type} that for any type family $\Gamma,x:\unit\vdash P(x)~\mathrm{type}$, there is a term
 \begin{equation*}
-\ind{\unit} : P(\ttt)\to\prd{x:\unit}P(x)
+\indunit : P(\ttt)\to\prd{x:\unit}P(x)
 \end{equation*}
 in context $\Gamma$ for which the computation rule\index{computation rules!of unit type}
 \begin{equation*}
-\ind{\unit}(p,\ttt) \jdeq p
+\indunit(p,\ttt) \jdeq p
 \end{equation*}
-holds. Sometimes we write $\lam{\ttt}p$ for $\ind{\unit}(p)$.
+holds. Sometimes we write $\lam{\ttt}p$ for $\indunit(p)$.
 \end{defn}
 
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
@@ -57,7 +57,7 @@ The empty type is a degenerate example of an inductive type. It does \emph{not} 
 \begin{defn}
 We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{empty type|textbf} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type} that for any type family $P:\emptyt\to\type$, there is a term
 \begin{equation*}
-\ind{\emptyt} : \prd{x:\emptyt}P(x).
+\indempty : \prd{x:\emptyt}P(x).
 \end{equation*}
 \end{defn}
 
@@ -67,8 +67,6 @@ Using the empty type we can also define \emph{negation}. The idea is that if $A$
 For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
 \end{defn}
 
-Unlike set theory, in most type theories every term has a \emph{unique} type. Therefore we annotate the constructors of $\bool$ with their type, to not confuse them with the terms $0$ and $1$ of the natural numbers.
-
 \begin{defn}
 We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with
 \begin{align*}
@@ -77,15 +75,23 @@ We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {bo
 \end{align*}
 satisfying the induction principle\index{induction principle!of booleans} that for any type family $P:\bool\to\type$, there is a term
 \begin{equation*}
-\ind{\bool} : P(\bfalse)\to \Big(P(\btrue)\to \prd{x:\bool}P(x)\Big)
+\indbool : P(\bfalse)\to \Big(P(\btrue)\to \prd{x:\bool}P(x)\Big)
 \end{equation*}
 for which the computation rules\index{computation rules!of booleans}
 \begin{align*}
-\ind{\bool}(p_0,p_1,\bfalse) & \jdeq p_0 \\
-\ind{\bool}(p_0,p_1,\btrue) & \jdeq p_1
+\indbool(p_0,p_1,\bfalse) & \jdeq p_0 \\
+\indbool(p_0,p_1,\btrue) & \jdeq p_1
 \end{align*}
 hold.
 \end{defn}
+
+\begin{rmk}
+  We annotate the terms $\bfalse$ and $\btrue$ of type $\bool$ with their type in the subscript, to remind ourselves that $\bfalse$ and $\btrue$ are declared to be terms of type $\bool$, and not of any other type. There are also the terms $0_\N$ and $1_\N$ of type $\N$, which should be distinguished from the terms $\bfalse$ and $\btrue$. In general, we will make sure that every term is given a unique name. In libraries of mathematics formalized in a computer proof assistant it is also the case that every type must be given a unique name.
+  
+  One difference between set theory and type theory is that every well-formed term is specified along with its type and with its context. One way of looking at this is that there are three sorts in type theory: contexts, types, and terms. On the other hand, there is only one sort in set theory: sets! Sets are governed by the elementhood relation: the formula $x\in y$ is a well-formed formula of set theory for any two sets $x$ and $y$. In particular, set theory is a theory stated in first order logic.
+
+  In type theory we only have sentences of the form $\Gamma \vdash a : A$, asserting that in context $\Gamma$, $a$ is a term of type $A$. Type theory does not make use of an ambient first order logic. Instead, type theory is its own system of inference rules
+\end{rmk}
 
 \begin{defn}
 Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with
@@ -164,7 +170,7 @@ By the computation rule we have
 
 When one thinks of types as propositions, then the $\Sigma$-type has the r\^{o}le of the existential quantification.
 
-A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e.~$B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product)} of $A$ and $B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its definition.
+A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e.~$B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product} $A\times B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its specification along with the induction principle for cartesian products.
 
 \begin{defn}
 Let $A$ and $B$ be types in context $\Gamma$. The \define{(cartesian) product}\index{cartesian product|textbf}\index{product!of types|textbf} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor

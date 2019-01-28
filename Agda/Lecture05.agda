@@ -201,9 +201,9 @@ is-equiv-eq-pair' s t =
     ( dpair (pair-eq' s t) (issec-pair-eq s t))
     ( dpair (pair-eq' s t) (isretr-pair-eq s t))
 
-is-equiv-eq-pair : {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
+is-equiv-eq-pair : {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
   is-equiv (eq-pair {i} {j} {A} {B} {s} {t})
-is-equiv-eq-pair = is-equiv-eq-pair'
+is-equiv-eq-pair {s = s} {t} = is-equiv-eq-pair' s t
 
 is-equiv-pair-eq' : {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
   is-equiv (pair-eq' s t)
@@ -212,32 +212,40 @@ is-equiv-pair-eq' s t =
     ( dpair (eq-pair {s = s} {t = t}) (isretr-pair-eq s t))
     ( dpair (eq-pair {s = s} {t = t}) (issec-pair-eq s t))
 
+is-equiv-pair-eq : {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
+  is-equiv (pair-eq {s = s} {t})
+is-equiv-pair-eq {s = s} {t} = is-equiv-pair-eq' s t
+
 -- We also define a function eq-pair-triv, which is like eq-pair but simplified for the case where B is just a type.
 
-eq-pair-triv : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
+eq-pair-triv' : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
   prod (Id (pr1 s) (pr1 t)) (Id (pr2 s) (pr2 t)) → Id s t
-eq-pair-triv (dpair x y) (dpair .x .y) (dpair refl refl) = refl
+eq-pair-triv' (dpair x y) (dpair .x .y) (dpair refl refl) = refl
+
+eq-pair-triv : {i j : Level} {A : UU i} {B : UU j} {s t : prod A B} →
+  prod (Id (pr1 s) (pr1 t)) (Id (pr2 s) (pr2 t)) → Id s t
+eq-pair-triv {s = s} {t} = eq-pair-triv' s t
 
 -- Ideally, we would use the 3-for-2 property of equivalences to show that eq-pair-triv is an equivalence, using that eq-pair is an equivalence. Indeed, there is an equivalence (Id x x') × (Id y y') → Σ (Id x x') (λ p → Id (tr (λ x → B) p y) y'). However, to show that this map is an equivalence we either give a direct proof (in which case we might as well have given a direct proof that eq-pair-triv is an equivalence), or we use the fact that it is the induced map on total spaces of a fiberwise equivalence (the topic of Lecture 7). Thus it seems that a direct proof showing that eq-pair-triv is an equivalence is quickest for now. 
 
-pair-eq-triv : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
+pair-eq-triv' : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
   Id s t → prod (Id (pr1 s) (pr1 t)) (Id (pr2 s) (pr2 t))
-pair-eq-triv s .s refl = pair refl refl
+pair-eq-triv' s t α = pair (ap pr1 α) (ap pr2 α)
 
-isretr-pair-eq-triv : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
-  ((pair-eq-triv s t) ∘ (eq-pair-triv s t)) ~ id
-isretr-pair-eq-triv (dpair x y) (dpair .x .y) (dpair refl refl) = refl
+isretr-pair-eq-triv' : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
+  ((pair-eq-triv' s t) ∘ (eq-pair-triv' s t)) ~ id
+isretr-pair-eq-triv' (dpair x y) (dpair .x .y) (dpair refl refl) = refl
 
-issec-pair-eq-triv : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
-  ((eq-pair-triv s t) ∘ (pair-eq-triv s t)) ~ id
-issec-pair-eq-triv (dpair x y) (dpair .x .y) refl = refl
+issec-pair-eq-triv' : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
+  ((eq-pair-triv' s t) ∘ (pair-eq-triv' s t)) ~ id
+issec-pair-eq-triv' (dpair x y) (dpair .x .y) refl = refl
 
-is-equiv-eq-pair-triv : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
-  is-equiv (eq-pair-triv s t)
-is-equiv-eq-pair-triv s t =
+is-equiv-eq-pair-triv' : {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
+  is-equiv (eq-pair-triv' s t)
+is-equiv-eq-pair-triv' s t =
   pair
-    ( dpair (pair-eq-triv s t) (issec-pair-eq-triv s t))
-    ( dpair (pair-eq-triv s t) (isretr-pair-eq-triv s t))
+    ( dpair (pair-eq-triv' s t) (issec-pair-eq-triv' s t))
+    ( dpair (pair-eq-triv' s t) (isretr-pair-eq-triv' s t))
 
 -- Exercises
 
@@ -414,6 +422,11 @@ is-equiv-comp f g h H (dpair sec-h retr-h) (dpair sec-g retr-g) =
   pair
     ( section-comp' f g h H sec-h sec-g)
     ( retraction-comp' f g h H retr-g retr-h)
+
+is-equiv-comp' :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
+  is-equiv h → is-equiv g → is-equiv (g ∘ h)
+is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h (htpy-refl _)
 
 is-equiv-left-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →

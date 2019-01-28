@@ -16,6 +16,7 @@
 \RequirePackage{amsmath}
 \RequirePackage{amsthm}
 \RequirePackage{amssymb}
+\RequirePackage{bbold}
 
 %The following packages are loaded just to compress the document to well below 300 pages. Also the font size needs to be set to its default 10pt
 \RequirePackage[letterpaper,twoside,inner margin=1in,outer margin=1.7in,vmargin=1.15in,marginparwidth=1.3in,marginparsep=.1in]{geometry}
@@ -368,18 +369,33 @@
 \newcommand{\ac}{\ensuremath{\mathsf{ac}}\xspace} % not needed in symbol index
 \newcommand{\un}{\ensuremath{\mathsf{upun}}\xspace} % not needed in symbol index, uniqueness principle for unit type
 
-\newcommand{\usc}{\underline{\ }}
+\mathchardef\usc="2D
+%\newcommand{\usc}{\underline{\ }}
 
 \newcommand{\idfunc}[1][]{\mathsf{id}_{#1}}
 \newcommand{\const}{\mathsf{const}}
+\newcommand{\zeroN}{0_\N}
+\newcommand{\succN}{\mathsf{succ}_\N}
+\newcommand{\addN}{\mathsf{add_\N}}
 \newcommand{\evpair}{\mathsf{ev\usc{}pair}}
 \newcommand{\evpt}{\mathsf{ev\usc{}pt}}
 \newcommand{\evtruefalse}{\mathsf{ev\usc{}true\usc{}false}}
 \newcommand{\evrefl}{\mathsf{ev\usc{}refl}}
 \newcommand{\evunit}{\mathsf{ev\usc{}unit}}
 \newcommand{\suc}{\mathsf{succ}}
-\newcommand{\rec}[1]{\mathsf{rec}_{#1}}
 \newcommand{\ind}[1]{\mathsf{ind}_{#1}}
+\newcommand{\rec}{\ind}
+\newcommand{\indunit}{\mathsf{ind\usc{}unit}}
+\newcommand{\indempty}{\mathsf{ind\usc{}empty}}
+\newcommand{\indbool}{\mathsf{ind\usc{}\bool}}
+\newcommand{\indcoprod}{\mathsf{ind\usc{}coprod}}
+\newcommand{\indSigma}{\mathsf{ind\usc{}\Sigma}}
+\newcommand{\indprod}{\mathsf{ind\usc{}prod}}
+\newcommand{\indN}{\mathsf{ind\usc{}}\mathbb{N}}
+\newcommand{\indZ}{\mathsf{ind\usc{}}\mathbb{Z}}
+\newcommand{\zeroZ}{0_\Z}
+\newcommand{\succZ}{\mathsf{succ}_\Z}
+\newcommand{\addZ}{\mathsf{add}_\Z}
 \newcommand{\indid}[1]{\ind{=_{#1}}} % (Martin-Lof) path induction principle for identity types
 \newcommand{\indidb}[1]{\ind{=_{#1}}'} % (Paulin-Mohring) based path induction principle for identity types 
 \newcommand{\singind}{\mathsf{sing\usc{}ind}}
@@ -540,14 +556,14 @@
 %%%% Basic types
 
 %%% The empty type
-\newcommand{\emptyt}{\ensuremath{\mathbf{0}}\xspace}
+\newcommand{\emptyt}{\ensuremath{\mathbb{0}}\xspace}
 
 %%% The unit type
-\newcommand{\unit}{\ensuremath{\mathbf{1}}\xspace}
+\newcommand{\unit}{\ensuremath{\mathbb{1}}\xspace}
 \newcommand{\ttt}{\ensuremath{\star}\xspace}
 
 %%% The two-element type
-\newcommand{\bool}{\ensuremath{\mathbf{2}}\xspace}
+\newcommand{\bool}{\ensuremath{\mathbb{2}}\xspace}
 \newcommand{\btrue}{{1_{\bool}}}
 \newcommand{\bfalse}{{0_{\bool}}}
 \newcommand{\bneg}{\mathsf{neg}}
@@ -2444,9 +2460,7 @@
 
 %\expandafter\let\expandafter\oldproof\csname\string\proof\endcsname
 %\let\oldendproof\endproof
-\newenvironment{constr}{%
-  \begin{proof}[Construction]%
-}{\end{proof}}
+\newenvironment{constr}{\begin{proof}[Construction]}{\end{proof}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% New theorem environment for conjectures.

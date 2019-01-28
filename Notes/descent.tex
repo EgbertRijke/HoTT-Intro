@@ -72,8 +72,8 @@ is an equivalence.
 \begin{proof}
 By the 3-for-2 property of equivalences it suffices to construct an equivalence $\varphi:\mathsf{cocone}_{\mathcal{S}}(\UU)\to\mathsf{Desc}(\mathcal{S})$ such that the triangle
 \begin{equation*}
-\begin{tikzcd}
-& \UU^X \arrow[dl,swap,"{\mathsf{cocone\usc{}map}_{\mathcal{S}}(i,j,H)}"] \arrow[dr,"{\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H)}"] \\
+\begin{tikzcd}[column sep=tiny]
+& \UU^X \arrow[dl,swap,"{\mathsf{cocone\usc{}map}_{\mathcal{S}}(i,j,H)}"] \arrow[dr,"{\mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H)}"] & \phantom{\mathsf{cocone}_{\mathcal{S}}(\UU)} \\
 \mathsf{cocone}_{\mathcal{S}}(\UU) \arrow[rr,densely dotted,"\eqvsym","\varphi"'] & & \mathsf{Desc}(\mathcal{S})
 \end{tikzcd}
 \end{equation*}
@@ -229,82 +229,6 @@ w' & : \prd{x:S} \mathsf{tr}_{(t\mapsto P(t)\to Y)}(H(x),u'(f(x)))=v'(g(x)),
 \end{align*}
 Since the dependent action on generators $\mathsf{dgen}_{\mathcal{S}}$ is an equivalence it follows by the 3-for-2 property of equivalences that $\mathsf{cocone\usc{}map}_{\mathcal{S}'}(i',j',H')$ is an equivalence, as desired.
 \end{proof}
-
-\section{Commuting cubes}
-\begin{defn}\label{defn:cube}
-A \define{commuting cube}\index{commuting cube|textbf}
-\begin{equation*}
-\begin{tikzcd}
-& A_{111} \arrow[dl] \arrow[dr] \arrow[d] \\
-A_{110} \arrow[d] & A_{101} \arrow[dl] \arrow[dr] & A_{011} \arrow[dl,crossing over] \arrow[d] \\
-A_{100} \arrow[dr] & A_{010} \arrow[d] \arrow[from=ul,crossing over] & A_{001} \arrow[dl] \\
-& A_{000},
-\end{tikzcd}
-\end{equation*}
-consists of 
-\begin{enumerate}
-\item types
-\begin{equation*}
-A_{111},A_{110},A_{101},A_{011},A_{100},A_{010},A_{001},A_{000},
-\end{equation*}
-\item \begin{samepage}%
-maps
-\begin{align*}
-f_{11\check{1}} & : A_{111}\to A_{110} & f_{\check{1}01} & : A_{101}\to A_{001} \\
-f_{1\check{1}1} & : A_{111}\to A_{101} & f_{01\check{1}} & : A_{011}\to A_{010} \\
-f_{\check{1}11} & : A_{111}\to A_{011} & f_{0\check{1}1} & : A_{011}\to A_{001} \\
-f_{1\check{1}0} & : A_{110}\to A_{100} & f_{\check{1}00} & : A_{100}\to A_{000} \\
-f_{\check{1}10} & : A_{110}\to A_{010} & f_{0\check{1}0} & : A_{010}\to A_{000} \\
-f_{10\check{1}} & : A_{101}\to A_{100} & f_{00\check{1}} & : A_{001}\to A_{000},
-\end{align*}
-\end{samepage}%
-\item homotopies
-\begin{align*}
-H_{1\check{1}\check{1}} & : f_{1\check{1}0}\circ f_{11\check{1}} \htpy f_{10\check{1}}\circ f_{1\check{1}1} & H_{0\check{1}\check{1}} & : f_{0\check{1}0}\circ f_{01\check{1}} \htpy f_{00\check{1}}\circ f_{0\check{1}1} \\
-H_{\check{1}1\check{1}} & : f_{\check{1}10}\circ f_{11\check{1}} \htpy f_{01\check{1}}\circ f_{\check{1}11} & H_{\check{1}0\check{1}} & : f_{\check{1}00}\circ f_{10\check{1}} \htpy f_{00\check{1}}\circ f_{\check{1}01} \\
-H_{\check{1}\check{1}1} & : f_{\check{1}01}\circ f_{1\check{1}1} \htpy f_{0\check{1}1}\circ f_{\check{1}11} & H_{\check{1}\check{1}0} & : f_{\check{1}00}\circ f_{1\check{1}0} \htpy f_{0\check{1}0}\circ f_{\check{1}10},
-\end{align*}
-\item and a homotopy 
-\begin{align*}
-C & : \ct{(f_{\check{1}00}\cdot H_{1\check{1}\check{1}})}{(\ct{(H_{\check{1}0\check{1}}\cdot f_{1\check{1}1})}{(f_{00\check{1}}\cdot H_{\check{1}\check{1}1})})} \\
-& \qquad \htpy \ct{(H_{\check{1}\check{1}0}\cdot f_{11\check{1}})}{(\ct{(f_{0\check{1}0}\cdot H_{\check{1}1\check{1}})}{(H_{0\check{1}\check{1}}\cdot f_{\check{1}11})})}
-\end{align*}
-filling the cube.
-\end{enumerate}
-\end{defn}
-
-\begin{lem}
-Given a commuting cube as in \cref{defn:cube} we obtain a commuting square
-\begin{equation*}
-\begin{tikzcd}
-\fib{f_{1\check{1}1}}{x} \arrow[r] \arrow[d] & \fib{f_{0\check{1}1}}{f_{\check{1}01}(x)} \arrow[d] \\
-\fib{f_{1\check{1}0}}{f_{10\check{1}}(x)} \arrow[r] & \fib{f_{0\check{1}0}}{f_{00\check{1}}(x)}
-\end{tikzcd}
-\end{equation*}
-for any $x:A_{101}$. 
-\end{lem}
-
-\begin{lem}
-Consider a commuting cube
-\begin{equation*}
-\begin{tikzcd}
-& A_{111} \arrow[dl] \arrow[dr] \arrow[d] \\
-A_{110} \arrow[d] & A_{101} \arrow[dl] \arrow[dr] & A_{011} \arrow[dl,crossing over] \arrow[d] \\
-A_{100} \arrow[dr] & A_{010} \arrow[d] \arrow[from=ul,crossing over] & A_{001} \arrow[dl] \\
-& A_{000}.
-\end{tikzcd}
-\end{equation*}
-If the bottom and front right squares are pullback squares, then the back left square is a pullback if and only if the top square is.
-\end{lem}
-
-\begin{rmk}
-By rotating the cube we also obtain:
-\begin{enumerate}
-\item If the bottom and front left squares are pullback squares, then the back right square is a pullback if and only if the top square is.
-\item If the front left and front right squares are pullback, then the back left square is a pullback if and only if the back right square is.
-\end{enumerate}
-By combining these statements it also follows that if the front left, front right, and bottom squares are pullback squares, then if any of the remaining three squares are pullback squares, all of them are. Cubes that consist entirely of pullback squares are sometimes called \define{strongly cartesian}\index{strongly cartesian cube}.
-\end{rmk}
 
 \section{The descent property for pushouts}
 

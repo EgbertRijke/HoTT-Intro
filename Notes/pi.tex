@@ -247,35 +247,35 @@ The right unit law is left as \autoref{ex:fun_right_unit}.
 The archetypal example of an inductive type is the type of \emph{natural numbers}. 
 The type of \define{natural numbers}\index{natural numbers|see N@{$\N$}} is defined to be a closed type $\nat$\index{N@{$\N$}} equipped with closed terms for a \define{zero term}\index{zero term} and a \define{successor function}\index{successor function!of N@{of $\N$}}\index{function!successor on N@{successor on $\N$}}
 \begin{equation*}
-0:\N \qquad\text{and}\qquad S:\N\to\N,
+\zeroN:\N \qquad\text{and}\qquad \succN:\N\to\N,
 \end{equation*}
 To prove properties about the natural numbers, we postulate an \emph{induction principle}\index{induction principle!of N@{of $\N$}} for $\N$. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{dependent functions} of types depending on the natural numbers. 
 
 The \define{induction principle} for $\N$ states that for every type $P$ in context $\Gamma,n:\N$ one can infer
 \begin{prooftree}
 \def\fCenter{\Gamma}
-\Axiom$\fCenter\ \vdash p_0:P(0)$
+\Axiom$\fCenter\ \vdash p_0:P(\zeroN)$
 \noLine
-\UnaryInf$\fCenter\ \vdash p_S:\prd{n:\N}P(n)\to P(S(n))$
+\UnaryInf$\fCenter\ \vdash p_S:\prd{n:\N}P(n)\to P(\succN(n))$
 \RightLabel{$\N{-}\mathrm{Ind}$}
 \UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S):\prd{n:\N} P(n)$
 \end{prooftree}
-Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $0$ or a successor, i.e.~with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
+Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $\zeroN$ or a successor, i.e.~with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
 \begin{prooftree}
 \AxiomC{$\cdots$}
-\RightLabel{$\N{-}\mathrm{Comp}(0)$}
-\UnaryInfC{$\Gamma \vdash \ind{\N}(p_0,p_S,0)\jdeq p_0 : P(0)$}
+\RightLabel{$\N{-}\mathrm{Comp}(\zeroN)$}
+\UnaryInfC{$\Gamma \vdash \ind{\N}(p_0,p_S,\zeroN)\jdeq p_0 : P(\zeroN)$}
 \end{prooftree}
 \begin{prooftree}
 \AxiomC{$\cdots$}
-\RightLabel{$\N{-}\mathrm{Comp}(S)$}
-\UnaryInfC{$\Gamma, n:\N \vdash  \ind{\N}(p_0,p_S,S(n))\jdeq p_S(n,\ind{\N}(p_0,p_S,n)) : P(S(n))$}
+\RightLabel{$\N{-}\mathrm{Comp}(\succN)$}
+\UnaryInfC{$\Gamma, n:\N \vdash  \ind{\N}(p_0,p_S,\succN(n))\jdeq p_S(n,\ind{\N}(p_0,p_S,n)) : P(\succN(n))$}
 \end{prooftree}
 
 Using the induction principle of $\N$ we can perform many familiar constructions. 
 For instance, we can define the \define{addition operation}\index{addition!on N@{on $\N$}}\index{function!addition on N@{addition on $\N$}}
 \begin{equation*}
-\mathsf{add}:\N\to (\N\to\N)
+\addN:\N\to (\N\to\N)
 \end{equation*}
 by induction.
 
@@ -284,7 +284,7 @@ Informally, the definition of addition is as follows. By induction it suffices t
 add_S(f):\N\to\N,
 \end{align*}
 assuming $n:\N$ and $f:\N\to\N$. 
-The function $add_0:\N\to\N$ is of course taken to be $\idfunc[\N]$, since it has to add nothing. Given a function $f:\N\to\N$ we define $add_S(f)$ to be $\lam{m}S(f(m))$, simply adding one to $f$ pointwise.
+The function $add_0:\N\to\N$ is of course taken to be $\idfunc[\N]$, since it has to add nothing. Given a function $f:\N\to\N$ we define $add_S(f)$ to be $\lam{m}\succN(f(m))$, simply adding one to $f$ pointwise.
 
 The derivation for the construction of $add_S$ looks as follows:
 \begin{prooftree}
@@ -296,13 +296,13 @@ The derivation for the construction of $add_S$ looks as follows:
 \UnaryInfC{$\vdash\N~\mathrm{type}$}
 \BinaryInfC{$f:\N^\N,m:\N\vdash f(m):\N$}
 \AxiomC{}
-\UnaryInfC{$\vdash S:\N\to\N$}
-\UnaryInfC{$n:\N\vdash S(n):\N$}
-\UnaryInfC{$f:\N^\N,m:\N,n:\N\vdash S(n):\N$}
-\BinaryInfC{$f:\N^\N,m:\N\vdash S(f(m)):\N$}
-\BinaryInfC{$n:\N,f:\N^\N,m:\N\vdash S(f(m)):\N$}
-\UnaryInfC{$\vdash add_S\defeq \lam{n}{f}{m}S(f(m)):\N\to \N^\N \to \N^\N$}
-%\BinaryInfC{$\vdash\mathsf{add}:\ind{\N}(add_0,add_S):\N\to \N^\N$}
+\UnaryInfC{$\vdash \succN:\N\to\N$}
+\UnaryInfC{$n:\N\vdash \succN(n):\N$}
+\UnaryInfC{$f:\N^\N,m:\N,n:\N\vdash \succN(n):\N$}
+\BinaryInfC{$f:\N^\N,m:\N\vdash \succN(f(m)):\N$}
+\BinaryInfC{$n:\N,f:\N^\N,m:\N\vdash \succN(f(m)):\N$}
+\UnaryInfC{$\vdash add_S\defeq \lam{n}{f}{m}\succN(f(m)):\N\to \N^\N \to \N^\N$}
+%\BinaryInfC{$\vdash\addN:\ind{\N}(add_0,add_S):\N\to \N^\N$}
 \end{prooftree}
 We combine this derivation with the induction principle of $\N$ to complete the construction of addition:
 \begin{prooftree}
@@ -310,17 +310,25 @@ We combine this derivation with the induction principle of $\N$ to complete the 
 \UnaryInfC{$\vdash add_0\defeq \idfunc[\N]:\N^\N$}
 \AxiomC{}
 \UnaryInfC{$\vdash add_S:\N\to \N^\N \to \N^\N$}
-\BinaryInfC{$\vdash\mathsf{add}:\ind{\N}(add_0,add_S):\N\to \N^\N$}
+\BinaryInfC{$\vdash\addN\jdeq\ind{\N}(add_0,add_S):\N\to \N^\N$}
 \end{prooftree}
-Usually we will write $n+m$ for $\mathsf{add}(n,m)$. By the computation rules we have
+Usually we will write $n+m$ for $\addN(n,m)$. By the computation rules we have
 \begin{align*}
-0+m & \jdeq m \\
-S(n)+m & \jdeq S(n+m)
+\zeroN+m & \jdeq m \\
+\succN(n)+m & \jdeq \succN(n+m)
 \end{align*}
 for any $n,m:\N$. 
 
 \begin{rmk}
-The rules that we provided so far are not sufficient to also conclude that $n+0\jdeq n$ and $n+ S(m)\jdeq S(n+m)$. However, once we have introduced the \emph{identity type} we will nevertheless be able to \emph{identify} $n+0$ with $n$, and $n+ S(m)$ with $S(n+m)$. 
+The rules that we provided so far are not sufficient to also conclude that $n+\zeroN\jdeq n$ and $n+ \succN(m)\jdeq \succN(n+m)$. However, once we have introduced the \emph{identity type} we will nevertheless be able to \emph{identify} $n+\zeroN$ with $n$, and $n+ \succN(m)$ with $\succN(n+m)$. 
+\end{rmk}
+
+\begin{rmk}
+  We annotate the terms $\zeroN$ and $\succN$ of type $\N$ with their type in the subscript, to remind ourselves that $\zeroN$ and $\succN$ are declared to be terms of type $\N$, and not of any other type. In the next chapter we will introduce the type $\Z$ of the integers, on which we can also define a zero term $\zeroZ$, and a successor function $\succZ$. These should be distinguished from the terms $\zeroN$ and $\succN$. In general, we will make sure that every term is given a unique name. In libraries of mathematics formalized in a computer proof assistant it is also the case that every type must be given a unique name.
+  
+  One difference between set theory and type theory is that every well-formed term is specified along with its type and with its context. One way of looking at this is that there are three sorts in type theory: contexts, types, and terms. On the other hand, there is only one sort in set theory: sets! Sets are governed by the elementhood relation: the formula $x\in y$ is a well-formed formula of set theory for any two sets $x$ and $y$. In particular, set theory is a theory stated in first order logic.
+
+  In type theory we only have sentences of the form $\Gamma \vdash a : A$, asserting that in context $\Gamma$, $a$ is a term of type $A$. Type theory does not make use of an ambient first order logic. Instead, type theory is its own system of inference rules, as we have seen in \cref{ch:dtt}.
 \end{rmk}
 
 \begin{exercises}
@@ -386,12 +394,12 @@ that swaps the order of the arguments.
 \item Define the binary $\min$ and $\max$ functions $\mathsf{min},\mathsf{max}:\N\to(\N\to\N)$.\index{minimum function}\index{maximum function}\index{function!min}\index{function!max}
 \item Construct a function
 \begin{equation*}
-\ind{\nat}:P(0)\to \Big(\prd{n:\nat}P(n)\to P(S(n))\Big)\to \prd{n:\nat}P(n),
+\indN:P(\zeroN)\to \Big(\Big(\prd{n:\nat}P(n)\to P(\succN(n))\Big)\to \prd{n:\nat}P(n)\Big),
 \end{equation*}
 in context $\Gamma$, for every type $P$ in context $\Gamma,n:\N$, and show that the computation rules
 \begin{align*}
-\ind{\nat}(p_0,p_S,0) & \jdeq p_0 \\
-\ind{\nat}(p_0,p_S,S(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
+\indN(p_0,p_S,\zeroN) & \jdeq p_0 \\
+\indN(p_0,p_S,\succN(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
 \end{align*}
 hold. \emph{Note: this is more an exercise in type theoretical bookkeeping than an exercise about the natural numbers.}
 \end{exercises}

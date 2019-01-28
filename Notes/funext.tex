@@ -491,4 +491,13 @@ g & : B\to A \\
 H & : f\circ g = \idfunc[B] \\
 K & : g\circ f = \idfunc[A].
 \end{align*}
+\item \label{ex:pi_sec}Let $B$ be a type family over $A$, and consider the maps
+  \begin{align*}
+    \proj 1 & : \sm{x:A} B(x)\to A \\
+    \proj1 \circ \blank & : \Big(\sm{x:A} B(x)\Big)^A \to A^A.
+  \end{align*}
+  Construct equivalences
+  \begin{equation*}
+    \Big(\prd{x:A}B(x)\Big) \eqvsym \mathsf{sec}(\proj 1) \eqvsym \fib{\proj 1 \circ\blank}{\idfunc[A]}.
+  \end{equation*}
 \end{exercises}

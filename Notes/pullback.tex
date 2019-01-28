@@ -883,6 +883,29 @@ is a pullback square, for every $x,y:A$ and $p:f(x)=f(y)$.
 \item Show that a map $f:A\to X$ is $(k+1)$-truncated if and only if $\delta_f$ is $k$-truncated.\index{truncated!map!by truncatedness of diagonal}
 \end{subexenum}
 Conclude that $f$ is an embedding if and only if $\delta_f$ is an equivalence.\index{embedding!diagonal is an equivalence}
+\item Consider a commuting square 
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X 
+\end{tikzcd}
+\end{equation*}
+with $H:f\circ p\htpy g\circ q$. Show that this square is a pullback square if and only if the square
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r,"p"] \arrow[d,swap,"q"] & A \arrow[d,"f"] \\
+B \arrow[r,swap,"g"] & X 
+\end{tikzcd}
+\end{equation*}
+with $H^{-1}:g\circ q\htpy f\circ p$ is a pullback square.
+\item Show that any square of the form
+\begin{equation*}
+\begin{tikzcd}
+C \arrow[r] \arrow[d] & B \arrow[d] \\
+\emptyt \arrow[r] & X
+\end{tikzcd}
+\end{equation*}
+commutes and is a pullback square. This is the \emph{descent property} of the empty type.\index{descent!empty type}
 \item Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -922,55 +945,24 @@ A\times B \arrow[r,swap,"f\times g"] & X\times X
 \end{equation*}
 which commutes by $\lam{z}\mathsf{eq\usc{}pair}(H(z),\refl{g(q(z))})$ is a pullback square.
 \end{enumerate}
-\item \label{ex:pb_prod}Show that if\index{pullback!cartesian products of pullbacks}
+\item \label{ex:pb_prod}Consider two commuting squares\index{pullback!cartesian products of pullbacks}
 \begin{equation*}
 \begin{tikzcd}
 C_1 \arrow[r] \arrow[d] & B_1 \arrow[d] & C_2 \arrow[r] \arrow[d] & B_2 \arrow[d] \\
-A_1 \arrow[r] & X_1 & A_2 \arrow[r] & X_2
+A_1 \arrow[r] & X_1 & A_2 \arrow[r] & X_2.
 \end{tikzcd}
 \end{equation*}
-are pullback squares, then so is
+\begin{subexenum}
+\item Show that if both squares are pullback squares, then the square
 \begin{equation*}
 \begin{tikzcd}
 C_1\times C_2 \arrow[r] \arrow[d] & B_1\times B_2 \arrow[d] \\
 A_1 \times A_2 \arrow[r] & X_1\times X_2. 
 \end{tikzcd}
 \end{equation*}
-\item Consider a pullback square\index{pullback!Sigma-type of pullbacks@{$\Sigma$-type of pullbacks}}
-  \begin{equation*}
-    \begin{tikzcd}
-      C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
-      A \arrow[r,swap,"f"] & X
-    \end{tikzcd}
-  \end{equation*}
-  with $H : f \circ p \htpy g \circ h$. Furthermore, consider type families $P_X$, $P_A$, $P_B$, and $P_C$ over $X$, $A$, $B$, and $C$ respectively, equipped with families of maps
-  \begin{align*}
-    f' & : \prd{a:A} P_A(a) \to P_X(f(a)) \\
-    g' & : \prd{b:B} P_B(b) \to P_X(g(b)) \\
-    p' & : \prd{c:C} P_C(c) \to P_A(p(c)) \\
-    q' & : \prd{c:C} P_C(c) \to P_B(q(c)),
-  \end{align*}
-  and for each $c:C$ a homotopy $H'_c$ witnessing that the square
-  \begin{equation}\label{eq:family-squares-pullback}
-    \begin{tikzcd}
-      P_C(c) \arrow[rr,"{q'_c}"] \arrow[d,swap,"{p'_c}"] & &[3em] P_B(q(c)) \arrow[d,"{g'_{q(c)}}"] \\
-      P_A(p(c)) \arrow[r,swap,"{f'_{p(c)}}"] & P_X(f(p(c))) \arrow[r,swap,"{\tr_{P_X}(H(c))}"] & P_X(g(q(c)))
-    \end{tikzcd}
-  \end{equation}
-  commutes. Construct a homotopy witnessing that the square
-  \begin{equation}\label{eq:total-square-pullback}
-    \begin{tikzcd}[column sep=huge]
-      \sm{c:C}P_C(c)
-      \arrow[r,"{\total[q]{q'}}"] \arrow[d,swap,"{\total[p]{p'}}"] &
-      \sm{b:B}P_B(b) \arrow[d,"{\total[g]{g'}}"] \\
-      \sm{a:A}P_A(a) \arrow[r,swap,"{\total[f]{f'}}"] & \sm{x:X}P_X(x)
-    \end{tikzcd}
-  \end{equation}
-  commutes, and show that the following are equivalent:
-  \begin{enumerate}
-  \item For each $c:C$ the square in \cref{eq:family-squares-pullback} is a pullback square.
-  \item The square in \cref{eq:total-square-pullback} is a pullback square.
-  \end{enumerate}
+is also a pullback square.
+\item Show that if there are terms $t_1:A_1\times_{X_1}B_1$ and $t_2:A_2\times_{X_2}B_2$, then the converse of (a) also holds.
+\end{subexenum}
 \item Consider for each $i:I$ a pullback square
 \begin{equation*}
 \begin{tikzcd}
@@ -1014,29 +1006,6 @@ is a pullback square.
 %\end{tikzcd}
 %\end{equation*}
 %Show that this square is cartesian if and only if the induced map $C\to A\times_X B$ has a retraction.
-\item \label{ex:pi_sec}Let $B$ be a type family over $A$. Show that the square\index{Pi-type@{$\Pi$-type}!as pullback}
-\begin{equation*}
-\begin{tikzcd}[column sep=6em]
-\prd{x:A}B(x) \arrow[r,"{\lam{f}{x}(x,f(x))}"] \arrow[d] & \Big(\sm{x:A}B(x)\Big)^A \arrow[d,"\proj 1\circ\blank"] \\
-\unit \arrow[r,swap,"{\mathsf{const}_{\idfunc[A]}}"] & A^A
-\end{tikzcd}
-\end{equation*}
-is a pullback square. Conclude that the type $\prd{x:A}B(x)$ is equivalent to the type $\mathsf{sec}(\proj 1)$ of sections of the projection map.
-\item Consider a pullback square
-\begin{equation*}
-\begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X,
-\end{tikzcd}
-\end{equation*}
-with $H:f\circ p\htpy g\circ q$, and let $c_1,c_2:C$. Show that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-(c_1=c_2) \arrow[r,"\apfunc{q}"] \arrow[d,swap,"\apfunc{p}"] & (q(c_1)=q(c_2)) \arrow[d,"\lam{\beta}\ct{H(c_1)}{\ap{g}{\beta}}"] \\
-(p(c_1)=p(c_2)) \arrow[r,swap,"\lam{\alpha}\ct{\ap{f}{\alpha}}{H(c_2)}"] & f(p(c_1))=g(q(c_2)),
-\end{tikzcd}
-\end{equation*}
-which commutes by the naturality of homotopies (\cref{defn:htpy_nat}), is again a pullback square.
 %\end{subexenum}
 %\item Suppose that the squares
 %\begin{equation*}
@@ -1064,21 +1033,7 @@ Show that the map
 \end{equation*}
 is $k$-truncated if each of the vertical maps is.
 \end{comment}
-\item Suppose that 
-\begin{equation*}
-\begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X 
-\end{tikzcd}
-\end{equation*}
-with $H:f\circ p\htpy g\circ q$ is a pullback square. Show that the square
-\begin{equation*}
-\begin{tikzcd}
-C \arrow[r,"p"] \arrow[d,swap,"q"] & A \arrow[d,"f"] \\
-B \arrow[r,swap,"g"] & X 
-\end{tikzcd}
-\end{equation*}
-with $H^{-1}:g\circ q\htpy f\circ p$ is again a pullback square.
+\begin{comment}
 \item \label{ex:pb_fib}Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -1094,6 +1049,7 @@ Show that the square
 \unit \arrow[r,swap,"\mathsf{const}_{(b,\alpha^{-1})}"] & \fib{g}{f(a)}
 \end{tikzcd}
 \end{equation*}
+\end{comment}
 \item \label{ex:pb_3by3}Consider a commuting diagram of the form
 \begin{equation*}
 \begin{tikzcd}
@@ -1108,12 +1064,4 @@ with homotopies filling the (small) squares. Construct an equivalence
 & \qquad \eqvsym (A_0\times_{A_1} A_2) \times_{(B_0\times_{B_1} B_2)} (C_0\times_{C_1} C_2).
 \end{align*}
 This is also known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pullbacks} for pullbacks.
-\item Show that any square of the form
-\begin{equation*}
-\begin{tikzcd}
-C \arrow[r] \arrow[d] & B \arrow[d] \\
-\emptyt \arrow[r] & X
-\end{tikzcd}
-\end{equation*}
-commutes and is a pullback square. This is the \emph{descent property} of the empty type.\index{descent!empty type}
 \end{exercises}

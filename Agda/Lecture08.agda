@@ -288,7 +288,7 @@ eq-fib-diagonal A (dpair x y) (dpair z α) = (inv (ap pr1 α)) ∙ (ap pr2 α)
 fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
   Id (pr1 t) (pr2 t) → fib (diagonal A) t
 fib-diagonal-eq A (dpair x y) β =
-  dpair x (eq-pair-triv (pair x x) (pair x y) (dpair refl β))
+  dpair x (eq-pair-triv (dpair refl β))
 
 issec-fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
   ((eq-fib-diagonal A t) ∘ (fib-diagonal-eq A t)) ~ id
@@ -581,7 +581,7 @@ has-decidable-equality-prod-aux : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
   coprod (Id y y') (¬ (Id y y')) →
   coprod (Id (pair x y) (pair x' y')) (¬ (Id (pair x y) (pair x' y')))
 has-decidable-equality-prod-aux x x' y y' (inl p) (inl q) =
-  inl (eq-pair-triv (pair x y) (pair x' y') (pair p q))
+  inl (eq-pair-triv (pair p q))
 has-decidable-equality-prod-aux x x' y y' (inl p) (inr g) =
   inr (λ h → g (ap pr2 h))
 has-decidable-equality-prod-aux x x' y y' (inr f) (inl q) =

@@ -775,7 +775,7 @@ dependent-universal-property-coprod P =
     ( dpair
       ( λ p → ind-coprod P (pr1 p) (pr2 p))
       ( dpair
-        ( ind-Σ (λ f g → eq-pair-triv _ (pair f g) (pair refl refl)))
+        ( ind-Σ (λ f g → eq-pair-triv (pair refl refl)))
         ( λ s → eq-htpy (ind-coprod _ (λ x → refl) λ y → refl))))
 
 universal-property-coprod :
