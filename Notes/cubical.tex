@@ -1,47 +1,173 @@
 \chapter{Cubical diagrams}
 
+In this lecture we study commuting diagrams of the form
+\begin{equation*}
+  \begin{tikzcd}
+    & C' \arrow[dl] \arrow[d] \arrow[dr] \\
+    A' \arrow[d] & C \arrow[dl] \arrow[dr] & B' \arrow[dl,crossing over] \arrow[d] \\
+    A \arrow[dr] & X' \arrow[from=ul,crossing over] \arrow[d] & B \arrow[dl] \\
+    & X.
+  \end{tikzcd}
+\end{equation*}
+In these diagrams there are six homotopies witnessing that the faces of the cube commute, as well as a homotopy of homotopies witnessing that the cube as a whole commutes.
+
+Once the basic definitions of cubes are established, we focus on pullbacks and pushouts that appear in different configurations in these cubical diagrams. For example, if all the vertical maps in a commuting cube are equivalences, then the top square is a pullback square if and only if the bottom square is a pullback square. In \cref{chap:descent} we will use cubical diagrams in our formulation of the universality and descent theorems for pushouts.
+
+In our first main theorem of this lecture we show that given a commuting cube in which the bottom square is a pullback square, the top square is a pullback square if and only if the induced square of fibers of the vertical maps is a pullback square. This theorem should be compared to \cref{cor:pb_fibequiv}, where we showed that a square is a pullback square if and only if it induces equivalences on the fibers of the vertical maps.
+
+In our second main theorem we use the previous result to derive the 3-by-3 properties for pullbacks and pushouts.
+
 \section{Commuting cubes}
 \begin{defn}\label{defn:cube}
 A \define{commuting cube}\index{commuting cube|textbf}
 \begin{equation*}
-\begin{tikzcd}
-& A_{111} \arrow[dl] \arrow[dr] \arrow[d] \\
-A_{110} \arrow[d] & A_{101} \arrow[dl] \arrow[dr] & A_{011} \arrow[dl,crossing over] \arrow[d] \\
-A_{100} \arrow[dr] & A_{010} \arrow[d] \arrow[from=ul,crossing over] & A_{001} \arrow[dl] \\
-& A_{000},
+\begin{tikzcd}[column sep=large,row sep=large]
+& C' \arrow[dl,swap,"{p'}"] \arrow[dr,"{q'}"] \arrow[d,swap,"{h_C}" near end] \\
+A' \arrow[d,swap,"{h_A}"] & C \arrow[dl,swap,"{p}" very near start] \arrow[dr,"{q}" very near start] & B' \arrow[dl,crossing over,"{g'}" near end] \arrow[d,"{h_B}"] \\
+A \arrow[dr,swap,"f"] & X' \arrow[d,swap,"{h_X}" near start] \arrow[from=ul,crossing over,swap,"{f'}" near end] & B \arrow[dl,"{g}"] \\
+& X,
 \end{tikzcd}
 \end{equation*}
-consists of 
+consists of types and maps as indicated in the diagram, equipped with
 \begin{enumerate}
-\item types
-\begin{equation*}
-A_{111},A_{110},A_{101},A_{011},A_{100},A_{010},A_{001},A_{000},
-\end{equation*}
-\item \begin{samepage}%
-maps
-\begin{align*}
-f_{11\check{1}} & : A_{111}\to A_{110} & f_{\check{1}01} & : A_{101}\to A_{001} \\
-f_{1\check{1}1} & : A_{111}\to A_{101} & f_{01\check{1}} & : A_{011}\to A_{010} \\
-f_{\check{1}11} & : A_{111}\to A_{011} & f_{0\check{1}1} & : A_{011}\to A_{001} \\
-f_{1\check{1}0} & : A_{110}\to A_{100} & f_{\check{1}00} & : A_{100}\to A_{000} \\
-f_{\check{1}10} & : A_{110}\to A_{010} & f_{0\check{1}0} & : A_{010}\to A_{000} \\
-f_{10\check{1}} & : A_{101}\to A_{100} & f_{00\check{1}} & : A_{001}\to A_{000},
-\end{align*}
-\end{samepage}%
 \item homotopies
-\begin{align*}
-H_{1\check{1}\check{1}} & : f_{1\check{1}0}\circ f_{11\check{1}} \htpy f_{10\check{1}}\circ f_{1\check{1}1} & H_{0\check{1}\check{1}} & : f_{0\check{1}0}\circ f_{01\check{1}} \htpy f_{00\check{1}}\circ f_{0\check{1}1} \\
-H_{\check{1}1\check{1}} & : f_{\check{1}10}\circ f_{11\check{1}} \htpy f_{01\check{1}}\circ f_{\check{1}11} & H_{\check{1}0\check{1}} & : f_{\check{1}00}\circ f_{10\check{1}} \htpy f_{00\check{1}}\circ f_{\check{1}01} \\
-H_{\check{1}\check{1}1} & : f_{\check{1}01}\circ f_{1\check{1}1} \htpy f_{0\check{1}1}\circ f_{\check{1}11} & H_{\check{1}\check{1}0} & : f_{\check{1}00}\circ f_{1\check{1}0} \htpy f_{0\check{1}0}\circ f_{\check{1}10},
-\end{align*}
+  \begin{align*}
+    \mathsf{top} & : f' \circ p' \htpy g' \circ q' \\
+    \mathsf{back\usc{}left} & : p \circ h_C \htpy h_A \circ p' \\
+    \mathsf{back\usc{}right} & : q \circ h_C \htpy h_B \circ q' \\
+    \mathsf{front\usc{}left} & : f \circ h_A \htpy h_X \circ f' \\
+    \mathsf{front\usc{}right} & : g \circ h_B \htpy h_X \circ g' \\
+    \mathsf{bottom} & : f \circ p \htpy g \circ q
+  \end{align*}
+  witnessing that the 6 faces of the cube commute,
 \item and a homotopy 
-\begin{align*}
-C & : \ct{(f_{\check{1}00}\cdot H_{1\check{1}\check{1}})}{(\ct{(H_{\check{1}0\check{1}}\cdot f_{1\check{1}1})}{(f_{00\check{1}}\cdot H_{\check{1}\check{1}1})})} \\
-& \qquad \htpy \ct{(H_{\check{1}\check{1}0}\cdot f_{11\check{1}})}{(\ct{(f_{0\check{1}0}\cdot H_{\check{1}1\check{1}})}{(H_{0\check{1}\check{1}}\cdot f_{\check{1}11})})}
+  \begin{align*}
+    % ((((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top))) ~
+    % ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
+\mathsf{coh\usc{}cube} & : \ct{(\ct{(f \cdot \mathsf{back\usc{}left})}{(\mathsf{front\usc{}left}\cdot p')})}{(h_X \cdot \mathsf{top})} \\
+& \qquad \htpy \ct{(\mathsf{bottom}\cdot h_C)}{(\ct{(g \cdot \mathsf{back\usc{}right})}{(\mathsf{front\usc{}right}\cdot q')})}
 \end{align*}
 filling the cube.
 \end{enumerate}
 \end{defn}
+
+In the following lemma we show that if a cube commutes, then so do its rotations and mirror symmetries (that preserve the directions of the arrows).\footnote{The group acting on commuting cubes of maps is the \emph{dihedral group} $D_3$ which has order $6$.} This fact is obviously true, but there is some `path algebra' involved that we wish to demonstrate at least once.
+
+\begin{lem}
+  Consider a commuting cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & C' \arrow[dl] \arrow[d] \arrow[dr] \\
+      A' \arrow[d] & C \arrow[dl] \arrow[dr] & B' \arrow[dl,crossing over] \arrow[d] \\
+      A \arrow[dr] & X' \arrow[from=ul,crossing over] \arrow[d] & B \arrow[dl] \\
+      & X.
+    \end{tikzcd}
+  \end{equation*}
+  Then the cubes
+
+  \begin{center}
+  \begin{minipage}{.3\textwidth}
+  \begin{equation*}
+    \begin{tikzcd}
+      & C' \arrow[dl] \arrow[d] \arrow[dr] \\
+      C \arrow[d] & B' \arrow[dl] \arrow[dr] & A' \arrow[dl,crossing over] \arrow[d] \\
+      B \arrow[dr] & A \arrow[from=ul,crossing over] \arrow[d] & X' \arrow[dl] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  \end{minipage}
+  \begin{minipage}{.3\textwidth}
+  \begin{equation*}
+    \begin{tikzcd}
+      & C' \arrow[dl] \arrow[d] \arrow[dr] \\
+      B' \arrow[d] & A' \arrow[dl] \arrow[dr] & C \arrow[dl,crossing over] \arrow[d] \\
+      X' \arrow[dr] & B \arrow[from=ul,crossing over] \arrow[d] & A \arrow[dl] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  \end{minipage}
+
+  \begin{minipage}{.3\textwidth}
+  \begin{equation*}
+    \begin{tikzcd}
+      & C' \arrow[dl] \arrow[d] \arrow[dr] \\
+      C \arrow[d] & A' \arrow[dl] \arrow[dr] & B' \arrow[dl,crossing over] \arrow[d] \\
+      A \arrow[dr] & B \arrow[from=ul,crossing over] \arrow[d] & X' \arrow[dl] \\
+      & X.
+    \end{tikzcd}
+  \end{equation*}
+  \end{minipage}
+  \begin{minipage}{.3\textwidth}
+  \begin{equation*}
+    \begin{tikzcd}
+      & C' \arrow[dl] \arrow[d] \arrow[dr] \\
+      A' \arrow[d] & B' \arrow[dl] \arrow[dr] & C \arrow[dl,crossing over] \arrow[d] \\
+      X' \arrow[dr] & A \arrow[from=ul,crossing over] \arrow[d] & B \arrow[dl] \\
+      & X.
+    \end{tikzcd}
+  \end{equation*}
+  \end{minipage}
+  \begin{minipage}{.3\textwidth}
+  \begin{equation*}
+    \begin{tikzcd}
+      & C' \arrow[dl] \arrow[d] \arrow[dr] \\
+      B' \arrow[d] & C \arrow[dl] \arrow[dr] & A' \arrow[dl,crossing over] \arrow[d] \\
+      B \arrow[dr] & X' \arrow[from=ul,crossing over] \arrow[d] & A \arrow[dl] \\
+      & X.
+    \end{tikzcd}
+  \end{equation*}
+  \end{minipage}
+  \end{center}
+  also commute.
+\end{lem}
+
+\begin{proof}
+  We only show that the first cube commutes, wich is obtained by a counter-clockwise rotation of the original cube around the axis through $C'$ and $X$. The other cases are similar, and they are formalized in the Agda library for this course.
+
+  First we list the homotopies witnessing that the faces of the cube commute:
+  \begin{align*}
+    \mathsf{top}' & \defeq \mathsf{back\usc{}left} \\
+    \mathsf{back\usc{}left}' & \defeq \mathsf{back\usc{}right}^{-1} \\
+    \mathsf{back\usc{}right}' & \defeq \mathsf{top}^{-1} \\
+    \mathsf{front\usc{}left}' & \defeq \mathsf{bottom}^{-1} \\
+    \mathsf{front\usc{}right}' & \defeq \mathsf{front\usc{}left}^{-1} \\
+    \mathsf{bottom}' & \defeq \mathsf{front\usc{}right}. 
+  \end{align*}
+  Thus, to show that the cube commutes, we have to show that there is a homotopy of type
+  \begin{align*}
+    & \ct{(\ct{(g \cdot \mathsf{back\usc{}right}^{-1})}{(\mathsf{bottom}^{-1}\cdot h_C)})}{(f \cdot \mathsf{back\usc{}left})} \\
+    & \qquad\qquad \htpy \ct{(\mathsf{front\usc{}right}\cdot q')}{(\ct{(h_X \cdot \mathsf{top}^{-1})}{(\mathsf{front\usc{}left}^{-1}\cdot p')})}.
+  \end{align*}
+  In other words, we need to construct a path
+  \begin{align*}
+    & \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')^{-1}}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}} \\
+    & \qquad\qquad \htpy \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')^{-1}}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})}
+  \end{align*}
+  for every $c':C'$. Recall that $\ap{g}{\mathsf{back\usc{}right}(c')^{-1}}=\ap{g}{\mathsf{back\usc{}right}(c')}^{-1}$. Using the action on paths of the concatenation function (twice), we see that
+  \begin{align*}
+    & \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')^{-1}}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}} \\
+    & \qquad\qquad \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')}^{-1}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}}.
+  \end{align*}
+  Similarly, we have an identification
+  \begin{align*}
+    & \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')}^{-1}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})} \\
+    & \qquad\qquad \htpy \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')^{-1}}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})}
+  \end{align*}
+  Therefore it suffices to construct an identification
+  \begin{align*}
+    & \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')}^{-1}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}} \\
+    & \qquad\qquad \htpy \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')}^{-1}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})}
+  \end{align*}
+  Now we note that our goal is of the form
+  \begin{equation*}
+    \ct{(\ct{\varepsilon^{-1}}{\delta^{-1}})}{\beta}=\ct{\zeta}{(\ct{\gamma^{-1}}{\beta^{-1}})}, %%% check greek alphabet
+  \end{equation*}
+  whereas the assumption that the original cube commutes yields an identification of the fom
+  \begin{equation*}
+    \ct{(\ct{\alpha}{\beta})}{\gamma}=\ct{\delta}{(\ct{\varepsilon}{\zeta})}
+  \end{equation*}
+  Indeed, in the case that $\alpha$, $\beta$, $\gamma$, $\delta$, $\varepsilon$, and $\zeta$ are general identifications, we can conclude our goal using path induction on all of them.
+\end{proof}
 
 \begin{lem}
 Given a commuting cube as in \cref{defn:cube} we obtain a commuting square
@@ -166,24 +292,30 @@ commutes and is a pullback square.
 \begin{thm}
   Consider a commuting diagram of the form
   \begin{equation*}
-    \begin{tikzcd}
-      A_0 \arrow[r] \arrow[d] & B_0 \arrow[d] & C_0 \arrow[l] \arrow[d] \\
-      A_1 \arrow[r] & B_1 & C_1 \arrow[l] \\
-      A_2 \arrow[u] \arrow[r] & B_2 \arrow[u] & C_2 \arrow[u] \arrow[l]
+    \begin{tikzcd}[column sep=large,row sep=large]
+      AA \arrow[r,"Af"] \arrow[d,swap,"fA"] \arrow[dr,phantom,"\Rightarrow" description] & AX \arrow[d,swap,"fX"] & AB \arrow[l,swap,"Ag"] \arrow[d,"gB"] \arrow[dl,phantom,"\Leftarrow" description] \\
+      XA \arrow[r,"Xf"] & XX & XB \arrow[l,swap,"Xg"] \\
+      BA \arrow[u,"gA"] \arrow[r,swap,"Bf"] & BX \arrow[u,"gX"] & BB \arrow[u,swap,"gB"] \arrow[l,"Bg"]
     \end{tikzcd}
   \end{equation*}
-  with homotopies filling the (small) squares. Furthermore, consider
+  with homotopies
+  \begin{align*}
+    ff & : Xf \circ fA \htpy Af \circ fX \\
+    fg & : Xg \circ gB \htpy Ag \circ fX \\
+    gf & : 
+  \end{align*}
+  filling the (small) squares. Furthermore, consider
   pullback squares
   \begin{equation*}
     \begin{tikzcd}
-      D_0 \arrow[r] \arrow[d] & C_0 \arrow[d] & D_1 \arrow[r] \arrow[d] & C_1 \arrow[d] & D_2 \arrow[r] \arrow[d] & C_2 \arrow[d] \\
-      A_0 \arrow[r] & B_0 & A_1 \arrow[r] & B_1 & A_2 \arrow[r] & B_2
+      AC \arrow[r] \arrow[d] & AB \arrow[d] & XC \arrow[r] \arrow[d] & XB \arrow[d] & BC \arrow[r] \arrow[d] & BB \arrow[d] \\
+      AA \arrow[r] & AX & XA \arrow[r] & XX & BA \arrow[r] & BX
     \end{tikzcd}
   \end{equation*}
   \begin{equation*}
     \begin{tikzcd}
-      A_3 \arrow[r] \arrow[d] & A_2 \arrow[d] & B_3 \arrow[r] \arrow[d] & B_2 \arrow[d] & C_3 \arrow[r] \arrow[d] & C_2 \arrow[d] \\
-      A_0 \arrow[r] & A_1 & B_0 \arrow[r] & B_1 & C_0 \arrow[r] & C_1.
+      CA \arrow[r] \arrow[d] & BA \arrow[d] & CX \arrow[r] \arrow[d] & BX \arrow[d] & CB \arrow[r] \arrow[d] & BB \arrow[d] \\
+      AA \arrow[r] & XA & AX \arrow[r] & XX & AB \arrow[r] & XB.
     \end{tikzcd}
   \end{equation*}
   Finally, consider a commuting square
@@ -206,6 +338,17 @@ commutes and is a pullback square.
     is a pullback square.
   \end{enumerate}
 \end{thm}
+
+\begin{proof}
+  First we construct an equivalence
+  \begin{equation*}
+    (A_0\times_{B_0}C_0)\times_{(A_1\times_{B_1}C_1)}(A_2\times_{B_2} C_2) \eqvsym (A_0\times_{A_1}A_2)\times_{(B_0\times_{B_1} B_2)} (C_0\times_{C_1}C_2).
+  \end{equation*}
+  Now it follows that we have an equivalence
+  \begin{equation*}
+    \mathsf{cone}(f_0,g_0)
+  \end{equation*}
+\end{proof}
 
 
 \begin{exercises}

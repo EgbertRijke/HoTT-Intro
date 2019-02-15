@@ -1040,6 +1040,7 @@ is-pullback-is-equiv f g c is-equiv-g is-equiv-p =
       ( is-contr-map-is-equiv is-equiv-p a)
       ( is-contr-map-is-equiv is-equiv-g (f a)))
 
+{-
 coherence-square-transpose :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (top : A → B) (left : A → C) (right : B → D) (bottom : C → D) →
@@ -1086,6 +1087,7 @@ is-pullback-is-equiv' :
 is-pullback-is-equiv' f g c is-equiv-f is-equiv-q =
    is-pullback-transpose f g c
      ( is-pullback-is-equiv g f (cone-transpose f g c) is-equiv-f is-equiv-q)
+-}
 
 -- Section 10.6 The pullback pasting property
 
@@ -2258,6 +2260,48 @@ is-pullback-cone-swap' f g c is-pb-c' =
     ( is-equiv-map-canonical-pullback-swap f g)
     ( is-pb-c')
 
+{- We conclude the swapped versions of some properties derived above, for 
+   future convenience -}
+
+is-trunc-is-pullback' :
+  {l1 l2 l3 l4 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  is-pullback f g c → is-trunc-map k f → is-trunc-map k (pr1 (pr2 c))
+is-trunc-is-pullback' k f g (dpair p (dpair q H)) pb is-trunc-f =
+  is-trunc-is-pullback k g f
+    ( cone-swap f g (dpair p (dpair q H)))
+    ( is-pullback-cone-swap f g (dpair p (dpair q H)) pb)
+    is-trunc-f
+
+is-emb-is-pullback' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  is-pullback f g c → is-emb f → is-emb (pr1 (pr2 c))
+is-emb-is-pullback' f g c pb is-emb-f =
+  is-emb-is-prop-map
+    ( pr1 (pr2 c))
+    ( is-trunc-is-pullback' neg-one-𝕋 f g c pb (is-prop-map-is-emb f is-emb-f))
+
+is-equiv-is-pullback' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  is-equiv f → is-pullback f g c → is-equiv (pr1 (pr2 c))
+is-equiv-is-pullback' f g c is-equiv-f pb =
+  is-equiv-is-contr-map
+    ( is-trunc-is-pullback' neg-two-𝕋 f g c pb
+      ( is-contr-map-is-equiv is-equiv-f))
+
+is-pullback-is-equiv' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4}
+  (f : A → X) (g : B → X) (c : cone f g C) →
+  is-equiv f → is-equiv (pr1 (pr2 c)) → is-pullback f g c
+is-pullback-is-equiv' f g (dpair p (dpair q H)) is-equiv-f is-equiv-q =
+  is-pullback-cone-swap' f g (dpair p (dpair q H))
+    ( is-pullback-is-equiv g f
+      ( cone-swap f g (dpair p (dpair q H)))
+      is-equiv-f
+      is-equiv-q)
+
 -- Exercise 10.4
 
 cone-empty :
@@ -3019,6 +3063,7 @@ cospan-hom-cospan-rotate' f g f' g' f'' g''
   (dpair hA' (dpair hB' (dpair hX' (dpair HA' HB')))) =
   dpair g' (dpair g'' (dpair g (dpair (htpy-inv HB) (htpy-inv HB'))))
 
+{-
 map-3-by-3-canonical-pullback' :
   {l1 l2 l3 l1' l2' l3' l1'' l2'' l3'' : Level}
   {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X)
@@ -3080,3 +3125,4 @@ map-3-by-3-canonical-pullback :
       ( pr1 (pr2 h'))
       ( cospan-hom-cospan-rotate' f g f' g' f'' g'' h h'))
 map-3-by-3-canonical-pullback = {!!}
+-}

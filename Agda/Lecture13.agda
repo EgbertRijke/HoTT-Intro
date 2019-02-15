@@ -643,3 +643,42 @@ pullback-property-dependent-pullback-property-pushout
               ( λ s → inv (tr-triv (H s) (h (i (f s)))))
               ( λ s → apd h (H s)))))))
     ( dpb (λ x → Y))
+
+-- Exercises
+
+-- Exercise 13.1
+
+-- Exercise 13.2
+
+is-equiv-universal-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g C) →
+  is-equiv f →
+  ((l : Level) → universal-property-pushout l f g c) → is-equiv (pr1 (pr2 c))
+is-equiv-universal-property-pushout
+  {A = A} {B} f g (dpair i (dpair j H)) is-equiv-f up-c =
+  is-equiv-is-equiv-precomp j
+    ( λ l T →
+      is-equiv-is-pullback'
+        ( λ (h : A → T) → h ∘ f)
+        ( λ (h : B → T) → h ∘ g)
+        ( cone-pullback-property-pushout f g (dpair i (dpair j H)) T)
+        ( is-equiv-precomp-is-equiv f is-equiv-f T)
+        ( pullback-property-pushout-universal-property-pushout
+          l f g (dpair i (dpair j H)) (up-c l) T))
+
+universal-property-pushout-is-equiv :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g C) →
+  is-equiv f → is-equiv (pr1 (pr2 c)) →
+  ((l : Level) → universal-property-pushout l f g c)
+universal-property-pushout-is-equiv f g (dpair i (dpair j H)) is-equiv-f is-equiv-j l =
+  let c = (dpair i (dpair j H)) in
+  universal-property-pushout-pullback-property-pushout l f g c
+    ( λ T → is-pullback-is-equiv'
+      ( λ h → h ∘ f)
+      ( λ h → h ∘ g)
+      ( cone-pullback-property-pushout f g c T)
+      ( is-equiv-precomp-is-equiv f is-equiv-f T)
+      ( is-equiv-precomp-is-equiv j is-equiv-j T))
+  

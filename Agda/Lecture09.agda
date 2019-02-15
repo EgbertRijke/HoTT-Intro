@@ -397,16 +397,16 @@ is-equiv-precomp-is-equiv f is-equiv-f =
 
 is-equiv-is-equiv-precomp :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-  ({l3 : Level} (C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f)) →
+  ((l3 : Level) (C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f)) →
   is-equiv f
 is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
-  let retr-f = center (is-contr-map-is-equiv (is-equiv-precomp-f A) id) in
+  let retr-f = center (is-contr-map-is-equiv (is-equiv-precomp-f _ A) id) in
   is-equiv-has-inverse
     ( dpair
       ( pr1 retr-f)
       ( pair
         ( htpy-eq (ap pr1 (center (is-prop-is-contr
-          ( is-contr-map-is-equiv (is-equiv-precomp-f B) f)
+          ( is-contr-map-is-equiv (is-equiv-precomp-f _ B) f)
           ( dpair (f ∘ (pr1 retr-f)) (ap (λ (g : A → A) → f ∘ g) (pr2 retr-f)))
           ( dpair id refl)))))
         ( htpy-eq (pr2 retr-f)))) 
@@ -745,7 +745,7 @@ uniqueness-empty :
   is-contr (Y → X)) → is-equiv (ind-empty {P = λ t → Y})
 uniqueness-empty Y H =
   is-equiv-is-equiv-precomp ind-empty
-    ( λ X → is-equiv-is-contr
+    ( λ l X → is-equiv-is-contr
       ( λ g → g ∘ ind-empty)
       ( H _ X)
       ( universal-property-empty X))
@@ -791,7 +791,7 @@ uniqueness-coprod :
 uniqueness-coprod {Y = Y} i j H =
   is-equiv-is-equiv-precomp
     ( ind-coprod _ i j)
-    ( λ X → is-equiv-right-factor
+    ( λ l X → is-equiv-right-factor
       ( λ (s : Y → X) → pair (s ∘ i) (s ∘ j))
       ( ev-inl-inr (λ t → X))
       ( λ s → s ∘ (ind-coprod (λ t → Y) i j))
@@ -842,7 +842,7 @@ is-equiv-ind-unit-universal-property-unit :
 is-equiv-ind-unit-universal-property-unit X x H =
    is-equiv-is-equiv-precomp
      ( ind-unit x)
-     ( λ Y → is-equiv-right-factor
+     ( λ l Y → is-equiv-right-factor
        ( λ f → f x)
        ( ev-star (λ t → Y))
        ( λ f → f ∘ (ind-unit x))

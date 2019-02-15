@@ -4,6 +4,7 @@ module Lecture15 where
 
 import Lecture14
 open Lecture14 public
+open Lecture14.Cubes public
 
 -- Section 15.1 The dependent pullback property of pushouts
 

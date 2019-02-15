@@ -7,66 +7,31 @@ open Lecture13 public
 
 -- Cubes
 
-{- 
-  We specify the type of the homotopy witnessing that a cube commutes. Imagine
-  that the cube is presented as a lattice
+  {- 
+    We specify the type of the homotopy witnessing that a cube commutes. 
+    Imagine that the cube is presented as a lattice
+  
+            *
+          / | \
+         /  |  \
+        /   |   \
+       *    *    *
+       |\ /   \ /| 
+       | \     ‌/ |
+       |/ \   / \|
+       *    *    *
+        \   |   /
+         \  |  /
+          \ | /
+            *
 
-           *
-         / | \
-        /  |  \
-       /   |   \
-      *    *    *
-      |\ /   \ /| 
-      | \     ‌/ |
-      |/ \   / \|
-      *    *    *
-       \   |   /
-        \  |  /
-         \ | /
-           *
-
-  with all maps pointing in the downwards direction. Presented in this way, a
-  cube of maps has a top face, a back-left face, a back-right face, a front-left
-  face, a front-right face, and a bottom face, all of which are homotopies.
-
-  A term of type coherence-cube is a homotopy filling the cube.
--}
-
-coherence-cube :
-  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
-  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
-  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
-  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
-  (top : (h' ∘ f') ~ (k' ∘ g'))
-  (back-left : (f ∘ hA) ~ (hB ∘ f'))
-  (back-right : (g ∘ hA) ~ (hC ∘ g'))
-  (front-left : (h ∘ hB) ~ (hD ∘ h'))
-  (front-right : (k ∘ hC) ~ (hD ∘ k'))
-  (bottom : (h ∘ f) ~ (k ∘ g)) → UU _
-coherence-cube f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom =
-  ((((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top))) ~
-  ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
-
-{-
-  The symmetry group D_3 acts on a cube. However, the coherence filling a
-  a cube needs to be modified to show that the rotated/reflected cube again
-  commutes. In the following definitions we provide the homotopies witnessing
-  that the rotated/reflected cubes again commute.
-
-  Note: although in principle it ought to be enough to show this for the
-  generators of the symmetry group D_3, in practice it is more straightforward
-  to just do the work for each of the symmetries separately. One reason is
-  that some of the homotopies witnessing that the faces commute will be
-  inverted as the result of an application of a symmetry. Inverting a homotopy
-  twice results in a new homotopy that is only homotopic to the original
-  homotopy.
-
-  We first provide some constructions involving homotopies that will help us
-  manipulating coherences of cubes.
--}
+    with all maps pointing in the downwards direction. Presented in this way, a
+    cube of maps has a top face, a back-left face, a back-right face, a 
+    front-left face, a front-right face, and a bottom face, all of which are 
+    homotopies.
+  
+    A term of type coherence-cube is a homotopy filling the cube.
+  -}
 
 htpy-square-htpy-refl-vertical :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
@@ -93,6 +58,74 @@ htpy-square-htpy-refl-horizontal f Hg Hp q H H' K =
       ( htpy-refl q)
       ( K ∙h (htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l Hp))))))
 
+coherence-hexagon :
+  {l : Level} {A : UU l} {x u u' v v' y : A}
+  (α : Id x u) (β : Id u u') (γ : Id u' y)
+  (δ : Id x v) (ε : Id v v') (ζ : Id v' y) → UU l
+coherence-hexagon α β γ δ ε ζ = Id ((α ∙ β) ∙ γ) (δ ∙ (ε ∙ ζ))
+
+hexagon-rotate-120 :
+  {l : Level} {A : UU l} {x u u' v v' y : A}
+  (α : Id x u) (β : Id u u') (γ : Id u' y)
+  (δ : Id x v) (ε : Id v v') (ζ : Id v' y) →
+  coherence-hexagon α β γ δ ε ζ →
+  coherence-hexagon (inv ε) (inv δ) α ζ (inv γ) (inv β)
+hexagon-rotate-120 refl refl refl refl refl refl refl = refl
+
+hexagon-rotate-240 :
+  {l : Level} {A : UU l} {x u u' v v' y : A}
+  (α : Id x u) (β : Id u u') (γ : Id u' y)
+  (δ : Id x v) (ε : Id v v') (ζ : Id v' y) →
+  coherence-hexagon α β γ δ ε ζ →
+  coherence-hexagon γ (inv ζ) (inv ε) (inv β) (inv α) δ
+hexagon-rotate-240 refl refl refl refl refl refl refl = refl
+
+{- Since the specification of a cube is rather lengthy, we use Agda's
+   parametrized module system in order to avoid having to specify the same
+   variables multiple times. 
+-}
+
+module Cubes
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g))
+  where
+  
+  coherence-cube :
+    UU _
+  coherence-cube =
+    (((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top)) ~
+    ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
+
+  {-
+    The symmetry group D_3 acts on a cube. However, the coherence filling a
+    a cube needs to be modified to show that the rotated/reflected cube again
+    commutes. In the following definitions we provide the homotopies witnessing
+    that the rotated/reflected cubes again commute.
+  
+    Note: although in principle it ought to be enough to show this for the
+    generators of the symmetry group D_3, in practice it is more 
+    straightforward to just do the work for each of the symmetries separately. 
+    One reason is that some of the homotopies witnessing that the faces 
+    commute will be inverted as the result of an application of a symmetry. 
+    Inverting a homotopy twice results in a new homotopy that is only 
+    homotopic to the original homotopy.
+
+    We first provide some constructions involving homotopies that will help us
+    manipulating coherences of cubes.
+  -}
+
+open Cubes
+
 -- We show that a rotation of a commuting cube again commutes.
 coherence-cube-rotate-120 :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
@@ -118,55 +151,22 @@ coherence-cube-rotate-120 :
     front-right
 coherence-cube-rotate-120
   f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom c =
-  ( htpy-inv
-    ( htpy-assoc
-      ( k ·l (htpy-inv back-right))
-      ( (htpy-inv bottom) ·r hA)
-      ( h ·l back-left))) ∙h
-  ( ( htpy-ap-concat'
-        ( k ·l (htpy-inv back-right))
-        ( htpy-inv (k ·l back-right))
-        ( _)
-        ( htpy-left-whisk-htpy-inv k back-right)) ∙h
-      ( htpy-inv
-        ( htpy-inv-con
-          ( k ·l back-right)
-          ( _)
-          ( ((htpy-inv bottom) ·r hA) ∙h (h ·l back-left))
-          ( htpy-inv-con
-            ( bottom ·r hA)
-            ( _)
-            ( h ·l back-left)
-            ( ( htpy-assoc (bottom ·r hA) (k ·l back-right) _) ∙h
-              ( ( htpy-assoc
-                  ( (bottom ·r hA) ∙h (k ·l back-right))
-                  ( front-right ·r g')
-                  ( _)) ∙h
-                ( ( htpy-assoc
-                    ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
-                      ( front-right ·r g'))
-                    ( hD ·l htpy-inv top)
-                    ( htpy-inv front-left ·r f')) ∙h
-                  ( htpy-inv
-                    ( htpy-con-inv
-                      ( h ·l back-left)
-                      ( front-left ·r f')
-                      ( _)
-                      ( htpy-con-inv _
-                          ( hD ·l top)
-                          ( ( (bottom ·r hA) ∙h (k ·l back-right)) ∙h
-                              (front-right ·r g'))
-                          ( c ∙h
-                            ( htpy-assoc
-                                ( bottom ·r hA)
-                                ( k ·l back-right)
-                                ( front-right ·r g'))) ∙h
-                        ( htpy-inv
-                          ( htpy-ap-concat _
-                            ( hD ·l (htpy-inv top))
-                            ( htpy-inv (hD ·l top))
-                            ( htpy-left-whisk-htpy-inv hD top)))))))))))))
+  top back-left back-right front-left front-right bottom c a' =
+  ( ap (λ t → t ∙ (ap h (back-left a')))
+    ( ap (λ t' → t' ∙ inv (bottom (hA a')))
+      ( ap-inv k (back-right a')))) ∙
+  ( ( hexagon-rotate-120
+      ( ap h (back-left a'))
+      ( front-left (f' a'))
+      ( ap hD (top a'))
+      ( bottom (hA a'))
+      ( ap k (back-right a'))
+      ( front-right (g' a'))
+      ( c a')) ∙
+    ( inv
+      ( ap (λ t → (front-right (g' a')) ∙ t)
+        ( ap (λ t' → t' ∙ inv (front-left (f' a')))
+          ( ap-inv hD (top a'))))))
 
 coherence-cube-rotate-240 :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}

@@ -1,4 +1,193 @@
-\chapter{Descent}\label{chap:descent}
+\chapter{Universality and descent for pushouts}\label{chap:descent}
+
+We begin this lecture with the idea that pushouts can be presented as higher inductive types. The general idea behind higher inductive types is that we can introduce new inductive types not only with constructors at the level of points, but also with constructors at the level of identifications. Pushouts form a basic class of examples that can be obtained as higher inductive types, because they come equipped with the structure of a cocone. The cocone $(i,j,H)$ in the commuting square
+\begin{equation*}
+  \begin{tikzcd}
+    S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+    A \arrow[r,swap,"i"] & C
+  \end{tikzcd}
+\end{equation*}
+equips the type $C$ with two \emph{point constructors}
+\begin{align*}
+  i & : A \to C \\
+  j & : B \to C \\
+  \intertext{and a \emph{path constructor}}
+  H & : \prd{s:S}i(f(s)) = j(g(s))
+\end{align*}
+that provides an identifcation $H(s):i(f(s))=j(g(s))$ for every $s:S$. The induction principle then specifies how to construct sections of families over $C$. Naturally, it takes not only the point constructors $i$ and $j$, but also the path constructor $H$ into account. 
+
+The induction principle is one of several equivalent characterizations of pushouts. We will prove a theorem providing five equivalent characterizations of homotopy pushouts. Two of those we have already seen in \cref{thm:pushout-up}: the universal property and the pullback property. The other three are
+\begin{enumerate}
+\item the \emph{dependent pullback property},
+\item the \emph{dependent universal property},
+\item the \emph{induction principle}.
+\end{enumerate}
+
+An implication that is particularly useful among our five characterizations of pushouts, is the fact that the pullback property implies the dependent pullback property. We use the dependent pullback property to derive the \emph{universality of pushouts} (not to be confused with the universal property of pushouts), showing that for any commuting cube
+\begin{equation*}
+  \begin{tikzcd}
+    & S' \arrow[dl] \arrow[d] \arrow[dr] \\
+    A' \arrow[d] & S \arrow[dl] \arrow[dr] & B' \arrow[d] \arrow[dl,crossing over] \\
+    A \arrow[dr] & D' \arrow[from=ul,crossing over] \arrow[d] & B \arrow[dl] \\
+    & D
+  \end{tikzcd}
+\end{equation*}
+in which the back left and right squares are pullback squares, if the front left and right squares are also pullback squares, then so is the induced square
+\begin{equation*}
+  \begin{tikzcd}
+    A'\sqcup^{\mathcal{S}'}B' \arrow[r,densely dotted] \arrow[d,densely dotted] & D' \arrow[d] \\
+    A\sqcup^S B \arrow[r,densely dotted] & D
+  \end{tikzcd}
+\end{equation*}
+
+We then observe that the univalence axiom can be used together with the universal property of pushouts to obtain such families over pushouts in the first place. We prove the descent theorem, which asserts that for any diagram of the form
+\begin{equation*}
+  \begin{tikzcd}
+    & S' \arrow[dl] \arrow[d] \arrow[dr] \\
+    A' \arrow[d] & S \arrow[dl] \arrow[dr] & B' \arrow[d] \\
+    A \arrow[dr] & & B \arrow[dl] \\
+    & C
+  \end{tikzcd}
+\end{equation*}
+in which the bottom square is a pushout square and the back left and right squares are pullback squares, there is a unique way of extending this to a commuting cube
+\begin{equation*}
+  \begin{tikzcd}
+    & S' \arrow[dl] \arrow[d] \arrow[dr] \\
+    A' \arrow[d] & S \arrow[dl] \arrow[dr] & B' \arrow[d] \\
+    A \arrow[dr] & C' \arrow[from=ul,crossing over,densely dotted] \arrow[from=ur,crossing over,densely dotted] \arrow[d,densely dotted] & B \arrow[dl] \\
+    & C
+  \end{tikzcd}
+\end{equation*}
+in which also the front left and right squares are pullback squares. Thus the converse of the universality theorem for pushouts also follows. The descent property used to show that pullbacks distribute over pushouts, and to compute the fibers of maps out of pushouts (the source of many exercises).
+
+We note that the computation rules in our treatment for the induction principle of homotopy pushouts are weak. In other words, they are identifications. In this course we have no need for judgmental computation rules. Our focus is instead on universal properties. We refer the reader who is interested in the more `traditional' higher inductive types with judgmental computation rules to \cite{hottbook}.
+
+\section{The induction principle of pushouts}
+
+The pushout $A\sqcup^{\mathcal{S}} B$ of a span $\mathcal{S}$ from $A$ to $B$ comes equipped with the structure of a cocone\index{inl@{$\inl$}!for pushouts}\index{inr@{$\inr$}!for pushouts}\index{glue@{$\glue$}}
+\begin{align*}
+\inl & : A \to A \sqcup^{\mathcal{S}} B \\
+\inr & : B \to A \sqcup^{\mathcal{S}} B \\
+\glue & : \prd{x:S} \inl(f(x))=\inr(g(x))
+\end{align*}
+
+
+To see what the induction principle has to be, consider first a dependent function $s:\prd{x:A\sqcup^{\mathcal{S}}B}P(x)$. When we evaluate this function at the constructors, we obtain
+\begin{align*}
+s\circ \inl & : \prd{a:A} P(\inl(a)) \\
+s\circ \inr & : \prd{b:B} P(\inr(b)) \\
+\apdfunc{s}\circ \glue & : \prd{x:S} \mathsf{tr}_P(\glue(x),s(f(x)))=s(g(x)).
+\end{align*}
+
+\begin{defn}
+Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and let $P$ be a family over $A\sqcup^{\mathcal{S}} B$. The \define{dependent action on generators}\index{dependent action on generators!for pushouts|textbf} is defined to be the map\index{dgen_S@{$\mathsf{dgen}_{\mathcal{S}}$}|textbf}
+\begin{align*}
+\mathsf{dgen}_{\mathcal{S}}^P & : \Big(\prd{x:A\sqcup^{\mathcal{S}} B} P(x)\Big) \to \Big(\sm{f': \prd{a:A}P(\inl(a))}{g':\prd{b:B}P(\inr(b))}\Big.\\
+& \qquad\qquad\qquad\qquad\qquad\qquad \Big.\prd{x:S} \mathsf{tr}_P(\glue(x),f'(f(x)))=g'(g(x))\Big).
+\end{align*}
+given by $s\mapsto (s\circ\inl,s\circ\inr,\apdfunc{s}\circ\glue)$.
+\end{defn}
+
+We can now fully specify homotopy pushouts.
+
+\begin{defn}
+Given a span $\mathcal{S}\jdeq (S,f,g)$, the \define{(homotopy) pushout}\index{pushout|textbf} $A\sqcup^{\mathcal{S}} B$ of $\mathcal{S}$ is defined to be the higher inductive\index{higher inductive types} type equipped with\index{inl@{$\inl$}!for pushouts|textbf}\index{inr@{$\inr$}!for pushouts|textbf}\index{glue@{$\glue$}|textbf}
+\begin{align*}
+\inl & : A \to A \sqcup^{\mathcal{S}} B \\
+\inr & : B \to A \sqcup^{\mathcal{S}} B \\
+\glue & : \prd{x:S} \inl(f(x))=\inr(g(x)),
+\end{align*}
+satisfying the \define{induction principle} for pushouts\index{induction principle!for pushouts|textbf}, which asserts that for each type family $P$ over $A\sqcup^{\mathcal{S}} B$ the map $\mathsf{dgen}_{\mathcal{S}}^P$ has a section.
+\end{defn}
+
+\begin{rmk}
+The induction principle of the pushout $A\sqcup^{\mathcal{S}} B$ provides us with a dependent function
+\begin{equation*}
+\ind{\mathcal{S}}(f',g',G) : \prd{x:A\sqcup^{\mathcal{S}} B} P(x),
+\end{equation*}
+for every
+\begin{align*}
+f' & : \prd{a:A}P(\inl(a)) \\
+g' & : \prd{b:B}P(\inr(b)) \\
+G & : \prd{x:S} \mathsf{tr}_P(\glue(x),f'(f(x)))=g'(g(x))
+\end{align*}
+Moreover, the function $\ind{\mathcal{S}}(f',g',G)$ comes equipped with an identification
+\begin{equation*}
+\mathsf{dgen}_{\mathcal{S}}(\ind{\mathcal{S}}(f',g',G))=(f',g',G).
+\end{equation*}
+Writing $s\defeq \ind{\mathcal{S}}(f',g',G)$, we see that such an identification between triples is equivalently described by a triple $(H,K,L)$ consisting of
+\begin{align*}
+H : s\circ \inl \htpy f' \\
+K : s\circ\inr \htpy g' 
+\end{align*}
+and a homotopy $L$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\mathsf{tr}_{P}(\glue(x),s(\inl(f(x)))) \arrow[r,equals,"\ap{\mathsf{tr}_P(\glue(x))}{H(x)}"] \arrow[d,equals,swap,"\apd{s}{\glue(x)}"] & \mathsf{tr}_{P}(\glue(x),f'(f(x))) \arrow[d,equals,"G(x)"] \\
+s(\inr(g(x))) \arrow[r,equals,swap,"K(x)"] & g'(g(x))
+\end{tikzcd}
+\end{equation*}
+commutes, for every $x:S$. These are the \define{computation rules} for pushouts\index{computation rules!for pushouts}.
+\end{rmk}
+
+\begin{thm}\label{defn:dependent-pullback-property-pushout}
+  Consider a commuting square
+  \begin{equation}\label{eq:dppp1}
+    \begin{tikzcd}
+      S \arrow[d,swap,"f"] \arrow[r,"g"] & B \arrow[d,"j"] \\
+      A \arrow[r,swap,"i"] & C
+    \end{tikzcd}
+  \end{equation}
+  with $H:(i\circ f) \htpy (j \circ g)$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The square in \cref{eq:dppp1} is a pushout square.
+  \item The square in \cref{eq:dppp1} satisfies the pullback property of pushouts.
+  \item The square satisfies the \define{dependent pullback property} of pushouts: For every family $P$ over $C$, the square
+    \begin{equation}\label{eq:dppp2}
+      \begin{tikzcd}[column sep=10em]
+        \prd{z:C}P(z) \arrow[r,"h\mapsto h\circ j"] \arrow[d,swap,"h\mapsto h\circ i"] & \prd{y:B}P(j(y)) \arrow[d,"h\mapsto h\circ g"] \\
+        \prd{x:A}P(i(x)) \arrow[r,swap,"{h\mapsto \lam{s}\mathsf{tr}_P(H(s),h(f(s)))}"] & \prd{s:S}P(j(g(s))),
+      \end{tikzcd}
+    \end{equation}
+    which commutes by the homotopy
+    \begin{equation*}
+      \lam{h}\mathsf{eq\usc{}htpy}(\lam{s}\apd{h}{H(s)}),
+    \end{equation*}
+    is a pullback square.
+  \item The type $C$ satisfies the \define{dependent universal property} of pushouts: For any family $P$ over $C$, the map
+    \begin{equation*}
+      \mathsf{gen}_P : \Big(\prd{c:C}P(c)\Big)\to \sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))}\prd{s:S}\mathsf{tr}_P(H(s),j'(f(s)))=j'(g(s))
+    \end{equation*}
+    is an equivalence.
+  \item The type $C$ satisfies the \define{induction principle} of pushouts: For any family $P$ over $C$ the map $\mathsf{gen}_P$ has a section.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  We have already seen in \cref{thm:pushout_up} that (i) $\Leftrightarrow$ (ii).
+  Next, we show that (ii) $\Rightarrow$ (iii). To see this, note that we have a commuting cube
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      &  \sm{h:C\to C}\prd{c:C}P(h(c)) \arrow[dl] \arrow[d] \arrow[dr] \\
+      \sm{h:A\to C}\prd{a:A}P(h(a)) \arrow[d] & \big(\sm{c:C}P(c)\big)^C \arrow[dl] \arrow[dr] & \sm{h:B\to C}\prd{b:B}P(h(b)) \arrow[d] \arrow[dl,crossing over] \\
+      \big(\sm{c:C}P(c)\big)^A \arrow[dr] & \sm{h:S\to C}\prd{s:S}P(h(s)) \arrow[d] \arrow[from=ul,crossing over] & \big(\sm{c:C}P(c)\big)^B \arrow[dl] \\
+      & \big(\sm{c:C}P(c)\big)^S
+    \end{tikzcd}
+  \end{equation*}
+  in which the vertical maps are equivalences. Moreover, the bottom square is a pullback square by the pullback property of pushouts, so we conclude that the top square is a pullback square. Since this is a square of total spaces over a pullback square, we invoke \cref{lem:fiberwise-pullback} to conclude that for each $h:C \to C$, the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \prd{c:C}P(h(c)) \arrow[r] \arrow[d] & \prd{b:B} P(h(j(b))) \arrow[d] \\
+      \prd{a:A}P(h(i(a))) \arrow[r] & \prd{s:S}P(h(j(g(s))))
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square. We use the case $h\jdeq\idfunc:C\to C$ to conclude that
+  the dependent pullback property holds.
+
+  To see that (iii) implies (ii) we recall that transport with respect to a trivial family is homotopic to the identity function. Thus we obtain the pullback property from the dependent pullback property using the trivial family $\lam{c}T$ over $C$.
+
+  To see that (iii) $\Leftrightarrow$ (iv) we note that 
+\end{proof}
 
 \section{Type families over pushouts}
 
@@ -197,45 +386,57 @@ is a pushout square.
 \end{lem}
 
 \begin{proof}
-We will show that the map
-\begin{equation*}
-\mathsf{cocone\usc{}map}_{\mathcal{S}'}(i',j',H'): \Big(\Big(\sm{x:X}P(x)\Big)\to Y\Big)\to \mathsf{cocone}_{\mathcal{S}'}(Y)
-\end{equation*}
-is an equivalence for any type $Y$.
-Let $Y$ be a type. Note that the type $\mathsf{cocone}_{\mathcal{S}'}$ is equivalent to the type of triples $(u,v,w)$ consisting of
-\begin{align*}
-u & : \prd{a:A} P_A(a)\to Y \\
-v & : \prd{b:B} P_B(b)\to Y \\
-w & : \prd{x:S}{y:P_A(f(x))} u(f(x),y)=v(g(x),e_S(x,y)).
-\end{align*}
-Now observe that there is an equivalence
-\begin{align*}
-& \Big(\prd{y:P_A(f(x))} u(f(x),y)=v(g(x),e_S(x,y))\Big) \\
-& \qquad \qquad \eqvsym \mathsf{tr}_{(t\mapsto P(t)\to Y)}(H(x),u'(f(x)))=v'(g(x))
-\end{align*}
-for any $u$ and $v$ as above, and any $x:S$. 
-By this equivalence we obtain a commuting square
-\begin{equation*}
-\begin{tikzcd}
-\Big(\Big({\sm{x:X}P(x)}\Big)\to Y\Big) \arrow[r,"\ind{\Sigma}","\eqvsym"'] \arrow[d,swap,"{\mathsf{cocone\usc{}map}_{\mathcal{S}'}(i',j',H')}"] & \prd{x:X}(P(x)\to Y) \arrow[d,"\mathsf{dgen}_{\mathcal{S}}"] \\
-\mathsf{cocone}_{\mathcal{S}'}(Y) \arrow[r,"\eqvsym"] & \Psi
-\end{tikzcd}
-\end{equation*}
-where $\Psi$ is the type of triples $(u',v',w')$ consisting of
-\begin{align*}
-u' & : \prd{a:A} P(i(a))\to Y \\
-v' & : \prd{b:B} P(j(b))\to Y \\
-w' & : \prd{x:S} \mathsf{tr}_{(t\mapsto P(t)\to Y)}(H(x),u'(f(x)))=v'(g(x)),
-\end{align*}
-Since the dependent action on generators $\mathsf{dgen}_{\mathcal{S}}$ is an equivalence it follows by the 3-for-2 property of equivalences that $\mathsf{cocone\usc{}map}_{\mathcal{S}'}(i',j',H')$ is an equivalence, as desired.
+  To show that the square of total spaces satisfies the pullback property of pullbacks, note that we have a commuting cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & T^{\sm{x:X}P(x)} \arrow[dl] \arrow[d] \arrow[dr] \\
+      T^{\sm{a:A}P_A(a)} \arrow[d] & \prd{x:X}P(x) \arrow[dl] \arrow[dr] & T^{\sm{b:B}P_B(b)} \arrow[dl,crossing over] \arrow[d] \\
+      \prd{a:A}T^{P_A(a)} \arrow[dr] & T^{\sm{x:S}P_A(f(x))} \arrow[from=ul,crossing over] \arrow[d] & \prd{b:B}T^{P_B(b)} \arrow[dl] \\
+      & \prd{x:S}T^{P_A(f(x))}
+    \end{tikzcd}
+  \end{equation*}
+  for any type $T$. In this cube, the vertical maps are all equivalences, and the bottom square is a pullback square by the dependent pullback property of pushouts. Therefore it follows that the top square is a pullback square.
 \end{proof}
+
+\section{The universality theorem}
+\begin{thm}
+  Consider two pushout squares
+  \begin{equation*}
+    \begin{tikzcd}
+      S' \arrow[r] \arrow[d] & B' \arrow[d] & S \arrow[r] \arrow[d] & B \arrow[d] \\
+      A' \arrow[r] & C' & A \arrow[r] & C
+    \end{tikzcd}
+  \end{equation*}
+  and a commuting cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & S' \arrow[dl] \arrow[d] \arrow[dr] \\
+      A' \arrow[d] & S \arrow[dl] \arrow[dr] & B' \arrow[d] \arrow[dl,crossing over] \\
+      A \arrow[dr] & D' \arrow[from=ul,crossing over] \arrow[d] & B \arrow[dl] \\
+      & D
+    \end{tikzcd}
+  \end{equation*}
+  in which the back left and right squares are pullback squares. The following are equivalent:
+  \begin{enumerate}
+  \item The front left and right squares are pullback squares.
+  \item The induced commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        C' \arrow[r,densely dotted] \arrow[d,densely dotted] & D' \arrow[d] \\
+        C \arrow[r,densely dotted] & D
+      \end{tikzcd}
+    \end{equation*}
+    is a pullback square.
+  \end{enumerate}
+\end{thm}
+
 
 \section{The descent property for pushouts}
 
 In the previous section there was a significant role for fiberwise equivalences, and we know by \cref{thm:pb_fibequiv,cor:pb_fibequiv}: fiberwise equivalences indicate the presence of pullbacks. In this section we reformulate the results of the previous section using pullbacks where we used fiberwise equivalences before, to obtain new and useful results. We begin by considering the type of descent data from the perspective of pullback squares.
 
 \begin{defn}
-Consider a span $\mathcal{S}$ from $A$ to $B$, and a span $\mathcal{S}'$ from $A'$ to $B'$. A \define{cartesian transformation}of spans\index{cartesian transformation!of spans|textbf} from $\mathcal{S}'$ to $\mathcal{S}$ is a diagram of the form
+Consider a span $\mathcal{S}$ from $A$ to $B$, and a span $\mathcal{S}'$ from $A'$ to $B'$. A \define{cartesian transformation} of spans\index{cartesian transformation!of spans|textbf} from $\mathcal{S}'$ to $\mathcal{S}$ is a diagram of the form
 \begin{equation*}
 \begin{tikzcd}
 A' \arrow[d,swap,"h_A"]  & S' \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] \arrow[d,swap,"h_S"] & B' \arrow[d,"h_B"] \\
@@ -529,6 +730,28 @@ A \arrow[dr] & (A\sqcup^{S} B)\times_{X}X' \arrow[d] \arrow[from=ul,crossing ove
 \end{equation*}
 are pullback squares by \cref{thm:pb_pasting}.
 \end{proof}
+
+\section{Applications of the descent theorem}
+
+\begin{thm}
+  Consider a commuting cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & S' \arrow[dl] \arrow[dr] \arrow[d] \\
+      A' \arrow[d] & S \arrow[dl] \arrow[dr] & B' \arrow[dl,crossing over] \arrow[d] \\
+      A \arrow[dr] & C' \arrow[from=ul,crossing over] \arrow[d] & B \arrow[dl] \\
+      & C
+    \end{tikzcd}
+  \end{equation*}
+  in which the bottom square is a pushout square. If the vertical sides are pullback squares, then for each $c:C$ the square of fibers
+  \begin{equation*}
+    \begin{tikzcd}
+      \fib{i\circ f\circ h_S}{c} \arrow[d] \arrow[r] & \fib{j\circ g\circ h_S}{c} \arrow[r] & \fib{j\circ h_B}{c} \arrow[d] \\
+      \fib{i\circ h_A}{c} \arrow[rr] & & \fib{h_C}{c}
+    \end{tikzcd}
+  \end{equation*}
+  is a pushout square.
+\end{thm}
 
 \begin{exercises}
 \item Use the characterization of the circle\index{circle} as a pushout given in \cref{eg:circle_pushout} to show that the square
