@@ -9,6 +9,7 @@ is-subuniverse :
   {l1 l2 : Level} (P : UU l1 → UU l2) → UU ((lsuc l1) ⊔ l2)
 is-subuniverse P = is-subtype P
 
+{-
 is-local :
   {l1 l2 l3 l4 : Level}
   {I : UU l1} {A : I → UU l2} {B : I → UU l3} (f : (i : I) → A i → B i)
@@ -21,6 +22,7 @@ is-subuniverse-is-local :
   {I : UU l1} {A : I → UU l2} {B : I → UU l3} (f : (i : I) → A i → B i) →
   is-subuniverse (is-local {l4 = l4} f)
 is-subuniverse-is-local f X = is-prop-Π (λ i → is-subtype-is-equiv _)
+-}
 
 subuniverse :
   (l1 l2 : Level) → UU ((lsuc l1) ⊔ (lsuc l2))
@@ -34,6 +36,16 @@ in-subuniverse-equiv P e = tr P (eq-equiv _ _ e)
 in-subuniverse-equiv' :
   {l1 l2 : Level} (P : UU l1 → UU l2) {X Y : UU l1} → X ≃ Y → P Y → P X
 in-subuniverse-equiv' P e = tr P (inv (eq-equiv _ _ e))
+
+{- We also introduce the notion of 'global subuniverse'. The handling of universe
+   levels is a bit more complicated here, since (l : Level) → A l are kinds but not
+   types. -}
+   
+is-global-subuniverse :
+  (α : Level → Level) (P : (l : Level) → subuniverse l (α l)) →
+  (l1 l2 : Level) → UU _
+is-global-subuniverse α P l1 l2 =
+  (X : UU l1) (Y : UU l2) → X ≃ Y → (pr1 (P l1)) X → (pr1 (P l2)) Y
 
 total-subuniverse :
   {l1 l2 : Level} (P : subuniverse l1 l2) → UU ((lsuc l1) ⊔ l2)
@@ -72,6 +84,14 @@ universal-property-localization :
   UU ((lsuc l1) ⊔ l2)
 universal-property-localization {l1} (dpair P H) X (dpair Y p) l =
   (Z : UU l1) (q : P Z) → is-equiv (λ (h : Y → Z) → h ∘ l)
+
+universal-property-localization' :
+  (l : Level) (α : Level → Level) (P : (l : Level) → subuniverse l (α l))
+  (g : (l1 l2 : Level) → is-global-subuniverse α P l1 l2)
+  {l1 l2 : Level} (X : UU l1) (Y : total-subuniverse (P l2)) (f : X → pr1 Y) →
+  UU ((lsuc l) ⊔ ((α l) ⊔ (l1 ⊔ l2)))
+universal-property-localization' l α P g X Y f =
+  (Z : total-subuniverse (P l)) → is-equiv (λ (h : (pr1 Y) → (pr1 Z)) → h ∘ f)
 
 is-prop-universal-property-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1)
@@ -400,16 +420,65 @@ reflective-subuniverse :
   (l1 l2 : Level) → UU ((lsuc l1) ⊔ (lsuc l2))
 reflective-subuniverse l1 l2 = Σ (subuniverse l1 l2) is-reflective-subuniverse
 
+is-local :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2) →
+  UU l1 → UU l2
+is-local L = pr1 (pr1 L)
+
+is-prop-is-local :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2) →
+  (X : UU l1) → is-prop (is-local L X)
+is-prop-is-local L = pr2 (pr1 L)
+
 total-reflective-subuniverse :
   {l1 l2 : Level} (L : reflective-subuniverse l1 l2) → UU ((lsuc l1) ⊔ l2)
 total-reflective-subuniverse L = total-subuniverse (pr1 L)
 
-type-localization :
+local-type-localization :
   {l1 l2 : Level} (L : reflective-subuniverse l1 l2)
   (X : UU l1) → total-reflective-subuniverse L
-localization (dpair L rs) X = pr1 (rs X)
+local-type-localization L X = pr1 ((pr2 L) X)
 
-{-
+type-localization :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2) →
+  UU l1 → UU l1
+type-localization L X = pr1 (local-type-localization L X)
+
+is-local-type-localization :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2)
+  (X : UU l1) → is-local L (type-localization L X)
+is-local-type-localization L X = pr2 (local-type-localization L X)
+
+universal-map-localization :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2) (X : UU l1) →
+  Σ ( X → type-localization L X)
+    ( universal-property-localization (pr1 L) X (local-type-localization L X))
+universal-map-localization L X = pr2 ((pr2 L) X)
+
+unit-localization :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2)
+  (X : UU l1) → X → type-localization L X
+unit-localization L X = pr1 (universal-map-localization L X)
+
+universal-property-map-localization :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2) (X : UU l1) → 
+  universal-property-localization (pr1 L) X
+    ( local-type-localization L X)
+    ( unit-localization L X)
+universal-property-map-localization L X = pr2 (universal-map-localization L X)
+
 dependent-elimination-reflective-subuniverse :
-  {l1 l2 : Level} (P : reflective-subuniverse l1 l2) (X : UU l1)
--}
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2) (X : UU l1) →
+  (Y : type-localization L X → UU l1)
+  (is-loc-total-Y : is-local L (Σ _ Y)) →
+  is-equiv
+    ( λ (h : (x' : type-localization L X) → Y x') x → h (unit-localization L X x))
+dependent-elimination-reflective-subuniverse L X =
+  dependent-elimination-localization (pr1 L) X ((pr2 L) X)
+
+is-contr-square-localization :
+  {l1 l2 : Level} (L : reflective-subuniverse l1 l2) {X Y : UU l1} (f : X → Y) →
+  is-contr
+    ( Σ (type-localization L X → type-localization L Y)
+      ( λ Lf → coherence-square (unit-localization L X) f Lf (unit-localization L Y)))
+is-contr-square-localization L f = {!!}

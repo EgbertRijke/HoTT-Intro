@@ -70,7 +70,7 @@ hexagon-rotate-120 :
   (δ : Id x v) (ε : Id v v') (ζ : Id v' y) →
   coherence-hexagon α β γ δ ε ζ →
   coherence-hexagon (inv ε) (inv δ) α ζ (inv γ) (inv β)
-hexagon-rotate-120 refl refl refl refl refl refl refl = refl
+hexagon-rotate-120 refl refl refl refl refl .refl refl = refl
 
 hexagon-rotate-240 :
   {l : Level} {A : UU l} {x u u' v v' y : A}
@@ -78,12 +78,56 @@ hexagon-rotate-240 :
   (δ : Id x v) (ε : Id v v') (ζ : Id v' y) →
   coherence-hexagon α β γ δ ε ζ →
   coherence-hexagon γ (inv ζ) (inv ε) (inv β) (inv α) δ
-hexagon-rotate-240 refl refl refl refl refl refl refl = refl
+hexagon-rotate-240 refl refl refl refl refl .refl refl = refl
+
+hexagon-mirror-A :
+  {l : Level} {A : UU l} {x u u' v v' y : A}
+  (α : Id x u) (β : Id u u') (γ : Id u' y)
+  (δ : Id x v) (ε : Id v v') (ζ : Id v' y) →
+  coherence-hexagon α β γ δ ε ζ →
+  coherence-hexagon ε ζ (inv γ) (inv δ) α β
+hexagon-mirror-A refl refl refl refl refl .refl refl = refl
+
+hexagon-mirror-B :
+  {l : Level} {A : UU l} {x u u' v v' y : A}
+  (α : Id x u) (β : Id u u') (γ : Id u' y)
+  (δ : Id x v) (ε : Id v v') (ζ : Id v' y) →
+  coherence-hexagon α β γ δ ε ζ →
+  coherence-hexagon (inv α) δ ε β γ (inv ζ)
+hexagon-mirror-B refl refl refl refl refl .refl refl = refl
+
+hexagon-mirror-C :
+  {l : Level} {A : UU l} {x u u' v v' y : A}
+  (α : Id x u) (β : Id u u') (γ : Id u' y)
+  (δ : Id x v) (ε : Id v v') (ζ : Id v' y) →
+  coherence-hexagon α β γ δ ε ζ →
+  coherence-hexagon (inv γ) (inv β) (inv α) (inv ζ) (inv ε) (inv δ)
+hexagon-mirror-C refl refl refl refl refl .refl refl = refl
 
 {- Since the specification of a cube is rather lengthy, we use Agda's
    parametrized module system in order to avoid having to specify the same
    variables multiple times. 
 -}
+
+coherence-cube :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g)) →
+  UU _
+coherence-cube
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom =
+  (((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top)) ~
+  ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
 
 module Cubes
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
@@ -98,13 +142,10 @@ module Cubes
   (front-left : (h ∘ hB) ~ (hD ∘ h'))
   (front-right : (k ∘ hC) ~ (hD ∘ k'))
   (bottom : (h ∘ f) ~ (k ∘ g))
+  (c : coherence-cube
+    f g h k f' g' h' k' hA hB hC hD
+    top back-left back-right front-left front-right bottom)
   where
-  
-  coherence-cube :
-    UU _
-  coherence-cube =
-    (((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top)) ~
-    ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
 
   {-
     The symmetry group D_3 acts on a cube. However, the coherence filling a
@@ -124,253 +165,113 @@ module Cubes
     manipulating coherences of cubes.
   -}
 
-open Cubes
+  -- We show that a rotation of a commuting cube again commutes.
+  coherence-cube-rotate-120 :
+    coherence-cube
+      hC k' k hD hA f' f hB g' g h' h
+      back-left
+      (htpy-inv back-right) (htpy-inv top)
+      (htpy-inv bottom) (htpy-inv front-left)
+      front-right
+  coherence-cube-rotate-120 a' =
+    ( ap (λ t → t ∙ (ap h (back-left a')))
+      ( ap (λ t' → t' ∙ inv (bottom (hA a')))
+        ( ap-inv k (back-right a')))) ∙
+    ( ( hexagon-rotate-120
+        ( ap h (back-left a'))
+        ( front-left (f' a'))
+        ( ap hD (top a'))
+        ( bottom (hA a'))
+        ( ap k (back-right a'))
+        ( front-right (g' a'))
+        ( c a')) ∙
+      ( inv
+        ( ap (λ t → (front-right (g' a')) ∙ t)
+          ( ap (λ t' → t' ∙ inv (front-left (f' a')))
+            ( ap-inv hD (top a'))))))
 
--- We show that a rotation of a commuting cube again commutes.
-coherence-cube-rotate-120 :
-  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
-  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
-  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
-  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
-  (top : (h' ∘ f') ~ (k' ∘ g'))
-  (back-left : (f ∘ hA) ~ (hB ∘ f'))
-  (back-right : (g ∘ hA) ~ (hC ∘ g'))
-  (front-left : (h ∘ hB) ~ (hD ∘ h'))
-  (front-right : (k ∘ hC) ~ (hD ∘ k'))
-  (bottom : (h ∘ f) ~ (k ∘ g))
-  (c : coherence-cube
-       f g h k f' g' h' k' hA hB hC hD
-       top back-left back-right front-left front-right bottom) →
-  coherence-cube
-    hC k' k hD hA f' f hB g' g h' h
-    back-left
-    (htpy-inv back-right) (htpy-inv top)
-    (htpy-inv bottom) (htpy-inv front-left)
-    front-right
-coherence-cube-rotate-120
-  f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom c a' =
-  ( ap (λ t → t ∙ (ap h (back-left a')))
-    ( ap (λ t' → t' ∙ inv (bottom (hA a')))
-      ( ap-inv k (back-right a')))) ∙
-  ( ( hexagon-rotate-120
+  coherence-cube-rotate-240 :
+    coherence-cube
+      h' hB hD h g' hA hC g f' k' f k
+      (htpy-inv back-right)
+      top (htpy-inv back-left)
+      (htpy-inv front-right) bottom
+      (htpy-inv front-left)
+  coherence-cube-rotate-240 a' =
+    ( ap (λ t → _ ∙ t) (ap-inv k (back-right a'))) ∙
+    ( ( hexagon-rotate-240
+        ( ap h (back-left a'))
+        ( front-left (f' a'))
+        ( ap hD (top a'))
+        ( bottom (hA a'))
+        ( ap k (back-right a'))
+        ( front-right (g' a'))
+        ( c a')) ∙
+      ( inv
+        ( ap
+          ( λ t → inv (front-left (f' a')) ∙ t)
+          ( ap (λ t' → t' ∙ _) (ap-inv h (back-left a'))))))
+
+  {- 
+    We show that a reflection through the plane spanned by the vertices
+    A', A, and D of a commuting cube again commutes.
+  
+    Note: Since the vertices A' and D must always be fixed, the vertex A
+    determines the mirror symmetry.
+  -}
+  
+  coherence-cube-mirror-A :
+    coherence-cube g f k h g' f' k' h' hA hC hB hD
+      (htpy-inv top) back-right back-left front-right front-left (htpy-inv bottom)
+  coherence-cube-mirror-A a' =
+    ( ap (λ t → _ ∙ t) (ap-inv hD (top a'))) ∙
+    ( hexagon-mirror-A
       ( ap h (back-left a'))
       ( front-left (f' a'))
       ( ap hD (top a'))
       ( bottom (hA a'))
       ( ap k (back-right a'))
       ( front-right (g' a'))
-      ( c a')) ∙
-    ( inv
-      ( ap (λ t → (front-right (g' a')) ∙ t)
-        ( ap (λ t' → t' ∙ inv (front-left (f' a')))
-          ( ap-inv hD (top a'))))))
+      ( c a'))
 
-coherence-cube-rotate-240 :
-  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
-  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
-  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
-  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
-  (top : (h' ∘ f') ~ (k' ∘ g'))
-  (back-left : (f ∘ hA) ~ (hB ∘ f'))
-  (back-right : (g ∘ hA) ~ (hC ∘ g'))
-  (front-left : (h ∘ hB) ~ (hD ∘ h'))
-  (front-right : (k ∘ hC) ~ (hD ∘ k'))
-  (bottom : (h ∘ f) ~ (k ∘ g))
-  (c : coherence-cube
-       f g h k f' g' h' k' hA hB hC hD
-       top back-left back-right front-left front-right bottom) →
-  coherence-cube
-    h' hB hD h g' hA hC g f' k' f k
-    (htpy-inv back-right)
-    top (htpy-inv back-left)
-    (htpy-inv front-right) bottom
-    (htpy-inv front-left)
-coherence-cube-rotate-240 f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom c =
-  ( htpy-ap-concat
-     ( (hD ·l top) ∙h ((htpy-inv front-right) ·r g')) _ _
-     ( htpy-left-whisk-htpy-inv k back-right)) ∙h
-  ( htpy-inv
-    ( htpy-con-inv _
-      ( htpy-left-whisk k back-right)
-      ( (hD ·l top) ∙h ((htpy-inv front-right) ·r g'))
-      ( htpy-con-inv _ (front-right ·r g') (hD ·l top)
-        ( htpy-inv
-          ( ( ( htpy-inv-con
-                ( front-left ·r f')
-                ( hD ·l top) _
-                ( ( ( htpy-inv-con
-                      ( h ·l back-left)
-                      ( (front-left ·r f') ∙h (hD ·l top)) _
-                      ( ( htpy-assoc
-                            ( h ·l back-left)
-                            ( front-left ·r f')
-                            ( hD ·l top)) ∙h
-                          c)) ∙h
-                    ( htpy-ap-concat'
-                      ( htpy-inv (h ·l back-left))
-                      ( h ·l (htpy-inv back-left)) _
-                      ( htpy-inv (htpy-left-whisk-htpy-inv h back-left)))) ∙h
-                  ( htpy-assoc
-                    ( h ·l (htpy-inv back-left))
-                    ( bottom ·r hA)
-                    ( (k ·l back-right) ∙h (front-right ·r g'))))) ∙h
-              ( htpy-assoc
-                ( (htpy-inv front-left) ·r f')
-                ( (h ·l (htpy-inv back-left)) ∙h ( bottom ·r hA))
-                ( (k ·l back-right) ∙h (front-right ·r g')))) ∙h
-            ( htpy-assoc _ (k ·l back-right) (front-right ·r g')))))))
+  coherence-cube-mirror-B :
+    coherence-cube hB h' h hD hA g' g hC f' f k' k
+    back-right (htpy-inv back-left) top bottom (htpy-inv front-right) front-left
+  coherence-cube-mirror-B a' =
+    ( ap (λ t → t ∙ (ap k (back-right a')))
+      ( ap (λ t → t ∙ _) (ap-inv h (back-left a')))) ∙
+    ( hexagon-mirror-B
+      ( ap h (back-left a'))
+      ( front-left (f' a'))
+      ( ap hD (top a'))
+      ( bottom (hA a'))
+      ( ap k (back-right a'))
+      ( front-right (g' a'))
+      ( c a'))
 
-{- 
-  We show that a reflection through the plane spanned by the vertices
-  A', A, and D of a commuting cube again commutes.
+  coherence-cube-mirror-C :
+    coherence-cube k' hC hD k f' hA hB f g' h' g h
+    (htpy-inv back-left) (htpy-inv top) (htpy-inv back-right)
+    (htpy-inv front-left) (htpy-inv bottom) (htpy-inv front-right)
+  coherence-cube-mirror-C a' =
+    ( ap
+      ( λ t → (t ∙ inv (front-left (f' a'))) ∙ (ap h (inv (back-left a'))))
+      ( ap-inv hD (top a'))) ∙
+    ( ( ap (λ t → _ ∙ t) (ap-inv h (back-left a'))) ∙
+      ( ( hexagon-mirror-C
+          ( ap h (back-left a'))
+          ( front-left (f' a'))
+          ( ap hD (top a'))
+          ( bottom (hA a'))
+          ( ap k (back-right a'))
+          ( front-right (g' a'))
+          ( c a')) ∙
+        ( inv
+          ( ap
+            ( λ t → inv (front-right (g' a')) ∙ t)
+            ( ap (λ t' → t' ∙ _) (ap-inv k (back-right a')))))))
 
-  Note: Since the vertices A' and D must always be fixed, the vertex A
-  determines the mirror symmetry.
--}
-
-coherence-cube-mirror-A :
-  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
-  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
-  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
-  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
-  (top : (h' ∘ f') ~ (k' ∘ g'))
-  (back-left : (f ∘ hA) ~ (hB ∘ f'))
-  (back-right : (g ∘ hA) ~ (hC ∘ g'))
-  (front-left : (h ∘ hB) ~ (hD ∘ h'))
-  (front-right : (k ∘ hC) ~ (hD ∘ k'))
-  (bottom : (h ∘ f) ~ (k ∘ g))
-  (c : coherence-cube
-       f g h k f' g' h' k' hA hB hC hD
-       top back-left back-right front-left front-right bottom) →
-  coherence-cube g f k h g' f' k' h' hA hC hB hD
-    (htpy-inv top) back-right back-left front-right front-left (htpy-inv bottom)
-coherence-cube-mirror-A f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom c =
-  ( htpy-ap-concat
-    ( (k ·l back-right) ∙h (front-right ·r g')) _ _
-    ( htpy-left-whisk-htpy-inv hD top)) ∙h
-  ( htpy-inv-con
-    ( bottom ·r hA) _
-    ( (h ·l back-left) ∙h (front-left ·r f'))
-    ( ( htpy-assoc
-        ( bottom ·r hA)
-        ( (k ·l back-right) ∙h (front-right ·r g'))
-        ( htpy-inv (hD ·l top))) ∙h
-      ( htpy-inv
-        ( htpy-con-inv
-          ( (h ·l back-left) ∙h (front-left ·r f'))
-          ( hD ·l top)
-          ( (bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
-          ( c)))))
-
-coherence-cube-mirror-B :
-  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
-  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
-  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
-  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
-  (top : (h' ∘ f') ~ (k' ∘ g'))
-  (back-left : (f ∘ hA) ~ (hB ∘ f'))
-  (back-right : (g ∘ hA) ~ (hC ∘ g'))
-  (front-left : (h ∘ hB) ~ (hD ∘ h'))
-  (front-right : (k ∘ hC) ~ (hD ∘ k'))
-  (bottom : (h ∘ f) ~ (k ∘ g))
-  (c : coherence-cube
-       f g h k f' g' h' k' hA hB hC hD
-       top back-left back-right front-left front-right bottom) →
-  coherence-cube hB h' h hD hA g' g hC f' f k' k
-  back-right (htpy-inv back-left) top bottom (htpy-inv front-right) front-left
-coherence-cube-mirror-B f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom c =
-  ( htpy-inv
-    ( htpy-assoc
-      ( h ·l (htpy-inv back-left))
-      ( bottom ·r hA)
-      ( k ·l back-right))) ∙h
-  ( ( ( htpy-ap-concat' _ _
-        ( (bottom ·r hA) ∙h (k ·l back-right))
-        ( htpy-left-whisk-htpy-inv h back-left)) ∙h
-      ( htpy-con-inv _
-        ( front-right ·r g')
-        ( (front-left ·r f') ∙h (hD ·l top))
-        ( ( htpy-inv
-            ( htpy-assoc (htpy-inv (h ·l back-left)) _ (front-right ·r g'))) ∙h
-          ( htpy-inv
-            ( htpy-inv-con (h ·l back-left) _ _
-              ( ( htpy-assoc (h ·l back-left) (front-left ·r f') (hD ·l top)) ∙h
-                ( c ∙h
-                  ( htpy-assoc
-                    ( bottom ·r hA)
-                    ( k ·l back-right)
-                    ( front-right ·r g'))))))))) ∙h
-    ( htpy-inv
-      ( htpy-assoc
-        ( front-left ·r f')
-        ( hD ·l top)
-        ( (htpy-inv front-right) ·r g'))))
-
-coherence-cube-mirror-C :
-  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
-  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
-  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
-  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
-  (top : (h' ∘ f') ~ (k' ∘ g'))
-  (back-left : (f ∘ hA) ~ (hB ∘ f'))
-  (back-right : (g ∘ hA) ~ (hC ∘ g'))
-  (front-left : (h ∘ hB) ~ (hD ∘ h'))
-  (front-right : (k ∘ hC) ~ (hD ∘ k'))
-  (bottom : (h ∘ f) ~ (k ∘ g))
-  (c : coherence-cube
-       f g h k f' g' h' k' hA hB hC hD
-       top back-left back-right front-left front-right bottom) →
-  coherence-cube k' hC hD k f' hA hB f g' h' g h
-  (htpy-inv back-left) (htpy-inv top) (htpy-inv back-right)
-  (htpy-inv front-left) (htpy-inv bottom) (htpy-inv front-right)
-coherence-cube-mirror-C f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom c =
-  ( htpy-ap-concat
-    ( (hD ·l (htpy-inv top)) ∙h ((htpy-inv front-left) ·r f')) _ _
-    ( htpy-left-whisk-htpy-inv h back-left)) ∙h
-  ( ( htpy-ap-concat' _ _
-      ( htpy-inv (h ·l back-left))
-      ( htpy-ap-concat' _ _
-        ( (htpy-inv front-left) ·r f')
-        ( htpy-left-whisk-htpy-inv hD top))) ∙h
-    ( ( ( htpy-ap-concat' _ _
-          ( htpy-inv (h ·l back-left))
-          ( htpy-inv (htpy-inv-assoc (front-left ·r f') (hD ·l top)))) ∙h
-        ( ( htpy-inv
-            ( htpy-inv-assoc
-              ( h ·l back-left)
-              ( (front-left ·r f') ∙h (hD ·l top)))) ∙h
-          ( ( ( htpy-ap-inv
-                ( ( htpy-assoc
-                    ( h ·l back-left)
-                    ( front-left ·r f')
-                    ( hD ·l top)) ∙h
-                  ( ( c) ∙h
-                    ( htpy-assoc
-                      ( bottom ·r hA)
-                      ( k ·l back-right)
-                      ( front-right ·r g'))))) ∙h
-              ( htpy-inv-assoc _ (front-right ·r g'))) ∙h
-            ( htpy-ap-concat (htpy-inv (front-right ·r g')) _ _
-              ( htpy-inv-assoc (bottom ·r hA) (k ·l back-right)))))) ∙h
-      ( htpy-ap-concat ((htpy-inv front-right) ·r g') _ _
-        ( htpy-ap-concat' _ _
-          ( (htpy-inv bottom) ·r hA)
-          ( htpy-inv (htpy-left-whisk-htpy-inv k back-right))))))
+open Cubes public
 
 rectangle-back-left-front-left-cube : 
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
