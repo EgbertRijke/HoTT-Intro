@@ -33,30 +33,25 @@ open Lecture13 public
     A term of type coherence-cube is a homotopy filling the cube.
   -}
 
-htpy-square-htpy-refl-vertical :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
-  {f f' : A → X} (Hf : f ~ f') (g : B → X)
-  (p : C → A) {q q' : C → B} (Hq : q ~ q') →
-  (H : (f ∘ p) ~ (g ∘ q)) (H' : (f' ∘ p) ~ (g ∘ q')) →
-  (H ∙h (g ·l Hq)) ~ ((Hf ·r p) ∙h H') →
-  htpy-square Hf (htpy-refl g) (dpair p (dpair q H)) (dpair p (dpair q' H'))
-htpy-square-htpy-refl-vertical Hf g p Hq H H' K =
-  dpair
-    ( htpy-refl p)
-    ( dpair Hq (htpy-ap-concat H _ _ (htpy-right-unit (g ·l Hq)) ∙h K))
-
-htpy-square-htpy-refl-horizontal :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
-  (f : A → X) {g g' : B → X} (Hg : g ~ g')
-  {p p' : C → A} (Hp : p ~ p') (q : C → B)
-  (H : (f ∘ p) ~ (g ∘ q)) (H' : (f ∘ p') ~ (g' ∘ q)) →
-  ((H ∙h (Hg ·r q)) ~ ((f ·l Hp) ∙h H')) →
-  htpy-square (htpy-refl f) Hg (dpair p (dpair q H)) (dpair p' (dpair q H'))
-htpy-square-htpy-refl-horizontal f Hg Hp q H H' K =
-  dpair Hp
-    ( dpair
-      ( htpy-refl q)
-      ( K ∙h (htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l Hp))))))
+coherence-cube :
+  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
+  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
+  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
+  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
+  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
+  (top : (h' ∘ f') ~ (k' ∘ g'))
+  (back-left : (f ∘ hA) ~ (hB ∘ f'))
+  (back-right : (g ∘ hA) ~ (hC ∘ g'))
+  (front-left : (h ∘ hB) ~ (hD ∘ h'))
+  (front-right : (k ∘ hC) ~ (hD ∘ k'))
+  (bottom : (h ∘ f) ~ (k ∘ g)) →
+  UU _
+coherence-cube
+  f g h k f' g' h' k' hA hB hC hD
+  top back-left back-right front-left front-right bottom =
+  (((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top)) ~
+  ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
 
 coherence-hexagon :
   {l : Level} {A : UU l} {x u u' v v' y : A}
@@ -108,26 +103,6 @@ hexagon-mirror-C refl refl refl refl refl .refl refl = refl
    parametrized module system in order to avoid having to specify the same
    variables multiple times. 
 -}
-
-coherence-cube :
-  {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
-  {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D)
-  {A' : UU l1'} {B' : UU l2'} {C' : UU l3'} {D' : UU l4'}
-  (f' : A' → B') (g' : A' → C') (h' : B' → D') (k' : C' → D')
-  (hA : A' → A) (hB : B' → B) (hC : C' → C) (hD : D' → D)
-  (top : (h' ∘ f') ~ (k' ∘ g'))
-  (back-left : (f ∘ hA) ~ (hB ∘ f'))
-  (back-right : (g ∘ hA) ~ (hC ∘ g'))
-  (front-left : (h ∘ hB) ~ (hD ∘ h'))
-  (front-right : (k ∘ hC) ~ (hD ∘ k'))
-  (bottom : (h ∘ f) ~ (k ∘ g)) →
-  UU _
-coherence-cube
-  f g h k f' g' h' k' hA hB hC hD
-  top back-left back-right front-left front-right bottom =
-  (((h ·l back-left) ∙h (front-left ·r f')) ∙h (hD ·l top)) ~
-  ((bottom ·r hA) ∙h ((k ·l back-right) ∙h (front-right ·r g')))
 
 module Cubes
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
