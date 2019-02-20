@@ -37,6 +37,47 @@ compute-transport-cone-family-dependent-pullback-property
       ( eq-htpy-htpy-refl f))
     g H
 
+fiberwise-square-dependent-pullback-property :
+  {l1 l2 l3 l4 l5 l6 : Level}
+  {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5} (P : Y → UU l6)
+  (f : S → A) (g : S → B) (i : A → X) (j : B → X) (H : (i ∘ f) ~ (j ∘ g)) →
+  (γ : X → Y) →
+  coherence-square
+    ( λ (γ' : (x : X) → P (γ x)) b → γ' (j b))
+    ( λ (γ' : (x : X) → P (γ x)) a → γ' (i a))
+    ( λ (β' : (b : B) → P (γ (j b))) s → β' (g s))
+    ( λ (α' : (a : A) → P (γ (i a))) →
+      tr
+        ( λ (σ : S → Y) → (s : S) → P (σ s))
+        ( eq-htpy (γ ·l H))
+        ( λ s → α' (f s)))
+fiberwise-square-dependent-pullback-property P f g i j H γ γ' =
+  eq-htpy
+    ( λ s →
+      ( compute-transport-cone-family-dependent-pullback-property
+        ( P)
+        ( γ ·l H)
+        ( λ s → γ' (i (f s)))
+        ( s)) ∙
+      ( ( tr-precompose-fam P γ (H s) (γ' (i (f s)))) ∙
+        ( apd γ' (H s))))
+
+cone-family-dependent-pullback-property :
+  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) (P : X → UU l) →
+  cone-family
+    ( λ (σ : S → X) → (s : S) → P (σ s))
+    ( λ (α : A → X) (α' : (a : A) → P (α a)) (s : S) → α' (f s))
+    ( λ (β : B → X) (β' : (b : B) → P (β b)) (s : S) → β' (g s))
+    ( cone-pullback-property-pushout f g c X)
+    ( λ (γ : X → X) → (x : X) → P (γ x))
+cone-family-dependent-pullback-property f g (dpair i (dpair j H)) P γ =
+  dpair
+    ( λ γ' a → γ' (i a))
+    ( dpair
+      ( λ γ' b → γ' (j b))
+      ( fiberwise-square-dependent-pullback-property P f g i j H γ))
+
 coherence-square-tot-cone-family-dependent-pullback-property :
   {l1 l2 l3 l4 l5 l6 : Level}
   {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5} (P : Y → UU l6)
@@ -58,29 +99,11 @@ coherence-square-tot-cone-family-dependent-pullback-property :
       ( λ (σ : S → Y) → (s : S) → P (σ s))
       ( λ (α : A → Y) → α ∘ f)
       ( λ (α : A → Y) (α' : (a : A) → P (α a)) (s : S) → α' (f s)))
-coherence-square-tot-cone-family-dependent-pullback-property P f g i j H (dpair γ γ') =
-  eq-pair (dpair (eq-htpy (γ ·l H)) {!!})
-
-cone-family-dependent-pullback-property :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
-  (f : S → A) (g : S → B) (c : cocone f g X) (P : X → UU l) →
-  cone-family
-    ( λ (σ : S → X) → (s : S) → P (σ s))
-    ( λ (α : A → X) (α' : (a : A) → P (α a)) (s : S) → α' (f s))
-    ( λ (β : B → X) (β' : (b : B) → P (β b)) (s : S) → β' (g s))
-    ( cone-pullback-property-pushout f g c X)
-    ( λ (γ : X → X) → (x : X) → P (γ x))
-cone-family-dependent-pullback-property f g (dpair i (dpair j H)) P γ =
-  dpair
-    ( λ γ' a → γ' (i a))
-    ( dpair
-      ( λ γ' b → γ' (j b))
-      ( λ γ' → eq-htpy
-        ( λ s →
-          ( compute-transport-cone-family-dependent-pullback-property
-            ( P) (γ ·l H) (λ a → γ' (i (f a))) s) ∙
-          ( ( tr-precompose-fam P γ (H s) (γ' (i (f s)))) ∙
-            ( apd γ' (H s))))))
+coherence-square-tot-cone-family-dependent-pullback-property
+  P f g i j H (dpair γ γ') =
+  eq-pair (dpair
+    ( eq-htpy (γ ·l H))
+    ( fiberwise-square-dependent-pullback-property P f g i j H γ γ'))
 
 coherence-cube-inv-choice-∞ :
   {l1 l2 l3 l4 l5 l6 : Level}
@@ -117,7 +140,24 @@ coherence-cube-inv-choice-∞ :
     ( coherence-square-inv-choice-∞ f)
     ( coherence-square-inv-choice-∞ g)
     ( λ φ → eq-htpy (φ ·l H))
-coherence-cube-inv-choice-∞ P f g i j H = {!!}
+coherence-cube-inv-choice-∞ P f g i j H (dpair γ γ') =
+  concat
+    ( ( inv-choice-∞ ·l
+        coherence-square-tot-cone-family-dependent-pullback-property P f g
+        i j H)
+      (dpair γ γ'))
+    ( refl)
+    ( concat (eq-htpy ((λ x → dpair (γ x) (γ' x)) ·l H))
+      ( concat
+        ( eq-htpy
+          ( λ s → eq-pair
+            ( dpair
+              ( ap γ (H s))
+              ( ( tr-precompose-fam P γ (H s) (γ' (i (f s)))) ∙
+                ( apd γ' (H s))))))
+        {!!}
+        {!!})
+      ( inv (right-unit _)))
 
 ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3} (f : A → B)
@@ -139,7 +179,7 @@ ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy {A = A} {B} {C} f f' g' H' =
       ( eq-pair (dpair refl (eq-htpy H'))))
     ( eq-htpy (λ s → eq-pair (dpair refl (H' s)))))
   ( ap
-    ( λ t → ap inv-choice-∞
+    ( λ t → ap (inv-choice-∞ {A = A} {B = λ a → B} {C = λ a → C})
       { x = dpair f f'}
       { y = choice-∞ (λ x → dpair (f x) (f' x))}
       ( eq-pair (dpair refl t)))
@@ -147,7 +187,6 @@ ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy {A = A} {B} {C} f f' g' H' =
   ( g')
   ( H') 
 
-{-
 ap-inv-choice-∞-eq-pair-eq-htpy :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3}
   {f g : A → B} (H : f ~ g) (f' : (x : A) → C (f x)) (g' : (x : A) → C (g x))
@@ -168,8 +207,8 @@ ap-inv-choice-∞-eq-pair-eq-htpy {A = A} {B} {C} {f} {g} H f' g' H' =
        ( eq-htpy (λ s → eq-pair (dpair (H s) ({!!} ∙ (H' s))))))
    {!!}
    g H g' H'
--}
 
+{-
 {-
 coherence-cone-family-dependent-pullback-property :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
@@ -672,3 +711,4 @@ isretr-eq-htpy-generating-data-fam-pushout :
 isretr-eq-htpy-generating-data-fam-pushout l f g s t =
   isretr-inv-is-equiv
     ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
+-}
