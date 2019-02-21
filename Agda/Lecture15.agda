@@ -21,6 +21,27 @@ coherence-square-inv-choice-∞ :
     ( inv-choice-∞)
 coherence-square-inv-choice-∞ h (dpair f g) = refl
 
+{-
+htpy-dependent-precomposition :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {P : C → UU l4}
+  (γ : B → C) {f g : A → B} (H : f ~ g) →
+  ( ( tr (λ (α : A → C) → (a : A) → P (α a)) (eq-htpy (γ ·l H))) ∘
+    ( λ (h : (b : B) → P (γ b)) a → h (f a))) ~
+  ( λ (h : (b : B) → P (γ b)) a → (h (g a)))
+htpy-dependent-precomposition {A = A} {B} {C} {P} γ {f} {g} =
+  ind-htpy f
+    ( λ g H →
+      ( ( tr (λ (α : A → C) → (a : A) → P (α a)) (eq-htpy (γ ·l H))) ∘
+        ( λ (h : (b : B) → P (γ b)) a → h (f a))) ~
+      ( λ h a → h (g a)))
+    ( tr ( λ t →
+           ( λ a → tr (λ α → (a₁ : A) → P (α a₁)) t (λ a₁ → a (f a₁))) ~
+           ( λ h a → h (f a)))
+         ( eq-htpy-htpy-refl (γ ∘ f))
+         ( htpy-refl (λ h a → h (f a))))
+    g
+-}
+
 compute-transport-cone-family-dependent-pullback-property :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
   {f g : A → B} (H : f ~ g) (f' : (a : A) → C (f a)) → 

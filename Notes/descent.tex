@@ -165,7 +165,9 @@ commutes, for every $x:S$. These are the \define{computation rules} for pushouts
 
 \begin{proof}
   We have already seen in \cref{thm:pushout_up} that (i) $\Leftrightarrow$ (ii).
-  Next, we show that (ii) $\Rightarrow$ (iii). To see this, note that we have a commuting cube
+  Next, we show that (ii) $\Rightarrow$ (iii), which is the most complicated implication to prove.
+
+  To see this, note that we have a commuting cube
   \begin{equation*}
     \begin{tikzcd}[column sep=tiny]
       &  \sm{h:C\to C}\prd{c:C}P(h(c)) \arrow[dl] \arrow[d] \arrow[dr] \\
@@ -177,8 +179,8 @@ commutes, for every $x:S$. These are the \define{computation rules} for pushouts
   in which the vertical maps are equivalences. Moreover, the bottom square is a pullback square by the pullback property of pushouts, so we conclude that the top square is a pullback square. Since this is a square of total spaces over a pullback square, we invoke \cref{lem:fiberwise-pullback} to conclude that for each $h:C \to C$, the square
   \begin{equation*}
     \begin{tikzcd}
-      \prd{c:C}P(h(c)) \arrow[r] \arrow[d] & \prd{b:B} P(h(j(b))) \arrow[d] \\
-      \prd{a:A}P(h(i(a))) \arrow[r] & \prd{s:S}P(h(j(g(s))))
+      \prd{c:C}P(h(c)) \arrow[rr] \arrow[d] & &[2em] \prd{b:B} P(h(j(b))) \arrow[d] \\
+      \prd{a:A}P(h(i(a))) \arrow[r] & \prd{s:S}P(h(i(f(s)))) \arrow[r,swap,"\mathsf{tr}_{((k:S\to C)\mapsto \prd{s:S}P(k(s)))}(\mathsf{eq\usc{}htpy}(h\cdot H))" yshift=-2ex] & \prd{s:S}P(h(j(g(s))))
     \end{tikzcd}
   \end{equation*}
   is a pullback square. We use the case $h\jdeq\idfunc:C\to C$ to conclude that
