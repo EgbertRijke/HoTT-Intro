@@ -828,6 +828,12 @@ cone-family {C = C} PX f' g' c PC =
   (x : C) →
   cone ((tr PX (pr2 (pr2 c) x)) ∘ (f' (pr1 c x))) (g' (pr1 (pr2 c) x)) (PC x)
 
+htpy-toto :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {P : A → UU l3} (Q : B → UU l4)
+  {f f' : A → B} (H : f ~ f') (g : (x : A) → P x → Q (f x)) {g' : (x : A) → P x → Q (f' x)} (K : (x : A) → ((tr Q (H x)) ∘ (g x)) ~ (g' x)) →
+  (toto Q f g) ~ (toto Q f' g')
+htpy-toto Q H g K t = eq-pair (dpair (H (pr1 t)) (K (pr1 t) (pr2 t)))
+
 tot-cone-cone-family :
   {l1 l2 l3 l4 l5 l6 l7 l8 : Level}
   {X : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
@@ -841,10 +847,10 @@ tot-cone-cone-family PX f' g' c c' =
     ( toto _ (pr1 c) (λ x → pr1 (c' x)))
     ( dpair
       ( toto _ (pr1 (pr2 c)) (λ x → (pr1 (pr2 (c' x)))))
-      ( λ t → eq-pair
-         ( dpair
-           ( pr2 (pr2 c) (pr1 t))
-           ( pr2 (pr2 (c' (pr1 t))) (pr2 t)))))
+      ( htpy-toto PX
+        ( pr2 (pr2 c))
+        ( λ z → (f' (pr1 c z)) ∘ (pr1 (c' z)))
+        ( λ z → pr2 (pr2 (c' z)))))
 
 map-canpb-tot-cone-cone-fam-right-factor :
   {l1 l2 l3 l4 l5 l6 l7 l8 : Level}

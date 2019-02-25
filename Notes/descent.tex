@@ -144,9 +144,9 @@ commutes, for every $x:S$. These are the \define{computation rules} for pushouts
   \item The square in \cref{eq:dppp1} satisfies the pullback property of pushouts.
   \item The square satisfies the \define{dependent pullback property} of pushouts: For every family $P$ over $C$, the square
     \begin{equation}\label{eq:dppp2}
-      \begin{tikzcd}[column sep=10em]
-        \prd{z:C}P(z) \arrow[r,"h\mapsto h\circ j"] \arrow[d,swap,"h\mapsto h\circ i"] & \prd{y:B}P(j(y)) \arrow[d,"h\mapsto h\circ g"] \\
-        \prd{x:A}P(i(x)) \arrow[r,swap,"{h\mapsto \lam{s}\mathsf{tr}_P(H(s),h(f(s)))}"] & \prd{s:S}P(j(g(s))),
+      \begin{tikzcd}[column sep=large]
+        \prd{z:C}P(z) \arrow[rr,"h\mapsto h\circ j"] \arrow[d,swap,"h\mapsto h\circ i"] & &[1em] \prd{y:B}P(j(y)) \arrow[d,"h\mapsto h\circ g"] \\
+        \prd{x:A}P(i(x)) \arrow[r,swap,"{h\mapsto h \circ f}"] & \prd{s:S}P(i(f(s))) \arrow[r,swap,"{\lam{h}{s}\mathsf{tr}_P(H(s),h(s))}" yshift=-2ex] & \prd{s:S}P(j(g(s))),
       \end{tikzcd}
     \end{equation}
     which commutes by the homotopy
@@ -183,12 +183,24 @@ commutes, for every $x:S$. These are the \define{computation rules} for pushouts
       \prd{a:A}P(h(i(a))) \arrow[r] & \prd{s:S}P(h(i(f(s)))) \arrow[r,swap,"\mathsf{tr}_{((k:S\to C)\mapsto \prd{s:S}P(k(s)))}(\mathsf{eq\usc{}htpy}(h\cdot H))" yshift=-2ex] & \prd{s:S}P(h(j(g(s))))
     \end{tikzcd}
   \end{equation*}
-  is a pullback square. We use the case $h\jdeq\idfunc:C\to C$ to conclude that
-  the dependent pullback property holds.
+  is a pullback square. Note that the transport with respect to the family $k\mapsto \prd{s:S}(Pk(s))$ along the identification $\mathsf{eq\usc{}htpy}(h\cdot H)$ is homotopic to the map
+  \begin{equation*}
+    \lam{h}{s}\mathsf{tr}_{P\circ h}(H(s),h(s)):\prd{s:S}P(h(i(f(s)))) \to \prd{s:S}P(h(j(g(s)))).
+  \end{equation*}
+  Therefore we conclude that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \prd{c:C}P(h(c)) \arrow[rr] \arrow[d] & &[2em] \prd{b:B} P(h(j(b))) \arrow[d] \\
+      \prd{a:A}P(h(i(a))) \arrow[r] & \prd{s:S}P(h(i(f(s)))) \arrow[r,swap,"{\lam{h}{s}\mathsf{tr}_{P\circ h}(H(s),h(s))}" yshift=-2ex] & \prd{s:S}P(h(j(g(s))))
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square for each $h:C\to C$. Using the case $h\jdeq\idfunc : C \to C$ we conclude that the cocone $(i,j,H)$ satisfies the dependent pullback property.
 
   To see that (iii) implies (ii) we recall that transport with respect to a trivial family is homotopic to the identity function. Thus we obtain the pullback property from the dependent pullback property using the trivial family $\lam{c}T$ over $C$.
 
-  To see that (iii) $\Leftrightarrow$ (iv) we note that 
+  To see that (iii) $\Leftrightarrow$ (iv) we note that $\mathsf{gen}$ is an equivalence if and only if the gap map of the square in \cref{eq:dppp2} is an equivalence.
+
+  It is clear that (iv) implies (v), so it remains to see that (v) implies (iv). TODO
 \end{proof}
 
 \section{Type families over pushouts}

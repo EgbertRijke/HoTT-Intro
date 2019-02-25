@@ -237,16 +237,24 @@ is-set-function-type :
   is-set B → is-set (A → B)
 is-set-function-type = is-trunc-function-type zero-𝕋
 
-choice-∞ :
+type-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
-  {C : (x : A) → B x → UU l3} → ((x : A) → Σ (B x) (λ y → C x y)) →
-  Σ ((x : A) → B x) (λ f → (x : A) → C x (f x))
+  (C : (x : A) → B x → UU l3) → UU (l1 ⊔ (l2 ⊔ l3))
+type-choice-∞ {A = A} {B} C = Σ ((x : A) → B x) (λ f → (x : A) → C x (f x))
+
+Π-total-fam :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
+  (C : (x : A) → B x → UU l3) → UU (l1 ⊔ (l2 ⊔ l3))
+Π-total-fam {A = A} {B} C = (x : A) → Σ (B x) (C x)
+
+choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
+  Π-total-fam C → type-choice-∞ C
 choice-∞ φ = dpair (λ x → pr1 (φ x)) (λ x → pr2 (φ x))
 
 inv-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
-  Σ ((x : A) → B x) (λ f → (x : A) → C x (f x)) →
-  (x : A) → Σ (B x) (λ y → C x y)
+  type-choice-∞ C → Π-total-fam C
 inv-choice-∞ ψ x = dpair ((pr1 ψ) x) ((pr2 ψ) x)
 
 issec-inv-choice-∞ :
