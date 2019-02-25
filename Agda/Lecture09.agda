@@ -187,14 +187,14 @@ Ind-htpy f = IND-HTPY-FUNEXT f (funext f)
 ind-htpy :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   (f : (x : A) → B x) (C : (g : (x : A) → B x) → (f ~ g) → UU l3) →
-  C f (htpy-refl f) → (g : (x : A) → B x) (H : f ~ g) → C g H
-ind-htpy f C = pr1 (Ind-htpy f C)
+  C f (htpy-refl f) → {g : (x : A) → B x} (H : f ~ g) → C g H
+ind-htpy f C t {g} = pr1 (Ind-htpy f C) t g
 
 comp-htpy :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   (f : (x : A) → B x) (C : (g : (x : A) → B x) → (f ~ g) → UU l3) →
   (c : C f (htpy-refl f)) →
-  Id (ind-htpy f C c f (htpy-refl f)) c
+  Id (ind-htpy f C c (htpy-refl f)) c
 comp-htpy f C = pr2 (Ind-htpy f C)
 
 is-contr-Π :
@@ -437,11 +437,10 @@ is-equiv-htpy-concat :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
   {f g : (x : A) → B x} (H : f ~ g) →
   (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H)
-is-equiv-htpy-concat {A = A} {B = B} {f} {g} H =
+is-equiv-htpy-concat {A = A} {B = B} {f} =
   ind-htpy f
     ( λ g H → (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H))
     ( λ h → is-equiv-id (f ~ h))
-    g H
 
 htpy-concat' :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
@@ -875,7 +874,7 @@ universal-property-unit-is-equiv-ind-unit X x is-equiv-ind-unit l2 Y =
 
 tr-issec-eq-htpy :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
-  (g g' : B → A) (H : g ~ g') (G : (f ∘ g) ~ id) →
+  (g : B → A) {g' : B → A} (H : g ~ g') (G : (f ∘ g) ~ id) →
   (tr (λ (h : B → A) → (f ∘ h) ~ id) (eq-htpy H) G) ~ ((htpy-inv (f ·l H)) ∙h G)
 tr-issec-eq-htpy {A = A} {B = B} f g =
   let P = λ (h : B → A) → (f ∘ h) ~ id in
@@ -901,7 +900,6 @@ sec-left-factor-retract-of-sec-composition {X = X} f g h H sec-h =
           ( eq-htpy
             ( ( tr-issec-eq-htpy g
                 ( h ∘ ((pr1 sec-h) ∘ (pr1 sec-g)))
-                ( pr1 sec-g)
                 ( K)
                 ( pr2
                   ( section-comp f g h H sec-h
@@ -930,16 +928,15 @@ sec-left-factor-retract-of-sec-composition {X = X} f g h H sec-h =
 
 tr-isretr-eq-htpy :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
-  (h h' : B → A) (H : h ~ h') (is-retr-h : (h ∘ f) ~ id) →
+  (h : B → A) {h' : B → A} (H : h ~ h') (is-retr-h : (h ∘ f) ~ id) →
   (tr (λ (k : B → A) → (k ∘ f) ~ id) (eq-htpy H) is-retr-h) ~
   ((htpy-inv (H ·r f)) ∙h is-retr-h)
-tr-isretr-eq-htpy {A = A} {B} f h h' H is-retr-h =
+tr-isretr-eq-htpy {A = A} {B} f h =
   let P = λ (k : B → A) → (k ∘ f) ~ id in
   ind-htpy h
     ( λ h' H →
       ( K : (h ∘ f) ~ id) → (tr P (eq-htpy H) K) ~ ((htpy-inv (H ·r f)) ∙h K))
     ( λ K → htpy-eq (ap (λ t → tr P t K) (eq-htpy-htpy-refl h)))
-    h' H is-retr-h
   
 sec-right-factor-retract-of-sec-left-factor :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -956,7 +953,6 @@ sec-right-factor-retract-of-sec-left-factor f g h H retr-g =
           ( eq-htpy ((pr1 retr-h) ·l (pr2 retr-g)))
           ( eq-htpy
             ( ( tr-isretr-eq-htpy h _ _
-                ( (pr1 retr-h) ·l (pr2 retr-g))
                 ( pr2
                   ( retraction-comp f g h H retr-g
                   ( retraction-comp' f g h H retr-g retr-h)))) ∙h

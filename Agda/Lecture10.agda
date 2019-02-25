@@ -1844,12 +1844,11 @@ is-contr-total-htpy-square-htpy-refl :
   (f : A → X) {g g' : B → X} (Hg : g ~ g') →
   (c : cone f g C) →
   is-contr (Σ (cone f g' C) (htpy-square (htpy-refl f) Hg c))
-is-contr-total-htpy-square-htpy-refl {C = C} f {g} {g'} Hg =
+is-contr-total-htpy-square-htpy-refl {C = C} f {g} =
    ind-htpy g
      ( λ g'' Hg' → ( c : cone f g C) →
        is-contr (Σ (cone f g'' C) (htpy-square (htpy-refl f) Hg' c)))
      ( is-contr-total-htpy-square-htpy-refl-htpy-refl f g)
-     g' Hg
 
 is-contr-total-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
@@ -1864,7 +1863,7 @@ is-contr-total-htpy-square {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg =
     ( λ f'' Hf' → (g g' : B → X) (Hg : g ~ g') (c : cone f g C) →
       is-contr (Σ (cone f'' g' C) (htpy-square Hf' Hg c)))
     ( λ g g' Hg → is-contr-total-htpy-square-htpy-refl f Hg)
-    f' Hf g g' Hg
+    Hf g g' Hg
 
 tr-tr-htpy-refl-cone :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
@@ -1918,7 +1917,7 @@ htpy-square-eq' :
       tr-tr-c = tr (λ y → cone f y C) (eq-htpy Hg) tr-c
   in
   Id tr-tr-c c' → htpy-square (htpy-refl f) Hg c c'
-htpy-square-eq' {C = C} f {g} {g'} =
+htpy-square-eq' {C = C} f {g} =
   ind-htpy g
     ( λ g'' Hg' →
       ( c : cone f g C) (c' : cone f g'' C) →
@@ -1926,7 +1925,6 @@ htpy-square-eq' {C = C} f {g} {g'} =
         ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
       htpy-square (htpy-refl f) Hg' c c')
     ( htpy-square-eq-htpy-refl-htpy-refl f g)
-    g'
 
 comp-htpy-square-eq' :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
@@ -1962,7 +1960,7 @@ htpy-square-eq {A = A} {B} {X} {C} {f} {f'} Hf {g} {g'} Hg c c' p =
       ( tr (λ f''' → cone f''' g C) (eq-htpy Hf') c)) c') →
     htpy-square Hf' Hg c c')
   ( λ g g' → htpy-square-eq' f {g = g} {g' = g'})
-  f' Hf g g' Hg c c' p
+  Hf g g' Hg c c' p
 
 comp-htpy-square-eq : 
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
@@ -2009,8 +2007,8 @@ is-fiberwise-equiv-htpy-square-eq
               ( is-contr-total-htpy-square (htpy-refl f) (htpy-refl g) c)
               ( htpy-square-eq-htpy-refl f g c) c')
             ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c'))
-        g' Hg c c')
-    f' Hf g g' Hg c c'
+        Hg c c')
+    Hf g g' Hg c c'
 
 eq-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}

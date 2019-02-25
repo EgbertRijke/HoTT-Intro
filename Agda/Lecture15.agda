@@ -69,11 +69,10 @@ tr-eq-htpy-fam-lifts :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4) →
   (h : B → X) {f g : A → B} (H : f ~ g) →
   tr (fam-lifts A P) (eq-htpy (h ·l H)) ~ (tr-fam-lifts' P h H)
-tr-eq-htpy-fam-lifts P h {f} {g} =
+tr-eq-htpy-fam-lifts P h {f} =
   ind-htpy f
     ( λ g H → tr (fam-lifts _ P) (eq-htpy (h ·l H)) ~ (tr-fam-lifts' P h H))
     ( λ k → ap (λ t → tr (fam-lifts _ P) t k) (eq-htpy-htpy-refl (h ∘ f)))
-    g
 
 precompose-lifts :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -191,7 +190,7 @@ total-htpy-coherence-square-inv-choice-∞ :
   Σ ( Σ ( HTPY-precompose-total-lifts P H)
         ( Id (htpy-precompose-total-lifts P H)))
     ( λ t → HTPY-coherence-square-inv-choice-∞ P H (pr1 t))
-total-htpy-coherence-square-inv-choice-∞ {A = A} {B} P {f} {g} H =
+total-htpy-coherence-square-inv-choice-∞ {A = A} {B} P {f} =
   ind-htpy f
     ( λ g H → Σ ( Σ ( HTPY-precompose-total-lifts P H)
         ( Id (htpy-precompose-total-lifts P H)))
@@ -201,7 +200,6 @@ total-htpy-coherence-square-inv-choice-∞ {A = A} {B} P {f} {g} H =
         ( htpy-refl _)
         ( eq-htpy (htpy-precompose-total-lifts-htpy-refl P f)))
       ( htpy-coherence-square-inv-choice-∞-htpy-refl P f))
-    g H
 
 {-
 htpy-dependent-precomposition :
@@ -238,7 +236,7 @@ compute-transport-cone-family-dependent-pullback-property
     ( λ a → ap
       ( λ t → (tr (λ h → (a' : A) → C (h a')) t f' a))
       ( eq-htpy-htpy-refl f))
-    g H
+    H
 
 fiberwise-square-dependent-pullback-property :
   {l1 l2 l3 l4 l5 l6 : Level}
@@ -364,7 +362,7 @@ coherence-cube-inv-choice-∞ P f g i j H (dpair γ γ') =
 
 ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3} (f : A → B)
-  (f' : (x : A) → C (f x)) (g' : (x : A) → C (f x))
+  (f' : (x : A) → C (f x)) {g' : (x : A) → C (f x)}
   (H' : f' ~ g') →
   Id
     ( ap
@@ -373,7 +371,7 @@ ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy :
       { y = dpair f g'}
       ( eq-pair (dpair refl (eq-htpy H'))))
     ( eq-htpy (λ s → eq-pair (dpair refl (H' s))))
-ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy {A = A} {B} {C} f f' g' H' =
+ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy {A = A} {B} {C} f f' H' =
   ind-htpy f'
   ( λ g' H' → Id
     ( ap inv-choice-∞
@@ -387,12 +385,11 @@ ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy {A = A} {B} {C} f f' g' H' =
       { y = choice-∞ (λ x → dpair (f x) (f' x))}
       ( eq-pair (dpair refl t)))
     ( eq-htpy-htpy-refl f'))
-  ( g')
   ( H') 
 
 ap-inv-choice-∞-eq-pair-eq-htpy :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3}
-  {f g : A → B} (H : f ~ g) (f' : (x : A) → C (f x)) (g' : (x : A) → C (g x))
+  {f g : A → B} (H : f ~ g) (f' : (x : A) → C (f x)) {g' : (x : A) → C (g x)}
   (H' : (tr (λ t → (x : A) → C (t x)) (eq-htpy H) f') ~ g') →
   Id
     ( ap inv-choice-∞
@@ -400,7 +397,7 @@ ap-inv-choice-∞-eq-pair-eq-htpy :
       { y = dpair g g'}
       ( eq-pair (dpair (eq-htpy H) (eq-htpy H'))))
     ( eq-htpy (λ s → eq-pair (dpair (H s) ({!compute-transport-cone-family-dependent-pullback-property!} ∙ (H' s)))))
-ap-inv-choice-∞-eq-pair-eq-htpy {A = A} {B} {C} {f} {g} H f' g' H' =
+ap-inv-choice-∞-eq-pair-eq-htpy {A = A} {B} {C} {f} {g} H f' {g'} H' =
  ind-htpy f
    ( λ g H →
      ( g' : (x : A) → (C (g x)))
@@ -409,7 +406,7 @@ ap-inv-choice-∞-eq-pair-eq-htpy {A = A} {B} {C} {f} {g} H f' g' H' =
        ( ap inv-choice-∞ {x = dpair f f'} {y = dpair g g'} (eq-pair (dpair (eq-htpy H) (eq-htpy H'))))
        ( eq-htpy (λ s → eq-pair (dpair (H s) ({!!} ∙ (H' s))))))
    {!!}
-   g H g' H'
+   H g' H'
 
 {-
 {-

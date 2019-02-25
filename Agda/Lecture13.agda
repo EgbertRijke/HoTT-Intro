@@ -608,7 +608,7 @@ concat-eq-htpy {A = A} {B} {f} H K =
     ( λ g H →
       ( h : (x : A) → B x) (K : g ~ h) →
       Id (eq-htpy (H ∙h K)) ((eq-htpy H) ∙ (eq-htpy K)))
-    ( λ h K → ap (concat' _ (eq-htpy K)) (inv (eq-htpy-htpy-refl _))) _ H _ K
+    ( λ h K → ap (concat' _ (eq-htpy K)) (inv (eq-htpy-htpy-refl _))) H _ K
 
 pullback-property-dependent-pullback-property-pushout :
   {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
