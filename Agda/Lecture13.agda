@@ -345,16 +345,32 @@ universal-property-pushout l f g c =
    pullback-property-pushout, which states that the above square is a pullback.
    -}
 
+precompose :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : UU l3) →
+  (A → B) → (B → C) → (A → C)
+precompose C f g = g ∘ f
+
+htpy-precompose :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : UU l3)
+  {f g : A → B} (H : f ~ g) →
+  (precompose C f) ~ (precompose C g)
+htpy-precompose C H h = eq-htpy (h ·l H)
+
+compute-htpy-precompose :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : UU l3) (f : A → B) →
+  (htpy-precompose C (htpy-refl f)) ~ (htpy-refl _)
+compute-htpy-precompose C f h = eq-htpy-htpy-refl (h ∘ f)
+
 cone-pullback-property-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (Y : UU l) →
   cone (λ (h : A → Y) → h ∘ f) (λ (h : B → Y) → h ∘ g) (X → Y)
-cone-pullback-property-pushout f g {X} (dpair i (dpair j H)) Y =
+cone-pullback-property-pushout f g {X} c Y =
   dpair
-    ( λ (h : X → Y) → h ∘ i)
+    ( precompose Y (pr1 c))
     ( dpair
-      ( λ (h : X → Y) → h ∘ j)
-      ( λ h → eq-htpy (h ·l H)))
+      ( precompose Y (pr1 (pr2 c)))
+      ( htpy-precompose Y (pr2 (pr2 c))))
 
 pullback-property-pushout :
   {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
@@ -362,8 +378,8 @@ pullback-property-pushout :
   UU (l1 ⊔ (l2 ⊔ (l3 ⊔ (l4 ⊔ lsuc l))))
 pullback-property-pushout l {S} {A} {B} f g {X} c =
   (Y : UU l) → is-pullback
-    ( λ (h : A → Y) → h ∘ f)
-    ( λ (h : B → Y) → h ∘ g)
+    ( precompose Y f)
+    ( precompose Y g)
     ( cone-pullback-property-pushout f g c Y)
 
 {- There is also a universal property of pushouts for dependent functions out

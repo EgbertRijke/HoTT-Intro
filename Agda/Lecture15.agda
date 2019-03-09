@@ -10,137 +10,6 @@ open Lecture14 public
 {- Our goal in this section is to show that the pullback property of pushouts 
    implies the dependent pullback property of pushouts. -}
 
-{- We first compute the identity type of type-choice-∞. Note that its identity 
-   type is again of the form type-choice-∞. -}
-
-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → UU (l1 ⊔ (l2 ⊔ l3))
-Eq-type-choice-∞ {A = A} {B} C t t' =
-  type-choice-∞
-    ( λ (x : A) (p : Id ((pr1 t) x) ((pr1 t') x)) →
-      Id (tr (C x) p ((pr2 t) x)) ((pr2 t') x))
-
-reflexive-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : type-choice-∞ C) → Eq-type-choice-∞ C t t
-reflexive-Eq-type-choice-∞ C (dpair f g) = dpair (htpy-refl f) (htpy-refl _)
-
-Eq-type-choice-∞-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → Id t t' → Eq-type-choice-∞ C t t'
-Eq-type-choice-∞-eq C t .t refl = reflexive-Eq-type-choice-∞ C t
-
-is-contr-total-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : type-choice-∞ C) → is-contr (Σ (type-choice-∞ C) (Eq-type-choice-∞ C t))
-is-contr-total-Eq-type-choice-∞ {A = A} {B} C t =
-  is-contr-total-Eq-structure
-    ( λ f g H → (x : A) → Id (tr (C x) (H x) ((pr2 t) x)) (g x))
-    ( is-contr-total-htpy (pr1 t))
-    ( dpair (pr1 t) (htpy-refl _))
-    ( is-contr-total-htpy (pr2 t))
-
-is-equiv-Eq-type-choice-∞-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → is-equiv (Eq-type-choice-∞-eq C t t')
-is-equiv-Eq-type-choice-∞-eq C t =
-  id-fundamental-gen t
-    ( reflexive-Eq-type-choice-∞ C t)
-    ( is-contr-total-Eq-type-choice-∞ C t)
-    ( Eq-type-choice-∞-eq C t)
-
-eq-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → Eq-type-choice-∞ C t t' → Id t t'
-eq-Eq-type-choice-∞ C t t' =
-  inv-is-equiv (is-equiv-Eq-type-choice-∞-eq C t t')
-
-{- Next we compute the identity type of products of total spaces. Note again
-   that the identity type of a product of total spaces is again a product of
-   total spaces. -}
-
-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → UU (l1 ⊔ (l2 ⊔ l3))
-Eq-ΠΣ {A = A} C t t' =
-  (a : A) →
-    Σ (Id (pr1 (t a)) (pr1 (t' a))) (λ p →
-      Id (tr (C a) p (pr2 (t a))) (pr2 (t' a)))
-
-reflexive-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : (a : A) → Σ (B a) (C a)) → Eq-ΠΣ C t t
-reflexive-Eq-ΠΣ C t a = dpair refl refl
-
-Eq-ΠΣ-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → Id t t' → Eq-ΠΣ C t t'
-Eq-ΠΣ-eq C t .t refl = reflexive-Eq-ΠΣ C t
-
-is-contr-total-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : (a : A) → Σ (B a) (C a)) →
-  is-contr (Σ ((a : A) → Σ (B a) (C a)) (Eq-ΠΣ C t))
-is-contr-total-Eq-ΠΣ {A = A} {B} C t =
-  is-contr-is-equiv
-    ( (a : A) →
-      Σ (Σ (B a) (C a)) (λ t' →
-        Σ (Id (pr1 (t a)) (pr1 t')) (λ p →
-          Id (tr (C a) p (pr2 (t a))) (pr2 t'))))
-    ( inv-choice-∞)
-    ( is-equiv-inv-choice-∞)
-    ( is-contr-Π
-      ( λ a →
-        is-contr-total-Eq-structure
-        ( λ b c p → Id (tr (C a) p (pr2 (t a))) c)
-        ( is-contr-total-path (B a) (pr1 (t a)))
-        ( dpair (pr1 (t a)) refl)
-        ( is-contr-total-path (C a (pr1 (t a))) (pr2 (t a)))))
-
-is-equiv-Eq-ΠΣ-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → is-equiv (Eq-ΠΣ-eq C t t')
-is-equiv-Eq-ΠΣ-eq C t =
-  id-fundamental-gen t
-    ( reflexive-Eq-ΠΣ C t)
-    ( is-contr-total-Eq-ΠΣ C t)
-    ( Eq-ΠΣ-eq C t)
-
-eq-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → Eq-ΠΣ C t t' → Id t t'
-eq-Eq-ΠΣ C t t' = inv-is-equiv (is-equiv-Eq-ΠΣ-eq C t t')
-
-{- Since the identity types of type-choice-∞ and of products of total spaces
-   are again of the same form, it follows that the action on paths of
-   inv-choice-∞ is again of the form inv-choice-∞.
--}
-
-square-ap-inv-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) →
-  coherence-square
-    ( Eq-type-choice-∞-eq C t t')
-    ( ap inv-choice-∞ {x = t} {y = t'})
-    ( inv-choice-∞)
-    ( Eq-ΠΣ-eq C (inv-choice-∞ t) (inv-choice-∞ t'))
-square-ap-inv-choice-∞ C (dpair f g) .(dpair f g) refl = refl
-
-coherence-square-inv-is-equiv-horizontal :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D) (H : (h ∘ f) ~ (k ∘ g)) →
-  (is-equiv-h : is-equiv h) → (is-equiv-g : is-equiv g) →
-  coherence-square (inv-is-equiv is-equiv-g) k f (inv-is-equiv is-equiv-h)
-coherence-square-inv-is-equiv-horizontal f g h k H is-equiv-h is-equiv-g c =
-  ( ap
-    ( (inv-is-equiv is-equiv-h) ∘ k)
-    ( inv (issec-inv-is-equiv is-equiv-g c))) ∙
-  ( ( ap
-      ( inv-is-equiv is-equiv-h)
-      ( inv (H (inv-is-equiv is-equiv-g c)))) ∙
-    ( isretr-inv-is-equiv is-equiv-h (f (inv-is-equiv is-equiv-g c))))
-
 {- We first define the family of lifts, which is indexed by maps Y → X. -}
 
 fam-lifts :
@@ -371,99 +240,39 @@ compute-htpy-precompose-total-lifts {A = A} P f (dpair h h') =
                 ( htpy-eq (compute-triangle-precompose-lifts P f) h) h')) ∙
             ( left-inv (triangle-precompose-lifts-htpy-refl P f h h'))))))
 
-htpy-precompose-total-lifts' :
+COHERENCE-HTPY-INV-CHOICE-∞ :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
-  {f g : A → B} (H : f ~ g) (hh' : type-choice-∞ (λ (b : B) → P)) →
-  Eq-type-choice-∞
-    ( λ (a : A) → P)
-    ( precompose-total-lifts P f hh')
-    ( precompose-total-lifts P g hh')
-htpy-precompose-total-lifts' P H (dpair h h') =
-  dpair
-    ( h ·l H)
-    ( λ a → (tr-precompose-fam P h (H a) (h' _)) ∙ (apd h' (H a)))
-
-COMPUTE-HTPY-PRECOMPOSE-TOTAL-LIFTS :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
-  {f g : A → B} (H : f ~ g) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
-COMPUTE-HTPY-PRECOMPOSE-TOTAL-LIFTS {A = A} P {f} {g} H =
-  ( htpy-precompose-total-lifts P H) ~
-  ( λ hh' →
-    eq-Eq-type-choice-∞
-      ( λ (a : A) → P)
-      ( precompose-total-lifts P f hh')
-      ( precompose-total-lifts P g hh')
-      ( htpy-precompose-total-lifts' P H hh'))
-
-HTPY-COHERENCE-SQUARE-INV-CHOICE-∞ :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
-  {f g : A → B} (H : f ~ g) → (HTPY-PRECOMPOSE-TOTAL-LIFTS P H) → UU _
-HTPY-COHERENCE-SQUARE-INV-CHOICE-∞ P {f} {g} H K =
-  ( ( inv-choice-∞ ·l K) ∙h
-    ( coherence-square-inv-choice-∞ P g)) ~
+  {f g : A → B} (H : f ~ g) → UU _
+COHERENCE-HTPY-INV-CHOICE-∞ P {f} {g} H =
   ( ( coherence-square-inv-choice-∞ P f) ∙h
-    ( (λ φ → eq-htpy (φ ·l H)) ·r inv-choice-∞))
+    ( inv-choice-∞ ·l ( htpy-precompose-total-lifts P H))) ~
+  ( ( ( λ h → eq-htpy (h ·l H)) ·r inv-choice-∞) ∙h
+    ( coherence-square-inv-choice-∞ P g))
 
-htpy-coherence-square-inv-choice-∞-htpy-refl :
+coherence-htpy-inv-choice-∞-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
-  (f : A → B) →
-  HTPY-COHERENCE-SQUARE-INV-CHOICE-∞ P (htpy-refl f) (htpy-refl _)
-htpy-coherence-square-inv-choice-∞-htpy-refl P f (dpair h h') =
-  inv (eq-htpy-htpy-refl _)
+  (f : A → B) → COHERENCE-HTPY-INV-CHOICE-∞ P (htpy-refl f)
+coherence-htpy-inv-choice-∞-htpy-refl P f =
+  ( htpy-ap-concat
+    ( coherence-square-inv-choice-∞ P f)
+    ( inv-choice-∞ ·l ( htpy-precompose-total-lifts P (htpy-refl f)))
+    ( htpy-refl _)
+    ( λ h →
+      ap (ap inv-choice-∞) (compute-htpy-precompose-total-lifts P f h))) ∙h
+  ( htpy-inv
+    ( htpy-ap-concat'
+      ( ( htpy-precompose _ (htpy-refl f)) ·r inv-choice-∞)
+      ( htpy-refl _)
+      ( htpy-refl _)
+      ( λ h → compute-htpy-precompose _ f (inv-choice-∞ h))))
 
-total-htpy-coherence-square-inv-choice-∞ :
+coherence-htpy-inv-choice-∞ :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
-  {f g : A → B} (H : f ~ g) →
-  Σ ( Σ ( HTPY-PRECOMPOSE-TOTAL-LIFTS P H)
-        ( Id (htpy-precompose-total-lifts P H)))
-    ( λ t → HTPY-COHERENCE-SQUARE-INV-CHOICE-∞ P H (pr1 t))
-total-htpy-coherence-square-inv-choice-∞ {A = A} {B} P {f} =
+  {f g : A → B} (H : f ~ g) → COHERENCE-HTPY-INV-CHOICE-∞ P H
+coherence-htpy-inv-choice-∞ P {f} =
   ind-htpy f
-    ( λ g H → Σ ( Σ ( HTPY-PRECOMPOSE-TOTAL-LIFTS P H)
-        ( Id (htpy-precompose-total-lifts P H)))
-      ( λ t → HTPY-COHERENCE-SQUARE-INV-CHOICE-∞ P H (pr1 t)))
-    ( dpair
-      ( dpair
-        ( htpy-refl _)
-        ( eq-htpy (compute-htpy-precompose-total-lifts P f)))
-      ( htpy-coherence-square-inv-choice-∞-htpy-refl P f))
-
-{-
-htpy-dependent-precomposition :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {P : C → UU l4}
-  (γ : B → C) {f g : A → B} (H : f ~ g) →
-  ( ( tr (λ (α : A → C) → (a : A) → P (α a)) (eq-htpy (γ ·l H))) ∘
-    ( λ (h : (b : B) → P (γ b)) a → h (f a))) ~
-  ( λ (h : (b : B) → P (γ b)) a → (h (g a)))
-htpy-dependent-precomposition {A = A} {B} {C} {P} γ {f} {g} =
-  ind-htpy f
-    ( λ g H →
-      ( ( tr (λ (α : A → C) → (a : A) → P (α a)) (eq-htpy (γ ·l H))) ∘
-        ( λ (h : (b : B) → P (γ b)) a → h (f a))) ~
-      ( λ h a → h (g a)))
-    ( tr ( λ t →
-           ( λ a → tr (λ α → (a₁ : A) → P (α a₁)) t (λ a₁ → a (f a₁))) ~
-           ( λ h a → h (f a)))
-         ( eq-htpy-htpy-refl (γ ∘ f))
-         ( htpy-refl (λ h a → h (f a))))
-    g
--}
-
-compute-transport-cone-family-dependent-pullback-property :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
-  {f g : A → B} (H : f ~ g) (f' : (a : A) → C (f a)) → 
-  ( tr (fam-lifts A C) (eq-htpy H) f') ~
-  ( λ a → tr C (H a) (f' a))
-compute-transport-cone-family-dependent-pullback-property
-  {A = A} {B} C {f} {g} H f' =
-  ind-htpy f
-    ( λ g H →
-      ( tr (λ (h : A → B) → (a : A) → C (h a)) (eq-htpy H) f') ~
-      ( λ a → tr C (H a) (f' a)))
-    ( λ a → ap
-      ( λ t → (tr (λ h → (a' : A) → C (h a')) t f' a))
-      ( eq-htpy-htpy-refl f))
-    H
+    ( λ g H → COHERENCE-HTPY-INV-CHOICE-∞ P H)
+    ( coherence-htpy-inv-choice-∞-htpy-refl P f)
     
 cone-family-dependent-pullback-property :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
@@ -474,209 +283,59 @@ cone-family-dependent-pullback-property :
     ( precompose-lifts P g)
     ( cone-pullback-property-pushout f g c X)
     ( fam-lifts X P)
-cone-family-dependent-pullback-property f g (dpair i (dpair j H)) P γ =
+cone-family-dependent-pullback-property f g c P γ =
   dpair
-    ( precompose-lifts P i γ)
+    ( precompose-lifts P (pr1 c) γ)
     ( dpair
-      ( precompose-lifts P j γ)
-      ( triangle-precompose-lifts P H γ))
+      ( precompose-lifts P (pr1 (pr2 c)) γ)
+      ( triangle-precompose-lifts P (pr2 (pr2 c)) γ))
 
-coherence-square-tot-cone-family-dependent-pullback-property :
-  {l1 l2 l3 l4 l5 l6 : Level}
-  {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5} (P : Y → UU l6)
-  (f : S → A) (g : S → B) (i : A → X) (j : B → X) (H : (i ∘ f) ~ (j ∘ g)) →
-  coherence-square
-    ( toto (fam-lifts B P) (λ (γ : X → Y) → γ ∘ j) (precompose-lifts P j))
-    ( toto (fam-lifts A P) (λ (γ : X → Y) → γ ∘ i) (precompose-lifts P i))
-    ( toto (fam-lifts S P) (λ (β : B → Y) → β ∘ g) (precompose-lifts P g))
-    ( toto (fam-lifts S P) (λ (α : A → Y) → α ∘ f) (precompose-lifts P f))
-coherence-square-tot-cone-family-dependent-pullback-property P f g i j H =
-  htpy-precompose-total-lifts P H
-
-coherence-cube-inv-choice-∞ :
-  {l1 l2 l3 l4 l5 l6 : Level}
-  {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5} (P : Y → UU l6)
-  (f : S → A) (g : S → B) (i : A → X) (j : B → X) (H : (i ∘ f) ~ (j ∘ g)) →
-  coherence-cube
-    ( λ φ → φ ∘ i)
-    ( λ φ → φ ∘ j)
-    ( λ φ → φ ∘ f)
-    ( λ φ → φ ∘ g)
-    ( toto
-      ( λ (α : A → Y) → (a : A) → P (α a))
-      ( λ (γ : X → Y) → γ ∘ i)
-      ( λ (γ : X → Y) (γ' : (x : X) → P (γ x)) (a : A) → γ' (i a)))
-    ( toto
-      ( λ (β : B → Y) → (b : B) → P (β b))
-      ( λ (γ : X → Y) → γ ∘ j)
-      ( λ (γ : X → Y) (γ' : (x : X) → P (γ x)) (b : B) → γ' (j b)))
-    ( toto
-      ( λ (σ : S → Y) → (s : S) → P (σ s))
-      ( λ (α : A → Y) → α ∘ f)
-      ( λ (α : A → Y) (α' : (a : A) → P (α a)) (s : S) → α' (f s)))
-    ( toto
-      ( λ (σ : S → Y) → (s : S) → P (σ s))
-      ( λ (β : B → Y) → β ∘ g)
-      ( λ (β : B → Y) (β' : (b : B) → P (β b)) (s : S) → β' (g s)))
-    ( inv-choice-∞ {A = X} {B = λ x → Y} {C = λ x y → P y}) 
-    ( inv-choice-∞)
-    ( inv-choice-∞)
-    ( inv-choice-∞)
-    ( coherence-square-tot-cone-family-dependent-pullback-property P f g i j H)
-    ( coherence-square-inv-choice-∞ P i)
-    ( coherence-square-inv-choice-∞ P j)
-    ( coherence-square-inv-choice-∞ P f)
-    ( coherence-square-inv-choice-∞ P g)
-    ( λ φ → eq-htpy (φ ·l H))
-coherence-cube-inv-choice-∞ P f g i j H (dpair γ γ') =
-  concat
-    ( ( inv-choice-∞ ·l
-        coherence-square-tot-cone-family-dependent-pullback-property P f g
-        i j H)
-      (dpair γ γ'))
-    ( refl)
-    ( concat (eq-htpy ((λ x → dpair (γ x) (γ' x)) ·l H))
-      ( concat
-        ( eq-htpy
-          ( λ s → eq-pair
-            ( dpair
-              ( ap γ (H s))
-              ( ( tr-precompose-fam P γ (H s) (γ' (i (f s)))) ∙
-                ( apd γ' (H s))))))
-        {!!}
-        {!!})
-      ( inv (right-unit _)))
-
-ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3} (f : A → B)
-  (f' : (x : A) → C (f x)) {g' : (x : A) → C (f x)}
-  (H' : f' ~ g') →
-  Id
-    ( ap
-      ( inv-choice-∞ {A = A} {B = λ a → B} {C = λ a → C})
-      { x = dpair f f'}
-      { y = dpair f g'}
-      ( eq-pair (dpair refl (eq-htpy H'))))
-    ( eq-htpy (λ s → eq-pair (dpair refl (H' s))))
-ap-inv-choice-∞-eq-pair-eq-htpy-eq-htpy {A = A} {B} {C} f f' H' =
-  ind-htpy f'
-  ( λ g' H' → Id
-    ( ap inv-choice-∞
-      { x = dpair f f'}
-      { y = dpair f g'}
-      ( eq-pair (dpair refl (eq-htpy H'))))
-    ( eq-htpy (λ s → eq-pair (dpair refl (H' s)))))
-  ( ap
-    ( λ t → ap (inv-choice-∞ {A = A} {B = λ a → B} {C = λ a → C})
-      { x = dpair f f'}
-      { y = choice-∞ (λ x → dpair (f x) (f' x))}
-      ( eq-pair (dpair refl t)))
-    ( eq-htpy-htpy-refl f'))
-  ( H') 
-
-ap-inv-choice-∞-eq-pair-eq-htpy :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3}
-  {f g : A → B} (H : f ~ g) (f' : (x : A) → C (f x)) {g' : (x : A) → C (g x)}
-  (H' : (tr (λ t → (x : A) → C (t x)) (eq-htpy H) f') ~ g') →
-  Id
-    ( ap inv-choice-∞
-      { x = dpair f f'}
-      { y = dpair g g'}
-      ( eq-pair (dpair (eq-htpy H) (eq-htpy H'))))
-    ( eq-htpy (λ s → eq-pair (dpair (H s) ({!compute-transport-cone-family-dependent-pullback-property!} ∙ (H' s)))))
-ap-inv-choice-∞-eq-pair-eq-htpy {A = A} {B} {C} {f} {g} H f' {g'} H' =
- ind-htpy f
-   ( λ g H →
-     ( g' : (x : A) → (C (g x)))
-     ( H' : (tr (λ t → (x : A) → C (t x)) (eq-htpy H) f') ~ g') →
-     Id
-       ( ap inv-choice-∞ {x = dpair f f'} {y = dpair g g'} (eq-pair (dpair (eq-htpy H) (eq-htpy H'))))
-       ( eq-htpy (λ s → eq-pair (dpair (H s) ({!!} ∙ (H' s))))))
-   {!!}
-   H g' H'
-
-{-
-{-
-coherence-cone-family-dependent-pullback-property :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
-  (f : S → A) (g : S → B) (c : cocone f g X) (P : X → UU l) (γ : X → X) →
-  coherence-square
-    ( λ (γ' : (x : X) → P (γ x)) (a : A) → γ' ((pr1 c) a))
-    ( λ (γ' : (x : X) → P (γ x)) (b : B) → γ' ((pr1 (pr2 c)) b))
-    ( λ (α' : (a : A) → P (γ ((pr1 c) a))) (s : S) →
-      tr (λ σ → (s : S) → P (σ s)) (eq-htpy (γ ·l (pr2 (pr2 c)))) ?)
-    ( λ (β' : (b : B) → P (γ ((pr1 (pr2 c)) b))) → λ s → β' (g s))
-coherence-cone-family-dependent-pullback-property f g c P γ = ?
--}
-
-is-pullback-tot-cone-family-dependent-pullback-property :
+is-pullback-cone-family-dependent-pullback-property :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
   ((l : Level) → pullback-property-pushout l f g c) →
-  {l : Level} (P : X → UU l) →
+  {l : Level} (P : X → UU l) (γ : X → X) →
   is-pullback
-    ( toto
-      ( λ σ → (s : S) → P (σ s))
-      ( λ (α : A → X) → α ∘ f)
-      ( λ α (α' : (a : A) → P (α a)) s → α' (f s)))
-    ( toto
-      ( λ σ → (s : S) → P (σ s))
-      ( λ (β : B → X) → β ∘ g)
-      ( λ β (β' : (b : B) → P (β b)) s → β' (g s)))
-    ( tot-cone-cone-family
-      ( λ σ → (s : S) → P (σ s))
-      ( λ α α' s → α' (f s))
-      ( λ β β' s → β' (g s))
-      ( cone-pullback-property-pushout f g c X)
-      ( cone-family-dependent-pullback-property f g c P))
-is-pullback-tot-cone-family-dependent-pullback-property
-  {S = S} {A} {B} {X} f g (dpair i (dpair j H)) pb-c P =
-  is-pullback-top-is-pullback-bottom-cube-is-equiv
-    ( λ (φ : X → Σ X P) → φ ∘ i)
-    ( λ (φ : X → Σ X P) → φ ∘ j)
-    ( λ (φ : A → Σ X P) → φ ∘ f)
-    ( λ (φ : B → Σ X P) → φ ∘ g)
-    ( toto
-      ( λ (α : A → X) → (a : A) → P (α a))
-      ( λ (γ : X → X) → γ ∘ i)
-      ( λ (γ : X → X) (γ' : (x : X) → P (γ x)) (a : A) → γ' (i a)))
-    ( toto
-      ( λ (β : B → X) → (b : B) → P (β b))
-      ( λ (γ : X → X) → γ ∘ j)
-      ( λ (γ : X → X) (γ' : (x : X) → P (γ x)) (b : B) → γ' (j b)))
-    ( toto
-      ( λ (σ : S → X) → (s : S) → P (σ s))
-      ( λ (α : A → X) → α ∘ f)
-      ( λ (α : A → X) (α' : (a : A) → P (α a)) (s : S) → α' (f s)))
-    ( toto
-      ( λ (σ : S → X) → (s : S) → P (σ s))
-      ( λ (β : B → X) → β ∘ g)
-      ( λ (β : B → X) (β' : (b : B) → P (β b)) (s : S) → β' (g s)))
-    ( inv-choice-∞) 
-    ( inv-choice-∞)
-    ( inv-choice-∞)
-    ( inv-choice-∞)
-    ( λ t → eq-pair
-      ( dpair
-        ( eq-htpy ((pr1 t) ·l H))
-        ( eq-htpy
-          ( λ s →
-            ( compute-transport-cone-family-dependent-pullback-property
-              ( P) ((pr1 t) ·l H) (λ a → (pr2 t) (i (f a))) s) ∙
-            ( ( tr-precompose-fam P (pr1 t) (H s) ((pr2 t) (i (f s)))) ∙
-              ( apd (pr2 t) (H s)))))))
-    ( coherence-square-inv-choice-∞ i)
-    ( coherence-square-inv-choice-∞ j)
-    ( coherence-square-inv-choice-∞ f)
-    ( coherence-square-inv-choice-∞ g)
-    ( λ φ → eq-htpy (φ ·l H))
-    {! coherence-cube-inv-choice-∞ P f g i j H!}
-    ( is-equiv-inv-choice-∞)
-    ( is-equiv-inv-choice-∞)
-    ( is-equiv-inv-choice-∞)
-    ( is-equiv-inv-choice-∞)
-    ( pb-c _ (Σ X P))
-
+    ( ( tr (fam-lifts S P) (eq-htpy (γ ·l (pr2 (pr2 c))))) ∘
+      ( precompose-lifts P f (γ ∘ (pr1 c))))
+    ( precompose-lifts P g (γ ∘ (pr1 (pr2 c))))
+    ( cone-family-dependent-pullback-property f g c P γ)
+is-pullback-cone-family-dependent-pullback-property {S = S} {A} {B} {X}
+  f g (dpair i (dpair j H)) pb-c P =
+  let c = dpair i (dpair j H) in
+  is-pullback-family-is-pullback-tot
+    ( fam-lifts S P)
+    ( precompose-lifts P f)
+    ( precompose-lifts P g)
+    ( cone-pullback-property-pushout f g c X)
+    ( cone-family-dependent-pullback-property f g c P)
+    ( pb-c _ X)
+    ( is-pullback-top-is-pullback-bottom-cube-is-equiv
+      ( precompose (Σ X P) i)
+      ( precompose (Σ X P) j)
+      ( precompose (Σ X P) f)
+      ( precompose (Σ X P) g)
+      ( toto (fam-lifts A P) (precompose X i) (precompose-lifts P i))
+      ( toto (fam-lifts B P) (precompose X j) (precompose-lifts P j))
+      ( toto (fam-lifts S P) (precompose X f) (precompose-lifts P f))
+      ( toto (fam-lifts S P) (precompose X g) (precompose-lifts P g))
+      ( inv-choice-∞) 
+      ( inv-choice-∞)
+      ( inv-choice-∞)
+      ( inv-choice-∞)
+      ( htpy-precompose-total-lifts P H)
+      ( htpy-refl _)
+      ( htpy-refl _)
+      ( htpy-refl _)
+      ( htpy-refl _)
+      ( htpy-precompose _ H)
+      ( coherence-htpy-inv-choice-∞ P H)
+      ( is-equiv-inv-choice-∞)
+      ( is-equiv-inv-choice-∞)
+      ( is-equiv-inv-choice-∞)
+      ( is-equiv-inv-choice-∞)
+      ( pb-c _ (Σ X P)))
+    
 dependent-pullback-property-pullback-property-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
@@ -684,224 +343,21 @@ dependent-pullback-property-pullback-property-pushout :
   ((l : Level) → dependent-pullback-property-pushout l f g c)
 dependent-pullback-property-pullback-property-pushout
   {S = S} {A} {B} {X}
-  f g (dpair i (dpair j H)) pullback-c l P = {!!}
-{-
-  is-pullback-family-is-pullback-tot
-    { X = S → X}
-    { A = A → X}
-    { B = B → X}
-    { C = X → X}
-    ( λ (σ : S → X) → (s : S) → P (σ s))
-    { PA = λ α → (a : A) → P (α a)}
-    { PB = λ β → (b : B) → P (β b)}
-    { PC = λ γ → (x : X) → P x}
-    { f = λ (α : A → X) → α ∘ f}
-    { g = λ (β : B → X) → β ∘ g}
-    ( λ (α : A → X) (α' : (a : A) → P (α a)) (s : S) → α' (f s))
-    ( λ (β : B → X) (β' : (b : B) → P (β b)) (s : S) → β' (g s))
-    {! cone-pullback-property-pushout f g (dpair i (dpair j H)) X!}
-    {!!}
-    {!!}
-    {!!}
-    {!!}
-    ?
--}
-
-{-
-tot-cocone :
-  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  {l : Level} {P : X → UU l} →
-  generating-data-pushout f g c P → cocone f g (Σ X P)
-tot-cocone f g (dpair i (dpair j H)) (dpair i' (dpair j' H')) =
-  dpair
-    ( λ a → dpair (i a) (i' a))
-    ( dpair
-      ( λ b → dpair (j b) (j' b))
-      ( λ s → eq-pair (dpair (H s) (H' s))))
-
-map-tot-cocone :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) 
-  (up : (l' : Level) → universal-property-pushout l' f g c) →
-  (P : X → UU l) → generating-data-pushout f g c P → X → Σ X P
-map-tot-cocone f g c up P c' =
-  inv-is-equiv (up _ (Σ _ P)) (tot-cocone f g c c')
-
-eq-map-tot-cocone :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) 
-  (up : (l' : Level) → universal-property-pushout l' f g c) →
-  (P : X → UU l) (c' : generating-data-pushout f g c P) →
-  Id ( cocone-map f g c (map-tot-cocone f g c up P c'))
-    ( tot-cocone f g c c')
-eq-map-tot-cocone f g c up P c' =
-  issec-inv-is-equiv (up _ (Σ _ P)) (tot-cocone f g c c')
-
-ap-pr1-eq-pair :
-  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (s t : Σ A B)
-  (p : Id (pr1 s) (pr1 t)) (q : Id (tr B p (pr2 s)) (pr2 t)) →
-  Id (ap pr1 (eq-pair' s t (dpair p q))) p
-ap-pr1-eq-pair (dpair x x₁) (dpair .x .x₁) refl refl = refl
-
-htpy-cocone-cocone-map-pr1-tot-cocone :
-  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  {l : Level} (P : X → UU l) (c' : generating-data-pushout f g c P) →
-  (up : (l' : Level) → universal-property-pushout l' f g c) →
-  htpy-cocone f g (cocone-map f g (tot-cocone f g c c') pr1) c
-htpy-cocone-cocone-map-pr1-tot-cocone
-  f g {X} (dpair i (dpair j H)) P (dpair i' (dpair j' H')) up =
-  ( dpair
-    ( htpy-refl i)
-    ( dpair
-      ( htpy-refl j)
-      ( (htpy-right-unit _) ∙h (λ s → ap-pr1-eq-pair _ _ (H s) (H' s)))))
-
-htpy-whisk-swap :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
-  {f f' : A → B} {g g' : B → C} (H : f ~ f') (K : g ~ g') →
-  ((g ·l H) ∙h (K ·r f')) ~ ((K ·r f) ∙h (g' ·l H))
-htpy-whisk-swap H K x = inv (htpy-nat K (H x))
-
-{-
-
-coherence-htpy-fib-cocone-map :
-  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X)
-  {Y : UU l5} (c' : cocone f g Y) →
-  (s t : fib (cocone-map f g c) c')
-  (α : (pr1 s) ~ (pr1 t))
-  (β : {!(pr1 (htpy-cocone-eq f g (cocone-map f g c (pr1 s)) c' (pr2 s))) ~ ((α ·r (pr1 c)) ∙h (pr1 (htpy-cocone-eq f g (cocone-map f g c (pr1 t)) c' (pr2 t))))!}) (γ : {!!}) → UU _
-coherence-htpy-fib-cocone-map f g (dpair i (dpair j H)) (dpair i' (dpair j' H')) (dpair h KLM) (dpair h' KLM') α β γ =
-  let E = htpy-cocone-eq f g
-          ( cocone-map f g (dpair i (dpair j H)) h)
-          ( dpair i' (dpair j' H')) KLM
-      K = pr1 E
-      L = pr1 (pr2 E)
-      M = pr2 (pr2 E)
-      E' = htpy-cocone-eq f g
-          ( cocone-map f g (dpair i (dpair j H)) h')
-          ( dpair i' (dpair j' H')) KLM'
-      K' = pr1 E'
-      L' = pr1 (pr2 E')
-      M' = pr2 (pr2 E')
-  in
-  (htpy-ap-concat _ _ (h ·l H) {!!} ∙h {!!}) ~ {!!}
-
-htpy-fib-cocone-map :
-  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X)
-  {Y : UU l5} (c' : cocone f g Y) →
-  fib (cocone-map f g c) c' → fib (cocone-map f g c) c' → UU _
-htpy-fib-cocone-map f g (dpair i (dpair j H)) (dpair i' (dpair j' H'))
-  (dpair h KLM) (dpair h' KLM') =
-  let E = htpy-cocone-eq f g
-          ( cocone-map f g (dpair i (dpair j H)) h)
-          ( dpair i' (dpair j' H')) KLM
-      K = pr1 E
-      L = pr1 (pr2 E)
-      M = pr2 (pr2 E)
-      E' = htpy-cocone-eq f g
-          ( cocone-map f g (dpair i (dpair j H)) h')
-          ( dpair i' (dpair j' H')) KLM'
-      K' = pr1 E'
-      L' = pr1 (pr2 E')
-      M' = pr2 (pr2 E')
-  in
-  Σ ( h ~ h')
-    ( λ α → Σ (K ~ ((α ·r i) ∙h K'))
-      ( λ β → Σ (L ~ ((α ·r j) ∙h L'))
-        ( coherence-htpy-fib-cocone-map f g
-          ( dpair i (dpair j H))
-          ( dpair i' (dpair j' H'))
-          ( dpair h KLM)
-
-          ( dpair h' KLM') α β )))
-
-sec-pr1-generating-data-pushout :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  ((l' : Level) → universal-property-pushout l' f g c) →
-  (P : X → UU l) →
-  generating-data-pushout f g c P → sec (pr1 {A = X} {B = P})
-sec-pr1-generating-data-pushout
-  f g {X} (dpair i (dpair j H)) up P (dpair i' (dpair j' H')) =
-  let c = dpair i (dpair j H)
-      c' = dpair i' (dpair j' H')
-      u = inv-is-equiv (up _ (Σ X P))
-          ( tot-cocone f g c c')
-      α = issec-inv-is-equiv (up _ (Σ X P))
-          ( tot-cocone f g c c')
-  in
-  dpair
-    ( u)
-    ( htpy-eq (ap pr1 (center (is-prop-is-contr
-      ( is-contr-map-is-equiv (up _ X)
-        ( dpair i (dpair j H)))
-      ( dpair (pr1 ∘ u)
-        ( ( cocone-map-comp f g c u pr1) ∙
-          ( ( ap (λ t → cocone-map f g t pr1) α) ∙
-           eq-pair (dpair refl (eq-pair (dpair refl (eq-htpy
-             ( λ s → ap-pr1-eq-pair
-               ( dpair (i (f s)) (i' (f s)))
-               ( dpair (j (g s)) (j' (g s)))
-               ( H s)
-               ( H' s)))))))))
-      ( dpair id
-        ( eq-pair (dpair refl
-          ( eq-pair (dpair refl (eq-htpy (λ s → ap-id (H s))))))))))))
-
-Π-sec-pr1 : {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
-  sec (pr1 {A = A} {B = B}) → (x : A) → B x
-Π-sec-pr1 B (dpair f H) x = tr B (H x) (pr2 (f x))
-
-ind-pushout-universal-property-pushout :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  ((l : Level) → universal-property-pushout l f g c) →
-  (P : X → UU l) →
-  generating-data-pushout f g c P → (x : X) → P x
-ind-pushout-universal-property-pushout {S = S} {A} {B} f g {X} c up P c' =
-  Π-sec-pr1 P (sec-pr1-generating-data-pushout f g c up P c')
-
-comp-pushout-universal-property-pushout-A :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4}
-  (i : A → X) (j : B → X) (H : (i ∘ f) ~ (j ∘ g)) →
-  (up : (l' : Level) → universal-property-pushout l' f g (dpair i (dpair j H)))
-  (P : X → UU l)
-  (i' : (a : A) → P (i a)) (j' : (b : B) → P (j b))
-  (H' : (s : S) → Id (tr P (H s) (i' (f s))) (j' (g s))) →
-  ( ( pr1 ( dgen-pushout f g (dpair i (dpair j H))
-      ( ind-pushout-universal-property-pushout
-        f g (dpair i (dpair j H)) up P (dpair i' (dpair j' H'))))) ~ i')
-comp-pushout-universal-property-pushout-A f g i j H up i' j' H' = {!!}
-
-comp-pushout-universal-property-pushout :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  (up : (l' : Level) → universal-property-pushout l' f g c) →
-  (P : X → UU l) →
-  ( ( dgen-pushout f g c) ∘
-    ( ind-pushout-universal-property-pushout f g c up P)) ~ id
-comp-pushout-universal-property-pushout
-  f g (dpair i (dpair j H)) up P (dpair i' (dpair j' H')) =
-  eq-htpy-generating-data-pushout f g
-    ( dpair i (dpair j H)) P
-    ( dgen-pushout f g
-      ( dpair i (dpair j H))
-      ( ind-pushout-universal-property-pushout f g
-        ( dpair i (dpair j H)) up P
-        ( dpair i' (dpair j' H'))))
-    ( dpair i' (dpair j' H'))
-    ( dpair
-      ( comp-pushout-universal-property-pushout-A f g i j H up P i' j' H')
+  f g (dpair i (dpair j H)) pullback-c l P =
+  let c = dpair i (dpair j H) in
+  is-pullback-htpy'
+    ( (tr (fam-lifts S P) (eq-htpy (id ·l H))) ∘ (precompose-lifts P f i))
+    ( (tr-eq-htpy-fam-lifts P id H) ·r (precompose-lifts P f i))
+    ( precompose-lifts P g j)
+    ( htpy-refl _)
+    ( cone-family-dependent-pullback-property f g c P id)
+    { c' = cone-dependent-pullback-property-pushout f g c P}
+    ( dpair (htpy-refl _)
       ( dpair
-        {!!}
-        {!!}))
--}
--}
+        ( htpy-refl _)
+        ( ( htpy-right-unit _) ∙h
+          ( coherence-triangle-precompose-lifts P H id))))
+    ( is-pullback-cone-family-dependent-pullback-property f g c pullback-c P id)
 
 -- Section 15.2 Families over pushouts
 
@@ -1098,4 +554,137 @@ isretr-eq-htpy-generating-data-fam-pushout :
 isretr-eq-htpy-generating-data-fam-pushout l f g s t =
   isretr-inv-is-equiv
     ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
+
+{-
+{- We first compute the identity type of type-choice-∞. Note that its identity 
+   type is again of the form type-choice-∞. -}
+
+Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) → UU (l1 ⊔ (l2 ⊔ l3))
+Eq-type-choice-∞ {A = A} {B} C t t' =
+  type-choice-∞
+    ( λ (x : A) (p : Id ((pr1 t) x) ((pr1 t') x)) →
+      Id (tr (C x) p ((pr2 t) x)) ((pr2 t') x))
+
+reflexive-Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : type-choice-∞ C) → Eq-type-choice-∞ C t t
+reflexive-Eq-type-choice-∞ C (dpair f g) = dpair (htpy-refl f) (htpy-refl _)
+
+Eq-type-choice-∞-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) → Id t t' → Eq-type-choice-∞ C t t'
+Eq-type-choice-∞-eq C t .t refl = reflexive-Eq-type-choice-∞ C t
+
+is-contr-total-Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : type-choice-∞ C) → is-contr (Σ (type-choice-∞ C) (Eq-type-choice-∞ C t))
+is-contr-total-Eq-type-choice-∞ {A = A} {B} C t =
+  is-contr-total-Eq-structure
+    ( λ f g H → (x : A) → Id (tr (C x) (H x) ((pr2 t) x)) (g x))
+    ( is-contr-total-htpy (pr1 t))
+    ( dpair (pr1 t) (htpy-refl _))
+    ( is-contr-total-htpy (pr2 t))
+
+is-equiv-Eq-type-choice-∞-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) → is-equiv (Eq-type-choice-∞-eq C t t')
+is-equiv-Eq-type-choice-∞-eq C t =
+  id-fundamental-gen t
+    ( reflexive-Eq-type-choice-∞ C t)
+    ( is-contr-total-Eq-type-choice-∞ C t)
+    ( Eq-type-choice-∞-eq C t)
+
+eq-Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) → Eq-type-choice-∞ C t t' → Id t t'
+eq-Eq-type-choice-∞ C t t' =
+  inv-is-equiv (is-equiv-Eq-type-choice-∞-eq C t t')
+
+{- Next we compute the identity type of products of total spaces. Note again
+   that the identity type of a product of total spaces is again a product of
+   total spaces. -}
+
+Eq-ΠΣ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → UU (l1 ⊔ (l2 ⊔ l3))
+Eq-ΠΣ {A = A} C t t' =
+  (a : A) →
+    Σ (Id (pr1 (t a)) (pr1 (t' a))) (λ p →
+      Id (tr (C a) p (pr2 (t a))) (pr2 (t' a)))
+
+reflexive-Eq-ΠΣ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : (a : A) → Σ (B a) (C a)) → Eq-ΠΣ C t t
+reflexive-Eq-ΠΣ C t a = dpair refl refl
+
+Eq-ΠΣ-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → Id t t' → Eq-ΠΣ C t t'
+Eq-ΠΣ-eq C t .t refl = reflexive-Eq-ΠΣ C t
+
+is-contr-total-Eq-ΠΣ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : (a : A) → Σ (B a) (C a)) →
+  is-contr (Σ ((a : A) → Σ (B a) (C a)) (Eq-ΠΣ C t))
+is-contr-total-Eq-ΠΣ {A = A} {B} C t =
+  is-contr-is-equiv
+    ( (a : A) →
+      Σ (Σ (B a) (C a)) (λ t' →
+        Σ (Id (pr1 (t a)) (pr1 t')) (λ p →
+          Id (tr (C a) p (pr2 (t a))) (pr2 t'))))
+    ( inv-choice-∞)
+    ( is-equiv-inv-choice-∞)
+    ( is-contr-Π
+      ( λ a →
+        is-contr-total-Eq-structure
+        ( λ b c p → Id (tr (C a) p (pr2 (t a))) c)
+        ( is-contr-total-path (B a) (pr1 (t a)))
+        ( dpair (pr1 (t a)) refl)
+        ( is-contr-total-path (C a (pr1 (t a))) (pr2 (t a)))))
+
+is-equiv-Eq-ΠΣ-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → is-equiv (Eq-ΠΣ-eq C t t')
+is-equiv-Eq-ΠΣ-eq C t =
+  id-fundamental-gen t
+    ( reflexive-Eq-ΠΣ C t)
+    ( is-contr-total-Eq-ΠΣ C t)
+    ( Eq-ΠΣ-eq C t)
+
+eq-Eq-ΠΣ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → Eq-ΠΣ C t t' → Id t t'
+eq-Eq-ΠΣ C t t' = inv-is-equiv (is-equiv-Eq-ΠΣ-eq C t t')
+
+
+{- Since the identity types of type-choice-∞ and of products of total spaces
+   are again of the same form, it follows that the action on paths of
+   inv-choice-∞ is again of the form inv-choice-∞.
+-}
+
+square-ap-inv-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) →
+  coherence-square
+    ( Eq-type-choice-∞-eq C t t')
+    ( ap inv-choice-∞ {x = t} {y = t'})
+    ( inv-choice-∞)
+    ( Eq-ΠΣ-eq C (inv-choice-∞ t) (inv-choice-∞ t'))
+square-ap-inv-choice-∞ C (dpair f g) .(dpair f g) refl = refl
+
+coherence-square-inv-is-equiv-horizontal :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : A → C) (h : B → D) (k : C → D) (H : (h ∘ f) ~ (k ∘ g)) →
+  (is-equiv-h : is-equiv h) → (is-equiv-g : is-equiv g) →
+  coherence-square (inv-is-equiv is-equiv-g) k f (inv-is-equiv is-equiv-h)
+coherence-square-inv-is-equiv-horizontal f g h k H is-equiv-h is-equiv-g c =
+  ( ap
+    ( (inv-is-equiv is-equiv-h) ∘ k)
+    ( inv (issec-inv-is-equiv is-equiv-g c))) ∙
+  ( ( ap
+      ( inv-is-equiv is-equiv-h)
+      ( inv (H (inv-is-equiv is-equiv-g c)))) ∙
+    ( isretr-inv-is-equiv is-equiv-h (f (inv-is-equiv is-equiv-g c))))
 -}
