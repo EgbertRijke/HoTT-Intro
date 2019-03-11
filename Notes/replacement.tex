@@ -1,0 +1,176 @@
+\chapter{Type theoretic replacement}
+
+\section{Essentially small types and maps}
+It is a trivial observation, but nevertheless of fundamental importance, that by the univalence axiom the identity types of $\UU$ are equivalent to types in $\UU$, because it provides an equivalence $\eqv{(A=B)}{(\eqv{A}{B})}$, and the type $\eqv{A}{B}$ is in $\UU$ for any $A,B:\UU$. Since the identity types of $\UU$ are equivalent to types in $\UU$, we also say that the universe is \emph{locally small}.
+
+\begin{defn}\label{defn:ess_small}
+\begin{enumerate}
+\item A type $A$ is said to be \define{essentially small}\index{essentially small!type|textbf} if there is a type $X:\UU$ and an equivalence $\eqv{A}{X}$. We write\index{ess_small(A)@{$\mathsf{ess\usc{}small}(A)$}|textbf}
+\begin{equation*}
+\mathsf{ess\usc{}small}(A)\defeq\sm{X:\UU}\eqv{A}{X}.
+\end{equation*}
+\item A map $f:A\to B$ is said to be \define{essentially small}\index{essentially small!map|textbf} if for each $b:B$ the fiber $\fib{f}{b}$ is essentially small.
+We write\index{ess_small(f)@{$\mathsf{ess\usc{}small}(f)$}|textbf}
+\begin{equation*}
+\mathsf{ess\usc{}small}(f)\defeq\prd{b:B}\mathsf{ess\usc{}small}(\fib{f}{b}).
+\end{equation*}
+\item A type $A$ is said to be \define{locally small}\index{locally small!type} if for every $x,y:A$ the identity type $x=y$ is essentially small.
+We write\index{loc_small(A)@{$\mathsf{loc\usc{}small}(A)$}|textbf}
+\begin{equation*}
+\mathsf{loc\usc{}small}(A)\defeq \prd{x,y:A}\mathsf{ess\usc{}small}(x=y).
+\end{equation*}
+\end{enumerate}
+\end{defn}
+
+\begin{lem}\label{lem:isprop_ess_small}
+The type $\mathsf{ess\usc{}small}(A)$ is a proposition for any type $A$.\index{essentially small!is a proposition|textit}
+\end{lem}
+
+\begin{proof}
+Let $X$ be a type. Our goal is to show that the type
+\begin{equation*}
+\sm{Y:\UU}\eqv{X}{Y}
+\end{equation*}
+is a proposition. Suppose there is a type $X':\UU$ and an equivalence $e:\eqv{X}{X'}$, then the map
+\begin{equation*}
+(\eqv{X}{Y})\to (\eqv{X'}{Y})
+\end{equation*}
+given by precomposing with $e^{-1}$ is an equivalence. This induces an equivalence on total spaces
+\begin{equation*}
+\eqv{\Big(\sm{Y:\UU}\eqv{X}{Y}\Big)}{\Big(\sm{Y:\UU}\eqv{X'}{Y}\Big)}
+\end{equation*}
+However, the codomain of this equivalence is contractible by \cref{thm:univalence}. Thus it follows by \cref{cor:contr_prop} that the asserted type is a proposition.
+\end{proof}
+
+\begin{cor}
+For each function $f:A\to B$, the type $\mathsf{ess\usc{}small}(f)$ is a proposition, and for each type $X$ the type $\mathsf{loc\usc{}small}(X)$ is a proposition.
+\end{cor}
+
+\begin{proof}
+This follows from the fact that propositions are closed under dependent products, established in \cref{thm:trunc_pi}.
+\end{proof}
+
+\begin{thm}\label{thm:fam_proj}
+For any small type $A:\UU$ there is an equivalence
+\begin{equation*}
+\mathsf{map\usc{}fam}_A:\eqv{(A\to \UU)}{\Big(\sm{X:\UU} X\to A\Big)}.
+\end{equation*}
+\end{thm}
+
+\begin{proof}
+Note that we have the function
+\begin{equation*}
+\varphi :\lam{B} \Big(\sm{x:A}B(x),\proj 1\Big) : (A\to \UU)\to \Big(\sm{X:\UU}X\to A\Big).
+\end{equation*}
+The fiber of this map at $(X,f)$ is by univalence and function extensionality equivalent to the type
+\begin{equation*}
+\sm{B:A\to \UU}{e:\eqv{(\sm{x:A}B(x))}{X}} \proj 1\htpy f\circ e.
+\end{equation*}
+By \cref{ex:triangle_fib} this type is equivalent to the type
+\begin{equation*}
+\sm{B:A\to \UU}\prd{a:A} \eqv{B(a)}{\fib{f}{a}},
+\end{equation*}
+and by `type theoretic choice', which was established in \cref{thm:choice}, this type is equivalent to
+\begin{equation*}
+\prd{a:A}\sm{X:\UU}\eqv{X}{\fib{f}{a}}.
+\end{equation*}
+We conclude that the fiber of $\varphi$ at $(X,f)$ is equivalent to the type $\mathsf{ess\usc{}small}(f)$. However, since $f:X\to A$ is a map between small types it is essentially small. Moreover, since being essentially small is a proposition by \cref{lem:isprop_ess_small}, it follows that $\fib{\varphi}{(X,f)}$ is contractible for every $f:X\to A$. In other words, $\varphi$ is a contractible map, and therefore it is an equivalence.
+\end{proof}
+
+\begin{rmk}
+The inverse of the map
+\begin{equation*}
+\varphi : (A\to \UU)\to \Big(\sm{X:\UU}X\to A\Big).
+\end{equation*}
+constructed in \cref{thm:fam_proj} is the map $(X,f)\mapsto \fibf{f}$.
+\end{rmk}
+
+\begin{thm}\label{thm:classifier}
+Let $f:A\to B$ be a map. Then there is an equivalence
+\begin{equation*}
+\eqv{\mathsf{ess\usc{}small}(f)}{\mathsf{is\usc{}classified}(f)},
+\end{equation*}
+where $\mathsf{is\usc{}classified}(f)$\index{is_classified(f)@{$\mathsf{is\usc{}classified}(f)$}|textbf} is the type of quadruples $(F,\tilde{F},H,p)$ consisting of maps
+$F:B\to \UU$ and $\tilde{F}:A\to \sm{X:\UU}X$, a homotopy $H:F\circ f\htpy \proj 1\circ \tilde{F}$,  such that the commuting square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"\tilde{F}"] \arrow[d,swap,"f"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
+B \arrow[r,swap,"F"] & \UU
+\end{tikzcd}
+\end{equation*}
+is a pullback square, as witnessed by $p$\footnote{The universal property of the pullback is not expressible by a type. However, we may take the type of $p:\isequiv(h)$, where $h:A\to B\times_\UU\big(\sm{X:\UU}X\big)$ is the map obtained by the universal property of the canonical pullback.}. If $f$ comes equipped with a term of type $\mathsf{is\usc{}classified}(f)$, we also say that $f$ is \define{classified}\index{classified by the universal family|textbf} by the universal family. 
+\end{thm}
+
+\begin{proof}
+From \cref{ex:sq_fib} we obtain that the type of pairs $(\tilde{F},H)$ is equivalent to the type of fiberwise transformations
+\begin{equation*}
+\prd{b:B}\fib{f}{b}\to F(b).
+\end{equation*}
+By \cref{cor:pb_fibequiv} the square is a pullback square if and only if the induced map
+\begin{equation*}
+\prd{b:B}\fib{f}{b}\to F(b)
+\end{equation*}
+is a fiberwise equivalence. Thus the data $(F,\tilde{F},H,pb)$ is equivalent to the type of pairs $(F,e)$ where $e$ is a fiberwise equivalence from $\fibf{f}$ to $F$. By \cref{thm:choice} the type of pairs $(F,e)$ is equivalent to the type $\mathsf{ess\usc{}small}(f)$. 
+\end{proof}
+
+\begin{rmk}
+For any type $A$ (not necessarily small), and any $B:A\to \UU$, the square\index{Sigma-type@{$\Sigma$-type}!as pullback of universal family|textit}
+\begin{equation*}
+\begin{tikzcd}[column sep=6em]
+\sm{x:A}B(x) \arrow[d,swap,"\proj 1"] \arrow[r,"{\lam{(x,y)}(B(x),y)}"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
+A \arrow[r,swap,"B"] & \UU
+\end{tikzcd}
+\end{equation*}
+is a pullback square. Therefore it follows that for any family $B:A\to\UU$ of small types, the projection map $\proj 1:\sm{x:A}B(x)\to A$ is an essentially small map.
+To see that the claim is a direct consequence of \cref{lem:pb_subst} we write the asserted square in its rudimentary form:
+\begin{equation*}
+%\begin{gathered}[b]
+\begin{tikzcd}[column sep=6em]
+\sm{x:A}\mathrm{El}(B(x)) \arrow[d,swap,"\proj 1"] \arrow[r,"{\lam{(x,y)}(B(x),y)}"] & \sm{X:\UU}\mathrm{El}(X) \arrow[d,"\proj 1"] \\
+A \arrow[r,swap,"B"] & \UU.
+\end{tikzcd}%\\[-\dp\strutbox]\end{gathered}\qedhere
+\end{equation*}
+\end{rmk}
+
+In the following theorem we show that a type is small if and only if its diagonal is classified by $\UU$.
+
+\begin{thm}
+Let $A$ be a type. The following are equivalent:
+\begin{enumerate}
+\item $A$ is locally small.\index{locally small|textit}
+\item There are maps $I:A\times A\to\UU$ and $\tilde{I}:A\to\sm{X:\UU}X$, and a homotopy $H:I\circ \delta_A\htpy \proj 1\circ\tilde{I}$
+such that the commuting square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"\tilde{I}"] \arrow[d,swap,"\delta_A"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
+A\times A \arrow[r,swap,"{I}"] & \UU
+\end{tikzcd}
+\end{equation*}
+is a pullback square.\index{diagonal!of a type|textit}
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+In \cref{ex:diagonal} we have established that the identity type $x=y$ is the fiber of $\delta_A$ at $(x,y):A\times A$. Therefore it follows that $A$ is locally small if and only if the diagonal $\delta_A$ is essentially small.
+Now the result follows from \cref{thm:classifier}.
+\end{proof}
+
+\section{Smallness of images}
+
+\begin{exercises}
+\item
+\begin{subexenum}
+\item Show that any proposition is locally small.\index{proposition!is locally small}
+\item Show that any essentially small type is locally small.\index{essentially small!type!is locally small}
+\item Show that the function type $A\to X$ is locally small whenever $A$ is essentially small and $X$ is locally small.
+\end{subexenum}
+\item Let $f:A\to B$ be a map. Show that the following are equivalent:
+\begin{enumerate}
+\item The map $f$ is \define{locally small}\index{locally small!map|textbf} in the sense that for every $x,y:A$, the action on paths of $f$
+\begin{equation*}
+\apfunc{f}:(x=y)\to (f(x)=f(y))
+\end{equation*}
+is an essentially small map.
+\item The diagonal $\delta_f$ of $f$ as defined in \cref{ex:trunc_diagonal_map} is classified by the universal fibration.
+\end{enumerate}
+\end{exercises}
