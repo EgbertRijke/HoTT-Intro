@@ -361,27 +361,27 @@ dependent-pullback-property-pullback-property-pushout
 
 -- Section 15.2 Families over pushouts
 
-generating-data-fam-pushout :
+Fam-pushout :
   {l1 l2 l3 : Level} (l : Level)
   {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ lsuc l)))
-generating-data-fam-pushout l {S} {A} {B} f g =
+Fam-pushout l {S} {A} {B} f g =
   Σ ( A → UU l)
     ( λ PA → Σ (B → UU l)
       ( λ PB → (s : S) → PA (f s) ≃ PB (g s)))
 
-generating-data-fam-pushout-cocone-UU :
+Fam-pushout-cocone-UU :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) →
-  cocone f g (UU l) → generating-data-fam-pushout l f g
-generating-data-fam-pushout-cocone-UU l f g =
+  cocone f g (UU l) → Fam-pushout l f g
+Fam-pushout-cocone-UU l f g =
   tot (λ PA → (tot (λ PB H s → equiv-eq (H s))))
 
-is-equiv-generating-data-fam-pushout-cocone-UU :
+is-equiv-Fam-pushout-cocone-UU :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) →
-  is-equiv (generating-data-fam-pushout-cocone-UU l f g)
-is-equiv-generating-data-fam-pushout-cocone-UU l f g =
+  is-equiv (Fam-pushout-cocone-UU l f g)
+is-equiv-Fam-pushout-cocone-UU l f g =
   is-equiv-tot-is-fiberwise-equiv
     ( λ PA → is-equiv-tot-is-fiberwise-equiv
       ( λ PB → is-equiv-postcomp-Π
@@ -391,7 +391,7 @@ is-equiv-generating-data-fam-pushout-cocone-UU l f g =
 gen-fam-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
-  (P : X → UU l) → generating-data-fam-pushout l f g
+  (P : X → UU l) → Fam-pushout l f g
 gen-fam-pushout f g (dpair i (dpair j H)) P =
   dpair
     ( P ∘ i)
@@ -408,7 +408,7 @@ triangle-gen-fam-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
   ( gen-fam-pushout {l = l} f g c) ~
-  ( ( generating-data-fam-pushout-cocone-UU l f g) ∘
+  ( ( Fam-pushout-cocone-UU l f g) ∘
     ( cocone-map f g {Y = UU l} c))
 triangle-gen-fam-pushout {l = l} {S} {A} {B} {X} f g (dpair i (dpair j H)) P =
   eq-pair
@@ -417,7 +417,7 @@ triangle-gen-fam-pushout {l = l} {S} {A} {B} {X} f g (dpair i (dpair j H)) P =
         ( dpair refl
           ( eq-htpy (λ s → equiv-eq-ap-fam P (H s))))))
 
-coherence-htpy-generating-data-fam-pushout :
+coherence-Eq-Fam-pushout :
   {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) →
   (PA : A → UU l) (PB : B → UU l) (PS : (s : S) → (PA (f s)) ≃ (PB (g s))) →
@@ -425,21 +425,21 @@ coherence-htpy-generating-data-fam-pushout :
   (PS' : (s : S) → (PA' (f s)) ≃ (PB' (g s))) →
   (eA : (a : A) → (PA a) ≃ (PA' a)) (eB : (b : B) → (PB b) ≃ (PB' b)) →
   UU (l1 ⊔ l)
-coherence-htpy-generating-data-fam-pushout {S = S}
+coherence-Eq-Fam-pushout {S = S}
   f g PA PB PS PA' PB' PS' eA eB =
   ( s : S) →
     ( (eqv-map (eB (g s))) ∘ (eqv-map (PS s))) ~
     ( (eqv-map (PS' s)) ∘ (eqv-map (eA (f s))))
 
-is-contr-total-coherence-htpy-generating-data-fam-pushout :
+is-contr-total-coherence-Eq-Fam-pushout :
   {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) →
   (PA : A → UU l) (PB : B → UU l)
   (PS : (s : S) → (PA (f s)) ≃ (PB (g s))) →
   is-contr (Σ ((s : S) → (PA (f s)) ≃ (PB (g s)))
-    ( λ PS' → coherence-htpy-generating-data-fam-pushout
+    ( λ PS' → coherence-Eq-Fam-pushout
       f g PA PB PS PA PB PS' (λ a → equiv-id (PA a)) (λ b → equiv-id (PB b))))
-is-contr-total-coherence-htpy-generating-data-fam-pushout {S = S} f g PA PB PS =
+is-contr-total-coherence-Eq-Fam-pushout {S = S} f g PA PB PS =
   is-contr-is-equiv'
     ( (s : S) →
       Σ ( (PA (f s)) ≃ (PB (g s)))
@@ -449,11 +449,11 @@ is-contr-total-coherence-htpy-generating-data-fam-pushout {S = S} f g PA PB PS =
     ( is-contr-Π
       ( λ s → is-contr-total-htpy-equiv (PS s)))
 
-htpy-generating-data-fam-pushout :
+Eq-Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) →
-  (s t : generating-data-fam-pushout l f g) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l)))
-htpy-generating-data-fam-pushout l {S} {A} {B} f g
+  (s t : Fam-pushout l f g) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l)))
+Eq-Fam-pushout l {S} {A} {B} f g
   (dpair PA (dpair PB PS)) t =
   let PA' = pr1 t
       PB' = pr1 (pr2 t)
@@ -462,7 +462,7 @@ htpy-generating-data-fam-pushout l {S} {A} {B} f g
   Σ ( (a : A) → (PA a) ≃ (PA' a))
     ( λ eA → Σ ( (b : B) → (PB b) ≃ (PB' b))
       ( λ eB →
-        coherence-htpy-generating-data-fam-pushout
+        coherence-Eq-Fam-pushout
           f g PA PB PS PA' PB' PS' eA eB))
 
 is-contr-total-fam-equiv :
@@ -475,13 +475,13 @@ is-contr-total-fam-equiv {l2 = l2} {A} B =
     ( is-equiv-choice-∞)
     ( is-contr-Π (λ a → is-contr-total-equiv (B a)))
 
-is-contr-total-htpy-generating-data-fam-pushout :
+is-contr-total-Eq-Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s : generating-data-fam-pushout l f g) →
+  (f : S → A) (g : S → B) (s : Fam-pushout l f g) →
   is-contr
-    ( Σ ( generating-data-fam-pushout l f g)
-      ( htpy-generating-data-fam-pushout l f g s))
-is-contr-total-htpy-generating-data-fam-pushout l {S} {A} {B} f g
+    ( Σ ( Fam-pushout l f g)
+      ( Eq-Fam-pushout l f g s))
+is-contr-total-Eq-Fam-pushout l {S} {A} {B} f g
   ( dpair PA (dpair PB PS)) =
   is-contr-total-Eq-structure
     ( λ PA' t eA →
@@ -490,73 +490,73 @@ is-contr-total-htpy-generating-data-fam-pushout l {S} {A} {B} f g
       in
       Σ ( (b : B) → (PB b) ≃ (PB' b))
         ( λ eB →
-          coherence-htpy-generating-data-fam-pushout
+          coherence-Eq-Fam-pushout
             f g PA PB PS PA' PB' PS' eA eB))
     ( is-contr-total-fam-equiv PA)
     ( dpair PA (λ a → equiv-id (PA a)))
     ( is-contr-total-Eq-structure
       ( λ PB' PS' eB →
-        coherence-htpy-generating-data-fam-pushout
+        coherence-Eq-Fam-pushout
         f g PA PB PS PA PB' PS' (λ a → equiv-id (PA a)) eB)
       ( is-contr-total-fam-equiv PB)
       ( dpair PB (λ b → equiv-id (PB b)))
-      ( is-contr-total-coherence-htpy-generating-data-fam-pushout f g PA PB PS))
+      ( is-contr-total-coherence-Eq-Fam-pushout f g PA PB PS))
 
-reflexive-htpy-generating-data-fam-pushout :
+reflexive-Eq-Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s : generating-data-fam-pushout l f g) →
-  htpy-generating-data-fam-pushout l f g s s
-reflexive-htpy-generating-data-fam-pushout l f g (dpair PA (dpair PB PS)) =
+  (f : S → A) (g : S → B) (s : Fam-pushout l f g) →
+  Eq-Fam-pushout l f g s s
+reflexive-Eq-Fam-pushout l f g (dpair PA (dpair PB PS)) =
   dpair (λ a → equiv-id (PA a))
     ( dpair
       ( λ b → equiv-id (PB b))
       ( λ s → htpy-refl _))
 
-htpy-generating-data-fam-pushout-eq :
+Eq-Fam-pushout-eq :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
-  Id s t → htpy-generating-data-fam-pushout l f g s t
-htpy-generating-data-fam-pushout-eq l f g s .s refl =
-  reflexive-htpy-generating-data-fam-pushout l f g s
+  (f : S → A) (g : S → B) (s t : Fam-pushout l f g) →
+  Id s t → Eq-Fam-pushout l f g s t
+Eq-Fam-pushout-eq l f g s .s refl =
+  reflexive-Eq-Fam-pushout l f g s
 
-is-equiv-htpy-generating-data-fam-pushout-eq :
+is-equiv-Eq-Fam-pushout-eq :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
-  is-equiv (htpy-generating-data-fam-pushout-eq l f g s t)
-is-equiv-htpy-generating-data-fam-pushout-eq l f g s =
+  (f : S → A) (g : S → B) (s t : Fam-pushout l f g) →
+  is-equiv (Eq-Fam-pushout-eq l f g s t)
+is-equiv-Eq-Fam-pushout-eq l f g s =
   id-fundamental-gen s
-    ( reflexive-htpy-generating-data-fam-pushout l f g s)
-    ( is-contr-total-htpy-generating-data-fam-pushout l f g s)
-    ( htpy-generating-data-fam-pushout-eq l f g s)
+    ( reflexive-Eq-Fam-pushout l f g s)
+    ( is-contr-total-Eq-Fam-pushout l f g s)
+    ( Eq-Fam-pushout-eq l f g s)
 
-eq-htpy-generating-data-fam-pushout :
+eq-Eq-Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
-  (htpy-generating-data-fam-pushout l f g s t) → Id s t
-eq-htpy-generating-data-fam-pushout l f g s t =
+  (f : S → A) (g : S → B) (s t : Fam-pushout l f g) →
+  (Eq-Fam-pushout l f g s t) → Id s t
+eq-Eq-Fam-pushout l f g s t =
   inv-is-equiv
-    ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
+    ( is-equiv-Eq-Fam-pushout-eq l f g s t)
 
-issec-eq-htpy-generating-data-fam-pushout :
+issec-eq-Eq-Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
-  ( ( htpy-generating-data-fam-pushout-eq l f g s t) ∘
-    ( eq-htpy-generating-data-fam-pushout l f g s t)) ~ id
-issec-eq-htpy-generating-data-fam-pushout l f g s t =
+  (f : S → A) (g : S → B) (s t : Fam-pushout l f g) →
+  ( ( Eq-Fam-pushout-eq l f g s t) ∘
+    ( eq-Eq-Fam-pushout l f g s t)) ~ id
+issec-eq-Eq-Fam-pushout l f g s t =
   issec-inv-is-equiv
-    ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
+    ( is-equiv-Eq-Fam-pushout-eq l f g s t)
 
-isretr-eq-htpy-generating-data-fam-pushout :
+isretr-eq-Eq-Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s t : generating-data-fam-pushout l f g) →
-  ( ( eq-htpy-generating-data-fam-pushout l f g s t) ∘
-    ( htpy-generating-data-fam-pushout-eq l f g s t)) ~ id
-isretr-eq-htpy-generating-data-fam-pushout l f g s t =
+  (f : S → A) (g : S → B) (s t : Fam-pushout l f g) →
+  ( ( eq-Eq-Fam-pushout l f g s t) ∘
+    ( Eq-Fam-pushout-eq l f g s t)) ~ id
+isretr-eq-Eq-Fam-pushout l f g s t =
   isretr-inv-is-equiv
-    ( is-equiv-htpy-generating-data-fam-pushout-eq l f g s t)
+    ( is-equiv-Eq-Fam-pushout-eq l f g s t)
 
 {-
-{- We first compute the identity type of type-choice-∞. Note that its identity 
+{- We compute the identity type of type-choice-∞. Note that its identity 
    type is again of the form type-choice-∞. -}
 
 Eq-type-choice-∞ :

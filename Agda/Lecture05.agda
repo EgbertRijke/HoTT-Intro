@@ -108,9 +108,16 @@ has-inverse : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 has-inverse {i} {j} {A} {B} f =
   Σ (B → A) (λ g → ((f ∘ g) ~ id) × ((g ∘ f) ~ id))
 
-is-equiv-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+is-equiv-has-inverse :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   has-inverse f → is-equiv f
 is-equiv-has-inverse (dpair g (dpair H K)) = pair (dpair g H) (dpair g K)
+
+is-equiv-has-inverse' :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (g : B → A) (H : (f ∘ g) ~ id) (K : (g ∘ f) ~ id) → is-equiv f
+is-equiv-has-inverse' g H K =
+  is-equiv-has-inverse (dpair g (dpair H K))
 
 htpy-secf-retrf : {i j : Level} {A : UU i} {B : UU j} {f : A → B}
   (e : is-equiv f) → (map-sec-is-equiv e ~ map-retr-is-equiv e)
