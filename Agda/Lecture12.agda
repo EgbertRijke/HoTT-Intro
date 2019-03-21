@@ -134,7 +134,7 @@ induction-principle-circle l2 {X} l = (P : X → UU l2) → sec (ev-free-loop' l
 ev-free-loop :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (Y : UU l2) →
   ( X → Y) → free-loops Y
-ev-free-loop (dpair x l) Y f = dpair (f x) (ap f l)
+ev-free-loop l Y f = dpair (f (pr1 l)) (ap f (pr2 l))
 
 universal-property-circle :
   { l1 : Level} (l2 : Level) {X : UU l1} (l : free-loops X) → UU _
@@ -252,8 +252,134 @@ universal-property-induction-principle-circle l =
   ( universal-property-dependent-universal-property-circle l) ∘
   ( dependent-universal-property-induction-principle-circle l)
 
+unique-mapping-property-circle :
+  { l1 : Level} (l2 : Level) {X : UU l1} (l : free-loops X) →
+  UU (l1 ⊔ (lsuc l2))
+unique-mapping-property-circle l2 {X} l =
+  ( Y : UU l2) (l' : free-loops Y) →
+    is-contr (Σ (X → Y) (λ f → Eq-free-loops (ev-free-loop l Y f) l'))
+
+unique-mapping-property-universal-property-circle :
+  { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
+  universal-property-circle l2 l →
+  unique-mapping-property-circle l2 l
+unique-mapping-property-universal-property-circle l up-circle Y l' =
+  is-contr-is-equiv'
+    ( fib (ev-free-loop l Y) l')
+    ( tot (λ f → Eq-free-loops-eq (ev-free-loop l Y f) l'))
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ f → is-equiv-Eq-free-loops-eq (ev-free-loop l Y f) l'))
+    ( is-contr-map-is-equiv (up-circle Y) l')
+
 {- Section 11.3 The fundamental cover of the circle -}
 
+{- Families over the circle -}
+
+Automorphisms :
+  ( l1 : Level) → UU l1 → UU l1
+Automorphisms l1 Y = Y ≃ Y
+
+Fam-circle :
+  ( l1 : Level) → UU (lsuc l1)
+Fam-circle l1 = Σ (UU l1) (Automorphisms l1)
+
+Eq-Fam-circle :
+  { l1 : Level} → Fam-circle l1 → Fam-circle l1 → UU l1
+Eq-Fam-circle P Q =
+  Σ ( (pr1 P) ≃ (pr1 Q))
+    ( λ h →
+      ( (eqv-map h) ∘ (eqv-map (pr2 P))) ~ ((eqv-map (pr2 Q)) ∘ (eqv-map h)))
+  
+reflexive-Eq-Fam-circle :
+  { l1 : Level} (P : Fam-circle l1) → Eq-Fam-circle P P
+reflexive-Eq-Fam-circle (dpair X e) =
+  dpair (equiv-id X) (htpy-refl _)
+
+Eq-Fam-circle-eq :
+  { l1 : Level} (P Q : Fam-circle l1) → Id P Q → Eq-Fam-circle P Q
+Eq-Fam-circle-eq P .P refl = reflexive-Eq-Fam-circle P
+
+is-contr-total-Eq-Fam-circle :
+  { l1 : Level} (P : Fam-circle l1) →
+  is-contr (Σ (Fam-circle l1) (Eq-Fam-circle P))
+is-contr-total-Eq-Fam-circle (dpair X e) =
+  is-contr-total-Eq-structure
+    ( λ Y f h → ((eqv-map h) ∘ (eqv-map e)) ~ ((eqv-map f) ∘ (eqv-map h)))
+    ( is-contr-total-equiv X)
+    ( dpair X (equiv-id X))
+    ( is-contr-total-htpy-equiv e)
+
+is-equiv-Eq-Fam-circle-eq :
+  { l1 : Level} (P Q : Fam-circle l1) → is-equiv (Eq-Fam-circle-eq P Q)
+is-equiv-Eq-Fam-circle-eq P =
+  id-fundamental-gen P
+    ( reflexive-Eq-Fam-circle P)
+    ( is-contr-total-Eq-Fam-circle P)
+    ( Eq-Fam-circle-eq P)
+
+eq-Eq-Fam-circle :
+  { l1 : Level} (P Q : Fam-circle l1) → Eq-Fam-circle P Q → Id P Q
+eq-Eq-Fam-circle P Q = inv-is-equiv (is-equiv-Eq-Fam-circle-eq P Q)
+
+ev-fam-circle :
+  { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
+  ( X → UU l2) → Fam-circle l2
+ev-fam-circle l P =
+  dpair
+    ( P (base-free-loop l))
+    ( equiv-tr P (loop-free-loop l))
+
+comparison-fam-circle :
+  ( l1 : Level) → free-loops (UU l1) → Fam-circle l1
+comparison-fam-circle l1 = tot (λ Y → equiv-eq)
+
+is-equiv-comparison-fam-circle :
+  ( l1 : Level) → is-equiv (comparison-fam-circle l1)
+is-equiv-comparison-fam-circle l1 =
+  is-equiv-tot-is-fiberwise-equiv (λ Y → univalence Y Y)
+
+triangle-comparison-fam-circle :
+  { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
+  (ev-fam-circle l) ~ ((comparison-fam-circle l2) ∘ (ev-free-loop l (UU l2)))
+triangle-comparison-fam-circle l P =
+  eq-Eq-Fam-circle
+    ( ev-fam-circle l P)
+    ( comparison-fam-circle _ (ev-free-loop l (UU _) P))
+    ( dpair (equiv-id _) (htpy-inv (tr-equiv-eq-ap (pr2 l))))
+
+is-equiv-ev-fam-circle-universal-property-circle :
+  { l1 l2 : Level} {X : UU l1} (l : free-loops X)
+  ( up-circle : universal-property-circle (lsuc l2) l) →
+  is-equiv (ev-fam-circle {l2 = l2} l)
+is-equiv-ev-fam-circle-universal-property-circle {l2 = l2} l up-circle =
+  is-equiv-comp
+    ( ev-fam-circle l)
+    ( comparison-fam-circle l2)
+    ( ev-free-loop l (UU l2))
+    ( triangle-comparison-fam-circle l)
+    ( up-circle (UU l2))
+    ( is-equiv-comparison-fam-circle l2)
+
+unique-family-property-circle :
+  { l1 : Level} (l2 : Level) {X : UU l1} (l : free-loops X) →
+  UU (l1 ⊔ (lsuc l2))
+unique-family-property-circle l2 {X} l =
+  ( Q : Fam-circle l2) →
+    is-contr (Σ (X → UU l2) (λ P → Eq-Fam-circle (ev-fam-circle l P) Q))
+
+unique-family-property-universal-property-circle :
+  { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
+  universal-property-circle (lsuc l2) l → unique-family-property-circle l2 l
+unique-family-property-universal-property-circle l up-circle Q =
+  is-contr-is-equiv'
+    ( fib (ev-fam-circle l) Q)
+    ( tot (λ P → Eq-Fam-circle-eq (ev-fam-circle l P) Q))
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ P → is-equiv-Eq-Fam-circle-eq (ev-fam-circle l P) Q))
+    ( is-contr-map-is-equiv
+      ( is-equiv-ev-fam-circle-universal-property-circle l up-circle)
+      ( Q))
+  
 {- An elimination principle for ℤ -}
 
 elim-ℤ :
