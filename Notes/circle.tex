@@ -11,7 +11,7 @@ In this chapter we introduce higher inductive types, where we follow a similar i
 The ideas behind the definition of higher inductive types are introduced by studying the simplest non-trivial example: the \emph{circle}.
 Moreover, we show that the loop space of the circle is equivalent to $\mathbb{Z}$ by constructing the universal cover of the circle as an application of the univalence axiom. 
 
-\section{The universal property of the circle}
+\section{The induction principle of the circle}
 The \emph{circle}\index{circle} is defined as a higher inductive type\index{higher inductive type} $\sphere{1}$\index{S 1@{$\sphere{1}$}} that comes equipped with\index{base@{$\base$}}\index{loop@{$\lloop$}}
 \begin{align*}
 \base & : \sphere{1} \\
@@ -84,7 +84,9 @@ f(\base) \arrow[r,equals,swap,"\alpha"] & x
 commutes.
 \end{rmk}
 
-For the remainder of this section we establish the \define{universal property}\index{universal property!of the circle} of the circle. The proof of \cref{thm:circle_up} requires \cref{lem:circle_up_htpy,lem:circle_up_tr_compute}, which we state after we encounter their application.
+\section{The universal property of the circle}
+
+In the following theorem we establish the \define{universal property}\index{universal property!of the circle} of the circle. The proof requires \cref{lem:circle_up_htpy,lem:circle_up_tr_compute}, which we state after we encounter their application.
 
 \begin{thm}\label{thm:circle_up} 
 For each type $X$, the \define{action on generators}\index{action on generators!for the circle}\index{gen_S1@{$\mathsf{gen}_{\sphere{1}}$}|textbf}
