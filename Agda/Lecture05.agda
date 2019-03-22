@@ -435,7 +435,8 @@ is-equiv-comp' :
   is-equiv h → is-equiv g → is-equiv (g ∘ h)
 is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h (htpy-refl _)
 
-is-equiv-left-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+is-equiv-left-factor :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   is-equiv f → is-equiv h → is-equiv g
 is-equiv-left-factor f g h H
@@ -448,7 +449,14 @@ is-equiv-left-factor f g h H
       ( retr-f)
       ( dpair h sh-issec))
 
-is-equiv-right-factor : {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+is-equiv-left-factor' :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
+  is-equiv (g ∘ h) → is-equiv h → is-equiv g
+is-equiv-left-factor' g h =
+  is-equiv-left-factor (g ∘ h) g h (htpy-refl _)
+
+is-equiv-right-factor :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   is-equiv g → is-equiv f → is-equiv h
 is-equiv-right-factor f g h H
@@ -460,6 +468,12 @@ is-equiv-right-factor f g h H
       ( sec-f)
       ( dpair g rg-isretr))
     ( retraction-comp f g h H (dpair rg rg-isretr) retr-f)
+
+is-equiv-right-factor' :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) → 
+  is-equiv g → is-equiv (g ∘ h) → is-equiv h
+is-equiv-right-factor' g h =
+  is-equiv-right-factor (g ∘ h) g h (htpy-refl _)
 
 -- Exercise 5.6
 

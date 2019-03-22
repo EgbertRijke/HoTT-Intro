@@ -362,8 +362,7 @@ dependent-pullback-property-pullback-property-pushout
 -- Section 15.2 Families over pushouts
 
 Fam-pushout :
-  {l1 l2 l3 : Level} (l : Level)
-  {S : UU l1} {A : UU l2} {B : UU l3}
+  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ lsuc l)))
 Fam-pushout l {S} {A} {B} f g =
   Σ ( A → UU l)

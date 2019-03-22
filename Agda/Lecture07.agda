@@ -699,17 +699,38 @@ is-equiv-top-is-equiv-bottom-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
   (is-equiv f) → (is-equiv g) → (is-equiv i) → (is-equiv h)
-is-equiv-top-is-equiv-bottom-square f g h i H Ef Eg Ei =
-  is-equiv-right-factor (i ∘ f) g h H Eg
-    (is-equiv-comp (i ∘ f) i f (htpy-refl _) Ef Ei)
+is-equiv-top-is-equiv-bottom-square
+  f g h i H is-equiv-f is-equiv-g is-equiv-i =
+  is-equiv-right-factor (i ∘ f) g h H is-equiv-g
+    ( is-equiv-comp' i f is-equiv-f is-equiv-i)
 
 is-equiv-bottom-is-equiv-top-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
   (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
   (is-equiv f) → (is-equiv g) → (is-equiv h) → (is-equiv i)
-is-equiv-bottom-is-equiv-top-square f g h i H Ef Eg Eh =
-  is-equiv-left-factor (g ∘ h) i f (htpy-inv H)
-    (is-equiv-comp (g ∘ h) g h (htpy-refl _) Eh Eg) Ef
+is-equiv-bottom-is-equiv-top-square
+  f g h i H is-equiv-f is-equiv-g is-equiv-h = 
+  is-equiv-left-factor' i f
+    ( is-equiv-comp (i ∘ f) g h H is-equiv-h is-equiv-g) is-equiv-f
+
+is-equiv-left-is-equiv-right-square :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+  (is-equiv h) → (is-equiv i) → (is-equiv g) → (is-equiv f)
+is-equiv-left-is-equiv-right-square
+  f g h i H is-equiv-h is-equiv-i is-equiv-g =
+  is-equiv-right-factor' i f is-equiv-i
+    ( is-equiv-comp (i ∘ f) g h H is-equiv-h is-equiv-g)
+
+is-equiv-right-is-equiv-left-square :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+  (is-equiv h) → (is-equiv i) → (is-equiv f) → (is-equiv g)
+is-equiv-right-is-equiv-left-square
+  f g h i H is-equiv-h is-equiv-i is-equiv-f =
+  is-equiv-left-factor (i ∘ f) g h H
+    ( is-equiv-comp' i f is-equiv-f is-equiv-i)
+    ( is-equiv-h)
 
 fib-triangle :
   {i j k : Level} {X : UU i} {A : UU j} {B : UU k}

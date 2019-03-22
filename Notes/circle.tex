@@ -223,11 +223,7 @@ f(x) \arrow[r,equals,swap,"q"] & g(x)
 commutes.
 \end{proof}
 
-\section{The fundamental cover of the circle}
-
-The \emph{fundamental cover}\index{fundamental cover!of the circle} of the circle is a family of sets over the circle with contractible total space.
-Classically, the fundamental cover is described as a map $\mathbb{R}\to\sphere{1}$ that winds the real line around the circle.
-In homotopy type theory there is no analogue of such a construction.
+\section{Families over the circle}
 
 The type of small families over $\sphere{1}$ is just the function type $\sphere{1}\to\UU$, so in fact we may use the universal property of the circle to construct small dependent types over the circle. 
 By the universal property, small type families over $\sphere{1}$ are equivalently described as pairs $(X,p)$ consisting of a type $X:\UU$ and an identification $p:X=X$.
@@ -302,6 +298,12 @@ consists of a \define{base type} $B$ with a base point $b_0$ and a dependent typ
 commutes.
 \end{defn}
 \end{comment}
+
+\section{The fundamental cover of the circle}
+
+The \emph{fundamental cover}\index{fundamental cover!of the circle} of the circle is a family of sets over the circle with contractible total space.
+Classically, the fundamental cover is described as a map $\mathbb{R}\to\sphere{1}$ that winds the real line around the circle.
+In homotopy type theory there is no analogue of such a construction.
 
 Recall from \cref{ex:succ_equiv} that the successor function $\mathsf{succ}:\Z\to \Z$ is an equivalence. Its inverse is the predecessor function defined in \cref{ex:int_pred}. 
 
@@ -510,9 +512,9 @@ The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z
 \item Show that $\neg(\prd{t:\sphere{1}}\mathcal{T}(t))$.
 \item Construct an equivalence $e:\eqv{\sphere{1}}{\sm{t:\sphere{1}}\mathcal{T}(t)}$ for which the triangle
 \begin{equation*}
-\begin{tikzcd}
+\begin{tikzcd}[column sep=tiny]
 \sphere{1} \arrow[rr,"e"] \arrow[dr,swap,"\mathsf{deg}(2)"] & & \sm{t:\sphere{1}}\mathcal{T}(t) \arrow[dl,"\proj 1"] \\
-& \sphere{1}
+\phantom{\sm{t:\sphere{1}}\mathcal{T}(t)} & \sphere{1}
 \end{tikzcd}
 \end{equation*}
 commutes.
