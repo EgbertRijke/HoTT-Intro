@@ -223,6 +223,84 @@ f(x) \arrow[r,equals,swap,"q"] & g(x)
 commutes.
 \end{proof}
 
+\begin{exercises}
+\item \label{ex:circle_up_pushout}Show that
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+X^{\sphere{1}} \arrow[r,"\blank\circ\mathsf{const}_{\base}"] \arrow[d,swap,"\blank\circ\mathsf{const}_{\base}"] & X^\unit \arrow[d,"\blank\circ\mathsf{const}_{\ttt}"] \\
+X^\unit \arrow[r,swap,"\blank\circ\mathsf{const}_{\ttt}"] & X^\bool
+\end{tikzcd}
+\end{equation*}
+is a pullback square for each type $X$.
+\item \label{ex:circle_dup}In this exercise we establish the \emph{dependent universal property} of the circle, analogous to the proof of \cref{thm:circle_up}.
+\begin{subexenum}
+\item Let $f,g:\prd{x:A}B(x)$, and let $E_{f,g}$ be the family over $A$ given by 
+\begin{equation*}
+E_{f,g}(x)\defeq f(x)=g(x).
+\end{equation*}
+Construct for any $p:x=x'$ in $A$ an equivalence
+\begin{equation*}
+\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q')}{(\ct{\apd{f}{p}}{q'}=\ct{\ap{\mathsf{tr}_B(p)}{q}}{\apd{g}{p}})}.
+\end{equation*}
+for any $q:f(x)=g(x)$ and $q':f(x')=g(x')$.
+\item Let $B$ be a family over $A$, and for $l:x=_A x$ let $L_x$ be the family over $B(x)$ given by 
+\begin{equation*}
+L_x(y)\defeq \mathsf{tr}_B(l,y)=y.
+\end{equation*}
+Furthermore, let $q:y=y'$ be an identification in $B(x)$. 
+Construct an equivalence
+\begin{equation*}
+\eqv{(\mathsf{tr}_{L_x}(q,p)=p')}{(\ct{\ap{\mathsf{tr}_B(l)}{q}}{p'}=\ct{p}{q})}. 
+\end{equation*}
+for any $p:\mathsf{tr}_B(l,y)=y$ and $p':\mathsf{tr}_B(l,y')=y'$.
+\item Let $f,g:\prd{x:A}B(x)$, let $p:x=x$ be a loop in $A$, and let $q:f(x)=g(x)$. 
+Construct an equivalence
+\begin{equation*}
+\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q)}{(\mathsf{tr}_{L_x}(q,\apd{f}{p})=\apd{g}{p}).}
+\end{equation*}
+\item Show that for any $f,g:\prd{t:\sphere{1}}P(t)$ there is a function
+\begin{equation*}
+\Big(\mathsf{dgen}_{\sphere{1}}(f)=\mathsf{dgen}_{\sphere{1}}(g)\Big)\to (f=g).
+\end{equation*}
+\item Show that for any type family $P$ over $\sphere{1}$, the \emph{dependent action on generators}
+\begin{equation*}
+\Big(\prd{t:\sphere{1}}P(t)\Big)\to \sm{u:P(\base)}\mathsf{tr}_P(\lloop,u)=u
+\end{equation*}
+is an equivalence.
+\end{subexenum}
+\item Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
+\begin{equation*}
+P(\base)\to\prd{t:\sphere{1}}P(t).
+\end{equation*}
+In this sense the circle is \emph{connected}.
+\item Show that
+\begin{equation*}
+\prd{x,y:\sphere{1}}\neg\neg(x=y).
+\end{equation*}
+\item \label{ex:circle_constant}
+Show that for any type $X$ and any $x:X$, the map
+\begin{equation*}
+\rec{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
+\end{equation*}
+is homotopic to the constant map $\mathsf{const}_x$.
+\item \label{ex:circle_connected}
+\begin{subexenum}
+\item Show that a type $X$ is a set if and only if the map
+\begin{equation*}
+\lam{x}{t} x : X \to (\sphere{1}\to X)
+\end{equation*}
+is an equivalence.
+\item Show that a type $X$ is a set if and only if the map
+\begin{equation*}
+\lam{f}f(\base) : (\sphere{1}\to X)\to X
+\end{equation*}
+is an equivalence.
+\end{subexenum}
+\item Show that any retract of the circle is equivalent to the circle.
+\end{exercises}
+
+\chapter{The fundamental cover of the circle}
+
 \section{Families over the circle}
 
 The type of small families over $\sphere{1}$ is just the function type $\sphere{1}\to\UU$, so in fact we may use the universal property of the circle to construct small dependent types over the circle. 
@@ -428,69 +506,10 @@ The circle is a $1$-type and it is not a $0$-type.\index{circle!is a 1-type@{is 
 \end{cor}
 
 \begin{exercises}
-\item \label{ex:circle_up_pushout}Show that
-\begin{equation*}
-\begin{tikzcd}[column sep=huge]
-X^{\sphere{1}} \arrow[r,"\blank\circ\mathsf{const}_{\base}"] \arrow[d,swap,"\blank\circ\mathsf{const}_{\base}"] & X^\unit \arrow[d,"\blank\circ\mathsf{const}_{\ttt}"] \\
-X^\unit \arrow[r,swap,"\blank\circ\mathsf{const}_{\ttt}"] & X^\bool
-\end{tikzcd}
-\end{equation*}
-is a pullback square for each type $X$.
-\item \label{ex:circle_dup}In this exercise we establish the \emph{dependent universal property} of the circle, analogous to the proof of \cref{thm:circle_up}.
-\begin{subexenum}
-\item Let $f,g:\prd{x:A}B(x)$, and let $E_{f,g}$ be the family over $A$ given by 
-\begin{equation*}
-E_{f,g}(x)\defeq f(x)=g(x).
-\end{equation*}
-Construct for any $p:x=x'$ in $A$ an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q')}{(\ct{\apd{f}{p}}{q'}=\ct{\ap{\mathsf{tr}_B(p)}{q}}{\apd{g}{p}})}.
-\end{equation*}
-for any $q:f(x)=g(x)$ and $q':f(x')=g(x')$.
-\item Let $B$ be a family over $A$, and for $l:x=_A x$ let $L_x$ be the family over $B(x)$ given by 
-\begin{equation*}
-L_x(y)\defeq \mathsf{tr}_B(l,y)=y.
-\end{equation*}
-Furthermore, let $q:y=y'$ be an identification in $B(x)$. 
-Construct an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{L_x}(q,p)=p')}{(\ct{\ap{\mathsf{tr}_B(l)}{q}}{p'}=\ct{p}{q})}. 
-\end{equation*}
-for any $p:\mathsf{tr}_B(l,y)=y$ and $p':\mathsf{tr}_B(l,y')=y'$.
-\item Let $f,g:\prd{x:A}B(x)$, let $p:x=x$ be a loop in $A$, and let $q:f(x)=g(x)$. 
-Construct an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q)}{(\mathsf{tr}_{L_x}(q,\apd{f}{p})=\apd{g}{p}).}
-\end{equation*}
-\item Show that for any $f,g:\prd{t:\sphere{1}}P(t)$ there is a function
-\begin{equation*}
-\Big(\mathsf{dgen}_{\sphere{1}}(f)=\mathsf{dgen}_{\sphere{1}}(g)\Big)\to (f=g).
-\end{equation*}
-\item Show that for any type family $P$ over $\sphere{1}$, the \emph{dependent action on generators}
-\begin{equation*}
-\Big(\prd{t:\sphere{1}}P(t)\Big)\to \sm{u:P(\base)}\mathsf{tr}_P(\lloop,u)=u
-\end{equation*}
-is an equivalence.
-\end{subexenum}
-\item Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
-\begin{equation*}
-P(\base)\to\prd{t:\sphere{1}}P(t).
-\end{equation*}
-In this sense the circle is \emph{connected}.
-\item Show that
-\begin{equation*}
-\prd{x,y:\sphere{1}}\neg\neg(x=y).
-\end{equation*}
 \item Use the fundamental cover of the circle to show that
 \begin{equation*}
 \neg\Big(\prd{t:\sphere{1}}\base=t\Big).
 \end{equation*}
-\item \label{ex:circle_constant}
-Show that for any type $X$ and any $x:X$, the map
-\begin{equation*}
-\rec{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
-\end{equation*}
-is homotopic to the constant map $\mathsf{const}_x$.
 \item \label{ex:circle_degk}
 \begin{subexenum}
 \item Show that for every $x:X$, we have an equivalence
@@ -519,21 +538,7 @@ The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z
 \end{equation*}
 commutes.
 \end{subexenum}
-\item \label{ex:circle_connected}
-\begin{subexenum}
-\item Show that a type $X$ is a set if and only if the map
-\begin{equation*}
-\lam{x}{t} x : X \to (\sphere{1}\to X)
-\end{equation*}
-is an equivalence.
-\item Show that a type $X$ is a set if and only if the map
-\begin{equation*}
-\lam{f}f(\base) : (\sphere{1}\to X)\to X
-\end{equation*}
-is an equivalence.
-\end{subexenum}
 \item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
-\item Show that any retract of the circle is equivalent to the circle.
 \item \label{ex:is_invertible_id_S1}
 \begin{subexenum}
 \item Construct a fiberwise equivalence
