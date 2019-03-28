@@ -16,19 +16,20 @@ The course consisted of 27 one-hour lectures, in which we covered the following 
 7. The fundamental theorem of identity types
 8. The hierarchy of homotopical complexity
 9. Function extensionality
-10. Homotopy pullbacks
-11. The univalence axiom
-12. The circle
+10. The univalence axiom
+11. The circle
+12. Homotopy pullbacks
 13. Homotopy pushouts
-14. Descent
-15. Sequential colimits
-16. The homotopy image of a map
-17. Set quotients
-18. Homotopy groups of types
-19. The Hopf fibration
+14. Cubical diagrams
+15. Universality and descent for pushouts
+16. Sequential colimits
+17. The homotopy image of a map
+18. Set quotients
+19. Homotopy groups of types
+20. The Hopf fibration
 
 ## Course notes
-The course notes can be found in the Notes folder. 
+The course notes can be found in the Notes folder. They are currently subject to change. For the version that I used in my course, see the original [course website][1].
 
 * To compile the course notes, run `pdflatex hott_intro.tex`. It should run well with TeXLive 2017 or later.
 * To generate the bibliography, run `biber hott_intro.bcf`.
