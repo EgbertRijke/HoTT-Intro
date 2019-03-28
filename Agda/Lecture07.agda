@@ -140,6 +140,73 @@ is-emb-is-equiv {i} {j} {A} {B} f E x =
       ( is-contr-map-is-equiv E (f x)))
     ( λ y p → ap f p)
 
+-- Identity systems
+
+IND-identity-system :
+  {i j : Level} (k : Level) {A : UU i} (B : A → UU j) (a : A) (b : B a) → UU _
+IND-identity-system k {A} B a b =
+  ( P : (x : A) (y : B x) → UU k) →
+    sec (λ (h : (x : A) (y : B x) → P x y) → h a b)
+
+fam-Σ :
+  {i j k : Level} {A : UU i} {B : A → UU j} (C : (x : A) → B x → UU k) →
+  Σ A B → UU k
+fam-Σ C (dpair x y) = C x y
+
+ind-identity-system :
+  {i j k : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+  (is-contr-AB : is-contr (Σ A B)) (P : (x : A) → B x → UU k) →
+  P a b → (x : A) (y : B x) → P x y
+ind-identity-system a b is-contr-AB P p x y =
+  tr
+    ( fam-Σ P)
+    ( is-prop-is-contr' is-contr-AB (dpair a b) (dpair x y))
+    ( p)
+
+comp-identity-system :
+  {i j k : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+  (is-contr-AB : is-contr (Σ A B)) →
+  (P : (x : A) → B x → UU k) (p : P a b) →
+  Id (ind-identity-system a b is-contr-AB P p a b) p
+comp-identity-system a b is-contr-AB P p =
+  ap
+    ( λ t → tr (fam-Σ P) t p)
+    ( is-prop-is-contr'
+      ( is-prop-is-contr is-contr-AB (dpair a b) (dpair a b))
+      ( is-prop-is-contr' is-contr-AB (dpair a b) (dpair a b))
+      ( refl))
+
+Ind-identity-system :
+  {i j : Level} (k : Level) {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+  (is-contr-AB : is-contr (Σ A B)) →
+  IND-identity-system k B a b
+Ind-identity-system k a b is-contr-AB P =
+  dpair
+    ( ind-identity-system a b is-contr-AB P)
+    ( comp-identity-system a b is-contr-AB P)
+
+contraction-total-space-IND-identity-system :
+  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+  IND-identity-system (i ⊔ j) B a b →
+  (t : Σ A B) → Id (dpair a b) t
+contraction-total-space-IND-identity-system a b ind (dpair x y) =
+  pr1 (ind (λ x' y' → Id (dpair a b) (dpair x' y'))) refl x y
+
+is-contr-total-space-IND-identity-system :
+  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+  IND-identity-system (i ⊔ j) B a b → is-contr (Σ A B)
+is-contr-total-space-IND-identity-system a b ind =
+  dpair
+    ( dpair a b)
+    ( contraction-total-space-IND-identity-system a b ind)
+
+id-fundamental-IND-identity-system :
+  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+  IND-identity-system (i ⊔ j) B a b →
+  (f : (x : A) → Id a x → B x) → (x : A) → is-equiv (f x)
+id-fundamental-IND-identity-system a b ind f =
+  id-fundamental-gen a b (is-contr-total-space-IND-identity-system a b ind) f
+
 -- Section 7.3 Fiberwise equivalences over an equivalence
 
 Σ-map-base-map :

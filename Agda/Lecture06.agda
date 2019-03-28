@@ -239,6 +239,11 @@ is-prop-is-contr {i} {A} C =
         ( coh-contraction C)
         ( y)))
 
+is-prop-is-contr' : {i : Level} {A : UU i} → is-contr A →
+  (x y : A) → Id x y
+is-prop-is-contr' is-contr-A x y =
+  center (is-prop-is-contr is-contr-A x y)
+
 -- Exercise 6.2
 
 -- In this exercise we are showing that contractible types are closed under retracts.

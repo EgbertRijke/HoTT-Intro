@@ -372,63 +372,6 @@ up-pullback-is-equiv-up-pullback f g c c' h KLM up' is-equiv-h D =
 
 {- This concludes the '3-for-2-property' of pullbacks. -}
 
-{- The following is a general construction that will help us show that
-   the identity type of a subtype agrees with the identity type of the 
-   original type. We already know that the first projection of a family of
-   propositions is an embedding, but the following lemma still has its uses. -}
-
-is-contr-total-Eq-substructure :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {P : A → UU l3} →
-  is-contr (Σ A B) → (is-subtype P) → (a : A) (b : B a) (p : P a) →
-  is-contr (Σ (Σ A P) (λ t → B (pr1 t)))
-is-contr-total-Eq-substructure {A = A} {B} {P} is-contr-AB is-subtype-P a b p =
-  is-contr-is-equiv
-    ( Σ (Σ A B) (λ t → P (pr1 t)))
-    ( double-structure-swap A P B)
-    ( is-equiv-double-structure-swap A P B)
-    ( is-contr-is-equiv'
-      ( P a)
-      ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (dpair a b))
-      ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (dpair a b))
-      ( is-contr-is-prop-inh (is-subtype-P a) p))
-
-{- For example, we show that homotopies are equivalent to identifications of
-   equivalences. -}
-
-htpy-equiv :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} → A ≃ B → A ≃ B → UU (l1 ⊔ l2)
-htpy-equiv e e' = (eqv-map e) ~ (eqv-map e')
-
-reflexive-htpy-equiv :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) → htpy-equiv e e
-reflexive-htpy-equiv e = htpy-refl (eqv-map e)
-
-htpy-equiv-eq :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (e e' : A ≃ B) (p : Id e e') → htpy-equiv e e'
-htpy-equiv-eq e .e refl =
-  reflexive-htpy-equiv e
-
-is-contr-total-htpy-equiv :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
-  is-contr (Σ (A ≃ B) (λ e' → htpy-equiv e e'))
-is-contr-total-htpy-equiv (dpair f is-equiv-f) =
-  is-contr-total-Eq-substructure
-    ( is-contr-total-htpy f)
-    ( is-subtype-is-equiv)
-    ( f)
-    ( htpy-refl f)
-    ( is-equiv-f)
-
-is-equiv-htpy-equiv-eq :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e e' : A ≃ B) →
-  is-equiv (htpy-equiv-eq e e')
-is-equiv-htpy-equiv-eq e =
-  id-fundamental-gen e
-    ( reflexive-htpy-equiv e)
-    ( is-contr-total-htpy-equiv e)
-    ( htpy-equiv-eq e)
-
 {- We characterize the identity type of the canonical pullback. -}
 
 Eq-canonical-pullback :
@@ -2888,12 +2831,6 @@ is-pullback-right-factor-is-pullback-prod f g c f' g' c' is-pb-cc' t =
       ( is-pb-cc'))
 
 -- Exercise 10.8
-
-htpy-postcomp-Π :
-  {l1 l2 l3 : Level} {I : UU l1} {A : I → UU l2} {B : I → UU l3}
-  {f g : (i : I) → A i → B i} (H : (i : I) → (f i) ~ (g i)) →
-  (postcomp-Π f) ~ (postcomp-Π g)
-htpy-postcomp-Π H h = eq-htpy (λ i → H i (h i))
 
 cone-Π :
   {l1 l2 l3 l4 l5 : Level} {I : UU l1}

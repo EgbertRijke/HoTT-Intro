@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --allow-unsolved-metas #-}
 
 module Lecture09 where
 
@@ -65,31 +65,19 @@ triangle-ev-htpy-refl f C φ = refl
 IND-HTPY-FUNEXT :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (f : (x : A) → B x) →
   FUNEXT f → IND-HTPY {l3 = l3} f
-IND-HTPY-FUNEXT {l3 = l3} {A = A} {B = B} f funext-f C =
-  let total-C = λ t → C (pr1 t) (pr2 t) in
-  section-comp
-    ( ev-pt
-      ( Σ ((x : A) → B x) (λ g → f ~ g))
-      ( dpair f (htpy-refl f))
-      ( total-C))
-    ( ev-htpy-refl f C)
-    ( ev-pair)
-    ( triangle-ev-htpy-refl f total-C)
-    ( sec-ev-pair ((x : A) → B x) (λ g → f ~ g) total-C)
-    ( sec-ev-pt-is-contr
-      ( Σ ((x : A) → B x) (λ g → f ~ g))
-      ( is-contr-total-htpy-Funext f funext-f)
-      ( total-C))
+IND-HTPY-FUNEXT {l3 = l3} {A = A} {B = B} f funext-f =
+  Ind-identity-system l3 f
+    ( htpy-refl f)
+    ( is-contr-total-htpy-Funext f funext-f)
 
 FUNEXT-IND-HTPY :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (f : (x : A) → B x) →
   IND-HTPY {l3 = l1 ⊔ l2} f → FUNEXT f
 FUNEXT-IND-HTPY f ind-htpy-f =
-  let eq-htpy-f = pr1 (ind-htpy-f (λ h H → Id f h)) refl in
-  id-fundamental-sec f (λ h → htpy-eq {g = h}) (λ g → dpair
-    ( eq-htpy-f g)
-    ( pr1 (ind-htpy-f (λ h H → Id (htpy-eq (eq-htpy-f h H)) H))
-      ( ap htpy-eq (pr2 (ind-htpy-f (λ h H → Id f h)) refl)) g))
+  id-fundamental-IND-identity-system f
+    ( htpy-refl f)
+    ( ind-htpy-f)
+    ( λ g → htpy-eq)
 
 WEAK-FUNEXT-FUNEXT :
   {l1 l2 : Level} →
@@ -360,9 +348,14 @@ is-equiv-precomp-Π-is-half-adjoint-equivalence f
             ( apd s (isretr-g x)))))
         ( λ s → eq-htpy λ y → apd s (issec-g y))))
 
+precomp-Π :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
+  ((b : B) → C b) → ((a : A) → C (f a))
+precomp-Π f C h a = h (f a)
+
 is-equiv-precomp-Π-is-equiv :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) → is-equiv f →
-  (C : B → UU l3) → is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))
+  (C : B → UU l3) → is-equiv (precomp-Π f C)
 is-equiv-precomp-Π-is-equiv f is-equiv-f =
   is-equiv-precomp-Π-is-half-adjoint-equivalence f
     ( is-half-adjoint-equivalence-is-path-split f
@@ -413,10 +406,10 @@ is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
     ( dpair
       ( pr1 retr-f)
       ( pair
-        ( htpy-eq (ap pr1 (center (is-prop-is-contr
+        ( htpy-eq (ap pr1 (is-prop-is-contr'
           ( is-contr-map-is-equiv (is-equiv-precomp-f _ B) f)
           ( dpair (f ∘ (pr1 retr-f)) (ap (λ (g : A → A) → f ∘ g) (pr2 retr-f)))
-          ( dpair id refl)))))
+          ( dpair id refl))))
         ( htpy-eq (pr2 retr-f)))) 
 
 -- Exercises
@@ -497,6 +490,14 @@ is-prop-is-trunc neg-two-𝕋 = is-subtype-is-contr
 is-prop-is-trunc (succ-𝕋 k) A =
   is-prop-Π (λ x → is-prop-Π (λ y → is-prop-is-trunc k (Id x y)))
 
+is-prop-is-prop :
+  {l : Level} (A : UU l) → is-prop (is-prop A)
+is-prop-is-prop = is-prop-is-trunc neg-one-𝕋
+
+is-prop-is-set :
+  {l : Level} (A : UU l) → is-prop (is-set A)
+is-prop-is-set = is-prop-is-trunc zero-𝕋
+
 -- Exercise 9.3
 
 is-equiv-is-equiv-postcomp :
@@ -509,10 +510,10 @@ is-equiv-is-equiv-postcomp {X = X} {Y = Y} f post-comp-equiv-f =
       ( pr1 sec-f)
       ( dpair
         ( htpy-eq (pr2 sec-f))
-        ( htpy-eq (ap pr1 (center (is-prop-is-contr
+        ( htpy-eq (ap pr1 (is-prop-is-contr'
           ( is-contr-map-is-equiv (post-comp-equiv-f X) f)
           ( dpair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
-          ( dpair id refl)))))))
+          ( dpair id refl))))))
 
 is-equiv-postcomp-is-equiv :
   {l1 l2 : Level} {X : UU l1} {Y : UU l2} (f : X → Y) → is-equiv f →
@@ -569,6 +570,127 @@ is-emb-eqv-map :
   is-emb (eqv-map {A = A} {B = B})
 is-emb-eqv-map = is-emb-pr1-is-subtype is-subtype-is-equiv
 
+double-structure-swap :
+  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
+  Σ (Σ A B) (λ t → C (pr1 t)) → Σ (Σ A C) (λ t → B (pr1 t))
+double-structure-swap A B C (dpair (dpair a b) c) = (dpair (dpair a c) b)
+
+htpy-double-structure-swap :
+  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
+  ((double-structure-swap A C B) ∘ (double-structure-swap A B C)) ~ id
+htpy-double-structure-swap A B C (dpair (dpair a b) c) =
+  eq-pair (dpair (eq-pair (dpair refl refl)) refl)
+
+is-equiv-double-structure-swap :
+  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
+  is-equiv (double-structure-swap A B C)
+is-equiv-double-structure-swap A B C =
+  is-equiv-has-inverse
+    ( dpair
+      ( double-structure-swap A C B)
+      ( dpair
+        ( htpy-double-structure-swap A C B)
+        ( htpy-double-structure-swap A B C)))
+
+left-unit-law-Σ-map-gen :
+  {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+  is-contr A → (x : A) → B x → Σ A B
+left-unit-law-Σ-map-gen B is-contr-A x y = dpair x y
+
+is-equiv-left-unit-law-Σ-map-gen :
+  {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+  (is-contr-A : is-contr A) →
+  (x : A) → is-equiv (left-unit-law-Σ-map-gen B is-contr-A x)
+is-equiv-left-unit-law-Σ-map-gen B is-contr-A x =
+   is-equiv-comp
+     ( left-unit-law-Σ-map-gen B is-contr-A x)
+     ( left-unit-law-Σ-map B is-contr-A)
+     ( tr B (inv (contraction is-contr-A x)))
+     ( λ y → eq-pair (dpair (inv (contraction is-contr-A x)) refl))
+     ( is-equiv-tr B (inv (contraction is-contr-A x)))
+     ( is-equiv-left-unit-law-Σ-map B is-contr-A)
+
+{- The following is a general construction that will help us show that
+   the identity type of a subtype agrees with the identity type of the 
+   original type. We already know that the first projection of a family of
+   propositions is an embedding, but the following lemma still has its uses. -}
+
+is-contr-total-Eq-substructure :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {P : A → UU l3} →
+  is-contr (Σ A B) → (is-subtype P) → (a : A) (b : B a) (p : P a) →
+  is-contr (Σ (Σ A P) (λ t → B (pr1 t)))
+is-contr-total-Eq-substructure {A = A} {B} {P} is-contr-AB is-subtype-P a b p =
+  is-contr-is-equiv
+    ( Σ (Σ A B) (λ t → P (pr1 t)))
+    ( double-structure-swap A P B)
+    ( is-equiv-double-structure-swap A P B)
+    ( is-contr-is-equiv'
+      ( P a)
+      ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (dpair a b))
+      ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (dpair a b))
+      ( is-contr-is-prop-inh (is-subtype-P a) p))
+
+{- For example, we show that homotopies are equivalent to identifications of
+   equivalences. -}
+
+htpy-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} → A ≃ B → A ≃ B → UU (l1 ⊔ l2)
+htpy-equiv e e' = (eqv-map e) ~ (eqv-map e')
+
+reflexive-htpy-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) → htpy-equiv e e
+reflexive-htpy-equiv e = htpy-refl (eqv-map e)
+
+htpy-equiv-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2}
+  (e e' : A ≃ B) (p : Id e e') → htpy-equiv e e'
+htpy-equiv-eq e .e refl =
+  reflexive-htpy-equiv e
+
+is-contr-total-htpy-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  is-contr (Σ (A ≃ B) (λ e' → htpy-equiv e e'))
+is-contr-total-htpy-equiv (dpair f is-equiv-f) =
+  is-contr-total-Eq-substructure
+    ( is-contr-total-htpy f)
+    ( is-subtype-is-equiv)
+    ( f)
+    ( htpy-refl f)
+    ( is-equiv-f)
+
+is-equiv-htpy-equiv-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e e' : A ≃ B) →
+  is-equiv (htpy-equiv-eq e e')
+is-equiv-htpy-equiv-eq e =
+  id-fundamental-gen e
+    ( reflexive-htpy-equiv e)
+    ( is-contr-total-htpy-equiv e)
+    ( htpy-equiv-eq e)
+
+Ind-htpy-equiv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  (P : (e' : A ≃ B) (H : htpy-equiv e e') → UU l3) →
+  sec
+    ( λ (h : (e' : A ≃ B) (H : htpy-equiv e e') → P e' H) →
+      h e (reflexive-htpy-equiv e))
+Ind-htpy-equiv {l3 = l3} e =
+  Ind-identity-system l3 e
+    ( reflexive-htpy-equiv e)
+    ( is-contr-total-htpy-equiv e)
+
+ind-htpy-equiv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  (P : (e' : A ≃ B) (H : htpy-equiv e e') → UU l3) →
+  P e (reflexive-htpy-equiv e) → (e' : A ≃ B) (H : htpy-equiv e e') → P e' H
+ind-htpy-equiv e P = pr1 (Ind-htpy-equiv e P)
+
+comp-htpy-equiv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  (P : (e' : A ≃ B) (H : htpy-equiv e e') → UU l3)
+  (p : P e (reflexive-htpy-equiv e)) →
+  Id (ind-htpy-equiv e P p e (reflexive-htpy-equiv e)) p
+comp-htpy-equiv e P = pr2 (Ind-htpy-equiv e P)
+
 -- Exercise 9.5
 
 _↔_ :
@@ -612,7 +734,7 @@ is-prop-is-contr-endomaps :
   {l : Level} (P : UU l) → is-contr (P → P) → is-prop P
 is-prop-is-contr-endomaps P H =
   is-prop-is-prop'
-    ( λ x → htpy-eq (center (is-prop-is-contr H (const P P x) id)))
+    ( λ x → htpy-eq (is-prop-is-contr' H (const P P x) id))
 
 is-contr-endomaps-is-prop :
   {l : Level} (P : UU l) → is-prop P → is-contr (P → P)
@@ -684,24 +806,6 @@ is-equiv-is-half-adjoint-equivalence-is-equiv f =
     ( is-equiv-is-half-adjoint-equivalence f)
 
 -- Exercise 9.7
-
-left-unit-law-Σ-map-gen :
-  {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
-  is-contr A → (x : A) → B x → Σ A B
-left-unit-law-Σ-map-gen B is-contr-A x y = dpair x y
-
-is-equiv-left-unit-law-Σ-map-gen :
-  {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
-  (is-contr-A : is-contr A) →
-  (x : A) → is-equiv (left-unit-law-Σ-map-gen B is-contr-A x)
-is-equiv-left-unit-law-Σ-map-gen B is-contr-A x =
-   is-equiv-comp
-     ( left-unit-law-Σ-map-gen B is-contr-A x)
-     ( left-unit-law-Σ-map B is-contr-A)
-     ( tr B (inv (contraction is-contr-A x)))
-     ( λ y → eq-pair (dpair (inv (contraction is-contr-A x)) refl))
-     ( is-equiv-tr B (inv (contraction is-contr-A x)))
-     ( is-equiv-left-unit-law-Σ-map B is-contr-A)
 
 is-invertible-id-htpy-id-id :
   {l : Level} (A : UU l) →
@@ -984,6 +1088,12 @@ postcomp-Π :
   ((i : I) → A i) → ((i : I) → B i)
 postcomp-Π e f i = e i (f i)
 
+htpy-postcomp-Π :
+  {l1 l2 l3 : Level} {I : UU l1} {A : I → UU l2} {B : I → UU l3}
+  {f f' : (i : I) → A i → B i} (H : (i : I) → (f i) ~ (f' i)) →
+  (postcomp-Π f) ~ (postcomp-Π f')
+htpy-postcomp-Π H h = eq-htpy (λ i → H i (h i))
+
 is-equiv-postcomp-Π :
   {l1 l2 l3 : Level} {I : UU l1} {A : I → UU l2} {B : I → UU l3}
   (e : (i : I) → A i → B i) (is-equiv-e : is-fiberwise-equiv e) →
@@ -1109,28 +1219,6 @@ is-fiberwise-equiv-fiberwise-equiv-equiv-slice :
   is-fiberwise-equiv (fiberwise-hom-hom-slice f g t)
 is-fiberwise-equiv-fiberwise-equiv-equiv-slice f g (dpair h H) =
   is-fiberwise-equiv-is-equiv-triangle f g h H
-
-double-structure-swap :
-  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
-  Σ (Σ A B) (λ t → C (pr1 t)) → Σ (Σ A C) (λ t → B (pr1 t))
-double-structure-swap A B C (dpair (dpair a b) c) = (dpair (dpair a c) b)
-
-htpy-double-structure-swap :
-  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
-  ((double-structure-swap A C B) ∘ (double-structure-swap A B C)) ~ id
-htpy-double-structure-swap A B C (dpair (dpair a b) c) =
-  eq-pair (dpair (eq-pair (dpair refl refl)) refl)
-
-is-equiv-double-structure-swap :
-  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
-  is-equiv (double-structure-swap A B C)
-is-equiv-double-structure-swap A B C =
-  is-equiv-has-inverse
-    ( dpair
-      ( double-structure-swap A C B)
-      ( dpair
-        ( htpy-double-structure-swap A C B)
-        ( htpy-double-structure-swap A B C)))
 
 left-factor-fiberwise-equiv-equiv-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
@@ -1327,3 +1415,120 @@ is-equiv-set-isomorphism-equiv :
 is-equiv-set-isomorphism-equiv A B =
   is-equiv-tot-is-fiberwise-equiv
     ( is-fiberwise-equiv-set-isomorphism-equiv-fiberwise A B)
+
+{- Some lemmas about equivalences on Π-types -}
+
+map-equiv-Π :
+  { l1 l2 l3 l4 : Level}
+  { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
+  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
+  ( (a' : A') → B' a') → ( (a : A) → B a)
+map-equiv-Π {B' = B'} B e f =
+  ( postcomp-Π (λ a →
+    ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a)) ∘
+    ( eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a))))) ∘
+  ( precomp-Π (inv-is-equiv (is-equiv-eqv-map e)) B')
+
+id-map-equiv-Π :
+  { l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+  ( map-equiv-Π B (equiv-id A) (λ a → equiv-id (B a))) ~ id
+id-map-equiv-Π B = htpy-refl _
+
+is-equiv-map-equiv-Π :
+  { l1 l2 l3 l4 : Level}
+  { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
+  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
+  is-equiv (map-equiv-Π B e f)
+is-equiv-map-equiv-Π {B' = B'} B e f =
+  is-equiv-comp'
+    ( postcomp-Π (λ a →
+      ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a)) ∘
+      ( eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a)))))
+    ( precomp-Π (inv-is-equiv (is-equiv-eqv-map e)) B')
+    ( is-equiv-precomp-Π-is-equiv
+      ( inv-is-equiv (is-equiv-eqv-map e))
+      ( is-equiv-inv-is-equiv (is-equiv-eqv-map e))
+      ( B'))
+    ( is-equiv-postcomp-Π _
+      ( λ a → is-equiv-comp'
+        ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a))
+        ( eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a)))
+        ( is-equiv-eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a)))
+        ( is-equiv-tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a))))
+
+equiv-Π :
+  { l1 l2 l3 l4 : Level}
+  { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
+  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
+  ( (a' : A') → B' a') ≃ ( (a : A) → B a)
+equiv-Π B e f = dpair (map-equiv-Π B e f) (is-equiv-map-equiv-Π B e f)
+
+HTPY-map-equiv-Π :
+  { l1 l2 l3 l4 : Level}
+  { A' : UU l1} (B' : A' → UU l2) {A : UU l3} (B : A → UU l4)
+  ( e e' : A' ≃ A) (H : htpy-equiv e e') →
+  UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
+HTPY-map-equiv-Π {A' = A'} B' {A} B e e' H =
+  ( f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
+  ( f' : (a' : A') → B' a' ≃ B (eqv-map e' a')) →
+  ( K : (a' : A') → ((tr B (H a')) ∘ (eqv-map (f a'))) ~ (eqv-map (f' a'))) →
+  ( map-equiv-Π B e f) ~ (map-equiv-Π B e' f')
+
+htpy-map-equiv-Π-htpy-refl :
+  { l1 l2 l3 l4 : Level}
+  { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
+  ( e : A' ≃ A) →
+  HTPY-map-equiv-Π B' B e e (reflexive-htpy-equiv e)
+htpy-map-equiv-Π-htpy-refl {B' = B'} B e f f' K =
+  ( htpy-postcomp-Π
+    ( λ a →
+      ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a)) ·l
+      ( K (inv-is-equiv (is-equiv-eqv-map e) a)))) ·r
+  ( precomp-Π (inv-is-equiv (is-equiv-eqv-map e)) B')
+
+htpy-map-equiv-Π :
+  { l1 l2 l3 l4 : Level}
+  { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
+  ( e e' : A' ≃ A) (H : htpy-equiv e e') →
+  HTPY-map-equiv-Π B' B e e' H
+htpy-map-equiv-Π {B' = B'} B e e' H f f' K =
+  ind-htpy-equiv e
+    ( HTPY-map-equiv-Π B' B e)
+    ( htpy-map-equiv-Π-htpy-refl B e)
+    e' H f f' K
+
+comp-htpy-map-equiv-Π :
+  { l1 l2 l3 l4 : Level}
+  { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
+  ( e : A' ≃ A) →
+  Id ( htpy-map-equiv-Π {B' = B'} B e e (reflexive-htpy-equiv e))
+     ( ( htpy-map-equiv-Π-htpy-refl B e))
+comp-htpy-map-equiv-Π {B' = B'} B e =
+  comp-htpy-equiv e
+    ( HTPY-map-equiv-Π B' B e)
+    ( htpy-map-equiv-Π-htpy-refl B e)
+
+map-automorphism-Π :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  ( e : A ≃ A) (f : (a : A) → B a ≃ B (eqv-map e a)) →
+  ( (a : A) → B a) → ((a : A) → B a)
+map-automorphism-Π {B = B} e f =
+  ( postcomp-Π (λ a → (inv-is-equiv (is-equiv-eqv-map (f a))))) ∘
+  ( precomp-Π (eqv-map e) B)
+
+is-equiv-map-automorphism-Π :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  ( e : A ≃ A) (f : (a : A) → B a ≃ B (eqv-map e a)) →
+  is-equiv (map-automorphism-Π e f)
+is-equiv-map-automorphism-Π {B = B} e f =
+  is-equiv-comp' _ _
+    ( is-equiv-precomp-Π-is-equiv _ (is-equiv-eqv-map e) B)
+    ( is-equiv-postcomp-Π _
+      ( λ a → is-equiv-inv-is-equiv (is-equiv-eqv-map (f a))))
+
+automorphism-Π :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  ( e : A ≃ A) (f : (a : A) → B a ≃ B (eqv-map e a)) →
+  ( (a : A) → B a) ≃ ((a : A) → B a)
+automorphism-Π e f =
+  dpair (map-automorphism-Π e f) (is-equiv-map-automorphism-Π e f)
