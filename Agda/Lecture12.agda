@@ -199,6 +199,63 @@ is-set-fundamental-cover-circle l dup-circle =
       ( is-equiv-eqv-map (comp-fiber-fundamental-cover-circle l dup-circle))
       ( is-set-ℤ))
 
+{- Contractibility of a general total space -}
+
+contraction-total-space :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (center : Σ A B) →
+  ( x : A) → UU (l1 ⊔ l2)
+contraction-total-space {B = B} center x =
+  ( y : B x) → Id center (dpair x y)
+
+tr-contraction-total-space :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (center : Σ A B) →
+  { x x' : A} (p : Id x x') →
+  ( tr (contraction-total-space center) p) ~
+  ( map-equiv-Π
+    ( λ (y : B x') → Id center (dpair x' y))
+    ( equiv-tr B p)
+    ( λ y → equiv-concat' center (lift p y)))
+tr-contraction-total-space {B = B} c {x} refl =
+  ( htpy-inv (id-map-equiv-Π (λ y → Id c (dpair x y)))) ∙h
+  ( htpy-map-equiv-Π-htpy-refl
+    ( λ (y : B x) → Id c (dpair x y))
+    ( equiv-id _)
+    ( λ y → equiv-id (Id c (dpair x y)))
+    ( λ y → equiv-concat' c (lift refl y))
+    ( λ y q → inv (right-unit q)))
+
+contraction-total-space' :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  (x : A) → {F : UU l3} (e : F ≃ B x) → UU (l1 ⊔ (l2 ⊔ l3))
+contraction-total-space' c x {F} e =
+  (y : F) → Id c (dpair x (eqv-map e y))
+
+tr-contraction-total-space' :
+  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  { x x' : A} (p : Id x x') → {F : UU l3} {F' : UU l4} (f : F ≃ F')
+  ( e : F ≃ B x) (e' : F' ≃ B x')
+  ( H : ((eqv-map e') ∘ (eqv-map f)) ~ ((tr B p) ∘ (eqv-map e))) →
+  ( contraction-total-space' c x e) → (contraction-total-space' c x' e')
+tr-contraction-total-space' c {x} {x'} p f e e' H =
+  map-equiv-Π
+    ( λ y' → Id c (dpair x' (eqv-map e' y')))
+    ( f)
+    ( λ y → equiv-concat' c (eq-pair (dpair p (inv (H y)))))
+
+square-tr-contraction-total-space' :
+  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  { x x' : A} (p : Id x x') → {F : UU l3} {F' : UU l4} (f : F ≃ F')
+  ( e : F ≃ B x) (e' : F' ≃ B x')
+  ( H : ((eqv-map e') ∘ (eqv-map f)) ~ ((tr B p) ∘ (eqv-map e))) →
+  ( ( precomp-Π (eqv-map e') (λ y' → Id c (dpair x' y'))) ∘
+    ( tr (contraction-total-space c) p)) ~
+  ( ( tr-contraction-total-space' c p f e e' H) ∘
+    ( precomp-Π (eqv-map e) (λ y → Id c (dpair x y))))
+square-tr-contraction-total-space' c {x} {x'} p f e e' H =
+  ( ( precomp-Π (eqv-map e') (λ y' → Id c (dpair x' y'))) ·l
+    ( tr-contraction-total-space c p)) ∙h
+  {! htpy-refl _!}
+
 {- An elimination principle for ℤ -}
 
 elim-ℤ :
@@ -298,37 +355,6 @@ contraction-base-fundamental-cover-circle l dup-circle =
     ( λ k → equiv-concat'
       ( center-total-fundamental-cover-circle l dup-circle)
       ( path-total-fundamental-cover-circle l dup-circle k))
-
-{- Contractibility of a general total space -}
-
-contraction-total-space :
-  { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (center : Σ A B) →
-  ( x : A) → UU (l1 ⊔ l2)
-contraction-total-space {B = B} center x =
-  ( y : B x) → Id center (dpair x y)
-
-tr-contraction-total-space :
-  { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (center : Σ A B) →
-  { x x' : A} (p : Id x x') →
-  ( tr (contraction-total-space center) p) ~
-  ( map-equiv-Π
-    ( λ (y : B x') → Id center (dpair x' y))
-    ( equiv-tr B p)
-    ( λ y → equiv-concat' center (lift p y)))
-tr-contraction-total-space {B = B} c {x} refl =
-  ( htpy-inv (id-map-equiv-Π (λ y → Id c (dpair x y)))) ∙h
-  ( htpy-map-equiv-Π-htpy-refl
-    ( λ (y : B x) → Id c (dpair x y))
-    ( equiv-id _)
-    ( λ y → equiv-id (Id c (dpair x y)))
-    ( λ y → equiv-concat' c (lift refl y))
-    ( λ y q → inv (right-unit q)))
-
-contraction-total-space' :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (center : Σ A B) →
-  (x : A) → {F : UU l3} (e : F ≃ B x) → UU (l1 ⊔ (l2 ⊔ l3))
-contraction-total-space' center x {F} e =
-  (y : F) → Id center (dpair x (eqv-map e y))
 
 
 {-
