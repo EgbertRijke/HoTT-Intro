@@ -513,6 +513,8 @@ is-set-has-decidable-equality A d =
 
 -- Exercise 8.6
 
+-- Exercise 8.6.a
+
 Eq-𝟚-eq : (x y : bool) → Id x y → Eq-𝟚 x y
 Eq-𝟚-eq x .x refl = reflexive-Eq-𝟚 x
 
@@ -548,7 +550,7 @@ has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
     ( λ (f : ¬ (Id x y)) p → f (injective-succ-ℕ x y p))
     ( has-decidable-equality-ℕ x y)
 
--- Exercise 8.7
+-- Exercise 8.6.b
 
 has-decidable-equality-coprod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
   has-decidable-equality A → has-decidable-equality B →
@@ -595,7 +597,23 @@ has-decidable-equality-prod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
 has-decidable-equality-prod dec-A dec-B (dpair x y) (dpair x' y') =
   has-decidable-equality-prod-aux x x' y y' (dec-A x x') (dec-B y y')
 
--- Exercise 8.8
+-- Exercise 8.6.c
+
+decide-retract-of :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  A retract-of B → (coprod B (¬ B)) → coprod A (¬ A)
+decide-retract-of (dpair i (dpair r H)) (inl b) = inl (r b)
+decide-retract-of (dpair i (dpair r H)) (inr f) = inr (f ∘ i)
+
+has-decidable-equality-retract-of :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  A retract-of B → has-decidable-equality B → has-decidable-equality A
+has-decidable-equality-retract-of (dpair i (dpair r H)) d x y =
+  decide-retract-of
+    ( Id-retract-of-Id (dpair i (dpair r H)) x y)
+    ( d (i x) (i y))
+
+-- Exercise 8.7
 
 is-trunc-retract-of : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
   A retract-of B → is-trunc k B → is-trunc k A
@@ -606,7 +624,7 @@ is-trunc-retract-of (succ-𝕋 k) (dpair i retr-i) is-trunc-B x y =
     ( dpair (ap i) (retr-ap i retr-i x y))
     ( is-trunc-B (i x) (i y))
 
--- Exercise 8.9
+-- Exercise 8.8
 
 is-injective : {l1 l2 : Level} {A : UU l1} (is-set-A : is-set A) {B : UU l2}
   (is-set-B : is-set B) (f : A → B) → UU (l1 ⊔ l2)
@@ -643,7 +661,7 @@ is-injective-is-emb : {l1 l2 : Level} {A : UU l1} {is-set-A : is-set A}
   is-emb f → is-injective is-set-A is-set-B f
 is-injective-is-emb is-emb-f x y = inv-is-equiv (is-emb-f x y)
 
--- Exercise 8.10
+-- Exercise 8.9
 
 is-trunc-const-is-trunc : {l : Level} (k : 𝕋) {A : UU l} →
   is-trunc (succ-𝕋 k) A → (x : A) → is-trunc-map k (const unit A x)
@@ -663,7 +681,7 @@ is-trunc-is-trunc-const k is-trunc-const x y =
     ( is-equiv-left-unit-law-Σ-map (λ t → Id x y) is-contr-unit)
     ( is-trunc-const x y)
 
--- Exercise 8.11
+-- Exercise 8.10
 
 map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (g : B → X) (h : A → B) →

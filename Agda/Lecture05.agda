@@ -697,6 +697,14 @@ retr-ap :
 retr-ap i (dpair r H) x y =
   dpair (ap-retraction i r H x y) (isretr-ap-retraction i r H x y)
 
+Id-retract-of-Id :
+  {i j : Level} {A : UU i} {B : UU j} (R : A retract-of B) →
+  (x y : A) → (Id x y) retract-of (Id (pr1 R x) (pr1 R y))
+Id-retract-of-Id (dpair i (dpair r H)) x y =
+  dpair
+    ( ap i {x} {y})
+    ( retr-ap i (dpair r H) x y)
+
 -- Exercise 5.10
 Σ-assoc :
   {i j k : Level} (A : UU i) (B : A → UU j) (C : (Σ A B) → UU k) →

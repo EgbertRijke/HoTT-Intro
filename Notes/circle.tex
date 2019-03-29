@@ -9,7 +9,6 @@ For example, the free abelian group with two generators is described as the grou
 
 In this chapter we introduce higher inductive types, where we follow a similar idea: to allow in the specification of inductive types not only \emph{point constructors}, but also \emph{path constructors} that give us relations between the point constructors. 
 The ideas behind the definition of higher inductive types are introduced by studying the simplest non-trivial example: the \emph{circle}.
-Moreover, we show that the loop space of the circle is equivalent to $\mathbb{Z}$ by constructing the universal cover of the circle as an application of the univalence axiom. 
 
 \section{The induction principle of the circle}
 The \emph{circle}\index{circle} is defined as a higher inductive type\index{higher inductive type} $\sphere{1}$\index{S 1@{$\sphere{1}$}} that comes equipped with\index{base@{$\base$}}\index{loop@{$\lloop$}}
@@ -296,10 +295,11 @@ is an equivalence.
 \end{equation*}
 is an equivalence.
 \end{subexenum}
-\item Show that any retract of the circle is equivalent to the circle.
 \end{exercises}
 
 \chapter{The fundamental cover of the circle}
+
+In this lecture we show that the loop space of the circle is equivalent to $\mathbb{Z}$ by constructing the universal cover of the circle as an application of the univalence axiom. 
 
 \section{Families over the circle}
 
@@ -402,6 +402,8 @@ The \define{fundamental cover}\index{fundamental cover!of the circle|textbf} of 
     \end{tikzcd}
   \end{equation*}
   commutes.
+
+  For convenience, we write $k_{\mathcal{E}}$ for the term $e(k):\mathcal{E}_{\sphere{1}}(\mathsf{base})$, for any $k:\mathbb{Z}$. 
 \end{rmk}
 
 The picture of the fundamental cover is that of a helix\index{helix} over the circle. This picture emerges from the path liftings of $\mathsf{loop}$ in the total space. The segments of the helix connecting $k$ to $k+1$ in the total space of the helix, are constructed in the following lemma.
@@ -622,4 +624,8 @@ commutes.
 \end{equation*}
 and conclude that ${\mathsf{is\usc{}invertible}}(\idfunc[\sphere{1}])\not\simeq{\isequiv(\idfunc[\sphere{1}])}$. 
 \end{subexenum}
+\item Consider a map $i:A \to \sphere{1}$, and assume that $i$ has a retraction. Construct a term of type
+  \begin{equation*}
+    \iscontr(A)+\isequiv(i).
+  \end{equation*}
 \end{exercises}

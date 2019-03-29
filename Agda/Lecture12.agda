@@ -311,6 +311,44 @@ comp-succ-elim-ℤ P p0 pS (inl (succ-ℕ x)) =
 comp-succ-elim-ℤ P p0 pS (inr (inl star)) = refl
 comp-succ-elim-ℤ P p0 pS (inr (inr x)) = refl
 
+ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1)
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) → UU l1
+ELIM-ℤ P p0 pS =
+  Σ ( (k : ℤ) → P k) (λ f →
+    ( ( Id (f zero-ℤ) p0) ×
+      ( (k : ℤ) → Id (f (succ-ℤ k)) ((eqv-map (pS k)) (f k)))))
+
+Elim-ℤ :
+  { l1 : Level} (P : ℤ → UU l1)
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) → ELIM-ℤ P p0 pS
+Elim-ℤ P p0 pS =
+  dpair
+    ( elim-ℤ P p0 pS)
+    ( dpair
+      ( comp-zero-elim-ℤ P p0 pS)
+      ( comp-succ-elim-ℤ P p0 pS))
+
+equiv-comparison-map-Eq-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1)
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s t : ELIM-ℤ P p0 pS) (k : ℤ) →
+  Id ((pr1 s) k) ((pr1 t) k) ≃ Id ((pr1 s) (succ-ℤ k)) ((pr1 t) (succ-ℤ k))
+equiv-comparison-map-Eq-ELIM-ℤ P p0 pS s t = ?
+
+Eq-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1)
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s t : ELIM-ℤ P p0 pS) → UU l1
+Eq-ELIM-ℤ P p0 pS s t =
+  Σ ( (pr1 s) ~ (pr1 t)) (λ H →
+    ( Id (H zero-ℤ) ((pr1 (pr2 s)) ∙ (inv (pr1 (pr2 t))))) ×
+    {!( k : ℤ) → !})
+
+
+
+{- Section 12.5 The identity type of the circle -}
+
 path-total-fundamental-cover-circle :
   { l1 : Level} {X : UU l1} (l : free-loops X) →
   ( dup-circle : dependent-universal-property-circle (l1 ⊔ (lsuc lzero)) l)
