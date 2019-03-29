@@ -389,12 +389,27 @@ Recall from \cref{ex:succ_equiv} that the successor function $\mathsf{succ}:\Z\t
 The \define{fundamental cover}\index{fundamental cover!of the circle|textbf} of the circle is the dependent type $\mathcal{E}_{\sphere{1}}\defeq\mathcal{D}(\Z,\mathsf{succ}):\sphere{1}\to\UU$.\index{Z@{$\Z$}!fundamental cover of S1@{fundamental cover of $\sphere{1}$}}\index{E_S1@{$\mathcal{E}_{\sphere{1}}$}|textbf}
 \end{defn}
 
-The picture of the fundamental cover is that of a helix\index{helix} over the circle.
+\begin{rmk}
+  The fundamental cover of the circle comes equipped with an equivalence
+  \begin{equation*}
+    e:\mathbb{Z} \simeq \mathcal{E}_{\sphere{1}}(\mathsf{base})
+  \end{equation*}
+  and a homotopy witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \mathbb{Z} \arrow[r,"e"] \arrow[d,swap,"\mathsf{succ}"] & \mathcal{E}_{\sphere{1}}(\mathsf{base}) \arrow[d,"\mathsf{tr}_{\mathcal{E}_{\sphere{1}}}(\mathsf{loop})"] \\
+      \mathbb{Z} \arrow[r,swap,"e"] & \mathcal{E}_{\sphere{1}}(\mathsf{base})
+    \end{tikzcd}
+  \end{equation*}
+  commutes.
+\end{rmk}
+
+The picture of the fundamental cover is that of a helix\index{helix} over the circle. This picture emerges from the path liftings of $\mathsf{loop}$ in the total space. The segments of the helix connecting $k$ to $k+1$ in the total space of the helix, are constructed in the following lemma.
 
 \begin{lem}
 For any $k:\Z$, there is an identification
 \begin{equation*}
-s_k:(\base,k_{\mathcal{E}})=(\base,\mathsf{succ}(k)_{\mathcal{E}})
+\mathsf{segment\usc{}helix}_k:(\base,k_{\mathcal{E}})=(\base,\mathsf{succ}(k)_{\mathcal{E}})
 \end{equation*}
 in the total space $\sm{t:\sphere{1}}\mathcal{E}(t)$.
 \end{lem}
@@ -407,9 +422,12 @@ By \cref{thm:eq_sigma} it suffices to show that
 We just take $\alpha\defeq\lloop$. Then we have $\mathsf{tr}_{\mathcal{E}}(\alpha,k_{\mathcal{E}})= \mathsf{succ}(k)_{\mathcal{E}}$ by the commuting square provided in the definition of $\mathcal{E}$.
 \end{proof}
 
-Our goal in this section is to show that the total space of the fundamental cover is contractible. We will use the following elimination principle for the integers.
+\section{Contractibility of total spaces}
+In this section we provide some general lemmas that will help to prove that
+the a total space is contractible in the case that the base space is a (higher) inductive type.
 
-\begin{lem}
+\section{The dependent universal property of the integers}
+\begin{lem}\label{lem:elim-Z}
 Let $B$ be a family over $\Z$, equipped with a term $b_0:B(0)$, and an equivalence
 \begin{equation*}
 e_k : B(k)\eqvsym B(\mathsf{succ}(k))
@@ -447,11 +465,63 @@ For any type $A$, we obtain a map $f:\Z\to A$ from any $x:A$ and any equivalence
 \Z \arrow[r,swap,"f"] & A
 \end{tikzcd}
 \end{equation*}
-commutes. In particular, if we take $A\jdeq (x=x)$ for some $x:X$, then for any $p:x=x$ we have the equivalence $\lam{q}\ct{p}{q}:(x=x)\to (x=x)$. This equivalence induces the map
+commutes. In particular, if we take $A\jdeq (x=x)$ for some $x:X$, then for any $p:x=x$ we have the equivalence $\lam{q}\ct{p}{q}:(x=x)\to (x=x)$. This equivalence induces a map
 \begin{equation*}
-k\mapsto p^k : \Z \to (x=x).
+k\mapsto p^k : \Z \to (x=x),
 \end{equation*}
+for any $p:x=x$. This induces the \define{degree $k$ map} on the circle
+\begin{equation*}
+\mathsf{deg}(k) : \sphere{1}\to\sphere{1},
+\end{equation*}
+for any $k:\mathbb{Z}$.
 \end{eg}
+
+In the following theorem we show that the dependent function constructed in \cref{lem:elim-Z} is unique.
+
+\begin{thm}
+  Consider a type family $B:\mathbb{Z}\to\UU$ equipped with $b:B(0)$ and a family of equivalences
+  \begin{equation*}
+    e:\prd{k:\Z} \eqv{B(k)}{B(\mathsf{succ}(k))}.
+  \end{equation*}
+  Then the type
+  \begin{equation*}
+    \sm{f:\prd{k:\Z}B(k)}(f(0)=b)\times\prd{k:\Z}f(\mathsf{succ}(k))=e_k(f(k))
+  \end{equation*}
+  is contractible.
+\end{thm}
+
+\begin{proof}
+  In \cref{lem:elim-Z} we have already constructed a term of the asserted type.
+  Therefore it suffices to show that any two terms of this type can be identified.
+  Note that the type $(f,p,H)=(f',p',H')$ is equivalent to the type
+  \begin{equation*}
+    \sm{K:f~f'} (K(0)= \ct{p}{(p')^{-1}})\times \prd{k:\Z}K(\mathsf{succ}(k))=\ct{(\ct{H(k)}{\ap{e_k}{K(k)}})}{H'(k)^{-1}}. 
+  \end{equation*}
+  We obtain a term of this type by applying \cref{lem:elim-Z} to the family $C$ over $\Z$ given by $C(k)\defeq f(k)=f'(k)$, which comes equipped with a base point
+  \begin{equation*}
+    \ct{p}{(p')^{-1}} : C(0),
+  \end{equation*}
+  and the family of equivalences
+  \begin{equation*}
+    \lam{\alpha:f(k)=f'(k)}\ct{(\ct{H(k)}{\ap{e_k}{\alpha}})}{H'(k)^{-1}}:\prd{k:\Z}\eqv{C(k)}{C(\mathsf{succ}(k))}.\qedhere
+  \end{equation*}
+\end{proof}
+
+One way of phrasing the following corollary, is that $\Z$ is the `initial type equipped with a point and an automorphism'.
+
+\begin{cor}
+  For any type $X$ equipped with a base point $x_0:X$ and an automorphism $e:\eqv{X}{X}$, the type
+  \begin{equation*}
+    \sm{f:\Z\to X}(f(0)=x_0)\times ((f \circ \mathsf{succ})\htpy(e\circ f))
+  \end{equation*}
+  is contractible.
+\end{cor}
+
+
+
+\section{The identity type of the circle}
+
+Our goal in this section is to show that the total space of the fundamental cover is contractible.
 
 \begin{thm}\label{thm:circle_fundamental}
 The total space $\sm{t:\sphere{1}}\mathcal{E}(t)$ of the fundamental cover of $\sphere{1}$ is contractible.

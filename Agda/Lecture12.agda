@@ -242,6 +242,18 @@ tr-contraction-total-space' c {x} {x'} p f e e' H =
     ( f)
     ( λ y → equiv-concat' c (eq-pair (dpair p (inv (H y)))))
 
+tr-contraction-total-space-refl' :
+  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  ( x : A) → {F : UU l3} {F' : UU l4} (f : F ≃ F')
+  ( e : F ≃ B x) (e' : F' ≃ B x)
+  ( H : ((eqv-map e') ∘ (eqv-map f)) ~ (eqv-map e)) →
+  ( tr-contraction-total-space' c refl f e e' H) ~
+  ( map-equiv-Π
+    ( λ y' → Id c (dpair x (eqv-map e' y')))
+    ( f)
+    ( λ y → equiv-concat' c (eq-pair (dpair refl (inv (H y))))))
+tr-contraction-total-space-refl' c x f e e' H = htpy-refl _
+
 square-tr-contraction-total-space' :
   { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
   { x x' : A} (p : Id x x') → {F : UU l3} {F' : UU l4} (f : F ≃ F')
@@ -254,7 +266,7 @@ square-tr-contraction-total-space' :
 square-tr-contraction-total-space' c {x} {x'} p f e e' H =
   ( ( precomp-Π (eqv-map e') (λ y' → Id c (dpair x' y'))) ·l
     ( tr-contraction-total-space c p)) ∙h
-  {! htpy-refl _!}
+  {!!}
 
 {- An elimination principle for ℤ -}
 
