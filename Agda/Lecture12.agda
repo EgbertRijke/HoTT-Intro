@@ -472,6 +472,16 @@ is-contr-ELIM-ℤ :
 is-contr-ELIM-ℤ P p0 pS =
   is-contr-is-prop-inh (is-prop-ELIM-ℤ P p0 pS) (Elim-ℤ P p0 pS)
 
+-- The universal property of ℤ is now just a special case
+
+ELIM-ℤ' :
+  { l1 : Level} {X : UU l1} (x : X) (e : X ≃ X) → UU l1
+ELIM-ℤ' {X = X} x e = ELIM-ℤ (λ k → X) x (λ k → e)
+
+universal-property-ℤ :
+  { l1 : Level} {X : UU l1} (x : X) (e : X ≃ X) → is-contr (ELIM-ℤ' x e)
+universal-property-ℤ {X = X} x e = is-contr-ELIM-ℤ (λ k → X) x (λ k → e)
+
 {- Section 12.5 The identity type of the circle -}
 
 path-total-fundamental-cover-circle :
