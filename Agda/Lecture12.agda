@@ -334,18 +334,143 @@ equiv-comparison-map-Eq-ELIM-ℤ :
   ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
   ( s t : ELIM-ℤ P p0 pS) (k : ℤ) →
   Id ((pr1 s) k) ((pr1 t) k) ≃ Id ((pr1 s) (succ-ℤ k)) ((pr1 t) (succ-ℤ k))
-equiv-comparison-map-Eq-ELIM-ℤ P p0 pS s t = ?
+equiv-comparison-map-Eq-ELIM-ℤ P p0 pS s t k =
+  ( ( equiv-concat (pr2 (pr2 s) k) (pr1 t (succ-ℤ k))) ∘e
+    ( equiv-concat' (eqv-map (pS k) (pr1 s k)) (inv (pr2 (pr2 t) k)))) ∘e
+  ( equiv-ap (pS k) (pr1 s k) (pr1 t k))
+
+zero-Eq-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1)
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s t : ELIM-ℤ P p0 pS) (H : (pr1 s) ~ (pr1 t)) → UU l1
+zero-Eq-ELIM-ℤ P p0 pS s t H =
+  Id (H zero-ℤ) ((pr1 (pr2 s)) ∙ (inv (pr1 (pr2 t))))
+
+succ-Eq-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1)
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s t : ELIM-ℤ P p0 pS) (H : (pr1 s) ~ (pr1 t)) → UU l1
+succ-Eq-ELIM-ℤ P p0 pS s t H =
+  ( k : ℤ) → Id
+    ( H (succ-ℤ k))
+    ( eqv-map (equiv-comparison-map-Eq-ELIM-ℤ P p0 pS s t k) (H k))
 
 Eq-ELIM-ℤ :
   { l1 : Level} (P : ℤ → UU l1)
   ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
   ( s t : ELIM-ℤ P p0 pS) → UU l1
 Eq-ELIM-ℤ P p0 pS s t =
-  Σ ( (pr1 s) ~ (pr1 t)) (λ H →
-    ( Id (H zero-ℤ) ((pr1 (pr2 s)) ∙ (inv (pr1 (pr2 t))))) ×
-    {!( k : ℤ) → !})
+  ELIM-ℤ
+    ( λ k → Id (pr1 s k) (pr1 t k))
+    ( (pr1 (pr2 s)) ∙ (inv (pr1 (pr2 t))))
+    ( equiv-comparison-map-Eq-ELIM-ℤ P p0 pS s t)
 
+reflexive-Eq-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1)
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s : ELIM-ℤ P p0 pS) → Eq-ELIM-ℤ P p0 pS s s
+reflexive-Eq-ELIM-ℤ P p0 pS (dpair f (dpair p H)) =
+  dpair
+    ( htpy-refl f)
+    ( dpair
+      ( inv (right-inv p))
+      ( λ k → inv (right-inv (H k))))
 
+Eq-ELIM-ℤ-eq :
+  { l1 : Level} (P : ℤ → UU l1) →
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s t : ELIM-ℤ P p0 pS) → Id s t → Eq-ELIM-ℤ P p0 pS s t
+Eq-ELIM-ℤ-eq P p0 pS s .s refl = reflexive-Eq-ELIM-ℤ P p0 pS s
+
+is-equiv-htpy-con-inv :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
+  (H : f ~ g) (K : g ~ h) (L : f ~ h) →
+  is-equiv (htpy-con-inv H K L)
+is-equiv-htpy-con-inv H K L =
+  is-equiv-postcomp-Π
+    ( λ x → con-inv (H x) (K x) (L x))
+    ( λ x → is-equiv-con-inv (H x) (K x) (L x))
+
+is-contr-total-htpy' :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (f : (x : A) → B x) →
+  is-contr (Σ ((x : A) → B x) (λ g → g ~ f))
+is-contr-total-htpy' {A = A} {B} f =
+  is-contr-is-equiv'
+    ( Σ ((x : A) → B x) (λ g → f ~ g))
+    ( tot (λ g → htpy-inv))
+    ( is-equiv-tot-is-fiberwise-equiv (λ g → is-equiv-htpy-inv f g))
+    ( is-contr-total-htpy f)
+
+is-contr-total-Eq-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1) →
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s : ELIM-ℤ P p0 pS) → is-contr (Σ (ELIM-ℤ P p0 pS) (Eq-ELIM-ℤ P p0 pS s))
+is-contr-total-Eq-ELIM-ℤ P p0 pS s =
+  is-contr-total-Eq-structure
+    ( λ f t H →
+      ( zero-Eq-ELIM-ℤ P p0 pS s (dpair f t) H) ×
+      ( succ-Eq-ELIM-ℤ P p0 pS s (dpair f t) H))
+    ( is-contr-total-htpy (pr1 s))
+    ( dpair (pr1 s) (htpy-refl (pr1 s)))
+    ( is-contr-total-Eq-structure
+      ( λ p K
+        ( q : zero-Eq-ELIM-ℤ P p0 pS s
+          ( dpair (pr1 s) (dpair p K))
+          ( htpy-refl (pr1 s))) →
+        succ-Eq-ELIM-ℤ P p0 pS s
+          ( dpair (pr1 s) (dpair p K))
+          ( htpy-refl (pr1 s)))
+      ( is-contr-is-equiv'
+        ( Σ (Id (pr1 s zero-ℤ) p0) (λ α → Id α (pr1 (pr2 s))))
+        ( tot (λ α → con-inv refl α (pr1 (pr2 s))))
+        ( is-equiv-tot-is-fiberwise-equiv
+          ( λ α → is-equiv-con-inv refl α (pr1 (pr2 s))))
+        ( is-contr-total-path' _ (pr1 (pr2 s))))
+      ( dpair (pr1 (pr2 s)) (inv (right-inv (pr1 (pr2 s)))))
+      ( is-contr-is-equiv'
+        ( Σ ( ( k : ℤ) → Id (pr1 s (succ-ℤ k)) (pr1 (pS k) (pr1 s k)))
+            ( λ β → β ~ (pr2 (pr2 s))))
+        ( tot (λ β → htpy-con-inv (htpy-refl _) β (pr2 (pr2 s))))
+        ( is-equiv-tot-is-fiberwise-equiv
+          ( λ β → is-equiv-htpy-con-inv (htpy-refl _) β (pr2 (pr2 s))))
+        ( is-contr-total-htpy' (pr2 (pr2 s)))))
+
+is-equiv-Eq-ELIM-ℤ-eq :
+  { l1 : Level} (P : ℤ → UU l1) →
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s t : ELIM-ℤ P p0 pS) → is-equiv (Eq-ELIM-ℤ-eq P p0 pS s t)
+is-equiv-Eq-ELIM-ℤ-eq P p0 pS s =
+  id-fundamental-gen s
+    ( reflexive-Eq-ELIM-ℤ P p0 pS s)
+    ( is-contr-total-Eq-ELIM-ℤ P p0 pS s)
+    ( Eq-ELIM-ℤ-eq P p0 pS s)
+
+eq-Eq-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1) →
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  ( s t : ELIM-ℤ P p0 pS) → Eq-ELIM-ℤ P p0 pS s t → Id s t
+eq-Eq-ELIM-ℤ P p0 pS s t = inv-is-equiv (is-equiv-Eq-ELIM-ℤ-eq P p0 pS s t)
+
+is-prop-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1) →
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  is-prop (ELIM-ℤ P p0 pS)
+is-prop-ELIM-ℤ P p0 pS =
+  is-prop-is-prop'
+    ( λ s t → eq-Eq-ELIM-ℤ P p0 pS s t
+      ( Elim-ℤ
+        ( λ k → Id (pr1 s k) (pr1 t k))
+        ( (pr1 (pr2 s)) ∙ (inv (pr1 (pr2 t))))
+        ( equiv-comparison-map-Eq-ELIM-ℤ P p0 pS s t)))
+
+-- We finally arrive at the dependent universal property of ℤ
+
+is-contr-ELIM-ℤ :
+  { l1 : Level} (P : ℤ → UU l1) →
+  ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
+  is-contr (ELIM-ℤ P p0 pS)
+is-contr-ELIM-ℤ P p0 pS =
+  is-contr-is-prop-inh (is-prop-ELIM-ℤ P p0 pS) (Elim-ℤ P p0 pS)
 
 {- Section 12.5 The identity type of the circle -}
 

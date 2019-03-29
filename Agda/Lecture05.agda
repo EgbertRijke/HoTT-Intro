@@ -535,6 +535,17 @@ is-equiv-comp' :
   is-equiv h → is-equiv g → is-equiv (g ∘ h)
 is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h (htpy-refl _)
 
+equiv-comp :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
+  (B ≃ X) → (A ≃ B) → (A ≃ X)
+equiv-comp (dpair g is-equiv-g) (dpair h is-equiv-h) =
+  dpair (g ∘ h) (is-equiv-comp' g h is-equiv-h is-equiv-g)
+
+_∘e_ :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
+  (B ≃ X) → (A ≃ B) → (A ≃ X)
+_∘e_ = equiv-comp
+
 is-equiv-left-factor :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →

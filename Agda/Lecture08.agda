@@ -475,28 +475,31 @@ is-set-ℤ = is-set-coprod is-set-ℕ (is-set-coprod is-set-unit is-set-ℕ)
 
 -- Exercise 8.5
 
+decide : {l : Level} (A : UU l) → UU l
+decide A = coprod A (¬ A)
+
 has-decidable-equality : {l : Level} (A : UU l) → UU l
-has-decidable-equality A = (x y : A) → coprod (Id x y) (¬ (Id x y))
+has-decidable-equality A = (x y : A) → decide (Id x y)
 
 splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
-  coprod (Id x y) (¬ (Id x y)) → UU lzero
+  decide (Id x y) → UU lzero
 splitting-decidable-equality A x y (inl p) = unit
 splitting-decidable-equality A x y (inr f) = empty
 
 is-prop-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
-  (t : coprod (Id x y) (¬ (Id x y))) →
+  (t : decide (Id x y)) →
   is-prop (splitting-decidable-equality A x y t)
 is-prop-splitting-decidable-equality A x y (inl p) = is-prop-unit
 is-prop-splitting-decidable-equality A x y (inr f) = is-prop-empty
 
 reflexive-splitting-decidable-equality : {l : Level} (A : UU l) (x : A) →
-  (t : coprod (Id x x) (¬ (Id x x))) → splitting-decidable-equality A x x t
+  (t : decide (Id x x)) → splitting-decidable-equality A x x t
 reflexive-splitting-decidable-equality A x (inl p) = star
 reflexive-splitting-decidable-equality A x (inr f) =
   ind-empty {P = λ t → splitting-decidable-equality A x x (inr f)} (f refl)
 
 eq-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
-  (t : coprod (Id x y) (¬ (Id x y))) →
+  (t : decide (Id x y)) →
   splitting-decidable-equality A x y t → Id x y
 eq-splitting-decidable-equality A x y (inl p) t = p
 eq-splitting-decidable-equality A x y (inr f) t =
@@ -579,9 +582,8 @@ has-decidable-equality-coprod dec-A dec-B (inr x) (inr y) =
     ( dec-B x y)
 
 has-decidable-equality-prod-aux : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  (x x' : A) (y y' : B) → coprod (Id x x') (¬ (Id x x')) →
-  coprod (Id y y') (¬ (Id y y')) →
-  coprod (Id (pair x y) (pair x' y')) (¬ (Id (pair x y) (pair x' y')))
+  (x x' : A) (y y' : B) → decide (Id x x') → decide (Id y y') →
+  decide (Id (pair x y) (pair x' y'))
 has-decidable-equality-prod-aux x x' y y' (inl p) (inl q) =
   inl (eq-pair-triv (pair p q))
 has-decidable-equality-prod-aux x x' y y' (inl p) (inr g) =
@@ -601,7 +603,7 @@ has-decidable-equality-prod dec-A dec-B (dpair x y) (dpair x' y') =
 
 decide-retract-of :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  A retract-of B → (coprod B (¬ B)) → coprod A (¬ A)
+  A retract-of B → decide B → decide A
 decide-retract-of (dpair i (dpair r H)) (inl b) = inl (r b)
 decide-retract-of (dpair i (dpair r H)) (inr f) = inr (f ∘ i)
 

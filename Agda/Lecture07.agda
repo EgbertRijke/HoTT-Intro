@@ -140,6 +140,14 @@ is-emb-is-equiv {i} {j} {A} {B} f E x =
       ( is-contr-map-is-equiv E (f x)))
     ( λ y p → ap f p)
 
+equiv-ap :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) (x y : A) →
+  (Id x y) ≃ (Id (eqv-map e x) (eqv-map e y))
+equiv-ap e x y =
+  dpair
+    ( ap (eqv-map e) {x} {y})
+    ( is-emb-is-equiv (eqv-map e) (is-equiv-eqv-map e) x y)
+
 -- Identity systems
 
 IND-identity-system :
