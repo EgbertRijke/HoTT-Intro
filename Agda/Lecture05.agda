@@ -90,39 +90,39 @@ _≃_ :
   {i j : Level} (A : UU i) (B : UU j) → UU (i ⊔ j)
 A ≃ B = Σ (A → B) (λ f → is-equiv f)
 
-eqv-map :
+map-equiv :
   {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (A → B)
-eqv-map e = pr1 e
+map-equiv e = pr1 e
 
-is-equiv-eqv-map :
-  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (eqv-map e)
-is-equiv-eqv-map e = pr2 e
+is-equiv-map-equiv :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (map-equiv e)
+is-equiv-map-equiv e = pr2 e
 
 sec-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → sec f
-sec-is-equiv e = pr1 e
+sec-is-equiv is-equiv-f = pr1 is-equiv-f
 
 map-sec-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
-map-sec-is-equiv e = pr1 (sec-is-equiv e)
+map-sec-is-equiv is-equiv-f = pr1 (sec-is-equiv is-equiv-f)
 
 issec-map-sec-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (e : is-equiv f) → ((f ∘ map-sec-is-equiv e) ~ id)
-issec-map-sec-is-equiv e = pr2 (sec-is-equiv e)
+  (is-equiv-f : is-equiv f) → ((f ∘ map-sec-is-equiv is-equiv-f) ~ id)
+issec-map-sec-is-equiv is-equiv-f = pr2 (sec-is-equiv is-equiv-f)
 
 retr-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → retr f
-retr-is-equiv e = pr2 e
+retr-is-equiv is-equiv-f = pr2 is-equiv-f
 
 map-retr-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
-map-retr-is-equiv e = pr1 (retr-is-equiv e)
+map-retr-is-equiv is-equiv-f = pr1 (retr-is-equiv is-equiv-f)
 
 isretr-map-retr-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (e : is-equiv f) → (((map-retr-is-equiv e) ∘ f) ~ id)
-isretr-map-retr-is-equiv e = pr2 (retr-is-equiv e)
+  (is-equiv-f : is-equiv f) → (((map-retr-is-equiv is-equiv-f) ∘ f) ~ id)
+isretr-map-retr-is-equiv is-equiv-f = pr2 (retr-is-equiv is-equiv-f)
 
 has-inverse :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
@@ -142,7 +142,8 @@ is-equiv-has-inverse' g H K =
 
 htpy-secf-retrf :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B}
-  (e : is-equiv f) → (map-sec-is-equiv e ~ map-retr-is-equiv e)
+  (is-equiv-f : is-equiv f) →
+  (map-sec-is-equiv is-equiv-f ~ map-retr-is-equiv is-equiv-f)
 htpy-secf-retrf {i} {j} {A} {B} {f} (dpair (dpair g issec) (dpair h isretr)) =
   htpy-concat
     ( h ∘ (f ∘ g))
@@ -167,23 +168,38 @@ has-inverse-is-equiv
 
 inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
-inv-is-equiv E = pr1 (has-inverse-is-equiv E)
+inv-is-equiv is-equiv-f = pr1 (has-inverse-is-equiv is-equiv-f)
 
 issec-inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (E : is-equiv f) → (f ∘ (inv-is-equiv E)) ~ id
-issec-inv-is-equiv E = pr1 (pr2 (has-inverse-is-equiv E))
+  (is-equiv-f : is-equiv f) → (f ∘ (inv-is-equiv is-equiv-f)) ~ id
+issec-inv-is-equiv is-equiv-f = pr1 (pr2 (has-inverse-is-equiv is-equiv-f))
 
 isretr-inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (E : is-equiv f) → ((inv-is-equiv E) ∘ f) ~ id
-isretr-inv-is-equiv E = pr2 (pr2 (has-inverse-is-equiv E))
+  (is-equiv-f : is-equiv f) → ((inv-is-equiv is-equiv-f) ∘ f) ~ id
+isretr-inv-is-equiv is-equiv-f = pr2 (pr2 (has-inverse-is-equiv is-equiv-f))
 
 is-equiv-inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (E : is-equiv f) → is-equiv (inv-is-equiv E)
-is-equiv-inv-is-equiv {i} {j} {A} {B} {f} E =
-  pair (dpair f (isretr-inv-is-equiv E)) (dpair f (issec-inv-is-equiv E))
+  (is-equiv-f : is-equiv f) → is-equiv (inv-is-equiv is-equiv-f)
+is-equiv-inv-is-equiv {i} {j} {A} {B} {f} is-equiv-f =
+  is-equiv-has-inverse' f
+    ( isretr-inv-is-equiv is-equiv-f)
+    ( issec-inv-is-equiv is-equiv-f)
+
+inv-map-equiv :
+  {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B → A)
+inv-map-equiv e = inv-is-equiv (is-equiv-map-equiv e)
+
+is-equiv-inv-map-equiv :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (inv-map-equiv e)
+is-equiv-inv-map-equiv e =
+  is-equiv-inv-is-equiv (is-equiv-map-equiv e)
+
+inv-equiv :
+  {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B ≃ A)
+inv-equiv e = dpair (inv-map-equiv e) (is-equiv-inv-map-equiv e)
 
 is-equiv-id :
   {i : Level} (A : UU i) → is-equiv (id {i} {A})
@@ -328,6 +344,10 @@ is-equiv-inv :
   {i : Level} {A : UU i} (x y : A) →
   is-equiv (λ (p : Id x y) → inv p)
 is-equiv-inv x y = pair (dpair inv inv-inv) (dpair inv inv-inv)
+
+equiv-inv :
+  {i : Level} {A : UU i} (x y : A) → (Id x y) ≃ (Id y x)
+equiv-inv x y = dpair inv (is-equiv-inv x y)
 
 inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
@@ -538,8 +558,8 @@ is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h (htpy-refl _)
 equiv-comp :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
   (B ≃ X) → (A ≃ B) → (A ≃ X)
-equiv-comp (dpair g is-equiv-g) (dpair h is-equiv-h) =
-  dpair (g ∘ h) (is-equiv-comp' g h is-equiv-h is-equiv-g)
+equiv-comp g h =
+  dpair ((pr1 g) ∘ (pr1 h)) (is-equiv-comp' (pr1 g) (pr1 h) (pr2 h) (pr2 g))
 
 _∘e_ :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
@@ -598,9 +618,11 @@ neg-neg-𝟚 : (neg-𝟚 ∘ neg-𝟚) ~ id
 neg-neg-𝟚 true = refl
 neg-neg-𝟚 false = refl
 
-is-equiv-neg-𝟚 :
-  is-equiv neg-𝟚
+is-equiv-neg-𝟚 : is-equiv neg-𝟚
 is-equiv-neg-𝟚 = pair (dpair neg-𝟚 neg-neg-𝟚) (dpair neg-𝟚 neg-neg-𝟚)
+
+equiv-neg-𝟚 : bool ≃ bool
+equiv-neg-𝟚 = dpair neg-𝟚 is-equiv-neg-𝟚
 
 not-true-is-false : ¬ (Id true false)
 not-true-is-false p =
@@ -668,6 +690,10 @@ is-equiv-swap-coprod A B =
     ( dpair (swap-coprod B A) (swap-swap-coprod B A))
     ( dpair (swap-coprod B A) (swap-swap-coprod A B))
 
+equiv-swap-coprod :
+  {i j : Level} (A : UU i) (B : UU j) → coprod A B ≃ coprod B A
+equiv-swap-coprod A B = dpair (swap-coprod A B) (is-equiv-swap-coprod A B)
+
 swap-prod :
   {i j : Level} (A : UU i) (B : UU j) → prod A B → prod B A
 swap-prod A B t = dpair (pr2 t) (pr1 t)
@@ -684,6 +710,10 @@ is-equiv-swap-prod A B =
   pair
     ( dpair (swap-prod B A) (swap-swap-prod B A))
     ( dpair (swap-prod B A) (swap-swap-prod A B))
+
+equiv-swap-prod :
+  {i j : Level} (A : UU i) (B : UU j) → (A × B) ≃ (B × A)
+equiv-swap-prod A B = dpair (swap-prod A B) (is-equiv-swap-prod A B)
 
 -- Exercise 5.9
 
@@ -956,19 +986,14 @@ right-inverse-law-add-ℤ x =
 is-equiv-add-ℤ-right :
   (x : ℤ) → is-equiv (add-ℤ x)
 is-equiv-add-ℤ-right x =
-  pair
-    ( dpair
-      ( add-ℤ (neg-ℤ x))
-      ( λ y → concat
-        ( add-ℤ (add-ℤ x (neg-ℤ x)) y)
-        ( inv (associative-add-ℤ x (neg-ℤ x) y))
-        ( ap (λ t → add-ℤ t y) (right-inverse-law-add-ℤ x))))
-    ( dpair
-      ( add-ℤ (neg-ℤ x))
-      ( λ y → concat
-        ( add-ℤ (add-ℤ (neg-ℤ x) x) y)
-        ( inv (associative-add-ℤ (neg-ℤ x) x y))
-        ( ap (λ t → add-ℤ t y) (left-inverse-law-add-ℤ x))))
+  is-equiv-has-inverse'
+    ( add-ℤ (neg-ℤ x))
+    ( λ y →
+      ( inv (associative-add-ℤ x (neg-ℤ x) y)) ∙
+      ( ap (λ t → add-ℤ t y) (right-inverse-law-add-ℤ x)))
+    ( λ y →
+      ( inv (associative-add-ℤ (neg-ℤ x) x y)) ∙
+      ( ap (λ t → add-ℤ t y) (left-inverse-law-add-ℤ x)))
 
 is-equiv-add-ℤ-left :
   (y : ℤ) → is-equiv (λ x → add-ℤ x y)
@@ -988,11 +1013,9 @@ is-equiv-con-inv :
   {i : Level} {A : UU i} {x y z : A} (p : Id x y)
   (q : Id y z) (r : Id x z) → is-equiv (con-inv p q r)
 is-equiv-con-inv p refl r =
-  is-equiv-comp
-    ( con-inv p refl r)
+  is-equiv-comp'
     ( concat' r (inv (right-unit r)))
     ( concat (concat _ p refl) (inv (right-unit p)))
-    ( htpy-refl _)
     ( is-equiv-concat (inv (right-unit p)) r)
     ( is-equiv-concat' p (inv (right-unit r)))
 
@@ -1039,22 +1062,22 @@ is-equiv-functor-coprod {A = A} {B = B} {A' = A'} {B' = B'} {f = f} {g = g}
   dpair
     ( dpair
       ( functor-coprod sf sg)
-      ( htpy-concat
-        ( functor-coprod id id)
-        ( htpy-concat
-          ( functor-coprod (f ∘ sf) (g ∘ sg))
-          ( htpy-inv (compose-functor-coprod sf f sg g))
-          ( htpy-functor-coprod issec-sf issec-sg))
+      ( ( ( htpy-inv (compose-functor-coprod sf f sg g)) ∙h
+          ( htpy-functor-coprod issec-sf issec-sg)) ∙h
         ( id-functor-coprod A' B')))
     ( dpair
       ( functor-coprod rf rg)
-      ( htpy-concat
-        ( functor-coprod id id)
-        ( htpy-concat
-          ( functor-coprod (rf ∘ f) (rg ∘ g))
-          ( htpy-inv (compose-functor-coprod f rf g rg))
-          ( htpy-functor-coprod isretr-rf isretr-rg))
+      ( ( ( htpy-inv (compose-functor-coprod f rf g rg)) ∙h
+          ( htpy-functor-coprod isretr-rf isretr-rg)) ∙h
         ( id-functor-coprod A B)))
+
+equiv-functor-coprod :
+  {l1 l2 l1' l2' : Level} {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'} →
+  (A ≃ A') → (B ≃ B') → ((coprod A B) ≃ (coprod A' B'))
+equiv-functor-coprod (dpair e is-equiv-e) (dpair f is-equiv-f) =
+  dpair
+    ( functor-coprod e f)
+    ( is-equiv-functor-coprod is-equiv-e is-equiv-f)
 
 -- Extra material
 

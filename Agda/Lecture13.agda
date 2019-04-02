@@ -399,7 +399,7 @@ uniquely-unique-pullback :
   (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
   ({l : Level} → universal-property-pullback l f g c') →
   ({l : Level} → universal-property-pullback l f g c) →
-  is-contr (Σ (C' ≃ C) (λ h → htpy-cone f g (cone-map f g c (eqv-map h)) c'))
+  is-contr (Σ (C' ≃ C) (λ h → htpy-cone f g (cone-map f g c (map-equiv h)) c'))
 uniquely-unique-pullback {C = C} {C' = C'} f g c c' up-c' up-c =
   is-contr-total-Eq-substructure
     ( is-contr-universal-property-pullback f g c up-c C' c')

@@ -565,10 +565,10 @@ is-subtype-is-equiv f = is-prop-is-contr-if-inh
     ( is-contr-sec-is-equiv is-equiv-f)
     ( is-contr-retr-is-equiv is-equiv-f))
 
-is-emb-eqv-map :
+is-emb-map-equiv :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  is-emb (eqv-map {A = A} {B = B})
-is-emb-eqv-map = is-emb-pr1-is-subtype is-subtype-is-equiv
+  is-emb (map-equiv {A = A} {B = B})
+is-emb-map-equiv = is-emb-pr1-is-subtype is-subtype-is-equiv
 
 double-structure-swap :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
@@ -635,11 +635,11 @@ is-contr-total-Eq-substructure {A = A} {B} {P} is-contr-AB is-subtype-P a b p =
 
 htpy-equiv :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} → A ≃ B → A ≃ B → UU (l1 ⊔ l2)
-htpy-equiv e e' = (eqv-map e) ~ (eqv-map e')
+htpy-equiv e e' = (map-equiv e) ~ (map-equiv e')
 
 reflexive-htpy-equiv :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) → htpy-equiv e e
-reflexive-htpy-equiv e = htpy-refl (eqv-map e)
+reflexive-htpy-equiv e = htpy-refl (map-equiv e)
 
 htpy-equiv-eq :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
@@ -1179,7 +1179,7 @@ is-equiv-hom-slice-fiberwise-hom f g =
 equiv-slice :
   {l1 l2 l3 : Level} (X : UU l1) {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) → UU (l1 ⊔ (l2 ⊔ l3))
-equiv-slice X {A} {B} f g = Σ (A ≃ B) (λ e → f ~ (g ∘ (eqv-map e)))
+equiv-slice X {A} {B} f g = Σ (A ≃ B) (λ e → f ~ (g ∘ (map-equiv e)))
 
 hom-slice-equiv-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
@@ -1421,13 +1421,13 @@ is-equiv-set-isomorphism-equiv A B =
 map-equiv-Π :
   { l1 l2 l3 l4 : Level}
   { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
-  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
+  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (map-equiv e a')) →
   ( (a' : A') → B' a') → ( (a : A) → B a)
 map-equiv-Π {B' = B'} B e f =
   ( postcomp-Π (λ a →
-    ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a)) ∘
-    ( eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a))))) ∘
-  ( precomp-Π (inv-is-equiv (is-equiv-eqv-map e)) B')
+    ( tr B (issec-inv-is-equiv (is-equiv-map-equiv e) a)) ∘
+    ( map-equiv (f (inv-is-equiv (is-equiv-map-equiv e) a))))) ∘
+  ( precomp-Π (inv-is-equiv (is-equiv-map-equiv e)) B')
 
 id-map-equiv-Π :
   { l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
@@ -1437,29 +1437,29 @@ id-map-equiv-Π B = htpy-refl _
 is-equiv-map-equiv-Π :
   { l1 l2 l3 l4 : Level}
   { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
-  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
+  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (map-equiv e a')) →
   is-equiv (map-equiv-Π B e f)
 is-equiv-map-equiv-Π {B' = B'} B e f =
   is-equiv-comp'
     ( postcomp-Π (λ a →
-      ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a)) ∘
-      ( eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a)))))
-    ( precomp-Π (inv-is-equiv (is-equiv-eqv-map e)) B')
+      ( tr B (issec-inv-is-equiv (is-equiv-map-equiv e) a)) ∘
+      ( map-equiv (f (inv-is-equiv (is-equiv-map-equiv e) a)))))
+    ( precomp-Π (inv-is-equiv (is-equiv-map-equiv e)) B')
     ( is-equiv-precomp-Π-is-equiv
-      ( inv-is-equiv (is-equiv-eqv-map e))
-      ( is-equiv-inv-is-equiv (is-equiv-eqv-map e))
+      ( inv-is-equiv (is-equiv-map-equiv e))
+      ( is-equiv-inv-is-equiv (is-equiv-map-equiv e))
       ( B'))
     ( is-equiv-postcomp-Π _
       ( λ a → is-equiv-comp'
-        ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a))
-        ( eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a)))
-        ( is-equiv-eqv-map (f (inv-is-equiv (is-equiv-eqv-map e) a)))
-        ( is-equiv-tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a))))
+        ( tr B (issec-inv-is-equiv (is-equiv-map-equiv e) a))
+        ( map-equiv (f (inv-is-equiv (is-equiv-map-equiv e) a)))
+        ( is-equiv-map-equiv (f (inv-is-equiv (is-equiv-map-equiv e) a)))
+        ( is-equiv-tr B (issec-inv-is-equiv (is-equiv-map-equiv e) a))))
 
 equiv-Π :
   { l1 l2 l3 l4 : Level}
   { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
-  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
+  ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (map-equiv e a')) →
   ( (a' : A') → B' a') ≃ ( (a : A) → B a)
 equiv-Π B e f = dpair (map-equiv-Π B e f) (is-equiv-map-equiv-Π B e f)
 
@@ -1469,9 +1469,9 @@ HTPY-map-equiv-Π :
   ( e e' : A' ≃ A) (H : htpy-equiv e e') →
   UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l4)))
 HTPY-map-equiv-Π {A' = A'} B' {A} B e e' H =
-  ( f : (a' : A') → B' a' ≃ B (eqv-map e a')) →
-  ( f' : (a' : A') → B' a' ≃ B (eqv-map e' a')) →
-  ( K : (a' : A') → ((tr B (H a')) ∘ (eqv-map (f a'))) ~ (eqv-map (f' a'))) →
+  ( f : (a' : A') → B' a' ≃ B (map-equiv e a')) →
+  ( f' : (a' : A') → B' a' ≃ B (map-equiv e' a')) →
+  ( K : (a' : A') → ((tr B (H a')) ∘ (map-equiv (f a'))) ~ (map-equiv (f' a'))) →
   ( map-equiv-Π B e f) ~ (map-equiv-Π B e' f')
 
 htpy-map-equiv-Π-htpy-refl :
@@ -1482,9 +1482,9 @@ htpy-map-equiv-Π-htpy-refl :
 htpy-map-equiv-Π-htpy-refl {B' = B'} B e f f' K =
   ( htpy-postcomp-Π
     ( λ a →
-      ( tr B (issec-inv-is-equiv (is-equiv-eqv-map e) a)) ·l
-      ( K (inv-is-equiv (is-equiv-eqv-map e) a)))) ·r
-  ( precomp-Π (inv-is-equiv (is-equiv-eqv-map e)) B')
+      ( tr B (issec-inv-is-equiv (is-equiv-map-equiv e) a)) ·l
+      ( K (inv-is-equiv (is-equiv-map-equiv e) a)))) ·r
+  ( precomp-Π (inv-is-equiv (is-equiv-map-equiv e)) B')
 
 htpy-map-equiv-Π :
   { l1 l2 l3 l4 : Level}
@@ -1510,25 +1510,25 @@ comp-htpy-map-equiv-Π {B' = B'} B e =
 
 map-automorphism-Π :
   { l1 l2 : Level} {A : UU l1} {B : A → UU l2}
-  ( e : A ≃ A) (f : (a : A) → B a ≃ B (eqv-map e a)) →
+  ( e : A ≃ A) (f : (a : A) → B a ≃ B (map-equiv e a)) →
   ( (a : A) → B a) → ((a : A) → B a)
 map-automorphism-Π {B = B} e f =
-  ( postcomp-Π (λ a → (inv-is-equiv (is-equiv-eqv-map (f a))))) ∘
-  ( precomp-Π (eqv-map e) B)
+  ( postcomp-Π (λ a → (inv-is-equiv (is-equiv-map-equiv (f a))))) ∘
+  ( precomp-Π (map-equiv e) B)
 
 is-equiv-map-automorphism-Π :
   { l1 l2 : Level} {A : UU l1} {B : A → UU l2}
-  ( e : A ≃ A) (f : (a : A) → B a ≃ B (eqv-map e a)) →
+  ( e : A ≃ A) (f : (a : A) → B a ≃ B (map-equiv e a)) →
   is-equiv (map-automorphism-Π e f)
 is-equiv-map-automorphism-Π {B = B} e f =
   is-equiv-comp' _ _
-    ( is-equiv-precomp-Π-is-equiv _ (is-equiv-eqv-map e) B)
+    ( is-equiv-precomp-Π-is-equiv _ (is-equiv-map-equiv e) B)
     ( is-equiv-postcomp-Π _
-      ( λ a → is-equiv-inv-is-equiv (is-equiv-eqv-map (f a))))
+      ( λ a → is-equiv-inv-is-equiv (is-equiv-map-equiv (f a))))
 
 automorphism-Π :
   { l1 l2 : Level} {A : UU l1} {B : A → UU l2}
-  ( e : A ≃ A) (f : (a : A) → B a ≃ B (eqv-map e a)) →
+  ( e : A ≃ A) (f : (a : A) → B a ≃ B (map-equiv e a)) →
   ( (a : A) → B a) ≃ ((a : A) → B a)
 automorphism-Π e f =
   dpair (map-automorphism-Π e f) (is-equiv-map-automorphism-Π e f)

@@ -5,7 +5,7 @@ module Lecture10 where
 import Lecture09
 open Lecture09 public
 
--- Section 11.1 Type extensionality
+-- Section 10.1 Type extensionality
 
 equiv-eq : {i : Level} {A : UU i} {B : UU i} → Id A B → A ≃ B
 equiv-eq {A = A} refl = dpair id (is-equiv-id A)
@@ -99,27 +99,27 @@ ind-equiv A P = pr1 (Ind-equiv A P)
 
 -- Exercises
 
--- Exercise 11.1
+-- Exercise 10.1
 
 tr-equiv-eq-ap : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {x y : A}
-  (p : Id x y) → (eqv-map (equiv-eq (ap B p))) ~ tr B p
+  (p : Id x y) → (map-equiv (equiv-eq (ap B p))) ~ tr B p
 tr-equiv-eq-ap refl = htpy-refl id
 
--- Exercise 11.2
+-- Exercise 10.2
 
 is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
 is-contr-UU-contr i =
   let UNIT-i = Raise i unit
       unit-i = (pr1 UNIT-i)
       e = pr2 UNIT-i
-      f = eqv-map e
-      is-equiv-f = is-equiv-eqv-map e
+      f = map-equiv e
+      is-equiv-f = is-equiv-map-equiv e
   in 
   dpair
     ( dpair unit-i
       ( is-contr-is-equiv' unit
-        ( eqv-map e)
-        ( is-equiv-eqv-map e)
+        ( map-equiv e)
+        ( is-equiv-map-equiv e)
         is-contr-unit))
      (λ T → let X = pr1 T
                 is-contr-X = pr2 T

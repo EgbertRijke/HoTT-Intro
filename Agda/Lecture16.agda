@@ -427,8 +427,8 @@ coherence-Eq-Fam-pushout :
 coherence-Eq-Fam-pushout {S = S}
   f g PA PB PS PA' PB' PS' eA eB =
   ( s : S) →
-    ( (eqv-map (eB (g s))) ∘ (eqv-map (PS s))) ~
-    ( (eqv-map (PS' s)) ∘ (eqv-map (eA (f s))))
+    ( (map-equiv (eB (g s))) ∘ (map-equiv (PS s))) ~
+    ( (map-equiv (PS' s)) ∘ (map-equiv (eA (f s))))
 
 is-contr-total-coherence-Eq-Fam-pushout :
   {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -442,7 +442,7 @@ is-contr-total-coherence-Eq-Fam-pushout {S = S} f g PA PB PS =
   is-contr-is-equiv'
     ( (s : S) →
       Σ ( (PA (f s)) ≃ (PB (g s)))
-        ( λ PS's → ((eqv-map (PS s))) ~ (eqv-map (PS's))))
+        ( λ PS's → ((map-equiv (PS s))) ~ (map-equiv (PS's))))
     ( choice-∞)
     ( is-equiv-choice-∞)
     ( is-contr-Π

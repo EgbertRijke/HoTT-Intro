@@ -75,17 +75,26 @@ is-equiv-tot-is-fiberwise-equiv {f = f} H =
       ( is-equiv-fib-ftr-fib-tot f t)
       ( is-contr-map-is-equiv (H _) (pr2 t)))
 
+equiv-tot-fam-equiv :
+  {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
+  ((x : A) → B x ≃ C x) → (Σ A B) ≃ (Σ A C)
+equiv-tot-fam-equiv e =
+  dpair
+    ( tot (λ x → map-equiv (e x)))
+    ( is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-map-equiv (e x)))
+
 -- Conversely, any fiberwise transformation that induces an equivalence on total spaces is a fiberwise equivalence.
 is-fiberwise-equiv-is-equiv-tot :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
   (f : (x : A) → B x → C x) → is-equiv (tot f) →
   is-fiberwise-equiv f
-is-fiberwise-equiv-is-equiv-tot f H x =
+is-fiberwise-equiv-is-equiv-tot {A = A} {B} {C} f is-equiv-tot-f x =
   is-equiv-is-contr-map
-    (λ z → is-contr-is-equiv' _
-      (fib-ftr-fib-tot f (dpair x z))
-      (is-equiv-fib-ftr-fib-tot f (dpair x z))
-      (is-contr-map-is-equiv H (dpair x z)))
+    ( λ z → is-contr-is-equiv'
+      ( fib (tot f) (dpair x z))
+      ( fib-ftr-fib-tot f (dpair x z))
+      ( is-equiv-fib-ftr-fib-tot f (dpair x z))
+      ( is-contr-map-is-equiv is-equiv-tot-f (dpair x z)))
 
 -- Section 7.2 The fundamental theorem
 
@@ -93,9 +102,9 @@ is-fiberwise-equiv-is-equiv-tot f H x =
 id-fundamental-gen :
   {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
   is-contr (Σ A B) → (f : (x : A) → Id a x → B x) → is-fiberwise-equiv f
-id-fundamental-gen {_} {_} {A} {B} a b C f x =
+id-fundamental-gen {A = A} a b is-contr-AB f =
   is-fiberwise-equiv-is-equiv-tot f
-    ( is-equiv-is-contr _ (is-contr-total-path A a) C) x
+    ( is-equiv-is-contr (tot f) (is-contr-total-path A a) is-contr-AB)
 
 id-fundamental-gen' :
   {i j : Level} {A : UU i} {B : A → UU j}
@@ -112,15 +121,16 @@ id-fundamental-gen' {A = A} {B = B} a b f is-fiberwise-equiv-f =
 id-fundamental :
   {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
   is-contr (Σ A B) → is-fiberwise-equiv (ind-Id a (λ x p → B x) b)
-id-fundamental {i} {j} {A} {B} a b H =
-  id-fundamental-gen a b H (ind-Id a (λ x p → B x) b)
+id-fundamental {i} {j} {A} {B} a b is-contr-AB =
+  id-fundamental-gen a b is-contr-AB (ind-Id a (λ x p → B x) b)
 
 -- The converse of the fundamental theorem of identity types
 id-fundamental' :
   {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
   (is-fiberwise-equiv (ind-Id a (λ x p → B x) b)) → is-contr (Σ A B)
 id-fundamental' {i} {j} {A} {B} a b H =
-  is-contr-is-equiv' _
+  is-contr-is-equiv'
+    ( Σ A (Id a))
     ( tot (ind-Id a (λ x p → B x) b))
     ( is-equiv-tot-is-fiberwise-equiv H)
     ( is-contr-total-path A a)
@@ -132,21 +142,21 @@ is-emb f = (x y : _) → is-equiv (ap f {x} {y})
 
 is-emb-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → is-equiv f → is-emb f
-is-emb-is-equiv {i} {j} {A} {B} f E x =
+is-emb-is-equiv {i} {j} {A} {B} f is-equiv-f x =
   id-fundamental-gen x refl
     ( is-contr-is-equiv' _
       ( tot (λ y (p : Id (f y) (f x)) → inv p))
       ( is-equiv-tot-is-fiberwise-equiv (λ y → is-equiv-inv (f y) (f x)))
-      ( is-contr-map-is-equiv E (f x)))
+      ( is-contr-map-is-equiv is-equiv-f (f x)))
     ( λ y p → ap f p)
 
 equiv-ap :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) (x y : A) →
-  (Id x y) ≃ (Id (eqv-map e x) (eqv-map e y))
+  (Id x y) ≃ (Id (map-equiv e x) (map-equiv e y))
 equiv-ap e x y =
   dpair
-    ( ap (eqv-map e) {x} {y})
-    ( is-emb-is-equiv (eqv-map e) (is-equiv-eqv-map e) x y)
+    ( ap (map-equiv e) {x} {y})
+    ( is-emb-is-equiv (map-equiv e) (is-equiv-map-equiv e) x y)
 
 -- Identity systems
 
@@ -414,12 +424,12 @@ eqv-raise l2 A = pr2 (Raise l2 A)
 
 map-raise :
   {l1 : Level} (l2 : Level) (A : UU l1) → A → raise l2 A
-map-raise l2 A = eqv-map (eqv-raise l2 A)
+map-raise l2 A = map-equiv (eqv-raise l2 A)
 
 is-equiv-map-raise :
   {l1 : Level} (l2 : Level) (A : UU l1) →
   is-equiv (map-raise l2 A)
-is-equiv-map-raise l2 A = is-equiv-eqv-map (eqv-raise l2 A)
+is-equiv-map-raise l2 A = is-equiv-map-equiv (eqv-raise l2 A)
 
 -- Lemmas about coproducts
 
@@ -754,9 +764,6 @@ tot-comp :
 tot-comp f g (dpair x y) = refl
 
 -- Exercise 7.2
-fib' :
-  {i j : Level} {A : UU i} {B : UU j} → (A → B) → B → UU (i ⊔ j)
-fib' f y = Σ _ (λ x → Id y (f x))
 
 fib'-fib :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →

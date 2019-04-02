@@ -425,8 +425,112 @@ We just take $\alpha\defeq\lloop$. Then we have $\mathsf{tr}_{\mathcal{E}}(\alph
 \end{proof}
 
 \section{Contractibility of total spaces}
-In this section we provide some general lemmas that will help to prove that
-the a total space is contractible in the case that the base space is a (higher) inductive type.
+Consider a type $X$, a family $P$ over $X$, and a term $c:\sm{x:X}P(x)$, and suppose our goal is to construct a contraction
+\begin{equation*}
+  \prd{t:\sm{x:X}P(x)}c=t.
+\end{equation*}
+Of course, the first step is to apply the induction principle of $\Sigma$-types, so it suffices to construct a term of type
+\begin{equation*}
+\prd{x:X}{y:P(x)} c = (x,y).
+\end{equation*}
+In the case where $P$ is the fundamental cover of the circle, we are given an equivalence $e:\eqv{\Z}{\mathcal{E}(\base)}$. Using this equivalence, we obtain an equivalence
+\begin{equation*}
+  \Big(\prd{y:\mathcal{E}(y)}c=(\mathsf{base},y)\Big)\to \Big(\prd{k:\Z}c=(\mathsf{base},k_{\mathcal{E}})\Big).
+\end{equation*}
+More generally, if we are given an equivalence $e:\eqv{F}{P(x)}$ for some $x:X$, then we have an equivalence
+\begin{equation}
+\Big(\prd{y:P(x)}c=(x,y)\Big) \to \Big(\prd{y:F}c=(x,e(y))\Big)
+\end{equation}
+by precomposing with the equivalence $e$. Therefore we can construct a term of type $\prd{y:P(x)}c=(x,y)$ by constructing a term of type $\prd{y:F}c=(x,e(y))$. 
+
+Furthermore, if we consider a path $p:x=x'$ in $X$ and a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      F \arrow[r,"e"] \arrow[d,swap,"f"] & P(x) \arrow[d,"\mathsf{tr}_P(p)"] \\
+      F' \arrow[r,"{e'}"] & P(x')
+    \end{tikzcd}
+  \end{equation*}
+  where $e$, $e'$, and $f$ are all equivalences, then we obtain a function
+  \begin{equation*}
+    \psi : \Big(\prd{y:F}c=(x,e(y))\Big)\to \Big(\prd{y':F'}c=(x,e'(y'))\Big).
+  \end{equation*}
+  The function $\psi$ is constructed as follows. Given $h:\prd{y:F}c=(x,e(y))$ and $y':F'$ we have the path $h(f^{-1}(y')):c=(x,e(f^{-1}(y')))$. Moreover, writing $G$ for the homotopy $f\circ f^{-1} \htpy\idfunc$, we have the path
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      {\mathsf{tr}_P(p,e(f^{-1}(y')))} \arrow[r,equals,"{H(f^{-1}(y'))}"] &
+      {e'(f(f^{-1}(y')))} \arrow[r,equals,"\ap{e'}{G(y')}"] &
+      {e'(y')}.
+    \end{tikzcd}
+  \end{equation*}
+  From this concatenated path we obtain the path
+  \begin{equation*}
+    \begin{tikzcd}[column sep=14em]
+      {(x,e(f^{-1}(y')))} \arrow[r,equals,"{\mathsf{eq\usc{}pair}(p,\ct{H(f^{-1}(y'))}{\ap{e'}{G(y')}})}"] & {(x',e'(y'))}.
+    \end{tikzcd}
+  \end{equation*}
+  Now we define the function $\psi$ by
+  \begin{equation*}
+    h\mapsto \lam{y'}\ct{h(f^{-1}(y'))}{\mathsf{eq\usc{}pair}(p,\ct{H(f^{-1}(y'))}{\ap{e'}{G(y')}})}.
+  \end{equation*}
+  Note that $\psi$ is an equivalence, since it is given as precomposition by the equivalence $f^{-1}$, followed by postcomposition by concatenation, which is also an equivalence. Now we state the main technical result of this section, which will help us prove the contractibility of the total space of the fundamental cover of the circle by computing transport in the family $x\mapsto \prd{y:P(x)}c=(x,y)$.
+
+  \begin{defn}
+    Consider a path $p:x=x'$ in $X$ and a commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        F \arrow[r,"e"] \arrow[d,swap,"f"] & P(x) \arrow[d,"\mathsf{tr}_P(p)"] \\
+        F' \arrow[r,"{e'}"] & P(x')
+      \end{tikzcd}
+    \end{equation*}
+    with $H:e'\circ f ~ \mathsf{tr}_P(p)\circ e$, where $e$, $e'$, and $f$ are all equivalences. Then there is for any $y:F$ an identification
+    \begin{equation*}
+      \mathsf{segment\usc{}tot}(y):(x,e(y))=(x',e'(f(y)))
+    \end{equation*}
+    defined as $\mathsf{segment\usc{}tot}(y)\defeq\mathsf{eq\usc{}pair}(p,H(y)^{-1})$.
+  \end{defn}
+
+  \begin{lem}\label{lem:compute-tr-contraction}
+    Consider a path $p:x=x'$ in $X$ and a commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        F \arrow[r,"e"] \arrow[d,swap,"f"] & P(x) \arrow[d,"\mathsf{tr}_P(p)"] \\
+        F' \arrow[r,"{e'}"] & P(x')
+      \end{tikzcd}
+    \end{equation*}
+    with $H:e'\circ f ~ \mathsf{tr}_P(p)\circ e$, where $e$, $e'$, and $f$ are all equivalences. Furthermore, let
+    \begin{align*}
+      h & : \prd{y:F}c=(x,e(y)) \\
+      h' & : \prd{y':F'}c(x',e'(y')).
+    \end{align*}
+    Then there is an equivalence
+    \begin{equation*}
+      (\mathsf{tr}_C(p,\varphi(h))= \varphi'(h')) \simeq \Big(\prd{y:F} h'(f(y))=\ct{h(y)}{\mathsf{segment\usc{}tot}(y)}\Big).
+    \end{equation*}
+  \end{lem}
+
+  \begin{proof}
+    Note that the type $\psi(h)\htpy h'$ is equivalent to the type $\psi(h)=h'$, which is an identity type with a free endpoint. Therefore it suffices to show that the total space
+    \begin{equation*}
+      \sm{h':\prd{y':F'}c=(x',e'(y'))}\mathsf{tr}_C(p,\varphi(h))= \varphi'(h')
+    \end{equation*}
+    is contractible. Note that this type is eqivalent to the fiber at $h'$ of the composite function $\varphi'^{-1}\circ \mathsf{tr}_C(p) \circ \varphi$. This fiber is contractible because $\varphi$, $\mathsf{tr}_C(p)$, and $\varphi'$ are all three equivalences.
+  \end{proof}
+  
+  Applying these observations to the fundamental cover of the circle, we obtain the following lemma that we will use to prove that the total space of $\mathcal{E}$ is contractible.
+  
+  \begin{cor}\label{cor:construct-contraction-fundamental-cover}
+    In order to show that the total space of $\mathcal{E}$ is contractible, it suffices to construct a function
+    \begin{equation*}
+      h : \prd{k:\Z}(\base,0_{\mathcal{E}})=(\base,k_{\mathcal{E}})
+    \end{equation*}
+    equipped with a homotopy
+    \begin{equation*}
+      H : \prd{k:\Z}h(\mathsf{succ}(k)_{\mathcal{E}})=\ct{h(k)}{\mathsf{segment\usc{}helix}(k)}.
+    \end{equation*}
+  \end{cor}
+
+  In the next section we establish the dependent universal property of the integers, which we will use with \cref{cor:construct-contraction-fundamental-cover} to show that the total space of the fundamental cover is contractible.
+  
 
 \section{The dependent universal property of the integers}
 \begin{lem}\label{lem:elim-Z}
@@ -475,7 +579,7 @@ for any $p:x=x$. This induces the \define{degree $k$ map} on the circle
 \begin{equation*}
 \mathsf{deg}(k) : \sphere{1}\to\sphere{1},
 \end{equation*}
-for any $k:\mathbb{Z}$.
+for any $k:\mathbb{Z}$, see \cref{ex:degk}.
 \end{eg}
 
 In the following theorem we show that the dependent function constructed in \cref{lem:elim-Z} is unique.
@@ -497,7 +601,7 @@ In the following theorem we show that the dependent function constructed in \cre
   Therefore it suffices to show that any two terms of this type can be identified.
   Note that the type $(f,p,H)=(f',p',H')$ is equivalent to the type
   \begin{equation*}
-    \sm{K:f~f'} (K(0)= \ct{p}{(p')^{-1}})\times \prd{k:\Z}K(\mathsf{succ}(k))=\ct{(\ct{H(k)}{\ap{e_k}{K(k)}})}{H'(k)^{-1}}. 
+    \sm{K:f\htpy f'} (K(0)= \ct{p}{(p')^{-1}})\times \prd{k:\Z}K(\mathsf{succ}(k))=\ct{(\ct{H(k)}{\ap{e_k}{K(k)}})}{H'(k)^{-1}}. 
   \end{equation*}
   We obtain a term of this type by applying \cref{lem:elim-Z} to the family $C$ over $\Z$ given by $C(k)\defeq f(k)=f'(k)$, which comes equipped with a base point
   \begin{equation*}
@@ -523,12 +627,28 @@ One way of phrasing the following corollary, is that $\Z$ is the `initial type e
 
 \section{The identity type of the circle}
 
-Our goal in this section is to show that the total space of the fundamental cover is contractible.
-
 \begin{thm}\label{thm:circle_fundamental}
-The total space $\sm{t:\sphere{1}}\mathcal{E}(t)$ of the fundamental cover of $\sphere{1}$ is contractible.
+The total space $\sm{t:\sphere{1}}\mathcal{E}(t)$ of the fundamental cover of $\sphere{1}$ is contractible.\index{circle!fundamental cover!total space is contractible}
 \end{thm}
 
+\begin{proof}
+  By \cref{cor:construct-contraction-fundamental-cover} it suffices to construct
+  a function
+  \begin{equation*}
+    h : \prd{k:\Z}(\base,0_{\mathcal{E}})=(\base,k_{\mathcal{E}})
+  \end{equation*}
+  equipped with a homotopy
+  \begin{equation*}
+    H : \prd{k:\Z}h(\mathsf{succ}(k)_{\mathcal{E}})=\ct{h(k)}{\mathsf{segment\usc{}helix}(k)}.
+  \end{equation*}
+  We obtain $h$ and $H$ by the elimination principle of \cref{lem:elim-Z}. Indeed, the family $P$ over the integers given by $P(k)\defeq (\base,0_{\mathcal{E}})=(\base,k_{\mathcal{E}})$ comes equipped with a term $\refl{(\base,0_{\mathcal{E}})}:P(0)$, and a family of equivalences
+  \begin{equation*}
+    \prd{k:\Z}P(k) \simeq P(\mathsf{succ}(k))
+  \end{equation*}
+  given by $k,p\mapsto \ct{p}{\mathsf{segment\usc{}helix}(k)}$. 
+\end{proof}
+
+\begin{comment}
 \begin{proof}
 We show that the total space satisfies singleton induction (i.e.~we apply \cref{thm:contractible}). Let $P$ be a family over the total space of the fundamental cover, and let $p_0:P(\base,0_{\mathcal{E}})$. Our goal is to construct a term of type
 \begin{equation*}
@@ -560,25 +680,32 @@ Therefore the following computation completes the proof:
 & = f(k_{\mathcal{E}}).\qedhere
 \end{align*}
 \end{proof}
+\end{comment}
 
-\begin{cor}\label{cor:circle_loopspace}
-We have a fiber sequence
-\begin{equation*}
-\Z \hookrightarrow \unit \twoheadrightarrow \sphere{1}.
-\end{equation*}
-In other words: the loop space $\loopspace{\sphere{1}}$ of the circle is equivalent to $\Z$.\index{identity type!of the circle}
+\begin{cor}
+  The family of maps
+  \begin{equation*}
+    \prd{t:\sphere{1}} (\base=t)\to \mathcal{E}(t)
+  \end{equation*}
+  sending $\refl{\base}$ to $0_{\mathcal{E}}$ is a family of equivalences. In particular, the loop space of the circle is equivalent to $\Z$.
 \end{cor}
 
 \begin{proof}
-This follows from \cref{thm:circle_fundamental} by an application of \cref{thm:id_fundamental}.
+  This is a direct corollary of \cref{thm:circle_fundamental,thm:id_fundamental}. 
 \end{proof}
 
 \begin{cor}
-The circle is a $1$-type and it is not a $0$-type.\index{circle!is a 1-type@{is a $1$-type}|textit}
+  The circle is a $1$-type and not a $0$-type.\index{circle!is a 1-type@{is a $1$-type}|textit}
 \end{cor}
 
+\begin{proof}
+  To see that the circle is a $1$-type we have to show that $s=t$ is a $0$-type for every $s,t:\sphere{1}$. By \cref{ex:circle-connected} it suffices to show that the loop space of the circle is a $0$-type. This is indeed the case, because $\Z$ is a $0$-type, and we have an equivalence $(\base=\base)\simeq \Z$.
+
+  Furthermore, since $\Z$ is a $0$-type and not a $(-1)$-type, it follows that the circle is a $1$-type and not a $0$-type.
+\end{proof}
+
 \begin{exercises}
-\item Use the fundamental cover of the circle to show that
+\item \label{ex:degk}Use the fundamental cover of the circle to show that
 \begin{equation*}
 \neg\Big(\prd{t:\sphere{1}}\base=t\Big).
 \end{equation*}
@@ -620,9 +747,9 @@ commutes.
 \item Use \cref{ex:circle_connected} to show that $\eqv{(\idfunc[\sphere{1}]\htpy\idfunc[\sphere{1}])}{\Z}$.
 \item Use \cref{ex:idfunc_autohtpy} to show that
 \begin{equation*}
-\eqv{\mathsf{is\usc{}invertible}(\idfunc[\sphere{1}])}{\Z},
+\eqv{\mathsf{has\usc{}inverse}(\idfunc[\sphere{1}])}{\Z},
 \end{equation*}
-and conclude that ${\mathsf{is\usc{}invertible}}(\idfunc[\sphere{1}])\not\simeq{\isequiv(\idfunc[\sphere{1}])}$. 
+and conclude that ${\mathsf{has\usc{}inverse}}(\idfunc[\sphere{1}])\not\simeq{\isequiv(\idfunc[\sphere{1}])}$. 
 \end{subexenum}
 \item Consider a map $i:A \to \sphere{1}$, and assume that $i$ has a retraction. Construct a term of type
   \begin{equation*}
