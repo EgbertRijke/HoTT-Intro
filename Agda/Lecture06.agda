@@ -308,6 +308,11 @@ is-contr-is-equiv B f is-equiv-f is-contr-B =
       ( is-equiv-f)
       ( is-equiv-const-is-contr is-contr-B))
 
+is-contr-equiv :
+  {i j : Level} {A : UU i} (B : UU j) (e : A ≃ B) → is-contr B → is-contr A
+is-contr-equiv B (dpair e is-equiv-e) is-contr-B =
+  is-contr-is-equiv B e is-equiv-e is-contr-B
+
 is-contr-is-equiv' :
   {i j : Level} (A : UU i) {B : UU j} (f : A → B) →
   is-equiv f → is-contr A → is-contr B
@@ -317,18 +322,20 @@ is-contr-is-equiv' A f is-equiv-f is-contr-A =
     ( is-equiv-inv-is-equiv is-equiv-f)
     ( is-contr-A)
 
+is-contr-equiv' :
+  {i j : Level} (A : UU i) {B : UU j} (e : A ≃ B) → is-contr A → is-contr B
+is-contr-equiv' A (dpair e is-equiv-e) is-contr-A =
+  is-contr-is-equiv' A e is-equiv-e is-contr-A
+
 is-equiv-is-contr :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
   is-contr A → is-contr B → is-equiv f
 is-equiv-is-contr {i} {j} {A} {B} f is-contr-A is-contr-B =
-  pair
-    ( dpair
-      ( const B A (center is-contr-A))
-      ( sing-ind-is-contr B is-contr-B _
-        ( inv (contraction is-contr-B (f (center is-contr-A))))))
-    ( dpair
-      ( const B A (center is-contr-A))
-      ( contraction is-contr-A)) 
+  is-equiv-has-inverse'
+    ( const B A (center is-contr-A))
+    ( sing-ind-is-contr B is-contr-B _
+      ( inv (contraction is-contr-B (f (center is-contr-A)))))
+    ( contraction is-contr-A)
 
 -- Exercise 6.4
 
@@ -464,19 +471,17 @@ is-contr-right-factor-prod :
   {i j : Level} (A : UU i) (B : UU j) → is-contr (A × B) → is-contr B
 is-contr-right-factor-prod A B is-contr-AB =
   is-contr-left-factor-prod B A
-    ( is-contr-is-equiv
+    ( is-contr-equiv
       ( A × B)
-      ( swap-prod B A)
-      ( is-equiv-swap-prod B A)
+      ( equiv-swap-prod B A)
       ( is-contr-AB))
 
 is-contr-prod :
   {i j : Level} {A : UU i} {B : UU j} →
   is-contr A → is-contr B → is-contr (A × B)
 is-contr-prod {A = A} {B = B} is-contr-A is-contr-B =
-  is-contr-is-equiv' B
-    ( left-unit-law-Σ-map (λ x → B) is-contr-A)
-    ( is-equiv-left-unit-law-Σ-map (λ x → B) is-contr-A)
+  is-contr-equiv' B
+    ( left-unit-law-Σ (λ x → B) is-contr-A)
     ( is-contr-B)
 
 -- Exercise 6.8

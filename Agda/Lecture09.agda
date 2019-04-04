@@ -361,6 +361,14 @@ is-equiv-precomp-Π-is-equiv f is-equiv-f =
     ( is-half-adjoint-equivalence-is-path-split f
       ( is-path-split-is-equiv f is-equiv-f))
 
+precomp-Π-equiv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  (C : B → UU l3) → ((b : B) → C b) ≃ ((a : A) → C (map-equiv e a))
+precomp-Π-equiv e C =
+  dpair
+    ( precomp-Π (map-equiv e) C)
+    ( is-equiv-precomp-Π-is-equiv (map-equiv e) (is-equiv-map-equiv e) C)
+
 ind-is-equiv :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   (C : B → UU l3) (f : A → B) (is-equiv-f : is-equiv f) →

@@ -1,14 +1,16 @@
 \chapter{Dependent type theory}
 \label{ch:dtt}
 
+In this lecture we describe the deductive system of dependent type theory, without introducing yet any ways of actually forming types. In other words, we just give the rules of type dependency.
+
 \section{The primitive judgments of type theory}
 
 The theory of type dependency is formulated as a deductive system in which derivations establish that a given construction is well-formed. In any dependent type theory there are four \define{primitive judgments}\index{primitive judgment}:
 \begin{enumerate}
 %\item `\emph{$\Gamma$ is a well-formed context.}'
-\item `\emph{$A$ is a well-formed \define{type}\index{well-formed type}\index{type} in context $\Gamma$.}'\index{primitive judgment!type in context}
+\item `\emph{$A$ is a (well-formed) \define{type}\index{well-formed type}\index{type} in context $\Gamma$.}'\index{primitive judgment!type in context}
 \item `\emph{$A$ and $B$ are \define{judgmentally equal types} in context $\Gamma$.}'\index{primitive judgment!equal types in context}\index{judgmental equality!of types}
-\item `\emph{$a$ is a well-formed \define{term}\index{well-formed term}\index{term} of type $A$ in context $\Gamma$.}'\index{primitive judgment!term of a type in context}
+\item `\emph{$a$ is a (well-formed) \define{term}\index{well-formed term}\index{term} of type $A$ in context $\Gamma$.}'\index{primitive judgment!term of a type in context}
 \item `\emph{$a$ and $b$ are \define{judgmentally equal terms} of type $A$ in context $\Gamma$.}'\index{primitive judgment!equal terms of a type in context}\index{judgmental equality!of terms}
 \end{enumerate}
 \begin{samepage}
@@ -19,7 +21,9 @@ The symbolic expressions for these four primitive judgments are as follows:
 \Gamma & \vdash a:A & \Gamma & \vdash a\jdeq b:A.
 \end{align*}
 \end{samepage}
-A \define{context}\index{context|textbf} is an expression of the form
+In these judgments, well-formedness of a type $A$ in context $\Gamma$ just means that the type $A$ has been formed in accordance with the rules of type theory, which we are about to describe.
+
+A well-formed \define{context}\index{context|textbf} is an expression of the form
 \begin{equation*}
 x_1:A_1,~x_2:A_2(x_1),~\ldots,~x_n:A_n(x_1,\ldots,x_{n-1}),
 \end{equation*}
@@ -28,8 +32,9 @@ satisfying the condition that for each $1\leq k\leq n$ we have that $A_k$ is a w
 \begin{equation*}
 x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1} \vdash A_k~\textrm{type}.
 \end{equation*}
-We say that a context $x_1:A_1,~\ldots,~x_n:A_n$ \define{declares the variables}\index{variable declaration} $x_1,\ldots,x_n$. 
-We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.} 
+We say that a context $x_1:A_1,~\ldots,~x_n:A_n$ \define{declares the variables}\index{variable declaration} $x_1,\ldots,x_n$. In other words, a type $A(x_1,\ldots,x_n)$ in context $\Gamma$ is well-formed if all its variables $x_1,\ldots,x_n$ are assigned well-formed types in the context $\Gamma$.
+
+We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.} For example, we will often use the variable names $x$, $y$, and $z$ when they are assigned a general type, variables $f$, $g$, and $h$ for function types, and so on.
 %For example we used the variable names $A,\mu,u_l,p,u_r,q$ when we displayed the context of \autoref{lem:unit}.
 
 In the special case where $n=0$, the list $x_1:A_1,x_2:A_2,\ldots,x_n:A_n$ is empty, which satisfies the well-formedness condition vacuously. In other words, the \define{empty context}\index{context!empty context|textbf}\index{empty context|textbf} is well-formed. A well-formed type in the empty context is also called a \define{closed type}\index{closed type|textbf}, and a well-formed term of a closed type is called a \define{closed term}\index{closed term|textbf}.
@@ -38,7 +43,7 @@ When $B$ is a type in context $\Gamma,x:A$, we also say that $B$ is a \define{fa
 
 \section{Renaming variables}
 In some situations one might want to change the name of a variable in a context. This is allowed, provided that the new variable does not occur anywhere else in the context, so that also after renaming no variable is declared more than once. 
-The inference rules that rename a variable are sometimes called $\alpha$-conversion\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}}\index{rule!alpha conversion@{$\alpha$-conversion}} rules. 
+The inference rules that rename a variable are sometimes called \define{$\alpha$-conversion}\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}}\index{rule!alpha conversion@{$\alpha$-conversion}} rules. 
 
 If we are given a type $A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[x'/x]$ in context $\Gamma,x':A,\Delta[x'/x]$, where $B[x'/x]$ is an abbreviation for
 \begin{equation*}
@@ -119,7 +124,7 @@ Informally, these are rules stating that if $A$ and $A'$ are judgmentally equal 
 \RightLabel{$A'/A$}
 \BinaryInfC{$\Gamma,x:A',\Delta\vdash \mathcal{J}$}
 \end{prooftree}
-An analogous \emph{term conversion rule}\index{term conversion rule}\index{conversion rule!term}\index{rule!term conversion} stated in \cref{ex:term_conversion}, converting the type of a term to a judgmentally equal type, is derivable.
+An analogous \emph{term conversion rule}\index{term conversion rule}\index{conversion rule!term}\index{rule!term conversion}, stated in \cref{ex:term_conversion}, converting the type of a term to a judgmentally equal type, is derivable using the `structural rules' of type theory described in the next section.
 
 
 \section{Structural rules of type theory}
@@ -133,7 +138,16 @@ We complete the specification of dependent type theory by postulating rules for 
 \RightLabel{$W_A$}
 \BinaryInfC{$\Gamma,x:A,\Delta \vdash \mathcal{J}$}
 \end{prooftree}
-This process of expanding the context by a fresh variable of type $A$ is called \define{weakening (by $A$)}. The type family $W_A(B)$ over $A$ is also called the \define{constant family}\index{family!constant family}\index{constant family} $B$, or the \define{trivial family}\index{family!trivial family}\index{trivial family} $B$.
+This process of expanding the context by a fresh variable of type $A$ is called \define{weakening (by $A$)}.
+
+For example, when we have two types $A$ and $B$ in context $\Gamma$, we can weaken $B$ by $A$ as follows
+\begin{prooftree}
+  \AxiomC{$\Gamma\vdash A~\textrm{type}$}
+  \AxiomC{$\Gamma\vdash B~\textrm{type}$}
+  \RightLabel{$W_A$}
+  \BinaryInfC{$\Gamma,x:A\vdash B~\mathrm{type}$}
+\end{prooftree}
+in order to form the type $B$ in context $\Gamma,x:A$. The type $B$ in context $\Gamma,x:A$ is also called the \define{constant family}\index{family!constant family}\index{constant family} $B$, or the \define{trivial family}\index{family!trivial family}\index{trivial family} $B$.
 \item If we are given a type $A$ in context $\Gamma$, then $x$ is a well-formed term of type $A$ in context $\Gamma,x:A$.
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}

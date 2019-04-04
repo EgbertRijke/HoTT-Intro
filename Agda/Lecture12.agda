@@ -232,12 +232,62 @@ contraction-total-space' c x {F} e =
 
 segment-Σ :
   { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} →
-  { x x' : A} (p : Id x x') → {F : UU l3} {F' : UU l4} (f : F ≃ F')
-  ( e : F ≃ B x) (e' : F' ≃ B x')
+  { x x' : A} (p : Id x x')
+  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
   ( H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) (y : F) →
   Id (dpair x (map-equiv e y)) (dpair x' (map-equiv e' (map-equiv f y)))
 segment-Σ p f e e' H y =
   eq-pair (dpair p (inv (H y)))
+
+pathover-contraction-total-space :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  {x x' : A} (p : Id x x') →
+  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
+  (H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) →
+  (h : (y : F) → Id c (dpair x (map-equiv e y))) →
+  (h' : (y' : F') → Id c (dpair x' (map-equiv e' y'))) →
+  UU _
+pathover-contraction-total-space c {x} {x'} p f e e' H h h' =
+  Id ( tr
+       ( contraction-total-space c)
+       ( p)
+       ( inv-map-equiv (precomp-Π-equiv e (λ y → Id c (dpair x y))) h))
+     ( inv-map-equiv (precomp-Π-equiv e' (λ y' → Id c (dpair x' y'))) h')
+
+is-contr-total-pathover-contraction-total-space :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  {x x' : A} (p : Id x x') →
+  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
+  (H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) →
+  (h : (y : F) → Id c (dpair x (map-equiv e y))) →
+  is-contr
+    ( Σ ( (y' : F') → Id c (dpair x' (map-equiv e' y')))
+        ( pathover-contraction-total-space c p f e e' H h))
+is-contr-total-pathover-contraction-total-space
+  c {x} {x'} p {F} {F'} f e e' H h =
+  is-contr-equiv
+    ( Σ ( (y' : F') → Id c (dpair x' (map-equiv e' y')))
+        ( Id
+          ( map-equiv (precomp-Π-equiv e' (λ y' → Id c (dpair x' y')))
+            ( tr (contraction-total-space c) p
+              ( inv-map-equiv
+                ( precomp-Π-equiv e (λ y → Id c (dpair x y)))
+                ( h))))))
+    {!!}
+    {!!}
+
+pathover-contraction-total-space' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  {x x' : A} (p : Id x x') →
+  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
+  (H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) →
+  (h : (y : F) → Id c (dpair x (map-equiv e y))) →
+  (h' : (y' : F') → Id c (dpair x' (map-equiv e' y'))) →
+  UU _
+pathover-contraction-total-space' c {x} {x'} p f e e' H h h' =
+  ( precomp-Π (map-equiv f) (λ y' → Id c (dpair x' (map-equiv e' y'))) h') ~
+  ( postcomp-Π
+    ( λ y → concat' (dpair x (map-equiv e y)) (segment-Σ p f e e' H y)) h)
 
 {-
 COMPUTE-tr-contraction-total-space :

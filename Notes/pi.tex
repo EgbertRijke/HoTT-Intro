@@ -389,9 +389,11 @@ that swaps the order of the arguments.
 \begin{subexenum}
 \item Define the \define{multiplication}\index{multiplication!on N@{on $\N$}}\index{function!multiplication on N@{multiplication on $\N$}} operation $\mathsf{mul}:\N\to(\N\to\N)$.
 \item Define the \define{power}\index{power function on N@{power function on $\N$}}\index{function!power function on N@{power function on $\N$}} operation $n,m\mapsto m^n$ of type $\N\to (\N\to \N)$.
-\item Define the \define{factorial}\index{factorial function}\index{function!factorial function} function $n\mapsto n!$. 
+\item Define the \define{factorial}\index{factorial function}\index{function!factorial function} function $n\mapsto n!$.
+\item Define the binomial coefficient $\binom{n}{k}$ for any $n,k:\N$, making sure that $\binom{n}{k}\jdeq 0$ when $n<k$.
 \end{subexenum}
 \item Define the binary $\min$ and $\max$ functions $\mathsf{min},\mathsf{max}:\N\to(\N\to\N)$.\index{minimum function}\index{maximum function}\index{function!min}\index{function!max}
+\begin{comment}
 \item Construct a function
 \begin{equation*}
 \indN:P(\zeroN)\to \Big(\Big(\prd{n:\nat}P(n)\to P(\succN(n))\Big)\to \prd{n:\nat}P(n)\Big),
@@ -402,4 +404,5 @@ in context $\Gamma$, for every type $P$ in context $\Gamma,n:\N$, and show that 
 \indN(p_0,p_S,\succN(n)) & \jdeq p_S(n,\ind{\nat}(p_0,p_S,n))
 \end{align*}
 hold. \emph{Note: this is more an exercise in type theoretical bookkeeping than an exercise about the natural numbers.}
+\end{comment}
 \end{exercises}

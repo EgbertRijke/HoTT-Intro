@@ -70,6 +70,13 @@ factorial : ℕ → ℕ
 factorial zero-ℕ = one-ℕ
 factorial (succ-ℕ m) = (succ-ℕ m) ** (factorial m)
 
+-- Exercise 2.5(d)
+_choose_ : ℕ → ℕ → ℕ
+zero-ℕ choose zero-ℕ = one-ℕ
+zero-ℕ choose succ-ℕ k = zero-ℕ
+(succ-ℕ n) choose zero-ℕ = one-ℕ
+(succ-ℕ n) choose (succ-ℕ k) = add-ℕ (n choose k) (n choose (succ-ℕ k))
+
 -- Exercise 2.6
 max-ℕ : ℕ → (ℕ → ℕ)
 max-ℕ zero-ℕ n = n

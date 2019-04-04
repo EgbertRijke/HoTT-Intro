@@ -26,6 +26,7 @@ _∙_ :
   {i : Level} {A : UU i} {x y z : A} → Id x y → Id y z → Id x z
 _∙_ {y = y} = concat y
 
+{- This goes in the wrong direction! -}
 assoc :
   {i : Level} {A : UU i} {x y z w : A} (p : Id x y) (q : Id y z)
   (r : Id z w) → Id (p ∙ (q ∙ r)) ((p ∙ q) ∙ r)
@@ -87,6 +88,16 @@ apd :
   (p : Id x y) → Id (tr B p (f x)) (f y)
 apd f refl = refl
 
+path-over :
+  {i j : Level} {A :  UU i} (B : A → UU j) {x x' : A} (p : Id x x') →
+  B x → B x' → UU j
+path-over B p y y' = Id (tr B p y) y'
+
+reflexive-path-over :
+  {i j : Level} {A : UU i} (B : A → UU j) (x : A) (y : B x) →
+  path-over B refl y y
+reflexive-path-over B x y = refl
+
 -- Exercises
 
 -- Exercise 4.1
@@ -144,6 +155,19 @@ lift :
 lift refl b = refl
 
 -- Exercise 4.7
+pentagon :
+  {i : Level} {A : UU i} {a b c d e : A}
+  (p : Id a b) (q : Id b c) (r : Id c d) (s : Id d e) →
+  let α₁ = inv (ap (λ t → t ∙ s) (assoc p q r))
+      α₂ = inv (assoc p (q ∙ r) s)
+      α₃ = inv (ap (λ t → p ∙ t) (assoc q r s))
+      α₄ = inv (assoc (p ∙ q) r s)
+      α₅ = inv (assoc p q (r ∙ s))
+  in
+  Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
+pentagon refl refl refl refl = refl
+
+-- Exercise 4.8
 associative-add-ℕ :
   (x y z : ℕ) → Id (add-ℕ (add-ℕ x y) z) (add-ℕ x (add-ℕ y z))
 associative-add-ℕ zero-ℕ y z = refl 
@@ -256,3 +280,22 @@ associative-mul-ℕ (succ-ℕ x) y z =
   concat _
     ( right-distributive-mul-add-ℕ (mul-ℕ x y) y z)
     ( ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))
+
+-- Exercise 4.9
+
+two-ℕ : ℕ
+two-ℕ = succ-ℕ one-ℕ
+
+is-even-ℕ : ℕ → UU lzero
+is-even-ℕ n = Σ ℕ (λ m → Id (mul-ℕ two-ℕ m) n)
+
+div-ℕ : ℕ → ℕ → UU lzero
+div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
+
+is-prime : ℕ → UU lzero
+is-prime n = (one-ℕ < n) × ((m : ℕ) → (one-ℕ < m) → (div-ℕ m n) → Id m n)
+
+Goldbach-conjecture : UU lzero
+Goldbach-conjecture =
+  ( n : ℕ) → (two-ℕ < n) → (is-even-ℕ n) →
+    Σ ℕ (λ p → (is-prime p) × (Σ ℕ (λ q → (is-prime q) × Id (add-ℕ p q) n)))
