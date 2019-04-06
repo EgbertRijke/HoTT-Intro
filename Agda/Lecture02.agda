@@ -5,15 +5,15 @@ module Lecture02 where
 import Preamble
 open Preamble public
 
--- Definition 2.2.3 define identity, and show lambda-abstraction in so doing
+-- Definition 2.2.3
 id : {i : Level} {A : UU i} → A → A
-id = λ a → a -- can also use plain backslash \ instead of lambda (as it resembles lambda?)
+id a = a 
 
 -- Definition 2.2.4
-comp : {i j k : Level} {A : UU i} {B : UU j} {C : UU k} → (B → C) → ((A → B) → (A → C))
-comp = λ g f a → g(f(a)) -- the lambda extends to cover g, f and a
-_∘_ : {i j k : Level} {A : UU i} {B : UU j} {C : UU k} → (B → C) → ((A → B) → (A → C))
-g ∘ f = comp g f
+_∘_ :
+  {i j k : Level} {A : UU i} {B : UU j} {C : UU k} →
+  (B → C) → ((A → B) → (A → C))
+(g ∘ f) a = g (f a)
 
 data ℕ : UU lzero where
   zero-ℕ : ℕ
@@ -36,55 +36,61 @@ add-ℕ : ℕ → ℕ → ℕ
 add-ℕ zero-ℕ y = y
 add-ℕ (succ-ℕ x) y = succ-ℕ (add-ℕ x y)
 
--- try some examples, hit C-c C-n (or whatever "compute normal form" is bound to)
--- and try entering "add (Nsucc Nzero) (Nsucc (Nsucc Nzero))"
--- you should get "Nsucc (Nsucc (Nsucc Nzero))"
-
-_+_ : ℕ → ℕ → ℕ
-n + m = add-ℕ n m
-
--- Exercise 2.3
+-- Exercise 2.2
 const : {i j : Level} (A : UU i) (B : UU j) (b : B) → A → B
 const A B b x = b
 
--- Exercise 2.4
-Pi-swap : {i j k : Level} {A : UU i} {B : UU j} {C : A → (B → UU k)} →
-  ((x : A) (y : B) → C x y) → ((y : B) (x : A) → C x y)
-Pi-swap f y x = f x y
+-- Exercise 2.3
 
--- Exercise 2.5(a)
+-- In this exercise we are asked to construct some standard functions on the
+-- natural numbers.
+
+-- Exercise 2.3(a)
+max-ℕ : ℕ → (ℕ → ℕ)
+max-ℕ zero-ℕ n = n
+max-ℕ (succ-ℕ m) zero-ℕ = succ-ℕ m
+max-ℕ (succ-ℕ m) (succ-ℕ n) = succ-ℕ (max-ℕ m n)
+
+min-ℕ : ℕ → (ℕ → ℕ)
+min-ℕ zero-ℕ n = zero-ℕ
+min-ℕ (succ-ℕ m) zero-ℕ = zero-ℕ
+min-ℕ (succ-ℕ m) (succ-ℕ n) = succ-ℕ (min-ℕ m n)
+
+-- Exercise 2.3(b)
 mul-ℕ : ℕ → (ℕ → ℕ)
 mul-ℕ zero-ℕ n = zero-ℕ
 mul-ℕ (succ-ℕ m) n = add-ℕ (mul-ℕ m n) n
 
-_**_ : ℕ → (ℕ → ℕ)
-m ** n = mul-ℕ m n
-
--- Exercise 2.5(b)
+-- Exercise 2.3(c)
 _^_ : ℕ → (ℕ → ℕ)
 m ^ zero-ℕ = one-ℕ
 m ^ (succ-ℕ n) = mul-ℕ m (m ^ n)
 
--- Exercise 2.5(c)
+-- Exercise 2.3(d)
 factorial : ℕ → ℕ
 factorial zero-ℕ = one-ℕ
-factorial (succ-ℕ m) = (succ-ℕ m) ** (factorial m)
+factorial (succ-ℕ m) = mul-ℕ (succ-ℕ m) (factorial m)
 
--- Exercise 2.5(d)
+-- Exercise 2.3(e)
 _choose_ : ℕ → ℕ → ℕ
 zero-ℕ choose zero-ℕ = one-ℕ
 zero-ℕ choose succ-ℕ k = zero-ℕ
 (succ-ℕ n) choose zero-ℕ = one-ℕ
 (succ-ℕ n) choose (succ-ℕ k) = add-ℕ (n choose k) (n choose (succ-ℕ k))
 
--- Exercise 2.6
-max-ℕ : ℕ → (ℕ → ℕ)
-max-ℕ zero-ℕ n = n
-max-ℕ (succ-ℕ m) zero-ℕ = succ-ℕ m
-max-ℕ (succ-ℕ m) (succ-ℕ n) = succ-ℕ (max-ℕ m n)
+-- Exercise 2.3(f)
+fibonacci : ℕ → ℕ
+fibonacci zero-ℕ = zero-ℕ
+fibonacci (succ-ℕ zero-ℕ) = one-ℕ
+fibonacci (succ-ℕ (succ-ℕ n)) = add-ℕ (fibonacci n) (fibonacci (succ-ℕ n))
 
--- Exercise 2.6
-min-ℕ : ℕ → (ℕ → ℕ)
-min-ℕ zero-ℕ n = zero-ℕ
-min-ℕ (succ-ℕ m) zero-ℕ = zero-ℕ
-min-ℕ (succ-ℕ m) (succ-ℕ n) = succ-ℕ (min-ℕ m n)
+-- Exercise 2.4
+_∘'_ :
+  {i j k : Level} {A : UU i} {B : A → UU j} {C : (x : A) → B x → UU k} →
+  (g : (x : A) → (y : B x) → C x y) (f : (x : A) → B x) → (x : A) → C x (f x)
+(g ∘' f) x = g x (f x)
+
+-- Exercise 2.5
+Pi-swap : {i j k : Level} {A : UU i} {B : UU j} {C : A → (B → UU k)} →
+  ((x : A) (y : B) → C x y) → ((y : B) (x : A) → C x y)
+Pi-swap f y x = f x y

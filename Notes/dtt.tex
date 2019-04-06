@@ -41,6 +41,12 @@ In the special case where $n=0$, the list $x_1:A_1,x_2:A_2,\ldots,x_n:A_n$ is em
 
 When $B$ is a type in context $\Gamma,x:A$, we also say that $B$ is a \define{family of types}\index{family!of types|textbf} over $A$ (in context $\Gamma$).
 
+\begin{rmk}
+  One difference between set theory and type theory is that every well-formed term is specified along with its type and with its context. One way of looking at this is that there are three sorts in type theory: contexts, types, and terms. On the other hand, there is only one sort in set theory: sets. Sets are governed by the elementhood relation: the formula $x\in y$ is a well-formed formula of set theory for any two sets $x$ and $y$. In particular, for a given set $x$, the formula $x\in y$ can be true for many sets $y$, which is very different to the situation in type theory, where every term is assigned a unique type.
+  
+  Another important difference between set theory and type theory is that set theory is formulated in the language of first order logic, whereas type theory is its own deductive system, not making use of any ambient logic. We will see in the present chapter and in the next few chapters what this deductive system looks like.
+\end{rmk}
+
 \section{Renaming variables}
 In some situations one might want to change the name of a variable in a context. This is allowed, provided that the new variable does not occur anywhere else in the context, so that also after renaming no variable is declared more than once. 
 The inference rules that rename a variable are sometimes called \define{$\alpha$-conversion}\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}}\index{rule!alpha conversion@{$\alpha$-conversion}} rules. 
@@ -240,7 +246,20 @@ To give an example of how the deductive system works, we give a deduction for th
 \BinaryInfC{$\Gamma,y:B,x:A,\Delta\vdash \mathcal{J}$}
 \end{prooftree}
 In other words, if we have two types $A$ and $B$ in context $\Gamma$, and we make a judgment in context $\Gamma,x:A,y:B$, then we can make that same judgment in context $\Gamma,y:B,x:A$.
-The derivation is as follows:
+
+The idea of the derivation is as follows: If we have a judgment
+\begin{equation*}
+  \Gamma,x:A,y:B,\Delta\vdash\mathcal{J},
+\end{equation*}
+then we can rename $y$ by $y'$ and weaken the judgment to obtain the judgment
+\begin{equation*}
+  \Gamma,y:B,x:A,y':B,\Delta[y'/y]\vdash\mathcal{J}[y'/y].
+\end{equation*}
+Now we can substitute $y$ for $y'$ to obtain the desired judgment
+\begin{equation*}
+  \Gamma,y:B,x:A,\Delta\vdash\mathcal{J}.
+\end{equation*}
+The formal derivation is as follows:
 \begin{small}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}

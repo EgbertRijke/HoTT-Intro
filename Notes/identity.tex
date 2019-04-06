@@ -1,4 +1,4 @@
-\chapter{Identity types}
+\chapter{Identity types}\label{chap:identity}
 From the perspective of types as proof-relevant propositions, how should we think of \emph{equality} in type theory? Given a type $A$, and two terms $x,y:A$, the equality $\id{x}{y}$ should again be a type. Indeed, we want to \emph{use} type theory to prove equalities. \emph{Dependent} type theory provides us with a convenient setting for this: the equality type $\id{x}{y}$ is dependent on $x,y:A$. 
 
 Then, if $\id{x}{y}$ is to be a type, how should we think of the terms of $\id{x}{y}$. A term $p:\id{x}{y}$ witnesses that $x$ and $y$ are equal terms of type $A$. In other words $p:\id{x}{y}$ is an \emph{identification} of $x$ and $y$. In a proof-relevant world, there might be many terms of type $\id{x}{y}$. I.e.~there might be many identifications of $x$ and $y$. And, since $\id{x}{y}$ is itself a type, we can form the type $\id{p}{q}$ for any two identifications $p,q:\id{x}{y}$. That is, since $\id{x}{y}$ is a type, we may also use the type theory to prove things \emph{about} identifications (for instance, that two given such identifications can themselves be identified), and we may use the type theory to perform constructions with them. As we will see shortly, we can give every type a groupoid-like structure.
@@ -394,7 +394,7 @@ where $\alpha_1$, $\alpha_2$, and $\alpha_3$ run counter-clockwise, and $\alpha_
 \ct{(\ct{\alpha_1}{\alpha_2})}{\alpha_3} = \ct{\alpha_4}{\alpha_5}.
 \end{equation*}
 \end{subexenum}
-\item Show that the operations of addition and multiplication on the natural numbers satisfy the following laws:
+\item \label{ex:semi-ring-laws-N}Show that the operations of addition and multiplication on the natural numbers satisfy the following laws:
 \begin{align*}
 m+(n+k) & =(m+n)+k & m\cdot (n\cdot k) & = (m\cdot n)\cdot k \\
 m+0 & = m & m\cdot 1 & = m \\
@@ -402,5 +402,9 @@ m+0 & = m & m\cdot 1 & = m \\
 m+n & = n+m & m\cdot n & = n\cdot m\\
 & & m\cdot (n+k) & = m\cdot n + m\cdot k.
 \end{align*}
-\item State Goldbach's conjecture in type theory.
+\item
+  \begin{subexenum}
+  \item State Goldbach's conjecture in type theory.
+  \item State the twin prime conjecture in type theory.
+  \end{subexenum}
 \end{exercises}

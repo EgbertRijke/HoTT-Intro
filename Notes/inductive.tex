@@ -1,8 +1,8 @@
-\chapter{Inductive types and the universe}
+\chapter{Inductive types}
 
 \emph{From this chapter on we will use a more informal style of reasoning. Keeping in mind that formal deductions can be given, we will reason in prose.}
 
-\section{Inductive types}
+\section{The idea of general inductive types}
 
 Many other types can also be specified as inductive types, similar to the natural numbers. The unit type, the empty type, and the booleans are the simplest examples of this way of defining types. Just like the type of natural numbers, other inductive types are also specified by their \emph{constructors}, an \emph{induction principle}, and their \emph{computation rules}: 
 \begin{enumerate}
@@ -13,26 +13,8 @@ Many other types can also be specified as inductive types, similar to the natura
 The induction principle and computation rules can be generated automatically once the constructors are specified, but it goes beyond the scope of our course to describe general inductive types.
 %For a more general treatment of inductive types, we refer to Chapter 5 of \cite{hottbook}.
 
-\begin{table}
-\caption{Many types can be defined as inductive types.}
-\begin{tabular}{llll}
-\toprule
-name & type & constructors \\
-\midrule
-\define{natural numbers} & $\N$ & $0:\N$ \\
-& & $S:\N\to \N$ & \\
-\define{empty type} & $\emptyt$ & {\color{black!20}(no constructors)}\\
-\define{unit type} & $\unit$ & $\ttt:\unit$ \\
-\define{booleans} & $\bool$ & $\bfalse:\bool$ \\
-& & $\btrue : \bool$ \\
-\define{coproduct} & $A+B$ & $\inl : A \to A+B$ \\
-& & $\inr : B\to A+B$ & \\
-\define{product} & $A\times B$ & $\pairr{\blank,\blank}:A\to (B\to A\times B)$ \\
-\define{$\Sigma$-type} & $\sm{x:A}B(x)$ & $\pairr{\blank,\blank}:\prd{y:A} \big(B(y)\to \sm{x:A}B(x)\big)$ \\
-\bottomrule
-\end{tabular}
-\end{table}
 
+\section{The unit type}
 A straightforward example of an inductive type is the \emph{unit type}, which has just one constructor. 
 Its induction principle is analogous to just the base case of induction on the natural numbers.
 
@@ -52,6 +34,7 @@ in context $\Gamma$ for which the computation rule\index{computation rules!of un
 holds. Sometimes we write $\lam{\ttt}p$ for $\indunit(p)$.
 \end{defn}
 
+\section{The empty type}
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
 
 \begin{defn}
@@ -67,6 +50,7 @@ Using the empty type we can also define \emph{negation}. The idea is that if $A$
 For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
 \end{defn}
 
+\section{The booleans}
 \begin{defn}
 We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with
 \begin{align*}
@@ -93,6 +77,7 @@ hold.
   In type theory we only have sentences of the form $\Gamma \vdash a : A$, asserting that in context $\Gamma$, $a$ is a term of type $A$. Type theory does not make use of an ambient first order logic. Instead, type theory is its own system of inference rules
 \end{rmk}
 
+\section{coproducts}
 \begin{defn}
 Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with
 \begin{align*}
@@ -115,6 +100,7 @@ The coproduct of two types is sometimes also called the \define{disjoint sum}.
 When one thinks of types as propositions, then the coproduct plays the role of the disjunction.\index{propositions as types!disjunction}
 To construct a term of type $A+B$ you first have to decide whether it is of the form $\inl$ or $\inr$, and then you construct a term of $A$ or $B$ accordingly. Of course, this is to be contrasted with the \emph{double negation translation}\index{double negation translation!disjunction} of the disjunction, which is read as `not neither $A$ nor $B$'. 
 
+\section{Dependent pair types}
 The \emph{dependent pair type}\index{dependent pair type|see {$\Sigma$-type}} (or $\Sigma$-type) can be thought of as a `type indexed' disjoint sum.
 However, this intuition for the dependent pair type can be counterproductive once we start to do homotopy theory in type theory.
 It is better to think of the $\Sigma$-type as the total space of a family of types depending continuously on a base type, just like one can have a family of spaces depending continuously on a base space (i.e.~a fibration).
@@ -170,6 +156,7 @@ By the computation rule we have
 
 When one thinks of types as propositions, then the $\Sigma$-type has the r\^{o}le of the existential quantification.
 
+\section{Cartesian products}
 A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e.~$B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product} $A\times B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its specification along with the induction principle for cartesian products.
 
 \begin{defn}
@@ -187,7 +174,115 @@ satisfying the computation rule\index{computation rules!of cartesian product} th
 \end{align*}
 \end{defn}
 
-The projection maps are defined similarly to the projection maps of $\Sigma$-types. When one thinks of types as propositions\index{propositions as types!conjunction}, then $A\times B$ is interpreted as the conjunction of $A$ and $B$. 
+The projection maps are defined similarly to the projection maps of $\Sigma$-types. When one thinks of types as propositions\index{propositions as types!conjunction}, then $A\times B$ is interpreted as the conjunction of $A$ and $B$.
+
+\section{The type of integers}
+
+\begin{defn}
+We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$, and we write
+\begin{align*}
+\mathsf{neg} & \defeq \inl & &  : \N \to \Z \\
+-1 & \defeq \mathsf{neg}(0) & & : \Z \\
+0 & \defeq \inr(\ttt) & & : \Z \\
+\mathsf{pos} & \defeq \inr\circ\inr & & : \N\to \Z \\
+1 & \defeq \mathsf{pos}(0) & & : \Z.
+\end{align*}
+\end{defn}
+
+In the following lemma we derive an alternative induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which makes it easier to make definitions.
+\begin{lem}
+\label{lem:Z_ind}
+For any $\Gamma,k:\Z\vdash P(k)~\mathrm{type}$ we have
+\begin{prooftree}
+\Axiom$\fCenter\Gamma\vdash p_{-1}:P(-1)$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{neg}(n))\to P(\mathsf{neg}(S(n)))$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_0: P(0)$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_{1}:P(1)$
+\noLine
+\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{pos}(n))\to P(\mathsf{pos}(S(n)))$
+\UnaryInf$\fCenter\Gamma\vdash\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S}):\prd{k:\Z}P(k)$
+\end{prooftree}
+The term $\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S})$ furthermore satisfies the following computation rules:
+\begin{align*}
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},-1) & \jdeq p_{-1} \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(S(n))) & \jdeq p_{-S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(n))) \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},0) & \jdeq p_0 \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},1) & \jdeq p_1 \\
+\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(S(n))) & \jdeq p_{S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(n))).
+\end{align*}
+\end{lem}
+
+As an application we define the successor function on the integers.
+
+\begin{defn}
+We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $S_\Z:\Z\to\Z$.
+\end{defn}
+
+\begin{constr}
+We apply the induction principle of \autoref{lem:Z_ind}, taking
+\begin{align*}
+S_\Z(-1) & \defeq 0 \\
+S_\Z(\mathsf{neg}(S(n))) & \defeq \mathsf{neg}(n) \\
+S_\Z(0) & \defeq 1 \\
+S_\Z(1) & \defeq \mathsf{pos}(S(1)) \\
+S_\Z(\mathsf{pos}(S(n))) & \defeq \mathsf{pos}(S(S(n))).
+\end{align*}
+\end{constr}
+
+\section{Overview of the inductive types}
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+name & type & constructors \\
+\midrule
+\define{natural numbers} & $\N$ & $0:\N$ \\
+& & $S:\N\to \N$ & \\
+\define{empty type} & $\emptyt$ & {\color{black!20}(no constructors)}\\
+\define{unit type} & $\unit$ & $\ttt:\unit$ \\
+\define{booleans} & $\bool$ & $\bfalse:\bool$ \\
+& & $\btrue : \bool$ \\
+\define{coproduct} & $A+B$ & $\inl : A \to A+B$ \\
+& & $\inr : B\to A+B$ & \\
+\define{product} & $A\times B$ & $\pairr{\blank,\blank}:A\to (B\to A\times B)$ \\
+\define{$\Sigma$-type} & $\sm{x:A}B(x)$ & $\pairr{\blank,\blank}:\prd{y:A} \big(B(y)\to \sm{x:A}B(x)\big)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{exercises}
+\item Let $A$ be a type.
+  \begin{subexenum}
+  \item Show that $(A+\neg A)\to(\neg\neg A\to A)$.
+  \item Show that $\neg\neg\neg A \to \neg A$.
+  \end{subexenum}
+\item \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e. define
+\begin{align*}
+t_0 & : \unit + \unit \\
+t_1 & : \unit + \unit,
+\end{align*}
+and show that for every $\Gamma,t:\unit+\unit\vdash P(t)~\mathrm{type}$ there is a dependent function of type
+\begin{align*}
+\ind{\unit+\unit}:P(t_0)\to \Big(P(t_1)\to \prd{t:\unit+\unit}P(t)\Big)
+\end{align*}
+satisfying
+\begin{align*}
+\ind{\unit+\unit}(p_0,p_1,t_0) & \jdeq p_0 \\
+\ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
+\end{align*}
+In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+\unit$.}
+\item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}:\Z\to \Z$.
+\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
+\item Construct a function $F:\Z\to\Z$ that extends the Fibonacci sequence to the left
+  \begin{equation*}
+    \ldots,5,-3,2,-1,1,0,1,1,2,3,5,8,13,\ldots
+  \end{equation*}
+  in the expected way.
+\end{exercises}
+
+\chapter{The universe and type-valued relations}
 
 \section{The universe}
 The induction principle for inductive types can be used to prove universal quantifications. 
@@ -334,64 +429,7 @@ Therefore we have by the computation rule for the first induction that the judgm
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
 
-\section{The type of integers}
-
-\begin{defn}
-We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$, and we write
-\begin{align*}
-\mathsf{neg} & \defeq \inl & &  : \N \to \Z \\
--1 & \defeq \mathsf{neg}(0) & & : \Z \\
-0 & \defeq \inr(\ttt) & & : \Z \\
-\mathsf{pos} & \defeq \inr\circ\inr & & : \N\to \Z \\
-1 & \defeq \mathsf{pos}(0) & & : \Z.
-\end{align*}
-\end{defn}
-
-In the following lemma we derive an alternative induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which makes it easier to make definitions.
-\begin{lem}
-\label{lem:Z_ind}
-For any $\Gamma,k:\Z\vdash P(k)~\mathrm{type}$ we have
-\begin{prooftree}
-\Axiom$\fCenter\Gamma\vdash p_{-1}:P(-1)$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{neg}(n))\to P(\mathsf{neg}(S(n)))$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_0: P(0)$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_{1}:P(1)$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{pos}(n))\to P(\mathsf{pos}(S(n)))$
-\UnaryInf$\fCenter\Gamma\vdash\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S}):\prd{k:\Z}P(k)$
-\end{prooftree}
-The term $\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S})$ furthermore satisfies the following computation rules:
-\begin{align*}
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},-1) & \jdeq p_{-1} \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(S(n))) & \jdeq p_{-S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(n))) \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},0) & \jdeq p_0 \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},1) & \jdeq p_1 \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(S(n))) & \jdeq p_{S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(n))).
-\end{align*}
-\end{lem}
-
-As an application we define the successor function on the integers.
-
-\begin{defn}
-We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $S_\Z:\Z\to\Z$.
-\end{defn}
-
-\begin{constr}
-We apply the induction principle of \autoref{lem:Z_ind}, taking
-\begin{align*}
-S_\Z(-1) & \defeq 0 \\
-S_\Z(\mathsf{neg}(S(n))) & \defeq \mathsf{neg}(n) \\
-S_\Z(0) & \defeq 1 \\
-S_\Z(1) & \defeq \mathsf{pos}(S(1)) \\
-S_\Z(\mathsf{pos}(S(n))) & \defeq \mathsf{pos}(S(S(n))).
-\end{align*}
-\end{constr}
-
 \begin{exercises}
-\item For any type $A$, show that $(A+\neg A)\to(\neg\neg A\to A)$. 
 \item Construct a function
 \begin{equation*}
 \check{\Pi}:\prd{A:\UU} (\mathrm{El}(A)\to\UU)\to \UU
@@ -438,21 +476,6 @@ holds for every $A:\UU$ and $B:\mathrm{El}(A)\to\UU$.
 \prd{x,y:\bool} \mathrm{Eq}_\bool(x,y)\to R(x,y).
 \end{equation*}
 \end{subexenum}
-\item \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e. define
-\begin{align*}
-t_0 & : \unit + \unit \\
-t_1 & : \unit + \unit,
-\end{align*}
-and show that for every $\Gamma,t:\unit+\unit\vdash P(t)~\mathrm{type}$ there is a dependent function of type
-\begin{align*}
-\ind{\unit+\unit}:P(t_0)\to \Big(P(t_1)\to \prd{t:\unit+\unit}P(t)\Big)
-\end{align*}
-satisfying
-\begin{align*}
-\ind{\unit+\unit}(p_0,p_1,t_0) & \jdeq p_0 \\
-\ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
-\end{align*}
-In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+\unit$.}
 \item \label{ex:int_order}
 \begin{subexenum}
 \item Define the order relations\index{relation!order}\index{order relation} $\leq$ and $<$ on and $\Z$.
@@ -466,6 +489,4 @@ and show that $\Z_{\geq k}$ satisfies the induction principle of the natural num
 \ind{\Z_{\geq k}} : P(b_k)\to \Big(\prd{n:\Z_{\geq k}} P(n)\to P(s_k(n))\Big)\to \Big(\prd{n:\Z_{\geq k}} P(n)\Big)
 \end{equation*}
 \end{subexenum}
-\item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}:\Z\to \Z$.
-\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
 \end{exercises}
