@@ -40,7 +40,7 @@ With the following conversion rule we postulate that formation of dependent func
 \RightLabel{$\Pi$-eq}
 \BinaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq\prd{x:A'}B'(x)~\mathrm{type}$}
 \end{prooftree}
-Furthermore, when $x'$ is a fresh variable, i.e. which does not occur in the context $\Gamma,x:A$, we also postulate that
+Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the context $\Gamma,x:A$, we also postulate that
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
 \RightLabel{$\Pi$-$x'/x$}
@@ -69,12 +69,6 @@ The $\lambda$-abstraction is also required to respect judgmental equality. There
 \AxiomC{$\Gamma,x:A \vdash b(x)\jdeq b'(x) : B(x)$}
 \RightLabel{$\lambda_A$-eq}
 \UnaryInfC{$\Gamma\vdash \lam{x}b(x)\jdeq \lam{x}b'(x) : \prd{x:A}B(x)$.}
-\end{prooftree}
-Furthermore, when $x'$ is a fresh variable, we also postulate that
-\begin{prooftree}
-\AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
-\RightLabel{$\lambda_A$-$x'/x$}
-\UnaryInfC{$\Gamma\vdash \lam{x}b(x)\jdeq \lam{x'}b(x') : \prd{x:A}B(x)$}
 \end{prooftree}
 
 \subsection{The $\Pi$-elimination rule}
@@ -200,7 +194,7 @@ For any three types $A$, $B$, and $C$ in context $\Gamma$, there is a \define{co
 \begin{equation*}
 \mathsf{comp}:(B\to C)\to ((A\to B)\to (A\to C)),
 \end{equation*}
-i.e.~we can derive
+i.e., we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
@@ -232,7 +226,7 @@ We will write $g\circ f$ for $\mathsf{comp}(g,f)$.
 \end{constr}
 
 \begin{lem}
-Composition of functions is associative\index{associativity!of function composition}\index{composition!of functions!associativity}, i.e. we can derive
+Composition of functions is associative\index{associativity!of function composition}\index{composition!of functions!associativity}, i.e., we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \AxiomC{$\Gamma\vdash g:B\to C$}
@@ -262,7 +256,7 @@ Composition of functions is associative\index{associativity!of function composit
 \end{proof}
 
 \begin{lem}\label{lem:fun_unit}
-Composition of functions satisfies the left and right unit laws\index{left unit law|see {unit laws}}\index{right unit law|see {unit laws}}\index{unit laws!of function composition}, i.e.~we can derive
+Composition of functions satisfies the left and right unit laws\index{left unit law|see {unit laws}}\index{right unit law|see {unit laws}}\index{unit laws!of function composition}, i.e., we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:A\to B$}
@@ -335,7 +329,7 @@ Therefore the induction principle for $\N$ is as follows:
   \RightLabel{$\N{-}\mathrm{Ind}$}
   \UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S):\prd{n:\N} P(n)$
 \end{prooftree}
-Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $\zeroN$ or a successor, i.e.~with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
+Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $\zeroN$ or a successor, i.e., with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
 \begin{prooftree}
 \AxiomC{$\cdots$}
 %\RightLabel{$\N{-}\mathrm{Comp}(\zeroN)$}
@@ -414,6 +408,13 @@ The rules that we provided so far are not sufficient to also conclude that $n+\z
 
 \begin{exercises}
 \item \label{ex:fun_right_unit}Give a derivation for the right unit law of \autoref{lem:fun_unit}.\index{unit laws!for function composition}
+\item Show that the rule
+\begin{prooftree}
+\AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
+\RightLabel{$\lambda_A$-$x'/x$}
+\UnaryInfC{$\Gamma\vdash \lam{x}b(x)\jdeq \lam{x'}b(x') : \prd{x:A}B(x)$}
+\end{prooftree}
+is admissible for any variable $x'$ that does not occur in the context $\Gamma,x:A$.
 \item 
   \begin{subexenum}
   \item Construct the \define{constant function}\index{constant function}\index{function!constant function}
@@ -439,7 +440,7 @@ The rules that we provided so far are not sufficient to also conclude that $n+\z
   \item Define the \define{multiplication}\index{multiplication!on N@{on $\N$}}\index{function!multiplication on N@{multiplication on $\N$}} operation $\mathsf{mul}_\N :\N\to(\N\to\N)$.
   \item Define the \define{power}\index{power function on N@{power function on $\N$}}\index{function!power function on N@{power function on $\N$}} operation $n,m\mapsto m^n$ of type $\N\to (\N\to \N)$.
   \item Define the \define{factorial}\index{factorial function}\index{function!factorial function} function $n\mapsto n!$.
-  \item Define the binomial coefficient $\binom{n}{k}$ for any $n,k:\N$, making sure that $\binom{n}{k}\jdeq 0$ when $n<k$.
+  \item Define the \define{binomial coefficient}\index{binomial coefficients} $\binom{n}{k}$ for any $n,k:\N$, making sure that $\binom{n}{k}\jdeq 0$ when $n<k$.
   \item Define the \define{Fibonacci sequence}\index{Fibonacci sequence} $0,1,1,2,3,5,8,13,\ldots$ as a function $F:\N\to\N$.
   \end{subexenum}
 \item In this exercise we generalize the composition operation of non-dependent function types\index{composition!of dependent functions}:

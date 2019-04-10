@@ -226,7 +226,7 @@ succ-le-ℕ (succ-ℕ n) = succ-le-ℕ n
 -- Exercise 3.7
 -- With the construction of the divisibility relation we open the door to basic number theory.
 divides : (d n : ℕ) → UU lzero
-divides d n = Σ ℕ (λ m → Eq-ℕ (d ** m) n)
+divides d n = Σ ℕ (λ m → Eq-ℕ (mul-ℕ d m) n)
 
 -- Exercise 3.8
 -- In this exercise we were asked to construct observational equality on the booleans. This construction is analogous to, but simpler than, the construction of observational equality on the natural numbers.

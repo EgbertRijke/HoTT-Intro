@@ -28,7 +28,7 @@ A well-formed \define{context}\index{context|textbf} is an expression of the for
 x_1:A_1,~x_2:A_2(x_1),~\ldots,~x_n:A_n(x_1,\ldots,x_{n-1}),
 \end{equation*}
 which we often simply write as $x_1:A_1,~x_2:A_2,~\ldots,~x_n:A_n$,
-satisfying the condition that for each $1\leq k\leq n$ we have that $A_k$ is a well-formed type in context $x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1}$, i.e.
+satisfying the condition that for each $1\leq k\leq n$ we have that $A_k$ is a well-formed type in context $x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1}$, i.e.,
 \begin{equation*}
 x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1} \vdash A_k~\textrm{type}.
 \end{equation*}
@@ -37,7 +37,7 @@ We say that a context $x_1:A_1,~\ldots,~x_n:A_n$ \define{declares the variables}
 We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.} For example, we will often use the variable names $x$, $y$, and $z$ when they are assigned a general type, variables $f$, $g$, and $h$ for function types, and so on.
 %For example we used the variable names $A,\mu,u_l,p,u_r,q$ when we displayed the context of \autoref{lem:unit}.
 
-In the special case where $n=0$, the list $x_1:A_1,x_2:A_2,\ldots,x_n:A_n$ is empty, which satisfies the well-formedness condition vacuously. In other words, the \define{empty context}\index{context!empty context|textbf}\index{empty context|textbf} is well-formed. A well-formed type in the empty context is also called a \define{closed type}\index{closed type|textbf}, and a well-formed term of a closed type is called a \define{closed term}\index{closed term|textbf}.
+In the special case where $n=0$, the list $x_1:A_1,x_2:A_2,\ldots,x_n:A_n$ is empty, which satisfies the well-formedness condition vacuously. In other words, the \define{empty context}\index{context!empty context|textbf}\index{empty context|textbf} is well-formed. A well-formed type in the empty context is called a \define{closed type}\index{closed type|textbf}, and a well-formed term in the empty context is called a \define{closed term}\index{closed term|textbf}.
 
 When $B$ is a type in context $\Gamma,x:A$, we also say that $B$ is a \define{family of types}\index{family!of types|textbf} over $A$ (in context $\Gamma$).
 
@@ -47,6 +47,7 @@ When $B$ is a type in context $\Gamma,x:A$, we also say that $B$ is a \define{fa
   Another important difference between set theory and type theory is that set theory is formulated in the language of first order logic, whereas type theory is its own deductive system, not making use of any ambient logic. We will see in the present chapter and in the next few chapters what this deductive system looks like.
 \end{rmk}
 
+\begin{comment}
 \section{Renaming variables}
 In some situations one might want to change the name of a variable in a context. This is allowed, provided that the new variable does not occur anywhere else in the context, so that also after renaming no variable is declared more than once. 
 The inference rules that rename a variable are sometimes called \define{$\alpha$-conversion}\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}}\index{rule!alpha conversion@{$\alpha$-conversion}} rules. 
@@ -71,6 +72,7 @@ In fact, there is variable renaming rule for each of the primitive judgments. To
 \end{prooftree}
 where $\mathcal{J}$ may be a typing judgment, a judgment of equality of types, a term judgment, or a judgment of equality of terms.
 We will use generic judgments extensively to postulate the rest of the rules of dependent type theory.
+\end{comment}
 
 \section{Inference rules governing judgmental equality}
 
@@ -133,7 +135,7 @@ Informally, these are rules stating that if $A$ and $A'$ are judgmentally equal 
 An analogous \emph{term conversion rule}\index{term conversion rule}\index{conversion rule!term}\index{rule!term conversion}, stated in \cref{ex:term_conversion}, converting the type of a term to a judgmentally equal type, is derivable using the `structural rules' of type theory described in the next section.
 
 
-\section{Structural rules of type theory}
+\section{Weakening, substitution, and the variable rule}
 
 We complete the specification of dependent type theory by postulating rules for \emph{weakening} and \emph{substitution}, and the \emph{variable rule}:
 \begin{enumerate}
@@ -389,31 +391,34 @@ Here $A$ is a type in context $\Gamma$ and $a$ is a term of type $A$, $B$ is a t
 \AxiomC{$\Gamma\vdash a:A$}
 \BinaryInfC{$\Gamma\vdash a:A'$}
 \end{prooftree}
-\begin{comment}
+\item Show that variables can be changed, i.e., give a derivation of the following inference rule.
+  \begin{prooftree}
+    \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
+    \UnaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash \mathcal{J}[x'/x]$}
+  \end{prooftree}
 \item Consider a type $A$ in context $\Gamma$. In this exercise we establish a connection between types in context $\Gamma,x:A$, and uniform choices of types $B_a$, where $a$ ranges over terms of $A$ in a uniform way. A similar connection is made for terms.
-\begin{subexenum}
-\item We define a \define{uniform family} over $A$ to consist of a type
-\begin{equation*}
-\Delta,\Gamma\vdash B_a~\mathrm{type}
-\end{equation*}
-for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
-\begin{prooftree}
-\AxiomC{$\Delta\vdash d:D$}
-\AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
-\BinaryInfC{$\Delta,\Gamma\vdash B_a[d/y]\jdeq B_{a[d/y]}~\mathrm{type}$}
-\end{prooftree}
-Define a bijection between types in context $\Gamma,x:A$ and uniform families over $A$. 
-\item Consider a type $\Gamma,x:A\vdash B$. We define a \define{uniform term} of $B$ over $A$ to consist of a type
-\begin{equation*}
-\Delta,\Gamma\vdash b_a:B[a/x]~\mathrm{type}
-\end{equation*}
-for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
-\begin{prooftree}
-\AxiomC{$\Delta\vdash d:D$}
-\AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
-\BinaryInfC{$\Delta,\Gamma\vdash b_a[d/y]\jdeq b_{a[d/y]}:B[a/x][d/y]$}
-\end{prooftree}
-Define a bijection between terms of $B$ in context $\Gamma,x:A$ and uniform terms of $B$ over $A$. 
-\end{subexenum}
-\end{comment}
+  \begin{subexenum}
+  \item We define a \define{uniform family} over $A$ to consist of a type
+    \begin{equation*}
+      \Delta,\Gamma\vdash B_a~\mathrm{type}
+    \end{equation*}
+    for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
+    \begin{prooftree}
+      \AxiomC{$\Delta\vdash d:D$}
+      \AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
+      \BinaryInfC{$\Delta,\Gamma\vdash B_a[d/y]\jdeq B_{a[d/y]}~\mathrm{type}$}
+    \end{prooftree}
+    Define a bijection between types in context $\Gamma,x:A$ and uniform families over $A$. 
+  \item Consider a type $\Gamma,x:A\vdash B$. We define a \define{uniform term} of $B$ over $A$ to consist of a type
+    \begin{equation*}
+      \Delta,\Gamma\vdash b_a:B[a/x]~\mathrm{type}
+    \end{equation*}
+    for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
+    \begin{prooftree}
+      \AxiomC{$\Delta\vdash d:D$}
+      \AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
+      \BinaryInfC{$\Delta,\Gamma\vdash b_a[d/y]\jdeq b_{a[d/y]}:B[a/x][d/y]$}
+    \end{prooftree}
+    Define a bijection between terms of $B$ in context $\Gamma,x:A$ and uniform terms of $B$ over $A$. 
+  \end{subexenum}
 \end{exercises}

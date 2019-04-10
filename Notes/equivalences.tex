@@ -85,7 +85,7 @@ Dually, we say that $f$ has a \define{retraction}\index{retraction} if there is 
 \mathsf{retr}(f) \defeq \sm{h:B\to A} h\circ f\htpy \idfunc[A].
 \end{equation*}
 If $f$ has a retraction, we also say that $A$ is a \define{retract}\index{retract!of a type} of $B$.
-We say that a function $f:A\to B$ is an \define{equivalence}\index{equivalence|textbf}\index{bi-invertible map|see {equivalence}} if it has both a section and a retraction, i.e.~if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}|textbf}
+We say that a function $f:A\to B$ is an \define{equivalence}\index{equivalence|textbf}\index{bi-invertible map|see {equivalence}} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}|textbf}
 \begin{equation*}
 \isequiv(f)\defeq\mathsf{sec}(f)\times\mathsf{retr}(f).
 \end{equation*}
@@ -301,12 +301,12 @@ with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}
 %is an equivalence.
 \item \label{ex:int_group_laws}\index{Z@{$\Z$}!group laws} In this exercise we will show that the laws for abelian groups hold for addition on the integers. Note: these are obvious facts, but the proof terms that show \emph{how} the group laws hold are nevertheless fairly involved. This exercise is perfect for a formalization project. 
 \begin{subexenum}
-\item Show that addition satisfies the left and right unit laws, i.e.~construct terms
+\item Show that addition satisfies the left and right unit laws, i.e., construct terms
 \begin{align*}
 \mathsf{left\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x:\Z} 0 + x = x \\
 \mathsf{right\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x : \Z} x + 0 = x.
 \end{align*}
-\item Show that addition respects predecessors and successor on both sides, i.e.~construct terms
+\item Show that addition respects predecessors and successor on both sides, i.e., construct terms
 \begin{align*}
 \mathsf{left\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} \mathsf{pred}_{\mathbb{Z}}(x)+y = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
 \mathsf{right\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{pred}_{\mathbb{Z}}(y) = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
@@ -314,7 +314,7 @@ with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}
 \mathsf{right\usc{}successor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{succ}_{\mathbb{Z}}(y) = \mathsf{succ}_{\mathbb{Z}}(x+y).
 \end{align*}
 Hint: to avoid an excessive number of cases, use induction on $x$ but not on $y$. You may need to use the homotopies $\mathsf{succ}_{\mathbb{Z}}\circ \mathsf{pred}_{\mathbb{Z}}\htpy \idfunc$ and $\mathsf{pred}_{\mathbb{Z}}\circ\mathsf{succ}_{\mathbb{Z}}$ constructed in exercise \cref{ex:succ_equiv}.
-\item Use part (b) to show that addition on the integers is associative and commutative, i.e.~construct terms
+\item Use part (b) to show that addition on the integers is associative and commutative, i.e., construct terms
 \begin{align*}
 \mathsf{assoc\usc{}add\usc{}}\Z & : \prd{x,y,z:\Z} (x+y)+z = x + (y+z) \\
 \mathsf{comm\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+y = y+x.

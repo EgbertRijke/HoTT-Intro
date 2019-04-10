@@ -1,0 +1,100 @@
+\chapter{Elementary number theory}
+
+In this chapter our goal is to show how to use the language of type theory to do some elementary number theory. In particular, we define the greatest commmon divisor of any two numbers, and we use the trial division algorithm to show that being a prime is decidable.
+
+Some ideas to include in this chapter:
+\begin{enumerate}
+\item Show that the ordering $\leq$ is a decidable relation.
+\item Construct the greatest common divisor and the least common multiple.
+\item Show that $\mathsf{is\usc{}prime}(n)$ is a decidable proposition.
+\item Show that there are infinitely many primes.
+\item If $2^n-1$ is prime, then $n$ is prime.
+\item Fermat's little theorem.
+\item The Lucas-Lehmer test.
+\item Refer to Everest-Ward, Apostol, \dots for more ideas.
+\end{enumerate}
+
+
+\section{Decidable relations}
+
+\begin{defn}
+  A type $A$ is said to be decidable if it comes equipped with a term of type
+  \begin{equation*}
+    \mathsf{is\usc{}decidable}(A)\defeq A+\neg A.
+  \end{equation*}
+\end{defn}
+
+\begin{eg}
+  The types $\unit$ and $\emptyt$ are decidable. Indeed, we have
+  \begin{align*}
+    \inl(\ttt) & :\mathsf{is\usc{}decidable}(\unit) \\
+    \inr(\idfunc) & : \mathsf{id\usc{}decidable}(\emptyt).\qedhere
+  \end{align*}
+\end{eg}
+
+Typically we are mostly interested in decidability of propositions. However, we have defined the notion of decidability for general types. Therefore it is the case that the type natural numbers, or indeed any type $A$ that comes equipped with a point $a:A$, is decidable. One reason for defining decidability in this generality is that we can now formulate a theorem that shows that if the identity types of a given type are all decidable, then that type must be a set.
+
+\begin{defn}
+  We say that a type $A$ has decidable equality if the identity type $x=y$ is decidable for every $x,y:A$. 
+\end{defn}
+
+\begin{lem}
+  Equality on the natural numbers is decidable.
+\end{lem}
+
+We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a set. In fact, any type with decidable equality is a set.
+
+\begin{thm}[Hedberg]
+  Any type with decidable equality is a set.
+\end{thm}
+
+\begin{proof}
+  Let $A$ be a type, and let
+  \begin{equation*}
+    d:\prd{x,y:A}(x=y)+\neg(x=y).
+  \end{equation*}
+  Consider the type family $D(x,y):((\id{x}{y})+\neg(\id{x}{y}))\to\UU$ given by
+  \begin{align*}
+    D(x,y,\inl(p)) & \defeq \unit \\
+    D(x,y,\inr(p)) & \defeq \emptyt.
+  \end{align*}
+  We use $D$ to show that any type with decidable equality is a set.
+\end{proof}
+
+\begin{lem}
+  The ordering relations $\leq$ and $<$ on $\N$ are decidable.
+\end{lem}
+
+\begin{proof}
+  We first show by induction on $m,n:\N$ that the relation $\leq$ is decidable.
+\end{proof}
+
+\section{Defining the greatest common divisor}
+
+\begin{lem}
+  The divisibility relation $d,n\mapsto d\mid n$ is decidable.
+\end{lem}
+
+\begin{defn}
+  For any two natural numbers $m,n$ we define the \define{greatest common divisor} $\gcd(m,n)$, which satisfies the following two properties:
+  \begin{enumerate}
+  \item We have both $\gcd(m,n)\mid m$ and $\gcd(m,n)\mid n$.
+  \item For any $d:\N$ we have $d\mid \gcd(m,n)$ if and only if both $d\mid m$ and $d\mid n$ hold.
+  \end{enumerate}
+\end{defn}
+
+\section{The trial division primality test}
+
+\begin{thm}
+  For any $n:\N$, the proposition $\mathsf{is\usc{}prime}(n)$ is decidable.
+\end{thm}
+
+
+\begin{exercises}
+\item
+  \begin{subexenum}
+  \item Show that $\nat$ and $\bool$ have decidable equality. Hint: to show that $\mathbb{N}$ has decidable equality, show first that the successor function is injective.
+  \item Show that if $A$ and $B$ have decidable equality, then so do $A+B$ and $A\times B$. Conclude that $\Z$ has decidable equality.
+  \item Show that if $A$ is a retract of a type $B$ with decidable equality, then $A$ also has decidable equality.
+  \end{subexenum}
+\end{exercises}

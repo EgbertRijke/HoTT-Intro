@@ -71,7 +71,7 @@ Since $e$ is assumed to be an equivalence, it follows by \cref{cor:emb_equiv} th
 is an equivalence for any $x,y:A$. If $B$ is a proposition, then in particular the type $e(x)=e(y)$ is contractible for any $x,y:A$, so the claim follows from \cref{thm:contr_equiv}.
 \end{proof}
 
-In type theory terms always come equipped with their types, i.e.~they never appear in isolation. This is useful from the perspective that terms are programs with a certain specification, but as a consequence we cannot consider subtypes in the same way as set theorists have subsets. Our definition of subtype is therefore considerably different:
+In type theory terms always come equipped with their types, i.e., they never appear in isolation. This is useful from the perspective that terms are programs with a certain specification, but as a consequence we cannot consider subtypes in the same way as set theorists have subsets. Our definition of subtype is therefore considerably different:
 
 \begin{defn}
 A type family $B$ over $A$ is said to be a \define{subtype} of $A$ if for each $x:A$ the type $B(x)$ is a proposition.
@@ -426,22 +426,6 @@ is a $k$-truncated map.
 \end{subexenum}
 \item \label{ex:eq_bool}Show that $\bool$ is a set by applying \cref{lem:prop_to_id} with the observational equality on $\bool$ defined in \cref{ex:obs_bool}.
 \item \label{ex:set_coprod}Show that for any two $(k+2)$-types $A$ and $B$, the disjoint sum $A+B$ is again a $(k+2)$-type. Conclude that $\mathbb{Z}$ is a set.
-\item \label{ex:hedberg}(Hedberg's theorem) A type $A$ is said to have \define{decidable equality} if there is a term of type
-\begin{equation*}
-\prd{x,y:A} (\id{x}{y})+\neg(\id{x}{y}).
-\end{equation*}
-For any type $A$, and every $x,y:A$, consider the type family $D(x,y):((\id{x}{y})+\neg(\id{x}{y}))\to\UU$ given by
-\begin{align*}
-D(x,y,\inl(p)) & \defeq \unit \\
-D(x,y,\inr(p)) & \defeq \emptyt.
-\end{align*}
-Use $D$ to show that any type with decidable equality is a set.
-\item This exercise is about the notion of decidable equality, introduced in \cref{ex:hedberg}.
-  \begin{subexenum}
-  \item Show that $\nat$ and $\bool$ have decidable equality. Hint: to show that $\mathbb{N}$ has decidable equality, show first that the successor function is injective.
-  \item Show that if $A$ and $B$ have decidable equality, then so do $A+B$ and $A\times B$. Conclude that $\Z$ has decidable equality.
-  \item Show that if $A$ is a retract of a type $B$ with decidable equality, then $A$ also has decidable equality.
-  \end{subexenum}
 \item Use \autoref{ex:contr_retr,ex:retr_id} to show that if $A$ is a retract of a $k$-type $B$, then $A$ is also a $k$-type.
 \item \label{ex:injective}A map $f:A\to B$ between sets is said to be \define{injective} if for every $x,y:A$ there is a map
 \begin{equation*}

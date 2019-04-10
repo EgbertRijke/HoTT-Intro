@@ -2,7 +2,7 @@
 
 A common way in topology to construct new spaces is by attaching cells\index{attaching cells} to a given space. A $0$-cell is just a point, an $1$-cell is an interval, a $2$-cell is a disc, a $3$-cell is the solid ball, and so forth. Many spaces can be obtained by attaching cells. For example, the circle\index{circle} is obtained by attaching a $1$-cell to a $0$-cell, so that both end-points of the interval are mapped to the point. More generally, an $n$-sphere is obtained by attaching an $n$-disc to the point, so that its entire boundar gets mapped to the point.
 
-In type theory we can also consider a notion of $n$-cells. Just as in topology, a $0$-cell is just a point (i.e.~a term). A $1$-cell, however, is in type theory an identification, i.e.~a term of the identity type. A $1$-cell is then an identification of identifications, and so forth. Our goal in this lecture is to show how to mimic the process of attaching cells to a type.
+In type theory we can also consider a notion of $n$-cells. Just as in topology, a $0$-cell is just a point (i.e., a term). A $1$-cell, however, is in type theory an identification, i.e., a term of the identity type. A $1$-cell is then an identification of identifications, and so forth. Our goal in this lecture is to show how to mimic the process of attaching cells to a type.
 
 Spaces that are constructed by attaching cells are characterized by a universal property that is dual to the universal property of pushouts: the universal property of \emph{pushouts}. In this lecture we introduce the universal property of pushouts, and we show how the duality between pullbacks and pushouts can be used to prove many properties of pushouts.
 
@@ -218,7 +218,7 @@ h\circ \inl\circ f \arrow[r,"{K\cdot f}"] \arrow[d,swap,"{h\cdot\glue}"] & h'\ci
 h\circ \inr\circ f \arrow[r,swap,"{L\cdot g}"] & h'\circ\inr\circ g
 \end{tikzcd}
 \end{equation*}
-of homotopies commutes. By function extensionality, our goal is equivalent to constructing a homotopy (i.e.~a dependent function) of type
+of homotopies commutes. By function extensionality, our goal is equivalent to constructing a homotopy (i.e., a dependent function) of type
 \begin{equation*}
 \prd{t:A\sqcup^{\mathcal{S}} B} f(t)=g(t).
 \end{equation*}
@@ -436,14 +436,14 @@ Use this observation to conclude the following:
 \begin{enumerate}
 \item If $X$ is contractible, then $\susp X$ is contractible.
 \item The cofiber of any equivalence is contractible.
-\item The cofiber of a point in $B$ (i.e.~of a map of the type $\unit\to B$) is equivalent to $B$.
+\item The cofiber of a point in $B$ (i.e., of a map of the type $\unit\to B$) is equivalent to $B$.
 \item There is an equivalence $\eqv{X}{\join{\emptyt}{X}}$.
 \item If $X$ is contractible, then $\join{X}{Y}$ is contractible. 
 \item If $A$ is contractible, then there is an equivalence $\eqv{A\vee B}{B}$ for any pointed type $B$.
 \end{enumerate}
 \item \label{ex:join_propositions}Let $P$ and $Q$ be propositions.
 \begin{subexenum}
-\item Show that $\join{P}{Q}$ satisfies the \emph{universal property of disjunction}, i.e.~that for any proposition $R$, the map
+\item Show that $\join{P}{Q}$ satisfies the \emph{universal property of disjunction}, i.e., that for any proposition $R$, the map
 \begin{equation*}
 (\join{P}{Q}\to R)\to (P\to R)\times (Q\to R)
 \end{equation*}
