@@ -95,6 +95,24 @@ Again we require that evaluation respects judgmental equality:
   Terms $f$ of this type are dependent functions in two variables: by applying $f$ to a variable $x:A$ we obtain a term $f(x):\prd{y:B(x)}C(x,y)$. By further applying $f(x)$ to a term $y:B(x)$ we obtain a term $f(x,y):C(x,y)$.
 \end{rmk}
 
+\begin{rmk}
+  By the derivation
+  \begin{prooftree}
+    \AxiomC{$\Gamma\vdash a:A$}
+    \AxiomC{$\Gamma\vdash f: \prd{x:A}B(x)$}
+    \UnaryInfC{$\Gamma,x:A\vdash f(x):B(x)$}
+    \BinaryInfC{$\Gamma\vdash f(a):B(a)$}
+  \end{prooftree}
+  it follows that the rule
+  \begin{prooftree}
+    \AxiomC{$\Gamma\vdash a:A$}
+    \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
+    \BinaryInfC{$\Gamma\vdash f(a):B(a)$}
+  \end{prooftree}
+  is admissible.
+\end{rmk}
+
+
 \begin{rmk}\label{rmk:ev_var}
 By the derivation
 \begin{prooftree}
@@ -367,26 +385,24 @@ for every $n:\N$ and every $f:\N\to\N$.
 
 The function $\mathsf{add\usc{}}\zeroN:\N\to\N$ is of course taken to be $\idfunc[\N]$, since the result of adding $0$ to $n$ should be $n$.
 
-Given $n:\N$ and a function $f:\N\to\N$ we define $\mathsf{add\usc{}}\succN(n,f)$ to be the function $\lam{m}\succN(f(m))$. This function simply adds one to $f$ pointwise (and it ignores $n$). The idea is that if $f$ represents adding $m$, then $\mathsf{add\usc{}}\succN(n,f)$ should be adding one more than $f$ did.
+Given $n:\N$ and a function $f:\N\to\N$ we define $\mathsf{add\usc{}}\succN(n,f)\defeq \succN\circ f$. The idea is that if $f$ represents adding $m$, then $\mathsf{add\usc{}}\succN(n,f)$ should be adding one more than $f$ did.
 \end{proof}
 
 \begin{proof}[Formal derivation]
 The derivation for the construction of $\mathsf{add\usc{}}\succN$ looks as follows:
 \begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash\N~\mathrm{type}$}
-\AxiomC{}
-\UnaryInfC{$\vdash\N~\mathrm{type}$}
-\AxiomC{}
-\UnaryInfC{$\vdash\N~\mathrm{type}$}
-\BinaryInfC{$f:\N^\N,m:\N\vdash f(m):\N$}
-\AxiomC{}
-\UnaryInfC{$\vdash \succN:\N\to\N$}
-\UnaryInfC{$n:\N\vdash \succN(n):\N$}
-\UnaryInfC{$f:\N^\N,m:\N,n:\N\vdash \succN(n):\N$}
-\BinaryInfC{$f:\N^\N,m:\N\vdash \succN(f(m)):\N$}
-\BinaryInfC{$n:\N,f:\N^\N,m:\N\vdash \succN(f(m)):\N$}
-\UnaryInfC{$\vdash \mathsf{add\usc{}}\succN\defeq \lam{n}{f}{m}\succN(f(m)):\N\to (\N^\N \to \N^\N)$}
+  \AxiomC{}
+  \UnaryInfC{$\succN:\N^\N$}
+  \AxiomC{}
+  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \AxiomC{}
+  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \AxiomC{}
+  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \TrinaryInfC{$\vdash \mathsf{comp}:\N^\N\to (\N^\N\to \N^\N)$}
+  \BinaryInfC{$\vdash \mathsf{comp}(\succN):\N^\N\to\N^\N$}
+  \UnaryInfC{$n:\N\vdash \mathsf{comp}(\succN):\N^\N\to\N^\N$}
+  \UnaryInfC{$\vdash \mathsf{add\usc{}}\succN\defeq \lam{n}\mathsf{comp}(\succN):\N\to (\N^\N \to \N^\N)$}
 %\BinaryInfC{$\vdash\addN:\ind{\N}(add_0,add_S):\N\to \N^\N$}
 \end{prooftree}
 We combine this derivation with the induction principle of $\N$ to complete the construction of addition:

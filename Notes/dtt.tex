@@ -3,48 +3,53 @@
 
 In this lecture we describe the deductive system of dependent type theory, without introducing yet any ways of actually forming types. In other words, we just give the rules of type dependency.
 
-\section{The primitive judgments of type theory}
+\section{The judgments of type theory}
 
-The theory of type dependency is formulated as a deductive system in which derivations establish that a given construction is well-formed. In any dependent type theory there are four \define{primitive judgments}\index{primitive judgment}:
+Type theory is a system of inference rules that can be combined to make \emph{derivations}. An \define{inference rule} is an expression of the form
+\begin{prooftree}
+  \AxiomC{$\mathcal{H}_1$\quad $\mathcal{H}_2$ \quad \dots \quad $\mathcal{H}_n$}
+  \UnaryInfC{$\mathcal{C}$}
+\end{prooftree}
+containing above the horizontal line a finite list $\mathcal{H}_1$, $\mathcal{H}_n$, \dots, $\mathcal{H}_n$ of judgments for the hypotheses, and below the horizontal line a single judgment $\mathcal{C}$ for the conclusion.
+
+Since type theory is about types and their terms, there are four kinds of judgments: we can judge whether a certain object is a type, wheter it is a term, and we can make a judgment about equality of types or terms. More formally, these are the four judgments of type theory:
 \begin{enumerate}
-%\item `\emph{$\Gamma$ is a well-formed context.}'
-\item `\emph{$A$ is a (well-formed) \define{type}\index{well-formed type}\index{type} in context $\Gamma$.}'\index{primitive judgment!type in context}
-\item `\emph{$A$ and $B$ are \define{judgmentally equal types} in context $\Gamma$.}'\index{primitive judgment!equal types in context}\index{judgmental equality!of types}
-\item `\emph{$a$ is a (well-formed) \define{term}\index{well-formed term}\index{term} of type $A$ in context $\Gamma$.}'\index{primitive judgment!term of a type in context}
-\item `\emph{$a$ and $b$ are \define{judgmentally equal terms} of type $A$ in context $\Gamma$.}'\index{primitive judgment!equal terms of a type in context}\index{judgmental equality!of terms}
+\item \emph{$A$ is a (well-formed) \define{type}\index{well-formed type}\index{type} in context $\Gamma$.}\index{judgment!type in context} The symbolic expression for this judgment is
+  \begin{equation*}
+    \Gamma\vdash A~\mathrm{type}
+  \end{equation*}
+\item \emph{$A$ and $B$ are \define{judgmentally equal types} in context $\Gamma$.}\index{judgment!equal types in context}\index{judgmental equality!of types} The symbolic expression for this judgment is
+  \begin{equation*}
+    \Gamma\vdash A \jdeq B~\mathrm{type}
+  \end{equation*}
+\item \emph{$a$ is a (well-formed) \define{term}\index{well-formed term}\index{term} of type $A$ in context $\Gamma$.}\index{judgment!term of a type in context} The symbolic expression for this judgment is
+  \begin{equation*}
+    \Gamma \vdash a:A
+  \end{equation*}
+\item \emph{$a$ and $b$ are \define{judgmentally equal terms} of type $A$ in context $\Gamma$.}\index{judgment!equal terms of a type in context}\index{judgmental equality!of terms} The symbolic expression for this judgment is
+  \begin{equation*}
+    \Gamma\vdash a\jdeq b:A
+  \end{equation*}
 \end{enumerate}
-\begin{samepage}
-The symbolic expressions for these four primitive judgments are as follows:
-\begin{align*}
-%& \vdash \Gamma~\mathrm{ctx} & & \vdash \Gamma\jdeq \Gamma'~\mathrm{ctx} \\
-\Gamma & \vdash A~\textrm{type} & \Gamma & \vdash A\jdeq B~\textrm{type}\\
-\Gamma & \vdash a:A & \Gamma & \vdash a\jdeq b:A.
-\end{align*}
-\end{samepage}
 In these judgments, well-formedness of a type $A$ in context $\Gamma$ just means that the type $A$ has been formed in accordance with the rules of type theory, which we are about to describe.
 
-A well-formed \define{context}\index{context|textbf} is an expression of the form
+A \define{context}\index{context|textbf} is an expression of the form
 \begin{equation*}
 x_1:A_1,~x_2:A_2(x_1),~\ldots,~x_n:A_n(x_1,\ldots,x_{n-1}),
 \end{equation*}
 which we often simply write as $x_1:A_1,~x_2:A_2,~\ldots,~x_n:A_n$,
-satisfying the condition that for each $1\leq k\leq n$ we have that $A_k$ is a well-formed type in context $x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1}$, i.e.,
-\begin{equation*}
-x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1} \vdash A_k~\textrm{type}.
-\end{equation*}
-We say that a context $x_1:A_1,~\ldots,~x_n:A_n$ \define{declares the variables}\index{variable declaration} $x_1,\ldots,x_n$. In other words, a type $A(x_1,\ldots,x_n)$ in context $\Gamma$ is well-formed if all its variables $x_1,\ldots,x_n$ are assigned well-formed types in the context $\Gamma$.
+satisfying the condition that for each $1\leq k\leq n$ we have that $A_k$ is a well-formed type in context $x_1:A_1,x_2:A_2,\ldots,x_{k-1}:A_{k-1}$.
 
-We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.} For example, we will often use the variable names $x$, $y$, and $z$ when they are assigned a general type, variables $f$, $g$, and $h$ for function types, and so on.
-%For example we used the variable names $A,\mu,u_l,p,u_r,q$ when we displayed the context of \autoref{lem:unit}.
+Note that the context of length $0$ satisfies this condition vacuously. This context is called the \define{empty context}\index{context!empty context|textbf}\index{empty context|textbf}. The expression $x_1:A_1$ is a context if and only if $A_1$ is a well-formed type in the empty context. Such types are called \define{closed types}\index{closed type|textbf}. There is also the notion of \define{closed term}\index{closed term|textbf}, which is simply a term in the empty context. The next case is that $x_1:A_1,~x_2:A_2(x_1)$ is a context if and only if $A_1$ is a closed type and $A_2(x_1)$ is a well-formed type in context $x_1:A_1$, and so on.
 
-In the special case where $n=0$, the list $x_1:A_1,x_2:A_2,\ldots,x_n:A_n$ is empty, which satisfies the well-formedness condition vacuously. In other words, the \define{empty context}\index{context!empty context|textbf}\index{empty context|textbf} is well-formed. A well-formed type in the empty context is called a \define{closed type}\index{closed type|textbf}, and a well-formed term in the empty context is called a \define{closed term}\index{closed term|textbf}.
-
-When $B$ is a type in context $\Gamma,x:A$, we also say that $B$ is a \define{family of types}\index{family!of types|textbf} over $A$ (in context $\Gamma$).
+We say that a context $x_1:A_1,~\ldots,~x_n:A_n$ \define{declares the variables}\index{variable declaration} $x_1,\ldots,x_n$. In other words, a type $A(x_1,\ldots,x_n)$ in context $\Gamma$ is well-formed if all its variables $x_1,\ldots,x_n$ are assigned well-formed types. We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.}
 
 \begin{rmk}
-  One difference between set theory and type theory is that every well-formed term is specified along with its type and with its context. One way of looking at this is that there are three sorts in type theory: contexts, types, and terms. On the other hand, there is only one sort in set theory: sets. Sets are governed by the elementhood relation: the formula $x\in y$ is a well-formed formula of set theory for any two sets $x$ and $y$. In particular, for a given set $x$, the formula $x\in y$ can be true for many sets $y$, which is very different to the situation in type theory, where every term is assigned a unique type.
-  
-  Another important difference between set theory and type theory is that set theory is formulated in the language of first order logic, whereas type theory is its own deductive system, not making use of any ambient logic. We will see in the present chapter and in the next few chapters what this deductive system looks like.
+When $B$ is a type in context $\Gamma,x:A$, we also say that $B$ is a \define{family of types}\index{family!of types|textbf} over $A$ (in context $\Gamma$). It is common practice to write
+\begin{equation*}
+  \Gamma,x:A\vdash B(x)~\mathrm{type},
+\end{equation*}
+indicating only the dependency of $B$ on $x:A$, omitting explicit mention of the variables that are declared in $\Gamma$.
 \end{rmk}
 
 \begin{comment}
@@ -64,7 +69,7 @@ This definition of \define{renaming}\index{variable renaming|textbf} the variabl
 \end{prooftree}
 
 Similarly we obtain for any term $b:B$ in context $\Gamma,x:A,\Delta$ a term $b[x'/x]:B[x'/x]$, and there is a variable renaming rule postulating that the renaming of a variable preserves the well-formedness of terms.
-In fact, there is variable renaming rule for each of the primitive judgments. To avoid having to state essentially the same rule four times in a row, we postulate the four variable renaming rules all at once using a \emph{generic judgment}\index{generic judgment} $\mathcal{J}$. 
+In fact, there is variable renaming rule for each of the four kinds of judgments. To avoid having to state essentially the same rule four times in a row, we postulate the four variable renaming rules all at once using a \emph{generic judgment}\index{generic judgment} $\mathcal{J}$. 
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
 \RightLabel{$x'/x$}
@@ -74,7 +79,17 @@ where $\mathcal{J}$ may be a typing judgment, a judgment of equality of types, a
 We will use generic judgments extensively to postulate the rest of the rules of dependent type theory.
 \end{comment}
 
-\section{Inference rules governing judgmental equality}
+\section{Inference rules}
+
+The inference rules we present in this section are postulated to be valid rules of type theory. There are only four sets of inference rules in the theory of type dependency:
+\begin{enumerate}
+\item Rules for judgmental equality
+\item Rules for substitution
+\item Rules for weakening
+\item The ``variable rule''
+\end{enumerate}
+
+\subsection{Inference rules governing judgmental equality}
 
 \begin{samepage}
 Both on types and on terms, we postulate that judgmental equality is an equivalence relation. That is, we provide inference rules for the reflexivity, symmetry and transitivity of both kinds of judgmental equality\index{judgmental equality!equivalence relation}:
@@ -125,7 +140,18 @@ Both on types and on terms, we postulate that judgmental equality is an equivale
 \end{samepage}
 
 Apart from the rules postulating that judgmental equality is an equivalence relation, there are also \define{variable conversion rules}\index{judgmental equality!conversion rules}\index{variable conversion rules}\index{conversion rule!variable}\index{rule!variable conversion}.
-Informally, these are rules stating that if $A$ and $A'$ are judgmentally equal types in context $\Gamma$, then any valid judgment in context $\Gamma,x:A$ is also a valid judgment in context $\Gamma,x:A'$. In other words: we can convert the type of a variable to a judgmentally equal type. We state this with a generic judgment $\mathcal{J}$
+Informally, these are rules stating that if $A$ and $A'$ are judgmentally equal types in context $\Gamma$, then any valid judgment in context $\Gamma,x:A$ is also a valid judgment in context $\Gamma,x:A'$. In other words: we can convert the type of a variable to a judgmentally equal type.
+
+The first variable conversion rule states that
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash A\jdeq A'~\textrm{type}$}
+\AxiomC{$\Gamma,x:A,\Delta\vdash B(x)~\mathrm{type}$}
+\RightLabel{$A'/A$}
+\BinaryInfC{$\Gamma,x:A',\Delta\vdash B(x)~\mathrm{type}$}
+\end{prooftree}
+In this conversion rule, the context of the form $\Gamma,x:A,\Delta$ is just any extension of the context $\Gamma,x:A$.
+
+Similarly, there are variable conversion rules for judgmental equality of types, for terms, and for judgmental equality of terms. To avoid having to state essentially the same rule four times, we state all four variable conversion rules at once using a \emph{generic judgment} $\mathcal{J}$, which can be any of the four kinds of judgments.
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A\jdeq A'~\textrm{type}$}
 \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
@@ -134,36 +160,8 @@ Informally, these are rules stating that if $A$ and $A'$ are judgmentally equal 
 \end{prooftree}
 An analogous \emph{term conversion rule}\index{term conversion rule}\index{conversion rule!term}\index{rule!term conversion}, stated in \cref{ex:term_conversion}, converting the type of a term to a judgmentally equal type, is derivable using the `structural rules' of type theory described in the next section.
 
-
-\section{Weakening, substitution, and the variable rule}
-
-We complete the specification of dependent type theory by postulating rules for \emph{weakening} and \emph{substitution}, and the \emph{variable rule}:
-\begin{enumerate}
-\item If we are given a type $A$ in context $\Gamma$, then any judgment made in a longer context $\Gamma,\Delta$ can also be made in the context $\Gamma,x:A,\Delta$, for a fresh variable $x$. The \define{weakening rule}\index{weakening}\index{rule!weakening} asserts that weakening by a type $A$ in context preserves well-formedness and judgmental equality of types and terms.
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A~\textrm{type}$}
-\AxiomC{$\Gamma,\Delta\vdash \mathcal{J}$}
-\RightLabel{$W_A$}
-\BinaryInfC{$\Gamma,x:A,\Delta \vdash \mathcal{J}$}
-\end{prooftree}
-This process of expanding the context by a fresh variable of type $A$ is called \define{weakening (by $A$)}.
-
-For example, when we have two types $A$ and $B$ in context $\Gamma$, we can weaken $B$ by $A$ as follows
-\begin{prooftree}
-  \AxiomC{$\Gamma\vdash A~\textrm{type}$}
-  \AxiomC{$\Gamma\vdash B~\textrm{type}$}
-  \RightLabel{$W_A$}
-  \BinaryInfC{$\Gamma,x:A\vdash B~\mathrm{type}$}
-\end{prooftree}
-in order to form the type $B$ in context $\Gamma,x:A$. The type $B$ in context $\Gamma,x:A$ is also called the \define{constant family}\index{family!constant family}\index{constant family} $B$, or the \define{trivial family}\index{family!trivial family}\index{trivial family} $B$.
-\item If we are given a type $A$ in context $\Gamma$, then $x$ is a well-formed term of type $A$ in context $\Gamma,x:A$.
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A~\textrm{type}$}
-\RightLabel{$\delta_A$}
-\UnaryInfC{$\Gamma,x:A\vdash x:A$}
-\end{prooftree}
-This is called the \define{variable rule}\index{variable rule}\index{rule!variable rule|textbf}. It provides an \emph{identity function}\index{identity function} on the type $A$ in context $\Gamma$.
-\item If we are given a term $a:A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[a/x]$ in context $\Gamma,\Delta[a/x]$, where $B[a/x]$ is an abbreviation for
+\subsection{Substitution}
+If we are given a term $a:A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[a/x]$ in context $\Gamma,\Delta[a/x]$, where $B[a/x]$ is an abbreviation for
 \begin{equation*}
 B(x_1,\ldots,x_{n-1},a(x_1,\ldots,x_{n-1}),x_{n+1},\ldots,x_{n+m-1})
 \end{equation*}
@@ -187,10 +185,34 @@ and it also results in judgmentally equal terms
 \BinaryInfC{$\Gamma,\Delta[a/x]\vdash b[a/x]\jdeq b[a'/x]:B[a/x]$}
 \end{prooftree}
 When $B$ is a family of types over $A$ and $a:A$, we also say that $B[a/x]$ is the \define{fiber}\index{family!fiber of}\index{fiber!of a family} of $B$ at $a$. Often we write $B(a)$ for $B[a/x]$.
-\end{enumerate}
 
+\subsection{Weakening}
+If we are given a type $A$ in context $\Gamma$, then any judgment made in a longer context $\Gamma,\Delta$ can also be made in the context $\Gamma,x:A,\Delta$, for a fresh variable $x$. The \define{weakening rule}\index{weakening}\index{rule!weakening} asserts that weakening by a type $A$ in context preserves well-formedness and judgmental equality of types and terms.
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash A~\textrm{type}$}
+\AxiomC{$\Gamma,\Delta\vdash \mathcal{J}$}
+\RightLabel{$W_A$}
+\BinaryInfC{$\Gamma,x:A,\Delta \vdash \mathcal{J}$}
+\end{prooftree}
+This process of expanding the context by a fresh variable of type $A$ is called \define{weakening (by $A$)}.
 
+For example, when we have two types $A$ and $B$ in context $\Gamma$, we can weaken $B$ by $A$ as follows
+\begin{prooftree}
+  \AxiomC{$\Gamma\vdash A~\textrm{type}$}
+  \AxiomC{$\Gamma\vdash B~\textrm{type}$}
+  \RightLabel{$W_A$}
+  \BinaryInfC{$\Gamma,x:A\vdash B~\mathrm{type}$}
+\end{prooftree}
+in order to form the type $B$ in context $\Gamma,x:A$. The type $B$ in context $\Gamma,x:A$ is also called the \define{constant family}\index{family!constant family}\index{constant family} $B$, or the \define{trivial family}\index{family!trivial family}\index{trivial family} $B$.
 
+\subsection{The variable rule}
+If we are given a type $A$ in context $\Gamma$, then $x$ is a well-formed term of type $A$ in context $\Gamma,x:A$.
+\begin{prooftree}
+\AxiomC{$\Gamma\vdash A~\textrm{type}$}
+\RightLabel{$\delta_A$}
+\UnaryInfC{$\Gamma,x:A\vdash x:A$}
+\end{prooftree}
+This is called the \define{variable rule}\index{variable rule}\index{rule!variable rule|textbf}. It provides an \emph{identity function}\index{identity function} on the type $A$ in context $\Gamma$.
 
 \begin{comment}
 \bigskip
@@ -239,17 +261,47 @@ When $B$ is a family of types over $A$ and $a:A$, we also say that $B[a/x]$ is t
 \bigskip
 \end{comment}
 
+\section{Derivations}
 
-\begin{eg}
-To give an example of how the deductive system works, we give a deduction for the \define{interchange rule}\index{rule!interchange}\index{interchange rule}
+A derivation in type theory is a tree in which each node is a valid rule of inference. We give two examples of derivations: a derivation showing that any variable can be changed to a fresh one, and a derivation showing that any two variables that do not depend on one another can be swapped in order.
+
+Thus, we will see some examples of new inference rules that can be derived using the rules of type theory. Such inference rules are called \define{admissible}. Since derivations tend to get long and unwieldy, we declare that admissible inference rules are also valid to be used in derivations.
+
+\subsection{Changing variables}
+
+Variables can always be changed to fresh variables. We show that this is the case by showing that the inference rule
+\begin{prooftree}
+  \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
+  \RightLabel{$x'/x$}
+  \UnaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash \mathcal{J}[x'/x]$}
+\end{prooftree}
+is admissible, where $x'$ is a variable that does not occur in the context $\Gamma,x:A,\Delta$. 
+
+Indeed, we have the following derivation using substitution, weakening, and the variable rule:
+\begin{prooftree}
+  \AxiomC{$\Gamma\vdash A~\mathrm{type}$}
+  \RightLabel{$\delta_A$}
+  \UnaryInfC{$\Gamma,x':A\vdash x':A$}
+  \AxiomC{$\Gamma\vdash A~\mathrm{type}$}
+  \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
+  \RightLabel{$W_A$}
+  \BinaryInfC{$\Gamma,x':A,x:A,\Delta\vdash \mathcal{J}$}
+  \RightLabel{$S_{x'}$}
+  \BinaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash \mathcal{J}[x'/x]$}
+\end{prooftree}
+In this derivation it is the application of the weakening rule where we have to check that $x'$ does not occur in the context $\Gamma,x:A,\Delta$.
+
+\subsection{Interchanging variables}
+
+The \define{interchange rule}\index{rule!interchange}\index{interchange rule} states that if we have two types $A$ and $B$ in context $\Gamma$, and we make a judgment in context $\Gamma,x:A,y:B,\Delta$, then we can make that same judgment in context $\Gamma,y:B,x:A,\Delta$ where the order of $x:A$ and $y:B$ is swapped. More formally, the interchange rule is the following inference rule
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \AxiomC{$\Gamma,x:A,y:B,\Delta\vdash \mathcal{J}$}
 \BinaryInfC{$\Gamma,y:B,x:A,\Delta\vdash \mathcal{J}$}
 \end{prooftree}
-In other words, if we have two types $A$ and $B$ in context $\Gamma$, and we make a judgment in context $\Gamma,x:A,y:B$, then we can make that same judgment in context $\Gamma,y:B,x:A$.
+Just as the renaming of variables, we claim that the interchange rule is an admissible rule.
 
-The idea of the derivation is as follows: If we have a judgment
+The idea of the derivation for the interchange rule is as follows: If we have a judgment
 \begin{equation*}
   \Gamma,x:A,y:B,\Delta\vdash\mathcal{J},
 \end{equation*}
@@ -257,11 +309,7 @@ then we can rename $y$ by $y'$ and weaken the judgment to obtain the judgment
 \begin{equation*}
   \Gamma,y:B,x:A,y':B,\Delta[y'/y]\vdash\mathcal{J}[y'/y].
 \end{equation*}
-Now we can substitute $y$ for $y'$ to obtain the desired judgment
-\begin{equation*}
-  \Gamma,y:B,x:A,\Delta\vdash\mathcal{J}.
-\end{equation*}
-The formal derivation is as follows:
+Now we can substitute $y$ for $y'$ to obtain the desired judgment $\Gamma,y:B,x:A,\Delta\vdash\mathcal{J}$. The formal derivation is as follows:
 \begin{small}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
@@ -278,7 +326,6 @@ The formal derivation is as follows:
 \BinaryInfC{$\Gamma,y:B,x:A,\Delta\vdash \mathcal{J}$}
 \end{prooftree}
 \end{small}
-\end{eg}
 
 
 \begin{comment}
@@ -391,11 +438,6 @@ Here $A$ is a type in context $\Gamma$ and $a$ is a term of type $A$, $B$ is a t
 \AxiomC{$\Gamma\vdash a:A$}
 \BinaryInfC{$\Gamma\vdash a:A'$}
 \end{prooftree}
-\item Show that variables can be changed, i.e., give a derivation of the following inference rule.
-  \begin{prooftree}
-    \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
-    \UnaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash \mathcal{J}[x'/x]$}
-  \end{prooftree}
 \item Consider a type $A$ in context $\Gamma$. In this exercise we establish a connection between types in context $\Gamma,x:A$, and uniform choices of types $B_a$, where $a$ ranges over terms of $A$ in a uniform way. A similar connection is made for terms.
   \begin{subexenum}
   \item We define a \define{uniform family} over $A$ to consist of a type

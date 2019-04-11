@@ -72,6 +72,12 @@ To include introduction:
 \item Mention the formalization
 \end{enumerate}
 
+\begin{rmk}
+  One difference between set theory and type theory is that every well-formed term is specified along with its type and with its context. One way of looking at this is that there are three sorts in type theory: contexts, types, and terms. On the other hand, there is only one sort in set theory: sets. Sets are governed by the elementhood relation: the formula $x\in y$ is a well-formed formula of set theory for any two sets $x$ and $y$. In particular, for a given set $x$, the formula $x\in y$ can be true for many sets $y$, which is very different to the situation in type theory, where every term is assigned a unique type.
+  
+  Another important difference between set theory and type theory is that set theory is formulated in the language of first order logic, whereas type theory is its own deductive system, not making use of any ambient logic. We will see in the present chapter and in the next few chapters what this deductive system looks like.
+\end{rmk}
+
 \mainmatter
 
 \include{dtt}
