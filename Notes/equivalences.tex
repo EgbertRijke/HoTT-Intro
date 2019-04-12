@@ -25,7 +25,7 @@ For any dependent type $B:A\to\type$ there are operations
 \begin{align*}
 & \mathsf{htpy\usc{}refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
 & \mathsf{htpy\usc{}inv} & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
-& \mathsf{htpy\usc{}concat} & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to (g\htpy h)\to (f\htpy h).
+& \mathsf{htpy\usc{}concat} & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to ((g\htpy h)\to (f\htpy h)).
 \end{align*}
 We will write $H^{-1}$ for $\mathsf{htpy\usc{}inv}(H)$, and $\ct{H}{K}$ for $\mathsf{htpy\usc{}concat}(H,K)$. 
 
@@ -65,14 +65,30 @@ We define the following \define{whiskering}\index{homotopy!whiskering operations
 \begin{enumerate}
 \item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define
 \begin{equation*}
-hH\defeq \lam{x}\ap{h}{H(x)}:h\circ f\htpy h\circ g.
+h\cdot H\defeq \lam{x}\ap{h}{H(x)}:h\circ f\htpy h\circ g.
 \end{equation*}
 \item Suppose $f:A\to B$ and $H:g\htpy h$ for two functions $g,h:B\to C$. We define
 \begin{equation*}
-Hf\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
+H\cdot f\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
 \end{equation*}
 \end{enumerate}
 \end{defn}
+
+We also use homotopies to express the commutativity of diagrams. For example, we say that a triangle
+\begin{equation*}
+  \begin{tikzcd}[column sep=tiny]
+    A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+    & X
+  \end{tikzcd}
+\end{equation*}
+commutes if it comes equipped with a homotopy $H:f\htpy g\circ h$, and we say that a square
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[r,"g"] \arrow[d,swap,"f"] & A' \arrow[d,"{f'}"] \\
+    B \arrow[r,swap,"h"] & B'
+  \end{tikzcd}
+\end{equation*}
+if it comes equipped with a homotopy $h \circ f~g\circ f'$.
 
 \section{Bi-invertible maps}
 \begin{defn}
@@ -84,7 +100,7 @@ Dually, we say that $f$ has a \define{retraction}\index{retraction} if there is 
 \begin{equation*}
 \mathsf{retr}(f) \defeq \sm{h:B\to A} h\circ f\htpy \idfunc[A].
 \end{equation*}
-If $f$ has a retraction, we also say that $A$ is a \define{retract}\index{retract!of a type} of $B$.
+If a map $f:A \to B$ has a retraction, we also say that $A$ is a \define{retract}\index{retract!of a type} of $B$.
 We say that a function $f:A\to B$ is an \define{equivalence}\index{equivalence|textbf}\index{bi-invertible map|see {equivalence}} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}|textbf}
 \begin{equation*}
 \isequiv(f)\defeq\mathsf{sec}(f)\times\mathsf{retr}(f).
@@ -100,7 +116,7 @@ G & : f\circ g \htpy \idfunc[B] & H & : h\circ f \htpy \idfunc[A].
 \end{align*}
 Clearly, if $f$ is \define{invertible}\index{invertible map} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence. We write\index{is_invertible@{$\mathsf{is\usc{}invertible}$}|textbf}
 \begin{equation*}
-\mathsf{is\usc{}invertible}(f)\defeq\sm{g:B\to A} (f\circ g\htpy \idfunc[B])\times (g\circ f\htpy\idfunc[A]).
+\mathsf{has\usc{}inverse}(f)\defeq\sm{g:B\to A} (f\circ g\htpy \idfunc[B])\times (g\circ f\htpy\idfunc[A]).
 \end{equation*}
 \end{rmk}
 
@@ -115,9 +131,8 @@ First we construct for any equivalence $f$ with right inverse $g$ and left inver
 g(y) \arrow[r,equals,"H(g(y))^{-1}"] & hfg(y) \arrow[r,equals,"\ap{h}{G(y)}"] & h(y).
 \end{tikzcd}
 \end{equation*} 
-Therefore we define $K\defeq \ct{(Hg)^{-1}}{hG}$.
-from which we obtain a homotopy $K:g\htpy h$.
-This allows us to show that $g$ is also a left inverse of $f$. For $x:A$ we have the identification
+Therefore we define a homotopy $K:g\htpy h$ by $K\defeq \ct{(H\cdot g)^{-1}}{h\cdot G}$.
+Using the homotopy $K$ we are able to show that $g$ is also a left inverse of $f$. For $x:A$ we have the identification
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
 gf(x) \arrow[r,equals,"K(f(x))"] & hf(x) \arrow[r,equals,"H(x)"] & x.
@@ -142,57 +157,117 @@ The identity function is trivially its own section and its own retraction.
 \end{proof}
 
 \begin{eg}
-Let $A$ and $B$ be types in context $\Gamma$. 
-For any $\Gamma,x:A,y:B\vdash C(x,y)~\mathrm{type}$, the map
+  For any type $C(x,y)$ indexed by $x:A$ and $y:B$, the function
 \begin{equation*}
-\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
+\sigma:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
 \end{equation*}
-is an equivalence by \cref{ex:swap}.\index{swap function!is an equivalence|textit}
+that swaps the order of the arguments $x$ and $y$ is an equivalence by \cref{ex:swap}.\index{swap function!is an equivalence|textit}
 \end{eg}
 
 \section{The identity type of a \texorpdfstring{$\Sigma$-}{dependent pair }type}
 
-In the following theorem we characterize the identity type of a $\Sigma$-type as a $\Sigma$-type of identity types.
+In this section we characterize the identity type of a $\Sigma$-type as a $\Sigma$-type of identity types. In this course we will be characterizing the identity types of many types, so we will follow the general outline of how such a characterization goes:
+\begin{enumerate}
+\item First we define a binary relation $R:A\to A\to \UU$ on the type $A$ that we are interested in. This binary relation is intended to be equivalent to its identity type.
+\item Then we will show that this binary relation is reflexive, by constructing a term of type
+  \begin{equation*}
+    \prd{x:A}R(x,x)
+  \end{equation*}
+\item Using the reflexivity we will show that there is a canonical map
+  \begin{equation*}
+    (x=y)\to R(x,y)
+  \end{equation*}
+  for every $x,y:A$. This map is just constructed by path induction, using the reflexivity of $R$.
+\item Finally, it has to be shown that the map
+  \begin{equation*}
+    (x=y)\to R(x,y)
+  \end{equation*}
+  is an equivalence for each $x,y:A$. 
+\end{enumerate}
+The last step is usually the most difficult, and we will refine our methods for this step in \cref{chap:fundamental}, where we establish the Fundamental Theorem of Identity Types.
 
+In this section we consider a type family $B$ over $A$. Given two pairs
+\begin{equation*}
+  (x,y),(x',y'):\sm{x:A}B(x),
+\end{equation*}
+if we have a path $\alpha:x=x'$ then we can compare $y:B(x)$ to $y':B(x')$ by first transporting $y$ along $\alpha$, i.e., we consider the identity type
+\begin{equation*}
+  \mathsf{tr}_B(\alpha,y)=y'.
+\end{equation*}
+Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is an identification $\alpha:x=x'$ and an identification $\beta:\mathsf{tr}_B(\alpha,y)=y'$. In the following definition we turn this idea into a binary relation on the $\Sigma$-type.
+
+\begin{defn}
+  We will define a relation
+  \begin{equation*}
+    \mathsf{Eq}_{\Sigma} : \Big(\sm{x:A}B(x)\Big)\to\Big(\sm{x:A}B(x)\Big)\to\UU
+  \end{equation*}
+  by defining
+  \begin{equation*}
+    \mathsf{Eq}_{\Sigma}(s,t)\defeq\sm{\alpha:\proj 1(s)=\proj 1(t)}\mathsf{tr}_B(\alpha,\proj 2(s))=\proj 2 (t).
+  \end{equation*}
+\end{defn}
+
+\begin{lem}
+  The relation $\mathsf{Eq}_{\Sigma}$ is reflexive, i.e., there is a term
+  \begin{equation*}
+    \mathsf{reflexive\usc{}Eq}_{\Sigma}:\prd{s:\sm{x:A}B(x)}\mathsf{Eq}_{\Sigma}(s,s).
+  \end{equation*}
+\end{lem}
+
+\begin{constr}
+  This term is constructed by $\Sigma$-induction on $s:\sm{x:A}B(x)$. Thus, it suffices to construct a term of type
+  \begin{equation*}
+    \prd{x:A}{y:B(x)}\sm{\alpha:x=x}\mathsf{tr}_B(\alpha,y)=y.
+  \end{equation*}
+  Here we take $\lam{x}{y}(\refl{x},\refl{y})$.
+\end{constr}
+
+\begin{defn}
+  Consider a type family $B$ over $A$. Then for any $s,t:\sm{x:A}B(x)$ we define a map\index{pair_eq@{$\mathsf{pair\usc{}eq}$}|textbf}
+  \begin{equation*}
+    \mathsf{pair\usc{}eq}: (s=t)\to \mathsf{Eq}_\Sigma(s,t)
+  \end{equation*}
+  by path induction, taking $\mathsf{pair\usc{}eq}(\refl{s})\defeq\mathsf{reflexive\usc{}Eq}_\Sigma(s)$.
+\end{defn}
 
 \begin{thm}\label{thm:eq_sigma}
-Let $B$ be a type family over $A$, let $s:\sm{x:A}B(x)$, and consider the dependent function\index{pair_eq@{$\mathsf{pair\usc{}eq}$}|textbf}
-\begin{equation*}
-\mathsf{pair\usc{}eq}_{s}:\prd{t:\sm{x:A}B(x)} (s=t)\to \sm{\alpha:\proj 1(s)=\proj 1(t)} \mathsf{tr}_B(\alpha,\proj 2(s))=\proj 2(t)
-\end{equation*}
-defined as $\mathsf{pair\usc{}eq}_s \defeq \ind{s=}(\refl{\proj 1(s)},\refl{\proj 2(s)})$. Then $\mathsf{pair\usc{}eq}_{s,t}$ is an equivalence for every $t:\sm{x:A}B(x)$.\index{Sigma type@{$\Sigma$-type}!identity types of|textit}\index{identity type!of a Sigma-type@{of a $\Sigma$-type}|textit}
+  Let $B$ be a type family over $A$. Then the map
+  \begin{equation*}
+    \mathsf{pair\usc{}eq}: (s=t)\to \mathsf{Eq}_\Sigma(s,t)
+  \end{equation*}
+  is an equivalence for every $s,t:\sm{x:A}B(x)$.\index{Sigma type@{$\Sigma$-type}!identity types of|textit}\index{identity type!of a Sigma-type@{of a $\Sigma$-type}|textit}
 \end{thm}
 
 \begin{proof}
 The maps in the converse direction\index{eq_pair@{$\mathsf{eq\usc{}pair}$}}
 \begin{equation*}
-\mathsf{eq\usc{}pair}_{s,t} : \Big(\sm{p:\proj 1(s)=\proj 1(t)}\id{\mathsf{tr}_B(p,\proj 2(s))}{\proj 2(t)}\Big)\to(\id{s}{t})
+\mathsf{eq\usc{}pair} : \mathsf{Eq}_\Sigma(s,t)\to(\id{s}{t})
 \end{equation*}
 are defined by repeated $\Sigma$-induction. By $\Sigma$-induction on $s$ and $t$  we see that it suffices to define a map
 \begin{equation*}
-\mathsf{eq\usc{}pair}_{(x,y),(x',y')} : \Big(\sm{p:x=x'}\id{\mathsf{tr}_B(p,y)}{y'}\Big)\to(\id{(x,y)}{(x',y')}).
+\mathsf{eq\usc{}pair} : \Big(\sm{p:x=x'}\id{\mathsf{tr}_B(p,y)}{y'}\Big)\to(\id{(x,y)}{(x',y')}).
 \end{equation*}
 A map of this type is again defined by $\Sigma$-induction. Thus it suffices to define a dependent function of type
 \begin{equation*}
 \prd{p:x=x'} (\id{\mathsf{tr}_B(p,y)}{y'}) \to (\id{(x,y)}{(x',y')}).
 \end{equation*}
-Such a dependent function is defined by double path induction by sending $\pairr{\refl{x},\refl{y}}$ to $\refl{\pairr{x,y}}$.
+Such a dependent function is defined by double path induction by sending $\pairr{\refl{x},\refl{y}}$ to $\refl{\pairr{x,y}}$. This completes the definition of the function $\mathsf{eq\usc{}pair}$.
 
-Next, we must show that $\mathsf{eq\usc{}pair}_{s,t}$ is a section of $\mathsf{pair\usc{}eq}_{s,t}$. In other words, we must construct an identification
+Next, we must show that $\mathsf{eq\usc{}pair}$ is a section of $\mathsf{pair\usc{}eq}$. In other words, we must construct an identification
 \begin{equation*}
-\mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}(p,q))=\pairr{p,q}
+\mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}(\alpha,\beta))=\pairr{\alpha,\beta}
 \end{equation*}
-for each $\pairr{p,q}:\sm{p:x=x'}\id{\mathsf{tr}_B(p,y)}{y'}$. We proceed by path induction on $p$, followed by path induction on $q$. Our goal is now to construct a term of type
+for each $\pairr{\alpha,\beta}:\sm{\alpha:x=x'}\id{\mathsf{tr}_B(\alpha,y)}{y'}$. We proceed by path induction on $\alpha$, followed by path induction on $\beta$. Then our goal becomes to construct a term of type
 \begin{equation*}
 \mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}})=\pairr{\refl{x},\refl{y}}
 \end{equation*}
 By the definition of $\mathsf{eq\usc{}pair}$ we have $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}\jdeq \refl{\pairr{x,y}}$, and by the definition of $\mathsf{pair\usc{}eq}$ we have $\mathsf{pair\usc{}eq}(\refl{\pairr{x,y}})\jdeq\pairr{\refl{x},\refl{y}}$. Thus we may take $\refl{\pairr{\refl{x},\refl{y}}}$ to complete the construction of the homotopy $\mathsf{pair\usc{}eq}\circ\mathsf{eq\usc{}pair}\htpy\idfunc$.
 
-To complete the proof, we must show that $\mathsf{eq\usc{}pair}_{s,t}$ is a retraction of $\mathsf{pair\usc{}eq}_{s,t}$. In other words, we must construct an identification
+To complete the proof, we must show that $\mathsf{eq\usc{}pair}$ is a retraction of $\mathsf{pair\usc{}eq}$. In other words, we must construct an identification
 \begin{equation*}
 \mathsf{eq\usc{}pair}(\mathsf{pair\usc{}eq}(p))=p
 \end{equation*}
-for each $p:s=t$. We proceed by identity elimination on $p:s=t$, so it suffices to construct an identification 
+for each $p:s=t$. We proceed by path induction on $p:s=t$, so it suffices to construct an identification 
 \begin{equation*}
 \mathsf{eq\usc{}pair}\pairr{\refl{\proj 1(s)},\refl{\proj 2(s)}}=\refl{s}.
 \end{equation*}
@@ -202,14 +277,6 @@ Now we proceed by $\Sigma$-induction on $s:\sm{x:A}B(x)$, so it suffices to cons
 \end{equation*}
 Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simply take $\refl{\refl{(x,y)}}$.
 \end{proof}
-
-\begin{cor}
-Let $B$ be a type family over $A$, and let $\pairr{x,y},\pairr{x',y'}:\sm{x:A}B(x)$. Then the map
-\begin{equation*}
-\mathsf{pair\usc{}eq}_{(x,y),(x',y')} : (\id{\pairr{x,y}}{\pairr{x',y'}})\to \Big(\sm{p:x=x'}\id{\mathsf{tr}_B(p,y)}{y'}\Big)
-\end{equation*}
-is an equivalence.
-\end{cor}
 
 \begin{exercises}
 \item Show that for any term $a:A$ the functions
@@ -286,13 +353,13 @@ A \arrow[r,"i"] & B \arrow[r,"r"] & A,
 \end{tikzcd}
 \end{equation*}
 with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
-\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B:A\to \type$, and let $C$ be a family over $x:A,y:B(x)$. Construct an equivalence
+\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a type indexed by $x:A,y:B(x)$. Construct an equivalence
 \begin{equation*}
-\mathsf{\Sigma.assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
+\mathsf{\Sigma\usc{}assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
 \end{equation*}
 \item \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
 \begin{equation*}
-\mathsf{\Sigma.swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
+\mathsf{\Sigma\usc{}swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
 \end{equation*}
 %\item \label{ex:sigma_base_equiv}Consider an equivalence $e:A'\eqv A$ and a type family $B$ over $A$. Show that the map
 %\begin{equation*}
