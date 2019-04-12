@@ -141,6 +141,76 @@ is-equiv-is-contr-map is-contr-f =
 
 -- The goal in this section is to show that all equivalences are contractible maps. This theorem is much harder than anything we've seen so far, but many future results will depend on it.
 
+-- We characterize the identity types of fibers
+
+Eq-fib :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  fib f y → fib f y → UU (i ⊔ j)
+Eq-fib f y s t =
+  Σ (Id (pr1 s) (pr1 t)) (λ α → Id ((ap f α) ∙ (pr2 t)) (pr2 s))
+
+reflexive-Eq-fib :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  (s : fib f y) → Eq-fib f y s s
+reflexive-Eq-fib f y s = dpair refl refl
+
+Eq-fib-eq :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  {s t : fib f y} → (Id s t) → Eq-fib f y s t
+Eq-fib-eq f y {s} refl = reflexive-Eq-fib f y s
+
+eq-Eq-fib :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  {s t : fib f y} → Eq-fib f y s t → Id s t
+eq-Eq-fib f y {dpair x p} {dpair .x .p} (dpair refl refl) = refl
+
+issec-eq-Eq-fib :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  {s t : fib f y} → ((Eq-fib-eq f y {s} {t}) ∘ (eq-Eq-fib f y {s} {t})) ~ id
+issec-eq-Eq-fib f y {dpair x p} {dpair .x .p} (dpair refl refl) = refl
+
+isretr-eq-Eq-fib :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  {s t : fib f y} → ((eq-Eq-fib f y {s} {t}) ∘ (Eq-fib-eq f y {s} {t})) ~ id
+isretr-eq-Eq-fib f y {dpair x p} {.(dpair x p)} refl = refl
+
+is-equiv-Eq-fib-eq :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  {s t : fib f y} → is-equiv (Eq-fib-eq f y {s} {t})
+is-equiv-Eq-fib-eq f y {s} {t} =
+  is-equiv-has-inverse'
+    ( eq-Eq-fib f y)
+    ( issec-eq-Eq-fib f y)
+    ( isretr-eq-Eq-fib f y)
+
+is-equiv-eq-Eq-fib :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+  {s t : fib f y} → is-equiv (eq-Eq-fib f y {s} {t})
+is-equiv-eq-Eq-fib f y {s} {t} =
+  is-equiv-has-inverse'
+    ( Eq-fib-eq f y)
+    ( isretr-eq-Eq-fib f y)
+    ( issec-eq-Eq-fib f y)
+
+-- Next, we improve the homotopy G : f ∘ g ~ id if f comes equipped with the
+-- structure has-inverse f.
+
+inv-has-inverse :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  has-inverse f → B → A
+inv-has-inverse inv-f = pr1 inv-f
+
+issec-inv-has-inverse :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (inv-f : has-inverse f) → (f ∘ (inv-has-inverse inv-f)) ~ id
+issec-inv-has-inverse {f = f} (dpair g (dpair G H)) y =
+  (inv (G (f (g y)))) ∙ (ap f (H (g y)) ∙ (G y))
+
+isretr-inv-has-inverse :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (inv-f : has-inverse f) → ((inv-has-inverse inv-f) ∘ f) ~ id
+isretr-inv-has-inverse inv-f = pr2 (pr2 inv-f)
+
 -- Before we start we will develop some of the ingredients of the construction.
 
 -- We will need the naturality of homotopies.
@@ -183,56 +253,48 @@ sq-left-whisk refl sq = sq
 
 sq-top-whisk :
   {i : Level} {A : UU i} {x y1 y2 z : A}
-  {p1 : Id x y1} {q1 : Id y1 z}
-  {p2 p2' : Id x y2} (s : Id p2 p2') {q2 : Id y2 z} →
+  (p1 : Id x y1) (q1 : Id y1 z)
+  (p2 : Id x y2) {p2' : Id x y2} (s : Id p2 p2') (q2 : Id y2 z) →
   square p1 q1 p2 q2 → square p1 q1 p2' q2
-sq-top-whisk refl sq = sq
+sq-top-whisk p1 q1 p2 refl q2 sq = sq
+
+coherence-inv-has-inverse :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (inv-f : has-inverse f) →
+  (f ·l (isretr-inv-has-inverse inv-f)) ~ ((issec-inv-has-inverse inv-f) ·r f)
+coherence-inv-has-inverse {f = f} (dpair g (dpair G H)) x =
+  inv-con
+    ( G (f (g (f x))))
+    ( ap f (H x))
+    ( (ap f (H (g (f x)))) ∙ (G (f x)))
+    ( sq-top-whisk
+      ( G (f (g (f x))))
+      ( ap f (H x))
+      ( (ap (f ∘ (g ∘ f)) (H x)))
+      ( (ap-comp f (g ∘ f) (H x)) ∙ (inv (ap (ap f) (htpy-red H x))))
+      ( G (f x))
+      ( htpy-nat (htpy-right-whisk G f) (H x)))
 
 -- Now the proof that equivalences are contractible maps really begins. Note that we have already shown that any equivalence has an inverse. Our strategy is therefore to first show that maps with inverses are contractible, and then deduce the claim about equivalences.
 
 center-has-inverse :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   has-inverse f → (y : B) → fib f y
-center-has-inverse {i} {j} {A} {B} {f}
-  ( dpair g (dpair issec isretr)) y =
+center-has-inverse {i} {j} {A} {B} {f} inv-f y =
   dpair
-    ( g y)
-    ( ( inv (ap (f ∘ g) (issec y))) ∙
-      ( (ap f (isretr (g y))) ∙ (issec y)))
+    ( inv-has-inverse inv-f y)
+    ( issec-inv-has-inverse inv-f y)
 
 contraction-has-inverse :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   (I : has-inverse f) → (y : B) → (t : fib f y) →
   Id (center-has-inverse I y) t
 contraction-has-inverse {i} {j} {A} {B} {f}
-  ( dpair g (dpair issec isretr)) y (dpair x refl) =
-  eq-pair (dpair
-    ( isretr x)
-    ( ( tr-id-left-subst (isretr x) (f x)
-        ( pr2 (center-has-inverse
-          ( dpair g (dpair issec isretr))
-          ( f x)))) ∙
-      ( inv (inv-con
-        ( ap f (isretr x))
-        ( refl)
-        ( ( inv (ap (λ z → f (g z)) (issec (f x)))) ∙
-          ( (ap f (isretr (g (f x)))) ∙ (issec (f x))))
-        ( ( right-unit (ap f (isretr x))) ∙
-          ( inv-con
-            ( ap (f ∘ g) (issec y))
-            ( ap f (isretr x))
-            ( (ap f (isretr (g (f x)))) ∙ (issec (f x)))
-            ( sq-left-whisk
-              {_} {_} {f(g(f(g(f x))))} {f(g(f x))} {f(g(f x))} {f x}
-              { issec (f(g(f x)))} {ap (f ∘ g) (issec (f x))}
-              ( htpy-red issec (f x))
-              { ap f (isretr x)} {ap f (isretr (g (f x)))} { issec (f x)}
-              ( sq-top-whisk
-                {_} {_} {f(g(f(g(f x))))} {f(g(f x))} {f(g(f x))} {f x}
-                { issec (f(g(f x)))} {_} {_} {_}
-                ( ( ap-comp f (g ∘ f) (isretr x)) ∙
-                  ( inv (ap (ap f) (htpy-red isretr x))))
-                ( htpy-nat (htpy-right-whisk issec f) (isretr x))))))))))
+  ( dpair g (dpair G H)) y (dpair x refl) =
+  eq-Eq-fib f y (dpair 
+    ( H x)
+    ( ( right-unit (ap f (H x))) ∙
+      ( coherence-inv-has-inverse (dpair g (dpair G H)) x)))
 
 is-contr-map-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   has-inverse f → is-contr-map f

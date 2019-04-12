@@ -5,25 +5,13 @@
 
 \section{Contractible types}
 
-\begin{thm}\label{thm:contractible}
-Let $A$ be a type. The following are equivalent:
-\begin{enumerate}
-\item $A$ is \define{contractible}\index{contractible!type|textbf}: there is a term of type
-\begin{equation*}
-\iscontr(A) \defeq \sm{c:A}\prd{x:A}c=x.
-\end{equation*}
-Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction}\index{center of contraction|textbf} of $A$, and we call $C:\prd{x:A}c=x$ the \define{contraction}\index{contraction} of $A$.
-\item $A$ comes equipped with a term $a:A$, and satisfies \define{singleton induction}\index{singleton induction|textbf}: for every type family $B$ over $A$, the map
-\begin{equation*}
-\Big(\prd{x:A}B(x)\Big)\to B(a)
-\end{equation*}
-given by $f\mapsto f(a)$ has a section. In other words, we have a function and a homotopy
-\begin{align*}
-\mathsf{sing\usc{}ind}_{A,a} & : B(a)\to \prd{x:A}B(x) \\
-\mathsf{sing\usc{}comp}_{A,a} & : \prd{b:B(a)} \mathsf{sing\usc{}ind}_{A,a}(b,a)=b.
-\end{align*}
-\end{enumerate}
-\end{thm}
+\begin{defn}
+  We say that a type $A$ is \define{contractible}\index{contractible!type|textbf} if it comes equipped with a term of type
+  \begin{equation*}
+    \iscontr(A) \defeq \sm{c:A}\prd{x:A}c=x.
+  \end{equation*}
+  Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction}\index{center of contraction|textbf} of $A$, and we call $C:\prd{x:A}c=x$ the \define{contraction}\index{contraction} of $A$.
+\end{defn}
 
 \begin{rmk}
 Suppose $A$ is a contractible type with center of contraction $c$ and contraction $C$. Then the type of $C$ is (judgmentally) equal to the type
@@ -31,11 +19,33 @@ Suppose $A$ is a contractible type with center of contraction $c$ and contractio
 \mathsf{const}_c\htpy\idfunc[A].
 \end{equation*}
 In other words, the contraction $C$ is a \emph{homotopy} from the constant function to the identity function.
-
-Also note that the `computation rule' in the singleton induction for $A$ is stated using an \emph{identification} rather than as a judgmental equality. 
 \end{rmk}
 
-\begin{proof}[Proof of \autoref{thm:contractible}]
+\begin{defn}
+  Suppose $A$ comes equipped with a term $a:A$. Then we say that $A$ satisfies \define{singleton induction}\index{singleton induction|textbf} if for every type family $B$ over $A$, the map
+\begin{equation*}
+\Big(\prd{x:A}B(x)\Big)\to B(a)
+\end{equation*}
+given by $f\mapsto f(a)$ has a section. In other words, we have a function and a homotopy
+\begin{align*}
+\mathsf{sing\usc{}ind}_{a} & : B(a)\to \prd{x:A}B(x) \\
+\mathsf{sing\usc{}comp}_{a} & : \prd{b:B(a)} \mathsf{sing\usc{}ind}_{A,a}(b,a)=b.
+\end{align*}
+\end{defn}
+
+\begin{rmk}
+  Note that the "computation rule" in the singleton induction for $A$ is stated using an \emph{identification} rather than as a judgmental equality. 
+\end{rmk}
+
+\begin{thm}\label{thm:contractible}
+Let $A$ be a type. The following are equivalent:
+\begin{enumerate}
+\item The type $A$ is contractible.
+\item The type $A$ comes equipped with a term $a:A$, and satisfies signleton induction.
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
 Suppose $A$ is contractible with center of contraction $c$ and contraction $C$. 
 First we observe that, without loss of generality, we may assume that $C$ comes equipped with an identification $p:C(c)=\refl{c}$.
 To see this, note that we can always define a new contraction $C'$ by
