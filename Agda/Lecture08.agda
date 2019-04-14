@@ -773,7 +773,7 @@ is-trunc-map-succ-is-trunc-map : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU 
 is-trunc-map-succ-is-trunc-map k f is-trunc-f b =
   is-trunc-succ-is-trunc k (fib f b) (is-trunc-f b)
 
-{- Elementary number theory -}
+{- Elementary number theory -} 
 
 is-decidable-leq-ℕ :
   (m n : ℕ) → decide (leq-ℕ m n)
@@ -789,11 +789,6 @@ is-decidable-le-ℕ zero-ℕ (succ-ℕ n) = inl star
 is-decidable-le-ℕ (succ-ℕ m) zero-ℕ = inr id
 is-decidable-le-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-le-ℕ m n
 
-zero-ℕ-leq-ℕ :
-  (n : ℕ) → leq-ℕ zero-ℕ n
-zero-ℕ-leq-ℕ zero-ℕ = star
-zero-ℕ-leq-ℕ (succ-ℕ n) = star
-
 bound-succ-max-bounded-decidable-subtype-ℕ :
   { l : Level} (P : ℕ → UU l)
   ( m : ℕ) →
@@ -801,7 +796,7 @@ bound-succ-max-bounded-decidable-subtype-ℕ :
   ¬ (P m) → (n : ℕ) → (m ≤ n) → ¬ (P n)
 bound-succ-max-bounded-decidable-subtype-ℕ P m b not-P-m n m-leq-n = {!!}
   
-
+{-
 max-bounded-decidable-subtype-ℕ :
   { l : Level} (P : ℕ → UU l) (is-prop-P : (n : ℕ) → is-prop (P n)) →
   ( is-bounded : Σ ℕ (λ m → (n : ℕ) → (P n) → (n ≤ m))) →
@@ -817,3 +812,4 @@ max-bounded-decidable-subtype-ℕ P is-prop-P (dpair (succ-ℕ m) bound) d (dpai
       ( d)
       ( dpair n p))
     ( d m)
+-}

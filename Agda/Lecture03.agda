@@ -396,3 +396,110 @@ neg-ℤ : ℤ → ℤ
 neg-ℤ (inl x) = inr (inr x)
 neg-ℤ (inr (inl star)) = inr (inl star)
 neg-ℤ (inr (inr x)) = inl x
+
+
+-- We prove that the induction principle for ℕ implies strong induction.
+
+zero-ℕ-leq-ℕ :
+  (n : ℕ) → leq-ℕ zero-ℕ n
+zero-ℕ-leq-ℕ zero-ℕ = star
+zero-ℕ-leq-ℕ (succ-ℕ n) = star
+
+fam-strong-ind-ℕ :
+  { l : Level} → (ℕ → UU l) → ℕ → UU l
+fam-strong-ind-ℕ P n = (m : ℕ) → (leq-ℕ m n) → P m
+
+zero-strong-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) → P zero-ℕ → fam-strong-ind-ℕ P zero-ℕ
+zero-strong-ind-ℕ P p0 zero-ℕ t = p0
+zero-strong-ind-ℕ P p0 (succ-ℕ m) ()
+
+succ-strong-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  ( (k : ℕ) → (fam-strong-ind-ℕ P k) → P (succ-ℕ k)) →
+  ( k : ℕ) → (fam-strong-ind-ℕ P k) → (fam-strong-ind-ℕ P (succ-ℕ k))
+succ-strong-ind-ℕ P pS k f zero-ℕ t = f zero-ℕ (zero-ℕ-leq-ℕ k)
+succ-strong-ind-ℕ P pS k f (succ-ℕ m) t =
+  pS m (λ m' t' → f m' (transitive-leq-ℕ m' m k t' t))
+
+conclusion-strong-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  ( ( n : ℕ) → fam-strong-ind-ℕ P n) → (n : ℕ) → P n
+conclusion-strong-ind-ℕ P f n = f n n (reflexive-leq-ℕ n)
+
+induction-strong-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  ( fam-strong-ind-ℕ P zero-ℕ) →
+  ( (k : ℕ) → (fam-strong-ind-ℕ P k) → (fam-strong-ind-ℕ P (succ-ℕ k))) →
+  ( n : ℕ) → fam-strong-ind-ℕ P n
+induction-strong-ind-ℕ P q0 qS zero-ℕ = q0
+induction-strong-ind-ℕ P q0 qS (succ-ℕ n) = qS n
+  ( induction-strong-ind-ℕ P q0 qS n)
+
+strong-ind-ℕ :
+  { l : Level} → (P : ℕ → UU l) (p0 : P zero-ℕ) →
+  ( pS : (k : ℕ) → (fam-strong-ind-ℕ P k) → P (succ-ℕ k)) →
+  ( n : ℕ) → P n
+strong-ind-ℕ P p0 pS = 
+  conclusion-strong-ind-ℕ P
+    ( induction-strong-ind-ℕ P
+      ( zero-strong-ind-ℕ P p0)
+      ( succ-strong-ind-ℕ P pS))
+
+-- We show that induction on ℕ implies ordinal induction.
+
+fam-ordinal-ind-ℕ :
+  { l : Level} → (ℕ → UU l) → ℕ → UU l
+fam-ordinal-ind-ℕ P n = (m : ℕ) → (le-ℕ m n) → P m
+
+le-zero-ℕ :
+  (m : ℕ) → (le-ℕ m zero-ℕ) → empty
+le-zero-ℕ zero-ℕ ()
+le-zero-ℕ (succ-ℕ m) ()
+
+zero-ordinal-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) → fam-ordinal-ind-ℕ P zero-ℕ
+zero-ordinal-ind-ℕ P m t = ind-empty (le-zero-ℕ m t)
+
+le-one-ℕ :
+  (n : ℕ) → le-ℕ (succ-ℕ n) one-ℕ → empty
+le-one-ℕ zero-ℕ ()
+le-one-ℕ (succ-ℕ n) ()
+
+transitive-le-ℕ' :
+  (k l m : ℕ) → (le-ℕ k l) → (le-ℕ l (succ-ℕ m)) → le-ℕ k m
+transitive-le-ℕ' zero-ℕ zero-ℕ m () s
+transitive-le-ℕ' zero-ℕ (succ-ℕ l) zero-ℕ star s = ind-empty (le-one-ℕ l s)
+transitive-le-ℕ' zero-ℕ (succ-ℕ l) (succ-ℕ m) star s = star
+transitive-le-ℕ' (succ-ℕ k) zero-ℕ m () s
+transitive-le-ℕ' (succ-ℕ k) (succ-ℕ l) zero-ℕ t s = ind-empty (le-one-ℕ l s)
+transitive-le-ℕ' (succ-ℕ k) (succ-ℕ l) (succ-ℕ m) t s =
+  transitive-le-ℕ' k l m t s
+
+succ-ordinal-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  ( (n : ℕ) → (fam-ordinal-ind-ℕ P n) → P n) →
+  ( k : ℕ) → fam-ordinal-ind-ℕ P k → fam-ordinal-ind-ℕ P (succ-ℕ k)
+succ-ordinal-ind-ℕ P f k g m t =
+  f m (λ m' t' → g m' (transitive-le-ℕ' m' m k t' t))
+
+induction-ordinal-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  ( qS : (k : ℕ) → fam-ordinal-ind-ℕ P k → fam-ordinal-ind-ℕ P (succ-ℕ k))
+  ( n : ℕ) → fam-ordinal-ind-ℕ P n
+induction-ordinal-ind-ℕ P qS zero-ℕ = zero-ordinal-ind-ℕ P 
+induction-ordinal-ind-ℕ P qS (succ-ℕ n) =
+  qS n (induction-ordinal-ind-ℕ P qS n)
+
+conclusion-ordinal-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  (( n : ℕ) → fam-ordinal-ind-ℕ P n) → (n : ℕ) → P n
+conclusion-ordinal-ind-ℕ P f n = f (succ-ℕ n) n (succ-le-ℕ n)
+
+ordinal-ind-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  ( (n : ℕ) → (fam-ordinal-ind-ℕ P n) → P n) →
+  ( n : ℕ) → P n
+ordinal-ind-ℕ P f =
+  conclusion-ordinal-ind-ℕ P
+    ( induction-ordinal-ind-ℕ P (succ-ordinal-ind-ℕ P f))

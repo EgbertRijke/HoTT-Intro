@@ -481,4 +481,15 @@ and show that $\Z_{\geq k}$ satisfies the induction principle of the natural num
 \ind{\Z_{\geq k}} : P(b_k)\to \Big(\prd{n:\Z_{\geq k}} P(n)\to P(s_k(n))\Big)\to \Big(\prd{n:\Z_{\geq k}} P(n)\Big)
 \end{equation*}
 \end{subexenum}
+\item
+  \begin{subexenum}
+  \item Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function of type
+    \begin{equation*}
+      P(\zeroN) \to \Big(\prd{k:\N}\Big(\prd{m:\N} (m\leq k) \to P(m)\Big)\to P(\succN(k)) \to \prd{n:\N}P(n).
+    \end{equation*}
+  \item Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
+    \begin{equation*}
+      \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
+    \end{equation*}
+  \end{subexenum}
 \end{exercises}
