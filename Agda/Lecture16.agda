@@ -554,53 +554,6 @@ isretr-eq-Eq-Fam-pushout l f g s t =
   isretr-inv-is-equiv
     ( is-equiv-Eq-Fam-pushout-eq l f g s t)
 
-{-
-{- We compute the identity type of type-choice-∞. Note that its identity 
-   type is again of the form type-choice-∞. -}
-
-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → UU (l1 ⊔ (l2 ⊔ l3))
-Eq-type-choice-∞ {A = A} {B} C t t' =
-  type-choice-∞
-    ( λ (x : A) (p : Id ((pr1 t) x) ((pr1 t') x)) →
-      Id (tr (C x) p ((pr2 t) x)) ((pr2 t') x))
-
-reflexive-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : type-choice-∞ C) → Eq-type-choice-∞ C t t
-reflexive-Eq-type-choice-∞ C (dpair f g) = dpair (htpy-refl f) (htpy-refl _)
-
-Eq-type-choice-∞-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → Id t t' → Eq-type-choice-∞ C t t'
-Eq-type-choice-∞-eq C t .t refl = reflexive-Eq-type-choice-∞ C t
-
-is-contr-total-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : type-choice-∞ C) → is-contr (Σ (type-choice-∞ C) (Eq-type-choice-∞ C t))
-is-contr-total-Eq-type-choice-∞ {A = A} {B} C t =
-  is-contr-total-Eq-structure
-    ( λ f g H → (x : A) → Id (tr (C x) (H x) ((pr2 t) x)) (g x))
-    ( is-contr-total-htpy (pr1 t))
-    ( dpair (pr1 t) (htpy-refl _))
-    ( is-contr-total-htpy (pr2 t))
-
-is-equiv-Eq-type-choice-∞-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → is-equiv (Eq-type-choice-∞-eq C t t')
-is-equiv-Eq-type-choice-∞-eq C t =
-  id-fundamental-gen t
-    ( reflexive-Eq-type-choice-∞ C t)
-    ( is-contr-total-Eq-type-choice-∞ C t)
-    ( Eq-type-choice-∞-eq C t)
-
-eq-Eq-type-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) → Eq-type-choice-∞ C t t' → Id t t'
-eq-Eq-type-choice-∞ C t t' =
-  inv-is-equiv (is-equiv-Eq-type-choice-∞-eq C t t')
-
 {- Next we compute the identity type of products of total spaces. Note again
    that the identity type of a product of total spaces is again a product of
    total spaces. -}

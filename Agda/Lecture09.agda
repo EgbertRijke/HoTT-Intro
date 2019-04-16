@@ -230,6 +230,52 @@ type-choice-∞ :
   (C : (x : A) → B x → UU l3) → UU (l1 ⊔ (l2 ⊔ l3))
 type-choice-∞ {A = A} {B} C = Σ ((x : A) → B x) (λ f → (x : A) → C x (f x))
 
+{- We compute the identity type of type-choice-∞. Note that its identity 
+   type is again of the form type-choice-∞. -}
+
+Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) → UU (l1 ⊔ (l2 ⊔ l3))
+Eq-type-choice-∞ {A = A} {B} C t t' =
+  type-choice-∞
+    ( λ (x : A) (p : Id ((pr1 t) x) ((pr1 t') x)) →
+      Id (tr (C x) p ((pr2 t) x)) ((pr2 t') x))
+
+reflexive-Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : type-choice-∞ C) → Eq-type-choice-∞ C t t
+reflexive-Eq-type-choice-∞ C (dpair f g) = dpair (htpy-refl f) (htpy-refl _)
+
+Eq-type-choice-∞-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) → Id t t' → Eq-type-choice-∞ C t t'
+Eq-type-choice-∞-eq C t .t refl = reflexive-Eq-type-choice-∞ C t
+
+is-contr-total-Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : type-choice-∞ C) → is-contr (Σ (type-choice-∞ C) (Eq-type-choice-∞ C t))
+is-contr-total-Eq-type-choice-∞ {A = A} {B} C t =
+  is-contr-total-Eq-structure
+    ( λ f g H → (x : A) → Id (tr (C x) (H x) ((pr2 t) x)) (g x))
+    ( is-contr-total-htpy (pr1 t))
+    ( dpair (pr1 t) (htpy-refl _))
+    ( is-contr-total-htpy (pr2 t))
+
+is-equiv-Eq-type-choice-∞-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : type-choice-∞ C) → is-equiv (Eq-type-choice-∞-eq C t t')
+is-equiv-Eq-type-choice-∞-eq C t =
+  id-fundamental-gen t
+    ( reflexive-Eq-type-choice-∞ C t)
+    ( is-contr-total-Eq-type-choice-∞ C t)
+    ( Eq-type-choice-∞-eq C t)
+
+eq-Eq-type-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  {t t' : type-choice-∞ C} → Eq-type-choice-∞ C t t' → Id t t'
+eq-Eq-type-choice-∞ C {t} {t'} =
+  inv-is-equiv (is-equiv-Eq-type-choice-∞-eq C t t')
+
 Π-total-fam :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   (C : (x : A) → B x → UU l3) → UU (l1 ⊔ (l2 ⊔ l3))
@@ -249,12 +295,8 @@ issec-inv-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
   ( ( choice-∞ {A = A} {B = B} {C = C}) ∘
     ( inv-choice-∞ {A = A} {B = B} {C = C})) ~ id
-issec-inv-choice-∞ {A = A} {C = C} ψ =
-  eq-pair (dpair
-    ( eq-htpy (λ x → refl))
-    ( ap
-      ( λ t → tr (λ f → (x : A) → C x (f x)) t (λ x → (pr2 ψ) x))
-      ( isretr-eq-htpy refl)))
+issec-inv-choice-∞ {A = A} {C = C} (dpair ψ ψ') =
+  eq-Eq-type-choice-∞ C (dpair (htpy-refl ψ) (htpy-refl ψ'))
 
 isretr-inv-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
@@ -984,16 +1026,64 @@ universal-property-unit-is-equiv-ind-unit X x is-equiv-ind-unit l2 Y =
 
 -- Exercise 9.11
 
-tr-issec-eq-htpy :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
-  (g : B → A) {g' : B → A} (H : g ~ g') (G : (f ∘ g) ~ id) →
-  (tr (λ (h : B → A) → (f ∘ h) ~ id) (eq-htpy H) G) ~ ((htpy-inv (f ·l H)) ∙h G)
-tr-issec-eq-htpy {A = A} {B = B} f g =
-  let P = λ (h : B → A) → (f ∘ h) ~ id in
-  ind-htpy g
-    ( λ g' H → (G : (f ∘ g) ~ id) →
-      ( tr P (eq-htpy H) G) ~ ((htpy-inv (f ·l H)) ∙h G))
-    ( λ G → htpy-eq (ap (λ t → tr P t G) (eq-htpy-htpy-refl g))) 
+Eq-sec :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  sec f → sec f → UU (l1 ⊔ l2)
+Eq-sec f sec-f sec-f' =
+  Σ ( (pr1 sec-f) ~ (pr1 sec-f'))
+    ( λ H → (pr2 sec-f) ~ ((f ·l H) ∙h (pr2 sec-f')))
+
+reflexive-Eq-sec :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (sec-f : sec f) → Eq-sec f sec-f sec-f
+reflexive-Eq-sec f (dpair g G) = dpair (htpy-refl g) (htpy-refl G)
+
+Eq-sec-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (sec-f sec-f' : sec f) → Id sec-f sec-f' → Eq-sec f sec-f sec-f'
+Eq-sec-eq f sec-f .sec-f refl = reflexive-Eq-sec f sec-f
+
+is-contr-total-Eq-sec :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (sec-f : sec f) →
+  is-contr (Σ (sec f) (Eq-sec f sec-f))
+is-contr-total-Eq-sec f (dpair g G) =
+  is-contr-total-Eq-structure
+    ( λ g' G' H → G ~ ((f ·l H) ∙h G'))
+    ( is-contr-total-htpy g)
+    ( dpair g (htpy-refl g))
+    ( is-contr-total-htpy G)
+
+is-equiv-Eq-sec-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (sec-f sec-f' : sec f) → is-equiv (Eq-sec-eq f sec-f sec-f')
+is-equiv-Eq-sec-eq f sec-f =
+  id-fundamental-gen sec-f
+    ( reflexive-Eq-sec f sec-f)
+    ( is-contr-total-Eq-sec f sec-f)
+    ( Eq-sec-eq f sec-f)
+
+eq-Eq-sec :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  {sec-f sec-f' : sec f} → Eq-sec f sec-f sec-f' → Id sec-f sec-f'
+eq-Eq-sec f {sec-f} {sec-f'} = inv-is-equiv (is-equiv-Eq-sec-eq f sec-f sec-f')
+
+isretr-section-comp :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (sec-h : sec h) →
+  ((section-comp f g h H sec-h) ∘ (section-comp' f g h H sec-h)) ~ id
+isretr-section-comp f g h H (dpair k K) (dpair l L) =
+  eq-Eq-sec g
+    ( dpair
+      ( K ·r l)
+      ( ( htpy-assoc
+          ( htpy-inv (H ·r (k ∘ l)))
+          ( H ·r (k ∘ l))
+          ( (g ·l (K ·r l)) ∙h L)) ∙h
+        ( htpy-ap-concat'
+          ( (htpy-inv (H ·r (k ∘ l))) ∙h (H ·r (k ∘ l)))
+          ( htpy-refl _)
+          ( (g ·l (K ·r l)) ∙h L)
+          ( htpy-left-inv (H ·r (k ∘ l))))))
 
 sec-left-factor-retract-of-sec-composition :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -1004,51 +1094,67 @@ sec-left-factor-retract-of-sec-composition {X = X} f g h H sec-h =
     ( section-comp' f g h H sec-h)
     ( dpair
       ( section-comp f g h H sec-h)
-      ( λ sec-g →
-        let K = htpy-right-whisk (pr2 sec-h) (pr1 sec-g) in
-        eq-pair
-          ( dpair
-          ( eq-htpy K)
-          ( eq-htpy
-            ( ( tr-issec-eq-htpy g
-                ( h ∘ ((pr1 sec-h) ∘ (pr1 sec-g)))
-                ( K)
-                ( pr2
-                  ( section-comp f g h H sec-h
-                    ( section-comp' f g h H sec-h sec-g)))) ∙h
-              ( ( htpy-ap-concat
-                  ( htpy-inv (g ·l ((pr2 sec-h) ·r (pr1 sec-g)))) _ _
-                  ( ( htpy-assoc
-                      ( htpy-inv (H ·r ((pr1 sec-h) ∘ (pr1 sec-g))))
-                      ( H ·r ((pr1 sec-h) ∘ (pr1 sec-g)))
-                      ( _)) ∙h
-                    ( htpy-ap-concat' _ _
-                      ( ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))) ∙h
-                        ( pr2 sec-g))
-                      ( htpy-left-inv (H ·r ((pr1 sec-h) ∘ (pr1 sec-g))))))) ∙h
-                ( ( htpy-assoc
-                    ( htpy-inv (g ·l ((pr2 sec-h) ·r (pr1 sec-g))))
-                    ( g ·l ((pr2 sec-h) ·r (pr1 sec-g)))
-                    ( pr2 sec-g)) ∙h
-                  ( htpy-ap-concat'
-                    ( ( htpy-inv (g ·l ((pr2 sec-h) ·r (pr1 sec-g)))) ∙h
-                      ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))))
-                    ( htpy-refl (g ∘ (pr1 sec-g)))
-                    ( pr2 sec-g)
-                    ( htpy-left-inv
-                      ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))))))))))))
+      ( isretr-section-comp f g h H sec-h))
 
-tr-isretr-eq-htpy :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B)
-  (h : B → A) {h' : B → A} (H : h ~ h') (is-retr-h : (h ∘ f) ~ id) →
-  (tr (λ (k : B → A) → (k ∘ f) ~ id) (eq-htpy H) is-retr-h) ~
-  ((htpy-inv (H ·r f)) ∙h is-retr-h)
-tr-isretr-eq-htpy {A = A} {B} f h =
-  let P = λ (k : B → A) → (k ∘ f) ~ id in
-  ind-htpy h
-    ( λ h' H →
-      ( K : (h ∘ f) ~ id) → (tr P (eq-htpy H) K) ~ ((htpy-inv (H ·r f)) ∙h K))
-    ( λ K → htpy-eq (ap (λ t → tr P t K) (eq-htpy-htpy-refl h)))
+Eq-retr :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  retr f → retr f → UU (l1 ⊔ l2)
+Eq-retr f retr-f retr-f' =
+  Σ ( (pr1 retr-f) ~ (pr1 retr-f'))
+    ( λ H → (pr2 retr-f) ~ ((H ·r f) ∙h (pr2 retr-f')))
+
+reflexive-Eq-retr :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (retr-f : retr f) → Eq-retr f retr-f retr-f
+reflexive-Eq-retr f (dpair h H) = dpair (htpy-refl h) (htpy-refl H)
+
+Eq-retr-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (retr-f retr-f' : retr f) → Id retr-f retr-f' → Eq-retr f retr-f retr-f'
+Eq-retr-eq f retr-f .retr-f refl = reflexive-Eq-retr f retr-f
+
+is-contr-total-Eq-retr :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (retr-f : retr f) →
+  is-contr (Σ (retr f) (Eq-retr f retr-f))
+is-contr-total-Eq-retr f (dpair h H) =
+  is-contr-total-Eq-structure
+    ( λ h' H' K → H ~ ((K ·r f) ∙h H'))
+    ( is-contr-total-htpy h)
+    ( dpair h (htpy-refl _))
+    ( is-contr-total-htpy H)
+
+is-equiv-Eq-retr-eq :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (retr-f retr-f' : retr f) → is-equiv (Eq-retr-eq f retr-f retr-f')
+is-equiv-Eq-retr-eq f retr-f =
+  id-fundamental-gen retr-f
+    ( reflexive-Eq-retr f retr-f)
+    ( is-contr-total-Eq-retr f retr-f)
+    ( Eq-retr-eq f retr-f)
+
+eq-Eq-retr :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  {retr-f retr-f' : retr f} → Eq-retr f retr-f retr-f' → Id retr-f retr-f'
+eq-Eq-retr f {retr-f} {retr-f'} =
+  inv-is-equiv (is-equiv-Eq-retr-eq f retr-f retr-f')
+
+isretr-retraction-comp :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (retr-g : retr g) →
+  ((retraction-comp f g h H retr-g) ∘ (retraction-comp' f g h H retr-g)) ~ id
+isretr-retraction-comp f g h H (dpair l L) (dpair k K) =
+  eq-Eq-retr h
+    ( dpair
+      ( k ·l L)
+      ( ( htpy-assoc
+          ( htpy-inv ((k ∘ l) ·l H))
+          ( (k ∘ l) ·l H)
+          ( (k ·l (L ·r h)) ∙h K)) ∙h
+        ( htpy-ap-concat'
+          ( (htpy-inv ((k ∘ l) ·l H)) ∙h ((k ∘ l) ·l H))
+          ( htpy-refl _)
+          ( (k ·l (L ·r h)) ∙h K)
+          ( htpy-left-inv ((k ∘ l) ·l H)))))
   
 sec-right-factor-retract-of-sec-left-factor :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -1059,34 +1165,7 @@ sec-right-factor-retract-of-sec-left-factor f g h H retr-g =
     ( retraction-comp' f g h H retr-g)
     ( dpair
       ( retraction-comp f g h H retr-g)
-      ( λ retr-h →
-        eq-pair
-        ( dpair 
-          ( eq-htpy ((pr1 retr-h) ·l (pr2 retr-g)))
-          ( eq-htpy
-            ( ( tr-isretr-eq-htpy h _ _
-                ( pr2
-                  ( retraction-comp f g h H retr-g
-                  ( retraction-comp' f g h H retr-g retr-h)))) ∙h
-              ( ( htpy-ap-concat
-                  ( htpy-inv (((pr1 retr-h) ·l (pr2 retr-g)) ·r h))
-                  ( _)
-                  ( _)
-                  ( ( htpy-assoc
-                      ( htpy-inv (((pr1 retr-h) ∘ (pr1 retr-g)) ·l H))
-                      ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H)
-                      ( _)) ∙h
-                     ( htpy-ap-concat' _ _
-                       ( ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)) ∙h (pr2 retr-h))
-                       ( htpy-left-inv
-                         ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H))))) ∙h
-                ( ( htpy-assoc
-                    ( htpy-inv ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)))
-                    ( (pr1 retr-h) ·l ((pr2 retr-g) ·r h))
-                    ( pr2 retr-h)) ∙h
-                  ( htpy-ap-concat' _ _ (pr2 retr-h)
-                    ( htpy-left-inv
-                      ( (pr1 retr-h) ·l ((pr2 retr-g) ·r h)))))))))))
+      ( isretr-retraction-comp f g h H retr-g))
 
 -- Exercise 9.12
 

@@ -1086,3 +1086,69 @@ is-emb-inr A B x =
           ( λ y → is-equiv-map-raise _ (Id x y)))
         ( is-contr-total-path B x)))
     ( λ y → ap inr)
+
+-- Extra material
+
+{- In order to show that the total space of htpy-cone is contractible, we give
+   a general construction that helps us characterize the identity type of
+   a structure. This construction is called 
+
+   is-contr-total-Eq-structure.
+
+   We first give some definitions that help us with the construction of
+   is-contr-total-Eq-structure. -}
+
+swap-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
+  (D : (x : A) → B x → C x → UU l4) →
+  Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D (pr1 t) (pr2 t))) →
+  Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+swap-total-Eq-structure B C D (dpair (dpair a b) (dpair c d)) =
+  dpair (dpair a c) (dpair b d)
+
+htpy-swap-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
+  (D : (x : A) → B x → C x → UU l4) →
+  ( ( swap-total-Eq-structure B C D) ∘
+    ( swap-total-Eq-structure C B (λ x z y → D x y z))) ~ id
+htpy-swap-total-Eq-structure B C D (dpair (dpair a b) (dpair c d)) = refl
+
+is-equiv-swap-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
+  (D : (x : A) → B x → C x → UU l4) →
+  is-equiv (swap-total-Eq-structure B C D)
+is-equiv-swap-total-Eq-structure B C D =
+  is-equiv-has-inverse
+    ( dpair
+      ( swap-total-Eq-structure C B (λ x z y → D x y z))
+      ( dpair
+        ( htpy-swap-total-Eq-structure B C D)
+        ( htpy-swap-total-Eq-structure C B (λ x z y → D x y z))))
+
+is-contr-total-Eq-structure :
+  {l1 l2 l3 l4 : Level} { A : UU l1} {B : A → UU l2} {C : A → UU l3}
+  ( D : (x : A) → B x → C x → UU l4) →
+  ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
+  is-contr (Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))) →
+  is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D (pr1 t) (pr2 t))))
+is-contr-total-Eq-structure
+  {A = A} {B = B} {C = C} D is-contr-AC t is-contr-BD =
+  is-contr-is-equiv
+    ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))))
+    ( swap-total-Eq-structure B C D)
+    ( is-equiv-swap-total-Eq-structure B C D)
+    ( is-contr-is-equiv
+      ( Σ (B (pr1 t)) (λ y →
+        D (pr1 t) y
+          ( pr2 t)))
+      ( left-unit-law-Σ-map-conv
+        ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+        ( dpair t (λ t' →
+          ( inv (contraction is-contr-AC t)) ∙
+          ( contraction is-contr-AC t'))))
+      ( is-equiv-left-unit-law-Σ-map-conv
+        ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+        ( dpair t (λ t' →
+          ( inv (contraction is-contr-AC t)) ∙
+          ( contraction is-contr-AC t'))))
+      ( is-contr-BD))

@@ -788,28 +788,3 @@ is-decidable-le-ℕ zero-ℕ zero-ℕ = inr id
 is-decidable-le-ℕ zero-ℕ (succ-ℕ n) = inl star
 is-decidable-le-ℕ (succ-ℕ m) zero-ℕ = inr id
 is-decidable-le-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-le-ℕ m n
-
-bound-succ-max-bounded-decidable-subtype-ℕ :
-  { l : Level} (P : ℕ → UU l)
-  ( m : ℕ) →
-  ( b : (n : ℕ) → ((succ-ℕ m) ≤ n) → ¬ (P n)) → 
-  ¬ (P m) → (n : ℕ) → (m ≤ n) → ¬ (P n)
-bound-succ-max-bounded-decidable-subtype-ℕ P m b not-P-m n m-leq-n = {!!}
-  
-{-
-max-bounded-decidable-subtype-ℕ :
-  { l : Level} (P : ℕ → UU l) (is-prop-P : (n : ℕ) → is-prop (P n)) →
-  ( is-bounded : Σ ℕ (λ m → (n : ℕ) → (P n) → (n ≤ m))) →
-  ( is-decidable : (n : ℕ) → decide (P n)) →
-  ( Σ ℕ P) → ℕ
-max-bounded-decidable-subtype-ℕ P is-prop-P (dpair zero-ℕ bound) d (dpair n p) =  ind-empty (bound n (zero-ℕ-leq-ℕ n) p)
-max-bounded-decidable-subtype-ℕ P is-prop-P (dpair (succ-ℕ m) bound) d (dpair n p) =
-  ind-coprod
-    ( λ (t : decide (P m)) → ℕ)
-    ( λ p → m)
-    ( λ f → max-bounded-decidable-subtype-ℕ P is-prop-P
-      ( dpair m (bound-succ-max-bounded-decidable-subtype-ℕ P m bound f))
-      ( d)
-      ( dpair n p))
-    ( d m)
--}
