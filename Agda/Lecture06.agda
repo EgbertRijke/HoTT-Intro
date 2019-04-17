@@ -401,6 +401,14 @@ is-equiv-is-contr {i} {j} {A} {B} f is-contr-A is-contr-B =
       ( inv (contraction is-contr-B (f (center is-contr-A)))))
     ( contraction is-contr-A)
 
+equiv-is-contr :
+  {i j : Level} {A : UU i} {B : UU j} →
+  is-contr A → is-contr B → A ≃ B
+equiv-is-contr is-contr-A is-contr-B =
+  dpair
+    ( λ a → center is-contr-B)
+    ( is-equiv-is-contr _ is-contr-A is-contr-B)
+
 -- Exercise 6.4
 
 -- In this exercise we will show that if the base type in a Σ-type is contractible, then the Σ-type is equivalent to the fiber at the center of contraction. This can be seen as a left unit law for Σ-types. We will derive a right unit law for Σ-types in Lecture 7 (not because it is unduable here, but it is useful to have some knowledge of fiberwise equivalences).

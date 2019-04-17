@@ -5,10 +5,6 @@ module subuniverses where
 import Lecture15
 open Lecture15 public
 
-is-subuniverse :
-  {l1 l2 : Level} (P : UU l1 → UU l2) → UU ((lsuc l1) ⊔ l2)
-is-subuniverse P = is-subtype P
-
 {-
 is-local :
   {l1 l2 l3 l4 : Level}
@@ -23,60 +19,6 @@ is-subuniverse-is-local :
   is-subuniverse (is-local {l4 = l4} f)
 is-subuniverse-is-local f X = is-prop-Π (λ i → is-subtype-is-equiv _)
 -}
-
-subuniverse :
-  (l1 l2 : Level) → UU ((lsuc l1) ⊔ (lsuc l2))
-subuniverse l1 l2 = Σ (UU l1 → UU l2) is-subuniverse
-
-{- By univalence, subuniverses are closed under equivalences. -}
-in-subuniverse-equiv :
-  {l1 l2 : Level} (P : UU l1 → UU l2) {X Y : UU l1} → X ≃ Y → P X → P Y
-in-subuniverse-equiv P e = tr P (eq-equiv _ _ e)
-
-in-subuniverse-equiv' :
-  {l1 l2 : Level} (P : UU l1 → UU l2) {X Y : UU l1} → X ≃ Y → P Y → P X
-in-subuniverse-equiv' P e = tr P (inv (eq-equiv _ _ e))
-
-{- We also introduce the notion of 'global subuniverse'. The handling of universe
-   levels is a bit more complicated here, since (l : Level) → A l are kinds but not
-   types. -}
-   
-is-global-subuniverse :
-  (α : Level → Level) (P : (l : Level) → subuniverse l (α l)) →
-  (l1 l2 : Level) → UU _
-is-global-subuniverse α P l1 l2 =
-  (X : UU l1) (Y : UU l2) → X ≃ Y → (pr1 (P l1)) X → (pr1 (P l2)) Y
-
-total-subuniverse :
-  {l1 l2 : Level} (P : subuniverse l1 l2) → UU ((lsuc l1) ⊔ l2)
-total-subuniverse {l1} P = Σ (UU l1) (pr1 P)
-
-Eq-total-subuniverse :
-  {l1 l2 : Level} (P : subuniverse l1 l2) →
-  (s t : total-subuniverse P) → UU l1
-Eq-total-subuniverse (dpair P H) (dpair X p) t = X ≃ (pr1 t)
-
-Eq-total-subuniverse-eq :
-  {l1 l2 : Level} (P : subuniverse l1 l2) →
-  (s t : total-subuniverse P) → Id s t → Eq-total-subuniverse P s t
-Eq-total-subuniverse-eq (dpair P H) (dpair X p) .(dpair X p) refl = equiv-id X
-
-is-contr-total-Eq-total-subuniverse :
-  {l1 l2 : Level} (P : subuniverse l1 l2)
-  (s : total-subuniverse P) →
-  is-contr (Σ (total-subuniverse P) (λ t → Eq-total-subuniverse P s t))
-is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p) =
-  is-contr-total-Eq-substructure (is-contr-total-equiv X) H X (equiv-id X) p
-
-is-equiv-Eq-total-subuniverse-eq :
-  {l1 l2 : Level} (P : subuniverse l1 l2)
-  (s t : total-subuniverse P) → is-equiv (Eq-total-subuniverse-eq P s t)
-is-equiv-Eq-total-subuniverse-eq (dpair P H) (dpair X p) =
-  id-fundamental-gen
-    ( dpair X p)
-    ( equiv-id X)
-    ( is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p))
-    ( Eq-total-subuniverse-eq (dpair P H) (dpair X p))
 
 universal-property-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2)
