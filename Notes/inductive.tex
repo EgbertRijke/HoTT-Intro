@@ -276,6 +276,12 @@ In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+
 
 \chapter{The universe and type-valued relations}
 
+In this lecture we introduce type theoretic \emph{universes}. Universes are types $\UU$ of which the terms again represent types. In other words, the universe comes equipped with a type family, which we call the \emph{universal type family}.
+
+One reason for introducting universes is that it enables us to define new type families over inductive types, using their induction principle. Indeed, since the universe is itself a type, we can use the induction principle to eliminate into the universe. Then we obtain a type family over the inductive type by the universal type family.
+
+We use this way of defining type families to define many familiar relations over $\N$, such as $\leq$ and $<$. We also introduce a relation called \emph{observational equality} $\mathsf{Eq}_\N$ on $\N$, which we can think of as equality of $\N$. This relation is reflexive, symmetric, and transitive, and moreover it is the least reflexive relation. Furthermore, one of the most important aspects of observational equality $\mathsf{Eq}_\N$ on $\N$ is that $\mathsf{Eq}_\N(m,n)$ is a type for every $m,n:\N$, unlike judgmental equality. Therefore we can use type theory to reason about observational equality on $\N$. Indeed, in the exercises we show that some very elementary mathematics can already be done at this early stage in our development of type theory.
+
 \section{The universe}
 The induction principle for inductive types can be used to prove universal quantifications. 
 However, it would also be nice if we could construct \emph{new type families} over inductive types, using their induction principles.
@@ -387,6 +393,7 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
 \end{align*}
 \end{defn}
 
+\section{Observational equality on \texorpdfstring{$\N$}{ℕ}}
 A second example of this kind is the notion of \emph{observational equality} on the natural numbers.
 
 \begin{defn}\label{defn:obs_nat}
@@ -420,6 +427,10 @@ Therefore we have by the computation rule for the first induction that the judgm
 \end{align*}
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
+
+We can also define observational equality for many other kinds of types, such as $\bool$ or $\Z$. In each of these cases, what sets the observational equality apart from other relations is that it is the \emph{least} reflexive relation. However, the definitions of observational equality in the various situations are always very specific to the type they are defined on. In the next chapter we introduce the \emph{identity type}, which is an equality type defined uniformly for all types. In \cref{chap:hierarchy} we will show that the observational equality on $\N$ is equivalent to the identity type on $\N$.
+
+\section{How many universes are there?}
 
 \begin{exercises}
 \item Construct a function
@@ -485,7 +496,7 @@ and show that $\Z_{\geq k}$ satisfies the induction principle of the natural num
   \begin{subexenum}
   \item Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function of type
     \begin{equation*}
-      P(\zeroN) \to \Big(\prd{k:\N}\Big(\prd{m:\N} (m\leq k) \to P(m)\Big)\to P(\succN(k)) \to \prd{n:\N}P(n).
+      P(\zeroN) \to \Big(\prd{k:\N}\Big(\prd{m:\N} (m\leq k) \to P(m)\Big)\to P(\succN(k))\Big) \to \prd{n:\N}P(n).
     \end{equation*}
   \item Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
     \begin{equation*}

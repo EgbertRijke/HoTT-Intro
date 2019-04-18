@@ -3,6 +3,18 @@
 \chapter{Contractible types and contractible maps}
 \chaptermark{Contractible types and maps}
 
+In this lecture we introduce the notions of contractible types and maps. A contractible type is a type which has, up to identification, only one term. In other words, a contractible type is a type that comes equipped with a point, and an identification of this point with any point.
+
+We may think of contractible types as singletons up to homotopy, and indeed we show that the unit type is an example of a contractible type. Moreover, we show that contractible typs satisfy an induction principle that is very similar to the induction principle of the unit type, provided that we formulate the computation rule using the identity type rather than postulating a judgmental computation rule. Another example of a contractible type is the total space of the family of identifications with a fixed starting point.
+
+We then introduce the notion of fiber of a map, which is the type theoretic analogue of the pre-image of a map, and we say that a map in contractible if all its fibers are contractible. Thus, a map is contractible if the preimage at any point in the codomain is a singleton. This condition is of course analogous to the set theoretic notion of bijective map, which suggests that on the type theoretical side of things a map should be contractible if and only if it is an equivalence.
+
+The forward direction of this claim is straightforward, and we prove this direction immediately in \cref{thm:equiv_contr}. The converse direction can be done directly, but it is certainly more involved. Therefore we prepare the proof of the converse direction by first characterizing the identity type of a fiber of a map. Then we show that any equivalence $e$ can be given the structure of a invertible map with an additional coherence relating the homotopies
+\begin{equation*}
+  e\circ e^{-1}\htpy \idfunc,\qquad\text{and}\qquad e^{-1}\circ e\htpy\idfunc,
+\end{equation*}
+and finally we use these observations in \cref{thm:contr_equiv} to conclude that the fibers of any equivalence must be contractible.
+
 \section{Contractible types}
 
 \begin{defn}
@@ -115,6 +127,38 @@ Let $f:A\to B$ be a function, and let $b:B$. The \define{fiber}\index{fiber|text
 In other words, the fiber of $f$ at $b$ is the type of $a:A$ that get mapped by $f$ to $b$.
 One may think of the fiber as a type theoretic version of the pre-image\index{pre-image|see {fiber}} of a point.
 
+It will be useful to have a characterization of the identity type of a fiber, so we will make such a characterization immediately.
+
+  \begin{defn}
+    Let $f:A \to B$ be a map, and let $(x,p),(x',p'):\fib{f}{y}$ for some $y:B$.
+    Then we define
+    \begin{equation*}
+      \mathsf{Eq\usc{}fib}_f((x,p),(x',p'))\defeq \sm{\alpha:x=x'}p=\ct{\ap{f}{\alpha}}{p'}
+    \end{equation*}
+    The relation $\mathsf{Eq\usc{}fib}_f:\fib{f}{y}\to\fib{f}{y}\to\UU$ is a reflexive relation, since we have
+    \begin{equation*}
+      \lam{(x,p)}(\refl{x},\refl{p}):\prd{(x,p):\fib{f}{y}}\mathsf{Eq\usc{}fib}_f((x,p),(x,p)).
+    \end{equation*}
+  \end{defn}
+
+  \begin{lem}
+    Consider a map $f:A\to B$ and let $y:B$. The canonical map
+    \begin{equation*}
+      ((x,p)=(x',p'))\to\mathsf{Eq\usc{}fib}_f((x,p),(x',p'))
+    \end{equation*}
+    induced by the reflexivity of $\mathsf{Eq\usc{}fib}_f$ is an equivalence for any $(x,p),(x',p'):\fib{f}{y}$.
+  \end{lem}
+
+  \begin{proof}
+    The converse map
+    \begin{equation*}
+      \mathsf{Eq\usc{}fib}_f((x,p),(x',p'))\to ((x,p)=(x',p'))
+    \end{equation*}
+    is easily defined by $\Sigma$-induction, and then path induction twice. The homotopies witnessing that this converse map is indeed a right inverse as well as a left inverse is similarly constructed by induction.
+  \end{proof}
+
+  Now we arrive at the notion of contractible map.
+
 \begin{defn}
 We say that a function $f:A\to B$ is \define{contractible}\index{contractible!map|textbf} if there is a term of type
 \begin{equation*}
@@ -138,13 +182,82 @@ It remains to construct a retraction of $f$. Taking $g$ as our retraction, we ha
 
 \section{Equivalences are contractible maps}
 
-In this section we will show the converse to \autoref{thm:equiv_contr}, that equivalences are contractible maps. Before we do so, we will establish some useful constructions on homotopies and section-retraction pairs.
+In \cref{thm:contr_equiv} we will show the converse to \autoref{thm:equiv_contr}, that any equivalence is a contractible map. We will do this in two steps.
+
+First we introduce a new notion of \emph{coherently invertible map}, for which we can easily show that such maps have contractible fibers. Then we show that any equivalence is a coherently invertible map.
+
+  Recall that an invertible map is a map $f:A\to B$ equipped with $g:B\to A$ and homotopies
+  \begin{equation*}
+    G : f\circ g \htpy \idfunc\qquad\text{and}\qquad H:g\circ f\htpy \idfunc.
+  \end{equation*}
+  Then we observe that both $G \cdot f$ and $f \cdot H$ are homotopies of the same type
+  \begin{equation*}
+    f\circ g\circ f \htpy f.
+  \end{equation*}
+  A coherently invertible map is an invertible map for which there is a further homotopy $G \cdot f\htpy f\cdot H$.
+
+  \begin{defn}
+    Consider a map $f:A\to B$. We say that $f$ is \define{coherently invertible} if it comes equipped with
+    \begin{align*}
+      g & : B \to A \\
+      G & : f \circ g \htpy \idfunc \\
+      H & : g \circ f \htpy \idfunc \\
+      K & : G \cdot f \htpy f \cdot H.
+    \end{align*}
+    We will write $\mathsf{is\usc{}coh\usc{}invertible}(f)$ for the type of quadruples $(g,G,H,K)$.
+  \end{defn}
+
+  Although we will encounter the notion of coherently invertible map on some further occasions, the following lemma is our main motivation for considering it.
+
+  \begin{lem}\label{lem:contr-inv}
+    Any coherently invertible map has contractible fibers.
+  \end{lem}
+
+  \begin{proof}
+    Consider a map $f:A\to B$ equipped with
+    \begin{align*}
+      g & : B \to A \\
+      G & : f \circ g \htpy \idfunc \\
+      H & : g \circ f \htpy \idfunc \\
+      K & : G \cdot f \htpy f \cdot H,
+    \end{align*}
+    and let $y:B$. Our goal is to show that $\fib{f}{y}$ is contractible. For the center of contraction we take $(g(y),G(y))$. In order to construct a contraction, it suffices to construct a term of type
+    \begin{equation*}
+      \prd{x:A}{p:f(x)=y}\mathsf{Eq\usc{}fib}_f((g(y),G(y)),(x,p)).
+    \end{equation*}
+    By path induction on $p:f(x)=y$ it suffices to construct a term of type
+    \begin{equation*}
+      \prd{x:A}\mathsf{Eq\usc{}fib}_f((g(f(x)),G(f(x))),(x,\refl{f(x)})).
+    \end{equation*}
+    By definition of $\mathsf{Eq\usc{}fib}_f$, we have to construct a term of type
+    \begin{equation*}
+      \prd{x:A}\sm{\alpha:g(f(x))=x}G(f(x))=\ct{\ap{f}{\alpha}}{\refl{f(x)}}.
+    \end{equation*}
+    Such a term is constructed as $\lam{x}(H(x),K'(x))$, where the homotopy $H:g\circ f\htpy \idfunc$ is given by assumption, and the homotopy
+    \begin{align*}
+      K' & : \prd{x:A}G(f(x))=\ct{\ap{f}{H(x)}}{\refl{f(x)}}
+    \end{align*}
+    is defined as
+    \begin{equation*}
+      K'\defeq \ct{K}{\mathsf{htpy\usc{}right\usc{}unit}(f\cdot H)^{-1}}.\qedhere
+    \end{equation*}
+  \end{proof}
+
+  Our next goal is to show that for any map $f:A\to B$ equipped with
+  \begin{equation*}
+    g:B\to A,\qquad G:f\circ g \htpy \idfunc,\qquad\text{and}\qquad H:g\circ f\htpy \idfunc,
+  \end{equation*}
+  we can improve the homotopy $G$ to a new homotopy $G':f\circ g\htpy \idfunc$ for which there is a further homotopy
+  \begin{equation*}
+    f\cdot H\htpy G'\cdot f.
+  \end{equation*}
+  Note that this situation is analogous to the situation in the proof of \cref{thm:contractible}, where we improved the contraction $C$ so that it satisfied $C(c)=\refl{}$. The extra coherence $f\cdot H\htpy G'\cdot f$ is then used in the proof that the fibers of an equivalence are contractible.
 
 \begin{defn}\label{defn:htpy_nat}\index{homotopy!naturality|textbf}
 Let $f,g:A\to B$ be functions, and consider $H:f\htpy g$ and $p:x=y$ in $A$. We define identification
-\begin{align*}
-\mathsf{htpy\usc{}nat}(H,p) \defeq \ind{x=}(\mathsf{right\usc{}unit}(H(x)),p) & :\ct{H(x)}{\ap{g}{p}}=\ct{\ap{f}{p}}{H(y)}
-\end{align*}
+\begin{equation*}
+\mathsf{htpy\usc{}nat}(H,p) \defeq  :\ct{\ap{f}{p}}{H(y)}=\ct{H(x)}{\ap{g}{p}}
+\end{equation*}
 witnessing that the square
 \begin{equation*}
 \begin{tikzcd}
@@ -154,6 +267,14 @@ f(y) \arrow[r,equals,swap,"H(y)"] & g(y)
 \end{equation*}
 commutes. This square is also called the \define{naturality square} of the homotopy $H$ at $p$.
 \end{defn}
+
+\begin{constr}
+  By path induction on $p$ it suffices to construct an identification
+  \begin{equation*}
+    \ct{\ap{f}{\refl{x}}}{H(x)}=\ct{H(x)}{\ap{g}{\refl{x}}}
+  \end{equation*}
+  since $\ap{f}{\refl{x}}\jdeq \refl{f(x)}$ and $\ap{g}{\refl{x}}\jdeq\refl{g(x)}$, and since $\ct{\refl{f(x)}}{H(x)}\jdeq H(x)$, we see that the path $\mathsf{right\usc{}unit}(H(x))^{-1}$ is of the asserted type.
+\end{constr}
 
 \begin{defn}\label{defn:retraction_swap}
 Consider $f:A\to A$ and $H: f\htpy \idfunc[A]$. We construct an identification $H(f(x))=\ap{f}{H(x)}$, for any $x:A$.
@@ -170,56 +291,47 @@ f(x) \arrow[r,swap,equals,"H(x)"] & x
 commutes. This gives the desired identification $H(f(x))=\ap{f}{H(x)}$.
 \end{constr}
 
+\begin{lem}\label{lem:coherently-invertible}
+  Let $f:A\to B$ be a map, and consider $(g,G,H):\mathsf{has\usc{}inverse}(f)$. Then there is a homotopy $G':f\circ g\htpy \idfunc$ equipped with a further homotopy
+  \begin{equation*}
+    K : G'\cdot f \htpy f\cdot H.
+  \end{equation*}
+  Thus we obtain a map $\mathsf{has\usc{}inverse}(f)\to\mathsf{is\usc{}coh\usc{}invertible}(f)$.
+\end{lem}
+
+\begin{proof}
+  For each $y:B$, we construct the identification $G'(y)$ as the concatenation
+  \begin{equation*}
+    \begin{tikzcd}
+      fg(y) \arrow[r,equals,"{G(fg(y))}^{-1}"] &[2.5em] fgfg(y) \arrow[r,equals,"\ap{f}{H(g(y))}"] &[2.5em] fg(y) \arrow[r,equals,"G(y)"] & y.
+\end{tikzcd}
+  \end{equation*}
+  In order to construct a homotopy $G'\cdot f\htpy f\cdot H$, it suffices to show that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=8em]
+      fgfgf(x) \arrow[r,equals,"{G(fgf(x))}"] \arrow[d,equals,swap,"\ap{f}{H(gf(x))}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
+      fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
+    \end{tikzcd}
+  \end{equation*}
+  commutes for every $x:A$.
+  Recall from \autoref{defn:retraction_swap} that we have $H(gf(x))=\ap{gf}{H(x)}$. Using this identification, we see that it suffices to show that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=8em]
+      fgfgf(x) \arrow[r,equals,"G(fgf(x))"] \arrow[d,equals,swap,"\ap{fgf}{H(x)}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
+      fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Now we observe that this is just a naturality square the homotopy $Gf:fgf\htpy f$, which commutes by \autoref{defn:htpy_nat}.
+\end{proof}
+
+Now we put the pieces together to conclude that any equivalence has contractible fibers.
+
 \begin{thm}\label{thm:contr_equiv}
 Any equivalence is a contractible map.\index{equivalence!is a contractible map|textit}
 \end{thm}
 
 \begin{proof}
-Since every equivalence has the structure of an invertible map by \autoref{defn:inv_equiv}, it suffices to show that any invertible map is contractible.
-
-Let $f:A\to B$ be a map, with $g:B\to A$, $G:f\circ g\htpy\idfunc[B]$, and $H:g\circ f\htpy \idfunc[A]$.
-We have for any $y:B$ the term $\pairr{g(y),G(y)}:\fib{f}{y}$. However, as our center of contraction we take
-$\pairr{g(y),\epsilon(y)}$, where $\epsilon$ is defined as the concatenation
-\begin{equation*}
-\begin{tikzcd}
-fg(y) \arrow[r,equals,"\ap{fg}{G(y)}^{-1}"] &[2.5em] fgfg(y) \arrow[r,equals,"\ap{f}{H(g(y))}"] &[2.5em] fg(y) \arrow[r,equals,"G(y)"] & y.
-\end{tikzcd}
-\end{equation*}
-Now it remains to construct the contraction, which we do by $\Sigma$-induction. 
-Let $x:A$, and let $p:f(x)=y$.
-Since $p:f(x)=y$ has a free endpoint, we can apply path induction on it. 
-Our goal is now to construct an identification
-\begin{equation*}
-\pairr{g(f(x)),\varepsilon(f(x))}=\pairr{x,\refl{f(x)}}.
-\end{equation*}
-We will construct an identification of the form $\mathsf{eq\usc{}pair}(H(x),\nameless)$,
-so it remains to construct an identification of type
-\begin{equation*}
-\mathsf{tr}_{f(\blank)=f(x)}(H(x),\varepsilon(f(x)))=\refl{f(x)}.
-\end{equation*}
-Using \autoref{ex:trans_ap} we see that
-\begin{equation*}
-\mathsf{tr}_{f(\blank)=f(x)}(H(x),\varepsilon(f(x)))= \ct{\ap{f}{H(x)}^{-1}}{\epsilon(f(x))},
-\end{equation*}
-so it suffices to show that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-fgfgf(x) \arrow[r,equals,"\ap{fg}{G(f(x))}"] \arrow[d,equals,swap,"\ap{f}{H(gf(x))}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
-fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
-\end{tikzcd}
-\end{equation*}
-commutes, i.e., that 
-\begin{equation*}
-\ct{\ap{fg}{G(f(x))}}{\ap{f}{H(x)}}=\ct{\ap{f}{H(gf(x))}}{G(f(x))}.
-\end{equation*}
-Recall from \autoref{defn:retraction_swap} that we have $H(gf(x))=\ap{gf}{H(x)}$ and $\ap{fg}{G(y)}=G(fg(y))$. Using these two identifications and the fact that for any $p,p':x=y$, $r:y=z$, $q,q':x=y'$, and $s:y'=z$, if $p=p'$ and $q=q'$ then $\ct{p'}{r}=\ct{q'}{s}\to \ct{p}{r}=\ct{q}{s}$, we see that it suffices to show that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-fgfgf(x) \arrow[r,equals,"G(fgf(x))"] \arrow[d,equals,swap,"\ap{fgf}{H(x)}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
-fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
-\end{tikzcd}
-\end{equation*}
-commutes. However, this is just a naturality square the homotopy $Gf:fgf\htpy f$, which commutes by \autoref{defn:htpy_nat}.
+  We have seen in \cref{lem:contr-inv} that any coherently invertible map is a contractible map. Moreover, any equivalence has the structure of an invertible map by \cref{thm:inv_equiv}, and any invertible map is coherently invertible by \cref{lem:coherently-invertible}.
 \end{proof}
 
 \begin{cor}\label{cor:contr_path}
@@ -251,45 +363,41 @@ Note that we may proceed here by path induction on $p$. That is, it suffices to 
 \begin{exercises}
 \item \label{ex:prop_contr}Show that if $A$ is contractible, then for any $x,y:A$ the identity type $x=y$ is also contractible.\index{contractible!type!identity types of}
 \item \label{ex:contr_retr}Suppose that $A$ is a retract of $B$. Show that\index{contractible!type!retracts of}
-\begin{equation*}
-\iscontr(B)\to\iscontr(A).
-\end{equation*}
+  \begin{equation*}
+    \iscontr(B)\to\iscontr(A).
+  \end{equation*}
 \item \label{ex:contr_equiv}
-\begin{subexenum}
-\item Show that for any type $A$, the map $\mathsf{const}_\ttt : A\to \unit$ is an equivalence if and only if $A$ is contractible.\index{contractible!type!equivalence with $\unit$}
-\item Apply \cref{ex:3_for_2} to show that for any map $f:A\to B$, if any two of the three assertions\index{contractible!type!three@{3-for-2}}
-\begin{enumerate}
-\item $A$ is contractible
-\item $B$ is contractible
-\item $f$ is an equivalence
-\end{enumerate}
-hold, then so does the third.
-\end{subexenum}
-\item \label{ex:contr_in_sigma} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B$ be a type family over $C$. Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
-\item Show that for any $p:\id{x}{y}$ in $X$, and any $q:\id{g(b)}{x}$, there is an identification
-\begin{equation*}
-\mathsf{tr\usc{}fiber}(g,p,q) : \mathsf{tr}_{\mathsf{fib}_g}(p,(b,q))=(b,\ct{q}{p}).
-\end{equation*}
-\item \label{ex:fib_replacement}Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=0em]
-A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"] \\
-\phantom{\sm{y:B}\fib{f}{y}} & B
-\end{tikzcd}
-\end{equation*}
-commutes. The projection $\proj 1 : (\sm{y:B}\fib{f}{y})\to B$ is sometimes also called the \define{fibrant replacement}\index{fibrant replacement} of $f$.
+  \begin{subexenum}
+  \item Show that for any type $A$, the map $\mathsf{const}_\ttt : A\to \unit$ is an equivalence if and only if $A$ is contractible.\index{contractible!type!equivalence with $\unit$}
+  \item Apply \cref{ex:3_for_2} to show that for any map $f:A\to B$, if any two of the three assertions\index{contractible!type!three@{3-for-2}}
+    \begin{enumerate}
+    \item $A$ is contractible
+    \item $B$ is contractible
+    \item $f$ is an equivalence
+    \end{enumerate}
+    hold, then so does the third.
+  \end{subexenum}
 \item Show that for any two types $A$ and $B$, the following are equivalent:
-\begin{enumerate}
-\item Both $A$ and $B$ are contractible.
-\item The type $A\times B$ is contractible.
-\end{enumerate}
+  \begin{enumerate}
+  \item Both $A$ and $B$ are contractible.
+  \item The type $A\times B$ is contractible.
+  \end{enumerate}
+\item \label{ex:contr_in_sigma} Let $C$ be a contractible type with center of contraction $c:C$. Furthermore, let $B$ be a type family over $C$. Show that the map $b\mapsto\pairr{c,b}:B(c)\to\sm{x:C}B(x)$ is an equivalence.
 \item \label{ex:proj_fiber}Let $B$ be a family of types over $A$, and consider the projection map 
-\begin{equation*}
-\proj 1 : \big(\sm{x:A}B(x)\big)\to A.
-\end{equation*}
-Show that for any $a:A$, the map
-\begin{equation*}
-\lam{((x,y),p)} \mathsf{tr}_B(p,y) : \fib{\proj 1}{a} \to B(a),
-\end{equation*}
-is an equivalence. Conclude that $\proj 1$ is an equivalence if and only if each $B(a)$ is contractible.
+  \begin{equation*}
+    \proj 1 : \big(\sm{x:A}B(x)\big)\to A.
+  \end{equation*}
+  Show that for any $a:A$, the map
+  \begin{equation*}
+    \lam{((x,y),p)} \mathsf{tr}_B(p,y) : \fib{\proj 1}{a} \to B(a),
+  \end{equation*}
+  is an equivalence. Conclude that $\proj 1$ is an equivalence if and only if each $B(a)$ is contractible.
+\item \label{ex:fib_replacement}Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=0em]
+      A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"] \\
+      \phantom{\sm{y:B}\fib{f}{y}} & B
+    \end{tikzcd}
+  \end{equation*}
+  commutes. The projection $\proj 1 : (\sm{y:B}\fib{f}{y})\to B$ is sometimes also called the \define{fibrant replacement}\index{fibrant replacement} of $f$.
 \end{exercises}

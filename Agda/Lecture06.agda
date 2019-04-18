@@ -477,15 +477,6 @@ left-unit-law-Σ B is-contr-C =
     ( left-unit-law-Σ-map B is-contr-C)
     ( is-equiv-left-unit-law-Σ-map B is-contr-C)
 
--- Exercise 6.5
-
--- In this exercise we simply compute the transport in the fiber of a map.
-tr-fiber :
-  {i j : Level} {A : UU i} {B : UU j}
-  (f : A → B) {x y : B} (p : Id x y) (a : A) (q : Id (f a) x) →
-  Id (tr (fib f) p (dpair a q)) (dpair a (q ∙ p))
-tr-fiber f refl a refl = refl
-
 -- Exercise 6.6
 
 -- In this exercise we show that the domain of a map is equivalent to the total space of its fibers.

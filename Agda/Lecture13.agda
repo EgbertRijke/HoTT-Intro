@@ -372,9 +372,9 @@ is-equiv-Eq-canonical-pullback-eq f g t =
 
 eq-Eq-canonical-pullback :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) (t t' : canonical-pullback f g) →
+  (f : A → X) (g : B → X) {t t' : canonical-pullback f g} →
   Eq-canonical-pullback f g t t' → Id t t'
-eq-Eq-canonical-pullback f g t t' =
+eq-Eq-canonical-pullback f g {t} {t'} =
   inv-is-equiv (is-equiv-Eq-canonical-pullback-eq f g t t')
 
 {- We establish the uniquely uniqueness of pullbacks. -}
@@ -491,16 +491,19 @@ is-pullback-prod :
   {i j : Level} (A : UU i) (B : UU j) →
   is-pullback (const A unit star) (const B unit star) (cone-prod A B)
 is-pullback-prod A B =
-  is-equiv-has-inverse
-    ( dpair
-      ( λ t → dpair (pr1 t) (pr1 (pr2 t)))
-      ( dpair
-        ( λ t → eq-pair (dpair refl
-          ( eq-pair (dpair refl
-            ( center (is-prop-is-contr
+  is-equiv-has-inverse'
+    ( λ t → dpair (pr1 t) (pr1 (pr2 t)))
+    ( λ t →
+      eq-Eq-canonical-pullback
+        ( const A unit star)
+        ( const B unit star)
+        ( dpair refl
+          ( dpair refl
+            ( is-prop-is-contr'
               ( is-prop-is-contr is-contr-unit star star)
-                refl (pr2 (pr2 t))))))))
-        ( λ t → eq-pair (dpair refl refl))))
+              ( pr2 (pr2 t))
+              ( refl)))))
+    ( λ t → eq-pair (dpair refl refl))
 
 {- We conclude that cartesian products satisfy the universal property of 
    pullbacks. -}
@@ -2394,12 +2397,6 @@ issec-inv-map-cone-fold {A = A} {B} {X} f g (dpair (dpair a b) (dpair x α)) =
   eq-Eq-canonical-pullback
     ( functor-prod f g)
     ( diagonal X)
-    ( dpair
-      ( dpair a b)
-      ( dpair (g b)
-      ( eq-pair-triv
-        ( dpair ((ap pr1 α) ∙ (inv (ap pr2 α))) refl))))
-    ( dpair (dpair a b) (dpair x α))
     ( dpair refl
       ( dpair
         ( ap pr2 α)
@@ -2439,20 +2436,6 @@ isretr-inv-map-cone-fold :
   ((inv-map-cone-fold f g) ∘ (map-cone-fold f g)) ~ id
 isretr-inv-map-cone-fold { A = A} { B = B} { X = X} f g (dpair a (dpair b p)) =
   eq-Eq-canonical-pullback {A = A} {B = B} {X = X} f g
-    ( dpair a
-      ( dpair b
-        ( ( ap pr1
-            ( eq-pair-triv'
-              ( dpair (f a) (g b))
-              ( dpair (g b) (g b))
-              ( dpair p refl))) ∙
-          ( inv
-            ( ap pr2
-              ( eq-pair-triv'
-                ( dpair (f a) (g b))
-                ( dpair (g b) (g b))
-                ( dpair p refl)))))))
-    ( dpair a (dpair b p))
     ( dpair refl
       ( dpair refl
         ( inv
@@ -2807,7 +2790,7 @@ issec-inv-map-canonical-pullback-Π :
   ((map-canonical-pullback-Π f g) ∘ (inv-map-canonical-pullback-Π f g)) ~ id
 issec-inv-map-canonical-pullback-Π f g h =
   eq-htpy
-    ( λ i → eq-Eq-canonical-pullback (f i) (g i) _ (h i)
+    ( λ i → eq-Eq-canonical-pullback (f i) (g i)
       ( dpair refl
         ( dpair refl
           ( inv
@@ -2823,8 +2806,6 @@ isretr-inv-map-canonical-pullback-Π f g (dpair α (dpair β γ)) =
   eq-Eq-canonical-pullback
     ( postcomp-Π f)
     ( postcomp-Π g)
-    ( _)
-    ( dpair α (dpair β γ))
     ( dpair refl
       ( dpair refl
         ( inv ((right-unit _) ∙ (isretr-eq-htpy γ)))))
@@ -2855,8 +2836,6 @@ triangle-map-canonical-pullback-Π f g c h =
     eq-Eq-canonical-pullback
       (f i)
       (g i)
-      ( postcomp-Π (λ i → gap (f i) (g i) (c i)) h i)
-      ( _)
       ( dpair refl (dpair refl
         ( (htpy-eq (issec-eq-htpy _) i) ∙ (inv (right-unit _))))))
 
