@@ -116,49 +116,7 @@ To include introduction:
 
 \include{descent}
 
-\chapter{The identity types of pushouts}
-
-\begin{thm}
-  Consider a pushout square
-  \begin{equation*}
-    \begin{tikzcd}
-      S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
-      A \arrow[r,swap,"i"] & X
-    \end{tikzcd}
-  \end{equation*}
-  with $H:i\circ f \htpy j\circ g$, and let $a:A$. Furthermore consider $P\jdeq(P_A,P_B,r,e)$ consisting of type families $P_A$ over $A$ and $P_B$ over $B$, equipped with a point $r:P_A(a)$, and a family of equivalences
-  \begin{equation*}
-    e:\prd{s:S} P_A(f(s)) \simeq P_B(g(s)).
-  \end{equation*}
-  If $P$ is the initial such object, then we have two families of equivalences
-  \begin{align*}
-    \alpha & : \prd{x:A}P_A(x)\simeq (i(a)=i(x)) \\
-    \beta & : \prd{y:B} P_B(y)\simeq (i(a)=j(b)) 
-  \end{align*}
-  such that $\alpha(a,r)=\refl{i(a)}$, and the square
-  \begin{equation*}
-    \begin{tikzcd}[column sep=huge]
-      P_A(f(s)) \arrow[r,"e(s)"] \arrow[d,swap,"\alpha(f(s))"] & P_B(g(s)) \arrow[d,"\beta(g(s))"] \\
-      (i(a)=i(f(s))) \arrow[r,swap,"\lam{p}\ct{p}{H(s)}"] & (i(a)=g(s))
-    \end{tikzcd}
-  \end{equation*}
-  commutes for each $s:S$
-\end{thm}
-
-\begin{thm}
-  Let $X$ be a pointed type with base point $x_0:X$. Then the loop space of $\susp{X}$ is the initial type $Y$ equipped with a base point $y_0:Y$, and a pointed map
-  \begin{equation*}
-    X \to_\ast (Y\simeq Y).
-  \end{equation*}
-\end{thm}
-
-\begin{cor}
-  The loop space of $\sphere{2}$ is the initial type $X$ equipped with a point $x_0:X$ and a homotopy $H:\idfunc\htpy\idfunc$.
-\end{cor}
-
-\begin{exercises}
-  \item Show that if $X$ has decidable equality, then $\susp{X}$ is a $1$-type.
-\end{exercises}
+\include{id-pushout}
 
 
 %\part*{Homotopy quotients}

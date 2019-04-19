@@ -563,5 +563,27 @@ This is known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pushouts} for 
 \eqv{\susp(\mathsf{Fin}(n+1))}{\bigvee\nolimits_{(i:\mathsf{Fin}(n))}\sphere{1}}.
 \end{equation*}
 \end{subexenum}
-\item Show that $\eqv{\join{\mathsf{Fin}(n+1)}{\mathsf{Fin}(m+1)}}{\bigvee\nolimits_{(i:\mathsf{Fin}(n\cdot m))}\sphere{1}}$, for any $n,m:\N$. 
+\item Show that $\eqv{\join{\mathsf{Fin}(n+1)}{\mathsf{Fin}(m+1)}}{\bigvee\nolimits_{(i:\mathsf{Fin}(n\cdot m))}\sphere{1}}$, for any $n,m:\N$.
+\item For any pointed set $X$, show that the squares
+  \begin{equation*}
+    \begin{tikzcd}
+      \sphere{1} \arrow[r] \arrow[d] & \unit \arrow[d] \\
+      \bigvee_{(x:X)}\sphere{1} \arrow[r] & \susp{X}
+    \end{tikzcd}
+    \qquad\text{and}\qquad
+    \begin{tikzcd}
+      X\times \sphere{1} \arrow[d] \arrow[r] & \unit \arrow[d] \\
+      \bigvee_{(x:X)}\sphere{1} \arrow[r] & \susp{X}
+    \end{tikzcd}
+  \end{equation*}
+  are pushout squares.
+\item Show that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \sphere{1} \arrow[r] \arrow[d] & \unit \arrow[d] \\
+      \sphere{1}\times\sphere{1} \arrow[r] & \sphere{2}\vee\sphere{1}
+    \end{tikzcd}
+  \end{equation*}
+  is a pushout square.
+\item \label{ex:trunc-join-with-prop}Show that if $A$ is a $k$-type, and $P$ is a proposition, then $\join{A}{P}$ is again a $k$-type.
 \end{exercises}
