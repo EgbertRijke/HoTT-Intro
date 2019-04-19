@@ -15,7 +15,7 @@ ind-Id x B b y refl = b
 
 inv :
   {i : Level} {A : UU i} {x y : A} → Id x y → Id y x
-inv (refl) = refl
+inv refl = refl
 
 concat :
   {i : Level} {A : UU i} {x : A} (y : A) {z : A} →

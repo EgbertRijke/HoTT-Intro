@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K #-}
 
 module Lecture09 where
 
@@ -110,6 +110,10 @@ FUNEXT-WEAK-FUNEXT weak-funext A B f =
 -- From now on we will be assuming that function extensionality holds
 
 postulate funext : {i j : Level} {A : UU i} {B : A → UU j} (f : (x : A) → B x) → FUNEXT f
+
+equiv-funext : {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x} →
+  (Id f g) ≃ (f ~ g)
+equiv-funext {f = f} {g} = dpair htpy-eq (funext f g) 
 
 eq-htpy :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x} →
@@ -476,6 +480,11 @@ is-equiv-htpy-inv f g =
         ( λ H → eq-htpy (λ x → inv-inv (H x)))
         ( λ H → eq-htpy (λ x → inv-inv (H x)))))
 
+equiv-htpy-inv :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f g : (x : A) → B x) → (f ~ g) ≃ (g ~ f)
+equiv-htpy-inv f g = dpair htpy-inv (is-equiv-htpy-inv f g)
+
 is-equiv-htpy-concat :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
   {f g : (x : A) → B x} (H : f ~ g) →
@@ -484,6 +493,13 @@ is-equiv-htpy-concat {A = A} {B = B} {f} =
   ind-htpy f
     ( λ g H → (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H))
     ( λ h → is-equiv-id (f ~ h))
+
+equiv-htpy-concat :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  {f g : (x : A) → B x} (H : f ~ g) (h : (x : A) → B x) →
+  (g ~ h) ≃ (f ~ h)
+equiv-htpy-concat H h =
+  dpair (htpy-concat _ {h = h} H) (is-equiv-htpy-concat H h)
 
 htpy-concat' :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
@@ -522,6 +538,13 @@ is-equiv-htpy-concat' f K =
       ( dpair
         ( issec-inv-htpy-concat' f K)
         ( isretr-inv-htpy-concat' f K)))
+
+equiv-htpy-concat' :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) {g h : (x : A) → B x} (K : g ~ h) →
+  (f ~ g) ≃ (f ~ h)
+equiv-htpy-concat' f K =
+  dpair (htpy-concat' f K) (is-equiv-htpy-concat' f K)
 
 -- Exercise 9.2
 

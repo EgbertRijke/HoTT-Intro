@@ -424,7 +424,7 @@ By \cref{thm:eq_sigma} it suffices to show that
 We just take $\alpha\defeq\lloop$. Then we have $\mathsf{tr}_{\mathcal{E}}(\alpha,k_{\mathcal{E}})= \mathsf{succ}(k)_{\mathcal{E}}$ by the commuting square provided in the definition of $\mathcal{E}$.
 \end{proof}
 
-\section{Contractibility of total spaces}
+\section{Contractibility of general total spaces}
 Consider a type $X$, a family $P$ over $X$, and a term $c:\sm{x:X}P(x)$, and suppose our goal is to construct a contraction
 \begin{equation*}
   \prd{t:\sm{x:X}P(x)}c=t.
@@ -500,20 +500,35 @@ Furthermore, if we consider a path $p:x=x'$ in $X$ and a commuting square
     with $H:e'\circ f ~ \mathsf{tr}_P(p)\circ e$, where $e$, $e'$, and $f$ are all equivalences. Furthermore, let
     \begin{align*}
       h & : \prd{y:F}c=(x,e(y)) \\
-      h' & : \prd{y':F'}c(x',e'(y')).
+      h' & : \prd{y':F'}c=(x',e'(y')).
     \end{align*}
     Then there is an equivalence
     \begin{equation*}
-      (\mathsf{tr}_C(p,\varphi(h))= \varphi'(h')) \simeq \Big(\prd{y:F} h'(f(y))=\ct{h(y)}{\mathsf{segment\usc{}tot}(y)}\Big).
+      \Big(\prd{y:F} h'(f(y))=\ct{h(y)}{\mathsf{segment\usc{}tot}(y)}\Big)
+      \simeq \Big(\mathsf{tr}_C(p,\varphi(h))= \varphi'(h')\Big).
     \end{equation*}
   \end{lem}
 
   \begin{proof}
-    Note that the type $\psi(h)\htpy h'$ is equivalent to the type $\psi(h)=h'$, which is an identity type with a free endpoint. Therefore it suffices to show that the total space
+    We first note that we have a commuting square
     \begin{equation*}
-      \sm{h':\prd{y':F'}c=(x',e'(y'))}\mathsf{tr}_C(p,\varphi(h))= \varphi'(h')
+      \begin{tikzcd}
+        \prd{y:B(x)}c=(x,y) \arrow[r,"\blank\circ e"] \arrow[d,swap,"\mathsf{tr}_C(p)"] & \prd{y:F}c=(x,e(y)) \\
+        \prd{y':B(x')}c=(x',y') \arrow[r,swap,"\blank\circ {e'}"] & \prd{y':F'}c=(x',e'(y')) \arrow[u,swap,"\psi"]
+      \end{tikzcd}
     \end{equation*}
-    is contractible. Note that this type is eqivalent to the fiber at $h'$ of the composite function $\varphi'^{-1}\circ \mathsf{tr}_C(p) \circ \varphi$. This fiber is contractible because $\varphi$, $\mathsf{tr}_C(p)$, and $\varphi'$ are all three equivalences.
+    where $\psi(h')=\lam{y}\ct{h'(f(y))}{\mathsf{segment\usc{}tot}(y)^{-1}}$. All the maps in this square are equivalences. In particular, the inverses of the top and bottom maps are $\varphi$ and $\varphi'$, respectively. The claim follows from this observation, but we will spell out the details.
+
+    Since any equivalence is an embedding, we see immediately that the type $\mathsf{tr}_C(p)(\varphi(h))=\varphi'(h')$ is equivalent to the type
+    \begin{equation*}
+      \psi(\mathsf{tr}_C(p)(\varphi(h))\circ e')=\psi(\varphi'(h')\circ e').
+    \end{equation*}
+    By the commutativity of the square, the left hand side is $h$. The right hand side is $\psi(h')$. Therefore it follows that
+    \begin{align*}
+      \Big(\mathsf{tr}_C(p)(\varphi(h))=\varphi'(h')\Big)
+      & \simeq \Big(h= \lam{y}\ct{h'(f(y))}{\mathsf{segment\usc{}tot}(y)^{-1}}\Big) \\
+      & \simeq \Big(h'\circ f \htpy (\lam{y}\ct{h(y)}{\mathsf{segment\usc{}tot}(y)}\Big).\qedhere
+    \end{align*}
   \end{proof}
   
   Applying these observations to the fundamental cover of the circle, we obtain the following lemma that we will use to prove that the total space of $\mathcal{E}$ is contractible.

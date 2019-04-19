@@ -7,13 +7,13 @@ open Lecture11 public
 
 {- Section 12.1 Families over the circle -}
 
-Automorphisms :
-  ( l1 : Level) → UU l1 → UU l1
-Automorphisms l1 Y = Y ≃ Y
+Aut :
+  { l1 : Level} → UU l1 → UU l1
+Aut Y = Y ≃ Y
 
 Fam-circle :
   ( l1 : Level) → UU (lsuc l1)
-Fam-circle l1 = Σ (UU l1) (Automorphisms l1)
+Fam-circle l1 = Σ (UU l1) Aut
 
 Eq-Fam-circle :
   { l1 : Level} → Fam-circle l1 → Fam-circle l1 → UU l1
@@ -207,6 +207,110 @@ contraction-total-space :
 contraction-total-space {B = B} center x =
   ( y : B x) → Id center (dpair x y)
 
+contraction-total-space' :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  ( x : A) → {F : UU l3} (e : F ≃ B x) → UU (l1 ⊔ (l2 ⊔ l3))
+contraction-total-space' c x {F} e =
+  ( y : F) → Id c (dpair x (map-equiv e y))
+
+equiv-contraction-total-space :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  ( x : A) → {F : UU l3} (e : F ≃ B x) →
+  ( contraction-total-space c x) ≃ (contraction-total-space' c x e)
+equiv-contraction-total-space c x e =
+  precomp-Π-equiv e (λ y → Id c (dpair x y))
+
+path-total-path-fiber :
+  { l1 l2 : Level} {A : UU l1} (B : A → UU l2) (x : A) →
+  { y y' : B x} (q : Id y' y) → Id {A = Σ A B} (dpair x y) (dpair x y')
+path-total-path-fiber B x q = eq-pair (dpair refl (inv q))
+
+segment-Σ :
+  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} →
+  { x x' : A} (p : Id x x')
+  { F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
+  ( H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) (y : F) →
+  Id (dpair x (map-equiv e y)) (dpair x' (map-equiv e' (map-equiv f y)))
+segment-Σ refl f e e' H y = path-total-path-fiber _ _ (H y)
+
+tr-path-total-path-fiber :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) (x : A) →
+  { y y' : B x} (q : Id y' y) (α : Id c (dpair x y')) →
+  Id ( tr (λ z → Id c (dpair x z)) q α)
+     ( α ∙ (inv (path-total-path-fiber B x q)))
+tr-path-total-path-fiber c x refl α = inv (right-unit α)
+
+tr-path-total-tr-coherence :
+  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) (x : A) →
+  { F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x)
+  ( H : ((map-equiv e') ∘ (map-equiv f)) ~ (map-equiv e)) →
+  (y : F) (α : Id c (dpair x (map-equiv e' (map-equiv f y)))) →
+  Id ( tr (λ z → Id c (dpair x z)) (H y) α)
+     ( α ∙ (inv (segment-Σ refl f e e' H y)))
+tr-path-total-tr-coherence c x f e e' H y α =
+  tr-path-total-path-fiber c x (H y) α
+
+square-tr-contraction-total-space :
+  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  { x x' : A} (p : Id x x')
+  { F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
+  ( H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e)))
+  (h : contraction-total-space c x) (y : F) →
+  Id ( ( (tr (contraction-total-space c) p h) (map-equiv e' (map-equiv f y))) ∙
+       ( inv (segment-Σ p f e e' H y)))
+     ( h (map-equiv e y))
+square-tr-contraction-total-space c refl f e e' H h y =
+  ( inv (tr-path-total-tr-coherence c _ f e e' H y (h (map-equiv e' (map-equiv f y))))) ∙
+  ( apd h (H y))
+
+path-over-contraction-total-space :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  { x x' : A} (p : Id x x') →
+  ( h : contraction-total-space c x) (h' : contraction-total-space c x') →
+  UU _
+path-over-contraction-total-space {B = B} c p h h' =
+  ( λ y → (h y) ∙ (lift p y)) ~
+  ( λ y → h' (tr B p y))
+
+equiv-path-over-contraction-total-space :
+  { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  { x x' : A} (p : Id x x') →
+  ( h : contraction-total-space c x) (h' : contraction-total-space c x') →
+  ( path-over (contraction-total-space c) p h h') ≃
+  ( path-over-contraction-total-space c p h h')
+equiv-path-over-contraction-total-space c refl h h' =
+  (equiv-htpy-concat (htpy-right-unit h) h') ∘e equiv-funext
+  
+path-over-contraction-total-space' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  {x x' : A} (p : Id x x') →
+  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
+  (H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) →
+  (h : (y : F) → Id c (dpair x (map-equiv e y))) →
+  (h' : (y' : F') → Id c (dpair x' (map-equiv e' y'))) →
+  UU _
+path-over-contraction-total-space' c {x} {x'} p {F} {F'} f e e' H h h' =
+  ( postcomp-Π
+    ( λ y → concat' (dpair x (map-equiv e y)) (segment-Σ p f e e' H y)) h) ~
+  ( precomp-Π
+    ( map-equiv f)
+    ( λ y' → Id c (dpair x' (map-equiv e' y')))
+    ( h'))
+
+equiv-path-over-contraction-total-space' :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
+  {x x' : A} (p : Id x x') →
+  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
+  (H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) →
+  (h : (y : F) → Id c (dpair x (map-equiv e y))) →
+  (h' : (y' : F') → Id c (dpair x' (map-equiv e' y'))) →
+  ( path-over (contraction-total-space c) p
+    ( inv-map-equiv (equiv-contraction-total-space c x e) h)
+    ( inv-map-equiv (equiv-contraction-total-space c x' e') h')) ≃
+  ( path-over-contraction-total-space' c p f e e' H h h')
+equiv-path-over-contraction-total-space' c refl f e e' H h h' =
+  {!!} ∘e equiv-funext
+
 tr-contraction-total-space :
   { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (center : Σ A B) →
   { x x' : A} (p : Id x x') →
@@ -224,37 +328,8 @@ tr-contraction-total-space {B = B} c {x} refl =
     ( λ y → equiv-concat' c (lift refl y))
     ( λ y q → inv (right-unit q)))
 
-contraction-total-space' :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
-  (x : A) → {F : UU l3} (e : F ≃ B x) → UU (l1 ⊔ (l2 ⊔ l3))
-contraction-total-space' c x {F} e =
-  (y : F) → Id c (dpair x (map-equiv e y))
-
-segment-Σ :
-  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} →
-  { x x' : A} (p : Id x x')
-  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
-  ( H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) (y : F) →
-  Id (dpair x (map-equiv e y)) (dpair x' (map-equiv e' (map-equiv f y)))
-segment-Σ p f e e' H y =
-  eq-pair (dpair p (inv (H y)))
-
-pathover-contraction-total-space :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
-  {x x' : A} (p : Id x x') →
-  {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
-  (H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) →
-  (h : (y : F) → Id c (dpair x (map-equiv e y))) →
-  (h' : (y' : F') → Id c (dpair x' (map-equiv e' y'))) →
-  UU _
-pathover-contraction-total-space c {x} {x'} p f e e' H h h' =
-  Id ( tr
-       ( contraction-total-space c)
-       ( p)
-       ( inv-map-equiv (precomp-Π-equiv e (λ y → Id c (dpair x y))) h))
-     ( inv-map-equiv (precomp-Π-equiv e' (λ y' → Id c (dpair x' y'))) h')
-
-is-contr-total-pathover-contraction-total-space :
+{-
+is-contr-total-path-over-contraction-total-space :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
   {x x' : A} (p : Id x x') →
   {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
@@ -262,8 +337,8 @@ is-contr-total-pathover-contraction-total-space :
   (h : (y : F) → Id c (dpair x (map-equiv e y))) →
   is-contr
     ( Σ ( (y' : F') → Id c (dpair x' (map-equiv e' y')))
-        ( pathover-contraction-total-space c p f e e' H h))
-is-contr-total-pathover-contraction-total-space
+        ( path-over-contraction-total-space c p f e e' H h))
+is-contr-total-path-over-contraction-total-space
   c {x} {x'} p {F} {F'} f e e' H h =
   is-contr-equiv
     ( Σ ( (y' : F') → Id c (dpair x' (map-equiv e' y')))
@@ -275,8 +350,10 @@ is-contr-total-pathover-contraction-total-space
                 ( h))))))
     {!!}
     {!!}
+-}
 
-pathover-contraction-total-space' :
+{-
+path-over-contraction-total-space' :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) →
   {x x' : A} (p : Id x x') →
   {F : UU l3} {F' : UU l4} (f : F ≃ F') ( e : F ≃ B x) (e' : F' ≃ B x')
@@ -284,10 +361,11 @@ pathover-contraction-total-space' :
   (h : (y : F) → Id c (dpair x (map-equiv e y))) →
   (h' : (y' : F') → Id c (dpair x' (map-equiv e' y'))) →
   UU _
-pathover-contraction-total-space' c {x} {x'} p f e e' H h h' =
+path-over-contraction-total-space' c {x} {x'} p f e e' H h h' =
   ( precomp-Π (map-equiv f) (λ y' → Id c (dpair x' (map-equiv e' y'))) h') ~
   ( postcomp-Π
     ( λ y → concat' (dpair x (map-equiv e y)) (segment-Σ p f e e' H y)) h)
+-}
 
 {-
 COMPUTE-tr-contraction-total-space :
@@ -304,6 +382,7 @@ COMPUTE-tr-contraction-total-space c p f e e' H h h' =
 
 {- Section 12.4 The dependent universal property of ℤ -}
 
+{-
 elim-ℤ :
   { l1 : Level} (P : ℤ → UU l1)
   ( p0 : P zero-ℤ) (pS : (k : ℤ) → (P k) ≃ (P (succ-ℤ k))) →
@@ -658,4 +737,5 @@ is-contr-total-fundamental-cover-circle l dup-circle =
   dpair
     ( center-total-fundamental-cover-circle l dup-circle)
     ( contraction-total-fundamental-cover-circle l dup-circle)
+-}
 -}
