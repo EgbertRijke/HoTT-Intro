@@ -7,105 +7,137 @@ open Lecture07 public
 
 -- Section 8.1 Propositions
 
-is-prop : {i : Level} (A : UU i) → UU i
+is-prop :
+  {i : Level} (A : UU i) → UU i
 is-prop A = (x y : A) → is-contr (Id x y)
 
-hProp : (l : Level) → UU (lsuc l)
+hProp :
+  (l : Level) → UU (lsuc l)
 hProp l = Σ (UU l) is-prop
 
-is-prop-empty : is-prop empty
-is-prop-empty ()
+abstract
+  is-prop-empty : is-prop empty
+  is-prop-empty ()
 
-is-prop-unit : is-prop unit
-is-prop-unit = is-prop-is-contr is-contr-unit
+abstract
+  is-prop-unit : is-prop unit
+  is-prop-unit = is-prop-is-contr is-contr-unit
 
-is-prop' : {i : Level} (A : UU i) → UU i
+is-prop' :
+  {i : Level} (A : UU i) → UU i
 is-prop' A = (x y : A) → Id x y
 
-is-prop-is-prop' : {i : Level} {A : UU i} → is-prop' A → is-prop A
-is-prop-is-prop' {i} {A} H x y =
-  dpair
-    (concat _ (inv (H x x)) (H x y))
-    (ind-Id x
-      (λ z p → Id (concat _ (inv (H x x)) (H x z)) p)
-      (left-inv (H x x)) y)
+abstract
+  is-prop-is-prop' :
+    {i : Level} {A : UU i} → is-prop' A → is-prop A
+  is-prop-is-prop' {i} {A} H x y =
+    dpair
+      (concat _ (inv (H x x)) (H x y))
+      (ind-Id x
+        (λ z p → Id (concat _ (inv (H x x)) (H x z)) p)
+        (left-inv (H x x)) y)
 
-is-prop'-is-prop : {i : Level} {A : UU i} → is-prop A → is-prop' A
-is-prop'-is-prop H x y = pr1 (H x y)
+abstract
+  is-prop'-is-prop :
+    {i : Level} {A : UU i} → is-prop A → is-prop' A
+  is-prop'-is-prop H x y = pr1 (H x y)
 
-is-contr-is-prop-inh : {i : Level} {A : UU i} → is-prop A → A → is-contr A
-is-contr-is-prop-inh H a = dpair a (is-prop'-is-prop H a)
+abstract
+  is-contr-is-prop-inh :
+    {i : Level} {A : UU i} → is-prop A → A → is-contr A
+  is-contr-is-prop-inh H a = dpair a (is-prop'-is-prop H a)
 
-is-prop-is-contr-if-inh : {i : Level} {A : UU i} → (A → is-contr A) → is-prop A
-is-prop-is-contr-if-inh H x y = is-prop-is-contr (H x) x y
+abstract
+  is-prop-is-contr-if-inh :
+    {i : Level} {A : UU i} → (A → is-contr A) → is-prop A
+  is-prop-is-contr-if-inh H x y = is-prop-is-contr (H x) x y
 
-is-subtype : {i j : Level} {A : UU i} (B : A → UU j) → UU (i ⊔ j)
+is-subtype :
+  {i j : Level} {A : UU i} (B : A → UU j) → UU (i ⊔ j)
 is-subtype B = (x : _) → is-prop (B x)
 
 -- Section 8.2 Sets
 
-is-set : {i : Level} → UU i → UU i
+is-set :
+  {i : Level} → UU i → UU i
 is-set A = (x y : A) → is-prop (Id x y)
 
-hSet : (i : Level) → UU (lsuc i)
+hSet :
+  (i : Level) → UU (lsuc i)
 hSet i = Σ (UU i) is-set
 
-axiom-K : {i : Level} → UU i → UU i
+axiom-K :
+  {i : Level} → UU i → UU i
 axiom-K A = (x : A) (p : Id x x) → Id refl p
 
-is-set-axiom-K : {i : Level} (A : UU i) → axiom-K A → is-set A
-is-set-axiom-K A H x y =
-  is-prop-is-prop' (ind-Id x (λ z p → (q : Id x z) → Id p q) (H x) y)
+abstract
+  is-set-axiom-K :
+    {i : Level} (A : UU i) → axiom-K A → is-set A
+  is-set-axiom-K A H x y =
+    is-prop-is-prop' (ind-Id x (λ z p → (q : Id x z) → Id p q) (H x) y)
 
-axiom-K-is-set : {i : Level} (A : UU i) → is-set A → axiom-K A
-axiom-K-is-set A H x p =
-  concat
-    (center (is-contr-is-prop-inh (H x x) refl))
-      (inv (contraction (is-contr-is-prop-inh (H x x) refl) refl))
-      (contraction (is-contr-is-prop-inh (H x x) refl) p)
+abstract
+  axiom-K-is-set :
+    {i : Level} (A : UU i) → is-set A → axiom-K A
+  axiom-K-is-set A H x p =
+    concat
+      (center (is-contr-is-prop-inh (H x x) refl))
+        (inv (contraction (is-contr-is-prop-inh (H x x) refl) refl))
+        (contraction (is-contr-is-prop-inh (H x x) refl) p)
 
-is-equiv-prop-in-id : {i j : Level} {A : UU i}
-  (R : A → A → UU j)
-  (p : (x y : A) → is-prop (R x y))
-  (ρ : (x : A) → R x x)
-  (i : (x y : A) → R x y → Id x y)
-  → (x y : A) → is-equiv (i x y)
-is-equiv-prop-in-id R p ρ i x =
-  id-fundamental-retr x (i x)
-    (λ y → dpair
-      (ind-Id x (λ z p → R x z) (ρ x) y)
-      ((λ r → is-prop'-is-prop (p x y) _ r)))
+abstract
+  is-equiv-prop-in-id :
+    {i j : Level} {A : UU i}
+    (R : A → A → UU j)
+    (p : (x y : A) → is-prop (R x y))
+    (ρ : (x : A) → R x x)
+    (i : (x y : A) → R x y → Id x y) →
+    (x y : A) → is-equiv (i x y)
+  is-equiv-prop-in-id R p ρ i x =
+    id-fundamental-retr x (i x)
+      (λ y → dpair
+        (ind-Id x (λ z p → R x z) (ρ x) y)
+        ((λ r → is-prop'-is-prop (p x y) _ r)))
 
-is-prop-is-equiv : {i j : Level} {A : UU i} (B : UU j)
-  (f : A → B) (E : is-equiv f) → is-prop B → is-prop A
-is-prop-is-equiv B f E H x y =
-  is-contr-is-equiv _ (ap f {x} {y}) (is-emb-is-equiv f E x y) (H (f x) (f y))
+abstract
+  is-prop-is-equiv :
+    {i j : Level} {A : UU i} (B : UU j) (f : A → B) (E : is-equiv f) →
+    is-prop B → is-prop A
+  is-prop-is-equiv B f E H x y =
+    is-contr-is-equiv _ (ap f {x} {y}) (is-emb-is-equiv f E x y) (H (f x) (f y))
 
-is-prop-is-equiv' : {i j : Level} (A : UU i) {B : UU j}
-  (f : A → B) (E : is-equiv f) → is-prop A → is-prop B
-is-prop-is-equiv' A f E H =
-  is-prop-is-equiv _ (inv-is-equiv E) (is-equiv-inv-is-equiv E) H
+abstract
+  is-prop-is-equiv' :
+    {i j : Level} (A : UU i) {B : UU j} (f : A → B) (E : is-equiv f) →
+    is-prop A → is-prop B
+  is-prop-is-equiv' A f E H =
+    is-prop-is-equiv _ (inv-is-equiv E) (is-equiv-inv-is-equiv E) H
 
-is-set-prop-in-id : {i j : Level} {A : UU i}
-  (R : A → A → UU j)
-  (p : (x y : A) → is-prop (R x y))
-  (ρ : (x : A) → R x x)
-  (i : (x y : A) → R x y → Id x y)
-  → is-set A
-is-set-prop-in-id R p ρ i x y =
-  is-prop-is-equiv' (R x y) (i x y) (is-equiv-prop-in-id R p ρ i x y) (p x y)
+abstract
+  is-set-prop-in-id :
+    {i j : Level} {A : UU i} (R : A → A → UU j)
+    (p : (x y : A) → is-prop (R x y))
+    (ρ : (x : A) → R x x)
+    (i : (x y : A) → R x y → Id x y) →
+    is-set A
+  is-set-prop-in-id R p ρ i x y =
+    is-prop-is-equiv' (R x y) (i x y) (is-equiv-prop-in-id R p ρ i x y) (p x y)
 
-is-prop-Eq-ℕ : (n m : ℕ) → is-prop (Eq-ℕ n m)
-is-prop-Eq-ℕ zero-ℕ zero-ℕ = is-prop-unit
-is-prop-Eq-ℕ zero-ℕ (succ-ℕ m) = is-prop-empty
-is-prop-Eq-ℕ (succ-ℕ n) zero-ℕ = is-prop-empty
-is-prop-Eq-ℕ (succ-ℕ n) (succ-ℕ m) = is-prop-Eq-ℕ n m
+abstract
+  is-prop-Eq-ℕ :
+    (n m : ℕ) → is-prop (Eq-ℕ n m)
+  is-prop-Eq-ℕ zero-ℕ zero-ℕ = is-prop-unit
+  is-prop-Eq-ℕ zero-ℕ (succ-ℕ m) = is-prop-empty
+  is-prop-Eq-ℕ (succ-ℕ n) zero-ℕ = is-prop-empty
+  is-prop-Eq-ℕ (succ-ℕ n) (succ-ℕ m) = is-prop-Eq-ℕ n m
 
-eq-Eq-ℕ : (n m : ℕ) → Eq-ℕ n m → Id n m
-eq-Eq-ℕ = least-reflexive-Eq-ℕ (λ n → refl)
+abstract
+  eq-Eq-ℕ : (n m : ℕ) → Eq-ℕ n m → Id n m
+  eq-Eq-ℕ = least-reflexive-Eq-ℕ (λ n → refl)
 
-is-set-ℕ : is-set ℕ
-is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ reflexive-Eq-ℕ eq-Eq-ℕ
+abstract
+  is-set-ℕ : is-set ℕ
+  is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ reflexive-Eq-ℕ eq-Eq-ℕ
 
 -- Section 8.3 General truncation levels
 
@@ -139,20 +171,24 @@ add-𝕋 (succ-𝕋 (succ-𝕋 (succ-𝕋 x))) y = succ-𝕋 (add-𝕋 (succ-�
 is-trunc : {i : Level} (k : 𝕋) → UU i → UU i
 is-trunc neg-two-𝕋 A = is-contr A
 is-trunc (succ-𝕋 k) A = (x y : A) → is-trunc k (Id x y)
-  
-is-trunc-succ-is-trunc : {i : Level} (k : 𝕋) (A : UU i) →
-  is-trunc k A → is-trunc (succ-𝕋 k) A
-is-trunc-succ-is-trunc neg-two-𝕋 A H = is-prop-is-contr H
-is-trunc-succ-is-trunc (succ-𝕋 k) A H =
-  λ x y → is-trunc-succ-is-trunc k (Id x y) (H x y)
 
-is-trunc-is-equiv : {i j : Level} (k : 𝕋) {A : UU i} (B : UU j)
-  (f : A → B) → is-equiv f → is-trunc k B → is-trunc k A
-is-trunc-is-equiv neg-two-𝕋 B f is-equiv-f H =
-  is-contr-is-equiv B f is-equiv-f H
-is-trunc-is-equiv (succ-𝕋 k) B f is-equiv-f H x y =
-  is-trunc-is-equiv k (Id (f x) (f y)) (ap f {x} {y})
-    (is-emb-is-equiv f is-equiv-f x y) (H (f x) (f y))
+abstract
+  is-trunc-succ-is-trunc :
+    {i : Level} (k : 𝕋) (A : UU i) →
+    is-trunc k A → is-trunc (succ-𝕋 k) A
+  is-trunc-succ-is-trunc neg-two-𝕋 A H = is-prop-is-contr H
+  is-trunc-succ-is-trunc (succ-𝕋 k) A H =
+    λ x y → is-trunc-succ-is-trunc k (Id x y) (H x y)
+
+abstract
+  is-trunc-is-equiv :
+    {i j : Level} (k : 𝕋) {A : UU i} (B : UU j) (f : A → B) → is-equiv f →
+    is-trunc k B → is-trunc k A
+  is-trunc-is-equiv neg-two-𝕋 B f is-equiv-f H =
+    is-contr-is-equiv B f is-equiv-f H
+  is-trunc-is-equiv (succ-𝕋 k) B f is-equiv-f H x y =
+    is-trunc-is-equiv k (Id (f x) (f y)) (ap f {x} {y})
+      (is-emb-is-equiv f is-equiv-f x y) (H (f x) (f y))
 
 is-trunc-is-equiv' : {i j : Level} (k : 𝕋) (A : UU i) {B : UU j}
   (f : A → B) → is-equiv f → is-trunc k A → is-trunc k B

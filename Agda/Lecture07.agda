@@ -38,25 +38,28 @@ isretr-fib-tot-fib-ftr :
 isretr-fib-tot-fib-ftr f .(dpair x (f x y)) (dpair (dpair x y) refl) = refl
 
 -- We establish that the fibers of the induced map on total spaces are equivalent to the fibers of the fiberwise transformation.
-is-equiv-fib-ftr-fib-tot :
-  {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
-  (f : (x : A) → B x → C x) → (t : Σ A C) →
-  is-equiv (fib-ftr-fib-tot f t)
-is-equiv-fib-ftr-fib-tot f t =
-  is-equiv-has-inverse'
-    ( fib-tot-fib-ftr f t)
-    ( issec-fib-tot-fib-ftr f t)
-    ( isretr-fib-tot-fib-ftr f t)
 
-is-equiv-fib-tot-fib-ftr :
-  {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
-  (f : (x : A) → B x → C x) → (t : Σ A C) →
-  is-equiv (fib-tot-fib-ftr f t)
-is-equiv-fib-tot-fib-ftr f t =
-  is-equiv-has-inverse'
-    ( fib-ftr-fib-tot f t)
-    ( isretr-fib-tot-fib-ftr f t)
-    ( issec-fib-tot-fib-ftr f t)
+abstract
+  is-equiv-fib-ftr-fib-tot :
+    {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
+    (f : (x : A) → B x → C x) → (t : Σ A C) →
+    is-equiv (fib-ftr-fib-tot f t)
+  is-equiv-fib-ftr-fib-tot f t =
+    is-equiv-has-inverse'
+      ( fib-tot-fib-ftr f t)
+      ( issec-fib-tot-fib-ftr f t)
+      ( isretr-fib-tot-fib-ftr f t)
+
+abstract
+  is-equiv-fib-tot-fib-ftr :
+    {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
+    (f : (x : A) → B x → C x) → (t : Σ A C) →
+    is-equiv (fib-tot-fib-ftr f t)
+  is-equiv-fib-tot-fib-ftr f t =
+    is-equiv-has-inverse'
+      ( fib-ftr-fib-tot f t)
+      ( isretr-fib-tot-fib-ftr f t)
+      ( issec-fib-tot-fib-ftr f t)
 
 -- Any fiberwise equivalence induces an equivalence on total spaces
 is-fiberwise-equiv :
@@ -64,16 +67,17 @@ is-fiberwise-equiv :
   ((x : A) → B x → C x) → UU (i ⊔ (j ⊔ k))
 is-fiberwise-equiv f = (x : _) → is-equiv (f x)
 
-is-equiv-tot-is-fiberwise-equiv :
-  {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
-  {f : (x : A) → B x → C x} → is-fiberwise-equiv f →
-  is-equiv (tot f )
-is-equiv-tot-is-fiberwise-equiv {f = f} H =
-  is-equiv-is-contr-map
-    ( λ t → is-contr-is-equiv _
-      ( fib-ftr-fib-tot f t)
-      ( is-equiv-fib-ftr-fib-tot f t)
-      ( is-contr-map-is-equiv (H _) (pr2 t)))
+abstract
+  is-equiv-tot-is-fiberwise-equiv :
+    {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
+    {f : (x : A) → B x → C x} → is-fiberwise-equiv f →
+    is-equiv (tot f )
+  is-equiv-tot-is-fiberwise-equiv {f = f} H =
+    is-equiv-is-contr-map
+      ( λ t → is-contr-is-equiv _
+        ( fib-ftr-fib-tot f t)
+        ( is-equiv-fib-ftr-fib-tot f t)
+        ( is-contr-map-is-equiv (H _) (pr2 t)))
 
 equiv-tot-fam-equiv :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
@@ -84,71 +88,81 @@ equiv-tot-fam-equiv e =
     ( is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-map-equiv (e x)))
 
 -- Conversely, any fiberwise transformation that induces an equivalence on total spaces is a fiberwise equivalence.
-is-fiberwise-equiv-is-equiv-tot :
-  {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
-  (f : (x : A) → B x → C x) → is-equiv (tot f) →
-  is-fiberwise-equiv f
-is-fiberwise-equiv-is-equiv-tot {A = A} {B} {C} f is-equiv-tot-f x =
-  is-equiv-is-contr-map
-    ( λ z → is-contr-is-equiv'
-      ( fib (tot f) (dpair x z))
-      ( fib-ftr-fib-tot f (dpair x z))
-      ( is-equiv-fib-ftr-fib-tot f (dpair x z))
-      ( is-contr-map-is-equiv is-equiv-tot-f (dpair x z)))
+
+abstract
+  is-fiberwise-equiv-is-equiv-tot :
+    {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
+    (f : (x : A) → B x → C x) → is-equiv (tot f) →
+    is-fiberwise-equiv f
+  is-fiberwise-equiv-is-equiv-tot {A = A} {B} {C} f is-equiv-tot-f x =
+    is-equiv-is-contr-map
+      ( λ z → is-contr-is-equiv'
+        ( fib (tot f) (dpair x z))
+        ( fib-ftr-fib-tot f (dpair x z))
+        ( is-equiv-fib-ftr-fib-tot f (dpair x z))
+        ( is-contr-map-is-equiv is-equiv-tot-f (dpair x z)))
 
 -- Section 7.2 The fundamental theorem
 
 -- The general form of the fundamental theorem of identity types
-id-fundamental-gen :
-  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  is-contr (Σ A B) → (f : (x : A) → Id a x → B x) → is-fiberwise-equiv f
-id-fundamental-gen {A = A} a b is-contr-AB f =
-  is-fiberwise-equiv-is-equiv-tot f
-    ( is-equiv-is-contr (tot f) (is-contr-total-path A a) is-contr-AB)
 
-id-fundamental-gen' :
-  {i j : Level} {A : UU i} {B : A → UU j}
-  (a : A) (b : B a) (f : (x : A) → Id a x → B x) →
-  is-fiberwise-equiv f → is-contr (Σ A B)
-id-fundamental-gen' {A = A} {B = B} a b f is-fiberwise-equiv-f =
-  is-contr-is-equiv'
-    ( Σ A (Id a))
-    ( tot f)
-    ( is-equiv-tot-is-fiberwise-equiv is-fiberwise-equiv-f)
-    ( is-contr-total-path A a)
+abstract
+  id-fundamental-gen :
+    {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    is-contr (Σ A B) → (f : (x : A) → Id a x → B x) → is-fiberwise-equiv f
+  id-fundamental-gen {A = A} a b is-contr-AB f =
+    is-fiberwise-equiv-is-equiv-tot f
+      ( is-equiv-is-contr (tot f) (is-contr-total-path A a) is-contr-AB)
+
+abstract
+  id-fundamental-gen' :
+    {i j : Level} {A : UU i} {B : A → UU j}
+    (a : A) (b : B a) (f : (x : A) → Id a x → B x) →
+    is-fiberwise-equiv f → is-contr (Σ A B)
+  id-fundamental-gen' {A = A} {B = B} a b f is-fiberwise-equiv-f =
+    is-contr-is-equiv'
+      ( Σ A (Id a))
+      ( tot f)
+      ( is-equiv-tot-is-fiberwise-equiv is-fiberwise-equiv-f)
+      ( is-contr-total-path A a)
 
 -- The canonical form of the fundamental theorem of identity types
-id-fundamental :
-  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  is-contr (Σ A B) → is-fiberwise-equiv (ind-Id a (λ x p → B x) b)
-id-fundamental {i} {j} {A} {B} a b is-contr-AB =
-  id-fundamental-gen a b is-contr-AB (ind-Id a (λ x p → B x) b)
+
+abstract 
+  id-fundamental :
+    {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    is-contr (Σ A B) → is-fiberwise-equiv (ind-Id a (λ x p → B x) b)
+  id-fundamental {i} {j} {A} {B} a b is-contr-AB =
+    id-fundamental-gen a b is-contr-AB (ind-Id a (λ x p → B x) b)
 
 -- The converse of the fundamental theorem of identity types
-id-fundamental' :
-  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  (is-fiberwise-equiv (ind-Id a (λ x p → B x) b)) → is-contr (Σ A B)
-id-fundamental' {i} {j} {A} {B} a b H =
-  is-contr-is-equiv'
-    ( Σ A (Id a))
-    ( tot (ind-Id a (λ x p → B x) b))
-    ( is-equiv-tot-is-fiberwise-equiv H)
-    ( is-contr-total-path A a)
+
+abstract
+  id-fundamental' :
+    {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    (is-fiberwise-equiv (ind-Id a (λ x p → B x) b)) → is-contr (Σ A B)
+  id-fundamental' {i} {j} {A} {B} a b H =
+    is-contr-is-equiv'
+      ( Σ A (Id a))
+      ( tot (ind-Id a (λ x p → B x) b))
+      ( is-equiv-tot-is-fiberwise-equiv H)
+      ( is-contr-total-path A a)
 
 -- As an application we show that equivalences are embeddings.
 is-emb :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 is-emb f = (x y : _) → is-equiv (ap f {x} {y})
 
-is-emb-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) → is-equiv f → is-emb f
-is-emb-is-equiv {i} {j} {A} {B} f is-equiv-f x =
-  id-fundamental-gen x refl
-    ( is-contr-is-equiv' _
-      ( tot (λ y (p : Id (f y) (f x)) → inv p))
-      ( is-equiv-tot-is-fiberwise-equiv (λ y → is-equiv-inv (f y) (f x)))
-      ( is-contr-map-is-equiv is-equiv-f (f x)))
-    ( λ y p → ap f p)
+abstract
+  is-emb-is-equiv :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) → is-equiv f → is-emb f
+  is-emb-is-equiv {i} {j} {A} {B} f is-equiv-f x =
+    id-fundamental-gen x refl
+      ( is-contr-is-equiv' _
+        ( tot (λ y (p : Id (f y) (f x)) → inv p))
+        ( is-equiv-tot-is-fiberwise-equiv (λ y → is-equiv-inv (f y) (f x)))
+        ( is-contr-map-is-equiv is-equiv-f (f x)))
+      ( λ y p → ap f p)
 
 equiv-ap :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) (x y : A) →
@@ -171,38 +185,39 @@ fam-Σ :
   Σ A B → UU k
 fam-Σ C (dpair x y) = C x y
 
-ind-identity-system :
-  {i j k : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  (is-contr-AB : is-contr (Σ A B)) (P : (x : A) → B x → UU k) →
-  P a b → (x : A) (y : B x) → P x y
-ind-identity-system a b is-contr-AB P p x y =
-  tr
-    ( fam-Σ P)
-    ( is-prop-is-contr' is-contr-AB (dpair a b) (dpair x y))
-    ( p)
+abstract
+  ind-identity-system :
+    {i j k : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    (is-contr-AB : is-contr (Σ A B)) (P : (x : A) → B x → UU k) →
+    P a b → (x : A) (y : B x) → P x y
+  ind-identity-system a b is-contr-AB P p x y =
+    tr
+      ( fam-Σ P)
+      ( is-prop-is-contr' is-contr-AB (dpair a b) (dpair x y))
+      ( p)
 
-comp-identity-system :
-  {i j k : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  (is-contr-AB : is-contr (Σ A B)) →
-  (P : (x : A) → B x → UU k) (p : P a b) →
-  Id (ind-identity-system a b is-contr-AB P p a b) p
-comp-identity-system a b is-contr-AB P p =
-  ap
-    ( λ t → tr (fam-Σ P) t p)
-    ( is-prop-is-contr'
-      ( is-prop-is-contr is-contr-AB (dpair a b) (dpair a b))
-      ( is-prop-is-contr' is-contr-AB (dpair a b) (dpair a b))
-      ( refl))
+  comp-identity-system :
+    {i j k : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    (is-contr-AB : is-contr (Σ A B)) →
+    (P : (x : A) → B x → UU k) (p : P a b) →
+    Id (ind-identity-system a b is-contr-AB P p a b) p
+  comp-identity-system a b is-contr-AB P p =
+    ap
+      ( λ t → tr (fam-Σ P) t p)
+      ( is-prop-is-contr'
+        ( is-prop-is-contr is-contr-AB (dpair a b) (dpair a b))
+        ( is-prop-is-contr' is-contr-AB (dpair a b) (dpair a b))
+        ( refl))
 
-Ind-identity-system :
-  {i j : Level} (k : Level) {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  (is-contr-AB : is-contr (Σ A B)) →
-  IND-identity-system k B a b
-Ind-identity-system k a b is-contr-AB P =
-  dpair
-    ( ind-identity-system a b is-contr-AB P)
-    ( comp-identity-system a b is-contr-AB P)
-
+  Ind-identity-system :
+    {i j : Level} (k : Level) {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    (is-contr-AB : is-contr (Σ A B)) →
+    IND-identity-system k B a b
+  Ind-identity-system k a b is-contr-AB P =
+    dpair
+      ( ind-identity-system a b is-contr-AB P)
+      ( comp-identity-system a b is-contr-AB P)
+  
 contraction-total-space-IND-identity-system :
   {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
   IND-identity-system (i ⊔ j) B a b →
@@ -210,20 +225,22 @@ contraction-total-space-IND-identity-system :
 contraction-total-space-IND-identity-system a b ind (dpair x y) =
   pr1 (ind (λ x' y' → Id (dpair a b) (dpair x' y'))) refl x y
 
-is-contr-total-space-IND-identity-system :
-  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  IND-identity-system (i ⊔ j) B a b → is-contr (Σ A B)
-is-contr-total-space-IND-identity-system a b ind =
-  dpair
-    ( dpair a b)
-    ( contraction-total-space-IND-identity-system a b ind)
+abstract
+  is-contr-total-space-IND-identity-system :
+    {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    IND-identity-system (i ⊔ j) B a b → is-contr (Σ A B)
+  is-contr-total-space-IND-identity-system a b ind =
+    dpair
+      ( dpair a b)
+      ( contraction-total-space-IND-identity-system a b ind)
 
-id-fundamental-IND-identity-system :
-  {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
-  IND-identity-system (i ⊔ j) B a b →
-  (f : (x : A) → Id a x → B x) → (x : A) → is-equiv (f x)
-id-fundamental-IND-identity-system a b ind f =
-  id-fundamental-gen a b (is-contr-total-space-IND-identity-system a b ind) f
+abstract
+  id-fundamental-IND-identity-system :
+    {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
+    IND-identity-system (i ⊔ j) B a b →
+    (f : (x : A) → Id a x → B x) → (x : A) → is-equiv (f x)
+  id-fundamental-IND-identity-system a b ind f =
+    id-fundamental-gen a b (is-contr-total-space-IND-identity-system a b ind) f
 
 -- Section 7.3 Fiberwise equivalences over an equivalence
 
@@ -250,84 +267,127 @@ is-path-split :
 is-path-split {A = A} {B = B} f =
   sec f × ((x y : A) → sec (ap f {x = x} {y = y}))
 
-is-path-split-is-equiv :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-  is-equiv f → is-path-split f
-is-path-split-is-equiv f is-equiv-f =
-  pair (pr1 is-equiv-f) (λ x y → pr1 (is-emb-is-equiv f is-equiv-f x y))
+abstract
+  is-path-split-is-equiv :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+    is-equiv f → is-path-split f
+  is-path-split-is-equiv f is-equiv-f =
+    pair (pr1 is-equiv-f) (λ x y → pr1 (is-emb-is-equiv f is-equiv-f x y))
 
-is-half-adjoint-equivalence-is-path-split :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-  is-path-split f → is-half-adjoint-equivalence f
-is-half-adjoint-equivalence-is-path-split {A = A} {B = B} f
-  ( dpair (dpair g issec-g) sec-ap-f) =
-  let φ : ((x : A) → fib (ap f) (issec-g (f x))) →
-            Σ ((g ∘ f) ~ id)
-              ( λ H → (htpy-right-whisk issec-g f) ~ (htpy-left-whisk f H))
-      φ =  ( tot (λ H' → htpy-inv)) ∘
-             ( λ s → dpair (λ x → pr1 (s x)) (λ x → pr2 (s x)))
-  in
-  dpair g
-    ( dpair issec-g
-      ( φ (λ x → dpair
-        ( pr1 (sec-ap-f (g (f x)) x) (issec-g (f x)))
-        ( pr2 (sec-ap-f (g (f x)) x) (issec-g (f x))))))
+abstract
+  is-half-adjoint-equivalence-is-path-split :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+    is-path-split f → is-half-adjoint-equivalence f
+  is-half-adjoint-equivalence-is-path-split {A = A} {B = B} f
+    ( dpair (dpair g issec-g) sec-ap-f) =
+    let φ : ((x : A) → fib (ap f) (issec-g (f x))) →
+                Σ ((g ∘ f) ~ id)
+                ( λ H → (htpy-right-whisk issec-g f) ~ (htpy-left-whisk f H))
+        φ =  ( tot (λ H' → htpy-inv)) ∘
+               ( λ s → dpair (λ x → pr1 (s x)) (λ x → pr2 (s x)))
+    in
+    dpair g
+      ( dpair issec-g
+        ( φ (λ x → dpair
+          ( pr1 (sec-ap-f (g (f x)) x) (issec-g (f x)))
+          ( pr2 (sec-ap-f (g (f x)) x) (issec-g (f x))))))
 
-is-equiv-is-half-adjoint-equivalence :
-  { l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (f : A → B) → is-half-adjoint-equivalence f → is-equiv f
-is-equiv-is-half-adjoint-equivalence f (dpair g (dpair G (dpair H K))) =
-  is-equiv-has-inverse' g G H
+abstract
+  is-equiv-is-half-adjoint-equivalence :
+    { l1 l2 : Level} {A : UU l1} {B : UU l2}
+    (f : A → B) → is-half-adjoint-equivalence f → is-equiv f
+  is-equiv-is-half-adjoint-equivalence f (dpair g (dpair G (dpair H K))) =
+    is-equiv-has-inverse' g G H
 
-is-equiv-is-path-split :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-  is-path-split f → is-equiv f
-is-equiv-is-path-split f =
-  ( is-equiv-is-half-adjoint-equivalence f) ∘
-  ( is-half-adjoint-equivalence-is-path-split f)
+abstract
+  is-equiv-is-path-split :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+    is-path-split f → is-equiv f
+  is-equiv-is-path-split f =
+    ( is-equiv-is-half-adjoint-equivalence f) ∘
+    ( is-half-adjoint-equivalence-is-path-split f)
 
-is-half-adjoint-equivalence-is-equiv :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-  is-equiv f → is-half-adjoint-equivalence f
-is-half-adjoint-equivalence-is-equiv f =
-  ( is-half-adjoint-equivalence-is-path-split f) ∘ (is-path-split-is-equiv f)
+abstract
+  is-half-adjoint-equivalence-is-equiv :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+    is-equiv f → is-half-adjoint-equivalence f
+  is-half-adjoint-equivalence-is-equiv f =
+    ( is-half-adjoint-equivalence-is-path-split f) ∘ (is-path-split-is-equiv f)
 
 tr-precompose-fam :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
   (f : A → B) {x y : A} (p : Id x y) → tr C (ap f p) ~ tr (λ x → C (f x)) p
 tr-precompose-fam C f refl = htpy-refl _
 
-is-equiv-Σ-map-is-equiv-base-map :
+inv-Σ-map-is-hae-base-map :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
-  is-equiv f → is-equiv (Σ-map-base-map f C)
-is-equiv-Σ-map-is-equiv-base-map C f is-equiv-f =
-  let is-hae-f = is-half-adjoint-equivalence-is-path-split f
-                 ( is-path-split-is-equiv f is-equiv-f)
-      g = pr1 (is-hae-f)
-      G = pr1 (pr2 is-hae-f)
-      H = pr1 (pr2 (pr2 is-hae-f))
-      coh = pr2 (pr2 (pr2 is-hae-f))
-  in
-  is-equiv-has-inverse'
-    ( λ t → dpair (g (pr1 t)) (tr C (inv (G (pr1 t))) (pr2 t)))
-    ( λ t → eq-pair (dpair
-      ( G (pr1 t))
-      ( ( tr-concat (inv (G (pr1 t))) (G (pr1 t)) (pr2 t)) ∙
-        ( ap (λ α → tr C α (pr2 t)) (left-inv (G (pr1 t)))))))
-    ( λ t → eq-pair (dpair
-      ( H (pr1 t))
-      ( ( inv
-          ( tr-precompose-fam C f (H (pr1 t))
-             ( tr C (inv (G (f (pr1 t)))) (pr2 t)))) ∙ 
-        ( ( tr-concat (inv (G (f (pr1 t)))) (ap f (H (pr1 t))) (pr2 t)) ∙
-          ( ap
-            ( λ α → tr C α (pr2 t))
-            ( inv
-              ( inv-con
-                ( G (f (pr1 t)))
-                ( refl)
-                ( ap f (H (pr1 t)))
-                ( (right-unit (G (f (pr1 t)))) ∙ (coh (pr1 t))))))))))
+  is-half-adjoint-equivalence f → (Σ B C) → (Σ A (λ x → C (f x)))
+inv-Σ-map-is-hae-base-map C f (dpair g (dpair G (dpair H K))) (dpair y z) =
+  dpair (g y) (tr C (inv (G y)) z)
+
+inv-Σ-map-base-map :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
+  is-equiv f → (Σ B C) → (Σ A (λ x → C (f x)))
+inv-Σ-map-base-map C f is-equiv-f =
+  inv-Σ-map-is-hae-base-map C f
+    ( is-half-adjoint-equivalence-is-equiv f is-equiv-f)
+
+issec-inv-Σ-map-is-hae-base-map :
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
+  ( is-hae-f : is-half-adjoint-equivalence f) →
+  ((Σ-map-base-map f C) ∘ (inv-Σ-map-is-hae-base-map C f is-hae-f)) ~ id
+issec-inv-Σ-map-is-hae-base-map
+  C f (dpair g (dpair G (dpair H K))) (dpair y z) =
+  eq-pair
+    ( dpair
+      ( G y)
+      ( ( tr-concat (inv (G y)) (G y) z) ∙
+        ( ap (λ α → tr C α z) (left-inv (G y)))))
+
+issec-inv-Σ-map-base-map :
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
+  ( is-equiv-f : is-equiv f) →
+  ((Σ-map-base-map f C) ∘ (inv-Σ-map-base-map C f is-equiv-f)) ~ id
+issec-inv-Σ-map-base-map C f is-equiv-f =
+  issec-inv-Σ-map-is-hae-base-map C f
+    ( is-half-adjoint-equivalence-is-equiv f is-equiv-f)
+
+isretr-inv-Σ-map-is-hae-base-map :
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
+  ( is-hae-f : is-half-adjoint-equivalence f) →
+  ((inv-Σ-map-is-hae-base-map C f is-hae-f) ∘ (Σ-map-base-map f C)) ~ id
+isretr-inv-Σ-map-is-hae-base-map
+  C f (dpair g (dpair G (dpair H K))) (dpair x z) =
+  eq-pair
+    ( dpair
+      ( H x)
+      ( ( inv (tr-precompose-fam C f (H x) (tr C (inv (G (f x))) z))) ∙ 
+        ( ( tr-concat (inv (G (f x))) (ap f (H x)) z) ∙
+          ( ap (λ α → tr C α z)
+               ( inv
+                 ( inv-con
+                   ( G (f x))
+                   ( refl)
+                   ( ap f (H x))
+                   ( (right-unit (G (f x))) ∙ (K x))))))))
+
+isretr-inv-Σ-map-base-map :
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
+  ( is-equiv-f : is-equiv f) →
+  ((inv-Σ-map-base-map C f is-equiv-f) ∘ (Σ-map-base-map f C)) ~ id
+isretr-inv-Σ-map-base-map C f is-equiv-f =
+  isretr-inv-Σ-map-is-hae-base-map C f
+    ( is-half-adjoint-equivalence-is-equiv f is-equiv-f)
+
+abstract
+  is-equiv-Σ-map-base-map :
+    {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
+    is-equiv f → is-equiv (Σ-map-base-map f C)
+  is-equiv-Σ-map-base-map C f is-equiv-f =
+    is-equiv-has-inverse'
+      ( inv-Σ-map-base-map C f is-equiv-f)
+      ( issec-inv-Σ-map-base-map C f is-equiv-f)
+      ( isretr-inv-Σ-map-base-map C f is-equiv-f)
 
 toto :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
@@ -341,72 +401,76 @@ triangle-toto :
   (toto D f g) ~ ((Σ-map-base-map f D) ∘ (tot g))
 triangle-toto D f g t = refl
 
-is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
-  (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
-  is-equiv f → (is-fiberwise-equiv g) →
-  is-equiv (toto D f g)
-is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
-  D f g is-equiv-f is-fiberwise-equiv-g =
-  is-equiv-comp
-    ( toto D f g)
-    ( Σ-map-base-map f D)
-    ( tot g)
-    ( triangle-toto D f g)
-    ( is-equiv-tot-is-fiberwise-equiv is-fiberwise-equiv-g)
-    ( is-equiv-Σ-map-is-equiv-base-map D f is-equiv-f)
-
-is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
-  (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
-  is-equiv f → is-equiv (toto D f g) → is-fiberwise-equiv g
-is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
-  D f g is-equiv-f is-equiv-toto-fg =
-  is-fiberwise-equiv-is-equiv-tot g
-    ( is-equiv-right-factor
+abstract
+  is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
+    (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
+    is-equiv f → (is-fiberwise-equiv g) →
+    is-equiv (toto D f g)
+  is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
+    D f g is-equiv-f is-fiberwise-equiv-g =
+    is-equiv-comp
       ( toto D f g)
       ( Σ-map-base-map f D)
       ( tot g)
       ( triangle-toto D f g)
-      ( is-equiv-Σ-map-is-equiv-base-map D f is-equiv-f)
-      ( is-equiv-toto-fg))
+      ( is-equiv-tot-is-fiberwise-equiv is-fiberwise-equiv-g)
+      ( is-equiv-Σ-map-base-map D f is-equiv-f)
 
-is-fiberwise-equiv-id-to-Eq-structure :
-  { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (s : Σ A B) {C : A → UU l3}
-  ( D : (t : Σ A B) → C (pr1 t) → UU l4)
-  ( h : (t : Σ A B) → Id s t → Σ (C (pr1 t)) (D t))
-  ( f : (x : A) → Id (pr1 s) x → C x)
-  ( g : (t : Σ A B) (α : Id (pr1 s) (pr1 t)) → Id (tr B α (pr2 s)) (pr2 t) →
-       D t (f (pr1 t) α))
-  ( H : Id (h s refl) (dpair (f (pr1 s) refl) (g s refl refl))) →
-  is-fiberwise-equiv f →
-  ( (y : B (pr1 s)) → is-equiv (g (dpair (pr1 s) y) refl)) →
-  is-fiberwise-equiv h
-is-fiberwise-equiv-id-to-Eq-structure
-  {A = A} {B = B} s {C} D h f g H is-equiv-f is-equiv-g t =
-  is-equiv-comp
-    ( h t)
-    ( toto (D t) (f (pr1 t)) (g t))
-    ( pair-eq)
-    ( ind-Id s
-      ( λ t α → Id
-        (h t α)
-        (((toto (D t) (f (pr1 t)) (g t)) ∘ pair-eq) α))
-        ( H)
-        ( t))
-    ( is-equiv-pair-eq' s t)
-    ( is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
-      ( D t)
-      ( f (pr1 t))
-      ( g t)
-      ( is-equiv-f (pr1 t))
-      ( ind-Σ
-        { C = λ t → (α : Id (pr1 s) (pr1 t)) → is-equiv (g t α)}
-        ( λ x y α → (ind-Id (pr1 s)
-          ( λ (x' : A) (α : Id (pr1 s) x') →
-            (y' : B x') → is-equiv (g (dpair x' y') α))
-          ( λ y' → is-equiv-g y')) x α y)
-        ( t)))
+abstract
+  is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
+    (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
+    is-equiv f → is-equiv (toto D f g) → is-fiberwise-equiv g
+  is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
+    D f g is-equiv-f is-equiv-toto-fg =
+    is-fiberwise-equiv-is-equiv-tot g
+      ( is-equiv-right-factor
+        ( toto D f g)
+        ( Σ-map-base-map f D)
+        ( tot g)
+        ( triangle-toto D f g)
+        ( is-equiv-Σ-map-base-map D f is-equiv-f)
+        ( is-equiv-toto-fg))
+
+abstract
+  is-fiberwise-equiv-id-to-Eq-structure :
+    { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} (s : Σ A B)
+    { C : A → UU l3}
+    ( D : (t : Σ A B) → C (pr1 t) → UU l4)
+    ( h : (t : Σ A B) → Id s t → Σ (C (pr1 t)) (D t))
+    ( f : (x : A) → Id (pr1 s) x → C x)
+    ( g : (t : Σ A B) (α : Id (pr1 s) (pr1 t)) → Id (tr B α (pr2 s)) (pr2 t) →
+        D t (f (pr1 t) α))
+    ( H : Id (h s refl) (dpair (f (pr1 s) refl) (g s refl refl))) →
+    is-fiberwise-equiv f →
+    ( (y : B (pr1 s)) → is-equiv (g (dpair (pr1 s) y) refl)) →
+    is-fiberwise-equiv h
+  is-fiberwise-equiv-id-to-Eq-structure
+    {A = A} {B = B} s {C} D h f g H is-equiv-f is-equiv-g t =
+    is-equiv-comp
+      ( h t)
+      ( toto (D t) (f (pr1 t)) (g t))
+      ( pair-eq)
+      ( ind-Id s
+        ( λ t α → Id
+          (h t α)
+          (((toto (D t) (f (pr1 t)) (g t)) ∘ pair-eq) α))
+          ( H)
+          ( t))
+      ( is-equiv-pair-eq' s t)
+      ( is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
+        ( D t)
+        ( f (pr1 t))
+        ( g t)
+        ( is-equiv-f (pr1 t))
+        ( ind-Σ
+          { C = λ t → (α : Id (pr1 s) (pr1 t)) → is-equiv (g t α)}
+          ( λ x y α → (ind-Id (pr1 s)
+            ( λ (x' : A) (α : Id (pr1 s) x') →
+              (y' : B x') → is-equiv (g (dpair x' y') α))
+            ( λ y' → is-equiv-g y')) x α y)
+          ( t)))
 
 -- Section 7.4 Disjointness of coproducts
 
@@ -414,22 +478,23 @@ is-fiberwise-equiv-id-to-Eq-structure
 
 postulate Raise : {l1 : Level} (l2 : Level) → (A : UU l1) → Σ (UU (l1 ⊔ l2)) (λ X → A ≃ X)
 
-raise :
-  {l1 : Level} (l2 : Level) → UU l1 → UU (l1 ⊔ l2)
-raise l2 A = pr1 (Raise l2 A)
-
-eqv-raise :
-  {l1 : Level} (l2 : Level) (A : UU l1) → A ≃ raise l2 A
-eqv-raise l2 A = pr2 (Raise l2 A)
-
-map-raise :
-  {l1 : Level} (l2 : Level) (A : UU l1) → A → raise l2 A
-map-raise l2 A = map-equiv (eqv-raise l2 A)
-
-is-equiv-map-raise :
-  {l1 : Level} (l2 : Level) (A : UU l1) →
-  is-equiv (map-raise l2 A)
-is-equiv-map-raise l2 A = is-equiv-map-equiv (eqv-raise l2 A)
+abstract
+  raise :
+    {l1 : Level} (l2 : Level) → UU l1 → UU (l1 ⊔ l2)
+  raise l2 A = pr1 (Raise l2 A)
+  
+  eqv-raise :
+    {l1 : Level} (l2 : Level) (A : UU l1) → A ≃ raise l2 A
+  eqv-raise l2 A = pr2 (Raise l2 A)
+  
+  map-raise :
+    {l1 : Level} (l2 : Level) (A : UU l1) → A → raise l2 A
+  map-raise l2 A = map-equiv (eqv-raise l2 A)
+  
+  is-equiv-map-raise :
+    {l1 : Level} (l2 : Level) (A : UU l1) →
+    is-equiv (map-raise l2 A)
+  is-equiv-map-raise l2 A = is-equiv-map-equiv (eqv-raise l2 A)
 
 -- Lemmas about coproducts
 
@@ -461,30 +526,33 @@ isretr-inv-left-distributive-coprod-Σ-map :
 isretr-inv-left-distributive-coprod-Σ-map A B C (dpair (inl x) z) = refl
 isretr-inv-left-distributive-coprod-Σ-map A B C (dpair (inr y) z) = refl
 
-is-equiv-left-distributive-coprod-Σ-map :
-  {l1 l2 l3 : Level} (A : UU l1) (B : UU l2) (C : coprod A B → UU l3) →
-  is-equiv (left-distributive-coprod-Σ-map A B C)
-is-equiv-left-distributive-coprod-Σ-map A B C =
-  is-equiv-has-inverse'
-    ( inv-left-distributive-coprod-Σ-map A B C)
-    ( issec-inv-left-distributive-coprod-Σ-map A B C)
-    ( isretr-inv-left-distributive-coprod-Σ-map A B C)
+abstract
+  is-equiv-left-distributive-coprod-Σ-map :
+    {l1 l2 l3 : Level} (A : UU l1) (B : UU l2) (C : coprod A B → UU l3) →
+    is-equiv (left-distributive-coprod-Σ-map A B C)
+  is-equiv-left-distributive-coprod-Σ-map A B C =
+    is-equiv-has-inverse'
+      ( inv-left-distributive-coprod-Σ-map A B C)
+      ( issec-inv-left-distributive-coprod-Σ-map A B C)
+      ( isretr-inv-left-distributive-coprod-Σ-map A B C)
 
-is-equiv-map-to-empty :
-  {l : Level} {A : UU l} (f : A → empty) → is-equiv f
-is-equiv-map-to-empty f =
-  is-equiv-has-inverse'
-    ind-empty
-    ind-empty
-    ( λ x → ind-empty {P = λ t → Id (ind-empty (f x)) x} (f x))
+abstract
+  is-equiv-map-to-empty :
+    {l : Level} {A : UU l} (f : A → empty) → is-equiv f
+  is-equiv-map-to-empty f =
+    is-equiv-has-inverse'
+      ind-empty
+      ind-empty
+      ( λ x → ind-empty {P = λ t → Id (ind-empty (f x)) x} (f x))
 
 map-Σ-empty-fam :
   {l : Level} (A : UU l) → Σ A (λ x → empty) → empty
 map-Σ-empty-fam A (dpair x ()) 
 
-is-equiv-map-Σ-empty-fam :
-  {l : Level} (A : UU l) → is-equiv (map-Σ-empty-fam A)
-is-equiv-map-Σ-empty-fam A = is-equiv-map-to-empty (map-Σ-empty-fam A)
+abstract
+  is-equiv-map-Σ-empty-fam :
+    {l : Level} (A : UU l) → is-equiv (map-Σ-empty-fam A)
+  is-equiv-map-Σ-empty-fam A = is-equiv-map-to-empty (map-Σ-empty-fam A)
 
 inv-inl-coprod-empty : {l : Level} (A : UU l) → coprod A empty → A
 inv-inl-coprod-empty A (inl x) = x
@@ -495,13 +563,14 @@ issec-inv-inl-coprod-empty :
 issec-inv-inl-coprod-empty A (inl x) = refl
 issec-inv-inl-coprod-empty A (inr ())
 
-is-equiv-inl-coprod-empty :
-  {l : Level} (A : UU l) → is-equiv (inl {A = A} {B = empty})
-is-equiv-inl-coprod-empty A =
-  is-equiv-has-inverse'
-    ( inv-inl-coprod-empty A)
-    ( issec-inv-inl-coprod-empty A)
-    ( λ x → refl)
+abstract
+  is-equiv-inl-coprod-empty :
+    {l : Level} (A : UU l) → is-equiv (inl {A = A} {B = empty})
+  is-equiv-inl-coprod-empty A =
+    is-equiv-has-inverse'
+      ( inv-inl-coprod-empty A)
+      ( issec-inv-inl-coprod-empty A)
+      ( λ x → refl)
 
 inv-inr-coprod-empty :
   {l : Level} (B : UU l) → coprod empty B → B
@@ -513,13 +582,14 @@ issec-inv-inr-coprod-empty :
 issec-inv-inr-coprod-empty B (inl ())
 issec-inv-inr-coprod-empty B (inr x) = refl
 
-is-equiv-inr-coprod-empty :
-  {l : Level} (B : UU l) → is-equiv (inr {A = empty} {B = B})
-is-equiv-inr-coprod-empty B =
-  is-equiv-has-inverse'
-    ( inv-inr-coprod-empty B)
-    ( issec-inv-inr-coprod-empty B)
-    ( λ x → refl)
+abstract
+  is-equiv-inr-coprod-empty :
+    {l : Level} (B : UU l) → is-equiv (inr {A = empty} {B = B})
+  is-equiv-inr-coprod-empty B =
+    is-equiv-has-inverse'
+      ( inv-inr-coprod-empty B)
+      ( issec-inv-inr-coprod-empty B)
+      ( λ x → refl)
 
 -- The identity types of coproducts
 
@@ -542,97 +612,102 @@ Eq-coprod-eq :
   (s t : coprod A B) → Id s t → Eq-coprod A B s t
 Eq-coprod-eq A B s .s refl = reflexive-Eq-coprod A B s
 
-is-contr-total-Eq-coprod-inl :
-  {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : A) →
-  is-contr (Σ (coprod A B) (Eq-coprod A B (inl x)))
-is-contr-total-Eq-coprod-inl A B x =
-  is-contr-is-equiv
-     ( coprod
-       ( Σ A (λ y → Eq-coprod A B (inl x) (inl y)))
-       ( Σ B (λ y → Eq-coprod A B (inl x) (inr y))))
-     ( left-distributive-coprod-Σ-map A B (Eq-coprod A B (inl x)))
-     ( is-equiv-left-distributive-coprod-Σ-map A B (Eq-coprod A B (inl x)))
-     ( is-contr-is-equiv'
-       ( coprod
-         ( Σ A (Id x))
-         ( Σ B (λ y → empty)))
-       ( functor-coprod
-         ( tot (λ y → map-raise _ (Id x y)))
-         ( tot (λ y → map-raise _ empty)))
-       ( is-equiv-functor-coprod
-         ( is-equiv-tot-is-fiberwise-equiv
-           ( λ y → is-equiv-map-raise _ (Id x y)))
-         ( is-equiv-tot-is-fiberwise-equiv
-           ( λ y → is-equiv-map-raise _ empty)))
-       ( is-contr-is-equiv
-         ( coprod (Σ A (Id x)) empty)
-         ( functor-coprod id (map-Σ-empty-fam B))
-         ( is-equiv-functor-coprod
-           ( is-equiv-id (Σ A (Id x)))
-         ( is-equiv-map-Σ-empty-fam B))
-         ( is-contr-is-equiv'
-           ( Σ A (Id x))
-           ( inl)
-           ( is-equiv-inl-coprod-empty (Σ A (Id x)))
-           ( is-contr-total-path A x))))
-
-is-contr-total-Eq-coprod-inr :
-  {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : B) →
-  is-contr (Σ (coprod A B) (Eq-coprod A B (inr x)))
-is-contr-total-Eq-coprod-inr A B x =
-  is-contr-is-equiv
-    ( coprod
-      ( Σ A (λ y → Eq-coprod A B (inr x) (inl y)))
-      ( Σ B (λ y → Eq-coprod A B (inr x) (inr y))))
-    ( left-distributive-coprod-Σ-map A B (Eq-coprod A B (inr x)))
-    ( is-equiv-left-distributive-coprod-Σ-map A B (Eq-coprod A B (inr x)))
-    ( is-contr-is-equiv'
-      ( coprod (Σ A (λ y → empty)) (Σ B (Id x)))
-      ( functor-coprod
-        ( tot (λ y → map-raise _ empty))
-        ( tot (λ y → map-raise _ (Id x y))))
-      ( is-equiv-functor-coprod
-        ( is-equiv-tot-is-fiberwise-equiv
-          ( λ y → is-equiv-map-raise _ empty))
-        ( is-equiv-tot-is-fiberwise-equiv
-          ( λ y → is-equiv-map-raise _ (Id x y))))
-      ( is-contr-is-equiv
-        ( coprod empty (Σ B (Id x)))
-        ( functor-coprod (map-Σ-empty-fam A) id)
+abstract
+  is-contr-total-Eq-coprod-inl :
+    {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : A) →
+    is-contr (Σ (coprod A B) (Eq-coprod A B (inl x)))
+  is-contr-total-Eq-coprod-inl A B x =
+    is-contr-is-equiv
+      ( coprod
+        ( Σ A (λ y → Eq-coprod A B (inl x) (inl y)))
+        ( Σ B (λ y → Eq-coprod A B (inl x) (inr y))))
+      ( left-distributive-coprod-Σ-map A B (Eq-coprod A B (inl x)))
+      ( is-equiv-left-distributive-coprod-Σ-map A B (Eq-coprod A B (inl x)))
+      ( is-contr-is-equiv'
+        ( coprod
+          ( Σ A (Id x))
+          ( Σ B (λ y → empty)))
+        ( functor-coprod
+          ( tot (λ y → map-raise _ (Id x y)))
+          ( tot (λ y → map-raise _ empty)))
         ( is-equiv-functor-coprod
-          ( is-equiv-map-Σ-empty-fam A)
-          ( is-equiv-id (Σ B (Id x))))
-        ( is-contr-is-equiv'
-          ( Σ B (Id x))
-          ( inr)
-          ( is-equiv-inr-coprod-empty (Σ B (Id x)))
-          ( is-contr-total-path B x))))
+          ( is-equiv-tot-is-fiberwise-equiv
+            ( λ y → is-equiv-map-raise _ (Id x y)))
+          ( is-equiv-tot-is-fiberwise-equiv
+            ( λ y → is-equiv-map-raise _ empty)))
+        ( is-contr-is-equiv
+          ( coprod (Σ A (Id x)) empty)
+          ( functor-coprod id (map-Σ-empty-fam B))
+          ( is-equiv-functor-coprod
+            ( is-equiv-id (Σ A (Id x)))
+          ( is-equiv-map-Σ-empty-fam B))
+          ( is-contr-is-equiv'
+            ( Σ A (Id x))
+            ( inl)
+            ( is-equiv-inl-coprod-empty (Σ A (Id x)))
+            ( is-contr-total-path A x))))
 
-is-equiv-Eq-coprod-eq-inl :
-  {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : A) →
-  is-fiberwise-equiv (Eq-coprod-eq A B (inl x))
-is-equiv-Eq-coprod-eq-inl A B x =
-  id-fundamental-gen
-    ( inl x)
-    ( reflexive-Eq-coprod A B (inl x))
-    ( is-contr-total-Eq-coprod-inl A B x)
-    ( Eq-coprod-eq A B (inl x))
+abstract
+  is-contr-total-Eq-coprod-inr :
+    {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : B) →
+    is-contr (Σ (coprod A B) (Eq-coprod A B (inr x)))
+  is-contr-total-Eq-coprod-inr A B x =
+    is-contr-is-equiv
+      ( coprod
+        ( Σ A (λ y → Eq-coprod A B (inr x) (inl y)))
+        ( Σ B (λ y → Eq-coprod A B (inr x) (inr y))))
+      ( left-distributive-coprod-Σ-map A B (Eq-coprod A B (inr x)))
+      ( is-equiv-left-distributive-coprod-Σ-map A B (Eq-coprod A B (inr x)))
+      ( is-contr-is-equiv'
+        ( coprod (Σ A (λ y → empty)) (Σ B (Id x)))
+        ( functor-coprod
+          ( tot (λ y → map-raise _ empty))
+          ( tot (λ y → map-raise _ (Id x y))))
+        ( is-equiv-functor-coprod
+          ( is-equiv-tot-is-fiberwise-equiv
+            ( λ y → is-equiv-map-raise _ empty))
+          ( is-equiv-tot-is-fiberwise-equiv
+            ( λ y → is-equiv-map-raise _ (Id x y))))
+        ( is-contr-is-equiv
+          ( coprod empty (Σ B (Id x)))
+          ( functor-coprod (map-Σ-empty-fam A) id)
+          ( is-equiv-functor-coprod
+            ( is-equiv-map-Σ-empty-fam A)
+            ( is-equiv-id (Σ B (Id x))))
+          ( is-contr-is-equiv'
+            ( Σ B (Id x))
+            ( inr)
+            ( is-equiv-inr-coprod-empty (Σ B (Id x)))
+            ( is-contr-total-path B x))))
 
-is-equiv-Eq-coprod-eq-inr :
-  {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : B) →
-  is-fiberwise-equiv (Eq-coprod-eq A B (inr x))
-is-equiv-Eq-coprod-eq-inr A B x =
-  id-fundamental-gen
-    ( inr x)
-    ( reflexive-Eq-coprod A B (inr x))
-    ( is-contr-total-Eq-coprod-inr A B x)
-    ( Eq-coprod-eq A B (inr x))
+abstract
+  is-equiv-Eq-coprod-eq-inl :
+    {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : A) →
+    is-fiberwise-equiv (Eq-coprod-eq A B (inl x))
+  is-equiv-Eq-coprod-eq-inl A B x =
+    id-fundamental-gen
+      ( inl x)
+      ( reflexive-Eq-coprod A B (inl x))
+      ( is-contr-total-Eq-coprod-inl A B x)
+      ( Eq-coprod-eq A B (inl x))
 
-is-equiv-Eq-coprod-eq :
-  {l1 l2 : Level} (A : UU l1) (B : UU l2)
-  (s : coprod A B) → is-fiberwise-equiv (Eq-coprod-eq A B s)
-is-equiv-Eq-coprod-eq A B (inl x) = is-equiv-Eq-coprod-eq-inl A B x
-is-equiv-Eq-coprod-eq A B (inr x) = is-equiv-Eq-coprod-eq-inr A B x
+abstract
+  is-equiv-Eq-coprod-eq-inr :
+    {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : B) →
+    is-fiberwise-equiv (Eq-coprod-eq A B (inr x))
+  is-equiv-Eq-coprod-eq-inr A B x =
+    id-fundamental-gen
+      ( inr x)
+      ( reflexive-Eq-coprod A B (inr x))
+      ( is-contr-total-Eq-coprod-inr A B x)
+      ( Eq-coprod-eq A B (inr x))
+
+abstract
+  is-equiv-Eq-coprod-eq :
+    {l1 l2 : Level} (A : UU l1) (B : UU l2)
+    (s : coprod A B) → is-fiberwise-equiv (Eq-coprod-eq A B s)
+  is-equiv-Eq-coprod-eq A B (inl x) = is-equiv-Eq-coprod-eq-inl A B x
+  is-equiv-Eq-coprod-eq A B (inr x) = is-equiv-Eq-coprod-eq-inr A B x
 
 map-compute-eq-coprod-inl-inl :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
@@ -641,17 +716,18 @@ map-compute-eq-coprod-inl-inl x x' =
   ( inv-is-equiv (is-equiv-map-raise _ (Id x x'))) ∘
     ( Eq-coprod-eq _ _ (inl x) (inl x')) 
 
-is-equiv-map-compute-eq-coprod-inl-inl :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (x x' : A) → is-equiv (map-compute-eq-coprod-inl-inl {B = B} x x')
-is-equiv-map-compute-eq-coprod-inl-inl x x' =
-   is-equiv-comp
-     ( map-compute-eq-coprod-inl-inl x x')
-     ( inv-is-equiv (is-equiv-map-raise _ (Id x x')))
-     ( Eq-coprod-eq _ _ (inl x) (inl x'))
-     ( htpy-refl _)
-     ( is-equiv-Eq-coprod-eq _ _ (inl x) (inl x'))
-     ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id x x')))
+abstract
+  is-equiv-map-compute-eq-coprod-inl-inl :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2}
+    (x x' : A) → is-equiv (map-compute-eq-coprod-inl-inl {B = B} x x')
+  is-equiv-map-compute-eq-coprod-inl-inl x x' =
+    is-equiv-comp
+      ( map-compute-eq-coprod-inl-inl x x')
+      ( inv-is-equiv (is-equiv-map-raise _ (Id x x')))
+      ( Eq-coprod-eq _ _ (inl x) (inl x'))
+      ( htpy-refl _)
+      ( is-equiv-Eq-coprod-eq _ _ (inl x) (inl x'))
+      ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id x x')))
 
 compute-eq-coprod-inl-inl :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
@@ -668,18 +744,19 @@ map-compute-eq-coprod-inl-inr x y' =
   ( inv-is-equiv (is-equiv-map-raise _ empty)) ∘
     ( Eq-coprod-eq _ _ (inl x) (inr y'))
 
-is-equiv-map-compute-eq-coprod-inl-inr :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (x : A) (y' : B) → is-equiv (map-compute-eq-coprod-inl-inr x y')
-is-equiv-map-compute-eq-coprod-inl-inr x y' =
-   is-equiv-comp
-     ( map-compute-eq-coprod-inl-inr x y')
-     ( inv-is-equiv (is-equiv-map-raise _ empty))
-     ( Eq-coprod-eq _ _ (inl x) (inr y'))
-     ( htpy-refl _)
-     ( is-equiv-Eq-coprod-eq _ _ (inl x) (inr y'))
-     ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
-
+abstract
+  is-equiv-map-compute-eq-coprod-inl-inr :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2}
+    (x : A) (y' : B) → is-equiv (map-compute-eq-coprod-inl-inr x y')
+  is-equiv-map-compute-eq-coprod-inl-inr x y' =
+    is-equiv-comp
+      ( map-compute-eq-coprod-inl-inr x y')
+      ( inv-is-equiv (is-equiv-map-raise _ empty))
+      ( Eq-coprod-eq _ _ (inl x) (inr y'))
+      ( htpy-refl _)
+      ( is-equiv-Eq-coprod-eq _ _ (inl x) (inr y'))
+      ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
+  
 compute-eq-coprod-inl-inr :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
   (x : A) (y' : B) → (Id (inl x) (inr y')) ≃ empty
@@ -695,17 +772,18 @@ map-compute-eq-coprod-inr-inl y x' =
    ( inv-is-equiv (is-equiv-map-raise _ empty)) ∘
      ( Eq-coprod-eq _ _ (inr y) (inl x'))
 
-is-equiv-map-compute-eq-coprod-inr-inl :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (y : B) (x' : A) → is-equiv (map-compute-eq-coprod-inr-inl y x')
-is-equiv-map-compute-eq-coprod-inr-inl y x' =
-  is-equiv-comp
-    ( map-compute-eq-coprod-inr-inl y x')
-    ( inv-is-equiv (is-equiv-map-raise _ empty))
-    ( Eq-coprod-eq _ _ (inr y) (inl x'))
-    ( htpy-refl _)
-    ( is-equiv-Eq-coprod-eq _ _ (inr y) (inl x'))
-    ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
+abstract
+  is-equiv-map-compute-eq-coprod-inr-inl :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2}
+    (y : B) (x' : A) → is-equiv (map-compute-eq-coprod-inr-inl y x')
+  is-equiv-map-compute-eq-coprod-inr-inl y x' =
+    is-equiv-comp
+      ( map-compute-eq-coprod-inr-inl y x')
+      ( inv-is-equiv (is-equiv-map-raise _ empty))
+      ( Eq-coprod-eq _ _ (inr y) (inl x'))
+      ( htpy-refl _)
+      ( is-equiv-Eq-coprod-eq _ _ (inr y) (inl x'))
+      ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
 
 compute-eq-coprod-inr-inl :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
@@ -722,17 +800,18 @@ map-compute-eq-coprod-inr-inr y y' =
   ( inv-is-equiv (is-equiv-map-raise _ (Id y y'))) ∘
     ( Eq-coprod-eq _ _ (inr y) (inr y'))
 
-is-equiv-map-compute-eq-coprod-inr-inr :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (y y' : B) → is-equiv (map-compute-eq-coprod-inr-inr {A = A} y y')
-is-equiv-map-compute-eq-coprod-inr-inr y y' =
-  is-equiv-comp
-    ( map-compute-eq-coprod-inr-inr y y')
-    ( inv-is-equiv (is-equiv-map-raise _ (Id y y')))
-    ( Eq-coprod-eq _ _ (inr y) (inr y'))
-    ( htpy-refl _)
-    ( is-equiv-Eq-coprod-eq _ _ (inr y) (inr y'))
-    ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id y y')))
+abstract
+  is-equiv-map-compute-eq-coprod-inr-inr :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2}
+    (y y' : B) → is-equiv (map-compute-eq-coprod-inr-inr {A = A} y y')
+  is-equiv-map-compute-eq-coprod-inr-inr y y' =
+    is-equiv-comp
+      ( map-compute-eq-coprod-inr-inr y y')
+      ( inv-is-equiv (is-equiv-map-raise _ (Id y y')))
+      ( Eq-coprod-eq _ _ (inr y) (inr y'))
+      ( htpy-refl _)
+      ( is-equiv-Eq-coprod-eq _ _ (inr y) (inr y'))
+      ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id y y')))
 
 compute-eq-coprod-inr-inr :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
@@ -770,49 +849,55 @@ fib'-fib :
   fib f y → fib' f y
 fib'-fib f y t = tot (λ x → inv) t
 
-is-equiv-fib'-fib :
-  {i j : Level} {A : UU i} {B : UU j}
-  (f : A → B) → is-fiberwise-equiv (fib'-fib f)
-is-equiv-fib'-fib f y =
-  is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-inv (f x) y)
+abstract
+  is-equiv-fib'-fib :
+    {i j : Level} {A : UU i} {B : UU j}
+    (f : A → B) → is-fiberwise-equiv (fib'-fib f)
+  is-equiv-fib'-fib f y =
+    is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-inv (f x) y)
 
 -- Exercise 7.3
-is-equiv-top-is-equiv-bottom-square :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
-  (is-equiv f) → (is-equiv g) → (is-equiv i) → (is-equiv h)
-is-equiv-top-is-equiv-bottom-square
-  f g h i H is-equiv-f is-equiv-g is-equiv-i =
-  is-equiv-right-factor (i ∘ f) g h H is-equiv-g
-    ( is-equiv-comp' i f is-equiv-f is-equiv-i)
 
-is-equiv-bottom-is-equiv-top-square :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
-  (is-equiv f) → (is-equiv g) → (is-equiv h) → (is-equiv i)
-is-equiv-bottom-is-equiv-top-square
-  f g h i H is-equiv-f is-equiv-g is-equiv-h = 
-  is-equiv-left-factor' i f
-    ( is-equiv-comp (i ∘ f) g h H is-equiv-h is-equiv-g) is-equiv-f
+abstract
+  is-equiv-top-is-equiv-bottom-square :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+    (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+    (is-equiv f) → (is-equiv g) → (is-equiv i) → (is-equiv h)
+  is-equiv-top-is-equiv-bottom-square
+    f g h i H is-equiv-f is-equiv-g is-equiv-i =
+    is-equiv-right-factor (i ∘ f) g h H is-equiv-g
+      ( is-equiv-comp' i f is-equiv-f is-equiv-i)
 
-is-equiv-left-is-equiv-right-square :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
-  (is-equiv h) → (is-equiv i) → (is-equiv g) → (is-equiv f)
-is-equiv-left-is-equiv-right-square
-  f g h i H is-equiv-h is-equiv-i is-equiv-g =
-  is-equiv-right-factor' i f is-equiv-i
-    ( is-equiv-comp (i ∘ f) g h H is-equiv-h is-equiv-g)
+abstract
+  is-equiv-bottom-is-equiv-top-square :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+    (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+    (is-equiv f) → (is-equiv g) → (is-equiv h) → (is-equiv i)
+  is-equiv-bottom-is-equiv-top-square
+    f g h i H is-equiv-f is-equiv-g is-equiv-h = 
+    is-equiv-left-factor' i f
+      ( is-equiv-comp (i ∘ f) g h H is-equiv-h is-equiv-g) is-equiv-f
 
-is-equiv-right-is-equiv-left-square :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
-  (is-equiv h) → (is-equiv i) → (is-equiv f) → (is-equiv g)
-is-equiv-right-is-equiv-left-square
-  f g h i H is-equiv-h is-equiv-i is-equiv-f =
-  is-equiv-left-factor (i ∘ f) g h H
-    ( is-equiv-comp' i f is-equiv-f is-equiv-i)
-    ( is-equiv-h)
+abstract
+  is-equiv-left-is-equiv-right-square :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+    (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+    (is-equiv h) → (is-equiv i) → (is-equiv g) → (is-equiv f)
+  is-equiv-left-is-equiv-right-square
+    f g h i H is-equiv-h is-equiv-i is-equiv-g =
+    is-equiv-right-factor' i f is-equiv-i
+      ( is-equiv-comp (i ∘ f) g h H is-equiv-h is-equiv-g)
+
+abstract
+  is-equiv-right-is-equiv-left-square :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+    (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+    (is-equiv h) → (is-equiv i) → (is-equiv f) → (is-equiv g)
+  is-equiv-right-is-equiv-left-square
+    f g h i H is-equiv-h is-equiv-i is-equiv-f =
+    is-equiv-left-factor (i ∘ f) g h H
+      ( is-equiv-comp' i f is-equiv-f is-equiv-i)
+      ( is-equiv-h)
 
 fib-triangle :
   {i j k : Level} {X : UU i} {A : UU j} {B : UU k}
@@ -827,14 +912,31 @@ square-tot-fib-triangle :
   ((Σ-fib-to-domain g) ∘ (tot (fib-triangle f g h H)))
 square-tot-fib-triangle f g h H (dpair .(f a) (dpair a refl)) = refl
 
-is-fiberwise-equiv-is-equiv-triangle :
-  {i j k : Level} {X : UU i} {A : UU j} {B : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-  (E : is-equiv h) → is-fiberwise-equiv (fib-triangle f g h H)
-is-fiberwise-equiv-is-equiv-triangle f g h H E =
-  is-fiberwise-equiv-is-equiv-tot
-    ( fib-triangle f g h H)
-    ( is-equiv-top-is-equiv-bottom-square
+abstract
+  is-fiberwise-equiv-is-equiv-triangle :
+    {i j k : Level} {X : UU i} {A : UU j} {B : UU k}
+    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+    (E : is-equiv h) → is-fiberwise-equiv (fib-triangle f g h H)
+  is-fiberwise-equiv-is-equiv-triangle f g h H E =
+    is-fiberwise-equiv-is-equiv-tot
+      ( fib-triangle f g h H)
+      ( is-equiv-top-is-equiv-bottom-square
+        ( Σ-fib-to-domain f)
+        ( Σ-fib-to-domain g)
+        ( tot (fib-triangle f g h H))
+        ( h)
+        ( square-tot-fib-triangle f g h H)
+        ( is-equiv-Σ-fib-to-domain f)
+        ( is-equiv-Σ-fib-to-domain g)
+        ( E))
+
+abstract
+  is-equiv-triangle-is-fiberwise-equiv :
+    {i j k : Level} {X : UU i} {A : UU j} {B : UU k}
+    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+    (E : is-fiberwise-equiv (fib-triangle f g h H)) → is-equiv h
+  is-equiv-triangle-is-fiberwise-equiv f g h H E =
+    is-equiv-bottom-is-equiv-top-square
       ( Σ-fib-to-domain f)
       ( Σ-fib-to-domain g)
       ( tot (fib-triangle f g h H))
@@ -842,22 +944,7 @@ is-fiberwise-equiv-is-equiv-triangle f g h H E =
       ( square-tot-fib-triangle f g h H)
       ( is-equiv-Σ-fib-to-domain f)
       ( is-equiv-Σ-fib-to-domain g)
-      ( E))
-
-is-equiv-triangle-is-fiberwise-equiv :
-  {i j k : Level} {X : UU i} {A : UU j} {B : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-  (E : is-fiberwise-equiv (fib-triangle f g h H)) → is-equiv h
-is-equiv-triangle-is-fiberwise-equiv f g h H E =
-  is-equiv-bottom-is-equiv-top-square
-    ( Σ-fib-to-domain f)
-    ( Σ-fib-to-domain g)
-    ( tot (fib-triangle f g h H))
-    ( h)
-    ( square-tot-fib-triangle f g h H)
-    ( is-equiv-Σ-fib-to-domain f)
-    ( is-equiv-Σ-fib-to-domain g)
-    ( is-equiv-tot-is-fiberwise-equiv E)
+      ( is-equiv-tot-is-fiberwise-equiv E)
 
 -- Exercise 7.4
 fib-ap-eq-fib-fiberwise :
@@ -868,18 +955,19 @@ fib-ap-eq-fib-fiberwise :
 fib-ap-eq-fib-fiberwise f (dpair .x' p) (dpair x' refl) refl =
   inv ∘ (concat p (right-unit p))
 
-is-fiberwise-equiv-fib-ap-eq-fib-fiberwise :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) {b : B} (s t : fib f b) →
-  is-fiberwise-equiv (fib-ap-eq-fib-fiberwise f s t)
-is-fiberwise-equiv-fib-ap-eq-fib-fiberwise
-  f (dpair x y) (dpair .x refl) refl =
-  is-equiv-comp
-    ( fib-ap-eq-fib-fiberwise f (dpair x y) (dpair x refl) refl)
-    ( inv)
-    ( concat y (right-unit y))
-    ( htpy-refl (fib-ap-eq-fib-fiberwise f (dpair x y) (dpair x refl) refl))
-    ( is-equiv-concat (right-unit y) refl)
-    ( is-equiv-inv (concat (f x) y refl) refl)
+abstract
+  is-fiberwise-equiv-fib-ap-eq-fib-fiberwise :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) {b : B} (s t : fib f b) →
+    is-fiberwise-equiv (fib-ap-eq-fib-fiberwise f s t)
+  is-fiberwise-equiv-fib-ap-eq-fib-fiberwise
+    f (dpair x y) (dpair .x refl) refl =
+    is-equiv-comp
+      ( fib-ap-eq-fib-fiberwise f (dpair x y) (dpair x refl) refl)
+      ( inv)
+      ( concat y (right-unit y))
+      ( htpy-refl (fib-ap-eq-fib-fiberwise f (dpair x y) (dpair x refl) refl))
+      ( is-equiv-concat (right-unit y) refl)
+      ( is-equiv-inv (concat (f x) y refl) refl)
 
 fib-ap-eq-fib :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) {b : B}
@@ -893,18 +981,19 @@ triangle-fib-ap-eq-fib :
   (fib-ap-eq-fib f s t) ~ ((tot (fib-ap-eq-fib-fiberwise f s t)) ∘ (pair-eq' s t))
 triangle-fib-ap-eq-fib f (dpair x refl) .(dpair x refl) refl = refl
 
-is-equiv-fib-ap-eq-fib :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) {b : B}
-  (s t : fib f b) → is-equiv (fib-ap-eq-fib f s t)
-is-equiv-fib-ap-eq-fib f s t =
-  is-equiv-comp
-    ( fib-ap-eq-fib f s t)
-    ( tot (fib-ap-eq-fib-fiberwise f s t))
-    ( pair-eq' s t)
-    ( triangle-fib-ap-eq-fib f s t)
-    ( is-equiv-pair-eq' s t)
-    ( is-equiv-tot-is-fiberwise-equiv
-      ( is-fiberwise-equiv-fib-ap-eq-fib-fiberwise f s t))
+abstract
+  is-equiv-fib-ap-eq-fib :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) {b : B}
+    (s t : fib f b) → is-equiv (fib-ap-eq-fib f s t)
+  is-equiv-fib-ap-eq-fib f s t =
+    is-equiv-comp
+      ( fib-ap-eq-fib f s t)
+      ( tot (fib-ap-eq-fib-fiberwise f s t))
+      ( pair-eq' s t)
+      ( triangle-fib-ap-eq-fib f s t)
+      ( is-equiv-pair-eq' s t)
+      ( is-equiv-tot-is-fiberwise-equiv
+        ( is-fiberwise-equiv-fib-ap-eq-fib-fiberwise f s t))
 
 eq-fib-fib-ap :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) (x y : A)
@@ -912,180 +1001,214 @@ eq-fib-fib-ap :
   Id (dpair x q) (dpair y (refl {x = f y})) → fib (ap f {x = x} {y = y}) q
 eq-fib-fib-ap f x y q = (tr (fib (ap f)) (right-unit q)) ∘ (fib-ap-eq-fib f (dpair x q) (dpair y refl))
 
-is-equiv-eq-fib-fib-ap :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (x y : A)
-  (q : Id (f x) (f y)) → is-equiv (eq-fib-fib-ap f x y q)
-is-equiv-eq-fib-fib-ap f x y q =
-  is-equiv-comp
-    ( eq-fib-fib-ap f x y q)
-    ( tr (fib (ap f)) (right-unit q))
-    ( fib-ap-eq-fib f (dpair x q) (dpair y refl))
-    ( htpy-refl _)
-    ( is-equiv-fib-ap-eq-fib f (dpair x q) (dpair y refl))
-    ( is-equiv-tr (fib (ap f)) (right-unit q))
+abstract
+  is-equiv-eq-fib-fib-ap :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) (x y : A)
+    (q : Id (f x) (f y)) → is-equiv (eq-fib-fib-ap f x y q)
+  is-equiv-eq-fib-fib-ap f x y q =
+    is-equiv-comp
+      ( eq-fib-fib-ap f x y q)
+      ( tr (fib (ap f)) (right-unit q))
+      ( fib-ap-eq-fib f (dpair x q) (dpair y refl))
+      ( htpy-refl _)
+      ( is-equiv-fib-ap-eq-fib f (dpair x q) (dpair y refl))
+      ( is-equiv-tr (fib (ap f)) (right-unit q))
 
 -- Exercise 7.5
 
 -- This exercise was already done in id-fundamental-gen above.
 
 -- Exercise 7.6
-id-fundamental-retr :
-  {i j : Level} {A : UU i} {B : A → UU j} (a : A) →
-  (i : (x : A) → B x → Id a x) → (R : (x : A) → retr (i x)) →
-  is-fiberwise-equiv i
-id-fundamental-retr {_} {_} {A} {B} a i R =
-  is-fiberwise-equiv-is-equiv-tot i
-    ( is-equiv-is-contr (tot i)
-      ( is-contr-retract-of (Σ _ (λ y → Id a y))
-        ( dpair (tot i)
-          ( dpair (tot λ x → pr1 (R x))
-            ( htpy-concat
-              ( tot (λ x → pr1 (R x) ∘ i x))
-              ( htpy-inv (tot-comp i (λ x → pr1 (R x))))
-                ( htpy-concat (tot (λ x → id))
-                  ( tot-htpy λ x → pr2 (R x))
-                  ( tot-id B)))))
+
+abstract
+  id-fundamental-retr :
+    {i j : Level} {A : UU i} {B : A → UU j} (a : A) →
+    (i : (x : A) → B x → Id a x) → (R : (x : A) → retr (i x)) →
+    is-fiberwise-equiv i
+  id-fundamental-retr {_} {_} {A} {B} a i R =
+    is-fiberwise-equiv-is-equiv-tot i
+      ( is-equiv-is-contr (tot i)
+        ( is-contr-retract-of (Σ _ (λ y → Id a y))
+          ( dpair (tot i)
+            ( dpair (tot λ x → pr1 (R x))
+              ( htpy-concat
+                ( tot (λ x → pr1 (R x) ∘ i x))
+                ( htpy-inv (tot-comp i (λ x → pr1 (R x))))
+                  ( htpy-concat (tot (λ x → id))
+                    ( tot-htpy λ x → pr2 (R x))
+                    ( tot-id B)))))
+          ( is-contr-total-path _ a))
         ( is-contr-total-path _ a))
-      ( is-contr-total-path _ a))
 
-is-equiv-sec-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (sec-f : sec f) →
-  is-equiv (pr1 sec-f) → is-equiv f
-is-equiv-sec-is-equiv {A = A} {B = B} f (dpair g issec-g) is-equiv-sec-f =
-  let h : A → B
-      h = inv-is-equiv is-equiv-sec-f
-  in
-  is-equiv-htpy h
-    ( htpy-concat
-      ( f ∘ (g ∘ h))
-      ( htpy-left-whisk f (htpy-inv (issec-inv-is-equiv is-equiv-sec-f)))
-      ( htpy-right-whisk issec-g h))
-    ( is-equiv-inv-is-equiv is-equiv-sec-f)
+abstract
+  is-equiv-sec-is-equiv :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) (sec-f : sec f) →
+    is-equiv (pr1 sec-f) → is-equiv f
+  is-equiv-sec-is-equiv {A = A} {B = B} f (dpair g issec-g) is-equiv-sec-f =
+    let h : A → B
+        h = inv-is-equiv is-equiv-sec-f
+    in
+    is-equiv-htpy h
+      ( htpy-concat
+        ( f ∘ (g ∘ h))
+        ( htpy-left-whisk f (htpy-inv (issec-inv-is-equiv is-equiv-sec-f)))
+        ( htpy-right-whisk issec-g h))
+      ( is-equiv-inv-is-equiv is-equiv-sec-f)
 
-id-fundamental-sec :
-  {i j : Level} {A : UU i} {B : A → UU j} (a : A)
-  (f : (x : A) → Id a x → B x) → ((x : A) → sec (f x)) →
-  is-fiberwise-equiv f
-id-fundamental-sec {A = A} {B = B} a f sec-f x =
-  let i : (x : A) → B x → Id a x
-      i = λ x → pr1 (sec-f x)
-      retr-i : (x : A) → retr (i x)
-      retr-i = λ x → dpair (f x) (pr2 (sec-f x))
-      is-fiberwise-equiv-i : is-fiberwise-equiv i
-      is-fiberwise-equiv-i = id-fundamental-retr a i retr-i
-  in is-equiv-sec-is-equiv (f x) (sec-f x) (is-fiberwise-equiv-i x)
+abstract
+  id-fundamental-sec :
+    {i j : Level} {A : UU i} {B : A → UU j} (a : A)
+    (f : (x : A) → Id a x → B x) → ((x : A) → sec (f x)) →
+    is-fiberwise-equiv f
+  id-fundamental-sec {A = A} {B = B} a f sec-f x =
+    let i : (x : A) → B x → Id a x
+        i = λ x → pr1 (sec-f x)
+        retr-i : (x : A) → retr (i x)
+        retr-i = λ x → dpair (f x) (pr2 (sec-f x))
+        is-fiberwise-equiv-i : is-fiberwise-equiv i
+        is-fiberwise-equiv-i = id-fundamental-retr a i retr-i
+    in is-equiv-sec-is-equiv (f x) (sec-f x) (is-fiberwise-equiv-i x)
 
 -- Exercise 7.7
 
-is-emb-empty :
-  {i : Level} (A : UU i) → is-emb (ind-empty {P = λ x → A})
-is-emb-empty A = ind-empty
+abstract
+  is-emb-empty :
+    {i : Level} (A : UU i) → is-emb (ind-empty {P = λ x → A})
+  is-emb-empty A = ind-empty
 
 -- Exercise 7.8
 
-is-equiv-top-is-equiv-left-square :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
-  is-equiv i → is-equiv f → is-equiv g → is-equiv h
-is-equiv-top-is-equiv-left-square f g h i H Ei Ef Eg =
-  is-equiv-right-factor (i ∘ f) g h H Eg
-    ( is-equiv-comp (i ∘ f) i f (htpy-refl _) Ef Ei)
+abstract
+  is-equiv-top-is-equiv-left-square :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+    (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
+    is-equiv i → is-equiv f → is-equiv g → is-equiv h
+  is-equiv-top-is-equiv-left-square f g h i H Ei Ef Eg =
+    is-equiv-right-factor (i ∘ f) g h H Eg
+      ( is-equiv-comp (i ∘ f) i f (htpy-refl _) Ef Ei)
 
-is-emb-htpy :
-  {i j : Level} {A : UU i} {B : UU j} (f g : A → B) → (f ~ g) →
-  is-emb g → is-emb f
-is-emb-htpy f g H is-emb-g x y =
-  is-equiv-top-is-equiv-left-square
-    ( ap g)
-    ( concat' (f y) (H y))
-    ( ap f)
-    ( concat (g x) (H x))
-    ( htpy-nat H)
-    ( is-equiv-concat (H x) (g y))
-    ( is-emb-g x y)
-    ( is-equiv-concat' (f x) (H y))
+abstract
+  is-emb-htpy :
+    {i j : Level} {A : UU i} {B : UU j} (f g : A → B) → (f ~ g) →
+    is-emb g → is-emb f
+  is-emb-htpy f g H is-emb-g x y =
+    is-equiv-top-is-equiv-left-square
+      ( ap g)
+      ( concat' (f y) (H y))
+      ( ap f)
+      ( concat (g x) (H x))
+      ( htpy-nat H)
+      ( is-equiv-concat (H x) (g y))
+      ( is-emb-g x y)
+      ( is-equiv-concat' (f x) (H y))
 
 -- Exercise 7.9
 
-is-emb-comp :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) → is-emb g →
-  is-emb h → is-emb f
-is-emb-comp f g h H is-emb-g is-emb-h =
-  is-emb-htpy f (g ∘ h) H
-    ( λ x y → is-equiv-comp (ap (g ∘ h)) (ap g) (ap h) (ap-comp g h)
-      ( is-emb-h x y)
-      ( is-emb-g (h x) (h y)))
+abstract
+  is-emb-comp :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) → is-emb g →
+    is-emb h → is-emb f
+  is-emb-comp f g h H is-emb-g is-emb-h =
+    is-emb-htpy f (g ∘ h) H
+      ( λ x y → is-equiv-comp (ap (g ∘ h)) (ap g) (ap h) (ap-comp g h)
+        ( is-emb-h x y)
+        ( is-emb-g (h x) (h y)))
 
-is-emb-right-factor :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) → is-emb g →
-  is-emb f → is-emb h
-is-emb-right-factor f g h H is-emb-g is-emb-f x y =
-  is-equiv-right-factor (ap (g ∘ h)) (ap g) (ap h) (ap-comp g h) (is-emb-g (h x) (h y)) (is-emb-htpy (g ∘ h) f (htpy-inv H) is-emb-f x y )
+abstract
+  is-emb-right-factor :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) → is-emb g →
+    is-emb f → is-emb h
+  is-emb-right-factor f g h H is-emb-g is-emb-f x y =
+    is-equiv-right-factor
+      ( ap (g ∘ h))
+      ( ap g)
+      ( ap h)
+      ( ap-comp g h)
+      ( is-emb-g (h x) (h y))
+      ( is-emb-htpy (g ∘ h) f (htpy-inv H) is-emb-f x y)
 
-is-emb-triangle-is-equiv :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
-  is-equiv e → is-emb g → is-emb f
-is-emb-triangle-is-equiv f g e H is-equiv-e is-emb-g =
-  is-emb-comp f g e H is-emb-g (is-emb-is-equiv e is-equiv-e)
+abstract
+  is-emb-triangle-is-equiv :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
+    is-equiv e → is-emb g → is-emb f
+  is-emb-triangle-is-equiv f g e H is-equiv-e is-emb-g =
+    is-emb-comp f g e H is-emb-g (is-emb-is-equiv e is-equiv-e)
 
-is-emb-triangle-is-equiv' :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
-  is-equiv e → is-emb f → is-emb g
-is-emb-triangle-is-equiv' f g e H is-equiv-e is-emb-f =
-  is-emb-triangle-is-equiv g f
-    ( inv-is-equiv is-equiv-e)
-    ( triangle-section f g e H
-      ( dpair
-        ( inv-is-equiv is-equiv-e)
-        ( issec-inv-is-equiv is-equiv-e)))
-    ( is-equiv-inv-is-equiv is-equiv-e)
-    ( is-emb-f)
+abstract
+  is-emb-triangle-is-equiv' :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (f : A → X) (g : B → X) (e : A → B) (H : f ~ (g ∘ e)) →
+    is-equiv e → is-emb f → is-emb g
+  is-emb-triangle-is-equiv' f g e H is-equiv-e is-emb-f =
+    is-emb-triangle-is-equiv g f
+      ( inv-is-equiv is-equiv-e)
+      ( triangle-section f g e H
+        ( dpair
+          ( inv-is-equiv is-equiv-e)
+          ( issec-inv-is-equiv is-equiv-e)))
+      ( is-equiv-inv-is-equiv is-equiv-e)
+      ( is-emb-f)
 
 -- Exercise 7.10
-is-emb-sec-ap :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
-  ((x y : A) → sec (ap f {x = x} {y = y})) → is-emb f
-is-emb-sec-ap f sec-ap-f x =
-  id-fundamental-sec x (λ y → ap f {y = y}) (sec-ap-f x)
+
+abstract
+  is-emb-sec-ap :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
+    ((x y : A) → sec (ap f {x = x} {y = y})) → is-emb f
+  is-emb-sec-ap f sec-ap-f x =
+    id-fundamental-sec x (λ y → ap f {y = y}) (sec-ap-f x)
 
 -- Exercise 7.11
-is-emb-inl :
-  {i j : Level} (A : UU i) (B : UU j) → is-emb (inl {A = A} {B = B})
-is-emb-inl A B x =
-  id-fundamental-gen x refl
-    ( is-contr-is-equiv
-      ( Σ A (λ y → Eq-coprod A B (inl x) (inl y)))
-      ( tot (λ y → Eq-coprod-eq A B (inl x) (inl y)))
-      ( is-equiv-tot-is-fiberwise-equiv
-        ( λ y → is-equiv-Eq-coprod-eq A B (inl x) (inl y)))
-      ( is-contr-is-equiv'
-        ( Σ A (Id x))
-        ( tot (λ y → map-raise _ (Id x y)))
-        ( is-equiv-tot-is-fiberwise-equiv
-          ( λ y → is-equiv-map-raise _ (Id x y)))
-        ( is-contr-total-path A x)))
-    ( λ y → ap inl)
 
-is-emb-inr :
-  {i j : Level} (A : UU i) (B : UU j) → is-emb (inr {A = A} {B = B})
-is-emb-inr A B x =
-  id-fundamental-gen x refl
-    ( is-contr-is-equiv
-      ( Σ B (λ y → Eq-coprod A B (inr x) (inr y)))
-      ( tot (λ y → Eq-coprod-eq A B (inr x) (inr y)))
-      ( is-equiv-tot-is-fiberwise-equiv
-        ( λ y → is-equiv-Eq-coprod-eq A B (inr x) (inr y)))
-      ( is-contr-is-equiv'
-        ( Σ B (Id x))
-        ( tot (λ y → map-raise _ (Id x y)))
+abstract
+  is-emb-inl :
+    {i j : Level} (A : UU i) (B : UU j) → is-emb (inl {A = A} {B = B})
+  is-emb-inl A B x =
+    id-fundamental-gen x refl
+      ( is-contr-is-equiv
+        ( Σ A (λ y → Eq-coprod A B (inl x) (inl y)))
+        ( tot (λ y → Eq-coprod-eq A B (inl x) (inl y)))
         ( is-equiv-tot-is-fiberwise-equiv
-          ( λ y → is-equiv-map-raise _ (Id x y)))
-        ( is-contr-total-path B x)))
-    ( λ y → ap inr)
+          ( λ y → is-equiv-Eq-coprod-eq A B (inl x) (inl y)))
+        ( is-contr-is-equiv'
+          ( Σ A (Id x))
+          ( tot (λ y → map-raise _ (Id x y)))
+          ( is-equiv-tot-is-fiberwise-equiv
+            ( λ y → is-equiv-map-raise _ (Id x y)))
+          ( is-contr-total-path A x)))
+      ( λ y → ap inl)
+
+abstract
+  is-emb-inr :
+    {i j : Level} (A : UU i) (B : UU j) → is-emb (inr {A = A} {B = B})
+  is-emb-inr A B x =
+    id-fundamental-gen x refl
+      ( is-contr-is-equiv
+        ( Σ B (λ y → Eq-coprod A B (inr x) (inr y)))
+        ( tot (λ y → Eq-coprod-eq A B (inr x) (inr y)))
+        ( is-equiv-tot-is-fiberwise-equiv
+          ( λ y → is-equiv-Eq-coprod-eq A B (inr x) (inr y)))
+        ( is-contr-is-equiv'
+          ( Σ B (Id x))
+          ( tot (λ y → map-raise _ (Id x y)))
+          ( is-equiv-tot-is-fiberwise-equiv
+            ( λ y → is-equiv-map-raise _ (Id x y)))
+          ( is-contr-total-path B x)))
+      ( λ y → ap inr)
+
+-- Exercise 7.12
+
+path-adjointness-equiv :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) (x : A) (y : B) →
+  (Id (map-equiv e x) y) ≃ (Id x (inv-map-equiv e y))
+path-adjointness-equiv e x y =
+  ( inv-equiv (equiv-ap e x (inv-map-equiv e y))) ∘e
+  ( equiv-concat'
+    ( map-equiv e x)
+    ( inv (issec-inv-is-equiv (is-equiv-map-equiv e) y)))
 
 -- Extra material
 
@@ -1113,42 +1236,38 @@ htpy-swap-total-Eq-structure :
     ( swap-total-Eq-structure C B (λ x z y → D x y z))) ~ id
 htpy-swap-total-Eq-structure B C D (dpair (dpair a b) (dpair c d)) = refl
 
-is-equiv-swap-total-Eq-structure :
-  {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
-  (D : (x : A) → B x → C x → UU l4) →
-  is-equiv (swap-total-Eq-structure B C D)
-is-equiv-swap-total-Eq-structure B C D =
-  is-equiv-has-inverse
-    ( dpair
-      ( swap-total-Eq-structure C B (λ x z y → D x y z))
+abstract
+  is-equiv-swap-total-Eq-structure :
+    {l1 l2 l3 l4 : Level} {A : UU l1} (B : A → UU l2) (C : A → UU l3)
+    (D : (x : A) → B x → C x → UU l4) →
+    is-equiv (swap-total-Eq-structure B C D)
+  is-equiv-swap-total-Eq-structure B C D =
+    is-equiv-has-inverse
       ( dpair
-        ( htpy-swap-total-Eq-structure B C D)
-        ( htpy-swap-total-Eq-structure C B (λ x z y → D x y z))))
+        ( swap-total-Eq-structure C B (λ x z y → D x y z))
+        ( dpair
+          ( htpy-swap-total-Eq-structure B C D)
+          ( htpy-swap-total-Eq-structure C B (λ x z y → D x y z))))
 
-is-contr-total-Eq-structure :
-  {l1 l2 l3 l4 : Level} { A : UU l1} {B : A → UU l2} {C : A → UU l3}
-  ( D : (x : A) → B x → C x → UU l4) →
-  ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
-  is-contr (Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))) →
-  is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D (pr1 t) (pr2 t))))
-is-contr-total-Eq-structure
-  {A = A} {B = B} {C = C} D is-contr-AC t is-contr-BD =
-  is-contr-is-equiv
-    ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))))
-    ( swap-total-Eq-structure B C D)
-    ( is-equiv-swap-total-Eq-structure B C D)
-    ( is-contr-is-equiv
-      ( Σ (B (pr1 t)) (λ y →
-        D (pr1 t) y
-          ( pr2 t)))
-      ( left-unit-law-Σ-map-conv
-        ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
-        ( dpair t (λ t' →
-          ( inv (contraction is-contr-AC t)) ∙
-          ( contraction is-contr-AC t'))))
-      ( is-equiv-left-unit-law-Σ-map-conv
-        ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
-        ( dpair t (λ t' →
-          ( inv (contraction is-contr-AC t)) ∙
-          ( contraction is-contr-AC t'))))
-      ( is-contr-BD))
+abstract
+  is-contr-total-Eq-structure :
+    {l1 l2 l3 l4 : Level} { A : UU l1} {B : A → UU l2} {C : A → UU l3}
+    ( D : (x : A) → B x → C x → UU l4) →
+    ( is-contr-AC : is-contr (Σ A C)) → (t : Σ A C) →
+    is-contr (Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))) →
+    is-contr (Σ (Σ A B) (λ t → Σ (C (pr1 t)) (D (pr1 t) (pr2 t))))
+  is-contr-total-Eq-structure
+    {A = A} {B = B} {C = C} D is-contr-AC t is-contr-BD =
+    is-contr-is-equiv
+      ( Σ (Σ A C) (λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t))))
+      ( swap-total-Eq-structure B C D)
+      ( is-equiv-swap-total-Eq-structure B C D)
+      ( is-contr-is-equiv'
+        ( Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+        ( left-unit-law-Σ-map-gen
+          ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+          is-contr-AC t)
+        ( is-equiv-left-unit-law-Σ-map-gen
+          ( λ t → Σ (B (pr1 t)) (λ y → D (pr1 t) y (pr2 t)))
+          is-contr-AC t)
+        ( is-contr-BD))

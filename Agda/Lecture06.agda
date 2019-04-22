@@ -11,20 +11,21 @@ is-contr :
   {i : Level} → UU i → UU i
 is-contr A = Σ A (λ a → (x : A) → Id a x)
 
-center :
-  {i : Level} {A : UU i} → is-contr A → A
-center (dpair c is-contr-A) = c
-
--- We make sure that the contraction is coherent in a straightforward way
-contraction :
-  {i : Level} {A : UU i} (is-contr-A : is-contr A) →
-  (const A A (center is-contr-A) ~ id)
-contraction (dpair c C) x = concat c (inv (C c)) (C x)
-
-coh-contraction :
-  {i : Level} {A : UU i} (is-contr-A : is-contr A) →
-  Id (contraction is-contr-A (center is-contr-A)) refl
-coh-contraction (dpair c C) = left-inv (C c)
+abstract
+  center :
+    {i : Level} {A : UU i} → is-contr A → A
+  center (dpair c is-contr-A) = c
+  
+  -- We make sure that the contraction is coherent in a straightforward way
+  contraction :
+    {i : Level} {A : UU i} (is-contr-A : is-contr A) →
+    (const A A (center is-contr-A) ~ id)
+  contraction (dpair c C) x = concat c (inv (C c)) (C x)
+  
+  coh-contraction :
+    {i : Level} {A : UU i} (is-contr-A : is-contr A) →
+    Id (contraction is-contr-A (center is-contr-A)) refl
+  coh-contraction (dpair c C) = left-inv (C c)
 
 -- We show that contractible types satisfy an induction principle akin to the induction principle of the unit type: singleton induction. This can be helpful to give short proofs of many facts.
 
@@ -32,58 +33,70 @@ ev-pt :
   {i j : Level} (A : UU i) (a : A) (B : A → UU j) → ((x : A) → B x) → B a
 ev-pt A a B f = f a
 
-sing-ind-is-contr :
-  {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) →
-  B (center is-contr-A) → (x : A) → B x
-sing-ind-is-contr A is-contr-A B b x = tr B (contraction is-contr-A x) b
+abstract
+  sing-ind-is-contr :
+    {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) →
+    (a : A) → B a → (x : A) → B x
+  sing-ind-is-contr A is-contr-A B a b x =
+    tr B ((inv (contraction is-contr-A a)) ∙ (contraction is-contr-A x)) b
+  
+  sing-comp-is-contr :
+    {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) (a : A) →
+    ((ev-pt A a B) ∘ (sing-ind-is-contr A is-contr-A B a)) ~ id
+  sing-comp-is-contr A is-contr-A B a b =
+    ap (λ ω → tr B ω b) (left-inv (contraction is-contr-A a))
 
-sing-comp-is-contr :
-  {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) →
-  ((ev-pt A (center is-contr-A) B) ∘ (sing-ind-is-contr A is-contr-A B)) ~ id
-sing-comp-is-contr A is-contr-A B b =
-  ap ( λ (ω : Id (center is-contr-A) (center is-contr-A)) → tr B ω b)
-     ( coh-contraction is-contr-A)
+  sec-ev-pt-is-contr :
+    {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) (a : A) →
+    sec (ev-pt A a B)
+  sec-ev-pt-is-contr A is-contr-A B a =
+    dpair
+      ( sing-ind-is-contr A is-contr-A B a)
+      ( sing-comp-is-contr A is-contr-A B a)
 
-sec-ev-pt-is-contr :
-  {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) →
-  sec (ev-pt A (center is-contr-A) B)
-sec-ev-pt-is-contr A is-contr-A B =
-  dpair (sing-ind-is-contr A is-contr-A B) (sing-comp-is-contr A is-contr-A B)
-
-is-sing-is-contr :
-  {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) →
-  sec (ev-pt A (center is-contr-A) B)
-is-sing-is-contr A is-contr-A B =
-  dpair (sing-ind-is-contr A is-contr-A B) (sing-comp-is-contr A is-contr-A B)
+abstract
+  is-sing-is-contr :
+    {i j : Level} (A : UU i) (is-contr-A : is-contr A) (B : A → UU j) →
+    ( a : A) → sec (ev-pt A a B)
+  is-sing-is-contr A is-contr-A B a =
+    dpair
+      ( sing-ind-is-contr A is-contr-A B a)
+      ( sing-comp-is-contr A is-contr-A B a)
 
 is-sing :
   {i : Level} (A : UU i) → A → UU (lsuc i)
 is-sing {i} A a = (B : A → UU i) → sec (ev-pt A a B)
 
-is-contr-sing-ind :
-  {i : Level} (A : UU i) (a : A) →
-  ((P : A → UU i) → P a → (x : A) → P x) → is-contr A
-is-contr-sing-ind A a S = dpair a (S (λ x → Id a x) refl)
+abstract
+  is-contr-sing-ind :
+    {i : Level} (A : UU i) (a : A) →
+    ((P : A → UU i) → P a → (x : A) → P x) → is-contr A
+  is-contr-sing-ind A a S = dpair a (S (λ x → Id a x) refl)
 
-is-contr-is-sing :
-  {i : Level} (A : UU i) (a : A) → is-sing A a → is-contr A
-is-contr-is-sing A a S = is-contr-sing-ind A a (λ P → pr1 (S P))
+abstract
+  is-contr-is-sing :
+    {i : Level} (A : UU i) (a : A) → is-sing A a → is-contr A
+  is-contr-is-sing A a S = is-contr-sing-ind A a (λ P → pr1 (S P))
 
-is-sing-unit : is-sing unit star
-is-sing-unit B = dpair ind-unit (λ b → refl)
+abstract
+  is-sing-unit : is-sing unit star
+  is-sing-unit B = dpair ind-unit (λ b → refl)
 
-is-contr-unit : is-contr unit
-is-contr-unit = is-contr-is-sing unit star (is-sing-unit)
+abstract
+  is-contr-unit : is-contr unit
+  is-contr-unit = is-contr-is-sing unit star (is-sing-unit)
 
-is-sing-total-path :
-  {i : Level} (A : UU i) (a : A) →
-  is-sing (Σ A (λ x → Id a x)) (dpair a refl)
-is-sing-total-path A a B = dpair (ind-Σ ∘ (ind-Id a _)) (λ b → refl)
+abstract
+  is-sing-total-path :
+    {i : Level} (A : UU i) (a : A) →
+    is-sing (Σ A (λ x → Id a x)) (dpair a refl)
+  is-sing-total-path A a B = dpair (ind-Σ ∘ (ind-Id a _)) (λ b → refl)
 
-is-contr-total-path :
-  {i : Level} (A : UU i) (a : A) →
-  is-contr (Σ A (λ x → Id a x))
-is-contr-total-path A a = is-contr-is-sing _ _ (is-sing-total-path A a)
+abstract
+  is-contr-total-path :
+    {i : Level} (A : UU i) (a : A) →
+    is-contr (Σ A (λ x → Id a x))
+  is-contr-total-path A a = is-contr-is-sing _ _ (is-sing-total-path A a)
 
 -- Section 6.2 Contractible maps
 
@@ -129,13 +142,16 @@ isretr-is-contr-map {_} {_} {A} {B} {f} is-contr-f x =
        ( contraction (is-contr-f (f x)) (dpair x refl)))
 
 -- Finally we put it all together to show that contractible maps are equivalences.
-is-equiv-is-contr-map :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  is-contr-map f → is-equiv f
-is-equiv-is-contr-map is-contr-f =
-  pair
-    ( dpair (inv-is-contr-map is-contr-f) (issec-is-contr-map is-contr-f))
-    ( dpair (inv-is-contr-map is-contr-f) (isretr-is-contr-map is-contr-f))
+
+abstract
+  is-equiv-is-contr-map :
+    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+    is-contr-map f → is-equiv f
+  is-equiv-is-contr-map is-contr-f =
+    is-equiv-has-inverse'
+      ( inv-is-contr-map is-contr-f)
+      ( issec-is-contr-map is-contr-f)
+      ( isretr-is-contr-map is-contr-f)
 
 -- Section 6.3 Equivalences are contractible maps
 
@@ -174,23 +190,25 @@ isretr-eq-Eq-fib :
   {s t : fib f y} → ((eq-Eq-fib f y {s} {t}) ∘ (Eq-fib-eq f y {s} {t})) ~ id
 isretr-eq-Eq-fib f y {dpair x p} {.(dpair x p)} refl = refl
 
-is-equiv-Eq-fib-eq :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
-  {s t : fib f y} → is-equiv (Eq-fib-eq f y {s} {t})
-is-equiv-Eq-fib-eq f y {s} {t} =
-  is-equiv-has-inverse'
-    ( eq-Eq-fib f y)
-    ( issec-eq-Eq-fib f y)
-    ( isretr-eq-Eq-fib f y)
+abstract
+  is-equiv-Eq-fib-eq :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+    {s t : fib f y} → is-equiv (Eq-fib-eq f y {s} {t})
+  is-equiv-Eq-fib-eq f y {s} {t} =
+    is-equiv-has-inverse'
+      ( eq-Eq-fib f y)
+      ( issec-eq-Eq-fib f y)
+      ( isretr-eq-Eq-fib f y)
 
-is-equiv-eq-Eq-fib :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
-  {s t : fib f y} → is-equiv (eq-Eq-fib f y {s} {t})
-is-equiv-eq-Eq-fib f y {s} {t} =
-  is-equiv-has-inverse'
-    ( Eq-fib-eq f y)
-    ( isretr-eq-Eq-fib f y)
-    ( issec-eq-Eq-fib f y)
+abstract
+  is-equiv-eq-Eq-fib :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
+    {s t : fib f y} → is-equiv (eq-Eq-fib f y {s} {t})
+  is-equiv-eq-Eq-fib f y {s} {t} =
+    is-equiv-has-inverse'
+      ( Eq-fib-eq f y)
+      ( isretr-eq-Eq-fib f y)
+      ( issec-eq-Eq-fib f y)
 
 -- Next, we improve the homotopy G : f ∘ g ~ id if f comes equipped with the
 -- structure has-inverse f.
@@ -277,39 +295,41 @@ coherence-inv-has-inverse {f = f} (dpair g (dpair G H)) x =
 
 -- Now the proof that equivalences are contractible maps really begins. Note that we have already shown that any equivalence has an inverse. Our strategy is therefore to first show that maps with inverses are contractible, and then deduce the claim about equivalences.
 
-center-has-inverse :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  has-inverse f → (y : B) → fib f y
-center-has-inverse {i} {j} {A} {B} {f} inv-f y =
-  dpair
-    ( inv-has-inverse inv-f y)
-    ( issec-inv-has-inverse inv-f y)
-
-contraction-has-inverse :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (I : has-inverse f) → (y : B) → (t : fib f y) →
-  Id (center-has-inverse I y) t
-contraction-has-inverse {i} {j} {A} {B} {f}
-  ( dpair g (dpair G H)) y (dpair x refl) =
-  eq-Eq-fib f y (dpair 
-    ( H x)
-    ( ( right-unit (ap f (H x))) ∙
-      ( coherence-inv-has-inverse (dpair g (dpair G H)) x)))
-
-is-contr-map-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  has-inverse f → is-contr-map f
-is-contr-map-has-inverse inv-f y =
+abstract
+  center-has-inverse :
+    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+    has-inverse f → (y : B) → fib f y
+  center-has-inverse {i} {j} {A} {B} {f} inv-f y =
+    dpair
+      ( inv-has-inverse inv-f y)
+      ( issec-inv-has-inverse inv-f y)
+  
+  contraction-has-inverse :
+    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+    (I : has-inverse f) → (y : B) → (t : fib f y) →
+    Id (center-has-inverse I y) t
+  contraction-has-inverse {i} {j} {A} {B} {f}
+    ( dpair g (dpair G H)) y (dpair x refl) =
+    eq-Eq-fib f y (dpair 
+      ( H x)
+      ( ( right-unit (ap f (H x))) ∙
+        ( coherence-inv-has-inverse (dpair g (dpair G H)) x)))
+  
+  is-contr-map-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+    has-inverse f → is-contr-map f
+  is-contr-map-has-inverse inv-f y =
     dpair
       ( center-has-inverse inv-f y)
       ( contraction-has-inverse inv-f y)
+  
+  is-contr-map-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+    is-equiv f → is-contr-map f
+  is-contr-map-is-equiv = is-contr-map-has-inverse ∘ has-inverse-is-equiv
 
-is-contr-map-is-equiv : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  is-equiv f → is-contr-map f
-is-contr-map-is-equiv = is-contr-map-has-inverse ∘ has-inverse-is-equiv
-
-is-contr-total-path' : {i : Level} (A : UU i) (a : A) →
-  is-contr (Σ A (λ x → Id x a))
-is-contr-total-path' A a = is-contr-map-is-equiv (is-equiv-id _) a
+abstract
+  is-contr-total-path' : {i : Level} (A : UU i) (a : A) →
+    is-contr (Σ A (λ x → Id x a))
+  is-contr-total-path' A a = is-contr-map-is-equiv (is-equiv-id _) a
 
 -- Exercises
 
@@ -317,89 +337,102 @@ is-contr-total-path' A a = is-contr-map-is-equiv (is-equiv-id _) a
 
 -- In this exercise we are asked to show that the identity types of a contractible type are again contractible. In the terminology of Lecture 8: we are showing that contractible types are propositions.
 
-is-prop-is-contr : {i : Level} {A : UU i} → is-contr A →
-  (x y : A) → is-contr (Id x y)
-is-prop-is-contr {i} {A} C =
-  sing-ind-is-contr A C
-    ( λ x → ((y : A) → is-contr (Id x y)))
-    ( λ y → dpair
-      ( contraction C y)
-      ( ind-Id
-        ( center C)
-        ( λ z (p : Id (center C) z) → Id (contraction C z) p)
-        ( coh-contraction C)
-        ( y)))
+abstract
+  is-prop-is-contr : {i : Level} {A : UU i} → is-contr A →
+    (x y : A) → is-contr (Id x y)
+  is-prop-is-contr {i} {A} is-contr-A =
+    sing-ind-is-contr A is-contr-A
+      ( λ x → ((y : A) → is-contr (Id x y)))
+      ( center is-contr-A)
+      ( λ y → dpair
+        ( contraction is-contr-A y)
+        ( ind-Id
+          ( center is-contr-A)
+          ( λ z (p : Id (center is-contr-A) z) →
+            Id (contraction is-contr-A z) p)
+          ( coh-contraction is-contr-A)
+          ( y)))
 
-is-prop-is-contr' : {i : Level} {A : UU i} → is-contr A →
-  (x y : A) → Id x y
-is-prop-is-contr' is-contr-A x y =
-  center (is-prop-is-contr is-contr-A x y)
+abstract
+  is-prop-is-contr' : {i : Level} {A : UU i} → is-contr A →
+    (x y : A) → Id x y
+  is-prop-is-contr' is-contr-A x y =
+    center (is-prop-is-contr is-contr-A x y)
 
 -- Exercise 6.2
 
 -- In this exercise we are showing that contractible types are closed under retracts.
-is-contr-retract-of : {i j : Level} {A : UU i} (B : UU j) →
-  A retract-of B → is-contr B → is-contr A
-is-contr-retract-of B (dpair i (dpair r isretr)) is-contr-B =
-  dpair
-    ( r (center is-contr-B))
-    ( λ x → (ap r (contraction is-contr-B (i x))) ∙ (isretr x))
+
+abstract
+  is-contr-retract-of : {i j : Level} {A : UU i} (B : UU j) →
+    A retract-of B → is-contr B → is-contr A
+  is-contr-retract-of B (dpair i (dpair r isretr)) is-contr-B =
+    dpair
+      ( r (center is-contr-B))
+      ( λ x → (ap r (contraction is-contr-B (i x))) ∙ (isretr x))
 
 -- Exercise 6.3
 
 -- In this exercise we are showing that a type is contractible if and only if the constant map to the unit type is an equivalence. This can be used to derive a '3-for-2 property' for contractible types, which may come in handy sometimes.
 
-is-equiv-const-is-contr :
-  {i : Level} {A : UU i} → is-contr A → is-equiv (const A unit star)
-is-equiv-const-is-contr {i} {A} is-contr-A =
-  pair
-    ( dpair (ind-unit (center is-contr-A)) (ind-unit refl))
-    ( dpair (const unit A (center is-contr-A)) (contraction is-contr-A))
+abstract
+  is-equiv-const-is-contr :
+    {i : Level} {A : UU i} → is-contr A → is-equiv (const A unit star)
+  is-equiv-const-is-contr {i} {A} is-contr-A =
+    pair
+      ( dpair (ind-unit (center is-contr-A)) (ind-unit refl))
+      ( dpair (const unit A (center is-contr-A)) (contraction is-contr-A))
 
-is-contr-is-equiv-const :
-  {i : Level} {A : UU i} → is-equiv (const A unit star) → is-contr A
-is-contr-is-equiv-const (dpair (dpair g issec) (dpair h isretr)) =
-  dpair (h star) isretr
+abstract
+  is-contr-is-equiv-const :
+    {i : Level} {A : UU i} → is-equiv (const A unit star) → is-contr A
+  is-contr-is-equiv-const (dpair (dpair g issec) (dpair h isretr)) =
+    dpair (h star) isretr
 
-is-contr-is-equiv :
-  {i j : Level} {A : UU i} (B : UU j) (f : A → B) →
-  is-equiv f → is-contr B → is-contr A
-is-contr-is-equiv B f is-equiv-f is-contr-B =
-  is-contr-is-equiv-const
-    ( is-equiv-comp'
-      ( const B unit star)
-      ( f)
-      ( is-equiv-f)
-      ( is-equiv-const-is-contr is-contr-B))
+abstract
+  is-contr-is-equiv :
+    {i j : Level} {A : UU i} (B : UU j) (f : A → B) →
+    is-equiv f → is-contr B → is-contr A
+  is-contr-is-equiv B f is-equiv-f is-contr-B =
+    is-contr-is-equiv-const
+      ( is-equiv-comp'
+        ( const B unit star)
+        ( f)
+        ( is-equiv-f)
+        ( is-equiv-const-is-contr is-contr-B))
 
-is-contr-equiv :
-  {i j : Level} {A : UU i} (B : UU j) (e : A ≃ B) → is-contr B → is-contr A
-is-contr-equiv B (dpair e is-equiv-e) is-contr-B =
-  is-contr-is-equiv B e is-equiv-e is-contr-B
+abstract
+  is-contr-equiv :
+    {i j : Level} {A : UU i} (B : UU j) (e : A ≃ B) → is-contr B → is-contr A
+  is-contr-equiv B (dpair e is-equiv-e) is-contr-B =
+    is-contr-is-equiv B e is-equiv-e is-contr-B
 
-is-contr-is-equiv' :
-  {i j : Level} (A : UU i) {B : UU j} (f : A → B) →
-  is-equiv f → is-contr A → is-contr B
-is-contr-is-equiv' A f is-equiv-f is-contr-A =
-  is-contr-is-equiv A
-    ( inv-is-equiv is-equiv-f)
-    ( is-equiv-inv-is-equiv is-equiv-f)
-    ( is-contr-A)
+abstract
+  is-contr-is-equiv' :
+    {i j : Level} (A : UU i) {B : UU j} (f : A → B) →
+    is-equiv f → is-contr A → is-contr B
+  is-contr-is-equiv' A f is-equiv-f is-contr-A =
+    is-contr-is-equiv A
+      ( inv-is-equiv is-equiv-f)
+      ( is-equiv-inv-is-equiv is-equiv-f)
+      ( is-contr-A)
 
-is-contr-equiv' :
-  {i j : Level} (A : UU i) {B : UU j} (e : A ≃ B) → is-contr A → is-contr B
-is-contr-equiv' A (dpair e is-equiv-e) is-contr-A =
-  is-contr-is-equiv' A e is-equiv-e is-contr-A
+abstract
+  is-contr-equiv' :
+    {i j : Level} (A : UU i) {B : UU j} (e : A ≃ B) → is-contr A → is-contr B
+  is-contr-equiv' A (dpair e is-equiv-e) is-contr-A =
+    is-contr-is-equiv' A e is-equiv-e is-contr-A
 
-is-equiv-is-contr :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
-  is-contr A → is-contr B → is-equiv f
-is-equiv-is-contr {i} {j} {A} {B} f is-contr-A is-contr-B =
-  is-equiv-has-inverse'
-    ( const B A (center is-contr-A))
-    ( sing-ind-is-contr B is-contr-B _
-      ( inv (contraction is-contr-B (f (center is-contr-A)))))
-    ( contraction is-contr-A)
+abstract
+  is-equiv-is-contr :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
+    is-contr A → is-contr B → is-equiv f
+  is-equiv-is-contr {i} {j} {A} {B} f is-contr-A is-contr-B =
+    is-equiv-has-inverse'
+      ( const B A (center is-contr-A))
+      ( sing-ind-is-contr B is-contr-B _ _
+        ( inv (contraction is-contr-B (f (center is-contr-A)))))
+      ( contraction is-contr-A)
 
 equiv-is-contr :
   {i j : Level} {A : UU i} {B : UU j} →
@@ -422,7 +455,11 @@ left-unit-law-Σ-map-conv :
   {i j : Level} {C : UU i} (B : C → UU j)
   (is-contr-C : is-contr C) → Σ C B → B (center is-contr-C)
 left-unit-law-Σ-map-conv B is-contr-C =
-  ind-Σ (sing-ind-is-contr _ is-contr-C (λ x → B x → B (center is-contr-C)) id)
+  ind-Σ
+    ( sing-ind-is-contr _ is-contr-C
+      ( λ x → B x → B (center is-contr-C))
+      ( center is-contr-C)
+      ( id))
 
 left-inverse-left-unit-law-Σ-map-conv :
   {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
@@ -431,7 +468,10 @@ left-inverse-left-unit-law-Σ-map-conv :
 left-inverse-left-unit-law-Σ-map-conv B is-contr-C y =
   ap
     ( λ (f : B (center is-contr-C) → B (center is-contr-C)) → f y)
-    ( sing-comp-is-contr _ is-contr-C (λ x → B x → B (center is-contr-C)) id)
+    ( sing-comp-is-contr _ is-contr-C
+      ( λ x → B x → B (center is-contr-C))
+      ( center is-contr-C)
+      ( id))
 
 right-inverse-left-unit-law-Σ-map-conv :
   {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
@@ -444,31 +484,33 @@ right-inverse-left-unit-law-Σ-map-conv B is-contr-C =
         Id ( ( ( left-unit-law-Σ-map B is-contr-C) ∘
                ( left-unit-law-Σ-map-conv B is-contr-C))
              ( dpair x y))
-           ( id (dpair x y)))
+           ( id (dpair x y))) (center is-contr-C)
       ( λ y → ap
         ( left-unit-law-Σ-map B is-contr-C)
         ( ap
           ( λ f → f y)
           ( sing-comp-is-contr _ is-contr-C
-            ( λ x → B x → B (center is-contr-C)) id))))
+            ( λ x → B x → B (center is-contr-C)) (center is-contr-C) id))))
 
-is-equiv-left-unit-law-Σ-map :
-  {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
-  is-equiv (left-unit-law-Σ-map B is-contr-C)
-is-equiv-left-unit-law-Σ-map B is-contr-C =
-  is-equiv-has-inverse'
-    ( left-unit-law-Σ-map-conv B is-contr-C)
-    ( right-inverse-left-unit-law-Σ-map-conv B is-contr-C)
-    ( left-inverse-left-unit-law-Σ-map-conv B is-contr-C)
+abstract
+  is-equiv-left-unit-law-Σ-map :
+    {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
+    is-equiv (left-unit-law-Σ-map B is-contr-C)
+  is-equiv-left-unit-law-Σ-map B is-contr-C =
+    is-equiv-has-inverse'
+      ( left-unit-law-Σ-map-conv B is-contr-C)
+      ( right-inverse-left-unit-law-Σ-map-conv B is-contr-C)
+      ( left-inverse-left-unit-law-Σ-map-conv B is-contr-C)
 
-is-equiv-left-unit-law-Σ-map-conv :
-  {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
-  is-equiv (left-unit-law-Σ-map-conv B is-contr-C)
-is-equiv-left-unit-law-Σ-map-conv B is-contr-C =
-  is-equiv-has-inverse'
-    ( left-unit-law-Σ-map B is-contr-C)
-    ( left-inverse-left-unit-law-Σ-map-conv B is-contr-C)
-    ( right-inverse-left-unit-law-Σ-map-conv B is-contr-C)
+abstract
+  is-equiv-left-unit-law-Σ-map-conv :
+    {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
+    is-equiv (left-unit-law-Σ-map-conv B is-contr-C)
+  is-equiv-left-unit-law-Σ-map-conv B is-contr-C =
+    is-equiv-has-inverse'
+      ( left-unit-law-Σ-map B is-contr-C)
+      ( left-inverse-left-unit-law-Σ-map-conv B is-contr-C)
+      ( right-inverse-left-unit-law-Σ-map-conv B is-contr-C)
 
 left-unit-law-Σ : {i j : Level} {C : UU i} (B : C → UU j)
   (is-contr-C : is-contr C) → B (center is-contr-C) ≃ Σ C B
@@ -476,6 +518,25 @@ left-unit-law-Σ B is-contr-C =
   dpair
     ( left-unit-law-Σ-map B is-contr-C)
     ( is-equiv-left-unit-law-Σ-map B is-contr-C)
+
+left-unit-law-Σ-map-gen :
+  {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+  is-contr A → (x : A) → B x → Σ A B
+left-unit-law-Σ-map-gen B is-contr-A x y = dpair x y
+
+abstract
+  is-equiv-left-unit-law-Σ-map-gen :
+    {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+    (is-contr-A : is-contr A) →
+    (x : A) → is-equiv (left-unit-law-Σ-map-gen B is-contr-A x)
+  is-equiv-left-unit-law-Σ-map-gen B is-contr-A x =
+    is-equiv-comp
+      ( left-unit-law-Σ-map-gen B is-contr-A x)
+      ( left-unit-law-Σ-map B is-contr-A)
+      ( tr B (inv (contraction is-contr-A x)))
+      ( λ y → eq-pair (dpair (inv (contraction is-contr-A x)) refl))
+      ( is-equiv-tr B (inv (contraction is-contr-A x)))
+      ( is-equiv-left-unit-law-Σ-map B is-contr-A)
 
 -- Exercise 6.6
 
@@ -504,14 +565,15 @@ right-inverse-domain-to-Σ-fib :
   ((Σ-fib-to-domain f) ∘ (domain-to-Σ-fib f)) ~ id
 right-inverse-domain-to-Σ-fib f x = refl
 
-is-equiv-Σ-fib-to-domain :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B ) →
-  is-equiv (Σ-fib-to-domain f)
-is-equiv-Σ-fib-to-domain f =
-  is-equiv-has-inverse'
-    ( domain-to-Σ-fib f)
-    ( right-inverse-domain-to-Σ-fib f)
-    ( left-inverse-domain-to-Σ-fib f)
+abstract
+  is-equiv-Σ-fib-to-domain :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B ) →
+    is-equiv (Σ-fib-to-domain f)
+  is-equiv-Σ-fib-to-domain f =
+    is-equiv-has-inverse'
+      ( domain-to-Σ-fib f)
+      ( right-inverse-domain-to-Σ-fib f)
+      ( left-inverse-domain-to-Σ-fib f)
 
 equiv-Σ-fib-to-domain :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B ) → Σ B (fib f) ≃ A
@@ -522,30 +584,35 @@ equiv-Σ-fib-to-domain f =
 
 -- In this exercise we show that if a cartesian product is contractible, then so are its factors. We make use of the fact that contractible types are closed under retracts, just because that is a useful property to practice with. Other proofs are possible too.
 
-is-contr-left-factor-prod :
-  {i j : Level} (A : UU i) (B : UU j) → is-contr (A × B) → is-contr A
-is-contr-left-factor-prod A B is-contr-AB =
-  is-contr-retract-of
-    ( A × B)
-    ( dpair (λ x → pair x (pr2 (center is-contr-AB))) (dpair pr1 (λ x → refl)))
-    ( is-contr-AB)
-
-is-contr-right-factor-prod :
-  {i j : Level} (A : UU i) (B : UU j) → is-contr (A × B) → is-contr B
-is-contr-right-factor-prod A B is-contr-AB =
-  is-contr-left-factor-prod B A
-    ( is-contr-equiv
+abstract
+  is-contr-left-factor-prod :
+    {i j : Level} (A : UU i) (B : UU j) → is-contr (A × B) → is-contr A
+  is-contr-left-factor-prod A B is-contr-AB =
+    is-contr-retract-of
       ( A × B)
-      ( equiv-swap-prod B A)
-      ( is-contr-AB))
+      ( dpair
+        ( λ x → pair x (pr2 (center is-contr-AB)))
+        ( dpair pr1 (λ x → refl)))
+      ( is-contr-AB)
 
-is-contr-prod :
-  {i j : Level} {A : UU i} {B : UU j} →
-  is-contr A → is-contr B → is-contr (A × B)
-is-contr-prod {A = A} {B = B} is-contr-A is-contr-B =
-  is-contr-equiv' B
-    ( left-unit-law-Σ (λ x → B) is-contr-A)
-    ( is-contr-B)
+abstract
+  is-contr-right-factor-prod :
+    {i j : Level} (A : UU i) (B : UU j) → is-contr (A × B) → is-contr B
+  is-contr-right-factor-prod A B is-contr-AB =
+    is-contr-left-factor-prod B A
+      ( is-contr-equiv
+        ( A × B)
+        ( equiv-swap-prod B A)
+        ( is-contr-AB))
+
+abstract
+  is-contr-prod :
+    {i j : Level} {A : UU i} {B : UU j} →
+    is-contr A → is-contr B → is-contr (A × B)
+  is-contr-prod {A = A} {B = B} is-contr-A is-contr-B =
+    is-contr-equiv' B
+      ( left-unit-law-Σ (λ x → B) is-contr-A)
+      ( is-contr-B)
 
 -- Exercise 6.8
 
@@ -571,44 +638,48 @@ right-inverse-fib-pr1-fib-fam :
   ((fib-fam-fib-pr1 B a) ∘ (fib-pr1-fib-fam B a)) ~ id
 right-inverse-fib-pr1-fib-fam B a b = refl
 
-is-equiv-fib-fam-fib-pr1 :
-  {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
-  is-equiv (fib-fam-fib-pr1 B a)
-is-equiv-fib-fam-fib-pr1 B a =
-  is-equiv-has-inverse'
-    ( fib-pr1-fib-fam B a)
-    ( right-inverse-fib-pr1-fib-fam B a)
-    ( left-inverse-fib-pr1-fib-fam B a)
+abstract
+  is-equiv-fib-fam-fib-pr1 :
+    {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
+    is-equiv (fib-fam-fib-pr1 B a)
+  is-equiv-fib-fam-fib-pr1 B a =
+    is-equiv-has-inverse'
+      ( fib-pr1-fib-fam B a)
+      ( right-inverse-fib-pr1-fib-fam B a)
+      ( left-inverse-fib-pr1-fib-fam B a)
 
-is-equiv-fib-pr1-fib-fam :
-  {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
-  is-equiv (fib-pr1-fib-fam B a)
-is-equiv-fib-pr1-fib-fam B a =
-  is-equiv-has-inverse'
-    ( fib-fam-fib-pr1 B a)
-    ( left-inverse-fib-pr1-fib-fam B a)
-    ( right-inverse-fib-pr1-fib-fam B a)
+abstract
+  is-equiv-fib-pr1-fib-fam :
+    {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
+    is-equiv (fib-pr1-fib-fam B a)
+  is-equiv-fib-pr1-fib-fam B a =
+    is-equiv-has-inverse'
+      ( fib-fam-fib-pr1 B a)
+      ( left-inverse-fib-pr1-fib-fam B a)
+      ( right-inverse-fib-pr1-fib-fam B a)
 
-is-equiv-pr1-is-contr :
-  {i j : Level} {A : UU i} (B : A → UU j) →
-  ((a : A) → is-contr (B a)) → is-equiv (pr1 {B = B})
-is-equiv-pr1-is-contr B is-contr-B =
-  is-equiv-is-contr-map
-    ( λ x → is-contr-is-equiv
-      ( B x)
-      ( fib-fam-fib-pr1 B x)
-      ( is-equiv-fib-fam-fib-pr1 B x)
-      ( is-contr-B x))
+abstract
+  is-equiv-pr1-is-contr :
+    {i j : Level} {A : UU i} (B : A → UU j) →
+    ((a : A) → is-contr (B a)) → is-equiv (pr1 {B = B})
+  is-equiv-pr1-is-contr B is-contr-B =
+    is-equiv-is-contr-map
+      ( λ x → is-contr-is-equiv
+        ( B x)
+        ( fib-fam-fib-pr1 B x)
+        ( is-equiv-fib-fam-fib-pr1 B x)
+        ( is-contr-B x))
 
-is-contr-is-equiv-pr1 :
-  {i j : Level} {A : UU i} (B : A → UU j) →
-  (is-equiv (pr1 {B = B})) → ((a : A) → is-contr (B a))
-is-contr-is-equiv-pr1 B is-equiv-pr1-B a =
-  is-contr-is-equiv'
-    ( fib pr1 a)
-    ( fib-fam-fib-pr1 B a)
-    ( is-equiv-fib-fam-fib-pr1 B a)
-    ( is-contr-map-is-equiv is-equiv-pr1-B a)
+abstract
+  is-contr-is-equiv-pr1 :
+    {i j : Level} {A : UU i} (B : A → UU j) →
+    (is-equiv (pr1 {B = B})) → ((a : A) → is-contr (B a))
+  is-contr-is-equiv-pr1 B is-equiv-pr1-B a =
+    is-contr-is-equiv'
+      ( fib pr1 a)
+      ( fib-fam-fib-pr1 B a)
+      ( is-equiv-fib-fam-fib-pr1 B a)
+      ( is-contr-map-is-equiv is-equiv-pr1-B a)
 
 right-unit-law-Σ :
   {i j : Level} {A : UU i} (B : A → UU j) →

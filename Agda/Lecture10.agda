@@ -13,6 +13,7 @@ equiv-eq {A = A} refl = dpair id (is-equiv-id A)
 UNIVALENCE : {i : Level} (A B : UU i) → UU (lsuc i)
 UNIVALENCE A B = is-equiv (equiv-eq {A = A} {B = B})
 
+
 is-contr-total-equiv-UNIVALENCE : {i : Level} (A : UU i) →
   ((B : UU i) → UNIVALENCE A B) → is-contr (Σ (UU i) (λ X → A ≃ X))
 is-contr-total-equiv-UNIVALENCE A UA =
@@ -42,38 +43,42 @@ triangle-ev-id : {i j : Level} {A : UU i}
   ~ ((ev-id (λ X e → P (dpair X e))) ∘ (ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P}))
 triangle-ev-id P f = refl
 
-IND-EQUIV-is-contr-total-equiv : {i j : Level} (A : UU i) →
-  is-contr (Σ (UU i) (λ X → A ≃ X)) →
-  (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) → IND-EQUIV (λ B e → P (dpair B e))
-IND-EQUIV-is-contr-total-equiv {i} {j} A c P =
-  section-comp
-    ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (dpair A (dpair id (is-equiv-id A))) P)
-    ( ev-id (λ X e → P (dpair X e)))
-    ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
-    ( triangle-ev-id P)
-    ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
-    ( is-sing-is-contr (Σ (UU i) (λ X → A ≃ X))
-      ( dpair
-        ( dpair A (dpair id (is-equiv-id A)))
-        ( λ t → concat (center c)
-          ( inv (contraction c (dpair A (dpair id (is-equiv-id A)))))
-          ( contraction c t))) P)
-
-is-contr-total-equiv-IND-EQUIV : {i : Level} (A : UU i) →
-  ( {j : Level} (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) →
-    IND-EQUIV (λ B e → P (dpair B e))) →
-  is-contr (Σ (UU i) (λ X → A ≃ X))
-is-contr-total-equiv-IND-EQUIV {i} A ind =
-  is-contr-is-sing
-    ( Σ (UU i) (λ X → A ≃ X))
-    ( dpair A (dpair id (is-equiv-id A)))
-    ( λ P → section-comp'
+abstract
+  IND-EQUIV-is-contr-total-equiv : {i j : Level} (A : UU i) →
+    is-contr (Σ (UU i) (λ X → A ≃ X)) →
+    (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) → IND-EQUIV (λ B e → P (dpair B e))
+  IND-EQUIV-is-contr-total-equiv {i} {j} A c P =
+    section-comp
       ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (dpair A (dpair id (is-equiv-id A))) P)
       ( ev-id (λ X e → P (dpair X e)))
       ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
       ( triangle-ev-id P)
       ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
-      ( ind P))
+      ( is-sing-is-contr (Σ (UU i) (λ X → A ≃ X))
+        ( dpair
+          ( dpair A (dpair id (is-equiv-id A)))
+          ( λ t → concat (center c)
+            ( inv (contraction c (dpair A (dpair id (is-equiv-id A)))))
+            ( contraction c t)))
+        ( P)
+        ( dpair A (equiv-id A)))
+
+abstract
+  is-contr-total-equiv-IND-EQUIV : {i : Level} (A : UU i) →
+    ( {j : Level} (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) →
+      IND-EQUIV (λ B e → P (dpair B e))) →
+    is-contr (Σ (UU i) (λ X → A ≃ X))
+  is-contr-total-equiv-IND-EQUIV {i} A ind =
+    is-contr-is-sing
+      ( Σ (UU i) (λ X → A ≃ X))
+      ( dpair A (dpair id (is-equiv-id A)))
+      ( λ P → section-comp'
+        ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (dpair A (dpair id (is-equiv-id A))) P)
+        ( ev-id (λ X e → P (dpair X e)))
+        ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
+        ( triangle-ev-id P)
+        ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
+        ( ind P))
 
 -- The univalence axiom
 
@@ -82,16 +87,18 @@ postulate univalence : {i : Level} (A B : UU i) → UNIVALENCE A B
 eq-equiv : {i : Level} (A B : UU i) → (A ≃ B) → Id A B
 eq-equiv A B = inv-is-equiv (univalence A B)
 
-is-contr-total-equiv : {i : Level} (A : UU i) →
-  is-contr (Σ (UU i) (λ X → A ≃ X))
-is-contr-total-equiv A = is-contr-total-equiv-UNIVALENCE A (univalence A)
+abstract
+  is-contr-total-equiv : {i : Level} (A : UU i) →
+    is-contr (Σ (UU i) (λ X → A ≃ X))
+  is-contr-total-equiv A = is-contr-total-equiv-UNIVALENCE A (univalence A)
 
-Ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
-  sec (ev-id P)
-Ind-equiv A P =
-  IND-EQUIV-is-contr-total-equiv A
-   ( is-contr-total-equiv A)
-   ( λ t → P (pr1 t) (pr2 t))
+abstract
+  Ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
+    sec (ev-id P)
+  Ind-equiv A P =
+    IND-EQUIV-is-contr-total-equiv A
+    ( is-contr-total-equiv A)
+    ( λ t → P (pr1 t) (pr2 t))
 
 ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
   P A (dpair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
@@ -142,22 +149,24 @@ Eq-total-subuniverse-eq :
   (s t : total-subuniverse P) → Id s t → Eq-total-subuniverse P s t
 Eq-total-subuniverse-eq (dpair P H) (dpair X p) .(dpair X p) refl = equiv-id X
 
-is-contr-total-Eq-total-subuniverse :
-  {l1 l2 : Level} (P : subuniverse l1 l2)
-  (s : total-subuniverse P) →
-  is-contr (Σ (total-subuniverse P) (λ t → Eq-total-subuniverse P s t))
-is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p) =
-  is-contr-total-Eq-substructure (is-contr-total-equiv X) H X (equiv-id X) p
+abstract
+  is-contr-total-Eq-total-subuniverse :
+    {l1 l2 : Level} (P : subuniverse l1 l2)
+    (s : total-subuniverse P) →
+    is-contr (Σ (total-subuniverse P) (λ t → Eq-total-subuniverse P s t))
+  is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p) =
+    is-contr-total-Eq-substructure (is-contr-total-equiv X) H X (equiv-id X) p
 
-is-equiv-Eq-total-subuniverse-eq :
-  {l1 l2 : Level} (P : subuniverse l1 l2)
-  (s t : total-subuniverse P) → is-equiv (Eq-total-subuniverse-eq P s t)
-is-equiv-Eq-total-subuniverse-eq (dpair P H) (dpair X p) =
-  id-fundamental-gen
-    ( dpair X p)
-    ( equiv-id X)
-    ( is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p))
-    ( Eq-total-subuniverse-eq (dpair P H) (dpair X p))
+abstract
+  is-equiv-Eq-total-subuniverse-eq :
+    {l1 l2 : Level} (P : subuniverse l1 l2)
+    (s t : total-subuniverse P) → is-equiv (Eq-total-subuniverse-eq P s t)
+  is-equiv-Eq-total-subuniverse-eq (dpair P H) (dpair X p) =
+    id-fundamental-gen
+      ( dpair X p)
+      ( equiv-id X)
+      ( is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p))
+      ( Eq-total-subuniverse-eq (dpair P H) (dpair X p))
 
 eq-Eq-total-subuniverse :
   {l1 l2 : Level} (P : subuniverse l1 l2) →
@@ -183,23 +192,26 @@ unit' :
   (i : Level) → UU i
 unit' i = pr1 (Raise i unit)
 
-is-contr-unit' :
-  (i : Level) → is-contr (unit' i)
-is-contr-unit' i =
-  is-contr-equiv' unit (pr2 (Raise i unit)) is-contr-unit
+abstract
+  is-contr-unit' :
+    (i : Level) → is-contr (unit' i)
+  is-contr-unit' i =
+    is-contr-equiv' unit (pr2 (Raise i unit)) is-contr-unit
 
-center-UU-contr :
-  (i : Level) → total-subuniverse (subuniverse-is-contr {i})
-center-UU-contr i =
-  dpair (unit' i) (is-contr-unit' i)
+abstract
+  center-UU-contr :
+    (i : Level) → total-subuniverse (subuniverse-is-contr {i})
+  center-UU-contr i =
+    dpair (unit' i) (is-contr-unit' i)
+  
+  contraction-UU-contr :
+    {i : Level} (A : Σ (UU i) is-contr) →
+    Id (center-UU-contr i) A
+  contraction-UU-contr (dpair A is-contr-A) =
+    eq-Eq-total-subuniverse subuniverse-is-contr
+      ( equiv-is-contr (is-contr-unit' _) is-contr-A)
 
-contraction-UU-contr :
-  {i : Level} (A : Σ (UU i) is-contr) →
-  Id (center-UU-contr i) A
-contraction-UU-contr (dpair A is-contr-A) =
-  eq-Eq-total-subuniverse subuniverse-is-contr
-    ( equiv-is-contr (is-contr-unit' _) is-contr-A)
-
-is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
-is-contr-UU-contr i =
-  dpair (center-UU-contr i) (contraction-UU-contr)
+abstract
+  is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
+  is-contr-UU-contr i =
+    dpair (center-UU-contr i) (contraction-UU-contr)
