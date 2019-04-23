@@ -34,6 +34,11 @@ in context $\Gamma$ for which the computation rule\index{computation rules!of un
 holds. Sometimes we write $\lam{\ttt}p$ for $\indunit(p)$.
 \end{defn}
 
+Using the induction principle for the unit type, one can construct in the context $x:A$ a function $\mathsf{pt}_x:\unit\to A$. Indeed, we have
+\begin{equation*}
+  \indunit : A \to (\unit\to A).
+\end{equation*}
+
 \section{The empty type}
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
 
@@ -43,8 +48,11 @@ We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{em
 \indempty : \prd{x:\emptyt}P(x).
 \end{equation*}
 \end{defn}
-
-Using the empty type we can also define \emph{negation}. The idea is that if $A$ is false (i.e., has no terms), then from $A$ follows everything.
+In particular, there is a function
+\begin{equation*}
+  \emptyt\to A
+\end{equation*}
+for any type $A$, by the induction principle for the empty type. Using the empty type we can also define \emph{negation}. The idea is that if $A$ is false (i.e., has no terms), then from $A$ follows everything.
 
 \begin{defn}
 For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
