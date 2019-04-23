@@ -34,10 +34,11 @@ in context $\Gamma$ for which the computation rule\index{computation rules!of un
 holds. Sometimes we write $\lam{\ttt}p$ for $\indunit(p)$.
 \end{defn}
 
-Using the induction principle for the unit type, one can construct in the context $x:A$ a function $\mathsf{pt}_x:\unit\to A$. Indeed, we have
+The induction principle can also be used to define ordinary functions out of the unit type. Indeed, given a type $A$ we can first weaken it to obtain the constant family over $\unit$, with value $A$. Then the induction principle of the unit type provides a function
 \begin{equation*}
   \indunit : A \to (\unit\to A).
 \end{equation*}
+In other words, by the induction principle for the unit type we obtain for every $x:A$ a function $\mathsf{pt}_x\defeq\indunit(x):\unit\to A$.
 
 \section{The empty type}
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
@@ -48,15 +49,12 @@ We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{em
 \indempty : \prd{x:\emptyt}P(x).
 \end{equation*}
 \end{defn}
-In particular, there is a function
+
+The induction principle for the empty type can also be used to construct a function
 \begin{equation*}
   \emptyt\to A
 \end{equation*}
-for any type $A$, by the induction principle for the empty type. Using the empty type we can also define \emph{negation}. The idea is that if $A$ is false (i.e., has no terms), then from $A$ follows everything.
-
-\begin{defn}
-For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
-\end{defn}
+for any type $A$. Indeed, to obtain this function one first weakens $A$ to obtain the constant family over $\emptyt$ with value $A$, and then the induction principle gives the desired function.
 
 \section{The booleans}
 \begin{defn}
@@ -76,6 +74,12 @@ for which the computation rules\index{computation rules!of booleans}
 \end{align*}
 hold.
 \end{defn}
+
+Just as in the cases for the unit type and the empty type, the induction principle for the booleans can also be used to construct an ordinary function $\bool\to A$, provided that we can construct two terms of type $A$. Indeed, by the induction principle for the booleans there is a function
+\begin{equation*}
+  \indbool : A \to (A\to A^\bool)
+\end{equation*}
+for any type $A$.
 
 \section{Coproducts}
 \begin{defn}
@@ -253,26 +257,6 @@ name & type & constructors \\
 \end{center}
 
 \begin{exercises}
-\item Let $A$ be a type.
-  \begin{subexenum}
-  \item Show that $(A+\neg A)\to(\neg\neg A\to A)$.
-  \item Show that $\neg\neg\neg A \to \neg A$.
-  \end{subexenum}
-\item \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e., define
-\begin{align*}
-t_0 & : \unit + \unit \\
-t_1 & : \unit + \unit,
-\end{align*}
-and show that for every $\Gamma,t:\unit+\unit\vdash P(t)~\mathrm{type}$ there is a dependent function of type
-\begin{align*}
-\ind{\unit+\unit}:P(t_0)\to \Big(P(t_1)\to \prd{t:\unit+\unit}P(t)\Big)
-\end{align*}
-satisfying
-\begin{align*}
-\ind{\unit+\unit}(p_0,p_1,t_0) & \jdeq p_0 \\
-\ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
-\end{align*}
-In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+\unit$.}
 \item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}:\Z\to \Z$.
 \item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
 \item Construct a function $F:\Z\to\Z$ that extends the Fibonacci sequence to the left
@@ -280,235 +264,19 @@ In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+
     \ldots,5,-3,2,-1,1,0,1,1,2,3,5,8,13,\ldots
   \end{equation*}
   in the expected way.
-\end{exercises}
-
-\chapter{The universe and type-valued relations}
-
-In this lecture we introduce type theoretic \emph{universes}. Universes are types $\UU$ of which the terms again represent types. In other words, the universe comes equipped with a type family, which we call the \emph{universal type family}.
-
-One reason for introducting universes is that it enables us to define new type families over inductive types, using their induction principle. Indeed, since the universe is itself a type, we can use the induction principle to eliminate into the universe. Then we obtain a type family over the inductive type by the universal type family.
-
-We use this way of defining type families to define many familiar relations over $\N$, such as $\leq$ and $<$. We also introduce a relation called \emph{observational equality} $\mathsf{Eq}_\N$ on $\N$, which we can think of as equality of $\N$. This relation is reflexive, symmetric, and transitive, and moreover it is the least reflexive relation. Furthermore, one of the most important aspects of observational equality $\mathsf{Eq}_\N$ on $\N$ is that $\mathsf{Eq}_\N(m,n)$ is a type for every $m,n:\N$, unlike judgmental equality. Therefore we can use type theory to reason about observational equality on $\N$. Indeed, in the exercises we show that some very elementary mathematics can already be done at this early stage in our development of type theory.
-
-\section{The universe}
-The induction principle for inductive types can be used to prove universal quantifications. 
-However, it would also be nice if we could construct \emph{new type families} over inductive types, using their induction principles.
-To be able to do this, we introduce a \emph{universe}, a type of which the terms represent types. The idea is that the universe $\UU$ comes equipped with a type family $\mathrm{El}$, so that for each $X:\UU$ we have an associated type $\mathrm{El}(X)$, the type of \emph{elements} of $X$. 
-
-We assume there is a closed type $\UU$\index{U@{$\UU$}|textbf} called the \define{universe}\index{universe|textbf}, and a type family $\mathrm{El}$\index{El@{$\mathrm{El}$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}.
-\begin{center}
-\begin{minipage}{.4\textwidth}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash\UU~\mathrm{type}$}
-\end{prooftree}
-\end{minipage}\quad
-\begin{minipage}{.4\textwidth}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$X:\UU \vdash \mathrm{El}(X)~\mathrm{type}$}
-\end{prooftree}
-\end{minipage}
-\end{center}
-
-We postulate that the universe is closed under the type constructors, by the following rules:
-\begin{enumerate}
-\item The universe is closed under $\Pi$-types
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A:\UU$}
-\AxiomC{$\Gamma\vdash B:\mathrm{El}(A)\to\UU$}
-\BinaryInfC{$\Gamma \vdash \check{\Pi}(A,B):\UU$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A:\UU$}
-\AxiomC{$\Gamma\vdash B:\mathrm{El}(A)\to\UU$}
-\BinaryInfC{$\Gamma \vdash \mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))~\mathrm{type}$}
-\end{prooftree}
-\item The type of natural numbers is in the universe
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \check{\N}:\UU$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \mathrm{El}(\check{\N})\jdeq \mathbb{N}~\mathrm{type}$}
-\end{prooftree}
-\item Similarly we postulate that the universe contains the empty type, the unit type, the booleans, coproducts, products, and $\Sigma$-types. These closure properties of the universe are given concisely in \cref{tab:universe}.
-\begin{table}
-\begin{center}
-\caption{\label{tab:universe}Closure properties of the universe}
-\begin{tabular}{lll}
-\toprule
-Premises & Type encoding\index{type encoding@{type encoding $\check{A}$}} in $\UU$ & Type of elements $\mathrm{El}(\blank)$ \\
-\midrule
-$A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Pi}(A,B)$ & $\prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))$ \\
-& $\check{\nat}$ & $\nat$ \\
-& $\check{\emptyt}$ &  $\emptyt$ \\
-& $\check{\unit}$ &  $\unit$ \\
-& $\check{\bool}$ &  $\bool$ \\
-$A,B:\UU$ & $A\mathbin{\check{+}}B$ &  $\mathrm{El}(A)+\mathrm{El}(B)$ \\
-$A,B:\UU$ & $A\mathbin{\check{\times}}B$ &  $\mathrm{El}(A)\times\mathrm{El}(B)$ \\
-$A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Sigma}(A,B)$ & $\sm{x:\mathrm{El}(A)}\mathrm{El}(B(x))$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-\end{table}
-\end{enumerate}
-
-\begin{defn}
-We say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} if it occurs in the universe, i.e., if there is a term $\check{A}:\UU$ in context $\Gamma$ such that $\Gamma\vdash\mathrm{El}(\check{A})\jdeq A~\mathrm{type}$.
-\end{defn}
-
-In particular, if $A$ is a small type in context $\Gamma$ and $B$ is a small type in context $\Gamma,x:A$, then $\prd{x:A}B(x)$ is again a small type in context $\Gamma$.
-
-\begin{defn}
-Let $A$ be a type in context $\Gamma$. A \define{family of small types}\index{family of small types|textbf} over $A$ is defined to be a map
-\begin{equation*}
-B:A\to\UU
-\end{equation*}
-\end{defn}
-
-\begin{rmk}
-If $A$ is small, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathrm{El}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
-\end{rmk}
-
-\begin{eg}
-One important way to use the universe is to define types of \define{structured types}\index{structured types}. We give some examples:
-\begin{enumerate}
-\item The type of small \define{pointed types}\index{pointed types} is defined as
-\begin{equation*}
-\UU_\ast\defeq \sm{A:\UU}A,
-\end{equation*}
-\item The type of small \define{graphs}\index{graphs} is defined as the type
-\begin{equation*}
-\mathsf{Gph}_\UU \defeq \sm{A:\UU} A\to (A\to \UU),
-\end{equation*}
-\item The type of small \define{reflexive graphs}\index{reflexive graphs} is defined as the type
-\begin{equation*}
-\mathsf{rGph}_\UU \defeq \sm{A:\UU}{R:A\to (A\to \UU)}\prd{a:A}R(a,a).
-\end{equation*}
-\end{enumerate}
-Once we have introduced the \emph{identity types} we will also be able to state the types of groups, rings, and many other structured types. However, when doing so one has to be cautious to make sure that the underlying type is in the level of sets, in the hierarchy of homotopical complexity of types.
-\end{eg}
-
-Another important way to use the universe is to \emph{define} new type families by induction. For example, we can define the finite types as family over the natural numbers.
-
-\begin{defn}\label{defn:fin}
-We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}|textbf}\index{finite types|textbf} by induction on $\N$\index{family!of finite types}, taking
-\begin{align*}
-\mathsf{Fin}(0) & \defeq \emptyt \\
-\mathsf{Fin}(n+1) & \defeq \mathsf{Fin}(n)+\unit
-\end{align*}
-\end{defn}
-
-\section{Observational equality on \texorpdfstring{$\N$}{ℕ}}
-A second example of this kind is the notion of \emph{observational equality} on the natural numbers.
-
-\begin{defn}\label{defn:obs_nat}
-We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathrm{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathrm{Eq}_\N$}|textbf} satisfying
-\begin{align*}
-\mathrm{Eq}_\N(0,0) & \jdeq \unit & \mathrm{Eq}_\N(S(n),0) & \jdeq \emptyt \\
-\mathrm{Eq}_\N(0,S(n)) & \jdeq \emptyt & \mathrm{Eq}_\N(S(n),S(m)) & \jdeq \mathrm{Eq}_\N(n,m).
-\end{align*}
-\end{defn}
-
-\begin{constr}
-We define $\mathrm{Eq}_\N$ by double induction on $\N$. By the first application of induction it suffices to provide
-\begin{align*}
-E_0 & : \N\to\UU \\
-E_S & : \N\to (\N\to\UU)\to(\N\to\UU)
-\end{align*}
-We define $E_0$ by induction, taking $E_{00}\defeq \unit$ and $E_{0S}(n,X,m)\defeq \emptyt$. The resulting family $E_0$ satisfies
-\begin{align*}
-E_0(0) & \jdeq \unit \\
-E_0(S(n)) & \jdeq \emptyt.
-\end{align*} 
-We define $E_S$ by induction, taking $E_{S0}\defeq \emptyt$ and $E_{S0}(n,X,m)\defeq X(m)$. The resulting family $E_S$ satisfies
-\begin{align*}
-E_S(n,X,0) & \jdeq \emptyt \\
-E_S(n,X,S(m)) & \jdeq X(m) 
-\end{align*}
-Therefore we have by the computation rule for the first induction that the judgmental equality
-\begin{align*}
-\mathrm{Eq}_\N(0,m) & \jdeq E_0(m) \\
-\mathrm{Eq}_\N(S(n),m) & \jdeq E_S(n,\mathrm{Eq}_\N(n),m)
-\end{align*}
-holds, from which the judgmental equalities in the statement of the definition follow.
-\end{constr}
-
-We can also define observational equality for many other kinds of types, such as $\bool$ or $\Z$. In each of these cases, what sets the observational equality apart from other relations is that it is the \emph{least} reflexive relation. However, the definitions of observational equality in the various situations are always very specific to the type they are defined on. In the next chapter we introduce the \emph{identity type}, which is an equality type defined uniformly for all types. In \cref{chap:hierarchy} we will show that the observational equality on $\N$ is equivalent to the identity type on $\N$.
-
-\section{How many universes are there?}
-
-\begin{exercises}
-\item Construct a function
-\begin{equation*}
-\check{\Pi}:\prd{A:\UU} (\mathrm{El}(A)\to\UU)\to \UU
-\end{equation*}
-such that
-\begin{equation*}
-\mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))
-\end{equation*}
-holds for every $A:\UU$ and $B:\mathrm{El}(A)\to\UU$. 
-
-\emph{A similar exercise can be posed for $\Sigma$ and $+$ (and for $\to$ and $\times$ as special cases of $\Pi$ and $\Sigma$).}
-\item \label{ex:obs_nat_eqrel}Show that observational equality on $\N$\index{observational equality!on N@{on $\N$}!is an equivalence relation} is an equivalence relation\index{equivalence relation!observational equality on N@{observational equality on $\N$}}, i.e., construct terms of the following types:
-\begin{align*}
-& \prd{n:\N} \mathrm{Eq}_\N(n,n) \\
-& \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(m,n) \\
-& \prd{n,m,l:\N} \mathrm{Eq}_\N(n,m)\to (\mathrm{Eq}_\N(m,l)\to \mathrm{Eq}_\N(n,l)).
-\end{align*}
-\item \label{ex:obs_nat_least}\index{observational equality!on N@{on $\N$}!is least reflexive relation}Let $R$ be a reflexive binary relation\index{reflexive relation}\index{relation!reflexive} on $\N$, i.e., $R$ is of type $\N\to (\N\to\UU)$ and comes equipped with a term $\rho:\prd{n:\N}R(n,n)$. Show that
-\begin{equation*}
-\prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to R(n,m).
-\end{equation*}
-\item \index{observational equality!on N@{on $\N$}!is preserved by functions}Show that every function $f:\N\to \N$ preserves observational equality in the sense that
-\begin{equation*}
-\prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)).
-\end{equation*}
-\emph{Hint: to get the inductive step going the induction hypothesis has to be strong enough. Construct by double induction a term of type}
-\begin{equation*}
-\prd{n,m:\N}{f:\N\to\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)),
-\end{equation*}
-\emph{and pull out the universal quantification over $f:\N\to\N$ by \autoref{ex:swap}.}
-\item 
-  \begin{subexenum}
-  \item Define the \define{order relations}\index{relation!order}\index{order relation} $\leq$ and $<$ on $\N$.
-  \item Show that $\leq$ is reflexive and that $<$ is \define{anti-reflexive}\index{anti-reflexive}\index{relation!anti-reflexive}, i.e., that $\neg(n<n)$. 
-  \item Show that both $\leq$ and $<$ are transitive, and that $n<S(n)$.
-  \item Show that $k\leq \min(m,n)$ holds if and only if both $k\leq m$ and $k\leq n$ hold, and show that $\max(m,n)\leq k$ holds if and only if both $m\leq k$ and $n\leq k$ hold.
-\end{subexenum}
-\item \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
-\begin{subexenum}
-\item Define observational equality $\mathrm{Eq}_\bool$\index{Eq_bool@{$\mathrm{Eq}_\bool$}|textbf} on the booleans.
-\item Show that $\mathrm{Eq}_\bool$ is reflexive.\index{observational equality!on 2@{on $\bool$}!is reflexive}
-\item Show that for any reflexive relation $R:\bool\to(\bool\to \UU)$ one has\index{observational equality!on 2@{on $\bool$}!is least reflexive relation}
-\begin{equation*}
-\prd{x,y:\bool} \mathrm{Eq}_\bool(x,y)\to R(x,y).
-\end{equation*}
-\end{subexenum}
-\item \label{ex:int_order}
-\begin{subexenum}
-\item Define the order relations\index{relation!order}\index{order relation} $\leq$ and $<$ on and $\Z$.
-\item For $k:\Z$, consider the type $\Z_{\geq k}\defeq \sm{n:\Z}n\geq k$. Construct
-\begin{align*}
-b_k & : \Z_{\geq k} \\
-s_k & : \Z_{\geq k}\to\Z_{\geq k},
-\end{align*}
-and show that $\Z_{\geq k}$ satisfies the induction principle of the natural numbers\index{induction principle!of N@{of $\N$}}:
-\begin{equation*}
-\ind{\Z_{\geq k}} : P(b_k)\to \Big(\prd{n:\Z_{\geq k}} P(n)\to P(s_k(n))\Big)\to \Big(\prd{n:\Z_{\geq k}} P(n)\Big)
-\end{equation*}
-\end{subexenum}
-\item
-  \begin{subexenum}
-  \item Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function of type
-    \begin{equation*}
-      P(\zeroN) \to \Big(\prd{k:\N}\Big(\prd{m:\N} (m\leq k) \to P(m)\Big)\to P(\succN(k))\Big) \to \prd{n:\N}P(n).
-    \end{equation*}
-  \item Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
-    \begin{equation*}
-      \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
-    \end{equation*}
-  \end{subexenum}
+\item \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e., define
+  \begin{align*}
+    t_0 & : \unit + \unit \\
+    t_1 & : \unit + \unit,
+  \end{align*}
+  and show that for every $\Gamma,t:\unit+\unit\vdash P(t)~\mathrm{type}$ there is a dependent function of type
+  \begin{align*}
+    \ind{\unit+\unit}:P(t_0)\to \Big(P(t_1)\to \prd{t:\unit+\unit}P(t)\Big)
+  \end{align*}
+  satisfying
+  \begin{align*}
+    \ind{\unit+\unit}(p_0,p_1,t_0) & \jdeq p_0 \\
+    \ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
+  \end{align*}
+  In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+\unit$.}
 \end{exercises}

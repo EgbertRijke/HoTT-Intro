@@ -504,3 +504,24 @@ ordinal-ind-ℕ :
 ordinal-ind-ℕ P f =
   conclusion-ordinal-ind-ℕ P
     ( induction-ordinal-ind-ℕ P (succ-ordinal-ind-ℕ P f))
+
+-- Multiplication on ℤ
+
+mul-ℤ : ℤ → ℤ → ℤ
+mul-ℤ (inl zero-ℕ) l = neg-ℤ l
+mul-ℤ (inl (succ-ℕ x)) l = add-ℤ (neg-ℤ l) (mul-ℤ (inl x) l)
+mul-ℤ (inr (inl star)) l = zero-ℤ
+mul-ℤ (inr (inr zero-ℕ)) l = l
+mul-ℤ (inr (inr (succ-ℕ x))) l = add-ℤ l (mul-ℤ (inr (inr x)) l)
+
+-- Extend the Fibonacci sequence to ℤ in the obvious way
+Fibonacci-ℤ : ℤ → ℤ
+Fibonacci-ℤ (inl zero-ℕ) = one-ℤ
+Fibonacci-ℤ (inl (succ-ℕ zero-ℕ)) = neg-one-ℤ
+Fibonacci-ℤ (inl (succ-ℕ (succ-ℕ x))) =
+  add-ℤ (Fibonacci-ℤ (inl x)) (neg-ℤ (Fibonacci-ℤ (inl (succ-ℕ x))))
+Fibonacci-ℤ (inr (inl star)) = zero-ℤ
+Fibonacci-ℤ (inr (inr zero-ℕ)) = one-ℤ
+Fibonacci-ℤ (inr (inr (succ-ℕ zero-ℕ))) = one-ℤ
+Fibonacci-ℤ (inr (inr (succ-ℕ (succ-ℕ x)))) =
+  add-ℤ (Fibonacci-ℤ (inr (inr x))) (Fibonacci-ℤ (inr (inr (succ-ℕ x))))
