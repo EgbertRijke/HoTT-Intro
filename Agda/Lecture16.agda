@@ -222,12 +222,12 @@ compute-htpy-precompose-total-lifts :
   ( f : A → B) →
   ( htpy-precompose-total-lifts P (htpy-refl f)) ~
   ( htpy-refl (toto (fam-lifts A P) (λ h → h ∘ f) (precompose-lifts P f)))
-compute-htpy-precompose-total-lifts {A = A} P f (dpair h h') =
+compute-htpy-precompose-total-lifts {A = A} P f (pair h h') =
   let α = λ (t : Id (h ∘ f) (h ∘ f)) → tr (fam-lifts A P) t (λ a → h' (f a))
   in
   ap eq-pair
     ( eq-pair
-      ( dpair
+      ( pair
         ( eq-htpy-htpy-refl (h ∘ f))
         ( ( tr-id-left-subst
             { f = α}
@@ -284,9 +284,9 @@ cone-family-dependent-pullback-property :
     ( cone-pullback-property-pushout f g c X)
     ( fam-lifts X P)
 cone-family-dependent-pullback-property f g c P γ =
-  dpair
+  pair
     ( precompose-lifts P (pr1 c) γ)
-    ( dpair
+    ( pair
       ( precompose-lifts P (pr1 (pr2 c)) γ)
       ( triangle-precompose-lifts P (pr2 (pr2 c)) γ))
 
@@ -301,8 +301,8 @@ is-pullback-cone-family-dependent-pullback-property :
     ( precompose-lifts P g (γ ∘ (pr1 (pr2 c))))
     ( cone-family-dependent-pullback-property f g c P γ)
 is-pullback-cone-family-dependent-pullback-property {S = S} {A} {B} {X}
-  f g (dpair i (dpair j H)) pb-c P =
-  let c = dpair i (dpair j H) in
+  f g (pair i (pair j H)) pb-c P =
+  let c = pair i (pair j H) in
   is-pullback-family-is-pullback-tot
     ( fam-lifts S P)
     ( precompose-lifts P f)
@@ -343,8 +343,8 @@ dependent-pullback-property-pullback-property-pushout :
   ((l : Level) → dependent-pullback-property-pushout l f g c)
 dependent-pullback-property-pullback-property-pushout
   {S = S} {A} {B} {X}
-  f g (dpair i (dpair j H)) pullback-c l P =
-  let c = dpair i (dpair j H) in
+  f g (pair i (pair j H)) pullback-c l P =
+  let c = pair i (pair j H) in
   is-pullback-htpy'
     ( (tr (fam-lifts S P) (eq-htpy (id ·l H))) ∘ (precompose-lifts P f i))
     ( (tr-eq-htpy-fam-lifts P id H) ·r (precompose-lifts P f i))
@@ -352,8 +352,8 @@ dependent-pullback-property-pullback-property-pushout
     ( htpy-refl _)
     ( cone-family-dependent-pullback-property f g c P id)
     { c' = cone-dependent-pullback-property-pushout f g c P}
-    ( dpair (htpy-refl _)
-      ( dpair
+    ( pair (htpy-refl _)
+      ( pair
         ( htpy-refl _)
         ( ( htpy-right-unit _) ∙h
           ( coherence-triangle-precompose-lifts P H id))))
@@ -391,12 +391,12 @@ gen-fam-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
   (P : X → UU l) → Fam-pushout l f g
-gen-fam-pushout f g (dpair i (dpair j H)) P =
-  dpair
+gen-fam-pushout f g (pair i (pair j H)) P =
+  pair
     ( P ∘ i)
-    ( dpair
+    ( pair
       ( P ∘ j)
-      ( λ s → (dpair (tr P (H s)) (is-equiv-tr P (H s)))))
+      ( λ s → (pair (tr P (H s)) (is-equiv-tr P (H s)))))
 
 equiv-eq-ap-fam :
   {l1 l2 : Level} {A : UU l1} (B : A → UU l2) {x y : A} (p : Id x y) →
@@ -409,11 +409,11 @@ triangle-gen-fam-pushout :
   ( gen-fam-pushout {l = l} f g c) ~
   ( ( Fam-pushout-cocone-UU l f g) ∘
     ( cocone-map f g {Y = UU l} c))
-triangle-gen-fam-pushout {l = l} {S} {A} {B} {X} f g (dpair i (dpair j H)) P =
+triangle-gen-fam-pushout {l = l} {S} {A} {B} {X} f g (pair i (pair j H)) P =
   eq-pair
-    ( dpair refl
+    ( pair refl
       ( eq-pair
-        ( dpair refl
+        ( pair refl
           ( eq-htpy (λ s → equiv-eq-ap-fam P (H s))))))
 
 coherence-Eq-Fam-pushout :
@@ -453,7 +453,7 @@ Eq-Fam-pushout :
   (f : S → A) (g : S → B) →
   (s t : Fam-pushout l f g) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l)))
 Eq-Fam-pushout l {S} {A} {B} f g
-  (dpair PA (dpair PB PS)) t =
+  (pair PA (pair PB PS)) t =
   let PA' = pr1 t
       PB' = pr1 (pr2 t)
       PS' = pr2 (pr2 t)
@@ -481,7 +481,7 @@ is-contr-total-Eq-Fam-pushout :
     ( Σ ( Fam-pushout l f g)
       ( Eq-Fam-pushout l f g s))
 is-contr-total-Eq-Fam-pushout l {S} {A} {B} f g
-  ( dpair PA (dpair PB PS)) =
+  ( pair PA (pair PB PS)) =
   is-contr-total-Eq-structure
     ( λ PA' t eA →
       let PB' = pr1 t
@@ -492,22 +492,22 @@ is-contr-total-Eq-Fam-pushout l {S} {A} {B} f g
           coherence-Eq-Fam-pushout
             f g PA PB PS PA' PB' PS' eA eB))
     ( is-contr-total-fam-equiv PA)
-    ( dpair PA (λ a → equiv-id (PA a)))
+    ( pair PA (λ a → equiv-id (PA a)))
     ( is-contr-total-Eq-structure
       ( λ PB' PS' eB →
         coherence-Eq-Fam-pushout
         f g PA PB PS PA PB' PS' (λ a → equiv-id (PA a)) eB)
       ( is-contr-total-fam-equiv PB)
-      ( dpair PB (λ b → equiv-id (PB b)))
+      ( pair PB (λ b → equiv-id (PB b)))
       ( is-contr-total-coherence-Eq-Fam-pushout f g PA PB PS))
 
 reflexive-Eq-Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) (s : Fam-pushout l f g) →
   Eq-Fam-pushout l f g s s
-reflexive-Eq-Fam-pushout l f g (dpair PA (dpair PB PS)) =
-  dpair (λ a → equiv-id (PA a))
-    ( dpair
+reflexive-Eq-Fam-pushout l f g (pair PA (pair PB PS)) =
+  pair (λ a → equiv-id (PA a))
+    ( pair
       ( λ b → equiv-id (PB b))
       ( λ s → htpy-refl _))
 
@@ -569,7 +569,7 @@ Eq-ΠΣ {A = A} C t t' =
 reflexive-Eq-ΠΣ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
   (t : (a : A) → Σ (B a) (C a)) → Eq-ΠΣ C t t
-reflexive-Eq-ΠΣ C t a = dpair refl refl
+reflexive-Eq-ΠΣ C t a = pair refl refl
 
 Eq-ΠΣ-eq :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
@@ -593,7 +593,7 @@ is-contr-total-Eq-ΠΣ {A = A} {B} C t =
         is-contr-total-Eq-structure
         ( λ b c p → Id (tr (C a) p (pr2 (t a))) c)
         ( is-contr-total-path (B a) (pr1 (t a)))
-        ( dpair (pr1 (t a)) refl)
+        ( pair (pr1 (t a)) refl)
         ( is-contr-total-path (C a (pr1 (t a))) (pr2 (t a)))))
 
 is-equiv-Eq-ΠΣ-eq :
@@ -624,7 +624,7 @@ square-ap-inv-choice-∞ :
     ( ap inv-choice-∞ {x = t} {y = t'})
     ( inv-choice-∞)
     ( Eq-ΠΣ-eq C (inv-choice-∞ t) (inv-choice-∞ t'))
-square-ap-inv-choice-∞ C (dpair f g) .(dpair f g) refl = refl
+square-ap-inv-choice-∞ C (pair f g) .(pair f g) refl = refl
 
 coherence-square-inv-is-equiv-horizontal :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}

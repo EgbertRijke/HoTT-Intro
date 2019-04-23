@@ -133,20 +133,20 @@ abstract
   is-equiv-has-inverse :
     {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
     has-inverse f → is-equiv f
-  is-equiv-has-inverse (dpair g (dpair H K)) = pair (dpair g H) (dpair g K)
+  is-equiv-has-inverse (pair g (pair H K)) = pair (pair g H) (pair g K)
 
 abstract
   is-equiv-has-inverse' :
     {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
     (g : B → A) (H : (f ∘ g) ~ id) (K : (g ∘ f) ~ id) → is-equiv f
   is-equiv-has-inverse' g H K =
-    is-equiv-has-inverse (dpair g (dpair H K))
+    is-equiv-has-inverse (pair g (pair H K))
 
 htpy-secf-retrf :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B}
   (is-equiv-f : is-equiv f) →
   (map-sec-is-equiv is-equiv-f ~ map-retr-is-equiv is-equiv-f)
-htpy-secf-retrf {i} {j} {A} {B} {f} (dpair (dpair g issec) (dpair h isretr)) =
+htpy-secf-retrf {i} {j} {A} {B} {f} (pair (pair g issec) (pair h isretr)) =
   htpy-concat
     ( h ∘ (f ∘ g))
     ( htpy-inv (htpy-right-whisk isretr g))
@@ -158,13 +158,13 @@ has-inverse-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → has-inverse f
 has-inverse-is-equiv
-  {i} {j} {A} {B} {f} (dpair (dpair g issec) (dpair h isretr)) =
-  dpair g
+  {i} {j} {A} {B} {f} (pair (pair g issec) (pair h isretr)) =
+  pair g
     ( pair issec
       ( htpy-concat
         ( h ∘ f)
         ( htpy-right-whisk
-          ( htpy-secf-retrf ( dpair (dpair g issec) (dpair h isretr)))
+          ( htpy-secf-retrf ( pair (pair g issec) (pair h isretr)))
           ( f))
         ( isretr)))
 
@@ -203,15 +203,15 @@ abstract
 
 inv-equiv :
   {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B ≃ A)
-inv-equiv e = dpair (inv-map-equiv e) (is-equiv-inv-map-equiv e)
+inv-equiv e = pair (inv-map-equiv e) (is-equiv-inv-map-equiv e)
 
 is-equiv-id :
   {i : Level} (A : UU i) → is-equiv (id {i} {A})
-is-equiv-id A = pair (dpair id (htpy-refl id)) (dpair id (htpy-refl id))
+is-equiv-id A = pair (pair id (htpy-refl id)) (pair id (htpy-refl id))
 
 equiv-id :
   {i : Level} (A : UU i) → A ≃ A
-equiv-id A = dpair id (is-equiv-id A)
+equiv-id A = pair id (is-equiv-id A)
 
 inv-Π-swap :
   {i j k : Level} {A : UU i} {B : UU j} (C : A → B → UU k) →
@@ -233,7 +233,7 @@ abstract
 eq-pair' :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
   (Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))) → Id s t
-eq-pair' (dpair x y) (dpair x' y') (dpair refl refl) = refl
+eq-pair' (pair x y) (pair x' y') (pair refl refl) = refl
 
 eq-pair :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
@@ -243,7 +243,7 @@ eq-pair {i} {j} {A} {B} {s} {t} = eq-pair' s t
 pair-eq' :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
   (Id s t) → Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))
-pair-eq' s t refl = dpair refl refl
+pair-eq' s t refl = pair refl refl
 
 pair-eq  :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
@@ -253,12 +253,12 @@ pair-eq {i} {j} {A} {B} {s} {t} = pair-eq' s t
 isretr-pair-eq :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
   (((pair-eq' s t) ∘ (eq-pair' s t)) ~ id)
-isretr-pair-eq (dpair x y) (dpair x' y') (dpair refl refl) = refl
+isretr-pair-eq (pair x y) (pair x' y') (pair refl refl) = refl
 
 issec-pair-eq :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
   (((eq-pair' s t) ∘ (pair-eq' s t)) ~ id)
-issec-pair-eq (dpair x y) .(dpair x y) refl = refl
+issec-pair-eq (pair x y) .(pair x y) refl = refl
 
 abstract
   is-equiv-eq-pair' :
@@ -297,7 +297,7 @@ abstract
 eq-pair-triv' :
   {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
   prod (Id (pr1 s) (pr1 t)) (Id (pr2 s) (pr2 t)) → Id s t
-eq-pair-triv' (dpair x y) (dpair .x .y) (dpair refl refl) = refl
+eq-pair-triv' (pair x y) (pair .x .y) (pair refl refl) = refl
 
 eq-pair-triv :
   {i j : Level} {A : UU i} {B : UU j} {s t : prod A B} →
@@ -314,12 +314,12 @@ pair-eq-triv' s t α = pair (ap pr1 α) (ap pr2 α)
 isretr-pair-eq-triv' :
   {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
   ((pair-eq-triv' s t) ∘ (eq-pair-triv' s t)) ~ id
-isretr-pair-eq-triv' (dpair x y) (dpair .x .y) (dpair refl refl) = refl
+isretr-pair-eq-triv' (pair x y) (pair .x .y) (pair refl refl) = refl
 
 issec-pair-eq-triv' :
   {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
   ((eq-pair-triv' s t) ∘ (pair-eq-triv' s t)) ~ id
-issec-pair-eq-triv' (dpair x y) (dpair .x .y) refl = refl
+issec-pair-eq-triv' (pair x y) (pair .x .y) refl = refl
 
 abstract
   is-equiv-eq-pair-triv' :
@@ -358,11 +358,11 @@ abstract
   is-equiv-inv :
     {i : Level} {A : UU i} (x y : A) →
     is-equiv (λ (p : Id x y) → inv p)
-  is-equiv-inv x y = pair (dpair inv inv-inv) (dpair inv inv-inv)
+  is-equiv-inv x y = pair (pair inv inv-inv) (pair inv inv-inv)
 
 equiv-inv :
   {i : Level} {A : UU i} (x y : A) → (Id x y) ≃ (Id y x)
-equiv-inv x y = dpair inv (is-equiv-inv x y)
+equiv-inv x y = pair inv (is-equiv-inv x y)
 
 inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
@@ -392,7 +392,7 @@ abstract
 equiv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
   Id y z ≃ Id x z
-equiv-concat p z = dpair (concat _ p) (is-equiv-concat p z)
+equiv-concat p z = pair (concat _ p) (is-equiv-concat p z)
 
 concat' :
   {i : Level} {A : UU i} {x : A} (y : A) {z : A} → Id y z → Id x y → Id x z
@@ -440,7 +440,7 @@ abstract
 equiv-concat' :
   {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
   Id x y ≃ Id x z
-equiv-concat' x q = dpair (concat' _ q) (is-equiv-concat' x q)
+equiv-concat' x q = pair (concat' _ q) (is-equiv-concat' x q)
 
 inv-tr :
   {i j : Level} {A : UU i} (B : A → UU j) {x y : A} →
@@ -470,7 +470,7 @@ abstract
 equiv-tr :
   {i j : Level} {A : UU i} (B : A → UU j) {x y : A}
   (p : Id x y) → (B x) ≃ (B y)
-equiv-tr B p = dpair (tr B p) (is-equiv-tr B p)
+equiv-tr B p = pair (tr B p) (is-equiv-tr B p)
 
 -- Exercise 5.4
 
@@ -478,10 +478,10 @@ abstract
   is-equiv-htpy :
     {i j : Level} {A : UU i} {B : UU j} {f : A → B} (g : A → B) →
     f ~ g → is-equiv g → is-equiv f
-  is-equiv-htpy g H (dpair (dpair gs issec) (dpair gr isretr)) =
+  is-equiv-htpy g H (pair (pair gs issec) (pair gr isretr)) =
     pair
-      ( dpair gs (htpy-concat _ (htpy-right-whisk H gs) issec))
-      ( dpair gr (htpy-concat (gr ∘ _) (htpy-left-whisk gr H) isretr))
+      ( pair gs (htpy-concat _ (htpy-right-whisk H gs) issec))
+      ( pair gr (htpy-concat (gr ∘ _) (htpy-left-whisk gr H) isretr))
 
 abstract
   is-equiv-htpy' :
@@ -507,7 +507,7 @@ triangle-section :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (S : sec h) →
   g ~ (f ∘ (pr1 S))
-triangle-section f g h H (dpair s issec) =
+triangle-section f g h H (pair s issec) =
   htpy-inv
     ( htpy-concat
       ( g ∘ (h ∘ s))
@@ -519,14 +519,14 @@ section-comp :
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   sec h → sec f → sec g
 section-comp f g h H sec-h sec-f =
-  dpair (h ∘ (pr1 sec-f)) ((htpy-inv (H ·r (pr1 sec-f))) ∙h (pr2 sec-f))
+  pair (h ∘ (pr1 sec-f)) ((htpy-inv (H ·r (pr1 sec-f))) ∙h (pr2 sec-f))
 
 section-comp' :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   sec h → sec g → sec f
 section-comp' f g h H sec-h sec-g =
-  dpair
+  pair
     ( (pr1 sec-h) ∘ (pr1 sec-g))
     ( ( H ·r ((pr1 sec-h) ∘ (pr1 sec-g))) ∙h
       ( ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))) ∙h ((pr2 sec-g))))
@@ -537,7 +537,7 @@ triangle-retraction :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (R : retr g) →
   h ~ ((pr1 R) ∘ f)
-triangle-retraction f g h H (dpair r isretr) =
+triangle-retraction f g h H (pair r isretr) =
   htpy-inv
     ( htpy-concat
       ( r ∘ (g ∘ h))
@@ -549,7 +549,7 @@ retraction-comp :
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   retr g → retr f → retr h
 retraction-comp f g h H retr-g retr-f =
-  dpair
+  pair
     ( (pr1 retr-f) ∘ g)
     ( (htpy-inv ((pr1 retr-f) ·l H)) ∙h (pr2 retr-f))
 
@@ -558,7 +558,7 @@ retraction-comp' :
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   retr g → retr h → retr f
 retraction-comp' f g h H retr-g retr-h =
-  dpair
+  pair
     ( (pr1 retr-h) ∘ (pr1 retr-g))
     ( ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H) ∙h
       ( ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)) ∙h (pr2 retr-h)))
@@ -570,7 +570,7 @@ abstract
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
     (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
     is-equiv h → is-equiv g → is-equiv f
-  is-equiv-comp f g h H (dpair sec-h retr-h) (dpair sec-g retr-g) =
+  is-equiv-comp f g h H (pair sec-h retr-h) (pair sec-g retr-g) =
     pair
       ( section-comp' f g h H sec-h sec-g)
       ( retraction-comp' f g h H retr-g retr-h)
@@ -585,7 +585,7 @@ equiv-comp :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
   (B ≃ X) → (A ≃ B) → (A ≃ X)
 equiv-comp g h =
-  dpair ((pr1 g) ∘ (pr1 h)) (is-equiv-comp' (pr1 g) (pr1 h) (pr2 h) (pr2 g))
+  pair ((pr1 g) ∘ (pr1 h)) (is-equiv-comp' (pr1 g) (pr1 h) (pr2 h) (pr2 g))
 
 _∘e_ :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
@@ -598,14 +598,14 @@ abstract
     (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
     is-equiv f → is-equiv h → is-equiv g
   is-equiv-left-factor f g h H
-    ( dpair sec-f retr-f)
-    ( dpair (dpair sh sh-issec) retr-h) =
+    ( pair sec-f retr-f)
+    ( pair (pair sh sh-issec) retr-h) =
     pair
-      ( section-comp f g h H (dpair sh sh-issec) sec-f)
+      ( section-comp f g h H (pair sh sh-issec) sec-f)
       ( retraction-comp' g f sh
-        ( triangle-section f g h H (dpair sh sh-issec))
+        ( triangle-section f g h H (pair sh sh-issec))
         ( retr-f)
-        ( dpair h sh-issec))
+        ( pair h sh-issec))
 
 abstract
   is-equiv-left-factor' :
@@ -620,14 +620,14 @@ abstract
     (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
     is-equiv g → is-equiv f → is-equiv h
   is-equiv-right-factor f g h H
-    ( dpair sec-g (dpair rg rg-isretr))
-    ( dpair sec-f retr-f) =
+    ( pair sec-g (pair rg rg-isretr))
+    ( pair sec-f retr-f) =
     pair
       ( section-comp' h rg f
-        ( triangle-retraction f g h H (dpair rg rg-isretr))
+        ( triangle-retraction f g h H (pair rg rg-isretr))
         ( sec-f)
-        ( dpair g rg-isretr))
-      ( retraction-comp f g h H (dpair rg rg-isretr) retr-f)
+        ( pair g rg-isretr))
+      ( retraction-comp f g h H (pair rg rg-isretr) retr-f)
 
 abstract
   is-equiv-right-factor' :
@@ -650,10 +650,10 @@ neg-neg-𝟚 false = refl
 
 abstract
   is-equiv-neg-𝟚 : is-equiv neg-𝟚
-  is-equiv-neg-𝟚 = pair (dpair neg-𝟚 neg-neg-𝟚) (dpair neg-𝟚 neg-neg-𝟚)
+  is-equiv-neg-𝟚 = pair (pair neg-𝟚 neg-neg-𝟚) (pair neg-𝟚 neg-neg-𝟚)
 
 equiv-neg-𝟚 : bool ≃ bool
-equiv-neg-𝟚 = dpair neg-𝟚 is-equiv-neg-𝟚
+equiv-neg-𝟚 = pair neg-𝟚 is-equiv-neg-𝟚
 
 abstract
   not-true-is-false : ¬ (Id true false)
@@ -667,9 +667,9 @@ abstract
 abstract
   not-equiv-const :
     (b : bool) → ¬ (is-equiv (const bool bool b))
-  not-equiv-const true (dpair (dpair s issec) (dpair r isretr)) =
+  not-equiv-const true (pair (pair s issec) (pair r isretr)) =
     not-true-is-false (issec false)
-  not-equiv-const false (dpair (dpair s issec) (dpair r isretr)) =
+  not-equiv-const false (pair (pair s issec) (pair r isretr)) =
     not-true-is-false (inv (issec true))
 
 -- Exercise 5.7
@@ -696,11 +696,11 @@ abstract
   is-equiv-succ-ℤ : is-equiv succ-ℤ
   is-equiv-succ-ℤ =
     pair
-    ( dpair pred-ℤ right-inverse-pred-ℤ)
-    ( dpair pred-ℤ left-inverse-pred-ℤ)
+    ( pair pred-ℤ right-inverse-pred-ℤ)
+    ( pair pred-ℤ left-inverse-pred-ℤ)
   
 equiv-succ-ℤ : ℤ ≃ ℤ
-equiv-succ-ℤ = dpair succ-ℤ is-equiv-succ-ℤ
+equiv-succ-ℤ = pair succ-ℤ is-equiv-succ-ℤ
 
 -- Exercise 5.8
 
@@ -728,16 +728,16 @@ abstract
 
 equiv-swap-coprod :
   {i j : Level} (A : UU i) (B : UU j) → coprod A B ≃ coprod B A
-equiv-swap-coprod A B = dpair (swap-coprod A B) (is-equiv-swap-coprod A B)
+equiv-swap-coprod A B = pair (swap-coprod A B) (is-equiv-swap-coprod A B)
 
 swap-prod :
   {i j : Level} (A : UU i) (B : UU j) → prod A B → prod B A
-swap-prod A B t = dpair (pr2 t) (pr1 t)
+swap-prod A B t = pair (pr2 t) (pr1 t)
 
 swap-swap-prod :
   {i j : Level} (A : UU i) (B : UU j) →
   ((swap-prod B A) ∘ (swap-prod A B)) ~ id
-swap-swap-prod A B (dpair x y) = refl
+swap-swap-prod A B (pair x y) = refl
 
 abstract
   is-equiv-swap-prod :
@@ -751,7 +751,7 @@ abstract
 
 equiv-swap-prod :
   {i j : Level} (A : UU i) (B : UU j) → (A × B) ≃ (B × A)
-equiv-swap-prod A B = dpair (swap-prod A B) (is-equiv-swap-prod A B)
+equiv-swap-prod A B = pair (swap-prod A B) (is-equiv-swap-prod A B)
 
 -- Exercise 5.9
 
@@ -773,37 +773,37 @@ isretr-ap-retraction i r H x .x refl = left-inv (H x)
 retr-ap :
   {i j : Level} {A : UU i} {B : UU j} (i : A → B) →
   retr i → (x y : A) → retr (ap i {x} {y})
-retr-ap i (dpair r H) x y =
-  dpair (ap-retraction i r H x y) (isretr-ap-retraction i r H x y)
+retr-ap i (pair r H) x y =
+  pair (ap-retraction i r H x y) (isretr-ap-retraction i r H x y)
 
 Id-retract-of-Id :
   {i j : Level} {A : UU i} {B : UU j} (R : A retract-of B) →
   (x y : A) → (Id x y) retract-of (Id (pr1 R x) (pr1 R y))
-Id-retract-of-Id (dpair i (dpair r H)) x y =
-  dpair
+Id-retract-of-Id (pair i (pair r H)) x y =
+  pair
     ( ap i {x} {y})
-    ( retr-ap i (dpair r H) x y)
+    ( retr-ap i (pair r H) x y)
 
 -- Exercise 5.10
 Σ-assoc :
   {i j k : Level} (A : UU i) (B : A → UU j) (C : (Σ A B) → UU k) →
-  Σ (Σ A B) C → Σ A (λ x → Σ (B x) (λ y → C (dpair x y)))
-Σ-assoc A B C (dpair (dpair x y) z) = dpair x (dpair y z)
+  Σ (Σ A B) C → Σ A (λ x → Σ (B x) (λ y → C (pair x y)))
+Σ-assoc A B C (pair (pair x y) z) = pair x (pair y z)
 
 Σ-assoc' :
   {i j k : Level} (A : UU i) (B : A → UU j) (C : (Σ A B) → UU k) →
-  Σ A (λ x → Σ (B x) (λ y → C (dpair x y))) → Σ (Σ A B) C
-Σ-assoc' A B C t = dpair (dpair (pr1 t) (pr1 (pr2 t))) (pr2 (pr2 t))
+  Σ A (λ x → Σ (B x) (λ y → C (pair x y))) → Σ (Σ A B) C
+Σ-assoc' A B C t = pair (pair (pr1 t) (pr1 (pr2 t))) (pr2 (pr2 t))
 
 Σ-assoc-assoc :
   {i j k : Level} (A : UU i) (B : A → UU j)
   (C : (Σ A B) → UU k) → ((Σ-assoc' A B C) ∘ (Σ-assoc A B C)) ~ id
-Σ-assoc-assoc A B C (dpair (dpair x y) z) = refl
+Σ-assoc-assoc A B C (pair (pair x y) z) = refl
 
 Σ-assoc-assoc' :
   {i j k : Level} (A : UU i) (B : A → UU j)
   (C : (Σ A B) → UU k) → ((Σ-assoc A B C) ∘ (Σ-assoc' A B C)) ~ id
-Σ-assoc-assoc' A B C (dpair x (dpair y z)) = refl
+Σ-assoc-assoc' A B C (pair x (pair y z)) = refl
 
 abstract
   is-equiv-Σ-assoc :
@@ -819,7 +819,7 @@ abstract
 Σ-swap :
   {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
   Σ A (λ x → Σ B (C x)) → Σ B (λ y → Σ A (λ x → C x y))
-Σ-swap A B C t = dpair (pr1 (pr2 t)) (dpair (pr1 t) (pr2 (pr2 t)))
+Σ-swap A B C t = pair (pr1 (pr2 t)) (pair (pr1 t) (pr2 (pr2 t)))
 
 Σ-swap' :
   {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
@@ -829,7 +829,7 @@ abstract
 Σ-swap-swap :
   {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
   ((Σ-swap' A B C) ∘ (Σ-swap A B C)) ~ id
-Σ-swap-swap A B C (dpair x (dpair y z)) = refl
+Σ-swap-swap A B C (pair x (pair y z)) = refl
 
 abstract
   is-equiv-Σ-swap :
@@ -1110,15 +1110,15 @@ abstract
     {f : A → A'} {g : B → B'} →
     is-equiv f → is-equiv g → is-equiv (functor-coprod f g)
   is-equiv-functor-coprod {A = A} {B = B} {A' = A'} {B' = B'} {f = f} {g = g}
-    (dpair (dpair sf issec-sf) (dpair rf isretr-rf))
-    (dpair (dpair sg issec-sg) (dpair rg isretr-rg)) =
-    dpair
-      ( dpair
+    (pair (pair sf issec-sf) (pair rf isretr-rf))
+    (pair (pair sg issec-sg) (pair rg isretr-rg)) =
+    pair
+      ( pair
         ( functor-coprod sf sg)
         ( ( ( htpy-inv (compose-functor-coprod sf f sg g)) ∙h
             ( htpy-functor-coprod issec-sf issec-sg)) ∙h
           ( id-functor-coprod A' B')))
-      ( dpair
+      ( pair
         ( functor-coprod rf rg)
         ( ( ( htpy-inv (compose-functor-coprod f rf g rg)) ∙h
             ( htpy-functor-coprod isretr-rf isretr-rg)) ∙h
@@ -1127,8 +1127,8 @@ abstract
 equiv-functor-coprod :
   {l1 l2 l1' l2' : Level} {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'} →
   (A ≃ A') → (B ≃ B') → ((coprod A B) ≃ (coprod A' B'))
-equiv-functor-coprod (dpair e is-equiv-e) (dpair f is-equiv-f) =
-  dpair
+equiv-functor-coprod (pair e is-equiv-e) (pair f is-equiv-f) =
+  pair
     ( functor-coprod e f)
     ( is-equiv-functor-coprod is-equiv-e is-equiv-f)
 

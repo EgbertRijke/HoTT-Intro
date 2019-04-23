@@ -24,7 +24,7 @@ universal-property-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2)
   (X : UU l1) (Y : total-subuniverse P) (l : X → pr1 Y) →
   UU ((lsuc l1) ⊔ l2)
-universal-property-localization {l1} (dpair P H) X (dpair Y p) l =
+universal-property-localization {l1} (pair P H) X (pair Y p) l =
   (Z : UU l1) (q : P Z) → is-equiv (λ (h : Y → Z) → h ∘ l)
 
 universal-property-localization' :
@@ -39,7 +39,7 @@ is-prop-universal-property-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1)
   (Y : total-subuniverse P) (l : X → pr1 Y) →
   is-prop (universal-property-localization P X Y l)
-is-prop-universal-property-localization (dpair P H) X (dpair Y p) l =
+is-prop-universal-property-localization (pair P H) X (pair Y p) l =
   is-prop-Π (λ Z → is-prop-Π (λ q → is-subtype-is-equiv _))
 
 has-localization :
@@ -52,8 +52,8 @@ has-localization {l1} P X =
 Eq-localizations :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   ( s t : has-localization P X) → UU l1
-Eq-localizations (dpair P H) X
-  (dpair (dpair Y p) (dpair l up)) t =
+Eq-localizations (pair P H) X
+  (pair (pair Y p) (pair l up)) t =
   let Y' = pr1 (pr1 t)
       p' = pr1 (pr1 t)
       l' = pr1 (pr2 t)
@@ -65,8 +65,8 @@ Eq-localizations (dpair P H) X
 reflexive-Eq-localizations :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   (s : has-localization P X) → Eq-localizations P X s s
-reflexive-Eq-localizations (dpair P H) X (dpair (dpair Y p) (dpair l up)) =
-  dpair (equiv-id Y) (htpy-refl l)
+reflexive-Eq-localizations (pair P H) X (pair (pair Y p) (pair l up)) =
+  pair (equiv-id Y) (htpy-refl l)
 
 Eq-localizations-eq :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
@@ -78,14 +78,14 @@ is-contr-total-Eq-localizations :
   (s : has-localization P X) →
   is-contr (Σ (has-localization P X) (Eq-localizations P X s))
 is-contr-total-Eq-localizations
-  (dpair P H) X (dpair (dpair Y p) (dpair l up)) =
+  (pair P H) X (pair (pair Y p) (pair l up)) =
   is-contr-total-Eq-structure
     ( λ Y' l' e → ((eqv-map e) ∘ l) ~ (pr1 l'))
-    ( is-contr-total-Eq-total-subuniverse (dpair P H) (dpair Y p))
-    ( dpair (dpair Y p) (equiv-id Y))
+    ( is-contr-total-Eq-total-subuniverse (pair P H) (pair Y p))
+    ( pair (pair Y p) (equiv-id Y))
     ( is-contr-total-Eq-substructure
       ( is-contr-total-htpy l)
-      ( is-prop-universal-property-localization (dpair P H) X (dpair Y p))
+      ( is-prop-universal-property-localization (pair P H) X (pair Y p))
       ( l)
       ( htpy-refl _)
       ( up))
@@ -108,43 +108,43 @@ eq-Eq-localizations P X s t =
 uniqueness-localizations :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   ( s t : has-localization P X) → Eq-localizations P X s t
-uniqueness-localizations (dpair P H) X
-  (dpair (dpair Y p) (dpair l up)) (dpair (dpair Y' p') (dpair l' up')) =
-  dpair
-    ( dpair
+uniqueness-localizations (pair P H) X
+  (pair (pair Y p) (pair l up)) (pair (pair Y' p') (pair l' up')) =
+  pair
+    ( pair
       ( inv-is-equiv (up Y' p') l')
       ( is-equiv-has-inverse
-        ( dpair
+        ( pair
           ( inv-is-equiv (up' Y p) l)
-          ( dpair
+          ( pair
             ( htpy-eq
               ( ap
                 ( pr1 {B = λ h → Id (h ∘ l') l'})
                 ( center
                   ( is-prop-is-contr
                     ( is-contr-map-is-equiv (up' Y' p') l')
-                    ( dpair
+                    ( pair
                       ( ( inv-is-equiv (up Y' p') l') ∘
                         ( inv-is-equiv (up' Y p) l))
                       ( ( ap
                           ( λ t → (inv-is-equiv (up Y' p') l') ∘ t)
                           ( issec-inv-is-equiv (up' Y p) l)) ∙
                         ( issec-inv-is-equiv (up Y' p') l')))
-                    ( dpair id refl)))))
+                    ( pair id refl)))))
             ( htpy-eq
               ( ap
                 ( pr1 {B = λ h → Id (h ∘ l) l})
                 ( center
                   ( is-prop-is-contr
                     ( is-contr-map-is-equiv (up Y p) l)
-                    ( dpair
+                    ( pair
                       ( ( inv-is-equiv (up' Y p) l) ∘
                         ( inv-is-equiv (up Y' p') l'))
                       ( ( ap
                           ( λ t → (inv-is-equiv (up' Y p) l) ∘ t)
                           ( issec-inv-is-equiv (up Y' p') l')) ∙
                          issec-inv-is-equiv (up' Y p) l))
-                    ( dpair id refl)))))))))
+                    ( pair id refl)))))))))
     ( htpy-eq (issec-inv-is-equiv (up Y' p') l'))
 
 is-prop-localizations :
@@ -158,14 +158,14 @@ is-prop-localizations P X =
 universal-property-localization-equiv-is-local :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   (Y : UU l1) (p : (pr1 P) Y) (l : X → Y) →
-  is-equiv l → universal-property-localization P X (dpair Y p) l
+  is-equiv l → universal-property-localization P X (pair Y p) l
 universal-property-localization-equiv-is-local
-  (dpair P H) X Y p l is-equiv-l Z q =
+  (pair P H) X Y p l is-equiv-l Z q =
   is-equiv-precomp-is-equiv l is-equiv-l Z
 
 universal-property-localization-id-is-local :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) (q : (pr1 P) X) →
-  universal-property-localization P X (dpair X q) id
+  universal-property-localization P X (pair X q) id
 universal-property-localization-id-is-local P X q =
   universal-property-localization-equiv-is-local P X X q id (is-equiv-id X)
 
@@ -173,7 +173,7 @@ is-equiv-localization-is-local :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   ( Y : has-localization P X) → (pr1 P) X → is-equiv (pr1 (pr2 Y))
 is-equiv-localization-is-local
-  (dpair P H) X (dpair (dpair Y p) (dpair l up)) q =
+  (pair P H) X (pair (pair Y p) (pair l up)) q =
   is-equiv-right-factor
     ( id)
     ( inv-is-equiv (up X q) id)
@@ -181,32 +181,32 @@ is-equiv-localization-is-local
     ( htpy-eq (inv (issec-inv-is-equiv (up X q) id)))
     ( pr2
       ( pr1
-        ( uniqueness-localizations (dpair P H) X
-          ( dpair (dpair Y p) (dpair l up))
-          ( dpair
-            ( dpair X q)
-            ( dpair id
+        ( uniqueness-localizations (pair P H) X
+          ( pair (pair Y p) (pair l up))
+          ( pair
+            ( pair X q)
+            ( pair id
               ( universal-property-localization-id-is-local
-                (dpair P H) X q))))))
+                (pair P H) X q))))))
     ( is-equiv-id X)
 
 is-local-is-equiv-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   ( Y : has-localization P X) → is-equiv (pr1 (pr2 Y)) → (pr1 P) X
 is-local-is-equiv-localization
-  (dpair P H) X (dpair (dpair Y p) (dpair l up)) is-equiv-l =
-  in-subuniverse-equiv' P (dpair l is-equiv-l) p
+  (pair P H) X (pair (pair Y p) (pair l up)) is-equiv-l =
+  in-subuniverse-equiv' P (pair l is-equiv-l) p
 
 strong-retraction-property-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   (Y : total-subuniverse P) (l : X → pr1 Y) → UU l1
-strong-retraction-property-localization (dpair P H) X (dpair Y p) l =
+strong-retraction-property-localization (pair P H) X (pair Y p) l =
   is-equiv (λ (h : Y → X) → h ∘ l)
 
 retraction-property-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   (Y : total-subuniverse P) (l : X → pr1 Y) → UU l1
-retraction-property-localization (dpair P H) X (dpair Y p) l =
+retraction-property-localization (pair P H) X (pair Y p) l =
   retr l
 
 strong-retraction-property-localization-is-equiv-localization :
@@ -214,7 +214,7 @@ strong-retraction-property-localization-is-equiv-localization :
   (Y : total-subuniverse P) (l : X → pr1 Y) →
   is-equiv l → strong-retraction-property-localization P X Y l
 strong-retraction-property-localization-is-equiv-localization
-  (dpair P H) X (dpair Y p) l is-equiv-l =
+  (pair P H) X (pair Y p) l is-equiv-l =
   is-equiv-precomp-is-equiv l is-equiv-l X
 
 retraction-property-localization-strong-retraction-property-localization :
@@ -223,7 +223,7 @@ retraction-property-localization-strong-retraction-property-localization :
   strong-retraction-property-localization P X Y l →
   retraction-property-localization P X Y l
 retraction-property-localization-strong-retraction-property-localization
-  (dpair P H) X (dpair Y p) l s =
+  (pair P H) X (pair Y p) l s =
   tot (λ h → htpy-eq) (center (is-contr-map-is-equiv s id))
 
 is-equiv-localization-retraction-property-localization :
@@ -232,18 +232,18 @@ is-equiv-localization-retraction-property-localization :
   retraction-property-localization P X (pr1 Y) (pr1 (pr2 Y)) →
   is-equiv (pr1 (pr2 Y))
 is-equiv-localization-retraction-property-localization
-  (dpair P H) X (dpair (dpair Y p) (dpair l up)) (dpair g isretr-g) =
+  (pair P H) X (pair (pair Y p) (pair l up)) (pair g isretr-g) =
   is-equiv-has-inverse
-    ( dpair g
-      ( dpair
+    ( pair g
+      ( pair
         ( htpy-eq
           ( ap
             ( pr1 {B = λ (h : Y → Y) → Id (h ∘ l) l})
             ( center
               ( is-prop-is-contr
                 ( is-contr-map-is-equiv (up Y p) l)
-                ( dpair (l ∘ g) (ap (λ t → l ∘ t) (eq-htpy isretr-g)))
-                ( dpair id refl)))))
+                ( pair (l ∘ g) (ap (λ t → l ∘ t) (eq-htpy isretr-g)))
+                ( pair id refl)))))
         ( isretr-g)))
 
 is-local-retraction-property-localization :
@@ -259,20 +259,20 @@ is-local-has-localization-is-contr :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   is-contr X → has-localization P X → (pr1 P) X
 is-local-has-localization-is-contr
-  (dpair P H) X is-contr-X (dpair (dpair Y p) (dpair l up)) =
-  is-local-retraction-property-localization (dpair P H) X
-    ( dpair (dpair Y p) (dpair l up))
-    ( dpair
+  (pair P H) X is-contr-X (pair (pair Y p) (pair l up)) =
+  is-local-retraction-property-localization (pair P H) X
+    ( pair (pair Y p) (pair l up))
+    ( pair
       ( λ _ → center is-contr-X)
       ( contraction is-contr-X))
 
 has-localization-is-local-is-contr :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   is-contr X → (pr1 P) X → has-localization P X
-has-localization-is-local-is-contr (dpair P H) X is-contr-X p =
-  dpair
-    ( dpair X p)
-    ( dpair id (universal-property-localization-id-is-local (dpair P H) X p))
+has-localization-is-local-is-contr (pair P H) X is-contr-X p =
+  pair
+    ( pair X p)
+    ( pair id (universal-property-localization-id-is-local (pair P H) X p))
 
 is-contr-raise-unit :
   (l : Level) → is-contr (raise l unit)
@@ -298,8 +298,8 @@ toto-dependent-elimination-localization :
   (Z : Y → UU l1) →
   Σ (Y → Y) (λ h → (y : Y) → Z (h y)) →
   Σ (X → Y) (λ h → (x : X) → Z (h x))
-toto-dependent-elimination-localization (dpair P H) X
-  (dpair (dpair Y p) (dpair l up)) Z =
+toto-dependent-elimination-localization (pair P H) X
+  (pair (pair Y p) (pair l up)) Z =
   toto
     ( λ (h : X → Y) → (x : X) → Z (h x))
     ( λ h → h ∘ l)
@@ -317,7 +317,7 @@ square-dependent-elimination-localization :
   ( ( inv-choice-∞) ∘
     ( toto-dependent-elimination-localization P X has-loc-X Z))
 square-dependent-elimination-localization
-  (dpair P H) X (dpair (dpair Y p) (dpair l up)) Z q =
+  (pair P H) X (pair (pair Y p) (pair l up)) Z q =
   coherence-square-inv-choice-∞ l
 
 is-equiv-toto-dependent-elimination-localization :
@@ -326,15 +326,15 @@ is-equiv-toto-dependent-elimination-localization :
   (Z : pr1 (pr1 has-loc-X) → UU l1) (q : (pr1 P) (Σ _ Z)) →
   is-equiv (toto-dependent-elimination-localization P X has-loc-X Z)
 is-equiv-toto-dependent-elimination-localization
-  (dpair P H) X (dpair (dpair Y p) (dpair l up)) Z q =
+  (pair P H) X (pair (pair Y p) (pair l up)) Z q =
   is-equiv-top-is-equiv-bottom-square
     ( inv-choice-∞)
     ( inv-choice-∞)
     ( toto-dependent-elimination-localization
-      (dpair P H) X (dpair (dpair Y p) (dpair l up)) Z)
+      (pair P H) X (pair (pair Y p) (pair l up)) Z)
     ( λ h → h ∘ l)
     ( square-dependent-elimination-localization
-      (dpair P H) X (dpair (dpair Y p) (dpair l up)) Z q)
+      (pair P H) X (pair (pair Y p) (pair l up)) Z q)
     ( is-equiv-inv-choice-∞)
     ( is-equiv-inv-choice-∞)
     ( up (Σ Y Z) q)
@@ -344,14 +344,14 @@ dependent-elimination-localization :
   (X : UU l1) (Y : has-localization P X) →
   (Z : (pr1 (pr1 Y)) → UU l1) (q : (pr1 P) (Σ _ Z)) →
   is-equiv (λ (h : (y : (pr1 (pr1 Y))) → (Z y)) → λ x → h (pr1 (pr2 Y) x))
-dependent-elimination-localization (dpair P H) X (dpair (dpair Y p) (dpair l up)) Z q =
+dependent-elimination-localization (pair P H) X (pair (pair Y p) (pair l up)) Z q =
   is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
     ( λ (h : X → Y) → (x : X) → Z (h x))
     ( λ (h : Y → Y) → h ∘ l)
     ( λ (h : Y → Y) (h' : (y : Y) → Z (h y)) (x : X) → h' (l x))
     ( up Y p)
     ( is-equiv-toto-dependent-elimination-localization
-      (dpair P H) X (dpair (dpair Y p) (dpair l up)) Z q)
+      (pair P H) X (pair (pair Y p) (pair l up)) Z q)
     ( id)
 
 is-reflective-subuniverse :

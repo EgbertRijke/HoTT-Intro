@@ -31,7 +31,7 @@ abstract
   is-prop-is-prop' :
     {i : Level} {A : UU i} → is-prop' A → is-prop A
   is-prop-is-prop' {i} {A} H x y =
-    dpair
+    pair
       (concat _ (inv (H x x)) (H x y))
       (ind-Id x
         (λ z p → Id (concat _ (inv (H x x)) (H x z)) p)
@@ -45,7 +45,7 @@ abstract
 abstract
   is-contr-is-prop-inh :
     {i : Level} {A : UU i} → is-prop A → A → is-contr A
-  is-contr-is-prop-inh H a = dpair a (is-prop'-is-prop H a)
+  is-contr-is-prop-inh H a = pair a (is-prop'-is-prop H a)
 
 abstract
   is-prop-is-contr-if-inh :
@@ -95,7 +95,7 @@ abstract
     (x y : A) → is-equiv (i x y)
   is-equiv-prop-in-id R p ρ i x =
     id-fundamental-retr x (i x)
-      (λ y → dpair
+      (λ y → pair
         (ind-Id x (λ z p → R x z) (ρ x) y)
         ((λ r → is-prop'-is-prop (p x y) _ r)))
 
@@ -193,7 +193,7 @@ abstract
 is-trunc-equiv :
   {i j : Level} (k : 𝕋) {A : UU i} (B : UU  j) (e : A ≃ B) →
   is-trunc k B → is-trunc k A
-is-trunc-equiv k B (dpair f is-equiv-f) =
+is-trunc-equiv k B (pair f is-equiv-f) =
   is-trunc-is-equiv k B f is-equiv-f
 
 abstract
@@ -209,7 +209,7 @@ abstract
 is-trunc-equiv' :
   {i j : Level} (k : 𝕋) (A : UU i) {B : UU j} (e : A ≃ B) →
   is-trunc k A → is-trunc k B
-is-trunc-equiv' k A (dpair f is-equiv-f) =
+is-trunc-equiv' k A (pair f is-equiv-f) =
   is-trunc-is-equiv' k A f is-equiv-f
 
 abstract
@@ -246,11 +246,11 @@ abstract
   is-trunc-map-is-trunc-ap : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
     (f : A → B) → ((x y : A) → is-trunc-map k (ap f {x = x} {y = y})) →
     is-trunc-map (succ-𝕋 k) f
-  is-trunc-map-is-trunc-ap k f is-trunc-ap-f b (dpair x p) (dpair x' p') =
+  is-trunc-map-is-trunc-ap k f is-trunc-ap-f b (pair x p) (pair x' p') =
     is-trunc-is-equiv k
       ( fib (ap f) (p ∙ (inv p')))
-      ( fib-ap-eq-fib f (dpair x p) (dpair x' p'))
-      ( is-equiv-fib-ap-eq-fib f (dpair x p) (dpair x' p'))
+      ( fib-ap-eq-fib f (pair x p) (pair x' p'))
+      ( is-equiv-fib-ap-eq-fib f (pair x p) (pair x' p'))
       ( is-trunc-ap-f x x' (p ∙ (inv p')))
 
 abstract
@@ -259,10 +259,10 @@ abstract
     (x y : A) → is-trunc-map k (ap f {x = x} {y = y})
   is-trunc-ap-is-trunc-map k f is-trunc-map-f x y p =
     is-trunc-is-equiv' k
-      ( Id (dpair x p) (dpair y refl))
+      ( Id (pair x p) (pair y refl))
       ( eq-fib-fib-ap f x y p)
       ( is-equiv-eq-fib-fib-ap f x y p)
-      ( is-trunc-map-f (f y) (dpair x p) (dpair y refl))
+      ( is-trunc-map-f (f y) (pair x p) (pair y refl))
 
 is-prop-map : {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 is-prop-map f = (b : _) → is-trunc neg-one-𝕋 (fib f b)
@@ -310,11 +310,11 @@ abstract
   is-trunc-tot-is-fiberwise-trunc : {l1 l2 l3 : Level} (k : 𝕋)
     {A : UU l1} {B : A → UU l2} {C : A → UU l3} (f : (x : A) → B x → C x) →
     is-fiberwise-trunc k f → is-trunc-map k (tot f)
-  is-trunc-tot-is-fiberwise-trunc k f is-fiberwise-trunc-f (dpair x z) =
+  is-trunc-tot-is-fiberwise-trunc k f is-fiberwise-trunc-f (pair x z) =
     is-trunc-is-equiv k
       ( fib (f x) z)
-      ( fib-ftr-fib-tot f (dpair x z))
-      ( is-equiv-fib-ftr-fib-tot f (dpair x z))
+      ( fib-ftr-fib-tot f (pair x z))
+      ( is-equiv-fib-ftr-fib-tot f (pair x z))
       ( is-fiberwise-trunc-f x z)
 
 abstract
@@ -323,42 +323,42 @@ abstract
     is-trunc-map k (tot f) → is-fiberwise-trunc k f
   is-fiberwise-trunc-is-trunc-tot k f is-trunc-tot-f x z =
     is-trunc-is-equiv k
-      ( fib (tot f) (dpair x z))
-      ( fib-tot-fib-ftr f (dpair x z))
-      ( is-equiv-fib-tot-fib-ftr f (dpair x z))
-      ( is-trunc-tot-f (dpair x z))
+      ( fib (tot f) (pair x z))
+      ( fib-tot-fib-ftr f (pair x z))
+      ( is-equiv-fib-tot-fib-ftr f (pair x z))
+      ( is-trunc-tot-f (pair x z))
 
 -- Exercises
 
 -- Exercise 8.1
 
 diagonal : {l : Level} (A : UU l) → A → A × A
-diagonal A x = dpair x x
+diagonal A x = pair x x
 
 abstract
   is-prop-is-equiv-diagonal : {l : Level} (A : UU l) →
     is-equiv (diagonal A) → is-prop A
   is-prop-is-equiv-diagonal A is-equiv-d =
     is-prop-is-prop' ( λ x y →
-      let α = issec-inv-is-equiv is-equiv-d (dpair x y) in
+      let α = issec-inv-is-equiv is-equiv-d (pair x y) in
       ( inv (ap pr1 α)) ∙ (ap pr2 α))
 
 eq-fib-diagonal : {l : Level} (A : UU l) (t : A × A) →
   fib (diagonal A) t → Id (pr1 t) (pr2 t)
-eq-fib-diagonal A (dpair x y) (dpair z α) = (inv (ap pr1 α)) ∙ (ap pr2 α)
+eq-fib-diagonal A (pair x y) (pair z α) = (inv (ap pr1 α)) ∙ (ap pr2 α)
 
 fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
   Id (pr1 t) (pr2 t) → fib (diagonal A) t
-fib-diagonal-eq A (dpair x y) β =
-  dpair x (eq-pair-triv (dpair refl β))
+fib-diagonal-eq A (pair x y) β =
+  pair x (eq-pair-triv (pair refl β))
 
 issec-fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
   ((eq-fib-diagonal A t) ∘ (fib-diagonal-eq A t)) ~ id
-issec-fib-diagonal-eq A (dpair x .x) refl = refl
+issec-fib-diagonal-eq A (pair x .x) refl = refl
 
 isretr-fib-diagonal-eq : {l : Level} (A : UU l) (t : A × A) →
   ((fib-diagonal-eq A t) ∘ (eq-fib-diagonal A t)) ~ id
-isretr-fib-diagonal-eq A .(dpair z z) (dpair z refl) = refl
+isretr-fib-diagonal-eq A .(pair z z) (pair z refl) = refl
 
 abstract
   is-equiv-eq-fib-diagonal : {l : Level} (A : UU l) (t : A × A) →
@@ -374,10 +374,10 @@ abstract
     is-trunc-map k (diagonal A) → is-trunc (succ-𝕋 k) A
   is-trunc-is-trunc-diagonal k A is-trunc-d x y =
     is-trunc-is-equiv' k
-      ( fib (diagonal A) (dpair x y))
-      ( eq-fib-diagonal A (dpair x y))
-      ( is-equiv-eq-fib-diagonal A (dpair x y))
-      ( is-trunc-d (dpair x y))
+      ( fib (diagonal A) (pair x y))
+      ( eq-fib-diagonal A (pair x y))
+      ( is-equiv-eq-fib-diagonal A (pair x y))
+      ( is-trunc-d (pair x y))
 
 abstract
   is-trunc-diagonal-is-trunc : {l : Level} (k : 𝕋) (A : UU l) →
@@ -678,7 +678,7 @@ abstract
   has-decidable-equality-prod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     has-decidable-equality A → has-decidable-equality B →
     has-decidable-equality (A × B)
-  has-decidable-equality-prod dec-A dec-B (dpair x y) (dpair x' y') =
+  has-decidable-equality-prod dec-A dec-B (pair x y) (pair x' y') =
     has-decidable-equality-prod-aux x x' y y' (dec-A x x') (dec-B y y')
 
 -- Exercise 8.6.c
@@ -686,16 +686,16 @@ abstract
 decide-retract-of :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} →
   A retract-of B → decide B → decide A
-decide-retract-of (dpair i (dpair r H)) (inl b) = inl (r b)
-decide-retract-of (dpair i (dpair r H)) (inr f) = inr (f ∘ i)
+decide-retract-of (pair i (pair r H)) (inl b) = inl (r b)
+decide-retract-of (pair i (pair r H)) (inr f) = inr (f ∘ i)
 
 abstract
   has-decidable-equality-retract-of :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     A retract-of B → has-decidable-equality B → has-decidable-equality A
-  has-decidable-equality-retract-of (dpair i (dpair r H)) d x y =
+  has-decidable-equality-retract-of (pair i (pair r H)) d x y =
     decide-retract-of
-      ( Id-retract-of-Id (dpair i (dpair r H)) x y)
+      ( Id-retract-of-Id (pair i (pair r H)) x y)
       ( d (i x) (i y))
 
 -- Exercise 8.7
@@ -703,11 +703,11 @@ abstract
 abstract
   is-trunc-retract-of : {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
     A retract-of B → is-trunc k B → is-trunc k A
-  is-trunc-retract-of neg-two-𝕋 (dpair i (dpair r H)) is-trunc-B =
-    is-contr-retract-of _ (dpair i (dpair r H)) is-trunc-B
-  is-trunc-retract-of (succ-𝕋 k) (dpair i retr-i) is-trunc-B x y =
+  is-trunc-retract-of neg-two-𝕋 (pair i (pair r H)) is-trunc-B =
+    is-contr-retract-of _ (pair i (pair r H)) is-trunc-B
+  is-trunc-retract-of (succ-𝕋 k) (pair i retr-i) is-trunc-B x y =
     is-trunc-retract-of k
-      ( dpair (ap i) (retr-ap i retr-i x y))
+      ( pair (ap i) (retr-ap i retr-i x y))
       ( is-trunc-B (i x) (i y))
 
 -- Exercise 8.8
@@ -776,28 +776,28 @@ abstract
 map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (g : B → X) (h : A → B) →
   (x : X) → fib (g ∘ h) x → Σ (fib g x) (λ t → fib h (pr1 t))
-map-fib-comp g h x (dpair a p) =
-  dpair
-    ( dpair (h a) p)
-    ( dpair a refl)
+map-fib-comp g h x (pair a p) =
+  pair
+    ( pair (h a) p)
+    ( pair a refl)
 
 inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (g : B → X) (h : A → B) →
   (x : X) → Σ (fib g x) (λ t → fib h (pr1 t)) → fib (g ∘ h) x
 inv-map-fib-comp g h c t =
-  dpair (pr1 (pr2 t)) ((ap g (pr2 (pr2 t))) ∙ (pr2 (pr1 t)))
+  pair (pr1 (pr2 t)) ((ap g (pr2 (pr2 t))) ∙ (pr2 (pr1 t)))
 
 issec-inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (g : B → X) (h : A → B) →
   (x : X) →
   ((map-fib-comp g h x) ∘ (inv-map-fib-comp g h x)) ~ id
 issec-inv-map-fib-comp g h x
-  (dpair (dpair .(h a) refl) (dpair a refl)) = refl
+  (pair (pair .(h a) refl) (pair a refl)) = refl
 
 isretr-inv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (g : B → X) (h : A → B) (x : X) →
   ((inv-map-fib-comp g h x) ∘ (map-fib-comp g h x)) ~ id
-isretr-inv-map-fib-comp g h .(g (h a)) (dpair a refl) = refl
+isretr-inv-map-fib-comp g h .(g (h a)) (pair a refl) = refl
 
 abstract
   is-equiv-map-fib-comp : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
@@ -855,7 +855,7 @@ abstract
         ( map-fib-comp g h (g b))
         ( is-equiv-map-fib-comp g h (g b))
         ( is-trunc-map-htpy k (g ∘ h) f (htpy-inv H) is-trunc-f (g b)))
-      ( dpair b refl)
+      ( pair b refl)
 
 abstract
   is-trunc-map-succ-is-trunc-map :

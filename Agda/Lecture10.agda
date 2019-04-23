@@ -8,7 +8,7 @@ open Lecture09 public
 -- Section 10.1 Type extensionality
 
 equiv-eq : {i : Level} {A : UU i} {B : UU i} → Id A B → A ≃ B
-equiv-eq {A = A} refl = dpair id (is-equiv-id A)
+equiv-eq {A = A} refl = pair id (is-equiv-id A)
 
 UNIVALENCE : {i : Level} (A B : UU i) → UU (lsuc i)
 UNIVALENCE A B = is-equiv (equiv-eq {A = A} {B = B})
@@ -18,7 +18,7 @@ is-contr-total-equiv-UNIVALENCE : {i : Level} (A : UU i) →
   ((B : UU i) → UNIVALENCE A B) → is-contr (Σ (UU i) (λ X → A ≃ X))
 is-contr-total-equiv-UNIVALENCE A UA =
   id-fundamental-gen' A
-    ( dpair id (is-equiv-id A))
+    ( pair id (is-equiv-id A))
     ( λ B → equiv-eq {B = B})
     ( UA)
 
@@ -26,55 +26,55 @@ UNIVALENCE-is-contr-total-equiv : {i : Level} (A : UU i) →
   is-contr (Σ (UU i) (λ X → A ≃ X)) → (B : UU i) → UNIVALENCE A B
 UNIVALENCE-is-contr-total-equiv A c =
   id-fundamental-gen A
-    ( dpair id (is-equiv-id A))
+    ( pair id (is-equiv-id A))
     ( c)
     ( λ B → equiv-eq {B = B})
 
 ev-id : {i j : Level} {A : UU i} (P : (B : UU i) → (A ≃ B) → UU j) →
-  ((B : UU i) (e : A ≃ B) → P B e) → P A (dpair id (is-equiv-id A))
-ev-id {A = A} P f = f A (dpair id (is-equiv-id A))
+  ((B : UU i) (e : A ≃ B) → P B e) → P A (pair id (is-equiv-id A))
+ev-id {A = A} P f = f A (pair id (is-equiv-id A))
 
 IND-EQUIV : {i j : Level} {A : UU i} → ((B : UU i) (e : A ≃ B) → UU j) → UU _
 IND-EQUIV P = sec (ev-id P)
 
 triangle-ev-id : {i j : Level} {A : UU i}
   (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) →
-  (ev-pt (Σ (UU i) (λ X → A ≃ X)) (dpair A (dpair id (is-equiv-id A))) P)
-  ~ ((ev-id (λ X e → P (dpair X e))) ∘ (ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P}))
+  (ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (pair id (is-equiv-id A))) P)
+  ~ ((ev-id (λ X e → P (pair X e))) ∘ (ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P}))
 triangle-ev-id P f = refl
 
 abstract
   IND-EQUIV-is-contr-total-equiv : {i j : Level} (A : UU i) →
     is-contr (Σ (UU i) (λ X → A ≃ X)) →
-    (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) → IND-EQUIV (λ B e → P (dpair B e))
+    (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) → IND-EQUIV (λ B e → P (pair B e))
   IND-EQUIV-is-contr-total-equiv {i} {j} A c P =
     section-comp
-      ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (dpair A (dpair id (is-equiv-id A))) P)
-      ( ev-id (λ X e → P (dpair X e)))
+      ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (pair id (is-equiv-id A))) P)
+      ( ev-id (λ X e → P (pair X e)))
       ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
       ( triangle-ev-id P)
       ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
       ( is-sing-is-contr (Σ (UU i) (λ X → A ≃ X))
-        ( dpair
-          ( dpair A (dpair id (is-equiv-id A)))
+        ( pair
+          ( pair A (pair id (is-equiv-id A)))
           ( λ t → concat (center c)
-            ( inv (contraction c (dpair A (dpair id (is-equiv-id A)))))
+            ( inv (contraction c (pair A (pair id (is-equiv-id A)))))
             ( contraction c t)))
         ( P)
-        ( dpair A (equiv-id A)))
+        ( pair A (equiv-id A)))
 
 abstract
   is-contr-total-equiv-IND-EQUIV : {i : Level} (A : UU i) →
     ( {j : Level} (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) →
-      IND-EQUIV (λ B e → P (dpair B e))) →
+      IND-EQUIV (λ B e → P (pair B e))) →
     is-contr (Σ (UU i) (λ X → A ≃ X))
   is-contr-total-equiv-IND-EQUIV {i} A ind =
     is-contr-is-sing
       ( Σ (UU i) (λ X → A ≃ X))
-      ( dpair A (dpair id (is-equiv-id A)))
+      ( pair A (pair id (is-equiv-id A)))
       ( λ P → section-comp'
-        ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (dpair A (dpair id (is-equiv-id A))) P)
-        ( ev-id (λ X e → P (dpair X e)))
+        ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (pair id (is-equiv-id A))) P)
+        ( ev-id (λ X e → P (pair X e)))
         ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
         ( triangle-ev-id P)
         ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
@@ -101,7 +101,7 @@ abstract
     ( λ t → P (pr1 t) (pr2 t))
 
 ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
-  P A (dpair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
+  P A (pair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
 ind-equiv A P = pr1 (Ind-equiv A P)
 
 -- Subuniverses
@@ -142,31 +142,31 @@ is-global-subuniverse α P l1 l2 =
 Eq-total-subuniverse :
   {l1 l2 : Level} (P : subuniverse l1 l2) →
   (s t : total-subuniverse P) → UU l1
-Eq-total-subuniverse (dpair P H) (dpair X p) t = X ≃ (pr1 t)
+Eq-total-subuniverse (pair P H) (pair X p) t = X ≃ (pr1 t)
 
 Eq-total-subuniverse-eq :
   {l1 l2 : Level} (P : subuniverse l1 l2) →
   (s t : total-subuniverse P) → Id s t → Eq-total-subuniverse P s t
-Eq-total-subuniverse-eq (dpair P H) (dpair X p) .(dpair X p) refl = equiv-id X
+Eq-total-subuniverse-eq (pair P H) (pair X p) .(pair X p) refl = equiv-id X
 
 abstract
   is-contr-total-Eq-total-subuniverse :
     {l1 l2 : Level} (P : subuniverse l1 l2)
     (s : total-subuniverse P) →
     is-contr (Σ (total-subuniverse P) (λ t → Eq-total-subuniverse P s t))
-  is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p) =
+  is-contr-total-Eq-total-subuniverse (pair P H) (pair X p) =
     is-contr-total-Eq-substructure (is-contr-total-equiv X) H X (equiv-id X) p
 
 abstract
   is-equiv-Eq-total-subuniverse-eq :
     {l1 l2 : Level} (P : subuniverse l1 l2)
     (s t : total-subuniverse P) → is-equiv (Eq-total-subuniverse-eq P s t)
-  is-equiv-Eq-total-subuniverse-eq (dpair P H) (dpair X p) =
+  is-equiv-Eq-total-subuniverse-eq (pair P H) (pair X p) =
     id-fundamental-gen
-      ( dpair X p)
+      ( pair X p)
       ( equiv-id X)
-      ( is-contr-total-Eq-total-subuniverse (dpair P H) (dpair X p))
-      ( Eq-total-subuniverse-eq (dpair P H) (dpair X p))
+      ( is-contr-total-Eq-total-subuniverse (pair P H) (pair X p))
+      ( Eq-total-subuniverse-eq (pair P H) (pair X p))
 
 eq-Eq-total-subuniverse :
   {l1 l2 : Level} (P : subuniverse l1 l2) →
@@ -186,7 +186,7 @@ tr-equiv-eq-ap refl = htpy-refl id
 
 subuniverse-is-contr :
   {i : Level} → subuniverse i i
-subuniverse-is-contr {i} = dpair is-contr is-subtype-is-contr
+subuniverse-is-contr {i} = pair is-contr is-subtype-is-contr
 
 unit' :
   (i : Level) → UU i
@@ -202,16 +202,16 @@ abstract
   center-UU-contr :
     (i : Level) → total-subuniverse (subuniverse-is-contr {i})
   center-UU-contr i =
-    dpair (unit' i) (is-contr-unit' i)
+    pair (unit' i) (is-contr-unit' i)
   
   contraction-UU-contr :
     {i : Level} (A : Σ (UU i) is-contr) →
     Id (center-UU-contr i) A
-  contraction-UU-contr (dpair A is-contr-A) =
+  contraction-UU-contr (pair A is-contr-A) =
     eq-Eq-total-subuniverse subuniverse-is-contr
       ( equiv-is-contr (is-contr-unit' _) is-contr-A)
 
 abstract
   is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
   is-contr-UU-contr i =
-    dpair (center-UU-contr i) (contraction-UU-contr)
+    pair (center-UU-contr i) (contraction-UU-contr)

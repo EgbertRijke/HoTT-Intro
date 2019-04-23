@@ -37,26 +37,27 @@ ind-coprod C f g (inl x) = f x
 ind-coprod C f g (inr x) = g x
 
 data Σ {i j : Level} (A : UU i) (B : A → UU j) : UU (i ⊔ j) where
-  dpair : (x : A) → (B x → Σ A B)
+  pair : (x : A) → (B x → Σ A B)
 
 ind-Σ : {i j k : Level} {A : UU i} {B : A → UU j} {C : Σ A B → UU k} →
-  ((x : A) (y : B x) → C (dpair x y)) → ((t : Σ A B) → C t)
-ind-Σ f (dpair x y) = f x y
+  ((x : A) (y : B x) → C (pair x y)) → ((t : Σ A B) → C t)
+ind-Σ f (pair x y) = f x y
 
 pr1 : {i j : Level} {A : UU i} {B : A → UU j} → Σ A B → A
-pr1 (dpair a b) = a
+pr1 (pair a b) = a
 
 pr2 : {i j : Level} {A : UU i} {B : A → UU j} → (t : Σ A B) → B (pr1 t)
-pr2 (dpair a b) = b
+pr2 (pair a b) = b
 
 prod : {i j : Level} (A : UU i) (B : UU j) → UU (i ⊔ j)
 prod A B = Σ A (λ a → B)
 
+pair' :
+  {i j : Level} {A : UU i} {B : UU j} → A → B → prod A B
+pair' = pair
+
 _×_ :  {i j : Level} (A : UU i) (B : UU j) → UU (i ⊔ j)
 A × B = prod A B
-
-pair : {i j : Level} {A : UU i} {B : UU j} → A → (B → prod A B)
-pair a b = dpair a b
 
 -- Pointed types
 U-pt : (i : Level) → UU (lsuc i)

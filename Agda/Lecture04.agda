@@ -151,7 +151,7 @@ con-inv p refl r =
 -- Exercise 4.6
 lift :
   {i j : Level} {A : UU i} {B : A → UU j} {x y : A} (p : Id x y)
-  (b : B x) → Id (dpair x b) (dpair y (tr B p b))
+  (b : B x) → Id (pair x b) (pair y (tr B p b))
 lift refl b = refl
 
 -- Exercise 4.7

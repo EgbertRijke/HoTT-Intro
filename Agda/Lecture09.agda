@@ -47,20 +47,20 @@ abstract
 
 ev-pair :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : Σ A B → UU l3} →
-  ((t : Σ A B) → C t) → (x : A) (y : B x) → C (dpair x y)
-ev-pair f x y = f (dpair x y)
+  ((t : Σ A B) → C t) → (x : A) (y : B x) → C (pair x y)
+ev-pair f x y = f (pair x y)
 
 sec-ev-pair :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2)
   (C : Σ A B → UU l3) → sec (ev-pair {A = A} {B = B} {C = C})
 sec-ev-pair A B C =
-  dpair (λ f → ind-Σ f) (λ f → refl)
+  pair (λ f → ind-Σ f) (λ f → refl)
 
 triangle-ev-htpy-refl :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   (f : (x : A) → B x) (C :  Σ ((x : A) → B x) (λ g → f ~ g) → UU l3) →
-  ev-pt (Σ ((x : A) → B x) (λ g → f ~ g)) (dpair f (htpy-refl f)) C ~
-  ((ev-htpy-refl f (λ x y → C (dpair x y))) ∘ (ev-pair {C = C}))
+  ev-pt (Σ ((x : A) → B x) (λ g → f ~ g)) (pair f (htpy-refl f)) C ~
+  ((ev-htpy-refl f (λ x y → C (pair x y))) ∘ (ev-pair {C = C}))
 triangle-ev-htpy-refl f C φ = refl
 
 abstract
@@ -89,7 +89,7 @@ abstract
     ((A : UU l1) (B : A → UU l2) → WEAK-FUNEXT A B)
   WEAK-FUNEXT-FUNEXT funext A B is-contr-B =
     let pi-center = (λ x → center (is-contr-B x)) in
-    dpair
+    pair
       ( pi-center)
       ( λ f → inv-is-equiv (funext A B pi-center f)
         ( λ x → contraction (is-contr-B x) (f x)))
@@ -104,10 +104,10 @@ abstract
       ( htpy-refl f)
       ( is-contr-retract-of
         ( (x : A) → Σ (B x) (λ b → Id (f x) b))
-        ( dpair
-          ( λ t x → dpair (pr1 t x) (pr2 t x))
-          ( dpair (λ t → dpair (λ x → pr1 (t x)) (λ x → pr2 (t x)))
-          ( λ t → eq-pair (dpair refl refl))))
+        ( pair
+          ( λ t x → pair (pr1 t x) (pr2 t x))
+          ( pair (λ t → pair (λ x → pr1 (t x)) (λ x → pr2 (t x)))
+          ( λ t → eq-pair (pair refl refl))))
         ( weak-funext A
           ( λ x → Σ (B x) (λ b → Id (f x) b))
           ( λ x → is-contr-total-path (B x) (f x))))
@@ -119,7 +119,7 @@ postulate funext : {i j : Level} {A : UU i} {B : A → UU j} (f : (x : A) → B 
 
 equiv-funext : {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x} →
   (Id f g) ≃ (f ~ g)
-equiv-funext {f = f} {g} = dpair htpy-eq (funext f g) 
+equiv-funext {f = f} {g} = pair htpy-eq (funext f g) 
 
 abstract
   eq-htpy :
@@ -155,7 +155,7 @@ The immediate proof of the following theorem would be
 We give a different proof to ensure that the center of contraction is the 
 expected thing: 
 
-  dpair f (htpy-refl f)
+  pair f (htpy-refl f)
 
 -}
 
@@ -164,13 +164,13 @@ abstract
     {i j : Level} {A : UU i} {B : A → UU j} (f : (x : A) → B x) →
     is-contr (Σ ((x : A) → B x) (λ g → f ~ g))
   is-contr-total-htpy f =
-    dpair
-      ( dpair f (htpy-refl f))
+    pair
+      ( pair f (htpy-refl f))
       ( λ t → concat
         ( center (is-contr-total-htpy-Funext f (funext f)))
         ( inv (contraction
           ( is-contr-total-htpy-Funext f (funext f))
-          ( dpair f (htpy-refl f))))
+          ( pair f (htpy-refl f))))
         ( contraction (is-contr-total-htpy-Funext f (funext f)) t))
 
 abstract
@@ -259,7 +259,7 @@ Eq-type-choice-∞ {A = A} {B} C t t' =
 reflexive-Eq-type-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
   (t : type-choice-∞ C) → Eq-type-choice-∞ C t t
-reflexive-Eq-type-choice-∞ C (dpair f g) = dpair (htpy-refl f) (htpy-refl _)
+reflexive-Eq-type-choice-∞ C (pair f g) = pair (htpy-refl f) (htpy-refl _)
 
 Eq-type-choice-∞-eq :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
@@ -275,7 +275,7 @@ abstract
     is-contr-total-Eq-structure
       ( λ f g H → (x : A) → Id (tr (C x) (H x) ((pr2 t) x)) (g x))
       ( is-contr-total-htpy (pr1 t))
-      ( dpair (pr1 t) (htpy-refl _))
+      ( pair (pr1 t) (htpy-refl _))
       ( is-contr-total-htpy (pr2 t))
   
   is-equiv-Eq-type-choice-∞-eq :
@@ -301,26 +301,26 @@ abstract
 choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
   Π-total-fam C → type-choice-∞ C
-choice-∞ φ = dpair (λ x → pr1 (φ x)) (λ x → pr2 (φ x))
+choice-∞ φ = pair (λ x → pr1 (φ x)) (λ x → pr2 (φ x))
 
 inv-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
   type-choice-∞ C → Π-total-fam C
-inv-choice-∞ ψ x = dpair ((pr1 ψ) x) ((pr2 ψ) x)
+inv-choice-∞ ψ x = pair ((pr1 ψ) x) ((pr2 ψ) x)
 
 issec-inv-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
   ( ( choice-∞ {A = A} {B = B} {C = C}) ∘
     ( inv-choice-∞ {A = A} {B = B} {C = C})) ~ id
-issec-inv-choice-∞ {A = A} {C = C} (dpair ψ ψ') =
-  eq-Eq-type-choice-∞ C (dpair (htpy-refl ψ) (htpy-refl ψ'))
+issec-inv-choice-∞ {A = A} {C = C} (pair ψ ψ') =
+  eq-Eq-type-choice-∞ C (pair (htpy-refl ψ) (htpy-refl ψ'))
 
 isretr-inv-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
   ( ( inv-choice-∞ {A = A} {B = B} {C = C}) ∘
     ( choice-∞ {A = A} {B = B} {C = C})) ~ id
 isretr-inv-choice-∞ φ =
-  eq-htpy (λ x → eq-pair (dpair refl refl))
+  eq-htpy (λ x → eq-pair (pair refl refl))
 
 abstract
   is-equiv-choice-∞ :
@@ -360,9 +360,9 @@ abstract
     {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : Σ A B → UU l3} →
     is-equiv (ev-pair {C = C})
   is-equiv-ev-pair =
-    dpair
+    pair
       ( sec-ev-pair _ _ _)
-      ( dpair ind-Σ
+      ( pair ind-Σ
         ( λ f → eq-htpy
           ( ind-Σ
             {C = (λ t → Id (ind-Σ (ev-pair f) t) (f t))}
@@ -379,8 +379,8 @@ abstract
     {B : (x : A) → Id a x → UU l2} → is-equiv (ev-refl a {B = B})
   is-equiv-ev-refl a =
     is-equiv-has-inverse
-      ( dpair (ind-Id a _)
-        ( dpair
+      ( pair (ind-Id a _)
+        ( pair
           ( λ b → refl)
           ( λ f → eq-htpy
             ( λ x → eq-htpy
@@ -401,10 +401,10 @@ abstract
     is-half-adjoint-equivalence f →
     (C : B → UU l3) → is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))
   is-equiv-precomp-Π-is-half-adjoint-equivalence f
-    ( dpair g (dpair issec-g (dpair isretr-g coh))) C =
+    ( pair g (pair issec-g (pair isretr-g coh))) C =
     is-equiv-has-inverse
-      ( dpair (λ s y → tr C (issec-g y) (s (g y)))
-        ( dpair
+      ( pair (λ s y → tr C (issec-g y) (s (g y)))
+        ( pair
           ( λ s → eq-htpy (λ x → concat
             ( tr C (ap f (isretr-g x)) (s (g (f x))))
             ( ap (λ t → tr C t (s (g (f x)))) (coh x))
@@ -432,7 +432,7 @@ precomp-Π-equiv :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
   (C : B → UU l3) → ((b : B) → C b) ≃ ((a : A) → C (map-equiv e a))
 precomp-Π-equiv e C =
-  dpair
+  pair
     ( precomp-Π (map-equiv e) C)
     ( is-equiv-precomp-Π-is-equiv (map-equiv e) (is-equiv-map-equiv e) C)
 
@@ -482,15 +482,15 @@ abstract
   is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
     let retr-f = center (is-contr-map-is-equiv (is-equiv-precomp-f _ A) id) in
     is-equiv-has-inverse
-      ( dpair
+      ( pair
         ( pr1 retr-f)
         ( pair
           ( htpy-eq (ap pr1 (is-prop-is-contr'
             ( is-contr-map-is-equiv (is-equiv-precomp-f _ B) f)
-              ( dpair
+              ( pair
                 ( f ∘ (pr1 retr-f))
                 ( ap (λ (g : A → A) → f ∘ g) (pr2 retr-f)))
-            ( dpair id refl))))
+            ( pair id refl))))
           ( htpy-eq (pr2 retr-f)))) 
 
 -- Exercises
@@ -503,15 +503,15 @@ abstract
     (f g : (x : A) → B x) → is-equiv (htpy-inv {f = f} {g = g})
   is-equiv-htpy-inv f g =
     is-equiv-has-inverse
-      ( dpair htpy-inv
-        ( dpair
+      ( pair htpy-inv
+        ( pair
           ( λ H → eq-htpy (λ x → inv-inv (H x)))
           ( λ H → eq-htpy (λ x → inv-inv (H x)))))
 
 equiv-htpy-inv :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
   (f g : (x : A) → B x) → (f ~ g) ≃ (g ~ f)
-equiv-htpy-inv f g = dpair htpy-inv (is-equiv-htpy-inv f g)
+equiv-htpy-inv f g = pair htpy-inv (is-equiv-htpy-inv f g)
 
 abstract
   is-equiv-htpy-concat :
@@ -528,7 +528,7 @@ equiv-htpy-concat :
   {f g : (x : A) → B x} (H : f ~ g) (h : (x : A) → B x) →
   (g ~ h) ≃ (f ~ h)
 equiv-htpy-concat H h =
-  dpair (htpy-concat _ {h = h} H) (is-equiv-htpy-concat H h)
+  pair (htpy-concat _ {h = h} H) (is-equiv-htpy-concat H h)
 
 htpy-concat' :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
@@ -562,9 +562,9 @@ is-equiv-htpy-concat' :
   is-equiv (htpy-concat' f K)
 is-equiv-htpy-concat' f K =
   is-equiv-has-inverse
-    ( dpair
+    ( pair
       ( inv-htpy-concat' f K)
-      ( dpair
+      ( pair
         ( issec-inv-htpy-concat' f K)
         ( isretr-inv-htpy-concat' f K)))
 
@@ -573,7 +573,7 @@ equiv-htpy-concat' :
   (f : (x : A) → B x) {g h : (x : A) → B x} (K : g ~ h) →
   (f ~ g) ≃ (f ~ h)
 equiv-htpy-concat' f K =
-  dpair (htpy-concat' f K) (is-equiv-htpy-concat' f K)
+  pair (htpy-concat' f K) (is-equiv-htpy-concat' f K)
 
 -- Exercise 9.2
 
@@ -613,23 +613,23 @@ abstract
   is-equiv-is-equiv-postcomp {X = X} {Y = Y} f post-comp-equiv-f =
     let sec-f = center (is-contr-map-is-equiv (post-comp-equiv-f Y) id) in
     is-equiv-has-inverse
-      ( dpair
+      ( pair
         ( pr1 sec-f)
-        ( dpair
+        ( pair
           ( htpy-eq (pr2 sec-f))
           ( htpy-eq (ap pr1 (is-prop-is-contr'
             ( is-contr-map-is-equiv (post-comp-equiv-f X) f)
-            ( dpair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
-            ( dpair id refl))))))
+            ( pair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
+            ( pair id refl))))))
 
 abstract
   is-equiv-postcomp-is-equiv :
     {l1 l2 : Level} {X : UU l1} {Y : UU l2} (f : X → Y) → is-equiv f →
     ({l3 : Level} (A : UU l3) → is-equiv (λ (h : A → X) → f ∘ h))
   is-equiv-postcomp-is-equiv {X = X} {Y = Y} f is-equiv-f A =
-    is-equiv-has-inverse (dpair
+    is-equiv-has-inverse (pair
       ( λ (g : A → Y) → (inv-is-equiv is-equiv-f) ∘ g)
-      ( dpair
+      ( pair
         ( λ g → eq-htpy (htpy-right-whisk (issec-inv-is-equiv is-equiv-f) g))
         ( λ h → eq-htpy (htpy-right-whisk (isretr-inv-is-equiv is-equiv-f) h))))
 
@@ -683,22 +683,22 @@ abstract
 double-structure-swap :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
   Σ (Σ A B) (λ t → C (pr1 t)) → Σ (Σ A C) (λ t → B (pr1 t))
-double-structure-swap A B C (dpair (dpair a b) c) = (dpair (dpair a c) b)
+double-structure-swap A B C (pair (pair a b) c) = (pair (pair a c) b)
 
 htpy-double-structure-swap :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
   ((double-structure-swap A C B) ∘ (double-structure-swap A B C)) ~ id
-htpy-double-structure-swap A B C (dpair (dpair a b) c) =
-  eq-pair (dpair (eq-pair (dpair refl refl)) refl)
+htpy-double-structure-swap A B C (pair (pair a b) c) =
+  eq-pair (pair (eq-pair (pair refl refl)) refl)
 
 is-equiv-double-structure-swap :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
   is-equiv (double-structure-swap A B C)
 is-equiv-double-structure-swap A B C =
   is-equiv-has-inverse
-    ( dpair
+    ( pair
       ( double-structure-swap A C B)
-      ( dpair
+      ( pair
         ( htpy-double-structure-swap A C B)
         ( htpy-double-structure-swap A B C)))
 
@@ -720,8 +720,8 @@ abstract
       ( is-equiv-double-structure-swap A P B)
       ( is-contr-is-equiv'
         ( P a)
-        ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (dpair a b))
-        ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (dpair a b))
+        ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (pair a b))
+        ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (pair a b))
         ( is-contr-is-prop-inh (is-subtype-P a) p))
 
 {- For example, we show that homotopies are equivalent to identifications of
@@ -745,7 +745,7 @@ abstract
   is-contr-total-htpy-equiv :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
     is-contr (Σ (A ≃ B) (λ e' → htpy-equiv e e'))
-  is-contr-total-htpy-equiv (dpair f is-equiv-f) =
+  is-contr-total-htpy-equiv (pair f is-equiv-f) =
     is-contr-total-Eq-substructure
       ( is-contr-total-htpy f)
       ( is-subtype-is-equiv)
@@ -796,12 +796,12 @@ P ↔ Q = (pr1 P → pr1 Q) × (pr1 Q → pr1 P)
 equiv-iff :
   {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
   (P ↔ Q) → (pr1 P ≃ pr1 Q)
-equiv-iff P Q t = dpair (pr1 t) (is-equiv-is-prop (pr2 P) (pr2 Q) (pr2 t))
+equiv-iff P Q t = pair (pr1 t) (is-equiv-is-prop (pr2 P) (pr2 Q) (pr2 t))
 
 iff-equiv :
   {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
   (pr1 P ≃ pr1 Q) → (P ↔ Q)
-iff-equiv P Q equiv-PQ = dpair (pr1 equiv-PQ) (inv-is-equiv (pr2 equiv-PQ))
+iff-equiv P Q equiv-PQ = pair (pr1 equiv-PQ) (inv-is-equiv (pr2 equiv-PQ))
 
 abstract
   is-prop-iff :
@@ -915,7 +915,7 @@ abstract
 is-invertible-id-htpy-id-id :
   {l : Level} (A : UU l) →
   (id {A = A} ~ id {A = A}) → has-inverse (id {A = A})
-is-invertible-id-htpy-id-id A H = dpair id (dpair (htpy-refl id) H)
+is-invertible-id-htpy-id-id A H = pair id (pair (htpy-refl id) H)
 
 triangle-is-invertible-id-htpy-id-id :
   {l : Level} (A : UU l) →
@@ -923,7 +923,7 @@ triangle-is-invertible-id-htpy-id-id :
     ( (Σ-assoc (A → A) (λ g → (id ∘ g) ~ id) (λ s → ((pr1 s) ∘ id) ~ id)) ∘
       ( left-unit-law-Σ-map-gen
         ( λ s → ((pr1 s) ∘ id) ~ id)
-        ( is-contr-sec-is-equiv (is-equiv-id A)) (dpair id (htpy-refl id))))
+        ( is-contr-sec-is-equiv (is-equiv-id A)) (pair id (htpy-refl id))))
 triangle-is-invertible-id-htpy-id-id A H = refl
 
 abstract
@@ -936,12 +936,12 @@ abstract
       ( left-unit-law-Σ-map-gen
         ( λ s → ((pr1 s) ∘ id) ~ id)
         ( is-contr-sec-is-equiv (is-equiv-id A))
-        ( dpair id (htpy-refl id)))
+        ( pair id (htpy-refl id)))
       ( triangle-is-invertible-id-htpy-id-id A)
       ( is-equiv-left-unit-law-Σ-map-gen
         ( λ s → ((pr1 s) ∘ id) ~ id)
         ( is-contr-sec-is-equiv (is-equiv-id A))
-        ( dpair id (htpy-refl id)))
+        ( pair id (htpy-refl id)))
       ( is-equiv-Σ-assoc _ _ _)
 
 -- Exercise 9.8
@@ -950,7 +950,7 @@ abstract
   dependent-universal-property-empty :
     {l : Level} (P : empty → UU l) → is-contr ((x : empty) → P x)
   dependent-universal-property-empty P =
-    dpair
+    pair
       ( ind-empty {P = P})
       ( λ f → eq-htpy ind-empty)
 
@@ -994,9 +994,9 @@ abstract
     (P : coprod A B → UU l3) → is-equiv (ev-inl-inr P)
   dependent-universal-property-coprod P =
     is-equiv-has-inverse
-      ( dpair
+      ( pair
         ( λ p → ind-coprod P (pr1 p) (pr2 p))
-        ( dpair
+        ( pair
           ( ind-Σ (λ f g → eq-pair-triv (pair refl refl)))
           ( λ s → eq-htpy (ind-coprod _ (λ x → refl) λ y → refl))))
 
@@ -1008,9 +1008,10 @@ abstract
 
 abstract
   uniqueness-coprod :
-    {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {Y : UU l3}
-    (i : A → Y) (j : B → Y) →
-    ((l : Level) (X : UU l) → is-equiv (λ (s : Y → X) → pair (s ∘ i) (s ∘ j))) →
+    { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {Y : UU l3}
+    ( i : A → Y) (j : B → Y) →
+    ( (l : Level) (X : UU l) →
+      is-equiv (λ (s : Y → X) → pair' (s ∘ i) (s ∘ j))) →
     is-equiv (ind-coprod (λ t → Y) i j)
   uniqueness-coprod {Y = Y} i j H =
     is-equiv-is-equiv-precomp
@@ -1025,9 +1026,10 @@ abstract
 
 abstract
   universal-property-coprod-is-equiv-ind-coprod :
-    {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (X : UU l3)
-    (i : A → X) (j : B → X) → is-equiv (ind-coprod (λ t → X) i j) →
-    ((l4 : Level) (Y : UU l4) → is-equiv (λ (s : X → Y) → pair (s ∘ i) (s ∘ j)))
+    { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (X : UU l3)
+    ( i : A → X) (j : B → X) → is-equiv (ind-coprod (λ t → X) i j) →
+    ( (l4 : Level) (Y : UU l4) →
+      is-equiv (λ (s : X → Y) → pair' (s ∘ i) (s ∘ j)))
   universal-property-coprod-is-equiv-ind-coprod X i j is-equiv-ind-coprod l Y =
     is-equiv-comp
       ( λ s → pair (s ∘ i) (s ∘ j))
@@ -1050,12 +1052,10 @@ abstract
   dependent-universal-property-unit :
     {l : Level} (P : unit → UU l) → is-equiv (ev-star P)
   dependent-universal-property-unit P =
-    is-equiv-has-inverse
-      ( dpair
-        ( ind-unit)
-        ( dpair
-          ( λ p → refl)
-          ( λ f → eq-htpy (ind-unit refl))))
+    is-equiv-has-inverse'
+      ( ind-unit)
+      ( λ p → refl)
+      ( λ f → eq-htpy (ind-unit refl))
 
 abstract
   universal-property-unit :
@@ -1104,7 +1104,7 @@ Eq-sec f sec-f sec-f' =
 reflexive-Eq-sec :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
   (sec-f : sec f) → Eq-sec f sec-f sec-f
-reflexive-Eq-sec f (dpair g G) = dpair (htpy-refl g) (htpy-refl G)
+reflexive-Eq-sec f (pair g G) = pair (htpy-refl g) (htpy-refl G)
 
 Eq-sec-eq :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
@@ -1115,11 +1115,11 @@ abstract
   is-contr-total-Eq-sec :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (sec-f : sec f) →
     is-contr (Σ (sec f) (Eq-sec f sec-f))
-  is-contr-total-Eq-sec f (dpair g G) =
+  is-contr-total-Eq-sec f (pair g G) =
     is-contr-total-Eq-structure
       ( λ g' G' H → G ~ ((f ·l H) ∙h G'))
       ( is-contr-total-htpy g)
-      ( dpair g (htpy-refl g))
+      ( pair g (htpy-refl g))
       ( is-contr-total-htpy G)
 
 abstract
@@ -1142,9 +1142,9 @@ isretr-section-comp :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (sec-h : sec h) →
   ((section-comp f g h H sec-h) ∘ (section-comp' f g h H sec-h)) ~ id
-isretr-section-comp f g h H (dpair k K) (dpair l L) =
+isretr-section-comp f g h H (pair k K) (pair l L) =
   eq-Eq-sec g
-    ( dpair
+    ( pair
       ( K ·r l)
       ( ( htpy-assoc
           ( htpy-inv (H ·r (k ∘ l)))
@@ -1161,9 +1161,9 @@ sec-left-factor-retract-of-sec-composition :
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   sec h → (sec g) retract-of (sec f)
 sec-left-factor-retract-of-sec-composition {X = X} f g h H sec-h =
-  dpair
+  pair
     ( section-comp' f g h H sec-h)
-    ( dpair
+    ( pair
       ( section-comp f g h H sec-h)
       ( isretr-section-comp f g h H sec-h))
 
@@ -1177,7 +1177,7 @@ Eq-retr f retr-f retr-f' =
 reflexive-Eq-retr :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
   (retr-f : retr f) → Eq-retr f retr-f retr-f
-reflexive-Eq-retr f (dpair h H) = dpair (htpy-refl h) (htpy-refl H)
+reflexive-Eq-retr f (pair h H) = pair (htpy-refl h) (htpy-refl H)
 
 Eq-retr-eq :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
@@ -1188,11 +1188,11 @@ abstract
   is-contr-total-Eq-retr :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) (retr-f : retr f) →
     is-contr (Σ (retr f) (Eq-retr f retr-f))
-  is-contr-total-Eq-retr f (dpair h H) =
+  is-contr-total-Eq-retr f (pair h H) =
     is-contr-total-Eq-structure
       ( λ h' H' K → H ~ ((K ·r f) ∙h H'))
       ( is-contr-total-htpy h)
-      ( dpair h (htpy-refl _))
+      ( pair h (htpy-refl _))
       ( is-contr-total-htpy H)
 
 abstract
@@ -1215,9 +1215,9 @@ isretr-retraction-comp :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (retr-g : retr g) →
   ((retraction-comp f g h H retr-g) ∘ (retraction-comp' f g h H retr-g)) ~ id
-isretr-retraction-comp f g h H (dpair l L) (dpair k K) =
+isretr-retraction-comp f g h H (pair l L) (pair k K) =
   eq-Eq-retr h
-    ( dpair
+    ( pair
       ( k ·l L)
       ( ( htpy-assoc
           ( htpy-inv ((k ∘ l) ·l H))
@@ -1234,9 +1234,9 @@ sec-right-factor-retract-of-sec-left-factor :
   (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
   retr g → (retr h) retract-of (retr f)
 sec-right-factor-retract-of-sec-left-factor f g h H retr-g =
-  dpair
+  pair
     ( retraction-comp' f g h H retr-g)
-    ( dpair
+    ( pair
       ( retraction-comp f g h H retr-g)
       ( isretr-retraction-comp f g h H retr-g))
 
@@ -1261,9 +1261,9 @@ abstract
     is-equiv (postcomp-Π e)
   is-equiv-postcomp-Π e is-equiv-e =
     is-equiv-has-inverse
-      ( dpair
+      ( pair
         ( λ g i → inv-is-equiv (is-equiv-e i) (g i))
-        ( dpair
+        ( pair
           ( λ g → eq-htpy (λ i → issec-inv-is-equiv (is-equiv-e i) (g i)))
           λ f → eq-htpy (λ i → isretr-inv-is-equiv (is-equiv-e i) (f i))))
 
@@ -1271,7 +1271,7 @@ postcomp-Π-equiv :
   {l1 l2 l3 : Level} {I : UU l1} {A : I → UU l2} {B : I → UU l3}
   (e : (i : I) → (A i) ≃ (B i)) → ((i : I) → A i) ≃ ((i : I) → B i)
 postcomp-Π-equiv e =
-  dpair
+  pair
     ( postcomp-Π (λ i → map-equiv (e i)))
     ( is-equiv-postcomp-Π _ (λ i → is-equiv-map-equiv (e i)))
 
@@ -1286,23 +1286,23 @@ fiberwise-hom-hom-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
   hom-slice X f g → (x : X) → (fib f x) → (fib g x)
-fiberwise-hom-hom-slice f g (dpair h H) = fib-triangle f g h H
+fiberwise-hom-hom-slice f g (pair h H) = fib-triangle f g h H
 
 hom-slice-fiberwise-hom :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
   ((x : X) → (fib f x) → (fib g x)) → hom-slice X f g
 hom-slice-fiberwise-hom f g α =
-  dpair
-    ( λ a → pr1 (α (f a) (dpair a refl)))
-    ( λ a → inv (pr2 (α (f a) (dpair a refl))))
+  pair
+    ( λ a → pr1 (α (f a) (pair a refl)))
+    ( λ a → inv (pr2 (α (f a) (pair a refl))))
 
 issec-hom-slice-fiberwise-hom-eq-htpy :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) (α : (x : X) → (fib f x) → (fib g x)) (x : X) →
   (fiberwise-hom-hom-slice f g (hom-slice-fiberwise-hom f g α) x) ~ (α x)
-issec-hom-slice-fiberwise-hom-eq-htpy f g α .(f a) (dpair a refl) =
-  eq-pair (dpair refl (inv-inv (pr2 (α (f a) (dpair a refl)))))
+issec-hom-slice-fiberwise-hom-eq-htpy f g α .(f a) (pair a refl) =
+  eq-pair (pair refl (inv-inv (pr2 (α (f a) (pair a refl)))))
 
 issec-hom-slice-fiberwise-hom :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
@@ -1315,9 +1315,9 @@ isretr-hom-slice-fiberwise-hom :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
   ((hom-slice-fiberwise-hom f g) ∘ (fiberwise-hom-hom-slice f g)) ~ id
-isretr-hom-slice-fiberwise-hom f g (dpair h H) =
+isretr-hom-slice-fiberwise-hom f g (pair h H) =
   eq-pair
-    ( dpair
+    ( pair
       ( refl)
       ( eq-htpy (λ a → (inv-inv (H a)))))
 
@@ -1352,7 +1352,7 @@ hom-slice-equiv-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
   equiv-slice X f g → hom-slice X f g
-hom-slice-equiv-slice f g (dpair (dpair h is-equiv-h) H) = dpair h H
+hom-slice-equiv-slice f g (pair (pair h is-equiv-h) H) = pair h H
 
 {- We first prove two closely related generic lemmas that establishes 
    equivalences of subtypes -}
@@ -1389,7 +1389,7 @@ abstract
     (f : A → X) (g : B → X)
     (t : hom-slice X f g) → is-equiv (pr1 t) →
     is-fiberwise-equiv (fiberwise-hom-hom-slice f g t)
-  is-fiberwise-equiv-fiberwise-equiv-equiv-slice f g (dpair h H) =
+  is-fiberwise-equiv-fiberwise-equiv-equiv-slice f g (pair h H) =
     is-fiberwise-equiv-is-equiv-triangle f g h H
 
 left-factor-fiberwise-equiv-equiv-slice :
@@ -1436,7 +1436,7 @@ abstract
     ((x : X) → is-equiv (fiberwise-hom-hom-slice f g t x)) →
     is-equiv (pr1 t)
   is-equiv-hom-slice-is-fiberwise-equiv-fiberwise-hom-hom-slice
-    f g (dpair h H) =
+    f g (pair h H) =
     is-equiv-triangle-is-fiberwise-equiv f g h H
 
 abstract
@@ -1471,17 +1471,17 @@ fiberwise-hom-hom-over-morphism :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
   (i : X → Y) (f : A → X) (g : B → Y) →
   hom-over-morphism i f g → (x : X) → (fib f x) → (fib g (i x))
-fiberwise-hom-hom-over-morphism i f g (dpair h H) .(f a) (dpair a refl) =
-  dpair (h a) (inv (H a))
+fiberwise-hom-hom-over-morphism i f g (pair h H) .(f a) (pair a refl) =
+  pair (h a) (inv (H a))
 
 hom-over-morphism-fiberwise-hom :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
   (i : X → Y) (f : A → X) (g : B → Y) →
   ((x : X) → (fib f x) → (fib g (i x))) → hom-over-morphism i f g
 hom-over-morphism-fiberwise-hom i f g α =
-  dpair
-    ( λ a → pr1 (α (f a) (dpair a refl)))
-    ( λ a → inv (pr2 (α (f a) (dpair a refl))))
+  pair
+    ( λ a → pr1 (α (f a) (pair a refl)))
+    ( λ a → inv (pr2 (α (f a) (pair a refl))))
 
 issec-hom-over-morphism-fiberwise-hom-eq-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
@@ -1489,8 +1489,8 @@ issec-hom-over-morphism-fiberwise-hom-eq-htpy :
   (α : (x : X) → (fib f x) → (fib g (i x))) (x : X) →
   ( fiberwise-hom-hom-over-morphism i f g
     ( hom-over-morphism-fiberwise-hom i f g α) x) ~ (α x)
-issec-hom-over-morphism-fiberwise-hom-eq-htpy i f g α .(f a) (dpair a refl) =
-  eq-pair (dpair refl (inv-inv (pr2 (α (f a) (dpair a refl)))))
+issec-hom-over-morphism-fiberwise-hom-eq-htpy i f g α .(f a) (pair a refl) =
+  eq-pair (pair refl (inv-inv (pr2 (α (f a) (pair a refl)))))
 
 issec-hom-over-morphism-fiberwise-hom :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
@@ -1508,8 +1508,8 @@ isretr-hom-over-morphism-fiberwise-hom :
   (i : X → Y) (f : A → X) (g : B → Y) →
   ( ( hom-over-morphism-fiberwise-hom i f g) ∘
     ( fiberwise-hom-hom-over-morphism i f g)) ~ id
-isretr-hom-over-morphism-fiberwise-hom i f g (dpair h H) =
-  eq-pair (dpair refl (eq-htpy (λ a → (inv-inv (H a)))))
+isretr-hom-over-morphism-fiberwise-hom i f g (pair h H) =
+  eq-pair (pair refl (eq-htpy (λ a → (inv-inv (H a)))))
 
 abstract
   is-equiv-fiberwise-hom-hom-over-morphism :
@@ -1558,7 +1558,7 @@ abstract
     {l1 l2 : Level} (A : hSet l1) (B : hSet l2) (f : (pr1 A) → (pr1 B)) →
     is-equiv (has-inverse-is-half-adjoint-equivalence f)
   is-equiv-has-inverse-is-half-adjoint-equivalence-is-set
-    (dpair A is-set-A) (dpair B is-set-B) f =
+    (pair A is-set-A) (pair B is-set-B) f =
     is-equiv-tot-is-fiberwise-equiv
       ( λ g → is-equiv-tot-is-fiberwise-equiv
         ( λ G → is-equiv-pr1-is-contr
@@ -1608,7 +1608,7 @@ equiv-htpy-inv-con :
   ( H : f ~ g) (K : g ~ h) (L : f ~ h) →
   ( (H ∙h K) ~ L) ≃ (K ~ ((htpy-inv H) ∙h L))
 equiv-htpy-inv-con H K L =
-  dpair
+  pair
     ( htpy-inv-con H K L)
     ( is-equiv-htpy-inv-con H K L)
 
@@ -1625,7 +1625,7 @@ equiv-htpy-con-inv :
   ( H : f ~ g) (K : g ~ h) (L : f ~ h) →
   ( (H ∙h K) ~ L) ≃ (H ~ (L ∙h (htpy-inv K)))
 equiv-htpy-con-inv H K L =
-  dpair
+  pair
     ( htpy-con-inv H K L)
     ( is-equiv-htpy-con-inv H K L)
 
@@ -1673,7 +1673,7 @@ equiv-Π :
   { A' : UU l1} {B' : A' → UU l2} {A : UU l3} (B : A → UU l4)
   ( e : A' ≃ A) (f : (a' : A') → B' a' ≃ B (map-equiv e a')) →
   ( (a' : A') → B' a') ≃ ( (a : A) → B a)
-equiv-Π B e f = dpair (map-equiv-Π B e f) (is-equiv-map-equiv-Π B e f)
+equiv-Π B e f = pair (map-equiv-Π B e f) (is-equiv-map-equiv-Π B e f)
 
 HTPY-map-equiv-Π :
   { l1 l2 l3 l4 : Level}
@@ -1745,4 +1745,4 @@ automorphism-Π :
   ( e : A ≃ A) (f : (a : A) → B a ≃ B (map-equiv e a)) →
   ( (a : A) → B a) ≃ ((a : A) → B a)
 automorphism-Π e f =
-  dpair (map-automorphism-Π e f) (is-equiv-map-automorphism-Π e f)
+  pair (map-automorphism-Π e f) (is-equiv-map-automorphism-Π e f)

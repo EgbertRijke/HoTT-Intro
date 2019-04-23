@@ -61,8 +61,8 @@ Hom-Model-Base :
   { l1 l2 l3 l1' l2' l3' : Level} →
   Model-Base l1 l2 l3 → Model-Base l1' l2' l3' → UU _
 Hom-Model-Base
-  ( dpair ctx (dpair fam (dpair tm (dpair ctx-ext fam-ext))))
-  ( dpair ctx' (dpair fam' (dpair tm' (dpair ctx-ext' fam-ext')))) =
+  ( pair ctx (pair fam (pair tm (pair ctx-ext fam-ext))))
+  ( pair ctx' (pair fam' (pair tm' (pair ctx-ext' fam-ext')))) =
    Σ ( ctx → ctx')
      ( λ h-ctx → Σ ((Γ : ctx) → (fam Γ) → (fam' (h-ctx Γ)))
        ( λ h-fam →
@@ -82,7 +82,7 @@ Hom-Model-Base
 
 Assoc-Ctx-ext :
   { l1 l2 l3 : Level} (M : Model-Base l1 l2 l3) → UU (l1 ⊔ l2)
-Assoc-Ctx-ext (dpair ctx (dpair fam (dpair tm (dpair ctx-ext fam-ext)))) =
+Assoc-Ctx-ext (pair ctx (pair fam (pair tm (pair ctx-ext fam-ext)))) =
   ( Γ : ctx) (A : fam Γ) (B : fam (ctx-ext Γ A)) →
     Id (ctx-ext (ctx-ext Γ A) B) (ctx-ext Γ (fam-ext Γ A B))
 
@@ -91,11 +91,11 @@ Slice-Model-Base :
   ( assoc : Assoc-Ctx-ext M) →
   ( Γ : pr1 M) → Model-Base l2 l2 l3
 Slice-Model-Base
-  ( dpair ctx (dpair fam (dpair tm (dpair ctx-ext fam-ext)))) assoc Γ =
-  dpair (fam Γ)
-    ( dpair (λ A → fam (ctx-ext Γ A))
-      ( dpair (λ A B → tm (ctx-ext Γ A) B)
-        ( dpair (fam-ext Γ)
+  ( pair ctx (pair fam (pair tm (pair ctx-ext fam-ext)))) assoc Γ =
+  pair (fam Γ)
+    ( pair (λ A → fam (ctx-ext Γ A))
+      ( pair (λ A B → tm (ctx-ext Γ A) B)
+        ( pair (fam-ext Γ)
           ( λ A B C →
             fam-ext (ctx-ext Γ A) B (tr fam (inv (assoc Γ A B)) C)))))
 
@@ -107,5 +107,5 @@ Axiom-Empty-Context :
   { l1 l2 l3 : Level}
   (M : Model-Base l1 l2 l3) (empty-ctx : Empty-context M) → UU (l1 ⊔ l2)
 Axiom-Empty-Context
-  ( dpair ctx (dpair fam (dpair tm (dpair ctx-ext fam-ext)))) empty-ctx =
+  ( pair ctx (pair fam (pair tm (pair ctx-ext fam-ext)))) empty-ctx =
   is-equiv (ctx-ext empty-ctx)
