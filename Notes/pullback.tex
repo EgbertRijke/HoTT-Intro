@@ -3,7 +3,7 @@
 \chapter{Homotopy pullbacks}
 
 Suppose we are given a map $f:A\to B$, and type families $P$ over $A$, and $Q$ over $B$.
-Then any fiberwise map
+Then any family of maps
 \begin{equation*}
 g:\prd{x:A}P(x)\to Q(f(x))
 \end{equation*}
@@ -15,7 +15,7 @@ A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
 where $\total[f]{g}$ is defined as $\lam{(x,p)}(f(x),g(x,y))$. 
-We will show in \cref{thm:pb_fibequiv} that $g$ is a fiberwise equivalence\index{fiberwise equivalence} if and only if this square is a \emph{pullback square}\index{pullback square}. This generalization of \cref{thm:fib_equiv} is therefore abstracting away from the notion of fiberwise equivalence, and it serves as our motivating theorem to introduce pullbacks. The connection between pullbacks and fiberwise equivalences has an important role in the descent theorem\index{descent} in \cref{chap:descent}.
+We will show in \cref{thm:pb_fibequiv} that $g$ is a family of equivalences\index{family of equivalences} if and only if this square is a \emph{pullback square}\index{pullback square}. This generalization of \cref{thm:fib_equiv} is therefore abstracting away from the notion of families of equivalences, and it serves as our motivating theorem to introduce pullbacks. The connection between pullbacks and families of equivalences has an important role in the descent theorem\index{descent} in \cref{chap:descent}.
 
 \section{Cartesian squares}
 
@@ -438,7 +438,7 @@ By \cref{thm:is_pullback} it suffices to show that the gap map is an equivalence
 \begin{equation*}
 \mathsf{total}(\lam{x}{p}(\ttt,p))
 \end{equation*}
-The map $\lam{x}{p}(\ttt,p)$ is a fiberwise equivalence by \cref{ex:contr_in_sigma}, so it induces an equivalence on total spaces by \cref{thm:fib_equiv}.
+The map $\lam{x}{p}(\ttt,p)$ is a family of equivalences by \cref{ex:contr_in_sigma}, so it induces an equivalence on total spaces by \cref{thm:fib_equiv}.
 \end{proof}
 
 \begin{cor}
@@ -463,7 +463,7 @@ is a pullback square.
   Since the top map is an equivalence by \cref{ex:fib_replacement}, and the map on the right is an equivalence by \cref{lem:fib_pb}, it follows that the map on the left is an equivalence. The claim follows.
 \end{proof}
 
-\section{Fiberwise equivalences}
+\section{Families of equivalences}
 
 \begin{lem}\label{lem:pb_subst}
 Let $f:A\to B$, and let $Q$ be a type family over $B$. Then the square
@@ -485,7 +485,7 @@ The inverse of this map is given by $\lam{(x,((y,q),p))}(x,\mathsf{tr}_Q(p^{-1},
 \end{proof}
 
 \begin{thm}\label{thm:pb_fibequiv}
-Let $f:A\to B$, and let $g:\prd{a:A}P(a)\to Q(f(a))$ be a fiberwise transformation\index{fiberwise transformation|textit}. The following are equivalent:
+Let $f:A\to B$, and let $g:\prd{a:A}P(a)\to Q(f(a))$ be a family of maps\index{family of maps|textit}. The following are equivalent:
 \begin{enumerate}
 \item The commuting square
 \begin{equation*}
@@ -495,7 +495,7 @@ A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
-\item $g$ is a fiberwise equivalence.\index{fiberwise equivalence|textit}
+\item $g$ is a family of equivalences.\index{family of equivalences|textit}
 \end{enumerate}
 \end{thm}
 
@@ -506,7 +506,7 @@ The gap map is homotopic to the composite
 \sm{x:A}P(x) \arrow[r,"\total{g}"] & \sm{x:A}Q(f(x)) \arrow[r,"{\mathsf{gap}'}"] & A \times_B \Big(\sm{y:B}Q(y)\Big)
 \end{tikzcd}
 \end{equation*}
-where $\mathsf{gap}'$ is the gap map for the square in \cref{lem:pb_subst}. Since $\mathsf{gap}'$ is an equivalence, it follows by \cref{ex:3_for_2,thm:fib_equiv} that the gap map is an equivalence if and only if $g$ is a fiberwise equivalence.
+where $\mathsf{gap}'$ is the gap map for the square in \cref{lem:pb_subst}. Since $\mathsf{gap}'$ is an equivalence, it follows by \cref{ex:3_for_2,thm:fib_equiv} that the gap map is an equivalence if and only if $g$ is a family of equivalences.
 \end{proof}
 
 Our goal is now to extend \cref{thm:pb_fibequiv} to
@@ -537,12 +537,12 @@ X \arrow[r,swap,"i"] & Y
 \end{equation*}
 with $H: i\circ f ~ g \circ h$. The following are equivalent:
 \begin{enumerate}
-\item The square is a pullback square.\index{pullback square!characterized by fiberwise equivalence|textit}
+\item The square is a pullback square.\index{pullback square!characterized by families of equivalences|textit}
 \item The induced map on fibers
 \begin{equation*}
 \mathsf{fib\usc{}sq} : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
 \end{equation*}
-is a fiberwise equivalence.
+is a family of equivalences.
 \end{enumerate}
 \end{thm}
 
@@ -619,7 +619,7 @@ A \arrow[d,swap,"f"] \arrow[r,"i"] & B \arrow[d,"g"] \\
 X \arrow[r,swap,"h"] & Y.
 \end{tikzcd}
 \end{equation*}
-is a pullback square, is equivalent to the type of fiberwise equivalences
+is a pullback square, is equivalent to the type of families of equivalences
 \begin{equation*}
 \prd{x:X}\eqv{\fib{f}{x}}{\fib{g}{h(x)}}.
 \end{equation*}
@@ -638,7 +638,7 @@ a homotopy $H:h\circ \proj 1\htpy \proj 1\circ i$, and a term $p$ witnessing tha
 X \arrow[r,swap,"h"] & Y.
 \end{tikzcd}
 \end{equation*}
-is a pullback square, is equivalent to the type of fiberwise equivalences
+is a pullback square, is equivalent to the type of families of equivalences
 \begin{equation*}
 \prd{x:X}\eqv{P(x)}{Q(h(x))}.
 \end{equation*}

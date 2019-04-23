@@ -642,9 +642,9 @@ One way of phrasing the following corollary, is that $\Z$ is the `initial type e
 
 \section{The identity type of the circle}
 
-\begin{thm}\label{thm:circle_fundamental}
+\begin{lem}\label{thm:circle_fundamental}
 The total space $\sm{t:\sphere{1}}\mathcal{E}(t)$ of the fundamental cover of $\sphere{1}$ is contractible.\index{circle!fundamental cover!total space is contractible}
-\end{thm}
+\end{lem}
 
 \begin{proof}
   By \cref{cor:construct-contraction-fundamental-cover} it suffices to construct
@@ -697,13 +697,13 @@ Therefore the following computation completes the proof:
 \end{proof}
 \end{comment}
 
-\begin{cor}
+\begin{thm}\label{thm:eq-circle}
   The family of maps
   \begin{equation*}
     \prd{t:\sphere{1}} (\base=t)\to \mathcal{E}(t)
   \end{equation*}
   sending $\refl{\base}$ to $0_{\mathcal{E}}$ is a family of equivalences. In particular, the loop space of the circle is equivalent to $\Z$.
-\end{cor}
+\end{thm}
 
 \begin{proof}
   This is a direct corollary of \cref{thm:circle_fundamental,thm:id_fundamental}. 
@@ -755,7 +755,7 @@ commutes.
 \item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
 \item \label{ex:is_invertible_id_S1}
 \begin{subexenum}
-\item Construct a fiberwise equivalence
+\item Construct a family of equivalences
 \begin{equation*}
 \prd{t:\sphere{1}} \big(\eqv{(t=t)}{\Z}\big).
 \end{equation*}

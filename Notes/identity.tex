@@ -41,15 +41,15 @@ The induction principle postulates that for any type family
 %we can derive
 %\begin{prooftree}
 %\AxiomC{$\Gamma,\Delta[a/x,\refl{a}/p]\vdash \alpha : P(a,\refl{a})$}
-%\UnaryInfC{$\Gamma,x:A,p:\idtypevar{A}(a,x),\Delta\vdash \ind{a=}(\alpha,x,p):P(x,p)$}
+%\UnaryInfC{$\Gamma,x:A,p:\idtypevar{A}(a,x),\Delta\vdash \mathsf{path\usc{}ind}_a(\alpha,x,p):P(x,p)$}
 %\end{prooftree}
 there is a term
 \begin{equation*}
-\ind{a=} : P(a,\refl{a})\to \prd{x:A}{p:a=_A x}P(x,p)
+\mathsf{path\usc{}ind}_a : P(a,\refl{a})\to \prd{x:A}{p:a=_A x}P(x,p)
 \end{equation*}
 in context $\Gamma$, satisfying the computation rule
 \begin{equation*}
-\ind{a=}(y,x,p)\jdeq y.
+\mathsf{path\usc{}ind}_a(y,a,\refl{a})\jdeq y.
 \end{equation*}
 A term of type $a=_A x$ is also called an \define{identification}\index{identification|textbf} of $a$ with $x$, and sometimes it is called a \define{path}\index{path|textbf} from $a$ to $x$.
 The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination|textbf} or \define{path induction}\index{path induction|textbf}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}|textbf} for the identity type on $A$. 
@@ -85,7 +85,7 @@ By weakening the reflexive relation $R$ we obtain
 on which the induction principle is applicable.
 Thus we see that by the induction principle for identity types we have a term
 \begin{equation*}
-\ind{x=} : R(x,x)\to \prd{y:A}(x=_A y)\to R(x,y)
+\mathsf{path\usc{}ind}_x : R(x,x)\to \prd{y:A}(x=_A y)\to R(x,y)
 \end{equation*}
 so it suffices to construct a term of type $R(x,x)$, which we have by reflexivity of $R$.
 \end{constr}
@@ -117,7 +117,7 @@ We construct the concatenation operation by path induction. It suffices to const
 Here we take $\mathsf{concat}(\refl{x})_z \jdeq \idfunc[(x=z)]$. 
 Explicitly, the term we have constructed is
 \begin{equation*}
-\lam{x}\rec{x=}(\lam{z}\idfunc[(\id{x}{z})]):\prd{x,y:A} (x=y)\to \prd{z:A} (y=z)\to (x=z).
+\lam{x}\mathsf{path\usc{}ind}_x(\lam{z}\idfunc[(\id{x}{z})]):\prd{x,y:A} (x=y)\to \prd{z:A} (y=z)\to (x=z).
 \end{equation*}
 To obtain a term of the asserted type we need to swap the order of the arguments $p:x=y$ and $z:A$, using \autoref{ex:swap}.
 \end{constr}
@@ -229,7 +229,7 @@ Finally, we construct $\mathsf{ap\usc{}comp}(f,g)$ by identity elimination, taki
 \end{equation*}
 \end{constr}
 
-\begin{defn}
+\begin{defn}\label{defn:ap-preserve}
 Let $f:A\to B$ be a map. Then there are identifications
 \begin{align*}
 \mathsf{ap\usc{}refl}(f,x) & : \id{\ap{f}{\refl{x}}}{\refl{f}(x)} \\

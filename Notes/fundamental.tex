@@ -3,15 +3,21 @@
 \chapter{The fundamental theorem of identity types}\label{chap:fundamental}
 \chaptermark{The fundamental theorem}
 
-\section{Fiberwise equivalences}
+In many situations in homotopy type theory it is important to know what the identity types are. For example, we have used a characterization of the identity types of the fibers of a map in order to conclude that any equivalence is a contractible map. Therefore it is a routine task to give for any given type of interest, a characterization of its identity type. The fundamental theorem of identity types is our main tool to carry out such characterizations. To name a few applications, we will show in \cref{thm:eq_nat} that the identity type of the natural numbers is equivalent to its observational equality, and we will show in \cref{thm:eq-circle} that the loop space of the circle is equivalent to $\Z$.
+
+In order to prove the fundamental theorem of identity types, we first need the basic fact that a family of maps is a family of equivalences if and only if it induces an equivalence on total spaces. This fact will also be used in many other situations, most notably in the characterization of pullback squares in \cref{cor:pb_fibequiv}.
+
+Our first application of the fundamental theorem of identity types in the present lecture is a simple proof that any equivalence is an embedding. Embeddings are maps that induce equivalences on identity types, i.e., they are the homotopical analogue of injective maps. In our second application we characterize the identity types of coproducts.
+
+\section{Families of equivalences}
 Consider a family
 \begin{equation*}
 f : \prd{x:A}B(x)\to C(x)
 \end{equation*}
-of maps. Such $f$ is also called a \define{fiberwise map} or \define{fiberwise transformation}.
+of maps.
 
 \begin{defn}
-We define a map
+We define the map
 \begin{equation*}
 \total{f}:\sm{x:A}B(x)\to\sm{x:A}C(x).
 \end{equation*}
@@ -19,90 +25,39 @@ by $\lam{(x,y)}(x,f(x,y))$.
 \end{defn}
 
 \begin{lem}\label{lem:fib_total}
-For any fiberwise transformation $f:\prd{x:A}B(x)\to C(x)$, and any $a:A$ and $c:C(a)$, there is an equivalence
-\begin{equation*}
-\eqv{\fib{f(a)}{c}}{\fib{\total{f}}{\pairr{a,c}}}.
-\end{equation*}
+  For any family of maps $f:\prd{x:A}B(x)\to C(x)$ and any $t:\sm{x:A}C(x)$,
+  there is an equivalence
+  \begin{equation*}
+    \eqv{\fib{\total{f}}{t}}{\fib{f(\proj 1(t))}{\proj 2(t)}}.
+  \end{equation*}
 \end{lem}
 
 \begin{proof}
-We first define a map $\varphi_{\pairr{a,c}}:{\fib{f(a)}{c}}\to \fib{\total{f}}{\pairr{a,c}}$ by $\Sigma$-induction.
-It suffices to define a term of type
-\begin{equation*}
-\prd{b:B(a)} (f(a,b)=c)\to \fib{\total{f}}{\pairr{a,c}}
-\end{equation*}
-for every $a:A$ and $c:C(a)$. 
-Since the endpoint of the identification $f(a,b)=c$ is free, we may proceed by path induction. 
-It suffices to construct a term of type $\prd{b:B(a)} \fib{\total{f}}{\pairr{a,f(a,b)}}$.
-For $b:B$, we take
-\begin{equation*}
-\pairr{\pairr{a,b},\refl{\pairr{a,f(a,b)}}}:\fib{\total{f}}{\pairr{a,f(a,b)}}.
-\end{equation*}
-Since we have defined $\varphi_{\pairr{a,c}}$ for all $a:A$ and $c:C(a)$, note that we also obtain a map
-\begin{equation*}
-\varphi_t:{\fib{f(\proj 1(t))}{\proj 2(t)}}\to \fib{\total{f}}{t}
-\end{equation*}
-for every $t:\sm{x:A}C(x)$.
+  For any $p:\fib{\total{f}}{t}$ we define $\varphi(t,p):\fib{\proj 1(t)}{\proj 2(t)}$ by $\Sigma$-induction on $p$. Therefore it suffices to define $\varphi(t,(s,\alpha)):\fib{\proj 1(t)}{\proj 2 (t)}$ for any $s:\sm{x:A}B(x)$ and $\alpha:\total{f}(s)=t$. Now we proceed by path induction on $\alpha$, so it suffices to define $\varphi(\total{f}(s),(s,\refl{})):\fib{f(\proj 1(\total{f}(s)))}{\proj 2(\total{f}(s))}$. Finally, we use $\Sigma$-induction on $s$ once more, so it suffices to define
+  \begin{equation*}
+    \varphi((x,f(x,y)),((x,y),\refl{})):\fib{f(x)}{f(x,y)}.
+  \end{equation*}
+  Now we take as our definition
+  \begin{equation*}
+    \varphi((x,f(x,y)),((x,y),\refl{}))\defeq(y,\refl{}).
+  \end{equation*}
 
-Our next goal is to define a map
-\begin{equation*}
-\psi_{(a,c)}:{\fib{\total{f}}{a,c}}\to{\fib{f(a)}{c}}.
-\end{equation*}
-for every $a:A$ and $c:C(a)$. In fact it will be easier to construct more generally the map
-\begin{equation*}
-\psi_t : \fib{\total{f}}{t}\to \fib{f(\proj 1(t))}{\proj 2(t)}.
-\end{equation*}
-for every $t:\sm{x:A}C(x)$. Let us write $t_1\defeq \proj 1(t)$ and $t_2\defeq \proj 2(t)$.
-By $\Sigma$-induction it suffices to construct a term of type
-\begin{equation*}
-\prd{s:\sm{x:A}B(x)} (\total{f}(s)=t)\to \fib{f(t_1)}{t_2},
-\end{equation*}
-We apply $\Sigma$-induction once more, and we need to construct a term of type
-\begin{equation*}
-\prd{x:A}{y:B(x)} (\total{f}(x,y)=t)\to \fib{f(t_1)}{t_2}.
-\end{equation*}
-Let $x:A$ and $y:B(x)$. Since the endpoint of the identification $\total{f}(x,y)=t$ is free, we proceed by path induction. Our goal is now to construct a term of type
-\begin{equation*}
-\fib{f(x)}{f(x,y)}. 
-\end{equation*}
-Here we simply take $\pairr{y,\refl{f(x,y)}}$, completing the construction of $\psi$.
-
-To show that $\psi$ is a retraction of $\varphi$, we construct an identification 
-\begin{equation*}
-\psi(\varphi(\pairr{b,p}))=\pairr{b,p}
-\end{equation*}
-for each $b:B(a)$ and $p:f(a,b)=c$. We proceed by path induction on $p:f(a,b)=c$. Our goal is now to show that
-\begin{equation*}
-\psi(\varphi(b,\refl{f(a,b)}))=\pairr{b,\refl{f(a,b)}}
-\end{equation*}
-By definition we have
-\begin{align*}
-\varphi\pairr{b,\refl{f(a,b)}} & \jdeq \pairr{\pairr{a,b},\refl{\pairr{a,f(a,b)}}} \\
-\psi\pairr{\pairr{a,b},\refl{\pairr{a,f(a,b)}}} & \jdeq\pairr{b,\refl{f(a,b)}}.
-\end{align*}
-Thus, we simply take $\refl{\pairr{b,\refl{f(a,b)}}}$ to complete the goal of showing that $\psi$ is a retraction of $\varphi$.
-
-To show that $\psi_t$ is a section of $\varphi_t$ for every $t:\sm{x:A}C(x)$, we construct an identification 
-\begin{equation*}
-\varphi(\psi\pairr{\pairr{x,b},r})=\pairr{\pairr{x,b},r}
-\end{equation*}
-for each $x:A$, $y:B(x)$, and $r:\total{f}(x,y)=t$. 
-We proceed by path induction on $r$, so our goal is to show
-\begin{equation*}
-\varphi(\psi(\pairr{x,y},\refl{\pairr{x,f(x,y)}}))=\pairr{x,f(x,y)}.
-\end{equation*}
-By definition we have
-\begin{align*}
-\psi(\pairr{x,y},\refl{\pairr{x,f(x,y)}})& \jdeq \pairr{y,\refl{f(x,y)}} \\
-\varphi\pairr{y,\refl{f(x,y)}} & \jdeq \pairr{\pairr{x,y},\refl{\pairr{x,f(x,y)}}}
-\end{align*}
-Thus, we simply take $\refl{\pairr{x,f(x,y)}}$ to complete the goal of showing that $\psi$ is a section of $\varphi$.
+  For the proof that this map is an equivalence we construct a map
+  \begin{equation*}
+    \psi(t) : \fib{f(\proj 1(t))}{\proj 2(t)}\to\fib{\total{f}}{t}
+  \end{equation*}
+  equipped with homotopies $G(t):\varphi(t)\circ\psi(t)\htpy\idfunc$ and $H(t):\psi(t)\circ\varphi(t)\htpy\idfunc$. In each of these definitions we use $\Sigma$-induction and path induction all the way through, until an obvious choice of definition becomes apparent. We define $\psi(t)$, $G(t)$, and $H(t)$ as follows:
+  \begin{align*}
+    \psi((x,f(x,y)),(y,\refl{})) & \defeq ((x,y),\refl{}) \\
+    G((x,f(x,y)),(y,\refl{})) & \defeq \refl{} \\
+    H((x,f(x,y)),((x,y),\refl{})) & \defeq \refl{}.\qedhere
+  \end{align*}
 \end{proof}
 
 \begin{thm}\label{thm:fib_equiv}
-Let $f:\prd{x:A}B(x)\to C(x)$ be a fiberwise transformation. The following are logically equivalent:
+Let $f:\prd{x:A}B(x)\to C(x)$ be a family of maps. The following are equivalent:
 \begin{enumerate}
-\item For each $x:A$, the map $f(x)$ is an equivalence. In this case we say that $f$ is a \define{fiberwise equivalence}.
+\item For each $x:A$, the map $f(x)$ is an equivalence. In this case we say that $f$ is a \define{family of equivalences}.
 \item The map $\total{f}:\sm{x:A}B(x)\to\sm{x:A}C(x)$ is an equivalence.
 \end{enumerate}
 \end{thm}
@@ -111,41 +66,146 @@ Let $f:\prd{x:A}B(x)\to C(x)$ be a fiberwise transformation. The following are l
 By \cref{thm:equiv_contr,thm:contr_equiv} it suffices to show that $f(x)$ is a contractible map for each $x:A$, if and only if $\total{f}$ is a contractible map. Thus, we will show that $\fib{f(x)}{c}$ is contractible if and only if $\fib{\total{f}}{x,c}$ is contractible, for each $x:A$ and $c:C(x)$. However, by \autoref{lem:fib_total} these types are equivalent, so the result follows by \cref{ex:contr_equiv}.
 \end{proof}
 
-\section{The fundamental theorem}
+Now consider the situation where we have a map $f:A\to B$, and a family $C$ over $B$. Then we have the map
+\begin{equation*}
+  \lam{(x,z)}(f(x),z):\sm{x:A}C(f(x))\to\sm{y:B}C(y).
+\end{equation*}
+We claim that this map is an equivalence when $f$ is an equivalence. The technique to prove this claim is the same as the technique we used in \cref{thm:fib_equiv}: first we note that the fibers are equivalent to the fibers of $f$, and then we use the fact that a map is an equivalence if and only if its fibers are contractible to finish the proof.
+
+\begin{lem}\label{lem:total-equiv-base-equiv}
+  Consider an equivalence $e:A\simeq B$, and let $C$ be a type family over $B$. Then the map
+  \begin{equation*}
+    \sigma_f(C) \defeq\lam{(x,z)}(f(x),z):\sm{x:A}C(f(x))\to\sm{y:B}C(y)
+  \end{equation*}
+  is an equivalence.
+\end{lem}
+
+\begin{proof}
+  We claim that for each $t:\sm{y:B}C(y)$ there is an equivalence
+  \begin{equation*}
+    \fib{\sigma_f(C)}{t}\simeq \fib{f}{\proj 1(t)}.
+  \end{equation*}
+  We prove this by constructing
+  \begin{align*}
+    \varphi(t) & : \fib{\sigma_f(C)}{t}\to\fib{f}{\proj 1 (t)} \\
+    \psi(t) & : \fib{f}{\proj 1(t)} \to\fib{\sigma_f(C)}{t} \\
+    G(t) & : \varphi\circ\psi\htpy\idfunc\\
+    H(t) & : \psi\circ\varphi\htpy\idfunc.
+  \end{align*}
+  The construction of these functions and homotopies is by using $\Sigma$-induction and path induction all the way through, just as in the proof of \cref{lem:fib_total}. We list the definitions
+  \begin{align*}
+    \varphi((f(x),z),((x,z),\refl{})) & \defeq (x,\refl{}) \\
+    \psi((f(x),z),(x,\refl{})) & \defeq ((x,z),\refl{}) \\
+    G((f(x),z),(x,\refl{})) & \defeq \refl{} \\
+    H((f(x),z),((x,z),\refl{})) & \defeq \refl{}.
+  \end{align*}
+  Now the claim follows, since we see that $\varphi$ is a contractible map if and only if $f$ is a contractible map.
+\end{proof}
+
+We now combine \cref{thm:fib_equiv,lem:total-equiv-base-equiv}.
+
+\begin{defn}
+  Consider a map $f:A\to B$ and a family of maps
+  \begin{equation*}
+    g:\prd{x:A}C(x)\to D(f(x)),
+  \end{equation*}
+  where $C$ is a type family over $A$, and $D$ is a type family over $B$. In this situation we also say that $g$ is a \define{family of maps over $f$}. Then we define
+  \begin{equation*}
+    \total[f]{g}:\sm{x:A}C(x)\to\sm{y:B}D(y)
+  \end{equation*}
+  by $\total[f]{g}(x,z)\defeq (f(x),g(x,z))$.
+\end{defn}
+
+\begin{thm}
+  Suppose that $g$ is a family of maps over $f$, and suppose that $f$ is an equivalence. Then the following are equivalent:
+  \begin{enumerate}
+  \item The family of maps $g$ over $f$ is a family of equivalences.
+  \item The map $\total[f]{g}$ is an equivalence.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  Note that we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}
+      \sm{x:A}C(x) \arrow[rr,"{\total[f]{g}}"] \arrow[dr,swap,"\total{g}"]& & \sm{y:B}D(y) \\
+      & \sm{x:A}D(f(x)) \arrow[ur,swap,"{\lam{(x,z)}(f(x),z)}"]
+    \end{tikzcd}
+  \end{equation*}
+  By the assumption that $f$ is an equivalence, it follows that the map $\sm{x:A}D(f(x))\to \sm{y:B}D(y)$ is an equivalence. Therefore it follows that $\total[f]{g}$ is an equivalence if and only if $\total{g}$ is an equivalence. Now the claim follows, since $\total{g}$ is an equivalence if and only if $g$ if a family of equivalences.
+\end{proof}
+
+\section{Identity systems}
+
+The fundamental theorem (\cref{thm:id_fundamental}) tells us when, for a type family $B$ over $A$ and a fixed $a:A$, there is a family of equivalences $\prd{x:A}(a=x)\simeq B(x)$. In other words, it tells us when a family $B$ is a characterization of the identity type of $A$.
 
 \begin{thm}\label{thm:id_fundamental}
 Let $A$ be a type with $a:A$, and let $B$ be be a type family over $A$ with $b:B(a)$.
-Then  the following are logically equivalent:
-\begin{enumerate}
-\item The canonical family of maps
+Then  the following are logically equivalent for any family of maps
 \begin{equation*}
-\rec{a{=}}(b):\prd{x:A} (a=x)\to B(x)
+  f:\prd{x:A}(a=x)\to B(x).
 \end{equation*}
-is a fiberwise equivalence.
+\begin{enumerate}
+\item The family of maps $f$ is a family of equivalences.
 \item The total space
 \begin{equation*}
 \sm{x:A}B(x)
 \end{equation*}
 is contractible.
 \end{enumerate}
+In particular the canonical family of maps
+\begin{equation*}
+\mathsf{path\usc{}ind}_a(b):\prd{x:A} (a=x)\to B(x)
+\end{equation*}
+is a family of equivalences if and only if $\sm{x:A}B(x)$ is contractible.
 \end{thm}
 
 \begin{proof}
-By \autoref{thm:fib_equiv} it follows that the fiberwise transformation $\rec{a{=}}(b)$ is a fiberwise equivalence if and only if it induces an equivalence
+By \autoref{thm:fib_equiv} it follows that the family of maps $\mathsf{path\usc{}ind}_a(b)$ is a family of equivalences if and only if it induces an equivalence
 \begin{equation*}
 \eqv{\Big(\sm{x:A}a=x\Big)}{\Big(\sm{x:A}B(x)\Big)}
 \end{equation*}
 on total spaces. We have that $\sm{x:A}a=x$ is contractible. Now it follows by \cref{ex:contr_equiv}, applied in the case
 \begin{equation*}
 \begin{tikzcd}
-\sm{x:A}a=x \arrow[rr,"\total{\rec{a{=}}(b)}"] \arrow[dr,swap,"\eqvsym"] & & \sm{x:A}B(x) \arrow[dl] \\
+\sm{x:A}a=x \arrow[rr,"\total{\mathsf{path\usc{}ind}_a(b)}"] \arrow[dr,swap,"\eqvsym"] & & \sm{x:A}B(x) \arrow[dl] \\
 & \unit
 \end{tikzcd}
 \end{equation*}
-that $\total{\rec{a{=}}(b)}$ is an equivalence if and only if $\sm{x:A}B(x)$ is contractible.
+that $\total{\mathsf{path\usc{}ind}_a(b)}$ is an equivalence if and only if $\sm{x:A}B(x)$ is contractible.
 \end{proof}
 
-As an application of the fundamental theorem we show that equivalences are embeddings. The notion of embeddings is the homotopically correct notion of injective maps.
+As could be expected, when $B$ is equivalent to the identity type of $A$ we can also prove a variant of path induction for $B$.
+
+\begin{defn}
+  Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. We say that $B$ is an \define{(unary) identity system} if for every family $P$ indexed by $x:A$ and $y:B(x)$, the map
+  \begin{equation*}
+    \Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to P(a,\refl{a})
+  \end{equation*}
+  has a section.
+\end{defn}
+
+\begin{thm}
+  Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. Then the following are equivalent:
+  \begin{enumerate}
+  \item The family $B$ is an identity system.
+  \item The total space of $B$ is contractible.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  Note that we have the following commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}
+      \prd{t:\sm{x:A}B(x)}P(t) \arrow[rr,"\mathsf{ev\usc{}pair}"] \arrow[dr,swap,"{\mathsf{ev\usc{}pt}(a,b)}"] & & \prd{x:A}{y:B(x)}P(x,y) \arrow[dl,"{\lam{f}f(a,b)}"] \\
+      & P(a,b)
+    \end{tikzcd}
+  \end{equation*}
+  In this diagram the top map has a section. Therefore it follows by \cref{ex:3_for_2} that the left map has a section if and only if the right map has a section. Notice that the left map has a section for all $P$ if and only if $\sm{x:A}B(x)$ satisfies singleton induction, which is by \cref{thm:contractible} equivalent to $\sm{x:A}B(x)$ being contractible.
+\end{proof}
+
+\section{Embeddings}
+As an application of the fundamental theorem we show that equivalences are embeddings. The notion of embedding is the homotopical analogue of the set theoretic notion of injective map.
 
 \begin{defn}
 An \define{embedding}\index{embedding|textbf} is a map $f:A\to B$ satisfying the property that
@@ -233,176 +293,9 @@ The first and fourth case are easily shown by path induction on $p$, and the sec
 \end{constr}
 \end{comment}
 
-\section{Equivalences of total spaces}
-
-Given a map $f : A \to B$ and a type family $C : B \to \UU$, there is an induced map
-\begin{equation*}
-\lambda{(x,z)}{f(x),z} : \sm{x:A}C(f(x)) \to \sm{y:B}C(y).
-\end{equation*}
-Using the results of this lecture, we will show in this section that this map is an equivalence whenever $f$ is an equivalence. 
-As a first step we show that if $f$ has a section, then also the induced map on total spaces has a section.
-
-\begin{lem}
-Consider a type family $C:B\to\UU$, and a map $f:A\to B$. If $f$
-has a section, then so does the map
-\begin{equation*}
-\lam{(x,z)}(f(x),z) : \sm{x:A}C(f(x)) \to \sm{y:B}C(y).
-\end{equation*}
-\end{lem}
-
-\begin{proof}
-Suppose $g:B\to A$ is a map equipped with a homotopy $G : f \circ g \htpy \idfunc$. We define a map
-\begin{equation*}
-\sm{y:B} C(y) \to \sm{x:A} C(f(x))
-\end{equation*}
-by $\lam{(y,z)}(g(y),\mathsf{tr}_C(G(y)^{-1},z))$. To see that this map is a section of $\lam{(x,z)}(f(x),z)$, we have to construct an identification
-\begin{equation*}
-(f(g(x)),\mathsf{tr}_C(G(y))^{-1},z)=(x,z). 
-\end{equation*}
-We construct an identification of the form $\mathsf{eq\usc{}pair}(p,q)$ where $p:f(g(y))=y$ and $q:\mathsf{tr}_C(p,tr_C(G(y))^{-1},z))=z$. Of course, we take $p\defeq G(y)$.
-Then we calculate
-\begin{align*}
-\mathsf{tr}_C(p,tr_C(G(y)^{-1},z))
-& = \mathsf{tr}_C(\ct{G(y)^{-1}}{G(y)},z) \\
-& = z
-\end{align*}
-to obtain the identification $q$.
-\end{proof}
-
-\begin{rmk}
-To see that $\lam{(x,z)}(f(x),z)$ is an equivalence whenever $f$ is an equivalence, it remains to show that the function $\lam{(y,z)}(g(y),\mathsf{tr}_C(G(y)^{-1},z))$ is a retraction. However, in order to construct an identification
-\begin{equation*}
-(g(f(x)),\mathsf{tr}_C(G(y)^{-1},z)) = (x,z)
-\end{equation*}
-for any $x:A$ and $z:C(f(x))$, we run into a coherence problem, which we will now describe. First we note that we have a homotopy $H:g\circ f ~ \idfunc$, so we obtain an identification $H(x): g(f(x))= x$. However, now it remains to show that
-\begin{equation*}
-\mathsf{tr}_{C\circ f}(H(x),\mathsf{tr}_C(G(y)^{-1},z))=z.
-\end{equation*}
-We have the following lemma to compute transports in families of the form $C\circ f$.
-\end{rmk}
-
-\begin{lem}
-Consider a map $f:A\to B$ and a type family $C:B\to \UU$. Then, for any path $p:x=y$ in $A$, and any $z:C(f(x))$, there is an identification
-\begin{equation*}
-\mathsf{tr}_{C\circ f}(p,z)=\mathsf{tr}_C(\ap{f}{p},z).
-\end{equation*}
-\end{lem}
-
-\begin{proof}
-Immediate by identification elimination on $p:x=y$.
-\end{proof}
-
-Thus, we see that it suffices to construct an identification
-\begin{equation*}
-\mathsf{tr}_{C}(\ap{f}{H(x)},\mathsf{tr}_C(G(f(x))^{-1},z))=z.
-\end{equation*}
-We note that this iterated transport can be identified with
-\begin{equation*}
-\mathsf{tr}_C(\ct{G(f(x))^{-1}}{\ap{f}{H(x)}},z),
-\end{equation*}
-so it suffices to show that 
-\begin{equation*}
-G(f(x)) = \ap{f}{H(x)}.
-\end{equation*}
-This is a coherence condition between the homotopies $G$ and $H$ that needs to be satisfied.
-
-\begin{defn}
-A map $f:A\to B$ is said to be a \define{half-adjoint equivalence} if it comes equipped with
-\begin{align*}
-g & : B \to A\\
-G & : f\circ g \htpy \idfunc[B] \\
-H & : g\circ f \htpy \idfunc[A] \\
-K & : G\cdot f \htpy f\cdot H.
-\end{align*}
-We write $\mathsf{half\usc{}adj}(f)$\index{half_adj(f)@{$\mathsf{half\usc{}adj}(f)$}|textbf} for the type of such quadruples $(g,G,H,K)$.
-\end{defn}
-
-To show that every equivalence is a half-adjoint equivalence, we also introduce the notion of \emph{path-split} maps.
-
-\begin{defn}
-We say that a map $f:A\to B$ is \define{path-split}\index{path-split|textbf} if $f$ has a section, and for each $x,y:A$ the map
-\begin{equation*}
-\apfunc{f}(x,y):(x=y)\to (f(x)=f(y))
-\end{equation*}
-also has a section. We write $\mathsf{path\usc{}split}(f)$\index{path_split(f)@{$\mathsf{path\usc{}split}(f)$}|textbf} for the type
-\begin{equation*}
-\mathsf{sec}(f)\times\prd{x,y:A}\mathsf{sec}(\apfunc{f}(x,y)).
-\end{equation*}
-\end{defn}
-
-\begin{thm}\label{thm:half_adj}
-Let $f:A\to B$ be a map. Then the following are equivalent:
-\begin{enumerate}
-\item $f$ is an equivalence.
-\item $f$ is path-split.
-\item $f$ is a half-adjoint equivalence.
-\end{enumerate}
-\end{thm}
-
-\begin{proof}
-To see that (i) implies (ii) we note that any equivalence has a section, and its action on paths is an equivalence by \cref{cor:emb_equiv} so again it has a section.
-
-To show that (ii) implies (iii), assume that $f$ is path-split. Thus we have $(g,G):\mathsf{sec}(f)$, and the assumption that $\apfunc{f}:(x=y)\to (f(x)=f(y))$ has a section for every $x,y:A$ gives us a term
-\begin{equation*}
-s : \prd{x:A}\fib{\apfunc{f}}{G(f(x))}.
-\end{equation*}
-Using $s$, we obtain the term
-\begin{equation*}
-((\lam{x}\proj 1(s(x))),(\lam{x}\proj 2(s (x)))) : \sm{H:\prd{x:A}g(f(x))=x}\prd{x:A}G(f(x))=\ap{f}{H(x)}.
-\end{equation*}
-In other words, we obtain a homotopy $H:g\circ f\htpy \idfunc[A]$ and a homotopy $K:G\cdot f\htpy f\cdot H$, showing that $f$ is a half-adjoint equivalence.
-
-To see that (iii) implies (i), we simply note that any half-adjoint equivalence has in particular an inverse, from which we obtain that $f$ is an equivalence.
-\end{proof}
-
-\begin{rmk}
-Note that \cref{thm:half_adj} does \emph{not} show that it is possible to construct a homotopy $K : G\cdot f \htpy f\cdot H$ for any
-\begin{align*}
-g & : B \to A\\
-G & : f\circ g \htpy \idfunc[B] \\
-H & : g\circ f \htpy \idfunc[A].
-\end{align*}
-Indeed, in the proof of \cref{thm:half_adj} we construct a \emph{particular} homotopy $H:g\circ f \htpy \idfunc[A]$ for which we can also construct a further homotopy $K : G\cdot f \htpy f\cdot H$.
-\end{rmk}
-
-We now reach the main result of the current section.
-
-\begin{thm}
-Suppose $f:A\to B$ is an equivalence, and that $C$ is a type family over $B$. Then the map
-\begin{equation*}
-\lam{(x,z)}(f(x),z) : \sm{x:A}C(f(x)) \to \sm{y:B}C(y)
-\end{equation*}
-is an equivalence.
-\end{thm}
-
-\begin{defn}
-Consider type families $P:A\to \UU$ and $Q:B\to\UU$, and consider a map $f:A\to B$ and a fiberwise transformation $g:\prd{x:A}P(x)\to Q(f(x))$. Then we define a map $\total[f]{g}$ equipped with a homotopy witnessing that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-\sm{x:A}C(x) \arrow[r,"{\total[f]{g}}"] \arrow[d,swap,"\proj 1"] &
-\sm{y:B}D(y) \arrow[d,"\proj 1"] \\
-A \arrow[r,swap,"f"] & B
-\end{tikzcd}
-\end{equation*}
-commutes, by $\total[f]{g}(x,y)\defeq (f(x),g(x,y))$, with the obvious homotopy $\lam{(x,y)}\refl{f(x)}$. 
-\end{defn}
-
-\begin{cor}
-Consider type families $C:A\to \UU$ and $D:B\to\UU$, and consider a map $f:A\to B$ and a fiberwise transformation $g:\prd{x:A}C(x)\to D(f(x))$. If $f$ is an equivalence, then the following are equivalent:
-\begin{enumerate}
-\item $g$ is a fiberwise equivalence.
-\item the induced map on total spaces
-\begin{equation*}
-\total[f]{g} : \sm{x:A}C(x) \to \sm{y:B}D(y)
-\end{equation*}
-is an equivalence.
-\end{enumerate}
-\end{cor}
-
 \section{Disjointness of coproducts}
 
-To illustrate the usage of the fundamental theorem of identity types, we compute the identity types of coproducts.
-The goal of the current section is to prove the following theorem.
+To give a second application of the fundamental theorem of identity types, we characterize the identity types of coproducts. Our goal in this section is to prove the following theorem.
 
 \begin{thm}\label{thm:id-coprod-compute}
 Let $A$ and $B$ be types. Then there are equivalences
@@ -448,7 +341,7 @@ The reflexivity term $\rho$ is constructed by induction on $t:A+B$, using
 \end{align*}
 \end{constr}
 
-To show that $\mathsf{Eq\usc{}coprod\usc{}eq}$ is a fiberwise equivalence, we will use the fundamental theorem, \cref{thm:id_fundamental}. Moreover, we will use the functoriality of coproducts (established in \cref{ex:coproduct_functor}), along with the following facts about $\Sigma$-types, coproducts, and the empty type:
+To show that $\mathsf{Eq\usc{}coprod\usc{}eq}$ is a family of equivalences, we will use the fundamental theorem, \cref{thm:id_fundamental}. Moreover, we will use the functoriality of coproducts (established in \cref{ex:coproduct_functor}), along with the following facts about $\Sigma$-types, coproducts, and the empty type:
 \begin{align*}
 \sm{t:A+B}P(t) & \eqvsym \Big(\sm{x:A}P(\inl(x))\Big)+\Big(\sm{y:B}P(\inr(y))\Big)\\
 \sm{x:A}\emptyt & \eqvsym \emptyt \\
@@ -487,80 +380,12 @@ The proof is now concluded with an application of \cref{thm:id_fundamental}, usi
 \end{proof}
 
 \begin{exercises}
-\item \label{ex:htpy_total} 
-\begin{subexenum}
-\item Let $f,g:\prd{x:A}B(x)\to C(x)$ be two fiberwise transformations. Show that
-\begin{equation*}
-\Big(\prd{x:A}f(x)\htpy g(x)\Big)\to (\total{f}\htpy \total{g}). 
-\end{equation*}
-\item Let $f:\prd{x:A}B(x)\to C(x)$ and let $g:\prd{x:A}C(x)\to D(x)$. Show that
-\begin{equation*}
-\total{\lam{x}g(x)\circ f(x)}\htpy \total{g}\circ\total{f}.
-\end{equation*}
-\item For any family $B$ over $A$, show that
-\begin{equation*}
-\total{\lam{x}\idfunc[B(x)]}\htpy\idfunc[\sm{x:A}B(x)].
-\end{equation*}
-\end{subexenum}
-\item Construct an equivalence 
-\begin{equation*}
-\eqv{\big(\sm{x:A}f(x)=y\big)}{\big(\sm{x:A}y=f(x)\big)}.
-\end{equation*}
-%Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
-\item \label{ex:fiber_trans}Consider a triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=small]
-A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
-& X
-\end{tikzcd}
-\end{equation*}
-with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle commutes. 
-\begin{subexenum}
-\item Construct a fiberwise transformation
-\begin{equation*}
-\mathsf{fib\usc{}triangle}(h,H):\prd{x:X}\fib{f}{x}\to\fib{g}{x},
-\end{equation*}
-for which the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-\sm{x:X}\fib{f}{x} \arrow[r,"\total{\mathsf{fib\usc{}triangle}(h,H)}"] \arrow[d] & \sm{x:X}\fib{g}{x} \arrow[d] \\
-A \arrow[r,swap,"h"] & B
-\end{tikzcd}
-\end{equation*}
-commutes, where the vertical maps are as constructed in \cref{ex:fib_replacement}.
-\item Show that $h$ is an equivalence if and only if $\mathsf{fib\usc{}triangle}(h,H)$ is a fiberwise equivalence.
-\end{subexenum}
-\item Let $f:A\to B$ be a map, and let $s,t : \fib{f}{b}$. Consider the function
-\begin{equation*}
-\varphi : (s=t)\to \fib{\apfunc{f}}{\ct{\proj 2(s)}{\proj 2(t)^{-1}}}
-\end{equation*}
-given by $\varphi(\refl{s})=(\refl{\proj 1(s)},\mathsf{right\usc{}inv}(\proj 2(s))^{-1})$. Show that this map is an equivalence. Conclude that for any $q:f(x)=f(y)$ we have an equivalence
-\begin{equation*}
-((x,q)=(y,\refl{f(y)})) \simeq \fib{\apfunc{f}}{q}.
-\end{equation*}
-\item \label{ex:id_fundamental_gen}Let $A$ be a type with $a:A$, and let $B$ be a type family over $A$. Show that for \emph{any} family of maps
-\begin{equation*}
-f:\prd{x:A} (a=x)\to B(x)
-\end{equation*}
-the following are logically equivalent:
-\begin{enumerate}
-\item The family of maps $f$ is a fiberwise equivalence.
-\item The total space
-\begin{equation*}
-\sm{x:A}B(x)
-\end{equation*}
-is contractible.
-\end{enumerate}
-\item \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. 
-\begin{subexenum}
-\item Use \autoref{ex:htpy_total,ex:contr_retr,ex:id_fundamental_gen} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
-\item Conclude that for any fiberwise transformation
-\begin{equation*}
-f : \prd{x:A} (a=x) \to B(x),
-\end{equation*}
-if each $f(x)$ has a section, then $f$ is a fiberwise equivalence.
-\end{subexenum}
 \item Show that the map $\emptyt\to A$ is an embedding for every type $A$.
+\item Consider an equivalence $e:A\simeq B$. Construct an equivalence
+  \begin{equation*}
+    (e(x)=y)\simeq(x=e^{-1}(y))
+  \end{equation*}
+  for every $x:A$ and $y:B$.
 \item Show that 
 \begin{equation*}
 (f\htpy g)\to (\mathsf{is\usc{}emb}(f)\leftrightarrow\mathsf{is\usc{}emb}(g))
@@ -578,24 +403,65 @@ with $H:f\htpy g\circ h$.
 \item Suppose that $g$ is an embedding. Show that $f$ is an embedding if and only if $h$ is an embedding.
 \item Supose that $h$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.
 \end{subexenum}
+\item Show that for any two types $A$ and $B$, the coproduct inclusion maps $\inl:A \to A + B$ and $\inr : B \to A + B$ are embeddings.
+\item \label{ex:is-equiv-is-equiv-functor-coprod}Consider two maps $f:A\to A'$ and $g:B \to B'$.
+  \begin{subexenum}
+  \item Show that if the map
+    \begin{equation*}
+      f+g:(A+B)\to (A'+B')
+    \end{equation*}
+    is an equivalence, then so are both $f$ and $g$ (this is the converse of \cref{ex:coproduct_functor_equivalence}).
+  \item Show that $f+g$ is an embedding if and only if both $f$ and $g$ are embeddings.
+  \end{subexenum}
+\item \label{ex:htpy_total} 
+\begin{subexenum}
+\item Let $f,g:\prd{x:A}B(x)\to C(x)$ be two families of maps. Show that
+\begin{equation*}
+\Big(\prd{x:A}f(x)\htpy g(x)\Big)\to \Big(\total{f}\htpy \total{g}\Big). 
+\end{equation*}
+\item Let $f:\prd{x:A}B(x)\to C(x)$ and let $g:\prd{x:A}C(x)\to D(x)$. Show that
+\begin{equation*}
+\total{\lam{x}g(x)\circ f(x)}\htpy \total{g}\circ\total{f}.
+\end{equation*}
+\item For any family $B$ over $A$, show that
+\begin{equation*}
+\total{\lam{x}\idfunc[B(x)]}\htpy\idfunc.
+\end{equation*}
+\end{subexenum}
+\item \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. 
+\begin{subexenum}
+\item Use \autoref{ex:htpy_total,ex:contr_retr} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
+\item Conclude that for any family of maps
+\begin{equation*}
+f : \prd{x:A} (a=x) \to B(x),
+\end{equation*}
+if each $f(x)$ has a section, then $f$ is a family of equivalences.
+\end{subexenum}
 \item Use \cref{ex:id_fundamental_retr} to show that for any map $f:A\to B$, if
 \begin{equation*}
 \apfunc{f} : (x=y) \to (f(x)=f(y))
 \end{equation*}
 has a section for each $x,y:A$, then $f$ is an embedding.
-\item Show that for any two types $A$ and $B$, the coproduct inclusion maps $\inl:A \to A + B$ and $\inr : B \to A + B$ are embeddings.
-\item \label{ex:is-equiv-is-equiv-functor-coprod}Show that for any two maps $f:A\to A'$ and $g:B \to B'$, if the map
+\item \label{ex:path-split}We say that a map $f:A\to B$ is \define{path-split}\index{path-split|textbf} if $f$ has a section, and for each $x,y:A$ the map
 \begin{equation*}
-f+g:(A+B)\to (A'+B')
+\apfunc{f}(x,y):(x=y)\to (f(x)=f(y))
 \end{equation*}
-is an equivalence, then so are both $f$ and $g$ (this is the converse of \cref{ex:coproduct_functor_equivalence}). 
+also has a section. We write $\mathsf{path\usc{}split}(f)$\index{path_split(f)@{$\mathsf{path\usc{}split}(f)$}|textbf} for the type
+\begin{equation*}
+\mathsf{sec}(f)\times\prd{x,y:A}\mathsf{sec}(\apfunc{f}(x,y)).
+\end{equation*}
+Show that for any map $f:A\to B$ the following are equivalent:
+\begin{enumerate}
+\item The map $f$ is an equivalence.
+\item The map $f$ is path-split.
+\end{enumerate}
 \begin{comment}
 \item \label{ex:eqv_sigma_mv}Consider a map
 \begin{equation*}
 f:A \to \sm{y:B}C(y).
 \end{equation*}
 \begin{subexenum}
-\item Construct a fiberwise transformation
+\item Construct a family of maps
 \begin{equation*}
 f':\prd{y:B} \fib{\proj 1\circ f}{y}\to C(y).
 \end{equation*}
@@ -607,7 +473,7 @@ for every $(b,c):\sm{y:B}C(y)$.
 \item Conclude that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
-\item $f'$ is a fiberwise equivalence.
+\item $f'$ is a family of equivalences.
 \end{enumerate}
 \end{subexenum}
 \item \label{ex:coh_intro}Consider a type $A$ with base point $a:A$, and let $B$ be a type family on $A$ that implies the identity type, i.e., there is a term
@@ -620,9 +486,42 @@ Show that the \define{coherence reduction map}
 \end{equation*}
 defined by $\lam{(y,q)}(a,y)$ is an equivalence.
 \end{comment}
-\item Consider an equivalence $e:A\simeq B$. Construct an equivalence
-  \begin{equation*}
-    (e(x)=y)\simeq(x=e^{-1}(y))
-  \end{equation*}
-  for every $x:A$ and $y:B$.
+\item \label{ex:fiber_trans}Consider a triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=small]
+A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle commutes. 
+\begin{subexenum}
+\item Construct a family of maps
+\begin{equation*}
+\mathsf{fib\usc{}triangle}(h,H):\prd{x:X}\fib{f}{x}\to\fib{g}{x},
+\end{equation*}
+for which the square
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\sm{x:X}\fib{f}{x} \arrow[r,"\total{\mathsf{fib\usc{}triangle}(h,H)}"] \arrow[d] & \sm{x:X}\fib{g}{x} \arrow[d] \\
+A \arrow[r,swap,"h"] & B
+\end{tikzcd}
+\end{equation*}
+commutes, where the vertical maps are as constructed in \cref{ex:fib_replacement}.
+\item Show that $h$ is an equivalence if and only if $\mathsf{fib\usc{}triangle}(h,H)$ is a family of equivalences.
+\end{subexenum}
+\begin{comment}
+\item Let $f:A\to B$ be a map, and let $s,t : \fib{f}{b}$. Consider the function
+\begin{equation*}
+\varphi : (s=t)\to \fib{\apfunc{f}}{\ct{\proj 2(s)}{\proj 2(t)^{-1}}}
+\end{equation*}
+given by $\varphi(\refl{s})=(\refl{\proj 1(s)},\mathsf{right\usc{}inv}(\proj 2(s))^{-1})$. Show that this map is an equivalence. Conclude that for any $q:f(x)=f(y)$ we have an equivalence
+\begin{equation*}
+((x,q)=(y,\refl{f(y)})) \simeq \fib{\apfunc{f}}{q}.
+\end{equation*}
+\item Construct an equivalence 
+\begin{equation*}
+\eqv{\big(\sm{x:A}f(x)=y\big)}{\big(\sm{x:A}y=f(x)\big)}.
+\end{equation*}
+%Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
+\end{comment}
 \end{exercises}

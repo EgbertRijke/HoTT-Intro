@@ -105,13 +105,13 @@ We have the term $(x,\refl{x}):\sm{y:A}x=y$. Thus we need to show that for any t
 has a section. Note that we have the composite of maps
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
-B((x,\refl{x})) \arrow[r,"\ind{x=}"] & \prd{y:A}{p:x=y}B((y,p)) \arrow[r,"\ind{\Sigma}"] & \prd{t:\sm{y:A}x=y}B(t)
+B((x,\refl{x})) \arrow[r,"\mathsf{path\usc{}ind}_x"] & \prd{y:A}{p:x=y}B((y,p)) \arrow[r,"\ind{\Sigma}"] & \prd{t:\sm{y:A}x=y}B(t)
 \end{tikzcd}
 \end{equation*}
 which we take as our definition of $\mathsf{sing\usc{}ind}$. 
 Moreover, by the computation rules we have
 \begin{equation*}
-\ind{\Sigma}(\ind{x=}(b),(x,\refl{x}))\jdeq b.
+\ind{\Sigma}(\mathsf{path\usc{}ind}_x(b),(x,\refl{x}))\jdeq b.
 \end{equation*}
 Thus, for $\mathsf{sing\usc{}comp}$ we simply take $\lam{b}\refl{b}$.
 \end{proof}

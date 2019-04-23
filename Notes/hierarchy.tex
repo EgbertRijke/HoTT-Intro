@@ -185,18 +185,18 @@ Let $A$ be a type, and let $R:A\to A\to\UU$ be a binary relation on $A$ satisfyi
 \item Each $R(x,y)$ is a proposition,
 \item $R$ is reflexive, as witnessed by $\rho:\prd{x:A}R(x,x)$.
 \end{enumerate}
-Then any fiberwise map
+Then any family of maps
 \begin{equation*}
 \prd{x,y:A}R(x,y)\to (\id{x}{y})
 \end{equation*}
-is a fiberwise equivalence. Consequently, if there is such a fiberwise map, then $A$ is a set.
+is a family of equivalences. Consequently, if there is such a family of maps, then $A$ is a set.
 \end{lem}
 
 \begin{proof}
 Let $f:\prd{x,y:A}R(x,y)\to(\id{x}{y})$. 
-Since $R$ is assumed to be reflexive, we also have a fiberwise transformation
+Since $R$ is assumed to be reflexive, we also have a family of maps
 \begin{equation*}
-\rec{x=}(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
+\mathsf{path\usc{}ind}_x(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
 \end{equation*}
 Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. We conclude by \autoref{ex:id_fundamental_retr} that for each $x,y:A$, the map $f(x,y):R(x,y)\to(\id{x}{y})$ must be an equivalence.
 
@@ -365,7 +365,7 @@ is an embedding.
 \end{cor}
 
 \begin{thm}
-Let $f:\prd{x:A}B(x)\to C(x)$ be a fiberwise transformation. Then the following are equivalent:
+Let $f:\prd{x:A}B(x)\to C(x)$ be a family of maps. Then the following are equivalent:
 \begin{enumerate}
 \item For each $x:A$ the map $f(x)$ is $k$-truncated.
 \item The induced map 

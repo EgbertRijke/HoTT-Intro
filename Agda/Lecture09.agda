@@ -390,6 +390,11 @@ abstract
 
 -- Section 9.3 Composing with equivalences.
 
+tr-precompose-fam :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
+  (f : A → B) {x y : A} (p : Id x y) → tr C (ap f p) ~ tr (λ x → C (f x)) p
+tr-precompose-fam C f refl = htpy-refl _
+
 abstract
   is-equiv-precomp-Π-is-half-adjoint-equivalence :
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) →

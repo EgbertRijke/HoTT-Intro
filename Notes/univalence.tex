@@ -9,9 +9,9 @@ The following are equivalent:
 \begin{enumerate}
 \item The \define{univalence axiom}\index{univalence axiom|textbf}: for any $A:\UU$ the map\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}|textbf}
 \begin{equation*}
-\mathsf{equiv\usc{}eq}\defeq \ind{A=}(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
+\mathsf{equiv\usc{}eq}\defeq \mathsf{path\usc{}ind}_A(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
 \end{equation*}
-is a fiberwise equivalence.\index{identity type!universe} If this is the case, we write
+is a family of equivalences.\index{identity type!universe} If this is the case, we write
 $\mathsf{eq\usc{}equiv}$\index{eq equiv@{$\mathsf{eq\usc{}equiv}$}|textbf}
 for the inverse of $\mathsf{equiv\usc{}eq}$.
 \item The type
@@ -205,11 +205,11 @@ by path induction, taking $\refl{\mathcal{G}}$ to $\idfunc[\mathcal{G}]$. Indeed
 \end{defn}
 
 \begin{thm}
-The fiberwise transformation
+The family of maps
 \begin{equation*}
 \mathsf{iso\usc{}eq} : \prd{\mathcal{G}':\mathsf{Grp}}(\mathcal{G}=\mathcal{G}')\to (\mathcal{G}\cong\mathcal{G}')
 \end{equation*}
-is a fiberwise equivalence, for any group $\mathcal{G}$.
+is a family of equivalences, for any group $\mathcal{G}$.
 \end{thm}
 
 \begin{proof}
@@ -344,7 +344,7 @@ By the type theoretic Yoneda lemma\index{Yoneda lemma} we have an equivalence
 \begin{equation*}
 \Big(\prd{x:A} (b=x)\to (a=x)\Big)\to (a=b)
 \end{equation*}
-given by $\lam{f} f(b,\refl{b})$, for every $b:A$. Note that any fiberwise map $\prd{x:A}(b=x)\to (a=x)$ induces an equivalence of total spaces by \autoref{ex:contr_equiv}, since their total spaces are are both contractible by \autoref{cor:contr_path}. It follows that we have an equivalence
+given by $\lam{f} f(b,\refl{b})$, for every $b:A$. Note that any family of maps $\prd{x:A}(b=x)\to (a=x)$ induces an equivalence of total spaces by \autoref{ex:contr_equiv}, since their total spaces are are both contractible by \autoref{cor:contr_path}. It follows that we have an equivalence
 \begin{equation*}
 \varphi_b:\Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)\to (a=b)
 \end{equation*}
@@ -354,8 +354,8 @@ Note that $\varphi_a(\lam{x}\idfunc[(a=x)])\jdeq\refl{a}$. Therefore it follows 
 \begin{equation*}
 \alpha_b:(a=b)\to \Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)
 \end{equation*}
-that satisfies $\alpha_a(\refl{a})=\lam{x}\idfunc[(a=x)]$ is a fiberwise section of $\varphi$. 
-It follows that $\alpha$ is a fiberwise equivalence. Now the proof is completed by reverting the direction of the fiberwise equivalences in the codomain.
+that satisfies $\alpha_a(\refl{a})=\lam{x}\idfunc[(a=x)]$ is a family of sections of $\varphi$. 
+It follows that $\alpha$ is a family of equivalences. Now the proof is completed by reverting the direction of the family of equivalences in the codomain.
 \end{proof}
 
 \begin{comment}

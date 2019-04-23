@@ -299,7 +299,7 @@ Then $\varphi$ is an equivalence by \cref{thm:fib_equiv}, and the triangle commu
 
 \begin{cor}\label{cor:desc_fam}
 Consider descent data $(P_A,P_B,P_S)$ for a pushout square as in \cref{thm:desc_fam}.
-Then the type of quadruples $(P,e_A,e_B,e_S)$ consisting of a family $P:X\to\UU$ equipped with fiberwise equivalences
+Then the type of quadruples $(P,e_A,e_B,e_S)$ consisting of a family $P:X\to\UU$ equipped with two families of equivalences
 \begin{samepage}
 \begin{align*}
 e_A & : \prd{a:A}\eqv{P_A(a)}{P(i(a))} \\
@@ -447,7 +447,7 @@ is a pushout square.
 
 \section{The descent property for pushouts}
 
-In the previous section there was a significant role for fiberwise equivalences, and we know by \cref{thm:pb_fibequiv,cor:pb_fibequiv}: fiberwise equivalences indicate the presence of pullbacks. In this section we reformulate the results of the previous section using pullbacks where we used fiberwise equivalences before, to obtain new and useful results. We begin by considering the type of descent data from the perspective of pullback squares.
+In the previous section there was a significant role for families of equivalences, and we know by \cref{thm:pb_fibequiv,cor:pb_fibequiv}: families of equivalences indicate the presence of pullbacks. In this section we reformulate the results of the previous section using pullbacks where we used families of equivalences before, to obtain new and useful results. We begin by considering the type of descent data from the perspective of pullback squares.
 
 \begin{defn}
 Consider a span $\mathcal{S}$ from $A$ to $B$, and a span $\mathcal{S}'$ from $A'$ to $B'$. A \define{cartesian transformation} of spans\index{cartesian transformation!of spans|textbf} from $\mathcal{S}'$ to $\mathcal{S}$ is a diagram of the form
@@ -477,7 +477,7 @@ There is an equivalence\index{cart_desc@{$\mathsf{cart\usc{}desc}_{\mathcal{S}}$
 \end{lem}
 
 \begin{proof}
-Note that by \cref{thm:pb_fibequiv_complete} it follows that the types of triples $(f',F,p_f)$ and $(g',G,p_g)$ are equivalent to the types of fiberwise equivalences
+Note that by \cref{thm:pb_fibequiv_complete} it follows that the types of triples $(f',F,p_f)$ and $(g',G,p_g)$ are equivalent to the types of families of equivalences
 \begin{align*}
 & \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_A}{f(x)}} \\
 & \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_B}{g(x)}}
@@ -652,14 +652,14 @@ If each of the vertical squares is a pullback, and the bottom square  is a pusho
 \end{thm}
 
 \begin{proof}
-By \cref{cor:pb_fibequiv} we have fiberwise equivalences
+By \cref{cor:pb_fibequiv} we have families of equivalences
 \begin{align*}
 F & : \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_A}{f(x)}} \\
 G & : \prd{x:S}\eqv{\fib{h_S}{x}}{\fib{h_B}{g(x)}} \\
 I & : \prd{a:A}\eqv{\fib{h_A}{a}}{\fib{h_X}{i(a)}} \\
 J & : \prd{b:B}\eqv{\fib{h_B}{b}}{\fib{h_X}{j(b)}}. 
 \end{align*}
-Moreover, since the cube commutes we obtain a fiberwise homotopy
+Moreover, since the cube commutes we obtain a family of homotopies
 \begin{equation*}
 K : \prd{x:S} I(f(x))\circ F(x) \htpy J(g(x))\circ G(x).
 \end{equation*}
