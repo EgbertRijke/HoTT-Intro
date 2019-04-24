@@ -1,7 +1,7 @@
 % !TEX root = hott_intro.tex
 
 \chapter{The hierarchy of homotopical complexity}
-\chaptermark{Homotopical complexity}
+\chaptermark{Homotopical complexity}\label{chap:hierarchy}
 %Not all types have interesting higher groupoid structure. For example, we will see below that two natural numbers can only be equal in at most one way. Voevodsky articulated a useful notion to detect the homotopical complexity of types, which allows us to distinguish between contractible types (also called \emph{$(-2)$-types}), \emph{propositions} (also called \emph{$(-1)$-types}), \emph{sets} (\emph{$0$-types}), and \emph{$k$-types} for higher $k$.
 
 %We will see [later] that there are types that are not $k$-types for any $k$.
@@ -99,7 +99,7 @@ First assume that $B(x)$ is a proposition for each $x:A$. Our goal is to show th
 \begin{equation*}
 \apfunc{\proj 1} : (\id{s}{t})\to (\id{\proj 1(s)}{\proj 1(t)})
 \end{equation*}
-is an equivalence for every $s,t:\sm{x:A}B(x)$. By $\Sigma$-induction on $s$ and \autoref{thm:id_fundamental} it suffices to show that the type
+is an equivalence for every $s,t:\sm{x:A}B(x)$. By $\Sigma$-induction on $s$ and \cref{thm:id_fundamental} it suffices to show that the type
 \begin{equation*}
 \sm{t:\sm{x:A}B(x)} \id{a}{\proj 1(t)}
 \end{equation*}
@@ -152,7 +152,7 @@ A \arrow[rr,"\lam{a}\pairr{f(a),\pairr{a,\refl{f(a)}}}"] \arrow[dr,swap,"f"] & &
 & B
 \end{tikzcd}
 \end{equation*}
-in which the top map is an equivalence. Thus it follows from \autoref{ex:emb_triangle} that $f$ is an embedding if and only if $\proj 1:\big(\sm{y:B}\fib{f}{y}\big)\to B$ is an embedding. Now the claim follows from \cref{thm:subtype}.
+in which the top map is an equivalence. Thus it follows from \cref{ex:emb_triangle} that $f$ is an embedding if and only if $\proj 1:\big(\sm{y:B}\fib{f}{y}\big)\to B$ is an embedding. Now the claim follows from \cref{thm:subtype}.
 \end{proof}
 \end{comment}
 
@@ -198,7 +198,7 @@ Since $R$ is assumed to be reflexive, we also have a family of maps
 \begin{equation*}
 \mathsf{path\usc{}ind}_x(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
 \end{equation*}
-Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. We conclude by \autoref{ex:id_fundamental_retr} that for each $x,y:A$, the map $f(x,y):R(x,y)\to(\id{x}{y})$ must be an equivalence.
+Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. We conclude by \cref{ex:id_fundamental_retr} that for each $x,y:A$, the map $f(x,y):R(x,y)\to(\id{x}{y})$ must be an equivalence.
 
 Now it also follows that $A$ is a set, since its identity types are equivalent to propositions, and therefore they are propositions by \cref{lem:prop_equiv}. 
 \end{proof}
@@ -208,7 +208,7 @@ The type of natural numbers is a set.
 \end{thm}
 
 \begin{proof}
-We will apply \cref{lem:prop_to_id}. Note that the observational equality $\mathrm{Eq}_\N:\N\to(\N\to\UU)$ on $\N$ (\cref{defn:obs_nat}) is a reflexive relation by \autoref{ex:obs_nat_eqrel}, and moreover that $\mathrm{Eq}_\N(n,m)$ is a proposition for every $n,m:\N$ (proof by double induction).
+We will apply \cref{lem:prop_to_id}. Note that the observational equality $\mathrm{Eq}_\N:\N\to(\N\to\UU)$ on $\N$ (\cref{defn:obs_nat}) is a reflexive relation by \cref{ex:obs_nat_eqrel}, and moreover that $\mathrm{Eq}_\N(n,m)$ is a proposition for every $n,m:\N$ (proof by double induction).
 Therefore it suffices to show that
 \begin{equation*}
 \prd{m,n:\nat}\mathrm{Eq}_\N(m,n)\to (\id{m}{n}).
@@ -272,9 +272,9 @@ If $e:\eqv{A}{B}$ is an equivalence, and $B$ is a $k$-type, then so is $A$.
 \end{thm}
 
 \begin{proof}
-We have seen in \autoref{ex:contr_equiv} that if $B$ is contractible and $e:\eqv{A}{B}$ is an equivalence, then $A$ is also contractible. This proves the base case.
+We have seen in \cref{ex:contr_equiv} that if $B$ is contractible and $e:\eqv{A}{B}$ is an equivalence, then $A$ is also contractible. This proves the base case.
 
-For the inductive step, assume that the $k$-types are stable under equivalences, and consider $e:\eqv{A}{B}$ where $B$ is a $(k+1)$-type. In \autoref{cor:emb_equiv} we have seen that
+For the inductive step, assume that the $k$-types are stable under equivalences, and consider $e:\eqv{A}{B}$ where $B$ is a $(k+1)$-type. In \cref{cor:emb_equiv} we have seen that
 \begin{equation*}
 \apfunc{e}:(\id{x}{y})\to(\id{e(x)}{e(y)})
 \end{equation*}
@@ -382,7 +382,7 @@ This follows directly from \cref{lem:fib_total,thm:ktype_eqv}.
 
 \begin{comment}
 \begin{proof}
-By \autoref{ex:contr_retr} it follows that if $A$ is a retract of a contractible type, then $A$ is contractible.
+By \cref{ex:contr_retr} it follows that if $A$ is a retract of a contractible type, then $A$ is contractible.
 For the inductive step, suppose that the $k$-types are closed under retracts, and consider a section-retraction pair
 \begin{equation*}
 \begin{tikzcd}
@@ -402,7 +402,7 @@ r(i(x)) \arrow[d,equals,swap,"\ap{r}{q}"] \arrow[r,equals,"H(x)"] & x \arrow[d,e
 r(i(y)) \arrow[r,equals,swap,"H(y)"] & y
 \end{tikzcd}
 \end{equation*}
-commutes. This square commutes by the naturality of homotopies, proven in \autoref{ex:htpy_nat}.
+commutes. This square commutes by the naturality of homotopies, proven in \cref{ex:htpy_nat}.
 \end{proof}
 \end{comment}
 
@@ -426,7 +426,7 @@ is a $k$-truncated map.
 \end{subexenum}
 \item \label{ex:eq_bool}Show that $\bool$ is a set by applying \cref{lem:prop_to_id} with the observational equality on $\bool$ defined in \cref{ex:obs_bool}.
 \item \label{ex:set_coprod}Show that for any two $(k+2)$-types $A$ and $B$, the disjoint sum $A+B$ is again a $(k+2)$-type. Conclude that $\mathbb{Z}$ is a set.
-\item Use \autoref{ex:contr_retr,ex:retr_id} to show that if $A$ is a retract of a $k$-type $B$, then $A$ is also a $k$-type.
+\item Use \cref{ex:contr_retr,ex:retr_id} to show that if $A$ is a retract of a $k$-type $B$, then $A$ is also a $k$-type.
 \item \label{ex:injective}A map $f:A\to B$ between sets is said to be \define{injective} if for every $x,y:A$ there is a map
 \begin{equation*}
 (f(x)= f(y))\to (x=y).

@@ -182,7 +182,7 @@ It remains to construct a retraction of $f$. Taking $g$ as our retraction, we ha
 
 \section{Equivalences are contractible maps}
 
-In \cref{thm:contr_equiv} we will show the converse to \autoref{thm:equiv_contr}, that any equivalence is a contractible map. We will do this in two steps.
+In \cref{thm:contr_equiv} we will show the converse to \cref{thm:equiv_contr}, that any equivalence is a contractible map. We will do this in two steps.
 
 First we introduce a new notion of \emph{coherently invertible map}, for which we can easily show that such maps have contractible fibers. Then we show that any equivalence is a coherently invertible map.
 
@@ -314,14 +314,14 @@ commutes. This gives the desired identification $H(f(x))=\ap{f}{H(x)}$.
     \end{tikzcd}
   \end{equation*}
   commutes for every $x:A$.
-  Recall from \autoref{defn:retraction_swap} that we have $H(gf(x))=\ap{gf}{H(x)}$. Using this identification, we see that it suffices to show that the square
+  Recall from \cref{defn:retraction_swap} that we have $H(gf(x))=\ap{gf}{H(x)}$. Using this identification, we see that it suffices to show that the square
   \begin{equation*}
     \begin{tikzcd}[column sep=8em]
       fgfgf(x) \arrow[r,equals,"G(fgf(x))"] \arrow[d,equals,swap,"\ap{fgf}{H(x)}"] & fgf(x) \arrow[d,equals,"\ap{f}{H(x)}"] \\
       fgf(x) \arrow[r,equals,swap,"G(f(x))"] & f(x)
     \end{tikzcd}
   \end{equation*}
-  commutes. Now we observe that this is just a naturality square the homotopy $Gf:fgf\htpy f$, which commutes by \autoref{defn:htpy_nat}.
+  commutes. Now we observe that this is just a naturality square the homotopy $Gf:fgf\htpy f$, which commutes by \cref{defn:htpy_nat}.
 \end{proof}
 
 Now we put the pieces together to conclude that any equivalence has contractible fibers.
@@ -343,7 +343,7 @@ is contractible.
 \end{cor}
 
 \begin{proof}
-By \autoref{thm:id_equiv}, the identity function is an equivalence. Therefore, the fibers of the identity function are contractible by \autoref{thm:contr_equiv}. Note that $\sm{x:A}x=a$ is exactly the fiber of $\idfunc[A]$ at $a:A$.
+By \cref{thm:id_equiv}, the identity function is an equivalence. Therefore, the fibers of the identity function are contractible by \cref{thm:contr_equiv}. Note that $\sm{x:A}x=a$ is exactly the fiber of $\idfunc[A]$ at $a:A$.
 \end{proof}
 
 \begin{comment}

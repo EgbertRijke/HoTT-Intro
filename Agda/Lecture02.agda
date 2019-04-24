@@ -79,10 +79,10 @@ zero-ℕ choose succ-ℕ k = zero-ℕ
 (succ-ℕ n) choose (succ-ℕ k) = add-ℕ (n choose k) (n choose (succ-ℕ k))
 
 -- Exercise 2.3(f)
-fibonacci : ℕ → ℕ
-fibonacci zero-ℕ = zero-ℕ
-fibonacci (succ-ℕ zero-ℕ) = one-ℕ
-fibonacci (succ-ℕ (succ-ℕ n)) = add-ℕ (fibonacci n) (fibonacci (succ-ℕ n))
+Fibonacci : ℕ → ℕ
+Fibonacci zero-ℕ = zero-ℕ
+Fibonacci (succ-ℕ zero-ℕ) = one-ℕ
+Fibonacci (succ-ℕ (succ-ℕ n)) = add-ℕ (Fibonacci n) (Fibonacci (succ-ℕ n))
 
 -- Exercise 2.4
 _∘'_ :
@@ -91,6 +91,23 @@ _∘'_ :
 (g ∘' f) x = g x (f x)
 
 -- Exercise 2.5
-Pi-swap : {i j k : Level} {A : UU i} {B : UU j} {C : A → (B → UU k)} →
+Π-swap : {i j k : Level} {A : UU i} {B : UU j} {C : A → (B → UU k)} →
   ((x : A) (y : B) → C x y) → ((y : B) (x : A) → C x y)
-Pi-swap f y x = f x y
+Π-swap f y x = f x y
+
+-- Note: apparently Agda still allows us to define a sequence of universe levels indexed by ℕ
+
+Level-ℕ : ℕ → Level
+Level-ℕ zero-ℕ = lzero
+Level-ℕ (succ-ℕ n) = lsuc (Level-ℕ n)
+
+sequence-UU : (n : ℕ) → UU (Level-ℕ (succ-ℕ n))
+sequence-UU n = UU (Level-ℕ n)
+
+-- However, the following definition is unacceptable for Agda, since it runs
+-- into Setω.
+
+{-
+Π-sequence-UU : UU _
+Π-sequence-UU = (n : ℕ) → sequence-UU n
+-}

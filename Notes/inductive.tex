@@ -170,80 +170,25 @@ Let $A$ and $B$ be types in context $\Gamma$. The \define{(cartesian) product}\i
 \end{equation*}
 The induction principle\index{induction principle!of cartesian products} for $A\times B$ asserts that for any type family $P$ over $A\times B$, one has
 \begin{equation*}
-\ind{\times} : \Big(\prd{x:A}{y:B}P(\pairr{\blank,\blank})\Big)\to\Big(\prd{p:A\times B} P(p)\Big)
+\ind{\times} : \Big(\prd{x:A}{y:B}P(a,b)\Big)\to\Big(\prd{p:A\times B} P(p)\Big)
 \end{equation*}
 satisfying the computation rule\index{computation rules!of cartesian product} that
 \begin{align*}
-\ind{\times}(f,x,y) & \jdeq f(x,y).
+\ind{\times}(f,(x,y)) & \jdeq f(x,y).
 \end{align*}
 \end{defn}
 
 The projection maps are defined similarly to the projection maps of $\Sigma$-types. When one thinks of types as propositions\index{propositions as types!conjunction}, then $A\times B$ is interpreted as the conjunction of $A$ and $B$.
 
-\section{The type of integers}
-
-\begin{defn}
-We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$, and we write
-\begin{align*}
-\mathsf{neg} & \defeq \inl & &  : \N \to \Z \\
--1 & \defeq \mathsf{neg}(0) & & : \Z \\
-0 & \defeq \inr(\ttt) & & : \Z \\
-\mathsf{pos} & \defeq \inr\circ\inr & & : \N\to \Z \\
-1 & \defeq \mathsf{pos}(0) & & : \Z.
-\end{align*}
-\end{defn}
-
-In the following lemma we derive an alternative induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which makes it easier to make definitions.
-\begin{lem}
-\label{lem:Z_ind}
-For any $\Gamma,k:\Z\vdash P(k)~\mathrm{type}$ we have
-\begin{prooftree}
-\Axiom$\fCenter\Gamma\vdash p_{-1}:P(-1)$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{neg}(n))\to P(\mathsf{neg}(S(n)))$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_0: P(0)$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_{1}:P(1)$
-\noLine
-\UnaryInf$\fCenter\Gamma\vdash p_{-S} : \prd{n:\N}P(\mathsf{pos}(n))\to P(\mathsf{pos}(S(n)))$
-\UnaryInf$\fCenter\Gamma\vdash\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S}):\prd{k:\Z}P(k)$
-\end{prooftree}
-The term $\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S})$ furthermore satisfies the following computation rules:
-\begin{align*}
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},-1) & \jdeq p_{-1} \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(S(n))) & \jdeq p_{-S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{neg}(n))) \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},0) & \jdeq p_0 \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},1) & \jdeq p_1 \\
-\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(S(n))) & \jdeq p_{S}(n,\ind{\Z}(p_{-1},p_{-S},p_{0},p_{1},p_{S},\mathsf{pos}(n))).
-\end{align*}
-\end{lem}
-
-As an application we define the successor function on the integers.
-
-\begin{defn}
-We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $S_\Z:\Z\to\Z$.
-\end{defn}
-
-\begin{constr}
-We apply the induction principle of \autoref{lem:Z_ind}, taking
-\begin{align*}
-S_\Z(-1) & \defeq 0 \\
-S_\Z(\mathsf{neg}(S(n))) & \defeq \mathsf{neg}(n) \\
-S_\Z(0) & \defeq 1 \\
-S_\Z(1) & \defeq \mathsf{pos}(S(1)) \\
-S_\Z(\mathsf{pos}(S(n))) & \defeq \mathsf{pos}(S(S(n))).
-\end{align*}
-\end{constr}
-
 \section{Overview of the inductive types}
+The following table gives an overview of the 'primitive' inductive types that we have introduced so far. Many types of interest can be defined in terms of these inductive types, along with the identity type which we will introduce in \cref{chap:identity}.
 \begin{center}
 \begin{tabular}{llll}
 \toprule
 name & type & constructors \\
 \midrule
-\define{natural numbers} & $\N$ & $0:\N$ \\
-& & $S:\N\to \N$ & \\
+\define{natural numbers} & $\N$ & $\zeroN:\N$ \\
+& & $\succN:\N\to \N$ & \\
 \define{empty type} & $\emptyt$ & {\color{black!20}(no constructors)}\\
 \define{unit type} & $\unit$ & $\ttt:\unit$ \\
 \define{booleans} & $\bool$ & $\bfalse:\bool$ \\
@@ -256,9 +201,79 @@ name & type & constructors \\
 \end{tabular}
 \end{center}
 
+\section{The type of integers}
+
+\begin{defn}
+  We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$. The type of integers comes equipped with inclusion functions of the positive and negative integers
+  \begin{align*}
+    \mathsf{in\usc{}pos} & \defeq \inr\circ\inr \\
+    \mathsf{in\usc{}neg} & \defeq \inl,
+  \end{align*}
+  which are both of type $\N\to\Z$, and the constants
+  \begin{align*}
+    -1 & \defeq \mathsf{neg}(0)\\
+    0 & \defeq \inr(\inl(\ttt))\\
+    1 & \defeq \mathsf{pos}(0).
+  \end{align*}
+\end{defn}
+
+In the following lemma we derive an induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which can be used in many familiar constructions on $\Z$, such as in the definitions of addition and multiplication.
+
+\begin{lem}\label{lem:Z_ind}
+  Consider a type family $P$ over $\Z$. If we are given
+  \begin{align*}
+    p_{-1} & :P(-1) \\
+    p_{-S} & : \prd{n:\N}P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(S(n)))\\
+    p_{0} & : P(0) \\
+    P_{1} & : P(1) \\
+    P_{S} & : \prd{n:\N}P(\mathsf{in\usc{}pos}(n))\to P(\mathsf{in\usc{}pos}(S(n))),
+  \end{align*}
+  then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:
+  \begin{align*}
+    f(-1) & \jdeq p_{-1} \\
+    f(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\mathsf{in\usc{}neg}(n))) \\
+    f(0) & \jdeq p_{0} \\
+    f(1) & \jdeq p_{1} \\
+    f(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \jdeq p_S(n,f(\mathsf{in\usc{}pos}(n))).
+  \end{align*}
+\end{lem}
+
+\begin{proof}
+  Since $\Z$ is the coproduct of $\N$ and $\unit+\N$, it suffices to define
+  \begin{align*}
+    p_{inl} & : \prd{n:\N}P(\inl(n)) \\
+    p_{inr} & : \prd{t:\unit+\N}P(\inr(t)).
+  \end{align*}
+  Note that $\mathsf{in\usc{}neg}\jdeq\inl$ and $-1_\Z\jdeq \mathsf{in\usc{}neg}(\zeroN)$. In order to define $p_{inl}$ we use induction on the natural numbers, so it suffices to define
+  \begin{align*}
+    p_{-1} & : P(-1) \\
+    p_{-S} & : \prd{n:\N} P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n))).
+  \end{align*}
+  Similarly, we proced by coproduct induction, followed by induction on $\unit$ in the left case and induction on $\N$ on the right case, in order to define $p_{inr}$. 
+\end{proof}
+
+As an application we define the successor function on the integers.
+
+\begin{defn}
+We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $\mathsf{succ}_\Z:\Z\to\Z$ using the induction principle of \cref{lem:Z_ind}, taking
+\begin{align*}
+\mathsf{succ}_\Z(-1_\Z) & \defeq 0_\N \\
+\mathsf{succ}_\Z(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
+\mathsf{succ}_\Z(0_\Z) & \defeq 1_\N \\
+\mathsf{succ}_\Z(1_\Z) & \defeq \mathsf{in\usc{}pos}(2_\N) \\
+\mathsf{succ}_\Z(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}pos}(\mathsf{succ}_\N(\mathsf{succ}_\N(n))).
+\end{align*}
+\end{defn}
+
 \begin{exercises}
-\item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}:\Z\to \Z$.
-\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define operations $k,l\mapsto k+l:\Z\to\Z\to\Z$ and $k\mapsto -k:\Z\to \Z$.
+\item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}_\Z:\Z\to \Z$.
+\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define group operations
+  \begin{align*}
+    k,l & \mapsto k+l \\
+    k & \mapsto -k
+  \end{align*}
+  on $\Z$.
+\item Define multiplication on $\Z$.
 \item Construct a function $F:\Z\to\Z$ that extends the Fibonacci sequence to the left
   \begin{equation*}
     \ldots,5,-3,2,-1,1,0,1,1,2,3,5,8,13,\ldots
@@ -269,7 +284,7 @@ name & type & constructors \\
     t_0 & : \unit + \unit \\
     t_1 & : \unit + \unit,
   \end{align*}
-  and show that for every $\Gamma,t:\unit+\unit\vdash P(t)~\mathrm{type}$ there is a dependent function of type
+  and show that for any type family $P$ over $\unit+\unit$ there is a function
   \begin{align*}
     \ind{\unit+\unit}:P(t_0)\to \Big(P(t_1)\to \prd{t:\unit+\unit}P(t)\Big)
   \end{align*}
@@ -278,5 +293,5 @@ name & type & constructors \\
     \ind{\unit+\unit}(p_0,p_1,t_0) & \jdeq p_0 \\
     \ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
   \end{align*}
-  In other words, \emph{type theory cannot distinguish between $\bool$ and $\unit+\unit$.}
+  In other words, \emph{type theory cannot distinguish between the types $\bool$ and $\unit+\unit$.}
 \end{exercises}

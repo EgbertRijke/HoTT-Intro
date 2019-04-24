@@ -338,19 +338,19 @@ that sends $\refl{a}$ to $\lam{x}\refl{(a=x)}$ is an equivalence for every $b:A$
 \begin{equation*}
 (a=b)\to \prd{x:A}\eqv{(a=x)}{(b=x)}
 \end{equation*}
-that sends $\refl{a}$ to $\lam{x}\idfunc[(a=x)]$ is an equivalence for every $b:B$. To do this we employ the type theoretic Yoneda lemma, \autoref{thm:yoneda}.
+that sends $\refl{a}$ to $\lam{x}\idfunc[(a=x)]$ is an equivalence for every $b:B$. To do this we employ the type theoretic Yoneda lemma, \cref{thm:yoneda}.
 
 By the type theoretic Yoneda lemma\index{Yoneda lemma} we have an equivalence
 \begin{equation*}
 \Big(\prd{x:A} (b=x)\to (a=x)\Big)\to (a=b)
 \end{equation*}
-given by $\lam{f} f(b,\refl{b})$, for every $b:A$. Note that any family of maps $\prd{x:A}(b=x)\to (a=x)$ induces an equivalence of total spaces by \autoref{ex:contr_equiv}, since their total spaces are are both contractible by \autoref{cor:contr_path}. It follows that we have an equivalence
+given by $\lam{f} f(b,\refl{b})$, for every $b:A$. Note that any family of maps $\prd{x:A}(b=x)\to (a=x)$ induces an equivalence of total spaces by \cref{ex:contr_equiv}, since their total spaces are are both contractible by \cref{cor:contr_path}. It follows that we have an equivalence
 \begin{equation*}
 \varphi_b:\Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)\to (a=b)
 \end{equation*}
 given by $\lam{f} f(b,\refl{b})$, for every $b:A$. 
 
-Note that $\varphi_a(\lam{x}\idfunc[(a=x)])\jdeq\refl{a}$. Therefore it follows by another application of \autoref{thm:yoneda} that the unique family of maps 
+Note that $\varphi_a(\lam{x}\idfunc[(a=x)])\jdeq\refl{a}$. Therefore it follows by another application of \cref{thm:yoneda} that the unique family of maps 
 \begin{equation*}
 \alpha_b:(a=b)\to \Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)
 \end{equation*}

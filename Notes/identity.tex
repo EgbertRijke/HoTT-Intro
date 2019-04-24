@@ -119,7 +119,7 @@ Explicitly, the term we have constructed is
 \begin{equation*}
 \lam{x}\mathsf{path\usc{}ind}_x(\lam{z}\idfunc[(\id{x}{z})]):\prd{x,y:A} (x=y)\to \prd{z:A} (y=z)\to (x=z).
 \end{equation*}
-To obtain a term of the asserted type we need to swap the order of the arguments $p:x=y$ and $z:A$, using \autoref{ex:swap}.
+To obtain a term of the asserted type we need to swap the order of the arguments $p:x=y$ and $z:A$, using \cref{ex:swap}.
 \end{constr}
 
 \begin{defn}\label{defn:id_inv}
@@ -302,7 +302,7 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
 %\end{equation*}
 %\end{defn}
 %
-%\autoref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \autoref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
+%\cref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \cref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
 
 \begin{exercises}
 \item \label{ex:trans_concat}Let $B$ be a family over a type $A$. Construct for any two identifications $p:x=_A y$ and $q:y=_A z$, and any $b:B(x)$ an identification

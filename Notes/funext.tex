@@ -44,13 +44,13 @@ To show that function extensionality implies weak function extensionality, suppo
 \end{equation*}
 Let $f:\prd{x:A}B(x)$. By function extensionality we have a map $(c\htpy f)\to (c=f)$, so it suffices to construct a term of type $c\htpy f$. Here we take $\lam{a}C_a(f(a))$. This completes the proof that function extensionality implies weak function extensionality.
 
-To prove function extensionality from weak function extensionality, observe that it suffices by \autoref{thm:id_fundamental} to show that
+To prove function extensionality from weak function extensionality, observe that it suffices by \cref{thm:id_fundamental} to show that
 \begin{equation*}
 \sm{g:\prd{x:A}B(x)}f\htpy g
 \end{equation*}
 is contractible.
 
-Since the type $\sm{b:B(x)}f(x)=b$ is contractible for each $x:X$, it follows by our assumption of weak function extensionality that the type $\prd{x:A}\sm{b:B(x)}f(x)=b$ is contractible. By \autoref{ex:contr_retr} it therefore suffices to show that
+Since the type $\sm{b:B(x)}f(x)=b$ is contractible for each $x:X$, it follows by our assumption of weak function extensionality that the type $\prd{x:A}\sm{b:B(x)}f(x)=b$ is contractible. By \cref{ex:contr_retr} it therefore suffices to show that
 \begin{equation*}
 \sm{g:\prd{x:A}B(x)}f\htpy g
 \end{equation*}
@@ -111,9 +111,9 @@ Assume function extensionality. Then for any type family $B$ over $A$ one has\in
 \end{thm}
 
 \begin{proof}
-The theorem is proven by induction on $k\geq -2$. The base case is just the weak function extensionality principle, which was shown to follow from function extensionality in \autoref{thm:funext_wkfunext}.
+The theorem is proven by induction on $k\geq -2$. The base case is just the weak function extensionality principle, which was shown to follow from function extensionality in \cref{thm:funext_wkfunext}.
 
-For the inductive hypothesis, assume that the $k$-types are closed under dependent function types. Assume that $B$ is a family of $(k+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{x:A}B(x)$. Now observe that $f\htpy g$ is a dependent product of $k$-types, and therefore it is an $k$-type by our inductive hypotheses. Therefore, it follows by \autoref{thm:ktype_eqv} that $f=g$ is an $k$-type, and hence that $\prd{x:A}B(x)$ is an $(k+1)$-type.
+For the inductive hypothesis, assume that the $k$-types are closed under dependent function types. Assume that $B$ is a family of $(k+1)$-types. By function extensionality, the type $f=g$ is equivalent to $f\htpy g$ for any two dependent functions $f,g:\prd{x:A}B(x)$. Now observe that $f\htpy g$ is a dependent product of $k$-types, and therefore it is an $k$-type by our inductive hypotheses. Therefore, it follows by \cref{thm:ktype_eqv} that $f=g$ is an $k$-type, and hence that $\prd{x:A}B(x)$ is an $(k+1)$-type.
 \end{proof}
 
 \begin{cor}\label{cor:funtype_trunc}

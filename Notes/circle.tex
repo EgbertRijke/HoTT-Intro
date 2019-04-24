@@ -18,7 +18,7 @@ The \emph{circle}\index{circle} is defined as a higher inductive type\index{high
 \end{align*}
 Just like for ordinary inductive types, the induction principle for higher inductive types provides us with a way of constructing sections of dependent types. However, we need to take the \emph{path constructor}\index{path constructor} $\lloop$ into account in the induction principle. 
 
-By applying a section $f:\prd{t:\sphere{1}}P(t)$ to the base point of the circle, we obtain a term $f(\base):P(\base)$. Moreover, using the dependent action on paths\index{dependent action on paths} of $f$ of \autoref{defn:apd} we also obtain for any dependent function $f:\prd{t:\sphere{1}}P(t)$ a path
+By applying a section $f:\prd{t:\sphere{1}}P(t)$ to the base point of the circle, we obtain a term $f(\base):P(\base)$. Moreover, using the dependent action on paths\index{dependent action on paths} of $f$ of \cref{defn:apd} we also obtain for any dependent function $f:\prd{t:\sphere{1}}P(t)$ a path
 \begin{align*}
 \apd{f}{\lloop} & : \id{\mathsf{tr}_P(\lloop,f(\base))}{f(\base)}
 \end{align*}
@@ -333,7 +333,7 @@ The type $\sm{X:\UU}\eqv{X}{X}$ is also called the type of \define{descent data}
 \end{defn}
 
 \begin{constr}
-By \autoref{ex:tr_ap} we have an identification
+By \cref{ex:tr_ap} we have an identification
 \begin{equation*}
 \mathsf{equiv\usc{}eq}(\ap{P}{\lloop})=\mathsf{tr}_P(\lloop)
 \end{equation*}
@@ -740,7 +740,7 @@ The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z
 \eqv{\Big(\sm{e:\eqv{\sphere{1}}{\sphere{1}}}e(\base)= t \Big)}{\bool}
 \end{equation*}
 \end{subexenum}
-\item \label{ex:circle_double_cover} The \define{(twisted) double cover} of the circle is defined as the type family $\mathcal{T}\defeq\mathcal{D}(\bool,\mathsf{neg}):\sphere{1}\to\UU$, where $\mathsf{neg}:\eqv{\bool}{\bool}$ is the negation equivalence of \autoref{ex:neg_equiv}.
+\item \label{ex:circle_double_cover} The \define{(twisted) double cover} of the circle is defined as the type family $\mathcal{T}\defeq\mathcal{D}(\bool,\mathsf{neg}):\sphere{1}\to\UU$, where $\mathsf{neg}:\eqv{\bool}{\bool}$ is the negation equivalence of \cref{ex:neg_equiv}.
 \begin{subexenum}
 \item Show that $\neg(\prd{t:\sphere{1}}\mathcal{T}(t))$.
 \item Construct an equivalence $e:\eqv{\sphere{1}}{\sm{t:\sphere{1}}\mathcal{T}(t)}$ for which the triangle

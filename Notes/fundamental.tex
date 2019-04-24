@@ -63,7 +63,7 @@ Let $f:\prd{x:A}B(x)\to C(x)$ be a family of maps. The following are equivalent:
 \end{thm}
 
 \begin{proof}
-By \cref{thm:equiv_contr,thm:contr_equiv} it suffices to show that $f(x)$ is a contractible map for each $x:A$, if and only if $\total{f}$ is a contractible map. Thus, we will show that $\fib{f(x)}{c}$ is contractible if and only if $\fib{\total{f}}{x,c}$ is contractible, for each $x:A$ and $c:C(x)$. However, by \autoref{lem:fib_total} these types are equivalent, so the result follows by \cref{ex:contr_equiv}.
+By \cref{thm:equiv_contr,thm:contr_equiv} it suffices to show that $f(x)$ is a contractible map for each $x:A$, if and only if $\total{f}$ is a contractible map. Thus, we will show that $\fib{f(x)}{c}$ is contractible if and only if $\fib{\total{f}}{x,c}$ is contractible, for each $x:A$ and $c:C(x)$. However, by \cref{lem:fib_total} these types are equivalent, so the result follows by \cref{ex:contr_equiv}.
 \end{proof}
 
 Now consider the situation where we have a map $f:A\to B$, and a family $C$ over $B$. Then we have the map
@@ -161,7 +161,7 @@ is a family of equivalences if and only if $\sm{x:A}B(x)$ is contractible.
 \end{thm}
 
 \begin{proof}
-By \autoref{thm:fib_equiv} it follows that the family of maps $\mathsf{path\usc{}ind}_a(b)$ is a family of equivalences if and only if it induces an equivalence
+By \cref{thm:fib_equiv} it follows that the family of maps $\mathsf{path\usc{}ind}_a(b)$ is a family of equivalences if and only if it induces an equivalence
 \begin{equation*}
 \eqv{\Big(\sm{x:A}a=x\Big)}{\Big(\sm{x:A}B(x)\Big)}
 \end{equation*}
@@ -227,7 +227,7 @@ Let $e:\eqv{A}{B}$ be an equivalence, and let $x:A$. Our goal is to show that
 \begin{equation*}
 \apfunc{e} : (\id{x}{y})\to (\id{e(x)}{e(y)})
 \end{equation*}
-is an equivalence for every $y:A$. By \autoref{thm:id_fundamental} it suffices to show that 
+is an equivalence for every $y:A$. By \cref{thm:id_fundamental} it suffices to show that 
 \begin{equation*}
 \sm{y:A}e(x)=e(y)
 \end{equation*}
@@ -243,7 +243,7 @@ by \cref{thm:fib_equiv}, since for each $y:A$ the map
 \mathsf{inv} : (e(x)=e(y))\to (e(y)= e(x))
 \end{equation*}
 is an equivalence by \cref{ex:equiv_grpd_ops}.
-The fiber $\fib{e}{e(x)}$ is contractible by \cref{thm:contr_equiv}, so it follows by \autoref{ex:contr_equiv} that the type $\sm{y:A}e(x)=e(y)$ is indeed contractible.
+The fiber $\fib{e}{e(x)}$ is contractible by \cref{thm:contr_equiv}, so it follows by \cref{ex:contr_equiv} that the type $\sm{y:A}e(x)=e(y)$ is indeed contractible.
 \end{proof}
 
 \begin{comment}
@@ -274,7 +274,7 @@ E({\inr(y)},{\inr(y')}) & \defeq (\id[B]{y}{y'}).
 Moreover, we have a term $\rho:\prd{s:A+B}E(s,s)$ defined by $\rho(\inl(x))\defeq\refl{x}$ and $\rho(\inr(y))\defeq\refl{y}$.
 
 Our goal is to construct an equivalence $\eqv{(\id{s}{t})}{E(s,t)}$ for any $s,t:A+B$. 
-By \autoref{thm:id_fundamental} it suffices to show that for any $s:A+B$, the type
+By \cref{thm:id_fundamental} it suffices to show that for any $s:A+B$, the type
 \begin{equation*}
 \sm{t:A+B}E(s,t)
 \end{equation*}
@@ -430,7 +430,7 @@ with $H:f\htpy g\circ h$.
 \end{subexenum}
 \item \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. 
 \begin{subexenum}
-\item Use \autoref{ex:htpy_total,ex:contr_retr} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
+\item Use \cref{ex:htpy_total,ex:contr_retr} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
 \item Conclude that for any family of maps
 \begin{equation*}
 f : \prd{x:A} (a=x) \to B(x),

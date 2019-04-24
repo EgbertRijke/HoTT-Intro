@@ -1,12 +1,24 @@
 \chapter{The universe and type-valued relations}
 
-In this lecture we introduce type theoretic \emph{universes}. Universes are types $\UU$ of which the terms again represent types. In other words, the universe comes equipped with a type family, which we call the \emph{universal type family}.
+In this lecture we introduce type theoretic \emph{universes}. Universes are types that consist of types. In other words, a universe is a type $\UU$ that comes equipped with a type family $\mathsf{Ty}$ over $\UU$, and for any $X:\UU$ we think of $X$ as an \emph{encoding} of the type $\mathsf{Ty}(X)$. We call this type family the \emph{universal type family}.
 
-One reason for introducting universes is that it enables us to define new type families over inductive types, using their induction principle. Indeed, since the universe is itself a type, we can use the induction principle to eliminate into the universe. Then we obtain a type family over the inductive type by the universal type family.
+There are several reasons to equip type theory with universes. One reason is that it enables us to define new type families over inductive types, using their induction principle. For example, since the universe is itself a type, we can use the induction principle of $\bool$ to obtain a map $P:\bool\to\UU$ from any two terms $X_0,X_1:\UU$. Then we obtain a type family over $\bool$ by substituting $P$ into the universal type family:
+\begin{equation*}
+  x:\bool\vdash \mathsf{Ty}(P(x))~\mathrm{type}
+\end{equation*}
+satisfying $\mathsf{Ty}(P(0_\bool))\jdeq \mathsf{Ty}(X_0)$ and $\mathsf{Ty}(P(1_\bool))\jdeq \mathsf{Ty}(X_1)$.
 
 We use this way of defining type families to define many familiar relations over $\N$, such as $\leq$ and $<$. We also introduce a relation called \emph{observational equality} $\mathsf{Eq}_\N$ on $\N$, which we can think of as equality of $\N$. This relation is reflexive, symmetric, and transitive, and moreover it is the least reflexive relation. Furthermore, one of the most important aspects of observational equality $\mathsf{Eq}_\N$ on $\N$ is that $\mathsf{Eq}_\N(m,n)$ is a type for every $m,n:\N$, unlike judgmental equality. Therefore we can use type theory to reason about observational equality on $\N$. Indeed, in the exercises we show that some very elementary mathematics can already be done at this early stage in our development of type theory.
 
-\section{The universe}
+A second reason to introduce universes is that it allows us to define many types of types equipped with structure. One of the most important examples is the type of groups, which is the type of types equipped with the group operations satisfying the group laws, and for which the underlying type is a set. We won't discuss the condition for a type to be a set until \cref{chap:hierarchy}, so the definition of groups in type theory will be given much later. Therefore we illustrate this use of the universe by giving simpler examples: pointed types, graphs, and reflexive graphs.
+
+One of the aspects that make universes useful is that they are postulated to be closed under all the type constructors. For example, if we are given $X:\UU$ and $P:\mathsf{Ty}(X)\to \UU$, then the universe is equipped with a term
+\begin{equation*}
+  \check{\Sigma}(X,P):\UU
+\end{equation*}
+satisfying the judgmental equality $\mathsf{Ty}(\check{\Sigma}(X,P)\jdeq\sm{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x))$. We will similarly assume that any universe is closed under $\Pi$-types and the other ways of forming types. However, there is an important restriction: it would be inconsistent to assume that the universe is contained in itself. One way of thinking about this is that universes are types of \emph{small} types, and it cannot be the case that the universe is small with respect to itself. We address this problem by assuming that there are many universes: enough universes so that any type family can be obtained by substituting into the universal type family of some universe.
+
+\section{Type theoretic universes}
 The induction principle for inductive types can be used to prove universal quantifications. 
 However, it would also be nice if we could construct \emph{new type families} over inductive types, using their induction principles.
 To be able to do this, we introduce a \emph{universe}, a type of which the terms represent types. The idea is that the universe $\UU$ comes equipped with a type family $\mathrm{El}$, so that for each $X:\UU$ we have an associated type $\mathrm{El}(X)$, the type of \emph{elements} of $X$. 
@@ -107,8 +119,6 @@ One important way to use the universe is to define types of \define{structured t
 Once we have introduced the \emph{identity types} we will also be able to state the types of groups, rings, and many other structured types. However, when doing so one has to be cautious to make sure that the underlying type is in the level of sets, in the hierarchy of homotopical complexity of types.
 \end{eg}
 
-\section{How many universes are there?}
-
 \section{Defining families and relations using a universe}
 Another important way to use the universe is to \emph{define} new type families by induction. For example, we can define the finite types as family over the natural numbers.
 
@@ -206,7 +216,7 @@ In other words, it would be \emph{inconsistent} to admit proofs by contradiction
   \begin{equation*}
     \prd{n,m:\N}{f:\N\to\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)),
   \end{equation*}
-  \emph{and pull out the universal quantification over $f:\N\to\N$ by \autoref{ex:swap}.}
+  \emph{and pull out the universal quantification over $f:\N\to\N$ by \cref{ex:swap}.}
 \item 
   \begin{subexenum}
   \item Define the \define{order relations}\index{relation!order}\index{order relation} $\leq$ and $<$ on $\N$.

@@ -221,7 +221,7 @@ inv-Π-swap C g x y = g y x
 abstract
   is-equiv-Π-swap :
     {i j k : Level} {A : UU i} {B : UU j} (C : A → B → UU k) →
-    is-equiv (Pi-swap {i} {j} {k} {A} {B} {C})
+    is-equiv (Π-swap {i} {j} {k} {A} {B} {C})
   is-equiv-Π-swap C =
     is-equiv-has-inverse'
       ( inv-Π-swap C)

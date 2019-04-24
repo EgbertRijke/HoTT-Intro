@@ -353,7 +353,7 @@ is $N$-null.
 \end{lem}
 
 \begin{proof}
-The fiber of $\lam{b}{a}b$ at a function $f:A\to B$ is equivalent to the type $\sm{b:B}\prd{a:A}f(a)=b$. Therefore, it suffices to show that this type is $N$-null. By \autoref{lem:equivalent-extension-problems}, it is equivalent to show that $B$ is $(\join{A}{N})$-null. This is solved in \autoref{lem:join-null}.
+The fiber of $\lam{b}{a}b$ at a function $f:A\to B$ is equivalent to the type $\sm{b:B}\prd{a:A}f(a)=b$. Therefore, it suffices to show that this type is $N$-null. By \cref{lem:equivalent-extension-problems}, it is equivalent to show that $B$ is $(\join{A}{N})$-null. This is solved in \cref{lem:join-null}.
 \end{proof}
 
 \begin{thm}[Join extension theorem]\label{thm:join-extension}
@@ -374,7 +374,7 @@ Let $g:\prd{x:X}P(f(x))$. Then we have the equivalences
 & \eqvsym \prd{y:Y}\sm{z:P(y)}\prd{(x,p):\hfib{f}{y}} \trans{p}{g(x)}=z \\
 & \eqvsym \prd{y:Y}\hfib{\lam{z}{(x,p)}z}{\lam{(x,p)}\trans{p}{g(x)}}.
 \end{align*}
-Therefore, it suffices to show for every $y:Y$, that $P(y)$ has the $N$-extension property with respect to the unique map of type $\hfib{f}{y}\to\unit$. This is a special case of \autoref{lem:N-extension-simple}.
+Therefore, it suffices to show for every $y:Y$, that $P(y)$ has the $N$-extension property with respect to the unique map of type $\hfib{f}{y}\to\unit$. This is a special case of \cref{lem:N-extension-simple}.
 \end{proof}
 
 \begin{thm}\label{thm:simple-join}
@@ -384,7 +384,7 @@ Suppose $X$ is an $M$-connected type and $Y$ is an $N$-connected type. Then $\jo
 \begin{proof}
 It suffices to show that any $(\join{M}{N})$-null type is $(\join{X}{Y})$-null.
 Let $Z$ be an $(\join{M}{N})$-null type.
-Since $Z$ is assumed to be $(\join{M}{N})$-null, it follows by \autoref{lem:join-null} that $Z$ is $(\join{X}{N})$-null. By symmetry of the join, it also follows that $Z$ is $(\join{X}{Y})$-null.
+Since $Z$ is assumed to be $(\join{M}{N})$-null, it follows by \cref{lem:join-null} that $Z$ is $(\join{X}{N})$-null. By symmetry of the join, it also follows that $Z$ is $(\join{X}{Y})$-null.
 \end{proof}
 
 \begin{thm}[Join connectivity theorem]\label{thm:join-connectivity}
@@ -392,7 +392,7 @@ Consider an $M$-connected map $f:A\to X$ and an $N$-connected map $g:B\to X$. Th
 \end{thm}
 
 \begin{proof}
-This follows from \autoref{thm:simple-join} and \autoref{defn:join-fiber}.
+This follows from \cref{thm:simple-join} and \cref{defn:join-fiber}.
 \end{proof}
 
 \begin{thm}\label{thm:joinconstruction-connectivity}
@@ -554,8 +554,8 @@ The image $\im(I_k(A))$ is an $(n+1)$-truncated type.
 
 
 \begin{proof}[Construction]
-We will show that $\trunc{n+1}{A}$ is indeed $(n+1)$-truncated in \autoref{cor:truncated} of \autoref{lem:modal_contr} below. Once this fact is established, it remains to verify the dependent universal property of $(n+1)$-truncation.
-By the join extension theorem \autoref{thm:join-extension} (using $N\defeq \emptyt$), it suffices to show that the map $\tproj{n+1}{\blank}:A\to\trunc{n+1}{A}$ is $\sphere{n+2}$-connected. Note that $\tproj{n+1}{\blank}$ is surjective, so the claim that $\tproj{n+1}{\blank}$ is $\sphere{n+2}$-connected follows from \autoref{lem:ap_connectivity}, where we show that for any surjective map $f:A\to X$, if the action on paths is $M$-connected for any two points in $A$, then $f$ is $\susp(M)$-connected. To apply this lemma, we also need to know that $\tproj{k}{\blank}:A\to\trunc{k}{A}$ is $\sphere{n+1}$-connected. This is shown in Corollary 7.5.8 of \cite{hottbook}.
+We will show that $\trunc{n+1}{A}$ is indeed $(n+1)$-truncated in \cref{cor:truncated} of \cref{lem:modal_contr} below. Once this fact is established, it remains to verify the dependent universal property of $(n+1)$-truncation.
+By the join extension theorem \cref{thm:join-extension} (using $N\defeq \emptyt$), it suffices to show that the map $\tproj{n+1}{\blank}:A\to\trunc{n+1}{A}$ is $\sphere{n+2}$-connected. Note that $\tproj{n+1}{\blank}$ is surjective, so the claim that $\tproj{n+1}{\blank}$ is $\sphere{n+2}$-connected follows from \cref{lem:ap_connectivity}, where we show that for any surjective map $f:A\to X$, if the action on paths is $M$-connected for any two points in $A$, then $f$ is $\susp(M)$-connected. To apply this lemma, we also need to know that $\tproj{k}{\blank}:A\to\trunc{k}{A}$ is $\sphere{n+1}$-connected. This is shown in Corollary 7.5.8 of \cite{hottbook}.
 \end{proof}
 
 
@@ -618,7 +618,7 @@ That is, we must show that
 \prd{b:A}{p:f(a)=f(b)} g(a,\refl{f(a)})=g(b,p).
 \end{equation*}
 Using the assumption that $Y$ is $\susp(M)$-connected, it follows from
-\autoref{lem:local_id} that the type $g(a,\refl{f(a)})=g(b,p)$ is $M$-connected,
+\cref{lem:local_id} that the type $g(a,\refl{f(a)})=g(b,p)$ is $M$-connected,
 for every $b:A$ and $p:f(a)=f(b)$.
 Therefore it follows, since the map $\mapfunc{f}(a,b):(a=b)\to(f(a)=f(b))$ is connected, that our goal is equivalent to
 \begin{equation*}
