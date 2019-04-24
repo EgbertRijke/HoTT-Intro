@@ -82,9 +82,8 @@ abstract
   is-sing-unit : is-sing unit star
   is-sing-unit B = pair ind-unit (λ b → refl)
 
-abstract
-  is-contr-unit : is-contr unit
-  is-contr-unit = is-contr-is-sing unit star (is-sing-unit)
+is-contr-unit : is-contr unit
+is-contr-unit = is-contr-is-sing unit star (is-sing-unit)
 
 abstract
   is-sing-total-path :
