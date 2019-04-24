@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture14 where
+module 16-pushouts where
 
-import Lecture13
-open Lecture13 public
+import 15-pullbacks
+open 15-pullbacks public
 
 -- Section 14.1
 

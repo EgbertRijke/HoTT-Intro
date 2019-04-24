@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K #-}
 
-module Lecture05 where
+module 06-equivalences where
 
-import Lecture04
-open Lecture04 public
+import 05-identity-types
+open 05-identity-types public
 
 -- Section 5.1 Homotopies
 _~_ :

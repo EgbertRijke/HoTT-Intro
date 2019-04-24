@@ -1,9 +1,9 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K #-}
 
-module Lecture13 where
+module 15-pullbacks where
 
-import Lecture12
-open Lecture12 public
+import 14-fundamental-cover
+open 14-fundamental-cover public
 
 -- Section 13.1 Cartesian squares
 

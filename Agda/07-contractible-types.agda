@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K #-}
 
-module Lecture06 where
+module 07-contractible-types where
 
-import Lecture05
-open Lecture05 public
+import 06-equivalences
+open 06-equivalences public
 
 -- Section 6.1 Contractible types
 

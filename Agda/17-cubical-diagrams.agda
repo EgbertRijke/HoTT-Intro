@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture15 where
+module 17-cubical-diagrams where
 
-import Lecture14
-open Lecture14 public
+import 16-pushouts
+open 16-pushouts public
 
 -- Section 15.1 Commuting cubes
 

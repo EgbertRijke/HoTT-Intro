@@ -1,9 +1,9 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K #-}
 
-module Lecture12 where
+module 14-fundamental-cover where
 
-import Lecture11
-open Lecture11 public
+import 13-circle
+open 13-circle public
 
 {- Section 12.1 Families over the circle -}
 

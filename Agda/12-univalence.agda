@@ -1,9 +1,9 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K #-}
 
-module Lecture10 where
+module 12-univalence where
 
-import Lecture09
-open Lecture09 public
+import 11-function-extensionality
+open 11-function-extensionality public
 
 -- Section 10.1 Type extensionality
 

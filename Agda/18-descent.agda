@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --allow-unsolved-metas #-}
 
-module Lecture16 where
+module 18-descent where
 
-import Lecture15
-open Lecture15 public
+import 17-cubical-diagrams
+open 17-cubical-diagrams public
 
 -- Section 16.1 The dependent pullback property of pushouts
 
@@ -398,6 +398,7 @@ gen-fam-pushout f g (pair i (pair j H)) P =
       ( P ∘ j)
       ( λ s → (pair (tr P (H s)) (is-equiv-tr P (H s)))))
 
+{-
 equiv-eq-ap-fam :
   {l1 l2 : Level} {A : UU l1} (B : A → UU l2) {x y : A} (p : Id x y) →
   Id (equiv-tr B p) (equiv-eq (ap B p))

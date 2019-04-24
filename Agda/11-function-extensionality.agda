@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K #-}
 
-module Lecture09 where
+module 11-function-extensionality where
 
-import Lecture08
-open Lecture08 public
+import 10-number-theory
+open 10-number-theory public
 
 -- Section 9.1 Equivalent forms of Function Extensionality.
 

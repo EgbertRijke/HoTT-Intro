@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
-module Lecture02 where
+module 02-natural-numbers where
 
 import Preamble
 open Preamble public

@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K #-}
 
-module Lecture04 where
+module 05-identity-types where
 
-import Lecture03
-open Lecture03 public
+import 04-relations
+open 04-relations public
 
 data Id {i : Level} {A : UU i} (x : A) : A → UU i where
   refl : Id x x

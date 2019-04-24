@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K #-}
 
-module Lecture08 where
+module 09-truncation-levels where
 
-import Lecture07
-open Lecture07 public
+import 08-fundamental-theorem
+open 08-fundamental-theorem public
 
 -- Section 8.1 Propositions
 

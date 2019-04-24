@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K #-}
 
-module Lecture07 where
+module 08-fundamental-theorem where
 
-import Lecture06
-open Lecture06 public
+import 07-contractible-types
+open 07-contractible-types public
 
 -- Section 7.1 Fiberwise equivalences
 tot :
