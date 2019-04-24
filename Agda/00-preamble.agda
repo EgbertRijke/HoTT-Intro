@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
-module Preamble where
+module 00-preamble where
 
 open import Agda.Primitive using (Level; lzero; lsuc; _⊔_) public
 
