@@ -21,7 +21,7 @@ ind-Id :
   (B x refl) → (y : A) (p : Id x y) → B y p
 ind-Id x B b y refl = b
 
-{- We define the groupoid structure of a type. -}
+-- Section 5.2 The groupoid structure of types
 
 inv :
   {i : Level} {A : UU i} {x y : A} → Id x y → Id y x
@@ -36,7 +36,6 @@ _∙_ :
   {i : Level} {A : UU i} {x y z : A} → Id x y → Id y z → Id x z
 _∙_ {y = y} = concat y
 
-{- This goes in the wrong direction! -}
 assoc :
   {i : Level} {A : UU i} {x y z w : A} (p : Id x y) (q : Id y z)
   (r : Id z w) → Id ((p ∙ q) ∙ r) (p ∙ (q ∙ r))
@@ -59,6 +58,8 @@ right-inv :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) →
   Id (p ∙ (inv p)) refl
 right-inv refl = refl
+
+-- Section 5.3 The action on paths of functions
 
 ap :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) {x y : A} (p : Id x y) →
@@ -89,6 +90,8 @@ ap-inv :
   (p : Id x y) → Id (ap f (inv p)) (inv (ap f p))
 ap-inv f refl = refl
 
+-- Section 5.4 Transport
+
 tr :
   {i j : Level} {A : UU i} (B : A → UU j) {x y : A} (p : Id x y) → B x → B y
 tr B refl b = b
@@ -103,12 +106,12 @@ path-over :
   B x → B x' → UU j
 path-over B p y y' = Id (tr B p y) y'
 
-reflexive-path-over :
+refl-path-over :
   {i j : Level} {A : UU i} (B : A → UU j) (x : A) (y : B x) →
   path-over B refl y y
-reflexive-path-over B x y = refl
+refl-path-over B x y = refl
 
--- path induction for observational equality on ℕ
+-- Section 5.5 Identity systems
 
 succ-fam-Eq-ℕ :
   {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i) →
@@ -141,7 +144,7 @@ comp-path-ind-Eq-ℕ R ρ (succ-ℕ n) =
 
 -- Exercises
 
--- Exercise 4.1
+-- Exercise 5.1
 
 two-ℕ : ℕ
 two-ℕ = succ-ℕ one-ℕ
@@ -155,18 +158,33 @@ div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
 is-prime : ℕ → UU lzero
 is-prime n = (one-ℕ < n) × ((m : ℕ) → (one-ℕ < m) → (div-ℕ m n) → Id m n)
 
+{- The Goldbach conjecture asserts that every even number above 2 is the sum
+   of two primes. -}
+
 Goldbach-conjecture : UU lzero
 Goldbach-conjecture =
   ( n : ℕ) → (two-ℕ < n) → (is-even-ℕ n) →
     Σ ℕ (λ p → (is-prime p) × (Σ ℕ (λ q → (is-prime q) × Id (add-ℕ p q) n)))
 
--- Exercise 4.2
+is-twin-prime : ℕ → UU lzero
+is-twin-prime n = (is-prime n) × (is-prime (succ-ℕ (succ-ℕ n)))
+
+{- The twin prime conjecture asserts that there are infinitely many twin 
+   primes. We assert that there are infinitely twin primes by asserting that 
+   for every n : ℕ there is a twin prime that is larger than n. -}
+   
+Twin-prime-conjecture : UU lzero
+Twin-prime-conjecture = (n : ℕ) → Σ ℕ (λ p → (is-twin-prime p) × (leq-ℕ n p))
+
+-- Exercise 5.2
+
 distributive-inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A}
   (q : Id y z) → Id (inv (p ∙ q)) ((inv q) ∙ (inv p))
 distributive-inv-concat refl refl = refl
 
--- Exercise 4.5
+-- Exercise 5.3
+
 inv-con :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z)
   (r : Id x z) → (Id (p ∙ q) r) → Id q ((inv p) ∙ r)
@@ -178,13 +196,14 @@ con-inv :
 con-inv p refl r =
   ( λ α → α ∙ (inv (right-unit r))) ∘ (concat (p ∙ refl) (inv (right-unit p)))
 
--- Exercise 4.6
+-- Exercise 5.4
+
 lift :
   {i j : Level} {A : UU i} {B : A → UU j} {x y : A} (p : Id x y)
   (b : B x) → Id (pair x b) (pair y (tr B p b))
 lift refl b = refl
 
--- Exercise 4.8
+-- Exercise 5.5
 
 abstract
   associative-add-ℕ :
@@ -297,8 +316,9 @@ abstract
     ( right-distributive-mul-add-ℕ (mul-ℕ x y) y z) ∙ 
     ( ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))
 
--- Exercise 4.7
-pentagon :
+-- Exercise 5.6
+
+Mac-Lane-pentagon :
   {i : Level} {A : UU i} {a b c d e : A}
   (p : Id a b) (q : Id b c) (r : Id c d) (s : Id d e) →
   let α₁ = (ap (λ t → t ∙ s) (assoc p q r))
@@ -308,4 +328,4 @@ pentagon :
       α₅ = (assoc p q (r ∙ s))
   in
   Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
-pentagon refl refl refl refl = refl
+Mac-Lane-pentagon refl refl refl refl = refl

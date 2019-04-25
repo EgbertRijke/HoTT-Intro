@@ -26,43 +26,75 @@ Identity type & Path fibration\\
 
 \section{The inductive definition of identity types}
 
-Let $a:A$ be a term in context $\Gamma$. The \define{identity type}\index{identity type|textbf} of $A$ at $a:A$ is the inductive type family 
-\begin{equation*}
-\Gamma,x:A\vdash a =_A x~\mathrm{type}
-\end{equation*}
-with constructor
-\begin{equation*}
-\Gamma\vdash \refl{a} : a=_A a.
-\end{equation*}
-The induction principle postulates that for any type family
-\begin{equation*}
-\Gamma,x:A,p: a=_A x\vdash P(x,p)~\mathrm{type}
-\end{equation*}
-%we can derive
-%\begin{prooftree}
-%\AxiomC{$\Gamma,\Delta[a/x,\refl{a}/p]\vdash \alpha : P(a,\refl{a})$}
-%\UnaryInfC{$\Gamma,x:A,p:\idtypevar{A}(a,x),\Delta\vdash \mathsf{path\usc{}ind}_a(\alpha,x,p):P(x,p)$}
-%\end{prooftree}
-there is a term
-\begin{equation*}
-\mathsf{path\usc{}ind}_a : P(a,\refl{a})\to \prd{x:A}{p:a=_A x}P(x,p)
-\end{equation*}
-in context $\Gamma$, satisfying the computation rule
-\begin{equation*}
-\mathsf{path\usc{}ind}_a(y,a,\refl{a})\jdeq y.
-\end{equation*}
-A term of type $a=_A x$ is also called an \define{identification}\index{identification|textbf} of $a$ with $x$, and sometimes it is called a \define{path}\index{path|textbf} from $a$ to $x$.
-The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination|textbf} or \define{path induction}\index{path induction|textbf}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}|textbf} for the identity type on $A$. 
+\begin{defn}
+  Consider a type $A$ and let $a:A$. Then we define the \define{identity type}\index{identity type|textbf} of $A$ at $a$ as an inductive family of types $a =_A x$ indexed by $x:A$, of which the constructor is
+  \begin{equation*}
+    \refl{a}:a=_Aa.
+  \end{equation*}
+  The induction principle of the identity type postulates that for any family of types $P(x,p)$ indexed by $x:A$ and $p:a=_A x$, there is a function
+  \begin{equation*}
+    \mathsf{path\usc{}ind}_a:P(a,\refl{a}) \to \prd{x:A}{p:a=_A x} P(x,p)
+  \end{equation*}
+  that satisfies $\mathsf{path\usc{}ind}_a(p,a,\refl{a})\jdeq p$.
 
-We also assume that the universe $\UU$ is closed under identity types, i.e., that there is a map
-\begin{equation*}
-\check{\mathsf{Id}}:\prd{A:\UU}\mathrm{El}(A)\to\mathrm{El}(A)\to\UU
-\end{equation*}
-satisfying
-\begin{equation*}
-\mathrm{El}(\check{\mathsf{Id}}(A,a,x))\jdeq a=_{\mathrm{El}(A)} x.
-\end{equation*}
+  A term of type $a=_A x$ is also called an \define{identification}\index{identification|textbf} of $a$ with $x$, and sometimes it is called a \define{path}\index{path|textbf} from $a$ to $x$.
+The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination|textbf} or \define{path induction}\index{path induction|textbf}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}|textbf} for the identity type on $A$.
+\end{defn}
 
+\begin{rmk}
+  We see that the identity type is not just an inductive type, like the inductive types $\N$, $\emptyt$, and $\unit$ for example, but it is and inductive \emph{family} of types. Even though we have a type $a=_A x$ for any $x:A$, the constructor only provides a term $\refl{a}:a=_A a$, identifying $a$ with itself. The induction principle then asserts that in order to prove something about all identifications of $a$ with some $x:A$, it suffices to prove this assertion about $\refl{a}$ only. We will see in the next sections that this induction principle is strong enough to derive many familiar facts about equality, namely that it is a symmetric and transitive relation, and that all functions preserve equality.
+\end{rmk}
+
+\begin{rmk}
+  Since the identity types require getting used to, we provide the formal rules
+  for identity types. The identity type is formed by the formation rule:
+  \begin{prooftree}
+    \AxiomC{$\Gamma\vdash a:A$}
+    \UnaryInfC{$\Gamma,x:A\vdash a=_A x~\mathrm{type}$}
+  \end{prooftree}
+  The constructor of the identity type is then given by the introduction rule:
+  \begin{prooftree}
+    \AxiomC{$\Gamma\vdash a:A$}
+    \UnaryInfC{$\Gamma\vdash \refl{a}:a=_A a$}
+  \end{prooftree}
+  The induction principle is now given by the elimination rule:
+  \begin{prooftree}
+    \AxiomC{$\Gamma\vdash a:A$}
+    \AxiomC{$\Gamma,x:A,p:a=_A x\vdash P(x,p)~\mathrm{type}$}
+    \BinaryInfC{$\Gamma\vdash \mathsf{path\usc{}ind}_a:P(a,\refl{a})\to\prd{x:A}{p:a=_A x}P(x,p)$}
+  \end{prooftree}
+  And finally the computation rule is:
+  \begin{prooftree}
+    \AxiomC{$\Gamma\vdash a:A$}
+    \AxiomC{$\Gamma,x:A,p:a=_A x\vdash P(x,p)~\mathrm{type}$}
+    \BinaryInfC{$\Gamma\vdash \mathsf{path\usc{}ind}_a(p,a,\refl{a})\jdeq p : P(a,\refl{a})$}
+  \end{prooftree}
+  Furthermore we postulate that any universe is closed under identity types, i.e., that there is a function
+  \begin{equation*}
+    \check{\mathsf{Id}}:\prd{A:\UU}\mathrm{El}(A)\to\mathrm{El}(A)\to\UU
+  \end{equation*}
+  satisfying
+  \begin{equation*}
+    \mathrm{El}(\check{\mathsf{Id}}(A,a,x))\jdeq a=_{\mathrm{El}(A)} x.
+  \end{equation*}
+\end{rmk}
+
+\begin{rmk}
+  One might wonder whether it is also possible to form the identity type at a \emph{variable} of type $A$, rather than at a term. Thic is certainly possible: since we can form the identity type in \emph{any} context, we can form the identity type at a variable $x:A$ as follows:
+  \begin{prooftree}
+    \AxiomC{$\Gamma,x:A\vdash x:A$}
+    \UnaryInfC{$\Gamma,x:A,y:A\vdash x=_A y~\mathrm{type}$}
+  \end{prooftree}
+  In this way we obtain the 'binary' identity type. Its constructor is then also indexed by $x:A$. We have the following introduction rule
+  \begin{prooftree}
+    \AxiomC{$\Gamma,x:A\vdash x:A$}
+    \UnaryInfC{$\Gamma,x:A\vdash \refl{x}:x=_A x$}
+  \end{prooftree}
+  and similarly we have elimination and computation rules.
+\end{rmk}
+ 
+
+\begin{comment}
 In the following lemma we show that the identity type on $A$ is contained in any reflexive relation on $A$.
 
 \begin{lem}
@@ -89,6 +121,7 @@ Thus we see that by the induction principle for identity types we have a term
 \end{equation*}
 so it suffices to construct a term of type $R(x,x)$, which we have by reflexivity of $R$.
 \end{constr}
+\end{comment}
 
 \section{The groupoid structure of types}\label{sec:groupoid}
 We show that identifications can be \emph{concatenated} and \emph{inverted}, which corresponds to the transitivity and symmetry of the identity type. 
