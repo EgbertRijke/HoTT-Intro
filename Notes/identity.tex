@@ -339,56 +339,81 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
 
 \section{Identity systems}
 
-In this section we will show that type theory cannot distinguish between observational equality on $\N$ and the identity type on $\N$. The way we do this is by showing that the observational equality on $\N$ satisfies path induction.
+Many types come equipped with a reflexive relation that possesses a similar
+structure as the identity type. The observational equality on the natural
+numbers is such an example. We have see that it is a reflexive, symmetric, and
+transitive relation, and moreover it is contained in any other reflexive
+relation. As we will see in this section, the observational equality on the
+natural numbers even satisfies a variant of path induction, so in type theory
+we really can't distinguish between the identity type and observational
+equality.
+
+In this section we will introduce \emph{identity systems}. Those are reflexive
+relations on a type that satisfy path induction. Identity systems are useful
+to \emph{characterize} the identity type of a given type. Characterizing
+identity types is one of the core activities in homotopy type theory, because
+in order to fully understand a type one has to understand in what ways two
+terms of this type can be identified.
 
 \begin{defn}
-  Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. We say that $B$ is an \define{(unary) identity system} if for every family $P$ indexed by $x:A$ and $y:B(x)$, there is a function map
+  Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. We say that $B$ is an \define{(unary) identity system} if for every family of types
+  $P(x,y)$ indexed by $x:A$ and $y:B(x)$, there is a function map
   \begin{equation*}
-    \mathsf{path\usc{}ind\usc{}sys}:P(a,b)\to \prd{x:A}{y:B(x)}P(x,y)
-  \end{equation*}
-  such that for every $p:P(a,b)$ there is an identification
-  \begin{equation*}
-    \mathsf{path\usc{}ind\usc{}sys}(p,a,b)=p.
-  \end{equation*}
-\end{defn}
-
-\begin{thm}
-  Let $n:\N$ be a natural number, and consider a family of types $P(x,e)$ indexed by $x:\N$ and $e:\EqN(n,x)$. Then there is a function
-  \begin{equation*}
-    \mathsf{ind\usc{}Eq}_\N:P(n,\mathsf{refl\usc{}Eq}_\N(n))\to\prd{x:\N}{e:\EqN(n,x)}P(x,e)
+    \mathsf{ind\usc{}id\usc{}sys}:P(a,b)\to \prd{x:A}{y:B(x)}P(x,y)
   \end{equation*}
   equipped with an identification
   \begin{equation*}
-    \mathsf{ind\usc{}Eq}_\N(p,n,\mathsf{refl\usc{}Eq}_\N(n))= p
+    \mathsf{ind\usc{}id\usc{}sys}(p,a,b)=p.
   \end{equation*}
-  for any $p:P(n,\mathsf{refl\usc{}Eq}_\N(n))$.
+  for every $p:P(a,b)$.
+\end{defn}
+
+\begin{rmk}
+  Note that in the definition of identity systems we require an identification for the `computation rule', rather than a judgmental equality. 
+\end{rmk}
+
+\begin{thm}
+  For any natural number $n$, the family $\mathsf{Eq}_\N(n,m)$ indexed by $m:\N$ is an identity system.
 \end{thm}
 
 \begin{proof}
-  Before we start the proof, we will rearrange the order of the variables so that the inductive hypothesis will be strong enough: by induction on $m,n:\N$ we will construct for any
+  Our first goal is to construct a function
+  \begin{equation*}
+    \mathsf{ind\usc{}Eq}_\N:P(n,\mathsf{refl\usc{}Eq}_\N(n))\to\prd{x:\N}{e:\EqN(n,x)}P(x,e)
+  \end{equation*}
+  for any family of types $P(x,e)$ indexed by $x:\N$ and $e:\mathsf{Eq}_\N(n,x)$. The construction on $\mathsf{ind\usc{}Eq}_\N$ is by induction on $n:\N$ and $x:\N$. However, before we start the inductive argument we make sure to rearrange the order of the variables so that the inductive hypothesis will be strong enough: by induction on $n,m:\N$ we will construct for any
   \begin{align*}
-    e & :\mathsf{Eq}_\N(m,n) \\
-    R & :\prd{x,y:\N}\mathsf{Eq}_\N(x,y)\to \UU \\
-    \rho & :\prd{x:\N}R(x,x,\mathsf{refl\usc{}Eq}_\N(x)),
+    e & :\mathsf{Eq}_\N(n,m) \\
+    P & :\prd{x:\N}\mathsf{Eq}_\N(n,x)\to \UU \\
+    p & :P(n,\mathsf{refl\usc{}Eq}_\N(n)),
   \end{align*}
-  a term of type $R(m,n,e)$. There are four cases to consider:
+  a term $\mathsf{ind\usc{}Eq}_\N(p,m,e):P(m,e)$. There are four cases to consider:
 
-  In the case where $m\jdeq 0$ and $n\jdeq 0$, the type $\mathsf{Eq}_\N(m,n)$ is the unit type. We proceed by induction on $e$, and we take $\rho(0):R(0,0,\ttt)$.
+  In the case where $n\jdeq 0$ and $m\jdeq 0$, the type $\mathsf{Eq}_\N(n,m)$ is the unit type. We proceed by induction on $e$, and we note that $\mathsf{refl\usc{}Eq}_\N(0)\jdeq\ttt$. Therefore we take as our definition
+  \begin{equation*}
+    \mathsf{ind\usc{}Eq}_\N(p,0,\ttt)\defeq p:P(0,\mathsf{refl\usc{}Eq}_\N(0)).
+  \end{equation*}
 
   In the case where $m\jdeq 0$ and $n\jdeq \succN(n')$, the type $\mathsf{Eq}_\N(m,n)$ is empty, so we proceed by the induction principle of the empty type and we are done.
 
   Similarly in the case where $m\jdeq\succN(m')$ and $n\jdeq 0$, the type $\mathsf{Eq}_\N(m,n)$ is empty, so we proceed by the induction principle of the empty type and we are done.
 
   In the inductive steps for both $m$ and $n$ we use that
-    \begin{equation*}
-      \mathsf{Eq}_\N(\succN(m),\succN(n))\jdeq \mathsf{Eq}_\N(m,n).
-    \end{equation*}
-    The inductive hypothesis gives for every $e'$, $R'$, and $\rho'$ a term of type $R'(m,n,e')$. Therefore we simply apply the inductive hypothesis to the case where
-    \begin{align*}
-      R'(x,y,e) & \defeq R(\succN(x),\succN(y),e) \\
-      \rho'(x) & \defeq \rho(\succN(x)),
-    \end{align*}
-    to obtain a term of type $R'(m,n,e)$. 
+  \begin{equation*}
+    \mathsf{Eq}_\N(\succN(m),\succN(n))\jdeq \mathsf{Eq}_\N(m,n).
+  \end{equation*}
+  The inductive hypothesis gives for every $e'$, $R'$, and $\rho'$ a term of type $R'(m,n,e')$. Therefore we simply apply the inductive hypothesis to the case where
+  \begin{align*}
+    R'(x,y,e) & \defeq R(\succN(x),\succN(y),e) \\
+    \rho'(x) & \defeq \rho(\succN(x)),
+  \end{align*}
+  to obtain a term of type $R'(m,n,e)$. This completes the construction of $\mathsf{ind\usc{}Eq}_\N$.
+  
+  Finally, we have to construct an identification
+  \begin{equation*}
+    \mathsf{comp\usc{}Eq}_\N(p,n):\mathsf{ind\usc{}Eq}_\N(p,n,\mathsf{refl\usc{}Eq}_\N(n))= p
+  \end{equation*}
+  for any $p:P(n,\mathsf{refl\usc{}Eq}_\N(n))$. This is again by induction on $n:\N$.
 \end{proof}
 
 \begin{exercises}
@@ -442,6 +467,7 @@ In this section we will show that type theory cannot distinguish between observa
       \ct{(\ct{\alpha_1}{\alpha_2})}{\alpha_3} = \ct{\alpha_4}{\alpha_5}.
     \end{equation*}
   \end{subexenum}
+\item Show that observational equality on the booleans is an identity system.
 \end{exercises}
 
 %\item In this exercise we show that the action on paths of a function preserves the groupoid-structure of a type.

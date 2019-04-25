@@ -100,56 +100,30 @@ is-equiv-map-equiv :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (map-equiv e)
 is-equiv-map-equiv e = pr2 e
 
-sec-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → sec f
-sec-is-equiv is-equiv-f = pr1 is-equiv-f
-
-map-sec-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
-map-sec-is-equiv is-equiv-f = pr1 (sec-is-equiv is-equiv-f)
-
-issec-map-sec-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (is-equiv-f : is-equiv f) → ((f ∘ map-sec-is-equiv is-equiv-f) ~ id)
-issec-map-sec-is-equiv is-equiv-f = pr2 (sec-is-equiv is-equiv-f)
-
-retr-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → retr f
-retr-is-equiv is-equiv-f = pr2 is-equiv-f
-
-map-retr-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
-map-retr-is-equiv is-equiv-f = pr1 (retr-is-equiv is-equiv-f)
-
-isretr-map-retr-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-  (is-equiv-f : is-equiv f) → (((map-retr-is-equiv is-equiv-f) ∘ f) ~ id)
-isretr-map-retr-is-equiv is-equiv-f = pr2 (retr-is-equiv is-equiv-f)
-
 has-inverse :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 has-inverse {i} {j} {A} {B} f =
   Σ (B → A) (λ g → ((f ∘ g) ~ id) × ((g ∘ f) ~ id))
 
 abstract
-  is-equiv-has-inverse :
-    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-    has-inverse f → is-equiv f
-  is-equiv-has-inverse (pair g (pair H K)) = pair (pair g H) (pair g K)
-
-abstract
   is-equiv-has-inverse' :
     {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-    (g : B → A) (H : (f ∘ g) ~ id) (K : (g ∘ f) ~ id) → is-equiv f
-  is-equiv-has-inverse' g H K =
-    is-equiv-has-inverse (pair g (pair H K))
+    has-inverse f → is-equiv f
+  is-equiv-has-inverse' (pair g (pair H K)) = pair (pair g H) (pair g K)
 
--- We now show that if f is an equivalence, then it has an inverse.
+abstract
+  is-equiv-has-inverse :
+    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+    (g : B → A) (H : (f ∘ g) ~ id) (K : (g ∘ f) ~ id) → is-equiv f
+  is-equiv-has-inverse g H K =
+    is-equiv-has-inverse' (pair g (pair H K))
+
+{- We now show that if f is an equivalence, then it has an inverse. -}
 
 htpy-section-retraction :
   { i j : Level} {A : UU i} {B : UU j} {f : A → B}
   ( is-equiv-f : is-equiv f) →
-  ( (map-sec-is-equiv is-equiv-f) ~ (map-retr-is-equiv is-equiv-f))
+  ( (pr1 (pr1 is-equiv-f))) ~ (pr1 (pr2 is-equiv-f))
 htpy-section-retraction {i} {j} {A} {B} {f} (pair (pair g G) (pair h H)) =
     (htpy-inv (H ·r g)) ∙h (h ·l G)
 
@@ -179,7 +153,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
     (is-equiv-f : is-equiv f) → is-equiv (inv-is-equiv is-equiv-f)
   is-equiv-inv-is-equiv {i} {j} {A} {B} {f} is-equiv-f =
-    is-equiv-has-inverse' f
+    is-equiv-has-inverse f
       ( isretr-inv-is-equiv is-equiv-f)
       ( issec-inv-is-equiv is-equiv-f)
 
@@ -215,7 +189,7 @@ abstract
     {i j k : Level} {A : UU i} {B : UU j} (C : A → B → UU k) →
     is-equiv (Π-swap {i} {j} {k} {A} {B} {C})
   is-equiv-Π-swap C =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-Π-swap C)
       ( htpy-refl id)
       ( htpy-refl id)
@@ -260,7 +234,7 @@ abstract
     {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
     is-equiv (eq-pair' {s = s} {t})
   is-equiv-eq-pair s t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( pair-eq)
       ( issec-pair-eq s t)
       ( isretr-pair-eq s t)
@@ -270,12 +244,13 @@ abstract
     {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
     is-equiv (pair-eq {s = s} {t})
   is-equiv-pair-eq s t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( eq-pair')
       ( isretr-pair-eq s t)
       ( issec-pair-eq s t)
 
--- We also define a function eq-pair-triv, which is like eq-pair but simplified for the case where B is just a type.
+{- We also define a function eq-pair-triv, which is like eq-pair but simplified 
+   for the case where B is just a type. -}
 
 Eq-prod :
   {i j : Level} {A : UU i} {B : UU j} (s t : A × B) → UU (i ⊔ j)
@@ -291,7 +266,18 @@ eq-pair-triv :
   Eq-prod s t → Id s t
 eq-pair-triv {s = s} {t} = eq-pair-triv' s t
 
--- Ideally, we would use the 3-for-2 property of equivalences to show that eq-pair-triv is an equivalence, using that eq-pair is an equivalence. Indeed, there is an equivalence (Id x x') × (Id y y') → Σ (Id x x') (λ p → Id (tr (λ x → B) p y) y'). However, to show that this map is an equivalence we either give a direct proof (in which case we might as well have given a direct proof that eq-pair-triv is an equivalence), or we use the fact that it is the induced map on total spaces of a fiberwise equivalence (the topic of Lecture 7). Thus it seems that a direct proof showing that eq-pair-triv is an equivalence is quickest for now. 
+{- Ideally, we would use the 3-for-2 property of equivalences to show that 
+   eq-pair-triv is an equivalence, using that eq-pair is an equivalence. 
+   Indeed, there is an equivalence 
+   
+     (Id x x') × (Id y y') → Σ (Id x x') (λ p → Id (tr (λ x → B) p y) y'). 
+
+   However, to show that this map is an equivalence we either give a direct 
+   proof (in which case we might as well have given a direct proof that 
+   eq-pair-triv is an equivalence), or we use the fact that it is the induced 
+   map on total spaces of a fiberwise equivalence (the topic of Lecture 8). 
+   Thus it seems that a direct proof showing that eq-pair-triv is an 
+   equivalence is quickest for now. -}
 
 pair-eq-triv' :
   {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
@@ -313,7 +299,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
     is-equiv (eq-pair-triv' s t)
   is-equiv-eq-pair-triv' s t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( pair-eq-triv' s t)
       ( issec-pair-eq-triv' s t)
       ( isretr-pair-eq-triv' s t)
@@ -332,12 +318,14 @@ htpy-element-constant :
 htpy-element-constant a star = refl
 
 -- Exercise 6.2
+
 ap-const :
   {i j : Level} {A : UU i} {B : UU j} (b : B) (x y : A) →
   (ap (const A B b) {x} {y}) ~ const (Id x y) (Id b b) refl
 ap-const b x .x refl = refl
 
 -- Exercise 6.3
+
 inv-inv :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) → Id (inv (inv p)) p
 inv-inv refl = refl
@@ -347,7 +335,7 @@ abstract
     {i : Level} {A : UU i} (x y : A) →
     is-equiv (λ (p : Id x y) → inv p)
   is-equiv-inv x y =
-    is-equiv-has-inverse' inv inv-inv inv-inv
+    is-equiv-has-inverse inv inv-inv inv-inv
 
 equiv-inv :
   {i : Level} {A : UU i} (x y : A) → (Id x y) ≃ (Id y x)
@@ -373,7 +361,7 @@ abstract
     {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
     is-equiv (concat y {z} p)
   is-equiv-concat p z =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-concat p z)
       ( issec-inv-concat p z)
       ( isretr-inv-concat p z)
@@ -407,7 +395,7 @@ abstract
     {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
     is-equiv (concat' {x = x} y q)
   is-equiv-concat' x q =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-concat' x q)
       ( issec-inv-concat' x q)
       ( isretr-inv-concat' x q)
@@ -437,7 +425,7 @@ abstract
     {i j : Level} {A : UU i} (B : A → UU j) {x y : A}
     (p : Id x y) → is-equiv (tr B p)
   is-equiv-tr B p =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-tr B p)
       ( issec-inv-tr B p)
       ( isretr-inv-tr B p)
@@ -476,7 +464,10 @@ htpy-inv-is-equiv H is-equiv-f is-equiv-f' b =
 
 -- Exercise 6.5
 
--- Exercise 6.5 (a) asks to show that, given a commuting triangle f ~ g ∘ h and a section s of h, we get a new commuting triangle g ~ f ∘ s. Moreover, under the same assumptions it follows that f has a section if and only if g has a section.
+{- Exercise 6.5 (a) asks to show that, given a commuting triangle f ~ g ∘ h and
+   a section s of h, we get a new commuting triangle g ~ f ∘ s. Moreover, under
+   the same assumptions it follows that f has a section if and only if g has a 
+   section. -}
 
 triangle-section :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
@@ -502,7 +493,10 @@ section-comp' f g h H sec-h sec-g =
     ( ( H ·r ((pr1 sec-h) ∘ (pr1 sec-g))) ∙h
       ( ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))) ∙h ((pr2 sec-g))))
 
--- Exercise 6.5 (b) is dual to exercise 5.5 (a). It asks to show that, given a commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f has a retraction if and only if h has a retraction.
+{- Exercise 6.5 (b) is dual to exercise 5.5 (a). It asks to show that, given a 
+   commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting
+   triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f
+   has a retraction if and only if h has a retraction. -}
 
 triangle-retraction :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
@@ -530,7 +524,8 @@ retraction-comp' f g h H retr-g retr-h =
     ( ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H) ∙h
       ( ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)) ∙h (pr2 retr-h)))
 
--- In Exercise 6.5 (c) we use the constructions of parts (a) and (b) to derive the 3-for-2 property of equivalences.
+{- In Exercise 6.5 (c) we use the constructions of parts (a) and (b) to derive 
+   the 3-for-2 property of equivalences. -}
 
 abstract
   is-equiv-comp :
@@ -605,7 +600,9 @@ abstract
 
 -- Exercise 6.6
 
--- In this exercise we show that the negation function on the booleans is an equivalence. Moreover, we show that any constant function on the booleans is not an equivalence.
+{- In this exercise we show that the negation function on the booleans is an 
+   equivalence. Moreover, we show that any constant function on the booleans is
+   not an equivalence. -}
 
 neg-𝟚 : bool → bool
 neg-𝟚 true = false
@@ -617,7 +614,7 @@ neg-neg-𝟚 false = refl
 
 abstract
   is-equiv-neg-𝟚 : is-equiv neg-𝟚
-  is-equiv-neg-𝟚 = is-equiv-has-inverse' neg-𝟚 neg-neg-𝟚 neg-neg-𝟚
+  is-equiv-neg-𝟚 = is-equiv-has-inverse neg-𝟚 neg-neg-𝟚 neg-neg-𝟚
 
 equiv-neg-𝟚 : bool ≃ bool
 equiv-neg-𝟚 = pair neg-𝟚 is-equiv-neg-𝟚
@@ -637,7 +634,8 @@ abstract
 
 -- Exercise 6.7
 
--- In this exercise we show that the successor function on the integers is an equivalence. 
+{- In this exercise we show that the successor function on the integers is an
+   equivalence. -}
 
 abstract
   left-inverse-pred-ℤ :
@@ -658,14 +656,15 @@ abstract
   
   is-equiv-succ-ℤ : is-equiv succ-ℤ
   is-equiv-succ-ℤ =
-    is-equiv-has-inverse' pred-ℤ right-inverse-pred-ℤ left-inverse-pred-ℤ
+    is-equiv-has-inverse pred-ℤ right-inverse-pred-ℤ left-inverse-pred-ℤ
   
 equiv-succ-ℤ : ℤ ≃ ℤ
 equiv-succ-ℤ = pair succ-ℤ is-equiv-succ-ℤ
 
 -- Exercise 6.8
 
--- In this exercise we construct an equivalence from A + B to B + A, showing that the coproduct is commutative.
+{- In this exercise we construct an equivalence from A + B to B + A, showing 
+   that the coproduct is commutative. -}
 
 swap-coprod :
   {i j : Level} (A : UU i) (B : UU j) → coprod A B → coprod B A
@@ -682,7 +681,7 @@ abstract
   is-equiv-swap-coprod :
     {i j : Level} (A : UU i) (B : UU j) → is-equiv (swap-coprod A B)
   is-equiv-swap-coprod A B =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( swap-coprod B A)
       ( swap-swap-coprod B A)
       ( swap-swap-coprod A B)
@@ -705,7 +704,7 @@ abstract
     {i j : Level} (A : UU i) (B : UU j) →
     is-equiv (swap-prod A B)
   is-equiv-swap-prod A B =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( swap-prod B A)
       ( swap-swap-prod B A)
       ( swap-swap-prod A B)
@@ -716,7 +715,8 @@ equiv-swap-prod A B = pair (swap-prod A B) (is-equiv-swap-prod A B)
 
 -- Exercise 6.9
 
--- In this exercise we show that if A is a retract of B, then so are its identity types.
+{- In this exercise we show that if A is a retract of B, then so are its 
+   identity types. -}
 
 ap-retraction :
   {i j : Level} {A : UU i} {B : UU j}
@@ -746,6 +746,7 @@ Id-retract-of-Id (pair i (pair r H)) x y =
     ( retr-ap i (pair r H) x y)
 
 -- Exercise 6.10
+
 Σ-assoc :
   {i j k : Level} (A : UU i) (B : A → UU j) (C : (Σ A B) → UU k) →
   Σ (Σ A B) C → Σ A (λ x → Σ (B x) (λ y → C (pair x y)))
@@ -771,12 +772,13 @@ abstract
     {i j k : Level} (A : UU i) (B : A → UU j)
     (C : (Σ A B) → UU k) → is-equiv (Σ-assoc A B C)
   is-equiv-Σ-assoc A B C =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( Σ-assoc' A B C)
       ( Σ-assoc-assoc' A B C)
       ( Σ-assoc-assoc A B C)
 
 -- Exercise 6.11
+
 Σ-swap :
   {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
   Σ A (λ x → Σ B (C x)) → Σ B (λ y → Σ A (λ x → C x y))
@@ -797,14 +799,15 @@ abstract
     {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
     is-equiv (Σ-swap A B C)
   is-equiv-Σ-swap A B C =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( Σ-swap' A B C)
       ( Σ-swap-swap B A (λ y x → C x y))
       ( Σ-swap-swap A B C)
 
 -- Exercise 6.12
 
--- Exercise 6.12 (a) simply asks to prove the unit laws. The left unit law holds by judgmental equality.
+{- Exercise 6.12 (a) simply asks to prove the unit laws. The left unit law 
+   holds by judgmental equality. -}
 
 abstract
   left-unit-law-add-ℤ :
@@ -821,7 +824,9 @@ abstract
   right-unit-law-add-ℤ (inr (inr (succ-ℕ x))) =
     ap succ-ℤ (right-unit-law-add-ℤ (inr (inr x)))
 
--- Exercise 6.12 (b) asks to show the left and right predecessor and successor laws. These are helpful to give proofs of associativity and commutativity.
+{- Exercise 6.12 (b) asks to show the left and right predecessor and successor 
+   laws. These are helpful to give proofs of associativity and commutativity. 
+   -}
 
 abstract
   left-predecessor-law-add-ℤ :
@@ -873,7 +878,10 @@ abstract
   right-successor-law-add-ℤ (inr (inr (succ-ℕ x))) y =
     ap succ-ℤ (right-successor-law-add-ℤ (inr (inr x)) y)
 
--- Exercise 6.12 (c) asks to prove associativity and commutativity. Note that we avoid an unwieldy amount of cases by only using induction on the first argument. The resulting proof term is fairly short, and we don't have to present ℤ as a certain quotient of ℕ × ℕ.
+{- Exercise 6.12 (c) asks to prove associativity and commutativity. Note that 
+   we avoid an unwieldy amount of cases by only using induction on the first 
+   argument. The resulting proof term is fairly short, and we don't have to 
+   present ℤ as a certain quotient of ℕ × ℕ. -}
 
 abstract
   associative-add-ℤ :
@@ -918,7 +926,10 @@ abstract
     ( ap succ-ℤ (commutative-add-ℤ (inr (inr x)) y)) ∙ 
     ( inv (right-successor-law-add-ℤ y (inr (inr x))))
 
--- Exercise 6.12 (d) finally asks to show the inverse laws, completing the verification of the group laws. Combined with associativity and commutativity we conclude that (add-ℤ x) and (λ x → add-ℤ x y) are equivalences, for every x : ℤ and y : ℤ, respectively.
+{- Exercise 6.12 (d) finally asks to show the inverse laws, completing the 
+   verification of the group laws. Combined with associativity and 
+   commutativity we conclude that (add-ℤ x) and (λ x → add-ℤ x y) are 
+   equivalences, for every x : ℤ and y : ℤ, respectively. -}
 
 abstract
   left-inverse-law-add-ℤ :
@@ -942,7 +953,7 @@ abstract
   is-equiv-add-ℤ-right :
     (x : ℤ) → is-equiv (add-ℤ x)
   is-equiv-add-ℤ-right x =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( add-ℤ (neg-ℤ x))
       ( λ y →
         ( inv (associative-add-ℤ x (neg-ℤ x) y)) ∙
@@ -961,7 +972,7 @@ abstract
 
 -- Exercise 6.13
 
--- We construct the functoriality of coproducts
+{- We construct the functoriality of coproducts. -}
 
 functor-coprod :
   {l1 l2 l1' l2' : Level} {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'} →

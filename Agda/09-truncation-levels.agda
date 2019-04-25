@@ -364,7 +364,7 @@ abstract
   is-equiv-eq-fib-diagonal : {l : Level} (A : UU l) (t : A × A) →
     is-equiv (eq-fib-diagonal A t)
   is-equiv-eq-fib-diagonal A t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-diagonal-eq A t)
       ( issec-fib-diagonal-eq A t)
       ( isretr-fib-diagonal-eq A t)
@@ -728,7 +728,7 @@ abstract
   is-equiv-is-prop : {l1 l2 : Level} {A : UU l1} {B : UU l2} → is-prop A →
     is-prop B → {f : A → B} → (B → A) → is-equiv f
   is-equiv-is-prop is-prop-A is-prop-B {f} g =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( g)
       ( λ y → center (is-prop-B (f (g y)) y))
       ( λ x → center (is-prop-A (g (f x)) x))
@@ -804,7 +804,7 @@ abstract
     {X : UU l3} (g : B → X) (h : A → B) (x : X) →
     is-equiv (map-fib-comp g h x)
   is-equiv-map-fib-comp g h x =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-map-fib-comp g h x)
       ( issec-inv-map-fib-comp g h x)
       ( isretr-inv-map-fib-comp g h x)
@@ -814,7 +814,7 @@ abstract
     {X : UU l3} (g : B → X) (h : A → B) (x : X) →
     is-equiv (inv-map-fib-comp g h x)
   is-equiv-inv-map-fib-comp g h x =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( map-fib-comp g h x)
       ( isretr-inv-map-fib-comp g h x)
       ( issec-inv-map-fib-comp g h x)

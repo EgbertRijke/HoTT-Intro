@@ -202,7 +202,7 @@ abstract
     { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
     induction-principle-circle l2 l → dependent-universal-property-circle l2 l
   dependent-universal-property-induction-principle-circle l ind-circle P =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( pr1 (ind-circle P))
       ( pr2 (ind-circle P))
       ( isretr-ind-circle l ind-circle P)

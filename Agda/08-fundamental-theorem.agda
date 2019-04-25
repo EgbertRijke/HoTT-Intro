@@ -45,7 +45,7 @@ abstract
     (f : (x : A) → B x → C x) → (t : Σ A C) →
     is-equiv (fib-ftr-fib-tot f t)
   is-equiv-fib-ftr-fib-tot f t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-tot-fib-ftr f t)
       ( issec-fib-tot-fib-ftr f t)
       ( isretr-fib-tot-fib-ftr f t)
@@ -56,7 +56,7 @@ abstract
     (f : (x : A) → B x → C x) → (t : Σ A C) →
     is-equiv (fib-tot-fib-ftr f t)
   is-equiv-fib-tot-fib-ftr f t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-ftr-fib-tot f t)
       ( isretr-fib-tot-fib-ftr f t)
       ( issec-fib-tot-fib-ftr f t)
@@ -137,7 +137,7 @@ abstract
     { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
     ( t : Σ B C) → is-equiv (fib-Σ-map-base-map-fib f C t)
   is-equiv-fib-Σ-map-base-map-fib f C t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-fib-Σ-map-base-map f C t)
       ( issec-fib-fib-Σ-map-base-map f C t)
       ( isretr-fib-fib-Σ-map-base-map f C t)
@@ -404,7 +404,7 @@ abstract
     {l1 l2 l3 : Level} (A : UU l1) (B : UU l2) (C : coprod A B → UU l3) →
     is-equiv (left-distributive-coprod-Σ-map A B C)
   is-equiv-left-distributive-coprod-Σ-map A B C =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-left-distributive-coprod-Σ-map A B C)
       ( issec-inv-left-distributive-coprod-Σ-map A B C)
       ( isretr-inv-left-distributive-coprod-Σ-map A B C)
@@ -413,7 +413,7 @@ abstract
   is-equiv-map-to-empty :
     {l : Level} {A : UU l} (f : A → empty) → is-equiv f
   is-equiv-map-to-empty f =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ind-empty
       ind-empty
       ( λ x → ind-empty {P = λ t → Id (ind-empty (f x)) x} (f x))
@@ -440,7 +440,7 @@ abstract
   is-equiv-inl-coprod-empty :
     {l : Level} (A : UU l) → is-equiv (inl {A = A} {B = empty})
   is-equiv-inl-coprod-empty A =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-inl-coprod-empty A)
       ( issec-inv-inl-coprod-empty A)
       ( λ x → refl)
@@ -459,7 +459,7 @@ abstract
   is-equiv-inr-coprod-empty :
     {l : Level} (B : UU l) → is-equiv (inr {A = empty} {B = B})
   is-equiv-inr-coprod-empty B =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-inr-coprod-empty B)
       ( issec-inv-inr-coprod-empty B)
       ( λ x → refl)
@@ -959,7 +959,7 @@ abstract
     { l1 l2 : Level} {A : UU l1} {B : UU l2}
     (f : A → B) → is-half-adjoint-equivalence f → is-equiv f
   is-equiv-is-half-adjoint-equivalence f (pair g (pair G (pair H K))) =
-    is-equiv-has-inverse' g G H
+    is-equiv-has-inverse g G H
 
 abstract
   is-equiv-is-path-split :
@@ -1099,11 +1099,9 @@ abstract
     is-equiv (swap-total-Eq-structure B C D)
   is-equiv-swap-total-Eq-structure B C D =
     is-equiv-has-inverse
-      ( pair
-        ( swap-total-Eq-structure C B (λ x z y → D x y z))
-        ( pair
-          ( htpy-swap-total-Eq-structure B C D)
-          ( htpy-swap-total-Eq-structure C B (λ x z y → D x y z))))
+      ( swap-total-Eq-structure C B (λ x z y → D x y z))
+      ( htpy-swap-total-Eq-structure B C D)
+      ( htpy-swap-total-Eq-structure C B (λ x z y → D x y z))
 
 abstract
   is-contr-Σ :

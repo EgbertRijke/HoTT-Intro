@@ -505,7 +505,7 @@ abstract
     {i j : Level} (A : UU i) (B : UU j) →
     is-pullback (const A unit star) (const B unit star) (cone-prod A B)
   is-pullback-prod A B =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( λ t → pair (pr1 t) (pr1 (pr2 t)))
       ( λ t →
         eq-Eq-canonical-pullback
@@ -580,7 +580,7 @@ abstract
     is-pullback (pr1 {A = X} {B = P}) (pr1 {A = X} {B = Q})
       (cone-fiberwise-prod P Q)
   is-pullback-fiberwise-prod P Q =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-gap-fiberwise-prod P Q)
       ( issec-inv-gap-fiberwise-prod P Q)
       ( isretr-inv-gap-fiberwise-prod P Q)
@@ -760,7 +760,7 @@ abstract
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (Q : B → UU l3) →
     is-pullback f (pr1 {B = Q}) (cone-subst f Q)
   is-pullback-cone-subst f Q =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-gap-cone-subst f Q)
       ( issec-inv-gap-cone-subst f Q)
       ( isretr-inv-gap-cone-subst f Q)
@@ -1258,7 +1258,7 @@ abstract
     (f : A' → A) (g : B' → B) (x : A) →
     is-equiv (fib-functor-coprod-inl-fib f g x)
   is-equiv-fib-functor-coprod-inl-fib f g x =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-fib-functor-coprod-inl f g x)
       ( issec-fib-fib-functor-coprod-inl f g x)
       ( isretr-fib-fib-functor-coprod-inl f g x)
@@ -1313,7 +1313,7 @@ abstract
     (f : A' → A) (g : B' → B) (y : B) →
     is-equiv (fib-functor-coprod-inr-fib f g y)
   is-equiv-fib-functor-coprod-inr-fib f g y =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-fib-functor-coprod-inr f g y)
       ( issec-fib-fib-functor-coprod-inr f g y)
       ( isretr-fib-fib-functor-coprod-inr f g y)
@@ -1998,7 +1998,7 @@ abstract
     {l : Level} {A : UU l} (x y : A) →
     is-pullback (const unit A x) (const unit A y) (cone-Id x y)
   is-pullback-cone-Id x y =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-gap-cone-Id x y)
       ( issec-inv-gap-cone-Id x y)
       ( isretr-inv-gap-cone-Id x y)
@@ -2041,7 +2041,7 @@ abstract
     {l : Level} {A : UU l} (t : A × A) →
     is-pullback (const unit (A × A) t) (diagonal A) (cone-Id' t)
   is-pullback-cone-Id' t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-gap-cone-Id' t)
       ( issec-inv-gap-cone-Id' t)
       ( isretr-inv-gap-cone-Id' t)
@@ -2087,7 +2087,7 @@ abstract
     (t : canonical-pullback f f) →
     is-equiv (fib-ap-fib-diagonal-map f t)
   is-equiv-fib-ap-fib-diagonal-map f t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-diagonal-map-fib-ap f t)
       ( issec-fib-diagonal-map-fib-ap f t)
       ( isretr-fib-diagonal-map-fib-ap f t)
@@ -2161,7 +2161,7 @@ abstract
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
     (f : A → X) (g : B → X) → is-equiv (map-canonical-pullback-swap f g)
   is-equiv-map-canonical-pullback-swap f g =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( map-canonical-pullback-swap g f)
       ( inv-inv-map-canonical-pullback-swap f g)
       ( inv-inv-map-canonical-pullback-swap g f)
@@ -2535,7 +2535,7 @@ abstract
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
     (f : A → X) (g : B → X) → is-equiv (map-cone-fold f g)
   is-equiv-map-cone-fold f g =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-map-cone-fold f g)
       ( issec-inv-map-cone-fold f g)
       ( isretr-inv-map-cone-fold f g)
@@ -2751,7 +2751,7 @@ abstract
     (f : A → C) (g : B → D) (t : C × D) →
     is-equiv (map-fib-functor-prod f g t)
   is-equiv-map-fib-functor-prod f g t =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-map-fib-functor-prod f g t)
       ( issec-inv-map-fib-functor-prod f g t)
       ( isretr-inv-map-fib-functor-prod f g t)
@@ -2909,7 +2909,7 @@ abstract
     (f : (i : I) → A i → X i) (g : (i : I) → B i → X i) →
     is-equiv (map-canonical-pullback-Π f g)
   is-equiv-map-canonical-pullback-Π f g =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-map-canonical-pullback-Π f g)
       ( issec-inv-map-canonical-pullback-Π f g)
       ( isretr-inv-map-canonical-pullback-Π f g)

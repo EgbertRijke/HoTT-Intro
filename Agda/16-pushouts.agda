@@ -528,14 +528,12 @@ dependent-universal-property-pushout-Ind-pushout f g c H l P =
       comp-pushout = pr2 (H l P)
   in
   is-equiv-has-inverse
-    ( pair
-      ( ind-pushout)
-      ( pair
-        ( comp-pushout)
-        ( λ h → eq-htpy (htpy-eq-dgen-pushout f g c H
-          ( ind-pushout (dgen-pushout f g c h))
-          ( h)
-          ( pr2 (H l P) (dgen-pushout f g c h))))))
+    ( ind-pushout)
+    ( comp-pushout)
+    ( λ h → eq-htpy (htpy-eq-dgen-pushout f g c H
+      ( ind-pushout (dgen-pushout f g c h))
+      ( h)
+      ( pr2 (H l P) (dgen-pushout f g c h))))
 
 {- The converse, that the dependent universal property implies the induction
    principle, is a mere triviality. -}

@@ -147,7 +147,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
     is-contr-map f → is-equiv f
   is-equiv-is-contr-map is-contr-f =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( inv-is-contr-map is-contr-f)
       ( issec-is-contr-map is-contr-f)
       ( isretr-is-contr-map is-contr-f)
@@ -194,7 +194,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
     {s t : fib f y} → is-equiv (Eq-fib-eq f y {s} {t})
   is-equiv-Eq-fib-eq f y {s} {t} =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( eq-Eq-fib f y)
       ( issec-eq-Eq-fib f y)
       ( isretr-eq-Eq-fib f y)
@@ -204,7 +204,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} (f : A → B) (y : B) →
     {s t : fib f y} → is-equiv (eq-Eq-fib f y {s} {t})
   is-equiv-eq-Eq-fib f y {s} {t} =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( Eq-fib-eq f y)
       ( isretr-eq-Eq-fib f y)
       ( issec-eq-Eq-fib f y)
@@ -427,7 +427,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
     is-contr A → is-contr B → is-equiv f
   is-equiv-is-contr {i} {j} {A} {B} f is-contr-A is-contr-B =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( const B A (center is-contr-A))
       ( sing-ind-is-contr B is-contr-B _ _
         ( inv (contraction is-contr-B (f (center is-contr-A)))))
@@ -496,7 +496,7 @@ abstract
     {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
     is-equiv (left-unit-law-Σ-map B is-contr-C)
   is-equiv-left-unit-law-Σ-map B is-contr-C =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( left-unit-law-Σ-map-conv B is-contr-C)
       ( right-inverse-left-unit-law-Σ-map-conv B is-contr-C)
       ( left-inverse-left-unit-law-Σ-map-conv B is-contr-C)
@@ -506,7 +506,7 @@ abstract
     {i j : Level} {C : UU i} (B : C → UU j) (is-contr-C : is-contr C) →
     is-equiv (left-unit-law-Σ-map-conv B is-contr-C)
   is-equiv-left-unit-law-Σ-map-conv B is-contr-C =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( left-unit-law-Σ-map B is-contr-C)
       ( left-inverse-left-unit-law-Σ-map-conv B is-contr-C)
       ( right-inverse-left-unit-law-Σ-map-conv B is-contr-C)
@@ -569,7 +569,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} (f : A → B ) →
     is-equiv (Σ-fib-to-domain f)
   is-equiv-Σ-fib-to-domain f =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( domain-to-Σ-fib f)
       ( right-inverse-domain-to-Σ-fib f)
       ( left-inverse-domain-to-Σ-fib f)
@@ -642,7 +642,7 @@ abstract
     {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
     is-equiv (fib-fam-fib-pr1 B a)
   is-equiv-fib-fam-fib-pr1 B a =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-pr1-fib-fam B a)
       ( right-inverse-fib-pr1-fib-fam B a)
       ( left-inverse-fib-pr1-fib-fam B a)
@@ -652,7 +652,7 @@ abstract
     {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
     is-equiv (fib-pr1-fib-fam B a)
   is-equiv-fib-pr1-fib-fam B a =
-    is-equiv-has-inverse'
+    is-equiv-has-inverse
       ( fib-fam-fib-pr1 B a)
       ( left-inverse-fib-pr1-fib-fam B a)
       ( right-inverse-fib-pr1-fib-fam B a)
