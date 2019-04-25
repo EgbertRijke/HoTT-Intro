@@ -5,7 +5,8 @@ module 06-equivalences where
 import 05-identity-types
 open 05-identity-types public
 
--- Section 5.1 Homotopies
+-- Section 6.1 Homotopies
+
 _~_ :
   {i j : Level} {A : UU i} {B : A → UU j} (f g : (x : A) → B x) → UU (i ⊔ j)
 f ~ g = (x : _) → Id (f x) (g x)
@@ -69,7 +70,8 @@ htpy-right-whisk H f x = H (f x)
 
 _·r_ = htpy-right-whisk
 
--- Section 5.2 Bi-invertible maps
+-- Section 6.2 Bi-invertible maps
+
 sec :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 sec {i} {j} {A} {B} f = Σ (B → A) (λ g → (f ∘ g) ~ id)
@@ -142,31 +144,21 @@ abstract
   is-equiv-has-inverse' g H K =
     is-equiv-has-inverse (pair g (pair H K))
 
-htpy-secf-retrf :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B}
-  (is-equiv-f : is-equiv f) →
-  (map-sec-is-equiv is-equiv-f ~ map-retr-is-equiv is-equiv-f)
-htpy-secf-retrf {i} {j} {A} {B} {f} (pair (pair g issec) (pair h isretr)) =
-  htpy-concat
-    ( h ∘ (f ∘ g))
-    ( htpy-inv (htpy-right-whisk isretr g))
-    ( htpy-left-whisk h issec)
+-- We now show that if f is an equivalence, then it has an inverse.
 
--- For some reason Agda takes significantly longer to type-check the files if
--- the following definition is given directly in terms of E : is-equiv-f.
+htpy-section-retraction :
+  { i j : Level} {A : UU i} {B : UU j} {f : A → B}
+  ( is-equiv-f : is-equiv f) →
+  ( (map-sec-is-equiv is-equiv-f) ~ (map-retr-is-equiv is-equiv-f))
+htpy-section-retraction {i} {j} {A} {B} {f} (pair (pair g G) (pair h H)) =
+    (htpy-inv (H ·r g)) ∙h (h ·l G)
+
 has-inverse-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
   is-equiv f → has-inverse f
-has-inverse-is-equiv
-  {i} {j} {A} {B} {f} (pair (pair g issec) (pair h isretr)) =
-  pair g
-    ( pair issec
-      ( htpy-concat
-        ( h ∘ f)
-        ( htpy-right-whisk
-          ( htpy-secf-retrf ( pair (pair g issec) (pair h isretr)))
-          ( f))
-        ( isretr)))
+has-inverse-is-equiv {i} {j} {A} {B} {f} (pair (pair g G) (pair h H)) =
+  let is-equiv-f = pair (pair g G) (pair h H) in
+  pair g (pair G (((htpy-section-retraction is-equiv-f) ·r f) ∙h H))
 
 inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
@@ -230,67 +222,58 @@ abstract
 
 -- Section 5.3 The identity type of a Σ-type
 
-eq-pair' :
-  {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
-  (Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))) → Id s t
-eq-pair' (pair x y) (pair x' y') (pair refl refl) = refl
+Eq-Σ :
+  {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) → UU (i ⊔ j)
+Eq-Σ {B = B} s t = Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))
+
+reflexive-Eq-Σ :
+  {i j : Level} {A : UU i} {B : A → UU j} (s : Σ A B) → Eq-Σ s s
+reflexive-Eq-Σ (pair a b) = pair refl refl
+
+pair-eq :
+  {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
+  (Id s t) → Eq-Σ s t
+pair-eq {s = s} refl = reflexive-Eq-Σ s
 
 eq-pair :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
-  (Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))) → Id s t
-eq-pair {i} {j} {A} {B} {s} {t} = eq-pair' s t
+  (α : Id (pr1 s) (pr1 t)) → Id (tr B α (pr2 s)) (pr2 t) → Id s t
+eq-pair {B = B} {pair x y} {pair .x .y} refl refl = refl
 
-pair-eq' :
-  {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
-  (Id s t) → Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))
-pair-eq' s t refl = pair refl refl
-
-pair-eq  :
+eq-pair' :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
-  (Id s t) → Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))
-pair-eq {i} {j} {A} {B} {s} {t} = pair-eq' s t
+  Eq-Σ s t → Id s t
+eq-pair' (pair α β) = eq-pair α β
 
 isretr-pair-eq :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
-  (((pair-eq' s t) ∘ (eq-pair' s t)) ~ id)
-isretr-pair-eq (pair x y) (pair x' y') (pair refl refl) = refl
+  ((pair-eq {s = s} {t}) ∘ (eq-pair' {s = s} {t})) ~ id {A = Eq-Σ s t}
+isretr-pair-eq (pair x y) (pair .x .y) (pair refl refl) = refl
 
 issec-pair-eq :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
-  (((eq-pair' s t) ∘ (pair-eq' s t)) ~ id)
+  ((eq-pair' {s = s} {t}) ∘ (pair-eq {s = s} {t})) ~ id
 issec-pair-eq (pair x y) .(pair x y) refl = refl
 
 abstract
-  is-equiv-eq-pair' :
-    {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
-    is-equiv (eq-pair' s t)
-  is-equiv-eq-pair' s t =
-    is-equiv-has-inverse'
-      ( pair-eq' s t)
-      ( issec-pair-eq s t)
-      ( isretr-pair-eq s t)
-
-abstract
   is-equiv-eq-pair :
-    {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
-    is-equiv (eq-pair {i} {j} {A} {B} {s} {t})
-  is-equiv-eq-pair {s = s} {t} = is-equiv-eq-pair' s t
-
-abstract
-  is-equiv-pair-eq' :
     {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
-    is-equiv (pair-eq' s t)
-  is-equiv-pair-eq' s t =
+    is-equiv (eq-pair' {s = s} {t})
+  is-equiv-eq-pair s t =
     is-equiv-has-inverse'
-      ( eq-pair {s = s} {t = t})
-      ( isretr-pair-eq s t)
+      ( pair-eq)
       ( issec-pair-eq s t)
+      ( isretr-pair-eq s t)
 
 abstract
   is-equiv-pair-eq :
-    {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
+    {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) →
     is-equiv (pair-eq {s = s} {t})
-  is-equiv-pair-eq {s = s} {t} = is-equiv-pair-eq' s t
+  is-equiv-pair-eq s t =
+    is-equiv-has-inverse'
+      ( eq-pair')
+      ( isretr-pair-eq s t)
+      ( issec-pair-eq s t)
 
 -- We also define a function eq-pair-triv, which is like eq-pair but simplified for the case where B is just a type.
 

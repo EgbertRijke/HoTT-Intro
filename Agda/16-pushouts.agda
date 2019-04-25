@@ -306,9 +306,7 @@ cocone-map-id :
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
   Id (cocone-map f g c id) c
 cocone-map-id f g (pair i (pair j H)) =
-  eq-pair ( pair refl
-    ( eq-pair (pair refl
-      ( eq-htpy (λ s → ap-id (H s))))))
+  eq-pair refl (eq-pair refl (eq-htpy (λ s → ap-id (H s))))
 
 cocone-map-comp :
   {l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -316,9 +314,7 @@ cocone-map-comp :
   {Y : UU l5} (h : X → Y) {Z : UU l6} (k : Y → Z) →
   Id (cocone-map f g c (k ∘ h)) ((cocone-map f g (cocone-map f g c h) k))
 cocone-map-comp f g (pair i (pair j H)) h k =
-  eq-pair (pair refl
-    ( eq-pair (pair refl
-      ( eq-htpy (λ s → ap-comp k h (H s))))))
+  eq-pair refl (eq-pair refl (eq-htpy (λ s → ap-comp k h (H s))))
 
 {- A cocone c on a span S is said to satisfy the universal property of the
    pushout of S if the function cocone-map is an equivalence for every type Y.
@@ -454,8 +450,7 @@ triangle-pullback-property-pushout-universal-property-pushout :
     ( gap (λ h → h ∘ f) (λ h → h ∘ g) (cone-pullback-property-pushout f g c Y)))
 triangle-pullback-property-pushout-universal-property-pushout
   {S = S} {A = A} {B = B} f g (pair i (pair j H)) Y h =
-    eq-pair
-      ( pair refl (eq-pair (pair refl (inv (issec-eq-htpy (h ·l H))))))
+    eq-pair refl (eq-pair refl (inv (issec-eq-htpy (h ·l H))))
 
 pullback-property-pushout-universal-property-pushout :
   {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2}
@@ -570,8 +565,7 @@ triangle-dependent-pullback-property-pushout :
       ( λ (h : (b : B) → P (j b)) → λ s → h (g s))
       ( cone-dependent-pullback-property-pushout f g c P)))
 triangle-dependent-pullback-property-pushout f g (pair i (pair j H)) P h =
-  eq-pair (pair refl (eq-pair (pair refl
-    ( inv (issec-eq-htpy (λ x → apd h (H x)))))))
+  eq-pair refl (eq-pair refl (inv (issec-eq-htpy (λ x → apd h (H x)))))
 
 dependent-pullback-property-dependent-universal-property-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}

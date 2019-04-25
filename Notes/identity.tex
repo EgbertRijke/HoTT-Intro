@@ -38,7 +38,7 @@ Identity type & Path fibration\\
   that satisfies $\mathsf{path\usc{}ind}_a(p,a,\refl{a})\jdeq p$.
 
   A term of type $a=_A x$ is also called an \define{identification}\index{identification|textbf} of $a$ with $x$, and sometimes it is called a \define{path}\index{path|textbf} from $a$ to $x$.
-The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination|textbf} or \define{path induction}\index{path induction|textbf}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}|textbf} for the identity type on $A$.
+The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination|textbf} or \define{path induction}\index{path induction|textbf}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}|textbf} for the identity type on $A$, and often we write $a=x$ for the type of identifications of $a$ with $x$, omitting reference to the ambient type $A$.
 \end{defn}
 
 \begin{rmk}
@@ -80,7 +80,7 @@ The induction principle for identity types is sometimes called \define{identific
 \end{rmk}
 
 \begin{rmk}
-  One might wonder whether it is also possible to form the identity type at a \emph{variable} of type $A$, rather than at a term. Thic is certainly possible: since we can form the identity type in \emph{any} context, we can form the identity type at a variable $x:A$ as follows:
+  One might wonder whether it is also possible to form the identity type at a \emph{variable} of type $A$, rather than at a term. This is certainly possible: since we can form the identity type in \emph{any} context, we can form the identity type at a variable $x:A$ as follows:
   \begin{prooftree}
     \AxiomC{$\Gamma,x:A\vdash x:A$}
     \UnaryInfC{$\Gamma,x:A,y:A\vdash x=_A y~\mathrm{type}$}

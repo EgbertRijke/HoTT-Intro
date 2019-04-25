@@ -517,7 +517,7 @@ abstract
                 ( is-prop-is-contr is-contr-unit star star)
                 ( pr2 (pr2 t))
                 ( refl)))))
-      ( λ t → eq-pair (pair refl refl))
+      ( λ t → eq-pair refl refl)
 
 {- We conclude that cartesian products satisfy the universal property of 
    pullbacks. -}
@@ -563,7 +563,7 @@ issec-inv-gap-fiberwise-prod :
   ((gap (pr1 {B = P}) (pr1 {B = Q}) (cone-fiberwise-prod P Q)) ∘
   (inv-gap-fiberwise-prod P Q)) ~ id
 issec-inv-gap-fiberwise-prod P Q (pair (pair x p) (pair (pair .x q) refl)) =
-  eq-pair (pair refl (eq-pair (pair refl refl)))
+  eq-pair refl (eq-pair refl refl)
 
 isretr-inv-gap-fiberwise-prod :
   {l1 l2 l3 : Level} {X : UU l1} (P : X → UU l2) (Q : X → UU l3) →
@@ -848,15 +848,9 @@ square-tot-fib-square f g c (pair .((pr1 c) x) (pair x refl)) =
       q = pr1 (pr2 c)
       H = pr2 (pr2 c)
   in
-  eq-pair
-    ( pair refl
-      ( eq-pair
-        ( pair refl
-          ( inv
-            ( concat
-              ( inv (inv (H x)))
-              ( ap inv (right-unit (inv (H x))))
-              ( inv-inv (H x)))))))
+  eq-pair refl
+    ( eq-pair refl
+      ( inv ((ap inv (right-unit (inv (H x)))) ∙ (inv-inv (H x)))))
 
 abstract
   is-fiberwise-equiv-fib-square-is-pullback :
@@ -1074,12 +1068,12 @@ fib-square-comp-horizontal i j h c d .(pr1 d a) (pair a refl) =
       l = pr1 (pr2 c)
       K = pr2 (pr2 c)
   in
-  eq-pair (pair refl
+  eq-pair refl
     ( ( ap (concat' _ refl) (distributive-inv-concat (ap j (H a)) (K (k a)))) ∙
       ( ( assoc (inv (K (k a))) (inv (ap j (H a))) refl) ∙
         ( ap (concat _ (inv (K (k a))))
           ( ( ap (concat' _ refl) (inv (ap-inv j (H a)))) ∙
-            ( inv (ap-concat j (inv (H a)) refl)))))))
+            ( inv (ap-concat j (inv (H a)) refl))))))
 
 fib-square-comp-vertical : 
   {l1 l2 l3 l4 l5 l6 : Level}
@@ -1096,22 +1090,21 @@ fib-square-comp-vertical :
 fib-square-comp-vertical f g h
   (pair p (pair q H)) (pair p' (pair q' H')) .(p (p' a))
   (pair (pair .(p' a) refl) (pair a refl)) =
-  eq-pair
-    ( pair refl
-      ( ( right-unit (inv ((H (p' a)) ∙ (ap g (H' a))))) ∙
-        ( ( distributive-inv-concat (H (p' a)) (ap g (H' a))) ∙
-          ( ( ap
-              ( concat _ (inv (ap g (H' a))))
-              ( inv (right-unit (inv (H (p' a)))))) ∙
-            ( ap
-              ( concat' _
-                ( pr2
-                  ( fib-square f g
-                    ( pair p (pair q H))
-                    ( p (p' a))
-                    ( pair (p' a) refl))))
-              ( ( inv (ap-inv g (H' a))) ∙
-                ( ap (ap g) (inv (right-unit (inv (H' a)))))))))))
+  eq-pair refl
+    ( ( right-unit (inv ((H (p' a)) ∙ (ap g (H' a))))) ∙
+      ( ( distributive-inv-concat (H (p' a)) (ap g (H' a))) ∙
+        ( ( ap
+            ( concat _ (inv (ap g (H' a))))
+            ( inv (right-unit (inv (H (p' a)))))) ∙
+          ( ap
+            ( concat' _
+              ( pr2
+                ( fib-square f g
+                  ( pair p (pair q H))
+                  ( p (p' a))
+                  ( pair (p' a) refl))))
+            ( ( inv (ap-inv g (H' a))) ∙
+              ( ap (ap g) (inv (right-unit (inv (H' a))))))))))
 
 abstract
   is-pullback-rectangle-is-pullback-left-square :
@@ -1238,10 +1231,10 @@ issec-fib-fib-functor-coprod-inl : {l1 l2 l1' l2' : Level}
   ( (fib-functor-coprod-inl-fib f g x) ∘
     ( fib-fib-functor-coprod-inl f g x)) ~ id
 issec-fib-fib-functor-coprod-inl f g .(f a') (pair (inl a') refl) =
-  eq-pair (pair refl
+  eq-pair refl
     ( ap (ap inl)
       ( isretr-inv-is-equiv
-        ( is-equiv-map-raise _ (Id (f a') (f a'))) refl)))
+        ( is-equiv-map-raise _ (Id (f a') (f a'))) refl))
 issec-fib-fib-functor-coprod-inl f g x (pair (inr b') p) =
   ind-empty
     { P = λ t → Id
@@ -1256,8 +1249,8 @@ isretr-fib-fib-functor-coprod-inl : {l1 l2 l1' l2' : Level}
   ( (fib-fib-functor-coprod-inl f g x) ∘
     ( fib-functor-coprod-inl-fib f g x)) ~ id
 isretr-fib-fib-functor-coprod-inl f g .(f a') (pair a' refl) =
-  eq-pair (pair refl
-    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (f a') (f a'))) refl))
+  eq-pair refl
+    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (f a') (f a'))) refl)
 
 abstract
   is-equiv-fib-functor-coprod-inl-fib : {l1 l2 l1' l2' : Level}
@@ -1293,10 +1286,10 @@ issec-fib-fib-functor-coprod-inr : {l1 l2 l1' l2' : Level}
   ( (fib-functor-coprod-inr-fib f g y) ∘
     ( fib-fib-functor-coprod-inr f g y)) ~ id
 issec-fib-fib-functor-coprod-inr f g .(g b') (pair (inr b') refl) =
-  eq-pair (pair refl
+  eq-pair refl
     ( ap (ap inr)
       ( isretr-inv-is-equiv
-        ( is-equiv-map-raise _ (Id (g b') (g b'))) refl)))
+        ( is-equiv-map-raise _ (Id (g b') (g b'))) refl))
 issec-fib-fib-functor-coprod-inr f g y (pair (inl a') p) =
   ind-empty
     { P = λ t → Id
@@ -1311,8 +1304,8 @@ isretr-fib-fib-functor-coprod-inr : {l1 l2 l1' l2' : Level}
   ( (fib-fib-functor-coprod-inr f g y) ∘
     ( fib-functor-coprod-inr-fib f g y)) ~ id
 isretr-fib-fib-functor-coprod-inr f g .(g b') (pair b' refl) =
-  eq-pair (pair refl
-    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (g b') (g b'))) refl))
+  eq-pair refl
+    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (g b') (g b'))) refl)
 
 abstract
   is-equiv-fib-functor-coprod-inr-fib : {l1 l2 l1' l2' : Level}
@@ -1350,10 +1343,11 @@ triangle-descent-square-fib-functor-coprod-inl-fib :
         ( functor-coprod f g)
         ( pair (ind-coprod _ αA' αB') (ind-coprod _ HA HB))) (inl x)) ∘
     ( fib-functor-coprod-inl-fib f g x))
-triangle-descent-square-fib-functor-coprod-inl-fib {X = X} {X' = X'} f g h αA αB αA' αB' HA HB x
-  ( pair a' p) = eq-pair (pair refl
+triangle-descent-square-fib-functor-coprod-inl-fib
+  {X = X} {X' = X'} f g h αA αB αA' αB' HA HB x (pair a' p) =
+  eq-pair refl
     ( ap (concat (αA (f a')) (inv (HA a')))
-      ( ap-comp (ind-coprod _ αA αB) inl p)))
+      ( ap-comp (ind-coprod _ αA αB) inl p))
 
 triangle-descent-square-fib-functor-coprod-inr-fib :
   {l1 l2 l3 l1' l2' l3' : Level}
@@ -1370,9 +1364,9 @@ triangle-descent-square-fib-functor-coprod-inr-fib :
     ( fib-functor-coprod-inr-fib f g y))
 triangle-descent-square-fib-functor-coprod-inr-fib
   {X = X} {X' = X'} f g h αA αB αA' αB' HA HB y ( pair b' p) =
-  eq-pair (pair refl
+  eq-pair refl
     ( ap (concat (αB (g b')) (inv (HB b')))
-      ( ap-comp (ind-coprod _ αA αB) inr p)))
+      ( ap-comp (ind-coprod _ αA αB) inr p))
 
 abstract
   descent-coprod : {l1 l2 l3 l1' l2' l3' : Level}
@@ -1653,25 +1647,23 @@ triangle-is-pullback-htpy :
 triangle-is-pullback-htpy {A = A} {B} {X} {C} {f = f} {f'} Hf {g} {g'} Hg
   {pair p (pair q H)} {pair p' (pair q' H')} (pair Hp (pair Hq HH)) z =
   eq-pair
-    ( pair
-      ( Hp z)
-      ( ( tr-tot-pullback-rel f g (Hp z) (pair (q z) (H z))) ∙
-        ( eq-pair
-          ( pair
+    ( Hp z)
+    ( ( tr-tot-pullback-rel f g (Hp z) (pair (q z) (H z))) ∙
+      ( eq-pair
+        ( Hq z)
+        ( ( tr-id-right-subst
             ( Hq z)
-            ( ( tr-id-right-subst
-                ( Hq z)
-                ( f (p' z))
-                ( (inv (ap f (Hp z))) ∙ (H z))) ∙
-              ( ( assoc (inv (ap f (Hp z))) (H z) (ap g (Hq z))) ∙
-                ( square-eq-inv-vertical
-                   ( ap f (Hp z))
-                   ( (Hf (p' z)) ∙ (H' z))
-                   ( (H z) ∙ (ap g (Hq z)))
-                   ( Hg (q' z))
-                   ( ( inv (assoc (ap f (Hp z)) (Hf (p' z)) (H' z))) ∙
-                     ( ( inv (HH z)) ∙
-                       ( inv (assoc (H z) (ap g (Hq z)) (Hg (q' z)))))))))))))
+            ( f (p' z))
+            ( (inv (ap f (Hp z))) ∙ (H z))) ∙
+          ( ( assoc (inv (ap f (Hp z))) (H z) (ap g (Hq z))) ∙
+            ( square-eq-inv-vertical
+               ( ap f (Hp z))
+               ( (Hf (p' z)) ∙ (H' z))
+               ( (H z) ∙ (ap g (Hq z)))
+               ( Hg (q' z))
+               ( ( inv (assoc (ap f (Hp z)) (Hf (p' z)) (H' z))) ∙
+                 ( ( inv (HH z)) ∙
+                   ( inv (assoc (H z) (ap g (Hq z)) (Hg (q' z)))))))))))
 
 abstract
   is-pullback-htpy :
@@ -2024,7 +2016,7 @@ cone-Id' {A = A} (pair x y) =
     ( const (Id x y) unit star)
     ( pair
       ( const (Id x y) A x)
-      ( λ p → eq-pair (pair refl (inv p))))
+      ( λ p → eq-pair refl (inv p)))
 
 inv-gap-cone-Id' :
   {l : Level} {A : UU l} (t : A × A) →
@@ -2162,7 +2154,7 @@ inv-inv-map-canonical-pullback-swap :
   (f : A → X) (g : B → X) →
   (map-canonical-pullback-swap f g ∘ map-canonical-pullback-swap g f) ~ id
 inv-inv-map-canonical-pullback-swap f g (pair b (pair a q)) =
-  eq-pair (pair refl (eq-pair (pair refl (inv-inv q))))
+  eq-pair refl (eq-pair refl (inv-inv q))
 
 abstract
   is-equiv-map-canonical-pullback-swap :
@@ -2330,7 +2322,7 @@ triangle-map-canonical-pullback-exponent :
       ( cone-exponent T f g c)))
 triangle-map-canonical-pullback-exponent
   {A = A} {B} T f g (pair p (pair q H)) h =
-  eq-pair (pair refl (eq-pair (pair refl (inv (issec-eq-htpy (H ·r h))))))
+  eq-pair refl (eq-pair refl (inv (issec-eq-htpy (H ·r h))))
 
 abstract
   is-pullback-exponent-is-pullback :
@@ -2657,7 +2649,7 @@ triangle-map-cone-pair :
   ((map-cone-pair f g f' g') ∘ (functor-prod (gap f g c) (gap f' g' c')))
 triangle-map-cone-pair
   f g (pair p (pair q H)) f' g' (pair p' (pair q' H')) (pair z z') =
-  eq-pair (pair refl (eq-pair (pair refl (right-unit _))))
+  eq-pair refl (eq-pair refl (right-unit _))
 
 abstract
   is-equiv-map-cone-pair :

@@ -107,7 +107,7 @@ abstract
         ( pair
           ( λ t x → pair (pr1 t x) (pr2 t x))
           ( pair (λ t → pair (λ x → pr1 (t x)) (λ x → pr2 (t x)))
-          ( λ t → eq-pair (pair refl refl))))
+          ( λ t → eq-pair refl refl)))
         ( weak-funext A
           ( λ x → Σ (B x) (λ b → Id (f x) b))
           ( λ x → is-contr-total-path (B x) (f x))))
@@ -320,7 +320,7 @@ isretr-inv-choice-∞ :
   ( ( inv-choice-∞ {A = A} {B = B} {C = C}) ∘
     ( choice-∞ {A = A} {B = B} {C = C})) ~ id
 isretr-inv-choice-∞ φ =
-  eq-htpy (λ x → eq-pair (pair refl refl))
+  eq-htpy (λ x → eq-pair refl refl)
 
 abstract
   is-equiv-choice-∞ :
@@ -689,7 +689,7 @@ htpy-double-structure-swap :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
   ((double-structure-swap A C B) ∘ (double-structure-swap A B C)) ~ id
 htpy-double-structure-swap A B C (pair (pair a b) c) =
-  eq-pair (pair (eq-pair (pair refl refl)) refl)
+  eq-pair (eq-pair refl refl) refl
 
 is-equiv-double-structure-swap :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
@@ -1309,7 +1309,7 @@ issec-hom-slice-fiberwise-hom-eq-htpy :
   (f : A → X) (g : B → X) (α : (x : X) → (fib f x) → (fib g x)) (x : X) →
   (fiberwise-hom-hom-slice f g (hom-slice-fiberwise-hom f g α) x) ~ (α x)
 issec-hom-slice-fiberwise-hom-eq-htpy f g α .(f a) (pair a refl) =
-  eq-pair (pair refl (inv-inv (pr2 (α (f a) (pair a refl)))))
+  eq-pair refl (inv-inv (pr2 (α (f a) (pair a refl))))
 
 issec-hom-slice-fiberwise-hom :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
@@ -1323,10 +1323,7 @@ isretr-hom-slice-fiberwise-hom :
   (f : A → X) (g : B → X) →
   ((hom-slice-fiberwise-hom f g) ∘ (fiberwise-hom-hom-slice f g)) ~ id
 isretr-hom-slice-fiberwise-hom f g (pair h H) =
-  eq-pair
-    ( pair
-      ( refl)
-      ( eq-htpy (λ a → (inv-inv (H a)))))
+  eq-pair refl (eq-htpy (λ a → (inv-inv (H a))))
 
 abstract
   is-equiv-fiberwise-hom-hom-slice :
@@ -1497,7 +1494,7 @@ issec-hom-over-morphism-fiberwise-hom-eq-htpy :
   ( fiberwise-hom-hom-over-morphism i f g
     ( hom-over-morphism-fiberwise-hom i f g α) x) ~ (α x)
 issec-hom-over-morphism-fiberwise-hom-eq-htpy i f g α .(f a) (pair a refl) =
-  eq-pair (pair refl (inv-inv (pr2 (α (f a) (pair a refl)))))
+  eq-pair refl (inv-inv (pr2 (α (f a) (pair a refl))))
 
 issec-hom-over-morphism-fiberwise-hom :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
@@ -1516,7 +1513,7 @@ isretr-hom-over-morphism-fiberwise-hom :
   ( ( hom-over-morphism-fiberwise-hom i f g) ∘
     ( fiberwise-hom-hom-over-morphism i f g)) ~ id
 isretr-hom-over-morphism-fiberwise-hom i f g (pair h H) =
-  eq-pair (pair refl (eq-htpy (λ a → (inv-inv (H a)))))
+  eq-pair refl (eq-htpy (λ a → (inv-inv (H a))))
 
 abstract
   is-equiv-fiberwise-hom-hom-over-morphism :

@@ -218,7 +218,7 @@ contraction-total-space {B = B} center x =
 path-total-path-fiber :
   { l1 l2 : Level} {A : UU l1} (B : A → UU l2) (x : A) →
   { y y' : B x} (q : Id y' y) → Id {A = Σ A B} (pair x y) (pair x y')
-path-total-path-fiber B x q = eq-pair (pair refl (inv q))
+path-total-path-fiber B x q = eq-pair refl (inv q)
 
 tr-path-total-path-fiber :
   { l1 l2 : Level} {A : UU l1} {B : A → UU l2} (c : Σ A B) (x : A) →

@@ -402,7 +402,7 @@ abstract
     is-trunc-is-equiv k
       ( Σ (Id (pr1 s) (pr1 t)) (λ p → Id (tr B p (pr2 s)) (pr2 t)))
       ( pair-eq)
-      ( is-equiv-pair-eq' s t)
+      ( is-equiv-pair-eq s t)
       ( is-trunc-Σ k
         ( is-trunc-A (pr1 s) (pr1 t))
         ( λ p → is-trunc-B (pr1 t) (tr B p (pr2 s)) (pr2 t)))

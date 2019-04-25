@@ -225,20 +225,19 @@ compute-htpy-precompose-total-lifts :
 compute-htpy-precompose-total-lifts {A = A} P f (pair h h') =
   let α = λ (t : Id (h ∘ f) (h ∘ f)) → tr (fam-lifts A P) t (λ a → h' (f a))
   in
-  ap eq-pair
+  ap eq-pair'
     ( eq-pair
-      ( pair
-        ( eq-htpy-htpy-refl (h ∘ f))
-        ( ( tr-id-left-subst
-            { f = α}
-            ( eq-htpy-htpy-refl (h ∘ f))
-            ( λ a → h' (f a))
-            ( triangle-precompose-lifts P (htpy-refl f) h h')) ∙
-          ( ( ap
-              ( λ t → inv (ap α (eq-htpy-htpy-refl (λ a → h (f a)))) ∙ t)
-              ( htpy-eq
-                ( htpy-eq (compute-triangle-precompose-lifts P f) h) h')) ∙
-            ( left-inv (triangle-precompose-lifts-htpy-refl P f h h'))))))
+      ( eq-htpy-htpy-refl (h ∘ f))
+      ( ( tr-id-left-subst
+          { f = α}
+          ( eq-htpy-htpy-refl (h ∘ f))
+          ( λ a → h' (f a))
+          ( triangle-precompose-lifts P (htpy-refl f) h h')) ∙
+        ( ( ap
+            ( λ t → inv (ap α (eq-htpy-htpy-refl (λ a → h (f a)))) ∙ t)
+            ( htpy-eq
+              ( htpy-eq (compute-triangle-precompose-lifts P f) h) h')) ∙
+          ( left-inv (triangle-precompose-lifts-htpy-refl P f h h')))))
 
 COHERENCE-HTPY-INV-CHOICE-∞ :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
@@ -410,11 +409,7 @@ triangle-gen-fam-pushout :
   ( ( Fam-pushout-cocone-UU l f g) ∘
     ( cocone-map f g {Y = UU l} c))
 triangle-gen-fam-pushout {l = l} {S} {A} {B} {X} f g (pair i (pair j H)) P =
-  eq-pair
-    ( pair refl
-      ( eq-pair
-        ( pair refl
-          ( eq-htpy (λ s → equiv-eq-ap-fam P (H s))))))
+  eq-pair refl (eq-pair refl (eq-htpy (λ s → equiv-eq-ap-fam P (H s))))
 
 coherence-Eq-Fam-pushout :
   {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}

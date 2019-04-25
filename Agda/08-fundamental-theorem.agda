@@ -835,7 +835,7 @@ abstract
 tot-htpy :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k}
   {f g : (x : A) → B x → C x} → (H : (x : A) → f x ~ g x) → tot f ~ tot g
-tot-htpy H (pair x y) = eq-pair (pair refl (H x y))
+tot-htpy H (pair x y) = eq-pair refl (H x y)
 
 tot-id :
   {i j : Level} {A : UU i} (B : A → UU j) →
@@ -1177,7 +1177,7 @@ fib-ap-eq-fib f s .s refl = pair refl (inv (right-inv (pr2 s)))
 triangle-fib-ap-eq-fib :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B)
   {b : B} (s t : fib f b) →
-  (fib-ap-eq-fib f s t) ~ ((tot (fib-ap-eq-fib-fiberwise f s t)) ∘ (pair-eq' s t))
+  (fib-ap-eq-fib f s t) ~ ((tot (fib-ap-eq-fib-fiberwise f s t)) ∘ (pair-eq {s = s} {t}))
 triangle-fib-ap-eq-fib f (pair x refl) .(pair x refl) refl = refl
 
 abstract
@@ -1188,9 +1188,9 @@ abstract
     is-equiv-comp
       ( fib-ap-eq-fib f s t)
       ( tot (fib-ap-eq-fib-fiberwise f s t))
-      ( pair-eq' s t)
+      ( pair-eq {s = s} {t})
       ( triangle-fib-ap-eq-fib f s t)
-      ( is-equiv-pair-eq' s t)
+      ( is-equiv-pair-eq s t)
       ( is-equiv-tot-is-fiberwise-equiv
         ( is-fiberwise-equiv-fib-ap-eq-fib-fiberwise f s t))
 

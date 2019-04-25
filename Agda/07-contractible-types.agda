@@ -533,7 +533,7 @@ abstract
       ( left-unit-law-Σ-map-gen B is-contr-A x)
       ( left-unit-law-Σ-map B is-contr-A)
       ( tr B (inv (contraction is-contr-A x)))
-      ( λ y → eq-pair (pair (inv (contraction is-contr-A x)) refl))
+      ( λ y → eq-pair (inv (contraction is-contr-A x)) refl)
       ( is-equiv-tr B (inv (contraction is-contr-A x)))
       ( is-equiv-left-unit-law-Σ-map B is-contr-A)
 
