@@ -94,7 +94,7 @@ abstract
     (i : (x y : A) → R x y → Id x y) →
     (x y : A) → is-equiv (i x y)
   is-equiv-prop-in-id R p ρ i x =
-    id-fundamental-retr x (i x)
+    fundamental-theorem-id-retr x (i x)
       (λ y → pair
         (ind-Id x (λ z p → R x z) (ρ x) y)
         ((λ r → is-prop'-is-prop (p x y) _ r)))

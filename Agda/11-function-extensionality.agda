@@ -43,7 +43,7 @@ abstract
     {i j : Level} {A : UU i} {B : A → UU j} →
     (f : (x : A) → B x) → FUNEXT f → is-contr (Σ ((x : A) → B x) (λ g → f ~ g))
   is-contr-total-htpy-Funext f funext-f =
-    id-fundamental-gen' f (htpy-refl f) (λ g → htpy-eq {g = g}) funext-f
+    fundamental-theorem-id' f (htpy-refl f) (λ g → htpy-eq {g = g}) funext-f
 
 ev-pair :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : Σ A B → UU l3} →
@@ -77,7 +77,7 @@ abstract
     {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (f : (x : A) → B x) →
     IND-HTPY {l3 = l1 ⊔ l2} f → FUNEXT f
   FUNEXT-IND-HTPY f ind-htpy-f =
-    id-fundamental-IND-identity-system f
+    fundamental-theorem-id-IND-identity-system f
       ( htpy-refl f)
       ( ind-htpy-f)
       ( λ g → htpy-eq)
@@ -100,7 +100,7 @@ abstract
     ((A : UU l1) (B : A → UU l2) → WEAK-FUNEXT A B) →
     ((A : UU l1) (B : A → UU l2) (f : (x : A) → B x) → FUNEXT f)
   FUNEXT-WEAK-FUNEXT weak-funext A B f =
-    id-fundamental-gen f
+    fundamental-theorem-id f
       ( htpy-refl f)
       ( is-contr-retract-of
         ( (x : A) → Σ (B x) (λ b → Id (f x) b))
@@ -282,7 +282,7 @@ abstract
     {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
     (t t' : type-choice-∞ C) → is-equiv (Eq-type-choice-∞-eq C t t')
   is-equiv-Eq-type-choice-∞-eq C t =
-    id-fundamental-gen t
+    fundamental-theorem-id t
       ( reflexive-Eq-type-choice-∞ C t)
       ( is-contr-total-Eq-type-choice-∞ C t)
       ( Eq-type-choice-∞-eq C t)
@@ -745,7 +745,7 @@ abstract
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (e e' : A ≃ B) →
     is-equiv (htpy-equiv-eq e e')
   is-equiv-htpy-equiv-eq e =
-    id-fundamental-gen e
+    fundamental-theorem-id e
       ( reflexive-htpy-equiv e)
       ( is-contr-total-htpy-equiv e)
       ( htpy-equiv-eq e)
@@ -1118,7 +1118,7 @@ abstract
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
     (sec-f sec-f' : sec f) → is-equiv (Eq-sec-eq f sec-f sec-f')
   is-equiv-Eq-sec-eq f sec-f =
-    id-fundamental-gen sec-f
+    fundamental-theorem-id sec-f
       ( reflexive-Eq-sec f sec-f)
       ( is-contr-total-Eq-sec f sec-f)
       ( Eq-sec-eq f sec-f)
@@ -1192,7 +1192,7 @@ abstract
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
     (retr-f retr-f' : retr f) → is-equiv (Eq-retr-eq f retr-f retr-f')
   is-equiv-Eq-retr-eq f retr-f =
-    id-fundamental-gen retr-f
+    fundamental-theorem-id retr-f
       ( reflexive-Eq-retr f retr-f)
       ( is-contr-total-Eq-retr f retr-f)
       ( Eq-retr-eq f retr-f)

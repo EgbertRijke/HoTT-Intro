@@ -17,7 +17,7 @@ UNIVALENCE A B = is-equiv (equiv-eq {A = A} {B = B})
 is-contr-total-equiv-UNIVALENCE : {i : Level} (A : UU i) →
   ((B : UU i) → UNIVALENCE A B) → is-contr (Σ (UU i) (λ X → A ≃ X))
 is-contr-total-equiv-UNIVALENCE A UA =
-  id-fundamental-gen' A
+  fundamental-theorem-id' A
     ( pair id (is-equiv-id A))
     ( λ B → equiv-eq {B = B})
     ( UA)
@@ -25,7 +25,7 @@ is-contr-total-equiv-UNIVALENCE A UA =
 UNIVALENCE-is-contr-total-equiv : {i : Level} (A : UU i) →
   is-contr (Σ (UU i) (λ X → A ≃ X)) → (B : UU i) → UNIVALENCE A B
 UNIVALENCE-is-contr-total-equiv A c =
-  id-fundamental-gen A
+  fundamental-theorem-id A
     ( pair id (is-equiv-id A))
     ( c)
     ( λ B → equiv-eq {B = B})
@@ -162,7 +162,7 @@ abstract
     {l1 l2 : Level} (P : subuniverse l1 l2)
     (s t : total-subuniverse P) → is-equiv (Eq-total-subuniverse-eq P s t)
   is-equiv-Eq-total-subuniverse-eq (pair P H) (pair X p) =
-    id-fundamental-gen
+    fundamental-theorem-id
       ( pair X p)
       ( equiv-id X)
       ( is-contr-total-Eq-total-subuniverse (pair P H) (pair X p))

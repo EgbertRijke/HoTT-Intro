@@ -57,7 +57,7 @@ abstract
     { l1 : Level} {X : UU l1} (l l' : free-loops X) →
     is-equiv (Eq-free-loops-eq l l')
   is-equiv-Eq-free-loops-eq l =
-    id-fundamental-gen l
+    fundamental-theorem-id l
       ( reflexive-Eq-free-loops l)
       ( is-contr-total-Eq-free-loops l)
       ( Eq-free-loops-eq l) 
@@ -111,7 +111,7 @@ abstract
     ( p p' : dependent-free-loops l P) →
     is-equiv (Eq-dependent-free-loops-eq l P p p')
   is-equiv-Eq-dependent-free-loops-eq l P p =
-    id-fundamental-gen p
+    fundamental-theorem-id p
       ( reflexive-Eq-dependent-free-loops l P p)
       ( is-contr-total-Eq-dependent-free-loops l P p)
       ( Eq-dependent-free-loops-eq l P p)

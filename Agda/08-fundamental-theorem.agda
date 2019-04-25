@@ -5,20 +5,24 @@ module 08-fundamental-theorem where
 import 07-contractible-types
 open 07-contractible-types public
 
--- Section 7.1 Fiberwise equivalences
+-- Section 8.1 Families of equivalences
+
+{- Any family of maps induces a map on the total spaces. -}
+
 tot :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
   ((x : A) → B x → C x) → ( Σ A B → Σ A C)
 tot f t = pair (pr1 t) (f (pr1 t) (pr2 t))
 
--- There is a function from the fibers of the induced map on total spaces, to the fibers of the fiberwise transformation
+{- We show that for any family of maps, the fiber of the induced map on total
+   spaces are equivalent to the fibers of the maps in the family. -}
+   
 fib-ftr-fib-tot :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
   (f : (x : A) → B x → C x) → (t : Σ A C) →
   fib (tot f) t → fib (f (pr1 t)) (pr2 t)
 fib-ftr-fib-tot f .(pair x (f x y)) (pair (pair x y) refl) = pair y refl
 
--- This function has a converse
 fib-tot-fib-ftr :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
   (f : (x : A) → B x → C x) → (t : Σ A C) →
@@ -36,8 +40,6 @@ isretr-fib-tot-fib-ftr :
   (f : (x : A) → B x → C x) → (t : Σ A C) →
   ((fib-tot-fib-ftr f t) ∘ (fib-ftr-fib-tot f t)) ~ id
 isretr-fib-tot-fib-ftr f .(pair x (f x y)) (pair (pair x y) refl) = refl
-
--- We establish that the fibers of the induced map on total spaces are equivalent to the fibers of the fiberwise transformation.
 
 abstract
   is-equiv-fib-ftr-fib-tot :
@@ -61,7 +63,11 @@ abstract
       ( isretr-fib-tot-fib-ftr f t)
       ( issec-fib-tot-fib-ftr f t)
 
--- Any fiberwise equivalence induces an equivalence on total spaces
+{- Now that we have shown that the fibers of the induced map on total spaces
+   are equivalent to the fibers of the maps in the family, it follows that
+   the induced map on total spaces is an equivalence if and only if each map
+   in the family is an equivalence. -}
+
 is-fiberwise-equiv :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
   ((x : A) → B x → C x) → UU (i ⊔ (j ⊔ k))
@@ -79,16 +85,6 @@ abstract
         ( is-equiv-fib-ftr-fib-tot f t)
         ( is-contr-map-is-equiv (H _) (pr2 t)))
 
-equiv-tot-fam-equiv :
-  {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
-  ((x : A) → B x ≃ C x) → (Σ A B) ≃ (Σ A C)
-equiv-tot-fam-equiv e =
-  pair
-    ( tot (λ x → map-equiv (e x)))
-    ( is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-map-equiv (e x)))
-
--- Conversely, any fiberwise transformation that induces an equivalence on total spaces is a fiberwise equivalence.
-
 abstract
   is-fiberwise-equiv-is-equiv-tot :
     {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
@@ -102,10 +98,24 @@ abstract
         ( is-equiv-fib-ftr-fib-tot f (pair x z))
         ( is-contr-map-is-equiv is-equiv-tot-f (pair x z)))
 
+equiv-tot-fam-equiv :
+  {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
+  ((x : A) → B x ≃ C x) → (Σ A B) ≃ (Σ A C)
+equiv-tot-fam-equiv e =
+  pair
+    ( tot (λ x → map-equiv (e x)))
+    ( is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-map-equiv (e x)))
+
+{- In the second part of this section we show that any equivalence f on base 
+   types also induces an equivalence on total spaces. -}
+
 Σ-map-base-map :
   { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
   Σ A (λ x → C (f x)) → Σ B C
 Σ-map-base-map f C s = pair (f (pr1 s)) (pr2 s)
+
+{- The proof is similar to the previous part: we show that the fibers of f
+   and Σ-kap-base-map f C are equivalent. -}
 
 fib-Σ-map-base-map-fib :
   { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
@@ -161,6 +171,8 @@ abstract
     is-equiv-is-contr-map
       ( is-contr-map-Σ-map-base-map C f (is-contr-map-is-equiv is-equiv-f))
 
+{- Now we combine the two parts of this section. -}
+
 toto :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
   (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →
@@ -205,24 +217,24 @@ abstract
         ( is-equiv-Σ-map-base-map D f is-equiv-f)
         ( is-equiv-toto-fg))
 
--- Section 7.2 The fundamental theorem
+-- Section 8.2 The fundamental theorem
 
 -- The general form of the fundamental theorem of identity types
 
 abstract
-  id-fundamental-gen :
+  fundamental-theorem-id :
     {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
     is-contr (Σ A B) → (f : (x : A) → Id a x → B x) → is-fiberwise-equiv f
-  id-fundamental-gen {A = A} a b is-contr-AB f =
+  fundamental-theorem-id {A = A} a b is-contr-AB f =
     is-fiberwise-equiv-is-equiv-tot f
       ( is-equiv-is-contr (tot f) (is-contr-total-path A a) is-contr-AB)
 
 abstract
-  id-fundamental-gen' :
+  fundamental-theorem-id' :
     {i j : Level} {A : UU i} {B : A → UU j}
     (a : A) (b : B a) (f : (x : A) → Id a x → B x) →
     is-fiberwise-equiv f → is-contr (Σ A B)
-  id-fundamental-gen' {A = A} {B = B} a b f is-fiberwise-equiv-f =
+  fundamental-theorem-id' {A = A} {B = B} a b f is-fiberwise-equiv-f =
     is-contr-is-equiv'
       ( Σ A (Id a))
       ( tot f)
@@ -232,19 +244,19 @@ abstract
 -- The canonical form of the fundamental theorem of identity types
 
 abstract 
-  id-fundamental :
+  fundamental-theorem-id-J :
     {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
     is-contr (Σ A B) → is-fiberwise-equiv (ind-Id a (λ x p → B x) b)
-  id-fundamental {i} {j} {A} {B} a b is-contr-AB =
-    id-fundamental-gen a b is-contr-AB (ind-Id a (λ x p → B x) b)
+  fundamental-theorem-id-J {i} {j} {A} {B} a b is-contr-AB =
+    fundamental-theorem-id a b is-contr-AB (ind-Id a (λ x p → B x) b)
 
 -- The converse of the fundamental theorem of identity types
 
 abstract
-  id-fundamental' :
+  fundamental-theorem-id-J' :
     {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
     (is-fiberwise-equiv (ind-Id a (λ x p → B x) b)) → is-contr (Σ A B)
-  id-fundamental' {i} {j} {A} {B} a b H =
+  fundamental-theorem-id-J' {i} {j} {A} {B} a b H =
     is-contr-is-equiv'
       ( Σ A (Id a))
       ( tot (ind-Id a (λ x p → B x) b))
@@ -260,7 +272,7 @@ abstract
   is-emb-is-equiv :
     {i j : Level} {A : UU i} {B : UU j} (f : A → B) → is-equiv f → is-emb f
   is-emb-is-equiv {i} {j} {A} {B} f is-equiv-f x =
-    id-fundamental-gen x refl
+    fundamental-theorem-id x refl
       ( is-contr-is-equiv' _
         ( tot (λ y (p : Id (f y) (f x)) → inv p))
         ( is-equiv-tot-is-fiberwise-equiv (λ y → is-equiv-inv (f y) (f x)))
@@ -338,12 +350,12 @@ abstract
       ( contraction-total-space-IND-identity-system a b ind)
 
 abstract
-  id-fundamental-IND-identity-system :
+  fundamental-theorem-id-IND-identity-system :
     {i j : Level} {A : UU i} {B : A → UU j} (a : A) (b : B a) →
     IND-identity-system (i ⊔ j) B a b →
     (f : (x : A) → Id a x → B x) → (x : A) → is-equiv (f x)
-  id-fundamental-IND-identity-system a b ind f =
-    id-fundamental-gen a b (is-contr-total-space-IND-identity-system a b ind) f
+  fundamental-theorem-id-IND-identity-system a b ind f =
+    fundamental-theorem-id a b (is-contr-total-space-IND-identity-system a b ind) f
 
 -- Section 7.4 Disjointness of coproducts
 
@@ -558,7 +570,7 @@ abstract
     {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : A) →
     is-fiberwise-equiv (Eq-coprod-eq A B (inl x))
   is-equiv-Eq-coprod-eq-inl A B x =
-    id-fundamental-gen
+    fundamental-theorem-id
       ( inl x)
       ( reflexive-Eq-coprod A B (inl x))
       ( is-contr-total-Eq-coprod-inl A B x)
@@ -569,7 +581,7 @@ abstract
     {l1 l2 : Level} (A : UU l1) (B : UU l2) (x : B) →
     is-fiberwise-equiv (Eq-coprod-eq A B (inr x))
   is-equiv-Eq-coprod-eq-inr A B x =
-    id-fundamental-gen
+    fundamental-theorem-id
       ( inr x)
       ( reflexive-Eq-coprod A B (inr x))
       ( is-contr-total-Eq-coprod-inr A B x)
@@ -796,7 +808,7 @@ abstract
   is-emb-inl :
     {i j : Level} (A : UU i) (B : UU j) → is-emb (inl {A = A} {B = B})
   is-emb-inl A B x =
-    id-fundamental-gen x refl
+    fundamental-theorem-id x refl
       ( is-contr-is-equiv
         ( Σ A (λ y → Eq-coprod A B (inl x) (inl y)))
         ( tot (λ y → Eq-coprod-eq A B (inl x) (inl y)))
@@ -814,7 +826,7 @@ abstract
   is-emb-inr :
     {i j : Level} (A : UU i) (B : UU j) → is-emb (inr {A = A} {B = B})
   is-emb-inr A B x =
-    id-fundamental-gen x refl
+    fundamental-theorem-id x refl
       ( is-contr-is-equiv
         ( Σ B (λ y → Eq-coprod A B (inr x) (inr y)))
         ( tot (λ y → Eq-coprod-eq A B (inr x) (inr y)))
@@ -852,11 +864,11 @@ tot-comp f g (pair x y) = refl
 -- Exercise 7.8
 
 abstract
-  id-fundamental-retr :
+  fundamental-theorem-id-retr :
     {i j : Level} {A : UU i} {B : A → UU j} (a : A) →
     (i : (x : A) → B x → Id a x) → (R : (x : A) → retr (i x)) →
     is-fiberwise-equiv i
-  id-fundamental-retr {_} {_} {A} {B} a i R =
+  fundamental-theorem-id-retr {_} {_} {A} {B} a i R =
     is-fiberwise-equiv-is-equiv-tot i
       ( is-equiv-is-contr (tot i)
         ( is-contr-retract-of (Σ _ (λ y → Id a y))
@@ -887,17 +899,17 @@ abstract
       ( is-equiv-inv-is-equiv is-equiv-sec-f)
 
 abstract
-  id-fundamental-sec :
+  fundamental-theorem-id-sec :
     {i j : Level} {A : UU i} {B : A → UU j} (a : A)
     (f : (x : A) → Id a x → B x) → ((x : A) → sec (f x)) →
     is-fiberwise-equiv f
-  id-fundamental-sec {A = A} {B = B} a f sec-f x =
+  fundamental-theorem-id-sec {A = A} {B = B} a f sec-f x =
     let i : (x : A) → B x → Id a x
         i = λ x → pr1 (sec-f x)
         retr-i : (x : A) → retr (i x)
         retr-i = λ x → pair (f x) (pr2 (sec-f x))
         is-fiberwise-equiv-i : is-fiberwise-equiv i
-        is-fiberwise-equiv-i = id-fundamental-retr a i retr-i
+        is-fiberwise-equiv-i = fundamental-theorem-id-retr a i retr-i
     in is-equiv-sec-is-equiv (f x) (sec-f x) (is-fiberwise-equiv-i x)
 
 -- Exercise 7.9
@@ -907,7 +919,7 @@ abstract
     {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
     ((x y : A) → sec (ap f {x = x} {y = y})) → is-emb f
   is-emb-sec-ap f sec-ap-f x =
-    id-fundamental-sec x (λ y → ap f {y = y}) (sec-ap-f x)
+    fundamental-theorem-id-sec x (λ y → ap f {y = y}) (sec-ap-f x)
 
 -- Exercise 7.10
 

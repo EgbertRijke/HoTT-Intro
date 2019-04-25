@@ -77,7 +77,7 @@ is-equiv-htpy-cocone-eq :
   (f : S → A) (g : S → B) {X : UU l4} (c c' : cocone f g X) →
   is-equiv (htpy-cocone-eq f g c c')
 is-equiv-htpy-cocone-eq f g c =
-  id-fundamental-gen c
+  fundamental-theorem-id c
     ( reflexive-htpy-cocone f g c)
     ( is-contr-total-htpy-cocone f g c)
     ( htpy-cocone-eq f g c)
@@ -213,7 +213,7 @@ is-fiberwise-equiv-htpy-generating-data-pushout-eq :
   (s : generating-data-pushout f g c P) →
   is-fiberwise-equiv (htpy-generating-data-pushout-eq f g c P s)
 is-fiberwise-equiv-htpy-generating-data-pushout-eq f g c P s =
-  id-fundamental-gen s
+  fundamental-theorem-id s
     ( reflexive-htpy-generating-data-pushout f g c P s)
     ( is-contr-total-htpy-generating-data-pushout f g c P s)
     ( htpy-generating-data-pushout-eq f g c P s)
