@@ -54,9 +54,9 @@ dne-dec A (inr x) p = ind-empty (p x)
 {- In this exercise we were asked to show that the observational equality on ℕ 
    is an equivalence relation. -}
    
-reflexive-Eq-ℕ : (n : ℕ) → Eq-ℕ n n
-reflexive-Eq-ℕ zero-ℕ = star
-reflexive-Eq-ℕ (succ-ℕ n) = reflexive-Eq-ℕ n
+refl-Eq-ℕ : (n : ℕ) → Eq-ℕ n n
+refl-Eq-ℕ zero-ℕ = star
+refl-Eq-ℕ (succ-ℕ n) = refl-Eq-ℕ n
 
 symmetric-Eq-ℕ : (m n : ℕ) → Eq-ℕ m n → Eq-ℕ n m
 symmetric-Eq-ℕ zero-ℕ zero-ℕ t = t
@@ -80,26 +80,30 @@ transitive-Eq-ℕ (succ-ℕ l) (succ-ℕ m) (succ-ℕ n) s t = transitive-Eq-ℕ
    natural numbers is the least reflexive relation, in the sense that it 
    implies all other reflexive relation. As we will see once we introduce the 
    identity type, it follows that observationally equal natural numbers can be 
-   identified.
+   identified. -}
 
-   We first make an auxilary construction, where the relation is quantified 
-   over inside the scope of the variables n and m. This is to ensure that the 
-   inductive hypothesis is strong enough to make the induction go through. -}
-   
-least-reflexive-Eq-ℕ' : {i : Level} (n m : ℕ)
-                     (R : ℕ → ℕ → UU i) (ρ : (n : ℕ) → R n n) → Eq-ℕ n m → R n m
-least-reflexive-Eq-ℕ' zero-ℕ zero-ℕ R ρ p = ρ zero-ℕ
-least-reflexive-Eq-ℕ' zero-ℕ (succ-ℕ m) R ρ = ind-empty
-least-reflexive-Eq-ℕ' (succ-ℕ n) zero-ℕ R ρ = ind-empty
-least-reflexive-Eq-ℕ' (succ-ℕ n) (succ-ℕ m) R ρ =
-  least-reflexive-Eq-ℕ' n m (λ x y → R (succ-ℕ x) (succ-ℕ y)) (λ x → ρ (succ-ℕ x))
+succ-relation-ℕ :
+  {i : Level} (R : ℕ → ℕ → UU i) → ℕ → ℕ → UU i
+succ-relation-ℕ R m n = R (succ-ℕ m) (succ-ℕ n)
 
-{- Now we solve the actual exercise by rearranging the order of the variables. 
-   -}
+succ-reflexivity-ℕ :
+  {i : Level} (R : ℕ → ℕ → UU i) (ρ : (n : ℕ) → R n n) →
+  (n : ℕ) → succ-relation-ℕ R n n
+succ-reflexivity-ℕ R ρ n = ρ (succ-ℕ n)
 
-least-reflexive-Eq-ℕ : {i : Level} {R : ℕ → ℕ → UU i}
-  (ρ : (n : ℕ) → R n n) → (n m : ℕ) → Eq-ℕ n m → R n m
-least-reflexive-Eq-ℕ ρ n m p = least-reflexive-Eq-ℕ' n m _ ρ p
+{- In the book we suggest that first the order of the variables should be
+   swapped, in order to make the inductive hypothesis stronger. Agda's pattern
+   matching mechanism allows us to bypass this step and give a more direct
+   construction. -}
+
+least-reflexive-Eq-ℕ :
+  {i : Level} (R : ℕ → ℕ → UU i) (ρ : (n : ℕ) → R n n) →
+  (m n : ℕ) → Eq-ℕ m n → R m n
+least-reflexive-Eq-ℕ R ρ zero-ℕ zero-ℕ star = ρ zero-ℕ
+least-reflexive-Eq-ℕ R ρ zero-ℕ (succ-ℕ n) ()
+least-reflexive-Eq-ℕ R ρ (succ-ℕ m) zero-ℕ ()
+least-reflexive-Eq-ℕ R ρ (succ-ℕ m) (succ-ℕ n) e =
+  least-reflexive-Eq-ℕ (succ-relation-ℕ R) (succ-reflexivity-ℕ R ρ) m n e
 
 -- Exercise 3.5
 
@@ -109,8 +113,9 @@ least-reflexive-Eq-ℕ ρ n m p = least-reflexive-Eq-ℕ' n m _ ρ p
    
 preserve_Eq-ℕ : (f : ℕ → ℕ) (n m : ℕ) → (Eq-ℕ n m) → (Eq-ℕ (f n) (f m))
 preserve_Eq-ℕ f =
-    least-reflexive-Eq-ℕ {_} {λ x y → Eq-ℕ (f x) (f y)}
-      (λ x → reflexive-Eq-ℕ (f x))
+  least-reflexive-Eq-ℕ
+    ( λ x y → Eq-ℕ (f x) (f y))
+    ( λ x → refl-Eq-ℕ (f x))
 
 -- Exercise 3.6
 

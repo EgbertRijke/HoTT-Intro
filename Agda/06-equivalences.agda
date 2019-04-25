@@ -1160,11 +1160,11 @@ htpy-ap-concat' :
 htpy-ap-concat' H H' K L x =
   ap (concat' _ (K x)) (L x)
 
-htpy-inv-assoc :
+htpy-distributive-inv-concat :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
   (H : f ~ g) (K : g ~ h) →
   (htpy-inv (H ∙h K)) ~ ((htpy-inv K) ∙h (htpy-inv H))
-htpy-inv-assoc H K x = inv-assoc (H x) (K x)
+htpy-distributive-inv-concat H K x = distributive-inv-concat (H x) (K x)
 
 htpy-ap-inv :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g : (x : A) → B x} →

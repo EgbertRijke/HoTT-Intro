@@ -304,35 +304,113 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
 %
 %\cref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \cref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
 
+\section{Identity systems}
+
+In this section we will show that type theory cannot distinguish between observational equality on $\N$ and the identity type on $\N$. The way we do this is by showing that the observational equality on $\N$ satisfies path induction.
+
+\begin{defn}
+  Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. We say that $B$ is an \define{(unary) identity system} if for every family $P$ indexed by $x:A$ and $y:B(x)$, there is a function map
+  \begin{equation*}
+    \mathsf{path\usc{}ind\usc{}sys}:P(a,b)\to \prd{x:A}{y:B(x)}P(x,y)
+  \end{equation*}
+  such that for every $p:P(a,b)$ there is an identification
+  \begin{equation*}
+    \mathsf{path\usc{}ind\usc{}sys}(p,a,b)=p.
+  \end{equation*}
+\end{defn}
+
+\begin{thm}
+  Let $n:\N$ be a natural number, and consider a family of types $P(x,e)$ indexed by $x:\N$ and $e:\EqN(n,x)$. Then there is a function
+  \begin{equation*}
+    \mathsf{ind\usc{}Eq}_\N:P(n,\mathsf{refl\usc{}Eq}_\N(n))\to\prd{x:\N}{e:\EqN(n,x)}P(x,e)
+  \end{equation*}
+  equipped with an identification
+  \begin{equation*}
+    \mathsf{ind\usc{}Eq}_\N(p,n,\mathsf{refl\usc{}Eq}_\N(n))= p
+  \end{equation*}
+  for any $p:P(n,\mathsf{refl\usc{}Eq}_\N(n))$.
+\end{thm}
+
+\begin{proof}
+  Before we start the proof, we will rearrange the order of the variables so that the inductive hypothesis will be strong enough: by induction on $m,n:\N$ we will construct for any
+  \begin{align*}
+    e & :\mathsf{Eq}_\N(m,n) \\
+    R & :\prd{x,y:\N}\mathsf{Eq}_\N(x,y)\to \UU \\
+    \rho & :\prd{x:\N}R(x,x,\mathsf{refl\usc{}Eq}_\N(x)),
+  \end{align*}
+  a term of type $R(m,n,e)$. There are four cases to consider:
+
+  In the case where $m\jdeq 0$ and $n\jdeq 0$, the type $\mathsf{Eq}_\N(m,n)$ is the unit type. We proceed by induction on $e$, and we take $\rho(0):R(0,0,\ttt)$.
+
+  In the case where $m\jdeq 0$ and $n\jdeq \succN(n')$, the type $\mathsf{Eq}_\N(m,n)$ is empty, so we proceed by the induction principle of the empty type and we are done.
+
+  Similarly in the case where $m\jdeq\succN(m')$ and $n\jdeq 0$, the type $\mathsf{Eq}_\N(m,n)$ is empty, so we proceed by the induction principle of the empty type and we are done.
+
+  In the inductive steps for both $m$ and $n$ we use that
+    \begin{equation*}
+      \mathsf{Eq}_\N(\succN(m),\succN(n))\jdeq \mathsf{Eq}_\N(m,n).
+    \end{equation*}
+    The inductive hypothesis gives for every $e'$, $R'$, and $\rho'$ a term of type $R'(m,n,e')$. Therefore we simply apply the inductive hypothesis to the case where
+    \begin{align*}
+      R'(x,y,e) & \defeq R(\succN(x),\succN(y),e) \\
+      \rho'(x) & \defeq \rho(\succN(x)),
+    \end{align*}
+    to obtain a term of type $R'(m,n,e)$. 
+\end{proof}
+
 \begin{exercises}
-\item \label{ex:trans_concat}Let $B$ be a family over a type $A$. Construct for any two identifications $p:x=_A y$ and $q:y=_A z$, and any $b:B(x)$ an identification
-\begin{equation*}
-\mathsf{tr}_B(q,\mathsf{tr}_B(p,b))=\mathsf{tr}_B(\ct{p}{q},b).
-\end{equation*}
-\item \label{ex:inv_assoc}Let $p:\id{x}{y}$ and $q:\id{y}{z}$. Construct an identification
-\begin{align*}
-\mathsf{inv\usc{}assoc}(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
-\end{align*}
-\item \label{ex:trans_triv}Consider two types $A$ and $B$, and let $p:x=y$ in $A$, and $b:B$. 
-\begin{subexenum}
-\item Construct an identification
-\begin{align*}
-\mathsf{tr\usc{}triv}(p,b):\mathsf{tr}_{W_A(B)}(p,b)=b
-\end{align*}
-where $W_A(B)$ is the family $B$ weakened by $A$.
-\item Construct for any $f:A\to B$, an identification 
-\begin{equation*}
-\apd{f}{p}=\ct{\mathsf{tr\usc{}triv}(p,f(x))}{\mathsf{ap}_f(p)},
-\end{equation*}
-witnessing that the triangle
-\begin{equation*}
-\begin{tikzcd}[trim right=(a),column sep=0em]
-\mathsf{tr}_{W_A(B)}(p,f(x)) \arrow[dr,equals,swap,"\apd{f}{p}"] \arrow[rr,equals,"{\mathsf{tr\usc{}triv}(p,f(x))}"] & & |[alias=a,right]|f(x) \arrow[dl,equals,"\ap{f}{p}"] \\
-& f(y) & \phantom{\mathsf{tr}_{W_A(B)}(p,f(x))}
-\end{tikzcd}
-\end{equation*}
-commutes.
-\end{subexenum}
+\item
+  \begin{subexenum}
+  \item State Goldbach's conjecture in type theory.
+  \item State the twin prime conjecture in type theory.
+  \end{subexenum}
+\item \label{ex:inv_assoc}Show that the operation inverting paths distributes over the concatenation operation, i.e., construct an identification
+  \begin{align*}
+    \mathsf{distributive\usc{}inv\usc{}concat}(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
+  \end{align*}
+  for any $p:\id{x}{y}$ and $q:\id{y}{z}$.
+\item \label{ex:inv_con}For any $p:x=y$, $q:y=z$, and $r:x=z$, construct maps
+  \begin{align*}
+    \mathsf{inv\usc{}con}(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
+    \mathsf{con\usc{}inv}(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
+  \end{align*}
+\item Let $B$ be a type family over $A$, and consider a path $p:\id{x}{x'}$ in $A$. Construct for any $y:B(x)$ a path
+  \begin{equation*}
+    \mathsf{lift}_B(p,y) : \id{\pairr{x,y}}{\pairr{x',\mathsf{tr}_B(p,y)}}.
+  \end{equation*}
+  In other words, a path in the \emph{base type} $A$ \emph{lifts} to a path in the total space $\sm{x:A}B(x)$ for every term over the domain, analogous to the path lifting property for fibrations in homotopy theory.
+\item \label{ex:semi-ring-laws-N}Show that the operations of addition and multiplication on the natural numbers satisfy the following laws:
+  \begin{align*}
+    m+(n+k) & =(m+n)+k & m\cdot (n\cdot k) & = (m\cdot n)\cdot k \\
+    m+0 & = m & m\cdot 1 & = m \\
+    0+m & = m & 1\cdot m & = m \\
+    m+n & = n+m & m\cdot n & = n\cdot m\\
+    & & m\cdot (n+k) & = m\cdot n + m\cdot k.
+  \end{align*}
+\item Consider four consecutive identifications
+  \begin{equation*}
+    \begin{tikzcd}
+      a \arrow[r,equals,"p"] & b \arrow[r,equals,"q"] & c \arrow[r,equals,"r"] & d \arrow[r,equals,"s"] & e
+    \end{tikzcd}
+  \end{equation*}
+  in a type $A$. In this exercise we will show that the \define{Mac Lane pentagon}\index{Mac Lane pentagon} for identifications commutes.
+  \begin{subexenum}
+  \item Construct the five identifications $\alpha_1,\ldots,\alpha_5$ in the pentagon
+    \begin{equation*}
+      \begin{tikzcd}[column sep=-1.5em]
+        &[-2em] \ct{(\ct{(\ct{p}{q})}{r})}{s} \arrow[rr,equals,"\alpha_4"] \arrow[dl,equals,swap,"\alpha_1"] & & \ct{(\ct{p}{q})}{(\ct{r}{s})} \arrow[dr,equals,"\alpha_5"] &[-2em] \\
+        \ct{(\ct{p}{(\ct{q}{r})})}{s} \arrow[drr,equals,swap,"\alpha_2"] & & & & \ct{p}{(\ct{q}{(\ct{r}{s})})}, \\
+        & & \ct{p}{(\ct{(\ct{q}{r})}{s})} \arrow[urr,equals,swap,"\alpha_3"]
+      \end{tikzcd}
+    \end{equation*}
+    where $\alpha_1$, $\alpha_2$, and $\alpha_3$ run counter-clockwise, and $\alpha_4$ and $\alpha_5$ run clockwise.
+  \item Show that
+    \begin{equation*}
+      \ct{(\ct{\alpha_1}{\alpha_2})}{\alpha_3} = \ct{\alpha_4}{\alpha_5}.
+    \end{equation*}
+  \end{subexenum}
+\end{exercises}
+
 %\item In this exercise we show that the action on paths of a function preserves the groupoid-structure of a type.
 %\begin{subexenum}
 %\item Construct an identification
@@ -350,61 +428,37 @@ commutes.
 %\end{equation*}
 %commutes.
 %\end{subexenum}
-\item \label{ex:trans_ap}Let $f:A\to B$ be a map, and consider $p:x=y$ in $A$. 
-\begin{subexenum}
-\item Construct for any $q:f(x)=b$ in $B$ an identification
-\begin{equation*}
-\mathsf{tr\usc{}id\usc{}left\usc{}subst}(p,q):\id{\mathsf{tr}_{f(\blank)=b}(p,q)}{\ct{\ap{f}{p}^{-1}}{q}}.
-\end{equation*}
-\item Similarly, construct for any $q':b=f(x)$ in $B$ an identification
-\begin{equation*}
-\mathsf{tr\usc{}id\usc{}right\usc{}subst}(p,q'):\id{\mathsf{tr}_{b=f(\blank)}(p,q)}{\ct{q}{\ap{f}{p}}}.
-\end{equation*}
-\end{subexenum}
-\item \label{ex:inv_con}For any $p:x=y$, $q:y=z$, and $r:x=z$, construct maps
-\begin{align*}
-\mathsf{inv\usc{}con}(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
-\mathsf{con\usc{}inv}(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
-\end{align*}
-\item Let $A$ be a type, and let $B$ be a type family over $A$.
-Construct the \define{path lifting} operation
-\begin{equation*}
-\mathsf{lift}_B : \prd*{x,y:A}{p:\id{x}{y}}{b:B(x)} \id{\pairr{x,b}}{\pairr{y,\mathsf{tr}_B(p,b)}}.
-\end{equation*}
-In other words, a path in the \emph{base type} $A$ lifts to a path in the total space $\sm{x:A}B(x)$ for every term over the domain.
-\item Consider four consecutive identifications
-\begin{equation*}
-\begin{tikzcd}
-a \arrow[r,equals,"p"] & b \arrow[r,equals,"q"] & c \arrow[r,equals,"r"] & d \arrow[r,equals,"s"] & e
-\end{tikzcd}
-\end{equation*}
-in a type $A$. In this exercise we will show that the \define{Mac Lane pentagon}\index{Mac Lane pentagon} for identifications commutes.
-\begin{subexenum}
-\item Construct the five identifications $\alpha_1,\ldots,\alpha_5$ in the pentagon
-\begin{equation*}
-\begin{tikzcd}[column sep=-1.5em]
-&[-2em] \ct{(\ct{(\ct{p}{q})}{r})}{s} \arrow[rr,equals,"\alpha_4"] \arrow[dl,equals,swap,"\alpha_1"] & & \ct{(\ct{p}{q})}{(\ct{r}{s})} \arrow[dr,equals,"\alpha_5"] &[-2em] \\
-\ct{(\ct{p}{(\ct{q}{r})})}{s} \arrow[drr,equals,swap,"\alpha_2"] & & & & \ct{p}{(\ct{q}{(\ct{r}{s})})}, \\
-& & \ct{p}{(\ct{(\ct{q}{r})}{s})} \arrow[urr,equals,swap,"\alpha_3"]
-\end{tikzcd}
-\end{equation*}
-where $\alpha_1$, $\alpha_2$, and $\alpha_3$ run counter-clockwise, and $\alpha_4$ and $\alpha_5$ run clockwise.
-\item Show that
-\begin{equation*}
-\ct{(\ct{\alpha_1}{\alpha_2})}{\alpha_3} = \ct{\alpha_4}{\alpha_5}.
-\end{equation*}
-\end{subexenum}
-\item \label{ex:semi-ring-laws-N}Show that the operations of addition and multiplication on the natural numbers satisfy the following laws:
-\begin{align*}
-m+(n+k) & =(m+n)+k & m\cdot (n\cdot k) & = (m\cdot n)\cdot k \\
-m+0 & = m & m\cdot 1 & = m \\
-0+m & = m & 1\cdot m & = m \\
-m+n & = n+m & m\cdot n & = n\cdot m\\
-& & m\cdot (n+k) & = m\cdot n + m\cdot k.
-\end{align*}
-\item
+
+\begin{comment}
+\item \label{ex:trans_triv}Consider two types $A$ and $B$, and let $p:x=y$ in $A$, and $b:B$. 
   \begin{subexenum}
-  \item State Goldbach's conjecture in type theory.
-  \item State the twin prime conjecture in type theory.
+  \item Construct an identification
+    \begin{align*}
+      \mathsf{tr\usc{}triv}(p,b):\mathsf{tr}_{W_A(B)}(p,b)=b
+    \end{align*}
+    where $W_A(B)$ is the family $B$ weakened by $A$.
+  \item Construct for any $f:A\to B$, an identification 
+    \begin{equation*}
+      \apd{f}{p}=\ct{\mathsf{tr\usc{}triv}(p,f(x))}{\mathsf{ap}_f(p)},
+    \end{equation*}
+    witnessing that the triangle
+    \begin{equation*}
+      \begin{tikzcd}[trim right=(a),column sep=0em]
+        \mathsf{tr}_{W_A(B)}(p,f(x)) \arrow[dr,equals,swap,"\apd{f}{p}"] \arrow[rr,equals,"{\mathsf{tr\usc{}triv}(p,f(x))}"] & & |[alias=a,right]|f(x) \arrow[dl,equals,"\ap{f}{p}"] \\
+        & f(y) & \phantom{\mathsf{tr}_{W_A(B)}(p,f(x))}
+      \end{tikzcd}
+    \end{equation*}
+    commutes.
   \end{subexenum}
-\end{exercises}
+\item \label{ex:trans_ap}Let $f:A\to B$ be a map, and consider $p:x=y$ in $A$. 
+  \begin{subexenum}
+  \item Construct for any $q:f(x)=b$ in $B$ an identification
+    \begin{equation*}
+      \mathsf{tr\usc{}id\usc{}left\usc{}subst}(p,q):\id{\mathsf{tr}_{f(\blank)=b}(p,q)}{\ct{\ap{f}{p}^{-1}}{q}}.
+    \end{equation*}
+  \item Similarly, construct for any $q':b=f(x)$ in $B$ an identification
+    \begin{equation*}
+      \mathsf{tr\usc{}id\usc{}right\usc{}subst}(p,q'):\id{\mathsf{tr}_{b=f(\blank)}(p,q)}{\ct{q}{\ap{f}{p}}}.
+    \end{equation*}
+  \end{subexenum}
+\end{comment}

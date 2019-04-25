@@ -1176,7 +1176,7 @@ square-fib-cube f g h k f' g' h' k' hA hB hC hD
             ( bottom (hA a')))) ∙
         ( ( ( assoc (inv (ap hD (top a'))) _ (bottom (hA a'))) ∙
             {!!}) ∙
-          ( inv-assoc (ap k (back-right a')) (front-right (g' a')) ∙
+          ( distributive-inv-concat (ap k (back-right a')) (front-right (g' a')) ∙
             ( ( ap
                 ( concat _ (inv (front-right (g' a'))))
                 ( inv (ap-inv k (back-right a')))) ∙

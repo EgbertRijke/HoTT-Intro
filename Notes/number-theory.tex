@@ -10,10 +10,12 @@ Some ideas to include in this chapter:
 \item Show that there are infinitely many primes.
 \item If $2^n-1$ is prime, then $n$ is prime.
 \item Fermat's little theorem.
-\item The Lucas-Lehmer test.
+\item Introduce the groups $\Z/n\Z$
+\item Define Euler's totient function $\varphi$, prove basic properties, and prove Euler's theorem that $a^{\varphi(n)}\equiv 1 \mod n$ if $a$ and $n$ are coprime.
 \item Introduce $\mathbb{Q}$ and prove irrationality of $\sqrt{2}$.
-\item Refer to Everest-Ward, Apostol, \dots for more ideas.
 \end{enumerate}
+
+Something to consider: if it is reasonable to place this chapter right after chapter 5, that might be better.
 
 
 \section{Decidability}
@@ -29,7 +31,7 @@ Some ideas to include in this chapter:
   The types $\unit$ and $\emptyt$ are decidable. Indeed, we have
   \begin{align*}
     \inl(\ttt) & :\mathsf{is\usc{}decidable}(\unit) \\
-    \inr(\idfunc) & : \mathsf{id\usc{}decidable}(\emptyt).\qedhere
+    \inr(\idfunc) & : \mathsf{is\usc{}decidable}(\emptyt).\qedhere
   \end{align*}
 \end{eg}
 
@@ -98,4 +100,5 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   \item Show that if $A$ and $B$ have decidable equality, then so do $A+B$ and $A\times B$. Conclude that $\Z$ has decidable equality.
   \item Show that if $A$ is a retract of a type $B$ with decidable equality, then $A$ also has decidable equality.
   \end{subexenum}
+\item Define the prime-counting function $\pi:\N\to\N$
 \end{exercises}

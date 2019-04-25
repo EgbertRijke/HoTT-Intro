@@ -2,8 +2,8 @@
 
 module 02-natural-numbers where
 
-import Preamble
-open Preamble public
+import 00-preamble
+open 00-preamble public
 
 -- Definition 2.2.3
 id : {i : Level} {A : UU i} → A → A

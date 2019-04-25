@@ -1075,7 +1075,7 @@ fib-square-comp-horizontal i j h c d .(pr1 d a) (pair a refl) =
       K = pr2 (pr2 c)
   in
   eq-pair (pair refl
-    ( ( ap (concat' _ refl) (inv-assoc (ap j (H a)) (K (k a)))) ∙
+    ( ( ap (concat' _ refl) (distributive-inv-concat (ap j (H a)) (K (k a)))) ∙
       ( ( inv (assoc (inv (K (k a))) (inv (ap j (H a))) refl)) ∙
         ( ap (concat _ (inv (K (k a))))
           ( ( ap (concat' _ refl) (inv (ap-inv j (H a)))) ∙
@@ -1099,7 +1099,7 @@ fib-square-comp-vertical f g h
   eq-pair
     ( pair refl
       ( ( right-unit (inv ((H (p' a)) ∙ (ap g (H' a))))) ∙
-        ( ( inv-assoc (H (p' a)) (ap g (H' a))) ∙
+        ( ( distributive-inv-concat (H (p' a)) (ap g (H' a))) ∙
           ( ( ap
               ( concat _ (inv (ap g (H' a))))
               ( inv (right-unit (inv (H (p' a)))))) ∙
@@ -1631,6 +1631,18 @@ square-eq-inv-vertical : {l : Level} {A : UU l}
   Id (left ∙ bottom) (top ∙ right) →
   Id ((inv left) ∙ top) (bottom ∙ (inv right))
 square-eq-inv-vertical refl bottom refl refl refl = refl
+
+tr-id-left-subst :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
+  (p : Id x y) (b : B) → (q : Id (f x) b) →
+  Id (tr (λ (a : A) → Id (f a) b) p q) ((inv (ap f p)) ∙ q)
+tr-id-left-subst refl b q = refl
+
+tr-id-right-subst :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
+  (p : Id x y) (b : B) → (q : Id b (f x)) →
+  Id (tr (λ (a : A) → Id b (f a)) p q) (q ∙ (ap f p))
+tr-id-right-subst refl b q = inv (right-unit q)
 
 triangle-is-pullback-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}

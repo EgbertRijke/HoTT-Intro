@@ -5,13 +5,23 @@ module 05-identity-types where
 import 04-relations
 open 04-relations public
 
+-- Section 5.1
+
+{- We introduce the identity type. -}
+
 data Id {i : Level} {A : UU i} (x : A) : A → UU i where
   refl : Id x x
+
+{- In the following definition we give a construction of path induction.
+   However, in the development of this library we will mostly use Agda's
+   built-in methods to give constructions by path induction. -}
 
 ind-Id :
   {i j : Level} {A : UU i} (x : A) (B : (y : A) (p : Id x y) → UU j) →
   (B x refl) → (y : A) (p : Id x y) → B y p
 ind-Id x B b y refl = b
+
+{- We define the groupoid structure of a type. -}
 
 inv :
   {i : Level} {A : UU i} {x y : A} → Id x y → Id y x
@@ -98,43 +108,63 @@ reflexive-path-over :
   path-over B refl y y
 reflexive-path-over B x y = refl
 
+-- path induction for observational equality on ℕ
+
+succ-fam-Eq-ℕ :
+  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i) →
+  (m n : ℕ) → Eq-ℕ m n → UU i
+succ-fam-Eq-ℕ R m n e = R (succ-ℕ m) (succ-ℕ n) e
+
+succ-refl-fam-Eq-ℕ :
+  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i)
+  (ρ : (n : ℕ) → R n n (refl-Eq-ℕ n)) →
+  (n : ℕ) → (succ-fam-Eq-ℕ R n n (refl-Eq-ℕ n))
+succ-refl-fam-Eq-ℕ R ρ n = ρ (succ-ℕ n)
+
+path-ind-Eq-ℕ :
+  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i)
+  ( ρ : (n : ℕ) → R n n (refl-Eq-ℕ n)) →
+  ( m n : ℕ) (e : Eq-ℕ m n) → R m n e
+path-ind-Eq-ℕ R ρ zero-ℕ zero-ℕ star = ρ zero-ℕ
+path-ind-Eq-ℕ R ρ zero-ℕ (succ-ℕ n) ()
+path-ind-Eq-ℕ R ρ (succ-ℕ m) zero-ℕ ()
+path-ind-Eq-ℕ R ρ (succ-ℕ m) (succ-ℕ n) e =
+  path-ind-Eq-ℕ (succ-fam-Eq-ℕ R) (succ-refl-fam-Eq-ℕ R ρ) m n e
+
+comp-path-ind-Eq-ℕ :
+  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i)
+  ( ρ : (n : ℕ) → R n n (refl-Eq-ℕ n)) →
+  ( n : ℕ) → Id (path-ind-Eq-ℕ R ρ n n (refl-Eq-ℕ n)) (ρ n)
+comp-path-ind-Eq-ℕ R ρ zero-ℕ = refl
+comp-path-ind-Eq-ℕ R ρ (succ-ℕ n) =
+  comp-path-ind-Eq-ℕ (succ-fam-Eq-ℕ R) (succ-refl-fam-Eq-ℕ R ρ) n
+
 -- Exercises
 
 -- Exercise 4.1
-tr-concat :
-  {i j : Level} {A : UU i} {B : A → UU j} {x y : A} (p : Id x y)
-  {z : A} (q : Id y z) (b : B x) → Id (tr B q (tr B p b)) (tr B (p ∙ q) b)
-tr-concat refl q b = refl
+
+two-ℕ : ℕ
+two-ℕ = succ-ℕ one-ℕ
+
+is-even-ℕ : ℕ → UU lzero
+is-even-ℕ n = Σ ℕ (λ m → Id (mul-ℕ two-ℕ m) n)
+
+div-ℕ : ℕ → ℕ → UU lzero
+div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
+
+is-prime : ℕ → UU lzero
+is-prime n = (one-ℕ < n) × ((m : ℕ) → (one-ℕ < m) → (div-ℕ m n) → Id m n)
+
+Goldbach-conjecture : UU lzero
+Goldbach-conjecture =
+  ( n : ℕ) → (two-ℕ < n) → (is-even-ℕ n) →
+    Σ ℕ (λ p → (is-prime p) × (Σ ℕ (λ q → (is-prime q) × Id (add-ℕ p q) n)))
 
 -- Exercise 4.2
-inv-assoc :
+distributive-inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A}
   (q : Id y z) → Id (inv (p ∙ q)) ((inv q) ∙ (inv p))
-inv-assoc refl refl = refl
-
--- Exercise 4.3
-tr-triv :
-  {i j : Level} {A : UU i} {B : UU j} {x y : A} (p : Id x y) (b : B) →
-  Id (tr (λ (a : A) → B) p b) b
-tr-triv refl b = refl
-
-apd-triv :
-  {i j : Level} {A : UU i} {B : UU j} (f : A → B) {x y : A}
-  (p : Id x y) → Id (apd f p) ((tr-triv p (f x)) ∙ (ap f p))
-apd-triv f refl = refl
-
--- Exercise 4.4
-tr-id-left-subst :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
-  (p : Id x y) (b : B) → (q : Id (f x) b) →
-  Id (tr (λ (a : A) → Id (f a) b) p q) ((inv (ap f p)) ∙ q)
-tr-id-left-subst refl b q = refl
-
-tr-id-right-subst :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
-  (p : Id x y) (b : B) → (q : Id b (f x)) →
-  Id (tr (λ (a : A) → Id b (f a)) p q) (q ∙ (ap f p))
-tr-id-right-subst refl b q = inv (right-unit q)
+distributive-inv-concat refl refl = refl
 
 -- Exercise 4.5
 inv-con :
@@ -153,19 +183,6 @@ lift :
   {i j : Level} {A : UU i} {B : A → UU j} {x y : A} (p : Id x y)
   (b : B x) → Id (pair x b) (pair y (tr B p b))
 lift refl b = refl
-
--- Exercise 4.7
-pentagon :
-  {i : Level} {A : UU i} {a b c d e : A}
-  (p : Id a b) (q : Id b c) (r : Id c d) (s : Id d e) →
-  let α₁ = inv (ap (λ t → t ∙ s) (assoc p q r))
-      α₂ = inv (assoc p (q ∙ r) s)
-      α₃ = inv (ap (λ t → p ∙ t) (assoc q r s))
-      α₄ = inv (assoc (p ∙ q) r s)
-      α₅ = inv (assoc p q (r ∙ s))
-  in
-  Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
-pentagon refl refl refl refl = refl
 
 -- Exercise 4.8
 
@@ -207,9 +224,8 @@ abstract
     (x : ℕ) → Id (mul-ℕ x one-ℕ) x
   right-unit-law-mul-ℕ zero-ℕ = refl
   right-unit-law-mul-ℕ (succ-ℕ x) =
-    concat _
-      ( right-successor-law-add-ℕ (mul-ℕ x one-ℕ) zero-ℕ)
-      ( ap succ-ℕ (concat _ (right-unit-law-add-ℕ _) (right-unit-law-mul-ℕ x)))
+    ( right-successor-law-add-ℕ (mul-ℕ x one-ℕ) zero-ℕ) ∙
+    ( ap succ-ℕ (concat _ (right-unit-law-add-ℕ _) (right-unit-law-mul-ℕ x)))
   
   left-unit-law-mul-ℕ :
     (x : ℕ) → Id (mul-ℕ one-ℕ x) x
@@ -225,30 +241,23 @@ abstract
     (x y : ℕ) → Id (mul-ℕ x (succ-ℕ y)) (add-ℕ x (mul-ℕ x y))
   right-successor-law-mul-ℕ zero-ℕ y = refl
   right-successor-law-mul-ℕ (succ-ℕ x) y =
-    concat (succ-ℕ (add-ℕ (mul-ℕ x (succ-ℕ y)) y))
-      ( right-successor-law-add-ℕ (mul-ℕ x (succ-ℕ y)) y)
-      ( concat (succ-ℕ (add-ℕ (add-ℕ x (mul-ℕ x y)) y))
-        ( ap (λ t → succ-ℕ (add-ℕ t y)) (right-successor-law-mul-ℕ x y))
-        ( ap succ-ℕ (associative-add-ℕ x (mul-ℕ x y) y)))
+    ( right-successor-law-add-ℕ (mul-ℕ x (succ-ℕ y)) y) ∙ 
+    ( ( ap (λ t → succ-ℕ (add-ℕ t y)) (right-successor-law-mul-ℕ x y)) ∙
+      ( ap succ-ℕ (associative-add-ℕ x (mul-ℕ x y) y)))
 
 abstract
   left-distributive-mul-add-ℕ :
     (x y z : ℕ) → Id (mul-ℕ x (add-ℕ y z)) (add-ℕ (mul-ℕ x y) (mul-ℕ x z))
   left-distributive-mul-add-ℕ zero-ℕ y z = refl
   left-distributive-mul-add-ℕ (succ-ℕ x) y z =
-    concat _
-      ( left-successor-law-mul-ℕ x (add-ℕ y z))
-      ( concat _
-        ( ap (λ t → add-ℕ t (add-ℕ y z)) (left-distributive-mul-add-ℕ x y z))
-        ( concat (add-ℕ (mul-ℕ x y) (add-ℕ (mul-ℕ x z) (add-ℕ y z)))
-          ( associative-add-ℕ (mul-ℕ x y) (mul-ℕ x z) (add-ℕ y z))
-          ( concat _
-            ( ap (add-ℕ (mul-ℕ x y)) (concat _
-              ( inv (associative-add-ℕ (mul-ℕ x z) y z))
-              ( concat _
-                ( ap (λ t → add-ℕ t z) (commutative-add-ℕ (mul-ℕ x z) y))
-                ( associative-add-ℕ y (mul-ℕ x z) z))))
-            ( inv (associative-add-ℕ (mul-ℕ x y) y (add-ℕ (mul-ℕ x z) z))))))
+    ( left-successor-law-mul-ℕ x (add-ℕ y z)) ∙ 
+    ( ( ap (λ t → add-ℕ t (add-ℕ y z)) (left-distributive-mul-add-ℕ x y z)) ∙ 
+      ( ( associative-add-ℕ (mul-ℕ x y) (mul-ℕ x z) (add-ℕ y z)) ∙
+        ( ( ap ( add-ℕ (mul-ℕ x y)) 
+               ( ( inv (associative-add-ℕ (mul-ℕ x z) y z)) ∙
+                 ( ( ap (λ t → add-ℕ t z) (commutative-add-ℕ (mul-ℕ x z) y)) ∙
+                   ( associative-add-ℕ y (mul-ℕ x z) z)))) ∙ 
+          ( inv (associative-add-ℕ (mul-ℕ x y) y (add-ℕ (mul-ℕ x z) z))))))
 
 abstract
   left-zero-law-mul-ℕ :
@@ -267,48 +276,36 @@ abstract
     (x y : ℕ) → Id (mul-ℕ x y) (mul-ℕ y x)
   commutative-mul-ℕ zero-ℕ y = inv (right-zero-law-mul-ℕ y)
   commutative-mul-ℕ (succ-ℕ x) y =
-    concat _
-      ( commutative-add-ℕ (mul-ℕ x y) y)
-      ( concat _
-        ( ap (add-ℕ y) (commutative-mul-ℕ x y))
-        ( inv (right-successor-law-mul-ℕ y x)))
+    ( commutative-add-ℕ (mul-ℕ x y) y) ∙ 
+    ( ( ap (add-ℕ y) (commutative-mul-ℕ x y)) ∙
+      ( inv (right-successor-law-mul-ℕ y x)))
 
 abstract
   right-distributive-mul-add-ℕ :
     (x y z : ℕ) → Id (mul-ℕ (add-ℕ x y) z) (add-ℕ (mul-ℕ x z) (mul-ℕ y z))
   right-distributive-mul-add-ℕ x y z =
-    concat _
-      ( commutative-mul-ℕ (add-ℕ x y) z)
-      ( concat _
-        ( left-distributive-mul-add-ℕ z x y)
-        ( concat _
-          ( ap (λ t → add-ℕ t (mul-ℕ z y)) (commutative-mul-ℕ z x))
-          ( ap (λ t → add-ℕ (mul-ℕ x z) t) (commutative-mul-ℕ z y))))
+    ( commutative-mul-ℕ (add-ℕ x y) z) ∙ 
+    ( ( left-distributive-mul-add-ℕ z x y) ∙ 
+      ( ( ap (λ t → add-ℕ t (mul-ℕ z y)) (commutative-mul-ℕ z x)) ∙ 
+        ( ap (λ t → add-ℕ (mul-ℕ x z) t) (commutative-mul-ℕ z y))))
 
 abstract
   associative-mul-ℕ :
     (x y z : ℕ) → Id (mul-ℕ (mul-ℕ x y) z) (mul-ℕ x (mul-ℕ y z))
   associative-mul-ℕ zero-ℕ y z = refl
   associative-mul-ℕ (succ-ℕ x) y z =
-    concat _
-      ( right-distributive-mul-add-ℕ (mul-ℕ x y) y z)
-      ( ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))
+    ( right-distributive-mul-add-ℕ (mul-ℕ x y) y z) ∙ 
+    ( ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))
 
--- Exercise 4.9
-
-two-ℕ : ℕ
-two-ℕ = succ-ℕ one-ℕ
-
-is-even-ℕ : ℕ → UU lzero
-is-even-ℕ n = Σ ℕ (λ m → Id (mul-ℕ two-ℕ m) n)
-
-div-ℕ : ℕ → ℕ → UU lzero
-div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
-
-is-prime : ℕ → UU lzero
-is-prime n = (one-ℕ < n) × ((m : ℕ) → (one-ℕ < m) → (div-ℕ m n) → Id m n)
-
-Goldbach-conjecture : UU lzero
-Goldbach-conjecture =
-  ( n : ℕ) → (two-ℕ < n) → (is-even-ℕ n) →
-    Σ ℕ (λ p → (is-prime p) × (Σ ℕ (λ q → (is-prime q) × Id (add-ℕ p q) n)))
+-- Exercise 4.7
+pentagon :
+  {i : Level} {A : UU i} {a b c d e : A}
+  (p : Id a b) (q : Id b c) (r : Id c d) (s : Id d e) →
+  let α₁ = inv (ap (λ t → t ∙ s) (assoc p q r))
+      α₂ = inv (assoc p (q ∙ r) s)
+      α₃ = inv (ap (λ t → p ∙ t) (assoc q r s))
+      α₄ = inv (assoc (p ∙ q) r s)
+      α₅ = inv (assoc p q (r ∙ s))
+  in
+  Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
+pentagon refl refl refl refl = refl

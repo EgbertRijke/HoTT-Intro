@@ -212,6 +212,16 @@ abstract
    so by constructing a commuting triangle relating ev-free-loop to 
    ev-free-loop' via a comparison equivalence. -}
 
+tr-triv :
+  {i j : Level} {A : UU i} {B : UU j} {x y : A} (p : Id x y) (b : B) →
+  Id (tr (λ (a : A) → B) p b) b
+tr-triv refl b = refl
+
+apd-triv :
+  {i j : Level} {A : UU i} {B : UU j} (f : A → B) {x y : A}
+  (p : Id x y) → Id (apd f p) ((tr-triv p (f x)) ∙ (ap f p))
+apd-triv f refl = refl
+
 comparison-free-loops :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (Y : UU l2) →
   free-loops Y → dependent-free-loops l (λ x → Y)

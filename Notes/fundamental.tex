@@ -135,7 +135,7 @@ We now combine \cref{thm:fib_equiv,lem:total-equiv-base-equiv}.
   By the assumption that $f$ is an equivalence, it follows that the map $\sm{x:A}D(f(x))\to \sm{y:B}D(y)$ is an equivalence. Therefore it follows that $\total[f]{g}$ is an equivalence if and only if $\total{g}$ is an equivalence. Now the claim follows, since $\total{g}$ is an equivalence if and only if $g$ if a family of equivalences.
 \end{proof}
 
-\section{Identity systems}
+\section{The fundamental theorem}
 
 The fundamental theorem (\cref{thm:id_fundamental}) tells us when, for a type family $B$ over $A$ and a fixed $a:A$, there is a family of equivalences $\prd{x:A}(a=x)\simeq B(x)$. In other words, it tells us when a family $B$ is a characterization of the identity type of $A$.
 
@@ -174,16 +174,6 @@ on total spaces. We have that $\sm{x:A}a=x$ is contractible. Now it follows by \
 \end{equation*}
 that $\total{\mathsf{path\usc{}ind}_a(b)}$ is an equivalence if and only if $\sm{x:A}B(x)$ is contractible.
 \end{proof}
-
-As could be expected, when $B$ is equivalent to the identity type of $A$ we can also prove a variant of path induction for $B$.
-
-\begin{defn}
-  Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. We say that $B$ is an \define{(unary) identity system} if for every family $P$ indexed by $x:A$ and $y:B(x)$, the map
-  \begin{equation*}
-    \Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to P(a,\refl{a})
-  \end{equation*}
-  has a section.
-\end{defn}
 
 \begin{thm}
   Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. Then the following are equivalent:
