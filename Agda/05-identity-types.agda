@@ -39,7 +39,7 @@ _∙_ {y = y} = concat y
 {- This goes in the wrong direction! -}
 assoc :
   {i : Level} {A : UU i} {x y z w : A} (p : Id x y) (q : Id y z)
-  (r : Id z w) → Id (p ∙ (q ∙ r)) ((p ∙ q) ∙ r)
+  (r : Id z w) → Id ((p ∙ q) ∙ r) (p ∙ (q ∙ r))
 assoc refl q r = refl
 
 left-unit :
@@ -301,11 +301,11 @@ abstract
 pentagon :
   {i : Level} {A : UU i} {a b c d e : A}
   (p : Id a b) (q : Id b c) (r : Id c d) (s : Id d e) →
-  let α₁ = inv (ap (λ t → t ∙ s) (assoc p q r))
-      α₂ = inv (assoc p (q ∙ r) s)
-      α₃ = inv (ap (λ t → p ∙ t) (assoc q r s))
-      α₄ = inv (assoc (p ∙ q) r s)
-      α₅ = inv (assoc p q (r ∙ s))
+  let α₁ = (ap (λ t → t ∙ s) (assoc p q r))
+      α₂ = (assoc p (q ∙ r) s)
+      α₃ = (ap (λ t → p ∙ t) (assoc q r s))
+      α₄ = (assoc (p ∙ q) r s)
+      α₅ = (assoc p q (r ∙ s))
   in
   Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
 pentagon refl refl refl refl = refl

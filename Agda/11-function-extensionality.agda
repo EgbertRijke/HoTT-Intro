@@ -762,6 +762,11 @@ abstract
       ( is-contr-total-htpy-equiv e)
       ( htpy-equiv-eq e)
 
+eq-htpy-equiv :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} {e e' : A ≃ B} →
+  ( htpy-equiv e e') → Id e e'
+eq-htpy-equiv {e = e} {e'} = inv-is-equiv (is-equiv-htpy-equiv-eq e e')
+
 abstract
   Ind-htpy-equiv :
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
@@ -1146,10 +1151,11 @@ isretr-section-comp f g h H (pair k K) (pair l L) =
   eq-Eq-sec g
     ( pair
       ( K ·r l)
-      ( ( htpy-assoc
-          ( htpy-inv (H ·r (k ∘ l)))
-          ( H ·r (k ∘ l))
-          ( (g ·l (K ·r l)) ∙h L)) ∙h
+      ( ( htpy-inv
+          ( htpy-assoc
+            ( htpy-inv (H ·r (k ∘ l)))
+            ( H ·r (k ∘ l))
+            ( (g ·l (K ·r l)) ∙h L))) ∙h
         ( htpy-ap-concat'
           ( (htpy-inv (H ·r (k ∘ l))) ∙h (H ·r (k ∘ l)))
           ( htpy-refl _)
@@ -1219,10 +1225,11 @@ isretr-retraction-comp f g h H (pair l L) (pair k K) =
   eq-Eq-retr h
     ( pair
       ( k ·l L)
-      ( ( htpy-assoc
-          ( htpy-inv ((k ∘ l) ·l H))
-          ( (k ∘ l) ·l H)
-          ( (k ·l (L ·r h)) ∙h K)) ∙h
+      ( ( htpy-inv
+          ( htpy-assoc
+            ( htpy-inv ((k ∘ l) ·l H))
+            ( (k ∘ l) ·l H)
+            ( (k ·l (L ·r h)) ∙h K))) ∙h
         ( htpy-ap-concat'
           ( (htpy-inv ((k ∘ l) ·l H)) ∙h ((k ∘ l) ·l H))
           ( htpy-refl _)

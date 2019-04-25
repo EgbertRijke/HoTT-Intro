@@ -133,11 +133,11 @@ abstract
 
 abstract
   eq-Eq-ℕ : (n m : ℕ) → Eq-ℕ n m → Id n m
-  eq-Eq-ℕ = least-reflexive-Eq-ℕ (λ n → refl)
+  eq-Eq-ℕ = least-reflexive-Eq-ℕ Id (λ n → refl)
 
 abstract
   is-set-ℕ : is-set ℕ
-  is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ reflexive-Eq-ℕ eq-Eq-ℕ
+  is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ refl-Eq-ℕ eq-Eq-ℕ
 
 -- Section 8.3 General truncation levels
 
@@ -605,7 +605,7 @@ abstract
   has-decidable-equality-𝟚 false false = inl refl
 
 Eq-ℕ-eq : (x y : ℕ) → Id x y → Eq-ℕ x y
-Eq-ℕ-eq x .x refl = reflexive-Eq-ℕ x
+Eq-ℕ-eq x .x refl = refl-Eq-ℕ x
 
 abstract
   injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y

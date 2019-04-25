@@ -1076,7 +1076,7 @@ fib-square-comp-horizontal i j h c d .(pr1 d a) (pair a refl) =
   in
   eq-pair (pair refl
     ( ( ap (concat' _ refl) (distributive-inv-concat (ap j (H a)) (K (k a)))) ∙
-      ( ( inv (assoc (inv (K (k a))) (inv (ap j (H a))) refl)) ∙
+      ( ( assoc (inv (K (k a))) (inv (ap j (H a))) refl) ∙
         ( ap (concat _ (inv (K (k a))))
           ( ( ap (concat' _ refl) (inv (ap-inv j (H a)))) ∙
             ( inv (ap-concat j (inv (H a)) refl)))))))
@@ -1663,15 +1663,15 @@ triangle-is-pullback-htpy {A = A} {B} {X} {C} {f = f} {f'} Hf {g} {g'} Hg
                 ( Hq z)
                 ( f (p' z))
                 ( (inv (ap f (Hp z))) ∙ (H z))) ∙
-              ( inv (assoc (inv (ap f (Hp z))) (H z) (ap g (Hq z))) ∙
-                 square-eq-inv-vertical
+              ( ( assoc (inv (ap f (Hp z))) (H z) (ap g (Hq z))) ∙
+                ( square-eq-inv-vertical
                    ( ap f (Hp z))
                    ( (Hf (p' z)) ∙ (H' z))
                    ( (H z) ∙ (ap g (Hq z)))
                    ( Hg (q' z))
-                   ( ( assoc (ap f (Hp z)) (Hf (p' z)) (H' z)) ∙
+                   ( ( inv (assoc (ap f (Hp z)) (Hf (p' z)) (H' z))) ∙
                      ( ( inv (HH z)) ∙
-                       ( assoc (H z) (ap g (Hq z)) (Hg (q' z)))))))))))
+                       ( inv (assoc (H z) (ap g (Hq z)) (Hg (q' z)))))))))))))
 
 abstract
   is-pullback-htpy :
@@ -2491,7 +2491,7 @@ issec-inv-map-cone-fold {A = A} {B} {X} f g (pair (pair a b) (pair x α)) =
                 ( λ t → (eq-pair-triv ( pair t (ap pr2 α))))
                 ( ( ( inv (right-unit (ap pr1 α))) ∙
                     ( inv (ap (concat _ (ap pr1 α)) (left-inv (ap pr2 α))))) ∙
-                  ( assoc (ap pr1 α) (inv (ap pr2 α)) (ap pr2 α))))) ∙
+                  ( inv (assoc (ap pr1 α) (inv (ap pr2 α)) (ap pr2 α)))))) ∙
             ( eq-pair-triv-concat
               ( (ap pr1 α) ∙ (inv (ap pr2 α)))
               ( ap pr2 α)

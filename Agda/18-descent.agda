@@ -398,11 +398,10 @@ gen-fam-pushout f g (pair i (pair j H)) P =
       ( P ∘ j)
       ( λ s → (pair (tr P (H s)) (is-equiv-tr P (H s)))))
 
-{-
 equiv-eq-ap-fam :
   {l1 l2 : Level} {A : UU l1} (B : A → UU l2) {x y : A} (p : Id x y) →
   Id (equiv-tr B p) (equiv-eq (ap B p))
-equiv-eq-ap-fam B refl = refl
+equiv-eq-ap-fam B refl = eq-htpy-equiv (htpy-refl id)
 
 triangle-gen-fam-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
@@ -640,4 +639,3 @@ coherence-square-inv-is-equiv-horizontal f g h k H is-equiv-h is-equiv-g c =
       ( inv-is-equiv is-equiv-h)
       ( inv (H (inv-is-equiv is-equiv-g c)))) ∙
     ( isretr-inv-is-equiv is-equiv-h (f (inv-is-equiv is-equiv-g c))))
--}

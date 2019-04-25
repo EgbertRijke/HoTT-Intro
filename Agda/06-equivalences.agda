@@ -32,7 +32,7 @@ _∙h_ {g = g} = htpy-concat g
 htpy-assoc :
   {i j : Level} {A : UU i} {B : A → UU j} {f g h k : (x : A) → B x} →
   (H : f ~ g) → (K : g ~ h) → (L : h ~ k) →
-  (H ∙h (K ∙h L)) ~ ((H ∙h K) ∙h L)
+  ((H ∙h K) ∙h L) ~ (H ∙h (K ∙h L))
 htpy-assoc H K L x = assoc (H x) (K x) (L x)
 
 htpy-left-unit :
@@ -409,7 +409,7 @@ left-inv-inv-concat' :
 left-inv-inv-concat' x q p =
   concat
     ( concat _ p (concat _ q (inv q)))
-    ( inv (assoc p q (inv q)))
+    ( assoc p q (inv q))
     ( concat
       ( concat _ p refl)
       ( ap (concat _ p) (right-inv q))
@@ -421,7 +421,7 @@ right-inv-inv-concat' :
 right-inv-inv-concat' x q r =
   concat
     ( concat _ r (concat _ (inv q) q))
-    ( inv (assoc r (inv q) q))
+    ( assoc r (inv q) q)
     ( concat
       ( concat _ r refl)
       ( ap (concat _ r) (left-inv q))

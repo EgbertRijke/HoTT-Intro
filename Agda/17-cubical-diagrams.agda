@@ -611,24 +611,26 @@ coherence-htpy-square-is-pullback-bottom-is-pullback-top-cube-is-equiv
   f g h k f' g' h' k' hA hB hC hD
   top back-left back-right front-left front-right bottom c =
   ( htpy-inv
-    ( htpy-assoc
-      ( h ·l (htpy-inv back-left))
-      ( bottom ·r hA)
-      ( (k ·l back-right) ∙h (htpy-refl (k ∘ (hC ∘ g')))))) ∙h
+    ( htpy-inv
+      ( htpy-assoc
+        ( h ·l (htpy-inv back-left))
+        ( bottom ·r hA)
+        ( (k ·l back-right) ∙h (htpy-refl (k ∘ (hC ∘ g'))))))) ∙h
   ( ( htpy-ap-concat'
       ( h ·l (htpy-inv back-left))
       ( htpy-inv (h ·l back-left))
       ( _)
       ( htpy-left-whisk-htpy-inv h back-left)) ∙h
       ( htpy-inv (htpy-inv-con (h ·l back-left) _ _
-        ( ( ( htpy-assoc (h ·l back-left) (front-left ·r f') _) ∙h
-            ( htpy-assoc
-                ( (h ·l back-left) ∙h (front-left ·r f'))
-                ( hD ·l top)
-                ( (htpy-inv front-right) ·r g') ∙h
+        ( ( ( htpy-inv (htpy-assoc (h ·l back-left) (front-left ·r f') _)) ∙h
+            ( ( htpy-inv
+                ( htpy-assoc
+                  ( (h ·l back-left) ∙h (front-left ·r f'))
+                  ( hD ·l top)
+                  ( (htpy-inv front-right) ·r g'))) ∙h
               htpy-inv
               ( htpy-con-inv _ (front-right ·r g') _
-                ( htpy-inv (c ∙h (htpy-assoc (bottom ·r hA) _ _)))))) ∙h
+                ( (htpy-assoc (bottom ·r hA) _ _) ∙h (htpy-inv (c)))))) ∙h
           ( htpy-inv
             ( htpy-ap-concat (bottom ·r hA) _ _
               ( htpy-right-unit (k ·l back-right))))))))
@@ -737,13 +739,11 @@ is-pullback-top-is-pullback-bottom-cube-is-equiv
       ( pair back-left
         ( pair
           ( htpy-refl g')
-          ( ( ( ( htpy-inv
-                  ( htpy-assoc
-                    ( bottom ·r hA) (k ·l back-right) (front-right ·r g'))) ∙h
+          ( ( ( ( htpy-assoc
+                    ( bottom ·r hA) (k ·l back-right) (front-right ·r g')) ∙h
                 ( htpy-inv c)) ∙h
-              ( htpy-inv
-                ( htpy-assoc
-                  ( h ·l back-left) (front-left ·r f') (hD ·l top)))) ∙h
+              ( htpy-assoc
+                  ( h ·l back-left) (front-left ·r f') (hD ·l top))) ∙h
             ( htpy-ap-concat' _ _ ((front-left ·r f') ∙h (hD ·l top))
               ( htpy-inv (htpy-right-unit (h ·l back-left)))))))
       ( is-pullback-rectangle-is-pullback-top h k hC
