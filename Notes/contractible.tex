@@ -1,7 +1,7 @@
 % !TEX root = hott_intro.tex
 
-\chapter{Contractible types and contractible maps}
-\chaptermark{Contractible types and maps}
+\section{Contractible types and contractible maps}
+\sectionmark{Contractible types and maps}
 
 In this lecture we introduce the notions of contractible types and maps. A contractible type is a type which has, up to identification, only one term. In other words, a contractible type is a type that comes equipped with a point, and an identification of this point with any point.
 
@@ -15,7 +15,7 @@ The forward direction of this claim is straightforward, and we prove this direct
 \end{equation*}
 and finally we use these observations in \cref{thm:contr_equiv} to conclude that the fibers of any equivalence must be contractible.
 
-\section{Contractible types}
+\subsection{Contractible types}
 
 \begin{defn}
   We say that a type $A$ is \define{contractible}\index{contractible!type|textbf} if it comes equipped with a term of type
@@ -82,7 +82,15 @@ Therefore $\mathsf{sing\usc{}ind}_{A,a}(\refl{a})$ is a contraction.
 \end{proof}
 
 \begin{eg}
-By definition the unit type\index{unit type!contractibility} $\unit$ satisfies singleton induction, so it is contractible.
+  By definition the unit type\index{unit type!contractibility} $\unit$ comes equipped with a function
+  \begin{equation*}
+    \indunit:B(\ttt)\to \prd{x:\unit}B(x)
+  \end{equation*}
+  for every type family $B$ over $\unit$. The judgmental equality $\indunit(b,\ttt)\jdeq b$ holds for every $b:B(\ttt)$ by the computation rule, so we obtain the homotopy
+  \begin{equation*}
+    \lam{b}\refl{b}:\mathsf{ev\usc{}pt}\circ\indunit \htpy\idfunc.
+  \end{equation*}
+  We conclude that the unit type satisfies singleton induction, and is therefore contractible.
 \end{eg}
 
 \begin{thm}\label{thm:total_path}
@@ -116,7 +124,7 @@ Moreover, by the computation rules we have
 Thus, for $\mathsf{sing\usc{}comp}$ we simply take $\lam{b}\refl{b}$.
 \end{proof}
 
-\section{Contractible maps}
+\subsection{Contractible maps}
 \begin{defn}
 Let $f:A\to B$ be a function, and let $b:B$. The \define{fiber}\index{fiber|textbf}\index{homotopy fiber|see {fiber}} of $f$ at $b$ is defined to be the type
 \begin{equation*}
@@ -180,7 +188,7 @@ Thus, we get map $g:B\to A$, and a homotopy $G:\prd{y:B} f(g(y))=y$. In other wo
 It remains to construct a retraction of $f$. Taking $g$ as our retraction, we have to show that $\prd{x:A} g(f(x))=x$. Note that we get an identification $p:f(g(f(x)))=f(x)$ since $g$ is a section of $f$. It follows that $(g(f(x)),p):\fib{f}{f(x)}$. Moreover, since $\fib{f}{f(x)}$ is contractible we get an identification $q:\pairr{g(f(x)),p}=\pairr{x,\refl{f(x)}}$. The base path $\ap{\proj 1}{q}$ of this identification is an identification of type $g(f(x))=x$, as desired.
 \end{proof}
 
-\section{Equivalences are contractible maps}
+\subsection{Equivalences are contractible maps}
 
 In \cref{thm:contr_equiv} we will show the converse to \cref{thm:equiv_contr}, that any equivalence is a contractible map. We will do this in two steps.
 

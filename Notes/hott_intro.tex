@@ -1,6 +1,10 @@
 % arara: makechapters: {items: [syllabus, dtt, pi, inductive, identity, equivalences, contractible, fundamental, hierarchy, funext, pullback, univalence]}
 
-\documentclass[11pt]{memoir} %[ebook,10pt,oneside]
+\documentclass[11pt,draft]{memoir} %[ebook,10pt,oneside]
+
+% Number subsubsections
+\counterwithout{section}{chapter}
+\settocdepth{subsection}
 
 \title{Introduction to homotopy type theory}
 \author{Egbert Rijke}
@@ -13,33 +17,46 @@
 \preauthor{\begin{center}\textsc\bgroup\Large}\postauthor{\egroup\end{center}\vfill}
 \predate{\begin{center}\textsc\bgroup}{\postdate{\egroup\end{center}}
 
-\usepackage{hott}
+  \usepackage{hott}
 
-\usetikzlibrary{mindmap}
 
-\makeatletter
-\renewcommand{\@chapapp}{Lecture}
-\makeatother
-
-\crefname{table}{Table}{Tables}
-\crefname{chapter}{Lecture}{Lectures}
-
-\newlist{exenum}{enumerate}{1}
-\setlist[exenum]{noitemsep,label=\thechapter.\arabic*}%,ref=\thechapter.\arabic*}
-%\crefalias{exenumi}{Exercise} 
-\crefname{exenumi}{Exercise}{Exercises}
-
-\newlist{subexenum}{enumerate}{1}
-\setlist[subexenum]{noitemsep,label=(\alph*),ref=\theexenumi.\alph*}
-\crefname{subexenumi}{Exercise}{Exercises}
-
-\newenvironment{exercises}%
-{%
-\section*{Exercises}\addcontentsline{toc}{section}{Exercises}\sectionmark{Exercises}
-\begin{exenum}}
-{%
-\end{exenum}}
-
+  % The following is to avoid overfull hboxes in the table of contents.
+% https://tex.stackexchange.com/questions/49887/overfull-hbox-warning-for-toc-entries-when-using-memoir-documentclass
+%\renewcommand*{\cftdotsep}{1}
+\setpnumwidth{3em}
+\setrmarg{4em}
+\setlength{\cftchapternumwidth}{2em}
+\setlength{\cftsectionindent}{2em}
+\setlength{\cftsectionnumwidth}{2em}
+\setlength{\cftsubsectionindent}{5em}
+\setlength{\cftsubsectionnumwidth}{3em}
+  
+%  \usetikzlibrary{mindmap}
+  
+%  \makeatletter
+%  \renewcommand{\@chapapp}{Chapter}
+%  \makeatother
+  
+%  \crefname{table}{Table}{Tables}
+%  \crefname{chapter}{Lecture}{Lectures}
+  
+  \newlist{exenum}{enumerate}{1}
+  \setlist[exenum]{noitemsep,label=\thesection.\arabic*}%,ref=\thechapter.\arabic*}
+  %\crefalias{exenumi}{Exercise} 
+  \crefname{exenumi}{Exercise}{Exercises}
+  
+  \newlist{subexenum}{enumerate}{1}
+  \setlist[subexenum]{noitemsep,label=(\alph*),ref=\theexenumi.\alph*}
+  \crefname{subexenumi}{Exercise}{Exercises}
+  
+  \newenvironment
+      {exercises}%
+      {%
+        \subsection*{Exercises}\addcontentsline{toc}{subsection}{Exercises}\sectionmark{Exercises}
+        \begin{exenum}}
+      {%
+      \end{exenum}}
+      
 \addbibresource{bibliography.bib}
 
 \makeindex
@@ -49,7 +66,7 @@
 \frontmatter
 
 \begin{titlingpage}
-\maketitle 
+  \maketitle 
 \end{titlingpage}
 
 \tableofcontents
@@ -79,69 +96,49 @@ To include introduction:
 
 \mainmatter
 
-%\part*{Martin-L\"of's dependent type theory}
+\renewcommand{\thechapter}{\Roman{chapter}}
+\setsecnumdepth{subsection}
 
-\include{dtt}
+\chapter{Martin-L\"of's dependent type theory}
+\input{dtt}
+\input{pi}
+\input{inductive}
+\input{universes-relations}
+\input{identity}
 
-\include{pi}
+\chapter{Basic concepts of type theory}
+\input{equivalences}
+\input{contractible}
+\input{fundamental}
+\input{hierarchy}
+\input{number-theory}
 
-\include{inductive}
+\chapter{Univalent type theory}
+\input{funext}
+\input{univalence}
+\input{circle}
 
-\include{universes-relations}
+\chapter{Homotopy pullbacks and pushouts}
+\input{pullback}
+\input{pushout}
+\input{cubical}
+\input{descent}
+\input{id-pushout}
 
-\include{identity}
+\chapter{Homotopy quotients}
+\input{sequences}
+\input{image}
+\input{replacement}
+\section{The classifying type of a group}
+\input{truncation}
+\section{Truncations}
 
-%\part*{Basic concepts of type theory}
-\include{equivalences}
-
-\include{contractible}
-
-\include{fundamental}
-
-\include{hierarchy}
-
-\include{number-theory}
-
-%\part*{Univalent type theory}
-\include{funext}
-
-\include{univalence}
-
-\include{circle}
-
-%\part*{Homotopy pullbacks and pushouts}
-\include{pullback}
-
-\include{pushout}
-
-\include{cubical}
-
-\include{descent}
-
-\include{id-pushout}
-
-
-%\part*{Homotopy quotients}
-\include{sequences}
-
-\include{image}
-
-\include{replacement}
-
-\chapter{The classifying type of a group}
-
-\include{truncation}
-
-%\part*{Synthetic homotopy theory}
-\include{homotopy_groups}
-
-\include{les}
-
-\include{connected}
-
-\include{smash}
-
-\include{blakers-massey}
+\chapter{Synthetic homotopy theory}
+\input{homotopy_groups}
+\input{les}
+\input{connected}
+\input{smash}
+\input{blakers-massey}
 
 %\include{open_problems}
 

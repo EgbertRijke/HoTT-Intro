@@ -1,6 +1,6 @@
-\chapter{Homotopy groups of types}
+\section{Homotopy groups of types}
 
-\section{Pointed types}
+\subsection{Pointed types}
 
 \begin{defn}
 \begin{enumerate}
@@ -41,7 +41,7 @@ g\mathbin{\circ_\ast} f \defeq (g\circ f,\ct{\ap{g}{p_f}}{p_g}).
 \end{enumerate}
 \end{defn}
 
-\section{Loop spaces}
+\subsection{Loop spaces}
 \begin{defn}
 Let $X$ be a pointed type with base point $x$. We define the \define{loop space} $\loopspace{X,x}$ of $X$ at $x$ to be the pointed type $x=x$ with base point $\refl{x}$. 
 \end{defn}
@@ -86,7 +86,7 @@ Computing with the universal property of the suspension
 In the last equivalence we used \cref{ex:coh_intro}.
 \end{proof}
 
-\section{Homotopy groups}
+\subsection{Homotopy groups}
 In homotopy type theory we use $0$-types to define groups.
 \begin{defn}
 A \define{group} $\mathcal{G}$ consists of a set $G$ with a unit $e:G$, a multiplication $x,y\mapsto x\cdot y$, and an inverse operation $x\mapsto x^{-1}$ satisfying the \define{group laws}:
@@ -117,7 +117,7 @@ Furthermore, we have seen in \cref{circle_conn} that $\trunc{0}{\sphere{1}}$ is 
 Therefore we also have $\pi_0(\sphere{1})=0$.
 \end{eg}
 
-\section{The Eckmann-Hilton argument}
+\subsection{The Eckmann-Hilton argument}
 
 Given a diagram of identifications
 \begin{equation*}
@@ -200,7 +200,7 @@ Now we use that $\tproj{0}{r}\cdot\tproj{0}{s}\jdeq \tproj{0}{\ct{r}{s}}$ and $\
 \end{align*}
 \end{proof}
 
-\section{Simply connectedness of the $2$-sphere}
+\subsection{Simply connectedness of the $2$-sphere}
 
 \begin{defn}
 A pointed type $X$ is said to be \define{$n$-connected} if its homotopy groups $\pi_i(X)$ are trivial for $i\leq n$. A $0$-connected type is also just called \define{connected}, and a $1$-connected type is also called \define{simply connected}. 

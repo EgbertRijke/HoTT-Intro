@@ -1,4 +1,4 @@
-\chapter{Homotopy pushouts}
+\section{Homotopy pushouts}
 
 A common way in topology to construct new spaces is by attaching cells\index{attaching cells} to a given space. A $0$-cell is just a point, an $1$-cell is an interval, a $2$-cell is a disc, a $3$-cell is the solid ball, and so forth. Many spaces can be obtained by attaching cells. For example, the circle\index{circle} is obtained by attaching a $1$-cell to a $0$-cell, so that both end-points of the interval are mapped to the point. More generally, an $n$-sphere is obtained by attaching an $n$-disc to the point, so that its entire boundary gets mapped to the point.
 
@@ -17,7 +17,7 @@ A span from $A$ to $B$ can be thought of as a relation\index{relation} from $A$ 
 
 Unlike pullbacks, however, it is not automatically the case that pushouts always exist, and there are several equivalent characterizations of pushouts. Two such characterizations are presented in this lecture, establishing the duality between pullbacks and pushouts. Other characterizations, including the induction principle of pushouts, and the \emph{dependent universal property} of pushouts, are studied in \cref{chap:descent}.
 
-\section{The universal property of pushouts}
+\subsection{The universal property of pushouts}
 
 \begin{defn}
 Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and let $X$ be a type.
@@ -259,7 +259,7 @@ If any two of the following three properties hold, then so does the third:
 \end{cor}
 \end{comment}
 
-\section{Examples of pushouts}
+\subsection{Examples of pushouts}
 Many interesting types can be defined as homotopy pushouts. 
 
 \begin{defn}
@@ -390,7 +390,7 @@ X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"
 \end{defn}
 \end{comment}
 
-\section{Using the duality of pullbacks and pushouts}
+\subsection{Using the duality of pullbacks and pushouts}
 \begin{thm}\label{thm:pushout_pasting}
 Consider the following configuration of commuting squares:\index{pushout!pasting property|textit}\index{pasting property!for pushouts|textit}
 \begin{equation*}

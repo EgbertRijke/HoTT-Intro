@@ -1,12 +1,12 @@
 % !TEX root = hott_intro.tex
 
-\chapter{The hierarchy of homotopical complexity}
-\chaptermark{Homotopical complexity}\label{chap:hierarchy}
+\section{The hierarchy of homotopical complexity}
+\sectionmark{Homotopical complexity}\label{chap:hierarchy}
 %Not all types have interesting higher groupoid structure. For example, we will see below that two natural numbers can only be equal in at most one way. Voevodsky articulated a useful notion to detect the homotopical complexity of types, which allows us to distinguish between contractible types (also called \emph{$(-2)$-types}), \emph{propositions} (also called \emph{$(-1)$-types}), \emph{sets} (\emph{$0$-types}), and \emph{$k$-types} for higher $k$.
 
 %We will see [later] that there are types that are not $k$-types for any $k$.
 
-\section{Propositions and subtypes}
+\subsection{Propositions and subtypes}
 
 \begin{defn}
 A type $A$ is said to be a \define{proposition} if there is a term of type
@@ -156,7 +156,7 @@ in which the top map is an equivalence. Thus it follows from \cref{ex:emb_triang
 \end{proof}
 \end{comment}
 
-\section{Sets}
+\subsection{Sets}
 
 \begin{defn}
 A type $A$ is said to be a \define{set} if there is a term of type
@@ -246,7 +246,7 @@ In the first case, we take $\lam{x}{y}{p}{t}p$, and the second case is by induct
 \end{proof}
 \end{comment}
 
-\section{General truncation levels}
+\subsection{General truncation levels}
 \begin{defn}
 We define $\istrunc{} : \Z_{\geq-2}\to\UU\to\UU$ by induction on $k:\Z_{\geq -2}$, taking
 \begin{align*}

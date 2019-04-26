@@ -1,5 +1,5 @@
-\chapter{The homotopy image of a map}\label{chap:image}
-\section{The universal property of the image of a map}
+\section{The homotopy image of a map}\label{chap:image}
+\subsection{The universal property of the image of a map}
 
 \begin{defn}
 Let $f:A\to X$ and $g:B\to X$ be maps. We define
@@ -62,7 +62,7 @@ holds for every embedding $m':B'\to X$.
 
 The homotopy image can be used in many important constructions. In this lecture we discuss two applications: the propositional truncation, and set quotients.
 
-\section{The propositional truncation}
+\subsection{The propositional truncation}
 Note that embeddings into the unit type are just propositions. To see this, note that
 \begin{align*}
 \sm{A:\UU}{f:A\to\unit}\isemb(f)
@@ -130,7 +130,7 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
 \end{center}
 \end{table}
 
-\section{Constructing the propositional truncation}
+\subsection{Constructing the propositional truncation}
 Although technically it is not necessary to construct the propositional truncation before constructing the image of a map, we do so because the construction is simpler in this special case, and yet contains most of the essential ideas.
 
 \begin{lem}\label{lem:extend_join_prop}
@@ -256,7 +256,7 @@ For any type $A$ there is a type $\brck{A}$ that comes equipped with a map $\eta
 Let $A$ be a type. Then we define $\brck{A}\defeq A^{\ast\infty}$, and we define $\eta\defeq \seqin_0:A\to A^{\ast\infty}$. Then $\brck{A}$ is a proposition by \cref{lem:isprop_infjp}, and $\eta:A\to \brck{A}$ satisfies the universal property of propositional truncation by \cref{lem:infjp_up}.
 \end{proof}
 
-\section{The construction of the image of a map}
+\subsection{The construction of the image of a map}
 The image of a map $f:A\to X$ can be defined using the propositional truncation:
 \begin{defn}
 For any map $f:A\to X$ we define the \define{image}\index{image|textbf} of $f$ to be the type
@@ -342,7 +342,7 @@ is an equivalence.
 For any map $f:A\to X$, the map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ is an embedding that satisfies the universal property of the image inclusion of $f$.
 \end{thm}
 
-\section{Surjective maps}
+\subsection{Surjective maps}
 
 Another application of the propositional truncation is the notion of surjective map.
 

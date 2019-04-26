@@ -1,11 +1,11 @@
-\chapter{Dependent function types and the natural numbers}
-\chaptermark{\texorpdfstring{$\Pi$}{Π}-types and the natural numbers}
+\section{Dependent function types and the natural numbers}
+\sectionmark{\texorpdfstring{$\Pi$}{Π}-types and the natural numbers}
 
 In this lecture we introduce types of functions of which the output can depend on the input. We call such functions \emph{dependent functions}. We will see that ordinary function types are a special case of dependent function types.
 
 We then introduce the type of natural numbers, which is the single most important type. Dependent function types are used to formulate a type theoretic analogue of the induction principle for the natural numbers.
 
-\section{Dependent function types}
+\subsection{Dependent function types}
 Consider a section $b$ of a family $B$ over $A$ in context $\Gamma$, i.e.,
 \begin{equation*}
   \Gamma,x:A\vdash b(x):B(x).
@@ -24,7 +24,7 @@ in context $\Gamma$, consisting of all the dependent functions of which the outp
 \item The computation rules, which tell us how the introduction and elimination rules interact, and indeed that every term of a dependent function type behaves as expected: a function.
 \end{enumerate}
 
-\subsection{The $\Pi$-formation rule}
+\subsubsection{The $\Pi$-formation rule}
 \define{Dependent function types}\index{dependent function type}\index{pi-type@{$\Pi$-type}} are formed by the following \define{$\Pi$-formation rule}\index{rule!pi-formation@{$\Pi$-formation}}:
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
@@ -45,7 +45,7 @@ Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the co
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq \prd{x':A}B(x')~\mathrm{type}$}
 \end{prooftree}
 
-\subsection{The $\Pi$-introduction rule}
+\subsubsection{The $\Pi$-introduction rule}
 The introduction rule for dependent function types is also called the $\lambda$-abstraction rule. Recall that dependent functions are formed from terms $b(x)$ of type $B(x)$ in context $\Gamma,x:A$. Therefore \define{$\lambda$-abstraction rule}\index{lambda-abstraction@{$\lambda$-abstraction}}\index{rule!lambda-abstraction@{$\lambda$-abstraction}} is as follows:
 \begin{prooftree}
   \AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
@@ -60,7 +60,7 @@ Just like ordinary mathematicians, we will sometimes write $x\mapsto f(x)$ for a
   \UnaryInfC{$\Gamma\vdash \lam{x}b(x)\jdeq \lam{x}b'(x) : \prd{x:A}B(x)$.}
 \end{prooftree}
 
-\subsection{The $\Pi$-elimination rule}
+\subsubsection{The $\Pi$-elimination rule}
 
 The elimination rule for dependent function types provides us with a way to \emph{use} dependent functions. The way to use a dependent function is to apply it to an argument of the domain type. The $\Pi$-elimination rule is therefore also called the \define{evaluation rule}\index{evaluation}\index{rule!evaluation}. It asserts that given a dependent function $f:\prd{x:A}B(x)$ in context $\Gamma$ we obtain a term $f(x)$ of type $B(x)$ in context $\Gamma,x:A$. More formally:
 \begin{prooftree}
@@ -74,7 +74,7 @@ Again we require that evaluation respects judgmental equality:
   \UnaryInfC{$\Gamma,x:A\vdash f(x)\jdeq f'(x):B(x)$}
 \end{prooftree}
 
-\subsection{The $\Pi$-computation rules}
+\subsubsection{The $\Pi$-computation rules}
 The computation rules for dependent function types postulate that $\lambda$-abstraction rule and the evaluation rule are mutual inverses. Thus we have two computation rules.
 
 First we postulate the \define{$\beta$-rule}\index{beta-rule@{$\beta$-rule}}\index{rule!beta-rule@{$\beta$-rule}}
@@ -91,7 +91,7 @@ Second, we postulate the \define{$\eta$-rule}\index{eta-rule@{$\eta$-rule}}\inde
 \end{prooftree}
 This completes the specification of dependent function types.
 
-\section{Ordinary function types}
+\subsection{Ordinary function types}
 In the case where both $A$ and $B$ are types in context $\Gamma$, we may first weaken $B$ by $A$, and then apply the formation rule for the dependent function type:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
@@ -142,7 +142,7 @@ Similar to \cref{rmk:ev_var}, we can derive
 \end{rmk}
 \end{comment}
 
-\section{The identity function, composition, and their laws}
+\subsection{The identity function, composition, and their laws}
 \begin{defn}
 For any type $A$ in context $\Gamma$, we define the \define{identity function}\index{identity function|textbf} $\idfunc[A]:A\to A$ using the variable rule\index{variable rule}\index{rule!variable rule}:
 \begin{prooftree}
@@ -248,7 +248,7 @@ The derivation for the left unit law is
 The right unit law is left as \cref{ex:fun_right_unit}.
 \end{proof}
 
-\section{The natural numbers}
+\subsection{The natural numbers}
 The archetypal example of an inductive type is the type $\N$ of \emph{natural numbers}.
 The type of \define{natural numbers}\index{natural numbers|see N@{$\N$}} is defined to be a closed type $\nat$\index{N@{$\N$}} equipped with closed terms for a \define{zero term}\index{zero term} $\zeroN:\N$ and a \define{successor function}\index{successor function!of N@{of $\N$}}\index{function!successor on N@{successor on $\N$}} $\succN:\N\to\N$. The rules we postulate for the type of natural numbers again come in four sets:
 \begin{enumerate}
@@ -261,7 +261,7 @@ The type of \define{natural numbers}\index{natural numbers|see N@{$\N$}} is defi
   We annotate the terms $\zeroN$ and $\succN$ of type $\N$ with their type in the subscript, as a reminder that $\zeroN$ and $\succN$ are declared to be terms of type $\N$, and not of any other type. In the next chapter we will introduce the type $\Z$ of the integers, on which we can also define a zero term $\zeroZ$, and a successor function $\succZ$. These should be distinguished from the terms $\zeroN$ and $\succN$. In general, we will make sure that every term is given a unique name. In libraries of mathematics formalized in a computer proof assistant it is also the case that every type must be given a unique name.
 \end{rmk}
 
-\subsection{The formation rule of $\N$}
+\subsubsection{The formation rule of $\N$}
 The type $\N$ is formed by the $\N$-formation rule
 \begin{prooftree}
   \AxiomC{}
@@ -269,7 +269,7 @@ The type $\N$ is formed by the $\N$-formation rule
   \UnaryInfC{$\vdash \N~\mathrm{type}$.}
 \end{prooftree}
 
-\subsection{The introduction rules of $\N$}
+\subsubsection{The introduction rules of $\N$}
 The introduction rules for $\N$ introduce the zero term and the successor function
 
 \bigskip
@@ -286,7 +286,7 @@ The introduction rules for $\N$ introduce the zero term and the successor functi
   \end{prooftree}
 \end{minipage}
 
-\subsection{The elimination rule of $\N$}
+\subsubsection{The elimination rule of $\N$}
 To prove properties about the natural numbers, we postulate an \emph{induction principle}\index{induction principle!of N@{of $\N$}} for $\N$. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{dependent functions} of types depending on the natural numbers.
 
 The induction principle for $\N$ states what one has to do in order to construct a dependent function of type $\prd{n:\N}P(n)$, for any given type family $P$ over $\N$. Just like for the usual induction principle of the natural numbers, there are two things to be constructed: first one has to construct $p_0:P(\zeroN)$, and the second task is to construct a function of type $P(n)\to P(\succN(n))$ for all $n:\N$. 
@@ -303,7 +303,7 @@ Therefore the induction principle for $\N$ is as follows:
   \UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S):\prd{n:\N} P(n)$
 \end{prooftree}
 
-\subsection{The computation rules of $\N$}
+\subsubsection{The computation rules of $\N$}
 Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $\zeroN$ or a successor, i.e., with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
 \begin{prooftree}
 \AxiomC{$\cdots$}
@@ -317,7 +317,7 @@ Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves
 \end{prooftree}
 This completes the formal specification of $\N$.
 
-\subsection{The definition of addition on $\N$}
+\subsubsection{The definition of addition on $\N$}
 Using the induction principle of $\N$ we can perform many familiar constructions. 
 For instance, we can define the \define{addition operation}\index{addition!on N@{on $\N$}}\index{function!addition on N@{addition on $\N$}} by induction on $\N$.
 

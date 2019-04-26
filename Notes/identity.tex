@@ -1,4 +1,4 @@
-\chapter{Identity types}\label{chap:identity}
+\section{Identity types}\label{chap:identity}
 From the perspective of types as proof-relevant propositions, how should we think of \emph{equality} in type theory? Given a type $A$, and two terms $x,y:A$, the equality $\id{x}{y}$ should again be a type. Indeed, we want to \emph{use} type theory to prove equalities. \emph{Dependent} type theory provides us with a convenient setting for this: the equality type $\id{x}{y}$ is dependent on $x,y:A$. 
 
 Then, if $\id{x}{y}$ is to be a type, how should we think of the terms of $\id{x}{y}$. A term $p:\id{x}{y}$ witnesses that $x$ and $y$ are equal terms of type $A$. In other words $p:\id{x}{y}$ is an \emph{identification} of $x$ and $y$. In a proof-relevant world, there might be many terms of type $\id{x}{y}$. I.e., there might be many identifications of $x$ and $y$. And, since $\id{x}{y}$ is itself a type, we can form the type $\id{p}{q}$ for any two identifications $p,q:\id{x}{y}$. That is, since $\id{x}{y}$ is a type, we may also use the type theory to prove things \emph{about} identifications (for instance, that two given such identifications can themselves be identified), and we may use the type theory to perform constructions with them. As we will see shortly, we can give every type a groupoid-like structure.
@@ -24,7 +24,7 @@ Identity type & Path fibration\\
 \end{center}
 \end{table}
 
-\section{The inductive definition of identity types}
+\subsection{The inductive definition of identity types}
 
 \begin{defn}
   Consider a type $A$ and let $a:A$. Then we define the \define{identity type}\index{identity type|textbf} of $A$ at $a$ as an inductive family of types $a =_A x$ indexed by $x:A$, of which the constructor is
@@ -123,7 +123,7 @@ so it suffices to construct a term of type $R(x,x)$, which we have by reflexivit
 \end{constr}
 \end{comment}
 
-\section{The groupoid structure of types}\label{sec:groupoid}
+\subsection{The groupoid structure of types}\label{sec:groupoid}
 We show that identifications can be \emph{concatenated} and \emph{inverted}, which corresponds to the transitivity and symmetry of the identity type. 
 
 Furthermore, we observe that we can iteratively take identity types, i.e., we can take identity types of identity types, 
@@ -229,7 +229,7 @@ so we define $\mathsf{left\usc{}inv}(\refl{x})\defeq \refl{\refl{x}}$. Similarly
 so we again define $\mathsf{right\usc{}inv}(\refl{x})\defeq\refl{\refl{x}}$. 
 \end{constr}
 
-\section{The action on paths of functions}
+\subsection{The action on paths of functions}
 
 Using the induction principle of the identity type we can show that every function preserves identifications.
 In other words, every function sends identified terms to identified terms.
@@ -287,7 +287,7 @@ Finally we construct $\mathsf{ap\usc{}concat}(f,p,q)$ by identification eliminat
 \end{equation*}
 \end{constr}
 
-\section{Transport}
+\subsection{Transport}
 
 Dependent types also come with an action on paths: the \emph{transport} functions.
 Given an identification $p:\id{x}{y}$ in the base type $A$, we can transport any term $b:B(x)$ to the fiber $B(y)$.
@@ -337,7 +337,7 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
 %
 %\cref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \cref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
 
-\section{Identity systems}
+\subsection{Identity systems}
 
 Many types come equipped with a reflexive relation that possesses a similar
 structure as the identity type. The observational equality on the natural

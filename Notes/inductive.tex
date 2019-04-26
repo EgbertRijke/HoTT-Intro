@@ -1,8 +1,8 @@
-\chapter{Inductive types}
+\section{Inductive types}
 
 Analogous to the type of natural numbers, many types can be specified as inductive types. In this lecture we introduce some further examples of inductive types: the unit type, the empty type, the booleans, coproducts, dependent pair types, and cartesian products. We also introduce the type of integers.
 
-\section{The idea of general inductive types}
+\subsection{The idea of general inductive types}
 
 Just like the type of natural numbers, other inductive types are also specified by their \emph{constructors}, an \emph{induction principle}, and their \emph{computation rules}: 
 \begin{enumerate}
@@ -14,7 +14,7 @@ The induction principle and computation rules can be generated automatically onc
 %For a more general treatment of inductive types, we refer to Chapter 5 of \cite{hottbook}.
 
 
-\section{The unit type}
+\subsection{The unit type}
 A straightforward example of an inductive type is the \emph{unit type}, which has just one constructor. 
 Its induction principle is analogous to just the base case of induction on the natural numbers.
 
@@ -40,7 +40,7 @@ The induction principle can also be used to define ordinary functions out of the
 \end{equation*}
 In other words, by the induction principle for the unit type we obtain for every $x:A$ a function $\mathsf{pt}_x\defeq\indunit(x):\unit\to A$.
 
-\section{The empty type}
+\subsection{The empty type}
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
 
 \begin{defn}
@@ -56,7 +56,7 @@ The induction principle for the empty type can also be used to construct a funct
 \end{equation*}
 for any type $A$. Indeed, to obtain this function one first weakens $A$ to obtain the constant family over $\emptyt$ with value $A$, and then the induction principle gives the desired function.
 
-\section{The booleans}
+\subsection{The booleans}
 \begin{defn}
 We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with
 \begin{align*}
@@ -81,7 +81,7 @@ Just as in the cases for the unit type and the empty type, the induction princip
 \end{equation*}
 for any type $A$.
 
-\section{Coproducts}
+\subsection{Coproducts}
 \begin{defn}
 Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with
 \begin{align*}
@@ -104,7 +104,7 @@ The coproduct of two types is sometimes also called the \define{disjoint sum}.
 When one thinks of types as propositions, then the coproduct plays the role of the disjunction.\index{propositions as types!disjunction}
 To construct a term of type $A+B$ you first have to decide whether it is of the form $\inl$ or $\inr$, and then you construct a term of $A$ or $B$ accordingly. Of course, this is to be contrasted with the \emph{double negation translation}\index{double negation translation!disjunction} of the disjunction, which is read as `not neither $A$ nor $B$'. 
 
-\section{Dependent pair types}
+\subsection{Dependent pair types}
 The \emph{dependent pair type}\index{dependent pair type|see {$\Sigma$-type}} (or $\Sigma$-type) can be thought of as a `type indexed' disjoint sum.
 However, this intuition for the dependent pair type can be counterproductive once we start to do homotopy theory in type theory.
 It is better to think of the $\Sigma$-type as the total space of a family of types depending continuously on a base type, just like one can have a family of spaces depending continuously on a base space (i.e., a fibration).
@@ -160,7 +160,7 @@ By the computation rule we have
 
 When one thinks of types as propositions, then the $\Sigma$-type has the r\^{o}le of the existential quantification.
 
-\section{Cartesian products}
+\subsection{Cartesian products}
 A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e., $B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product} $A\times B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its specification along with the induction principle for cartesian products.
 
 \begin{defn}
@@ -180,7 +180,7 @@ satisfying the computation rule\index{computation rules!of cartesian product} th
 
 The projection maps are defined similarly to the projection maps of $\Sigma$-types. When one thinks of types as propositions\index{propositions as types!conjunction}, then $A\times B$ is interpreted as the conjunction of $A$ and $B$.
 
-\section{Overview of the inductive types}
+\subsection{Overview of the inductive types}
 The following table gives an overview of the 'primitive' inductive types that we have introduced so far. Many types of interest can be defined in terms of these inductive types, along with the identity type which we will introduce in \cref{chap:identity}.
 \begin{center}
 \begin{tabular}{llll}
@@ -201,7 +201,7 @@ name & type & constructors \\
 \end{tabular}
 \end{center}
 
-\section{The type of integers}
+\subsection{The type of integers}
 
 \begin{defn}
   We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$. The type of integers comes equipped with inclusion functions of the positive and negative integers

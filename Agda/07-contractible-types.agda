@@ -542,7 +542,9 @@ left-unit-law-Σ-gen :
   (is-contr-A : is-contr A) →
   (x : A) → B x ≃ Σ A B
 left-unit-law-Σ-gen B is-contr-A x =
-  pair (left-unit-law-Σ-map-gen B is-contr-A x) (is-equiv-left-unit-law-Σ-map-gen B is-contr-A x)
+  pair
+    ( left-unit-law-Σ-map-gen B is-contr-A x)
+    ( is-equiv-left-unit-law-Σ-map-gen B is-contr-A x)
 
 -- Exercise 6.6
 

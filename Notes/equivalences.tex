@@ -1,8 +1,8 @@
 % !TEX root = hott_intro.tex
 
-\chapter{Equivalences}
+\section{Equivalences}
 
-\section{Homotopies}
+\subsection{Homotopies}
 In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$.
 
 \begin{defn}
@@ -90,7 +90,7 @@ commutes if it comes equipped with a homotopy $H:f\htpy g\circ h$, and we say th
 \end{equation*}
 if it comes equipped with a homotopy $h \circ f~g\circ f'$.
 
-\section{Bi-invertible maps}
+\subsection{Bi-invertible maps}
 \begin{defn}
 Let $f:A\to B$ be a function. We say that $f$ has a \define{section}\index{section!of a map|textbf} if there is a term of type\index{sec(f)@{$\mathsf{sec}(f)$}|textbf}
 \begin{equation*}
@@ -164,7 +164,7 @@ The identity function is trivially its own section and its own retraction.
 that swaps the order of the arguments $x$ and $y$ is an equivalence by \cref{ex:swap}.\index{swap function!is an equivalence|textit}
 \end{eg}
 
-\section{The identity type of a \texorpdfstring{$\Sigma$-}{dependent pair }type}
+\subsection{The identity type of a \texorpdfstring{$\Sigma$-}{dependent pair }type}
 
 In this section we characterize the identity type of a $\Sigma$-type as a $\Sigma$-type of identity types. In this course we will be characterizing the identity types of many types, so we will follow the general outline of how such a characterization goes:
 \begin{enumerate}

@@ -1,7 +1,7 @@
 % !TEX root = hott_intro.tex
 
-\chapter{The fundamental theorem of identity types}\label{chap:fundamental}
-\chaptermark{The fundamental theorem}
+\section{The fundamental theorem of identity types}\label{chap:fundamental}
+\sectionmark{The fundamental theorem}
 
 In many situations in homotopy type theory it is important to know what the identity types are. For example, we have used a characterization of the identity types of the fibers of a map in order to conclude that any equivalence is a contractible map. Therefore it is a routine task to give for any given type of interest, a characterization of its identity type. The fundamental theorem of identity types is our main tool to carry out such characterizations. To name a few applications, we will show in \cref{thm:eq_nat} that the identity type of the natural numbers is equivalent to its observational equality, and we will show in \cref{thm:eq-circle} that the loop space of the circle is equivalent to $\Z$.
 
@@ -9,7 +9,7 @@ In order to prove the fundamental theorem of identity types, we first need the b
 
 Our first application of the fundamental theorem of identity types in the present lecture is a simple proof that any equivalence is an embedding. Embeddings are maps that induce equivalences on identity types, i.e., they are the homotopical analogue of injective maps. In our second application we characterize the identity types of coproducts.
 
-\section{Families of equivalences}
+\subsection{Families of equivalences}
 Consider a family
 \begin{equation*}
 f : \prd{x:A}B(x)\to C(x)
@@ -135,7 +135,7 @@ We now combine \cref{thm:fib_equiv,lem:total-equiv-base-equiv}.
   By the assumption that $f$ is an equivalence, it follows that the map $\sm{x:A}D(f(x))\to \sm{y:B}D(y)$ is an equivalence. Therefore it follows that $\total[f]{g}$ is an equivalence if and only if $\total{g}$ is an equivalence. Now the claim follows, since $\total{g}$ is an equivalence if and only if $g$ if a family of equivalences.
 \end{proof}
 
-\section{The fundamental theorem}
+\subsection{The fundamental theorem}
 
 The fundamental theorem (\cref{thm:id_fundamental}) tells us when, for a type family $B$ over $A$ and a fixed $a:A$, there is a family of equivalences $\prd{x:A}(a=x)\simeq B(x)$. In other words, it tells us when a family $B$ is a characterization of the identity type of $A$.
 
@@ -194,7 +194,7 @@ that $\total{\mathsf{path\usc{}ind}_a(b)}$ is an equivalence if and only if $\sm
   In this diagram the top map has a section. Therefore it follows by \cref{ex:3_for_2} that the left map has a section if and only if the right map has a section. Notice that the left map has a section for all $P$ if and only if $\sm{x:A}B(x)$ satisfies singleton induction, which is by \cref{thm:contractible} equivalent to $\sm{x:A}B(x)$ being contractible.
 \end{proof}
 
-\section{Embeddings}
+\subsection{Embeddings}
 As an application of the fundamental theorem we show that equivalences are embeddings. The notion of embedding is the homotopical analogue of the set theoretic notion of injective map.
 
 \begin{defn}
@@ -283,7 +283,7 @@ The first and fourth case are easily shown by path induction on $p$, and the sec
 \end{constr}
 \end{comment}
 
-\section{Disjointness of coproducts}
+\subsection{Disjointness of coproducts}
 
 To give a second application of the fundamental theorem of identity types, we characterize the identity types of coproducts. Our goal in this section is to prove the following theorem.
 

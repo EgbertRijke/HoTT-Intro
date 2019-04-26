@@ -1,6 +1,6 @@
 % !TEX root = hott_intro.tex
 
-\chapter{Homotopy pullbacks}
+\section{Homotopy pullbacks}
 
 Suppose we are given a map $f:A\to B$, and type families $P$ over $A$, and $Q$ over $B$.
 Then any family of maps
@@ -17,7 +17,7 @@ A \arrow[r,swap,"f"] & B
 where $\total[f]{g}$ is defined as $\lam{(x,p)}(f(x),g(x,y))$. 
 We will show in \cref{thm:pb_fibequiv} that $g$ is a family of equivalences\index{family of equivalences} if and only if this square is a \emph{pullback square}\index{pullback square}. This generalization of \cref{thm:fib_equiv} is therefore abstracting away from the notion of families of equivalences, and it serves as our motivating theorem to introduce pullbacks. The connection between pullbacks and families of equivalences has an important role in the descent theorem\index{descent} in \cref{chap:descent}.
 
-\section{Cartesian squares}
+\subsection{Cartesian squares}
 
 Recall that a square
 \begin{equation*}
@@ -174,7 +174,7 @@ g\circ q\circ h \arrow[r,swap,"g\cdot L"] & g\circ q'
 of homotopies commutes.
 \end{rmk}
 
-\section{The unique existence of pullbacks}
+\subsection{The unique existence of pullbacks}
 
 \begin{defn}
 Let $f:A\to X$ and $B\to X$ be maps. Then we define
@@ -352,7 +352,7 @@ M & \defeq \lam{z}\ct{\mathsf{right\usc{}unit}(H(z))}{\mathsf{left\usc{}unit}(H(
 Therefore the claim follows by \cref{lem:pb_3for2}.
 \end{proof}
 
-\section{Fiber products}
+\subsection{Fiber products}
 
 An important special case of pullbacks occurs when the cospan is of the form
 \begin{equation*}
@@ -420,7 +420,7 @@ A \arrow[r,swap,"f"] & X
 is a pullback square.
 \end{cor}
 
-\section{Fibers as pullbacks}
+\subsection{Fibers as pullbacks}
 
 \begin{lem}\label{lem:fib_pb}
 For any function $f:A\to B$, and any $b:B$, consider the square
@@ -463,7 +463,7 @@ is a pullback square.
   Since the top map is an equivalence by \cref{ex:fib_replacement}, and the map on the right is an equivalence by \cref{lem:fib_pb}, it follows that the map on the left is an equivalence. The claim follows.
 \end{proof}
 
-\section{Families of equivalences}
+\subsection{Families of equivalences}
 
 \begin{lem}\label{lem:pb_subst}
 Let $f:A\to B$, and let $Q$ be a type family over $B$. Then the square
@@ -644,7 +644,7 @@ is a pullback square, is equivalent to the type of families of equivalences
 \end{equation*}
 \end{cor}
 
-\section{The pullback pasting property}
+\subsection{The pullback pasting property}
 
 The following theorem is also called the \define{pasting property} of pullbacks.\index{pasting property!of pullbacks|textit}
 
@@ -684,7 +684,7 @@ by the 3-for-2 property of equivalences that for each $x:X$ the top map in the t
 The claim now follows by a second application of \cref{cor:pb_fibequiv}.
 \end{proof}
 
-\section{Descent theorems for coproducts and \texorpdfstring{$\Sigma$}{Σ}-types}
+\subsection{Descent theorems for coproducts and \texorpdfstring{$\Sigma$}{Σ}-types}
 
 \begin{thm}\label{thm:descent-coprod}
 Consider maps $f:A'\to A$ and $g:B'\to B$, a map $h:X'\to X$, and commuting squares of the form

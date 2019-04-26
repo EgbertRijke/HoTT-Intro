@@ -1,4 +1,4 @@
-\chapter{The universe and type-valued relations}
+\section{The universe and type-valued relations}
 
 In this lecture we introduce type theoretic \emph{universes}. Universes are types that consist of types. In other words, a universe is a type $\UU$ that comes equipped with a type family $\mathsf{Ty}$ over $\UU$, and for any $X:\UU$ we think of $X$ as an \emph{encoding} of the type $\mathsf{Ty}(X)$. We call this type family the \emph{universal type family}.
 
@@ -18,7 +18,7 @@ One of the aspects that make universes useful is that they are postulated to be 
 \end{equation*}
 satisfying the judgmental equality $\mathsf{Ty}(\check{\Sigma}(X,P)\jdeq\sm{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x))$. We will similarly assume that any universe is closed under $\Pi$-types and the other ways of forming types. However, there is an important restriction: it would be inconsistent to assume that the universe is contained in itself. One way of thinking about this is that universes are types of \emph{small} types, and it cannot be the case that the universe is small with respect to itself. We address this problem by assuming that there are many universes: enough universes so that any type family can be obtained by substituting into the universal type family of some universe.
 
-\section{Type theoretic universes}
+\subsection{Type theoretic universes}
 The induction principle for inductive types can be used to prove universal quantifications. 
 However, it would also be nice if we could construct \emph{new type families} over inductive types, using their induction principles.
 To be able to do this, we introduce a \emph{universe}, a type of which the terms represent types. The idea is that the universe $\UU$ comes equipped with a type family $\mathrm{El}$, so that for each $X:\UU$ we have an associated type $\mathrm{El}(X)$, the type of \emph{elements} of $X$. 
@@ -119,7 +119,7 @@ One important way to use the universe is to define types of \define{structured t
 Once we have introduced the \emph{identity types} we will also be able to state the types of groups, rings, and many other structured types. However, when doing so one has to be cautious to make sure that the underlying type is in the level of sets, in the hierarchy of homotopical complexity of types.
 \end{eg}
 
-\section{Defining families and relations using a universe}
+\subsection{Defining families and relations using a universe}
 Another important way to use the universe is to \emph{define} new type families by induction. For example, we can define the finite types as family over the natural numbers.
 
 \begin{defn}\label{defn:fin}
@@ -166,7 +166,7 @@ holds, from which the judgmental equalities in the statement of the definition f
 
 We can also define observational equality for many other kinds of types, such as $\bool$ or $\Z$. In each of these cases, what sets the observational equality apart from other relations is that it is the \emph{least} reflexive relation. However, the definitions of observational equality in the various situations are always very specific to the type they are defined on. In the next chapter we introduce the \emph{identity type}, which is an equality type defined uniformly for all types. In \cref{chap:hierarchy} we will show that the observational equality on $\N$ is equivalent to the identity type on $\N$.
 
-\section{Negations and decidability}
+\subsection{Negations and decidability}
 Using the empty type we can define the \emph{negation} of a type. The idea is that if $A$ is false (i.e., has no terms), then from $A$ follows everything.
 
 \begin{defn}

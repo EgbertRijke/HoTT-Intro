@@ -1,4 +1,4 @@
-\chapter{Universality and descent for pushouts}\label{chap:descent}
+\section{Universality and descent for pushouts}\label{chap:descent}
 
 We begin this lecture with the idea that pushouts can be presented as higher inductive types. The general idea behind higher inductive types is that we can introduce new inductive types not only with constructors at the level of points, but also with constructors at the level of identifications. Pushouts form a basic class of examples that can be obtained as higher inductive types, because they come equipped with the structure of a cocone. The cocone $(i,j,H)$ in the commuting square
 \begin{equation*}
@@ -62,7 +62,7 @@ in which also the front left and right squares are pullback squares. Thus the co
 
 We note that the computation rules in our treatment for the induction principle of homotopy pushouts are weak. In other words, they are identifications. In this course we have no need for judgmental computation rules. Our focus is instead on universal properties. We refer the reader who is interested in the more `traditional' higher inductive types with judgmental computation rules to \cite{hottbook}.
 
-\section{The induction principle of pushouts}
+\subsection{The induction principle of pushouts}
 
 The pushout $A\sqcup^{\mathcal{S}} B$ of a span $\mathcal{S}$ from $A$ to $B$ comes equipped with the structure of a cocone\index{inl@{$\inl$}!for pushouts}\index{inr@{$\inr$}!for pushouts}\index{glue@{$\glue$}}
 \begin{align*}
@@ -203,7 +203,7 @@ commutes, for every $x:S$. These are the \define{computation rules} for pushouts
   It is clear that (iv) implies (v), so it remains to see that (v) implies (iv). TODO
 \end{proof}
 
-\section{Type families over pushouts}
+\subsection{Type families over pushouts}
 
 Given a pushout square
 \begin{equation*}
@@ -320,7 +320,7 @@ commutes, is contractible.
 The fiber of this map at $(P_A,P_B,P_S)$ is equivalent to the type of quadruples $(P,e_A,e_B,e_S)$ as described in the theorem, which are contractible by \cref{thm:contr_equiv}.
 \end{proof}
 
-\section{The flattening lemma for pushouts}
+\subsection{The flattening lemma for pushouts}
 
 In this section we consider a pushout square
 \begin{equation*}
@@ -412,7 +412,7 @@ is a pushout square.
   for any type $T$. In this cube, the vertical maps are all equivalences, and the bottom square is a pullback square by the dependent pullback property of pushouts. Therefore it follows that the top square is a pullback square.
 \end{proof}
 
-\section{The universality theorem}
+\subsection{The universality theorem}
 \begin{thm}
   Consider two pushout squares
   \begin{equation*}
@@ -445,7 +445,7 @@ is a pushout square.
 \end{thm}
 
 
-\section{The descent property for pushouts}
+\subsection{The descent property for pushouts}
 
 In the previous section there was a significant role for families of equivalences, and we know by \cref{thm:pb_fibequiv,cor:pb_fibequiv}: families of equivalences indicate the presence of pullbacks. In this section we reformulate the results of the previous section using pullbacks where we used families of equivalences before, to obtain new and useful results. We begin by considering the type of descent data from the perspective of pullback squares.
 
@@ -745,7 +745,7 @@ A \arrow[dr] & (A\sqcup^{S} B)\times_{X}X' \arrow[d] \arrow[from=ul,crossing ove
 are pullback squares by \cref{thm:pb_pasting}.
 \end{proof}
 
-\section{Applications of the descent theorem}
+\subsection{Applications of the descent theorem}
 
 \begin{thm}
   Consider a commuting cube

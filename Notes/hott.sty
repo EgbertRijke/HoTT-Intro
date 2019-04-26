@@ -16,12 +16,13 @@
 \RequirePackage{amsmath}
 \RequirePackage{amsthm}
 \RequirePackage{amssymb}
-\RequirePackage{bbold}
+%\RequirePackage{bbold}
 
 %The following packages are loaded just to compress the document to well below 300 pages. Also the font size needs to be set to its default 10pt
 \RequirePackage[letterpaper,twoside,inner margin=1in,outer margin=1.7in,vmargin=1.15in,marginparwidth=1.3in,marginparsep=.1in]{geometry}
 \RequirePackage{marginnote}
 %\RequirePackage{mathptmx}
+  \RequirePackage{newtxmath}
 
 %\PassOptionsToPackage{colorlinks,citecolor=darkblue,linkcolor=darkblue,unicode}{hyperref}
 
@@ -75,12 +76,6 @@
 \RequirePackage{aliascnt}
 \RequirePackage[capitalize]{cleveref}
 
-% The following is to avoid overfull hboxes in the table of contents.
-% https://tex.stackexchange.com/questions/49887/overfull-hbox-warning-for-toc-entries-when-using-memoir-documentclass
-%\renewcommand*{\cftdotsep}{1}
-\setpnumwidth{3em}
-\setrmarg{4em}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% THEOREM ENVIRONMENTS %%%%
 
@@ -98,7 +93,7 @@
 % for the reader to find a particular theorem when flipping through
 % the document.
 
-\newtheorem{thm}{Theorem}[section]
+\newtheorem{thm}{Theorem}[subsection]
 \crefname{thm}{Theorem}{Theorems}
 
 \def\defthm#1#2#3{%
@@ -157,9 +152,6 @@
 \Crefmultiformat{paragraph}{Paragraphs~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
 \crefrangemultiformat{paragraph}{\S\S#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
 \Crefrangemultiformat{paragraph}{Paragraphs~#3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}{, #3#1#4--#5#2#6}{ and~#3#1#4--#5#2#6}
-
-% Number subsubsections
-\setcounter{secnumdepth}{5}
 
 % Display format for figures
 \crefname{figure}{Figure}{Figures}
@@ -557,14 +549,14 @@
 %%%% Basic types
 
 %%% The empty type
-\newcommand{\emptyt}{\ensuremath{\mathbb{0}}\xspace}
+\newcommand{\emptyt}{\ensuremath{\emptyset}\xspace}
 
 %%% The unit type
-\newcommand{\unit}{\ensuremath{\mathbb{1}}\xspace}
+\newcommand{\unit}{\ensuremath{\mathbf{1}}\xspace}
 \newcommand{\ttt}{\ensuremath{\star}\xspace}
 
 %%% The two-element type
-\newcommand{\bool}{\ensuremath{\mathbb{2}}\xspace}
+\newcommand{\bool}{\ensuremath{\mathbf{2}}\xspace}
 \newcommand{\btrue}{{1_{\bool}}}
 \newcommand{\bfalse}{{0_{\bool}}}
 \newcommand{\bneg}{\mathsf{neg}}
@@ -594,8 +586,8 @@
 \newcommand{\glue}{\mathsf{glue}}
 
 %%% Circles and spheres
-\newcommand{\sphere}[1]{\mathbb{S}^{#1}}
-\newcommand{\Sn}{\mathbb{S}}
+\newcommand{\sphere}[1]{\mathbf{S}^{#1}}
+\newcommand{\Sn}{\mathbf{S}}
 \newcommand{\base}{\ensuremath{\mathsf{base}}\xspace}
 \newcommand{\lloop}{\ensuremath{\mathsf{loop}}\xspace}
 \newcommand{\surf}{\ensuremath{\mathsf{surf}}\xspace}

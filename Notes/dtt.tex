@@ -1,4 +1,4 @@
-\chapter{Dependent type theory}
+\section{Dependent type theory}
 \label{ch:dtt}
 
 Type theory is a system of inference rules that can be combined to make \emph{derivations}. An \define{inference rule} is an expression of the form
@@ -10,7 +10,7 @@ containing above the horizontal line a finite list $\mathcal{H}_1$, $\mathcal{H}
 
 In \cref{sec:judgments} we explain what the judgments of type theory are. In \cref{sec:rules} we postulate the inference rules. Since we don't introduce any ways of forming new types, the set of inference rules is actually quite small. In \cref{sec:derivations} we give some examples of derivations that can be made in type theory.
 
-\section{Judgments and contexts in type theory}\label{sec:judgments}
+\subsection{Judgments and contexts in type theory}\label{sec:judgments}
 
 Since type theory is about types and their terms, there are four kinds of judgments: we can judge whether a certain object is a type, whether it is a term, and we can make a judgment about equality of types or terms. More formally, these are the four judgments of type theory:
 \begin{enumerate}
@@ -54,7 +54,7 @@ we say that $B$ is a \define{family} of types over $A$ (or indexed by $A$) in co
 we say that $b$ is a \define{section} of the family $B$ over $A$ in context $\Gamma$. Note that $B$ and $b$ also depend on the variables declared in the context $\Gamma$, even though we have not explicitly mentioned them. It is common practice to not mention every variable in the context $\Gamma$ in such situations.
 
 \begin{comment}
-\section{Renaming variables}
+\subsection{Renaming variables}
 In some situations one might want to change the name of a variable in a context. This is allowed, provided that the new variable does not occur anywhere else in the context, so that also after renaming no variable is declared more than once. 
 The inference rules that rename a variable are sometimes called \define{$\alpha$-conversion}\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}}\index{rule!alpha conversion@{$\alpha$-conversion}} rules. 
 
@@ -80,7 +80,7 @@ where $\mathcal{J}$ may be a typing judgment, a judgment of equality of types, a
 We will use generic judgments extensively to postulate the rest of the rules of dependent type theory.
 \end{comment}
 
-\section{Inference rules}\label{sec:rules}
+\subsection{Inference rules}\label{sec:rules}
 
 In this section we present the basic inference rules of dependent type theory. Those rules are valid to be used in any type theoretic derivation. There are only four sets of inference rules:
 \begin{enumerate}
@@ -90,7 +90,7 @@ In this section we present the basic inference rules of dependent type theory. T
 \item The ``variable rule''
 \end{enumerate}
 
-\subsection{Inference rules governing judgmental equality}
+\subsubsection*{Inference rules governing judgmental equality}
 
 In this set of inference rules we ensure that judgmental equality (both on types and on terms) are equivalence relations, and we make sure that in any context $\Gamma$, we can change the type of any variable to a judgmentally equal type.
 
@@ -162,7 +162,7 @@ Similarly, there are variable conversion rules for judgmental equality of types,
 \end{prooftree}
 An analogous \emph{term conversion rule}\index{term conversion rule}\index{conversion rule!term}\index{rule!term conversion}, stated in \cref{ex:term_conversion}, converting the type of a term to a judgmentally equal type, is derivable using the `structural rules' of type theory described in the next section.
 
-\subsection{Substitution}
+\subsubsection*{Substitution}
 If we are given a term $a:A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[a/x]$ in context $\Gamma,\Delta[a/x]$, where $B[a/x]$ is an abbreviation for
 \begin{equation*}
 B(x_1,\ldots,x_{n-1},a(x_1,\ldots,x_{n-1}),x_{n+1},\ldots,x_{n+m-1})
@@ -188,7 +188,7 @@ and it also results in judgmentally equal terms
 \end{prooftree}
 When $B$ is a family of types over $A$ and $a:A$, we also say that $B[a/x]$ is the \define{fiber}\index{family!fiber of}\index{fiber!of a family} of $B$ at $a$. Often we write $B(a)$ for $B[a/x]$.
 
-\subsection{Weakening}
+\subsubsection*{Weakening}
 If we are given a type $A$ in context $\Gamma$, then any judgment made in a longer context $\Gamma,\Delta$ can also be made in the context $\Gamma,x:A,\Delta$, for a fresh variable $x$. The \define{weakening rule}\index{weakening}\index{rule!weakening} asserts that weakening by a type $A$ in context preserves well-formedness and judgmental equality of types and terms.
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
@@ -207,7 +207,7 @@ In the simplest situation where weakening applies, we have two types $A$ and $B$
 \end{prooftree}
 in order to form the type $B$ in context $\Gamma,x:A$. The type $B$ in context $\Gamma,x:A$ is called the \define{constant family}\index{family!constant family}\index{constant family} $B$, or the \define{trivial family}\index{family!trivial family}\index{trivial family} $B$.
 
-\subsection{The variable rule}
+\subsubsection*{The variable rule}
 If we are given a type $A$ in context $\Gamma$, then we can weaken $A$ by itself to obtain that $A$ is a type in context $\Gamma,x:A$. The \define{variable rule}\index{variable rule}\index{rule!variable rule|textbf} now asserts that $x$ is a well-formed term of type $A$ in context $\Gamma,x:A$.
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
@@ -263,13 +263,13 @@ One of the reasons for including the variable rule is that it provides an \emph{
 \bigskip
 \end{comment}
 
-\section{Derivations}\label{sec:derivations}
+\subsection{Derivations}\label{sec:derivations}
 
 A derivation in type theory is a tree in which each node is a valid rule of inference. We give two examples of derivations: a derivation showing that any variable can be changed to a fresh one, and a derivation showing that any two variables that do not depend on one another can be swapped in order.
 
 Thus, we will see some examples of new inference rules that can be derived using the rules of type theory. Such inference rules are called \define{admissible}. Since derivations tend to get long and unwieldy, we declare that admissible inference rules are also valid to be used in derivations.
 
-\subsection{Changing variables}
+\subsubsection*{Changing variables}
 
 Variables can always be changed to fresh variables. We show that this is the case by showing that the inference rule
 \begin{prooftree}
@@ -293,7 +293,7 @@ Indeed, we have the following derivation using substitution, weakening, and the 
 \end{prooftree}
 In this derivation it is the application of the weakening rule where we have to check that $x'$ does not occur in the context $\Gamma,x:A,\Delta$.
 
-\subsection{Interchanging variables}
+\subsubsection*{Interchanging variables}
 
 The \define{interchange rule}\index{rule!interchange}\index{interchange rule} states that if we have two types $A$ and $B$ in context $\Gamma$, and we make a judgment in context $\Gamma,x:A,y:B,\Delta$, then we can make that same judgment in context $\Gamma,y:B,x:A,\Delta$ where the order of $x:A$ and $y:B$ is swapped. More formally, the interchange rule is the following inference rule
 \begin{prooftree}
@@ -349,7 +349,7 @@ subject to the conditions $\mathrm{ft}(S_a(B))=\mathrm{ft}(A)$ if $B\in T_{n+1}$
 \end{enumerate}
 \end{comment}
 
-%\section{Axioms for weakening, substitution, and the diagonal}
+%\subsection{Axioms for weakening, substitution, and the diagonal}
 \begin{comment}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
@@ -373,7 +373,7 @@ subject to the conditions $\mathrm{ft}(S_a(B))=\mathrm{ft}(A)$ if $B\in T_{n+1}$
 
 
 \begin{comment}
-\section{An algebraic presentation of dependent type theory}
+\subsection{An algebraic presentation of dependent type theory}
 
 %Let us write $T_n$ for the set of well-formed contexts of length $n$, for $n>1$. Then any well-formed context of length $n+1$ is of the form $\Gamma,x:A$, where $\Gamma$ is a well-formed context of length $n$. Thus we see that there are maps $\eft:T_{n+1}\to T_n$ for $n>1$. Similarly, if we write $\tilde{T}_n$ for the set of all terms of a type in a context of length $n-1$, we see that there is a map $\tilde{T}_n\to T_n$. The following picture emerges:
 %\begin{equation*}

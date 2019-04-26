@@ -1,6 +1,6 @@
-\chapter{Function extensionality}
+\section{Function extensionality}
 
-\section{Equivalent forms of function extensionality}
+\subsection{Equivalent forms of function extensionality}
 \begin{thm}\label{thm:funext_wkfunext}
 The following are equivalent:\index{function extensionality}
 \begin{enumerate}
@@ -169,7 +169,7 @@ For type $A$ and any type family $C$ over $B$, the map
 given by $\lam{(f,g)}{x}(f(x),g(x))$ is an equivalence.
 \end{cor}
 
-\section{Universal properties}
+\subsection{Universal properties}
 The function extensionality principle allows us to prove \emph{universal properties}: characterizations of all maps out of (or into) a given type. Universal properties characterize a type up to equivalence. In the following theorem we prove the universal property of dependent pair types.
 
 \begin{thm}
@@ -227,7 +227,7 @@ To see that $\varphi\circ \mathsf{ev\usc{}refl}\htpy\idfunc$, let $f:\prd{x:A}(a
 This follows by path induction on $p$, since $\varphi(f(a,\refl{a}),a,\refl{a})\jdeq f(a,\refl{a})$.
 \end{proof}
 
-\section{Composing with equivalences}
+\subsection{Composing with equivalences}
 
 We show in this section that a map $f:A\to B$ is an equivalence if and only if for any type $X$ the precomposition map 
 \begin{equation*}
