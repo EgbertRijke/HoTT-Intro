@@ -1,10 +1,6 @@
 % arara: makechapters: {items: [syllabus, dtt, pi, inductive, identity, equivalences, contractible, fundamental, hierarchy, funext, pullback, univalence]}
 
-\documentclass[11pt,draft]{memoir} %[ebook,10pt,oneside]
-
-% Number subsubsections
-\counterwithout{section}{chapter}
-\settocdepth{subsection}
+\documentclass[11pt]{memoir} %[ebook,10pt,oneside]
 
 \title{Introduction to homotopy type theory}
 \author{Egbert Rijke}
@@ -23,12 +19,12 @@
   % The following is to avoid overfull hboxes in the table of contents.
 % https://tex.stackexchange.com/questions/49887/overfull-hbox-warning-for-toc-entries-when-using-memoir-documentclass
 %\renewcommand*{\cftdotsep}{1}
-\setpnumwidth{3em}
-\setrmarg{4em}
+\setpnumwidth{2em}
+\setrmarg{3em}
 \setlength{\cftchapternumwidth}{2em}
 \setlength{\cftsectionindent}{2em}
 \setlength{\cftsectionnumwidth}{2em}
-\setlength{\cftsubsectionindent}{5em}
+\setlength{\cftsubsectionindent}{4em}
 \setlength{\cftsubsectionnumwidth}{3em}
   
 %  \usetikzlibrary{mindmap}
@@ -57,7 +53,11 @@
       {%
       \end{exenum}}
       
-\addbibresource{bibliography.bib}
+      \addbibresource{bibliography.bib}
+
+      % Number subsubsections
+\counterwithout{section}{chapter}
+\settocdepth{subsection}
 
 \makeindex
 

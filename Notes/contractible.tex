@@ -33,21 +33,42 @@ Suppose $A$ is a contractible type with center of contraction $c$ and contractio
 In other words, the contraction $C$ is a \emph{homotopy} from the constant function to the identity function.
 \end{rmk}
 
+\begin{eg}
+  The unit type is easily seen to be contractible. For the center of contraction we take $\ttt:\unit$. Then we define a contraction $\prd{x:\unit}\ttt=x$ by the induction principle of $\unit$. Applying the induction principle, it suffices to construct a term of type $\ttt = \ttt$, for which we just take $\refl{\ttt}$.
+\end{eg}
+
 \begin{defn}
-  Suppose $A$ comes equipped with a term $a:A$. Then we say that $A$ satisfies \define{singleton induction}\index{singleton induction|textbf} if for every type family $B$ over $A$, the map
-\begin{equation*}
-\Big(\prd{x:A}B(x)\Big)\to B(a)
-\end{equation*}
-given by $f\mapsto f(a)$ has a section. In other words, we have a function and a homotopy
-\begin{align*}
-\mathsf{sing\usc{}ind}_{a} & : B(a)\to \prd{x:A}B(x) \\
-\mathsf{sing\usc{}comp}_{a} & : \prd{b:B(a)} \mathsf{sing\usc{}ind}_{A,a}(b,a)=b.
-\end{align*}
+  For any $a:A$ and any type family $B$ over $A$, we define
+  \begin{equation*}
+    \mathsf{ev\usc{}pt} : \Big(\prd{x:A}B(x)\Big)\to B(a)
+  \end{equation*}
+  to be the function $\lam{f}f(a)$.
 \end{defn}
 
-\begin{rmk}
-  Note that the "computation rule" in the singleton induction for $A$ is stated using an \emph{identification} rather than as a judgmental equality. 
-\end{rmk}
+\begin{defn}
+  Suppose $A$ comes equipped with a term $a:A$. Then we say that $A$ satisfies \define{singleton induction}\index{singleton induction|textbf} if for every type family $B$ over $A$, the map
+  \begin{equation*}
+    \mathsf{ev\usc{}pt}:\Big(\prd{x:A}B(x)\Big)\to B(a)
+  \end{equation*}
+  has a section. In other words, if $A$ satisfies singleton induction we have a function and a homotopy
+  \begin{align*}
+    \mathsf{sing\usc{}ind}_{a} & : B(a)\to \prd{x:A}B(x) \\
+    \mathsf{sing\usc{}comp}_{a} & : \mathsf{ev\usc{}pt}\circ \mathsf{sing\usc{}ind}_{a} \htpy \idfunc
+  \end{align*}
+  for any type family $B$ over $A$.
+\end{defn}
+
+\begin{eg}
+  Note that the singleton induction principle is almost the same as the induction principle for the unit type, the difference being that the "computation rule" in the singleton induction for $A$ is stated using an \emph{identification} rather than as a judgmental equality. The unit type\index{unit type!contractibility} $\unit$ comes equipped with a function
+  \begin{equation*}
+    \indunit:B(\ttt)\to \prd{x:\unit}B(x)
+  \end{equation*}
+  for every type family $B$ over $\unit$, satisfying the judgmental equality $\indunit(b,\ttt)\jdeq b$ for every $b:B(\ttt)$ by the computation rule. Thus we easily obtain the homotopy
+  \begin{equation*}
+    \lam{b}\refl{b}:\mathsf{ev\usc{}pt}\circ\indunit \htpy\idfunc,
+  \end{equation*}
+  and we conclude that the unit type satisfies singleton induction. 
+\end{eg}
 
 \begin{thm}\label{thm:contractible}
 Let $A$ be a type. The following are equivalent:
@@ -66,7 +87,11 @@ C'(x)\defeq\ct{C(c)^{-1}}{C(x)},
 \end{equation*}
 which satisfies the requirement by the left inverse law, constructed in \cref{defn:id_invlaw}.
 
-To show that $A$ satisfies singleton induction let $B$ be a type family over $A$ equipped with $b:B(a)$. We define $\mathsf{sing\usc{}ind}(b):\prd{x:A}B(x)$ by $\lam{x}\mathsf{tr}_B(C(x),b)$. To see that $\mathsf{sing\usc{}ind}(c)=b$ note that we have
+To show that $A$ satisfies singleton induction let $B$ be a type family over $A$ equipped with $b:B(a)$. To define $\mathsf{sing\usc{}ind}_a(b):\prd{x:A}B(x)$, let $x:A$. We have an identification $C(x):a=x$, and $b$ is in $B(a)$. Therefore we can transport $b$ along the path $C(x)$ to obtain
+\begin{equation*}
+  \mathsf{sing\usc{}ind}_a(b)\defeq \mathsf{tr}_B(C(x),b):B(x).
+\end{equation*}
+To see that $\mathsf{sing\usc{}ind}(c)=b$ note that we have
 \begin{equation*}
 \begin{tikzcd}
 \mathsf{tr}_B(C(c),b) \arrow[r,equals,"\ap{\lam{\omega}\mathsf{tr}_B(\omega,b)}{p}"] &[4em] \mathsf{tr}_B(\refl{c},b) \arrow[r,equals,"\refl{b}"] & b.
@@ -76,52 +101,35 @@ This completes the proof that $A$ satisfies singleton induction.
 
 For the converse, suppose that $a:A$ and that $A$ satisfies singleton induction. Our goal is to show that $A$ is contractible. For the center of contraction we take the term $a:A$. By singleton induction applied to $B(x)\defeq a=x$ we have the map 
 \begin{equation*}
-\mathsf{sing\usc{}ind}_{A,a} : a=a \to \prd{x:A}a=x.
+\mathsf{sing\usc{}ind}_{a} : a=a \to \prd{x:A}a=x.
 \end{equation*}
 Therefore $\mathsf{sing\usc{}ind}_{A,a}(\refl{a})$ is a contraction.
 \end{proof}
 
-\begin{eg}
-  By definition the unit type\index{unit type!contractibility} $\unit$ comes equipped with a function
-  \begin{equation*}
-    \indunit:B(\ttt)\to \prd{x:\unit}B(x)
-  \end{equation*}
-  for every type family $B$ over $\unit$. The judgmental equality $\indunit(b,\ttt)\jdeq b$ holds for every $b:B(\ttt)$ by the computation rule, so we obtain the homotopy
-  \begin{equation*}
-    \lam{b}\refl{b}:\mathsf{ev\usc{}pt}\circ\indunit \htpy\idfunc.
-  \end{equation*}
-  We conclude that the unit type satisfies singleton induction, and is therefore contractible.
-\end{eg}
-
 \begin{thm}\label{thm:total_path}
-For any $x:A$, the type
+For any $a:A$, the type
 \begin{equation*}
-\sm{y:A}x=y
+\sm{x:A}a=x
 \end{equation*}
 is contractible.\index{identity type!contractibility of total space|textit}
 \end{thm}
 
-In the following proof we stress the analogy of path induction with singleton elimination, as we did in class. An alternative proof can be found in Lemma 3.11.8 of the HoTT book \cite{hottbook}.
-
 \begin{proof}
-We will prove the statement by showing that $\sm{y:A}x=y$ satisfies singleton induction, applying \cref{thm:contractible}.
+  We will prove the statement by showing that $\sm{y:A}x=y$ satisfies singleton induction, and then use \cref{thm:contractible} to conclude that $\sm{x:A}a=x$ is contractible. We will use the term $(a,\refl{a}):\sm{x:A}a=x$ as the center of contraction.
 
-We have the term $(x,\refl{x}):\sm{y:A}x=y$. Thus we need to show that for any type family $B$ over $\sm{x:A}x=y$, the map
-\begin{equation*}
-\Big(\prd{t:\sm{x:A}x=y}B(t)\Big)\to B((x,\refl{x}))
-\end{equation*}
-has a section. Note that we have the composite of maps
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-B((x,\refl{x})) \arrow[r,"\mathsf{path\usc{}ind}_x"] & \prd{y:A}{p:x=y}B((y,p)) \arrow[r,"\ind{\Sigma}"] & \prd{t:\sm{y:A}x=y}B(t)
-\end{tikzcd}
-\end{equation*}
-which we take as our definition of $\mathsf{sing\usc{}ind}$. 
-Moreover, by the computation rules we have
-\begin{equation*}
-\ind{\Sigma}(\mathsf{path\usc{}ind}_x(b),(x,\refl{x}))\jdeq b.
-\end{equation*}
-Thus, for $\mathsf{sing\usc{}comp}$ we simply take $\lam{b}\refl{b}$.
+  Now let $P$ be a type family over $\sm{x:A}a=x$. Note that we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=0]
+      \prd{t:\sm{x:A}a=x}P(t) \arrow[dr,swap,"\mathsf{ev\usc{}pt}"] \arrow[rr,"\mathsf{ev\usc{}pair}"] & & \prd{x:A}{p:a=x}P(x,p) \arrow[dl,"\mathsf{ev\usc{}refl}"] \\
+      \phantom{\prd{x:A}{p:a=x}P(x,p)} & P(a,\refl{a})
+    \end{tikzcd}
+  \end{equation*}
+  where the maps $\mathsf{ev\usc{}pair}$ and $\mathsf{ev\usc{}refl}$ are defined as
+  \begin{align*}
+    f & \mapsto \lam{x}{p}f(x,p) \\
+    g & \mapsto g(a,\refl{a}),
+  \end{align*}
+  respectively. By the induction principle for $\Sigma$-types it follows that $\mathsf{ev\usc{}pair}$ has a section, and by path induction it follows that $\mathsf{ev\usc{}refl}$ has a section. Therefore it follows from \cref{ex:3_for_2} that the composite $\mathsf{ev\usc{}pt}$ has a section.
 \end{proof}
 
 \subsection{Contractible maps}
@@ -190,7 +198,7 @@ It remains to construct a retraction of $f$. Taking $g$ as our retraction, we ha
 
 \subsection{Equivalences are contractible maps}
 
-In \cref{thm:contr_equiv} we will show the converse to \cref{thm:equiv_contr}, that any equivalence is a contractible map. We will do this in two steps.
+In \cref{thm:contr_equiv} we will show the converse to \cref{thm:equiv_contr}, i.i., we will show that any equivalence is a contractible map. We will do this in two steps.
 
 First we introduce a new notion of \emph{coherently invertible map}, for which we can easily show that such maps have contractible fibers. Then we show that any equivalence is a coherently invertible map.
 
