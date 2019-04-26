@@ -13,68 +13,53 @@
 \NeedsTeXFormat{LaTeX2e}[2016/10/01]
 \ProvidesPackage{hott}[2016/10/22 Notation and style package for HoTT]
 
+\RequirePackage[letterpaper,twoside,inner margin=1in,outer margin=1.7in,vmargin=1.15in,marginparwidth=1.3in,marginparsep=.1in]{geometry}
+
 \RequirePackage{amsmath}
 \RequirePackage{amsthm}
 \RequirePackage{amssymb}
-%\RequirePackage{bbold}
-
-%The following packages are loaded just to compress the document to well below 300 pages. Also the font size needs to be set to its default 10pt
-\RequirePackage[letterpaper,twoside,inner margin=1in,outer margin=1.7in,vmargin=1.15in,marginparwidth=1.3in,marginparsep=.1in]{geometry}
-\RequirePackage{marginnote}
-%\RequirePackage{mathptmx}
-\RequirePackage{newtxmath}
-
-%\PassOptionsToPackage{colorlinks,citecolor=darkblue,linkcolor=darkblue,unicode}{hyperref}
-
+\RequirePackage[english]{babel}
 \RequirePackage[T1]{fontenc}
 \RequirePackage[utf8]{inputenc}
-\RequirePackage{comment}
-%\RequirePackage{geometry}
-
-\RequirePackage[english]{babel}
-
-\RequirePackage{csquotes}
+\RequirePackage{newtxmath}
 \RequirePackage{microtype}
 \RequirePackage{booktabs}
 \RequirePackage{enumitem}
+\RequirePackage{comment}
 \RequirePackage{xspace}
-\RequirePackage[stable]{footmisc}
 \RequirePackage{ifthen}
-
-\RequirePackage{stmaryrd}
-\RequirePackage{mathrsfs}
 \RequirePackage{mathtools} % for :=
-\RequirePackage{wasysym}
-\RequirePackage{mathpartir}
 \RequirePackage{tikz-cd}
 \RequirePackage{tikz}
 \usetikzlibrary{decorations.pathmorphing,arrows}
-%\RequirePackage[inference]{semantic}
 \RequirePackage{bussproofs}
-\RequirePackage{tipa} % for textesh
-\RequirePackage{marginnote}
+%\RequirePackage{fancyvrb}
+%\RequirePackage[inference]{semantic}
+%\RequirePackage{stmaryrd}
+%\RequirePackage{mathrsfs}
+%\RequirePackage{wasysym}
+%\RequirePackage{mathpartir}
+%\RequirePackage[stable]{footmisc}
+%\RequirePackage{tipa} % for textesh
+%\RequirePackage{marginnote}
 
 \RequirePackage[hyphens]{url} % This package has to be loaded *before* hyperref and biblatex
 \RequirePackage[style=numeric,maxnames=10,backend=biber,hyperref=true]{biblatex}
 \definecolor{darkblue}{rgb}{0,0.4,0.4}
 \RequirePackage[pdfpagelabels,colorlinks,citecolor=orange,linkcolor=darkblue,unicode]{hyperref}
+\RequirePackage{aliascnt}
+\RequirePackage[capitalize,english]{cleveref}
+
 \hypersetup{pdfpagemode=UseOutlines}
 
-\RequirePackage{fancyvrb}
-
- \DefineVerbatimEnvironment
-   {code}{Verbatim}
-   {}
-
+% \DefineVerbatimEnvironment
+%   {code}{Verbatim}
+%   {}
 
 %\RequirePackage{caption}
 %\DeclareCaptionFormat{myformat}{{\bf #1}#2#3{\color{black!20}\hrulefill}}
 %\captionsetup[figure]{format=myformat}
 
-
-% For some reason the following can't be above hyperref.
-\RequirePackage{aliascnt}
-\RequirePackage[capitalize]{cleveref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% THEOREM ENVIRONMENTS %%%%
@@ -204,6 +189,8 @@
 \newcommand{\footstyle}[1]{{\hyperpage{#1}}n} % If you index something that is in a footnote
 \newcommand{\defstyle}[1]{\textbf{\hyperpage{#1}}}  % Style for pageref to a definition
 
+%%% Term being defined
+\newcommand{\define}[1]{\textbf{#1}}
 \newcommand{\indexdef}[1]{\index{#1|defstyle}}   % Index a definition
 \newcommand{\indexfoot}[1]{\index{#1|footstyle}} % Index a term in a footnote
 \newcommand{\indexsee}[2]{\index{#1|see{#2}}}    % Index "see also"
@@ -219,9 +206,6 @@
 %%% Definitional equality (used infix) %%%
 \newcommand{\jdeq}{\equiv}      % An equality judgment
 \newcommand{\defeq}{\vcentcolon\equiv}  % A judgmental equality currently being defined
-
-%%% Term being defined
-\newcommand{\define}[1]{\textbf{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Type constructors and quantifiers
@@ -1022,7 +1006,7 @@
 \renewcommand{\modal}{{\ensuremath{\ocircle}}}
 \newcommand{\eqrel}{\typefont{EqRel}}
 \newcommand{\piw}{\ensuremath{\Pi\typefont{W}}} %% to be used in conjunction with -pretopos.
-\renewcommand{\sslash}{/\!\!/}
+%\renewcommand{\sslash}{/\!\!/}
 \newcommand{\mprd}[3][]{\Pi^{#1}(#2,#3)}
 \newcommand{\msmsym}{\Sigma}
 \newcommand{\msm}[2]{\msmsym(#1,#2)}
