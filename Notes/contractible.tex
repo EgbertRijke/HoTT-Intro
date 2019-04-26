@@ -5,9 +5,9 @@
 
 In this lecture we introduce the notions of contractible types and maps. A contractible type is a type which has, up to identification, only one term. In other words, a contractible type is a type that comes equipped with a point, and an identification of this point with any point.
 
-We may think of contractible types as singletons up to homotopy, and indeed we show that the unit type is an example of a contractible type. Moreover, we show that contractible typs satisfy an induction principle that is very similar to the induction principle of the unit type, provided that we formulate the computation rule using the identity type rather than postulating a judgmental computation rule. Another example of a contractible type is the total space of the family of identifications with a fixed starting point.
+We may think of contractible types as singletons up to homotopy, and indeed we show that the unit type is an example of a contractible type. Moreover, we show that contractible types satisfy an induction principle that is very similar to the induction principle of the unit type, provided that we formulate the computation rule using the identity type rather than postulating a judgmental computation rule. Another example of a contractible type is the total space of the family of identifications with a fixed starting point.
 
-We then introduce the notion of fiber of a map, which is the type theoretic analogue of the pre-image of a map, and we say that a map in contractible if all its fibers are contractible. Thus, a map is contractible if the preimage at any point in the codomain is a singleton. This condition is of course analogous to the set theoretic notion of bijective map, which suggests that on the type theoretical side of things a map should be contractible if and only if it is an equivalence.
+We then introduce the notion of fiber of a map, which is the type theoretic analogue of the pre-image of a map, and we say that a map in contractible if all its fibers are contractible. Thus, a map is contractible if the pre-image at any point in the codomain is a singleton. This condition is of course analogous to the set theoretic notion of bijective map, which suggests that on the type theoretical side of things a map should be contractible if and only if it is an equivalence.
 
 The forward direction of this claim is straightforward, and we prove this direction immediately in \cref{thm:equiv_contr}. The converse direction can be done directly, but it is certainly more involved. Therefore we prepare the proof of the converse direction by first characterizing the identity type of a fiber of a map. Then we show that any equivalence $e$ can be given the structure of a invertible map with an additional coherence relating the homotopies
 \begin{equation*}
@@ -53,7 +53,7 @@ given by $f\mapsto f(a)$ has a section. In other words, we have a function and a
 Let $A$ be a type. The following are equivalent:
 \begin{enumerate}
 \item The type $A$ is contractible.
-\item The type $A$ comes equipped with a term $a:A$, and satisfies signleton induction.
+\item The type $A$ comes equipped with a term $a:A$, and satisfies singleton induction.
 \end{enumerate}
 \end{thm}
 

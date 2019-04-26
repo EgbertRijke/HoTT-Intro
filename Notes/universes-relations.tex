@@ -173,7 +173,7 @@ Using the empty type we can define the \emph{negation} of a type. The idea is th
 For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
 \end{defn}
 
-Note that $\neg A$ is the type of functions from $A$ to $\emptyt$. Therefore one can construct a term of type $\neg A$ by constructing a term $f(x):\emptyt$ using $x:A$. In other words, to construct a term of type $\neg A$ one assumes $A$ and derives a contradition. This proof technique is called \define{proof of negation}.
+Note that $\neg A$ is the type of functions from $A$ to $\emptyt$. Therefore one can construct a term of type $\neg A$ by constructing a term $f(x):\emptyt$ using $x:A$. In other words, to construct a term of type $\neg A$ one assumes $A$ and derives a contradiction. This proof technique is called \define{proof of negation}.
 
 Proof of negation is not to be confused with \emph{proof by contradiction}. In type theory there is no way of obtaining a term of type $A$ from a term of type $(A\to \emptyt)\to\emptyt$. Even stronger: we will use the univalence axiom to obtain a term of type
 \begin{equation*}

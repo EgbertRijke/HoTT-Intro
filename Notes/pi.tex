@@ -255,13 +255,13 @@ The type of \define{natural numbers}\index{natural numbers|see N@{$\N$}} is defi
 \item The formation rule, which asserts that the type $\N$ can be formed.
 \item The introduction rules, which provide the zero element and the successor function.
 \item The elimination rule. This rule is the type theoretic analogue of the induction principle for $\N$.
-\item The computation rules, which assert that any application of the elimination rule behaves as expected on the constructors $zeroN$ and $\succN$ of $\N$.
+\item The computation rules, which assert that any application of the elimination rule behaves as expected on the constructors $\zeroN$ and $\succN$ of $\N$.
 \end{enumerate}
 \begin{rmk}
   We annotate the terms $\zeroN$ and $\succN$ of type $\N$ with their type in the subscript, as a reminder that $\zeroN$ and $\succN$ are declared to be terms of type $\N$, and not of any other type. In the next chapter we will introduce the type $\Z$ of the integers, on which we can also define a zero term $\zeroZ$, and a successor function $\succZ$. These should be distinguished from the terms $\zeroN$ and $\succN$. In general, we will make sure that every term is given a unique name. In libraries of mathematics formalized in a computer proof assistant it is also the case that every type must be given a unique name.
 \end{rmk}
 
-\subsection{The formatuion rule of $\N$}
+\subsection{The formation rule of $\N$}
 The type $\N$ is formed by the $\N$-formation rule
 \begin{prooftree}
   \AxiomC{}

@@ -14,7 +14,7 @@ equips the type $C$ with two \emph{point constructors}
   \intertext{and a \emph{path constructor}}
   H & : \prd{s:S}i(f(s)) = j(g(s))
 \end{align*}
-that provides an identifcation $H(s):i(f(s))=j(g(s))$ for every $s:S$. The induction principle then specifies how to construct sections of families over $C$. Naturally, it takes not only the point constructors $i$ and $j$, but also the path constructor $H$ into account. 
+that provides an identification $H(s):i(f(s))=j(g(s))$ for every $s:S$. The induction principle then specifies how to construct sections of families over $C$. Naturally, it takes not only the point constructors $i$ and $j$, but also the path constructor $H$ into account. 
 
 The induction principle is one of several equivalent characterizations of pushouts. We will prove a theorem providing five equivalent characterizations of homotopy pushouts. Two of those we have already seen in \cref{thm:pushout-up}: the universal property and the pullback property. The other three are
 \begin{enumerate}
@@ -517,7 +517,7 @@ To define $g'$, let $s:S$, let $(a,x',p):A\times_X X'$, and let $q:f(s)=a$. Our 
 j(g(s)) \arrow[r,equals,"H(s)^{-1}"] &[1ex] i(f(s)) \arrow[r,equals,"\ap{i}{q}"] &[1ex] i(a) \arrow[r,equals,"p"] & h_X(x').
 \end{tikzcd}
 \end{equation*}
-To summaze, the map $g'$ is defined as
+To summarize, the map $g'$ is defined as
 \begin{equation*}
 g' \defeq \lam{(s,(a,x',p),q)}(g(s),x',\ct{H(s)^{-1}}{(\ct{\ap{i}{q}}{p})}).
 \end{equation*}

@@ -1,6 +1,6 @@
 \chapter{Homotopy pushouts}
 
-A common way in topology to construct new spaces is by attaching cells\index{attaching cells} to a given space. A $0$-cell is just a point, an $1$-cell is an interval, a $2$-cell is a disc, a $3$-cell is the solid ball, and so forth. Many spaces can be obtained by attaching cells. For example, the circle\index{circle} is obtained by attaching a $1$-cell to a $0$-cell, so that both end-points of the interval are mapped to the point. More generally, an $n$-sphere is obtained by attaching an $n$-disc to the point, so that its entire boundar gets mapped to the point.
+A common way in topology to construct new spaces is by attaching cells\index{attaching cells} to a given space. A $0$-cell is just a point, an $1$-cell is an interval, a $2$-cell is a disc, a $3$-cell is the solid ball, and so forth. Many spaces can be obtained by attaching cells. For example, the circle\index{circle} is obtained by attaching a $1$-cell to a $0$-cell, so that both end-points of the interval are mapped to the point. More generally, an $n$-sphere is obtained by attaching an $n$-disc to the point, so that its entire boundary gets mapped to the point.
 
 In type theory we can also consider a notion of $n$-cells. Just as in topology, a $0$-cell is just a point (i.e., a term). A $1$-cell, however, is in type theory an identification, i.e., a term of the identity type. A $1$-cell is then an identification of identifications, and so forth. Our goal in this lecture is to show how to mimic the process of attaching cells to a type.
 
@@ -176,7 +176,7 @@ Let $X$ be a type. Our goal is to show that the map
 \begin{equation*}
 \mathsf{cocone\usc{}map}(\inl,\inr,\glue):(A\sqcup^{\mathcal{S}} B \to X)\to \mathsf{cocone}_{\mathcal{S}}(X)
 \end{equation*}
-is an equivalence. For notational breveity we will just write $\mathsf{gen}_{\mathcal{S}}$\index{gen_S@{$\mathsf{gen}_{\mathcal{S}}$}} for $\mathsf{cocone\usc{}map}_{\mathcal{S}}(\inl,\inr,\glue)$, because $\mathsf{cocone\usc{}map}_{\mathcal{S}}(\inl,\inr,\glue)$ is just the action on generators.
+is an equivalence. For notational brevity we will just write $\mathsf{gen}_{\mathcal{S}}$\index{gen_S@{$\mathsf{gen}_{\mathcal{S}}$}} for $\mathsf{cocone\usc{}map}_{\mathcal{S}}(\inl,\inr,\glue)$, because $\mathsf{cocone\usc{}map}_{\mathcal{S}}(\inl,\inr,\glue)$ is just the action on generators.
 
 We first note that by \cref{ex:trans_triv} there is a commuting triangle
 \begin{equation*}

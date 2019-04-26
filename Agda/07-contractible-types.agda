@@ -537,6 +537,13 @@ abstract
       ( is-equiv-tr B (inv (contraction is-contr-A x)))
       ( is-equiv-left-unit-law-Σ-map B is-contr-A)
 
+left-unit-law-Σ-gen :
+  {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
+  (is-contr-A : is-contr A) →
+  (x : A) → B x ≃ Σ A B
+left-unit-law-Σ-gen B is-contr-A x =
+  pair (left-unit-law-Σ-map-gen B is-contr-A x) (is-equiv-left-unit-law-Σ-map-gen B is-contr-A x)
+
 -- Exercise 6.6
 
 -- In this exercise we show that the domain of a map is equivalent to the total space of its fibers.
@@ -647,6 +654,12 @@ abstract
       ( right-inverse-fib-pr1-fib-fam B a)
       ( left-inverse-fib-pr1-fib-fam B a)
 
+equiv-fib-fam-fib-pr1 :
+  {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
+  fib (pr1 {B = B}) a ≃ B a
+equiv-fib-fam-fib-pr1 B a =
+  pair (fib-fam-fib-pr1 B a) (is-equiv-fib-fam-fib-pr1 B a)
+
 abstract
   is-equiv-fib-pr1-fib-fam :
     {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
@@ -657,16 +670,21 @@ abstract
       ( left-inverse-fib-pr1-fib-fam B a)
       ( right-inverse-fib-pr1-fib-fam B a)
 
+equiv-fib-pr1-fib-fam :
+  {i j : Level} {A : UU i} (B : A → UU j) (a : A) →
+  B a ≃ fib (pr1 {B = B}) a
+equiv-fib-pr1-fib-fam B a =
+  pair (fib-pr1-fib-fam B a) (is-equiv-fib-pr1-fib-fam B a)
+
 abstract
   is-equiv-pr1-is-contr :
     {i j : Level} {A : UU i} (B : A → UU j) →
     ((a : A) → is-contr (B a)) → is-equiv (pr1 {B = B})
   is-equiv-pr1-is-contr B is-contr-B =
     is-equiv-is-contr-map
-      ( λ x → is-contr-is-equiv
+      ( λ x → is-contr-equiv
         ( B x)
-        ( fib-fam-fib-pr1 B x)
-        ( is-equiv-fib-fam-fib-pr1 B x)
+        ( equiv-fib-fam-fib-pr1 B x)
         ( is-contr-B x))
 
 abstract
@@ -674,10 +692,9 @@ abstract
     {i j : Level} {A : UU i} (B : A → UU j) →
     (is-equiv (pr1 {B = B})) → ((a : A) → is-contr (B a))
   is-contr-is-equiv-pr1 B is-equiv-pr1-B a =
-    is-contr-is-equiv'
+    is-contr-equiv'
       ( fib pr1 a)
-      ( fib-fam-fib-pr1 B a)
-      ( is-equiv-fib-fam-fib-pr1 B a)
+      ( equiv-fib-fam-fib-pr1 B a)
       ( is-contr-map-is-equiv is-equiv-pr1-B a)
 
 right-unit-law-Σ :
