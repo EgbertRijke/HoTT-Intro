@@ -139,6 +139,9 @@ abstract
   is-set-ℕ : is-set ℕ
   is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ refl-Eq-ℕ eq-Eq-ℕ
 
+set-ℕ : hSet lzero
+set-ℕ = pair ℕ is-set-ℕ
+
 -- Section 8.3 General truncation levels
 
 data 𝕋 : UU lzero where
@@ -428,10 +431,22 @@ abstract
     is-set A → ((x : A) → is-set (B x)) → is-set (Σ A B)
   is-set-Σ = is-trunc-Σ zero-𝕋
 
+set-Σ :
+  {l1 l2 : Level} (A : hSet l1) (B : pr1 A → hSet l2) → hSet (l1 ⊔ l2)
+set-Σ (pair A is-set-A) B =
+  pair
+    ( Σ A (λ x → (pr1 (B x))))
+    ( is-set-Σ is-set-A (λ x → pr2 (B x)))
+
 abstract
   is-set-prod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     is-set A → is-set B → is-set (A × B)
   is-set-prod = is-trunc-prod zero-𝕋
+
+set-prod :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) → hSet (l1 ⊔ l2)
+set-prod (pair A is-set-A) (pair B is-set-B) =
+  pair (A × B) (is-set-prod is-set-A is-set-B)
 
 -- Exercise 8.2 (b)
 
@@ -482,6 +497,9 @@ abstract
 abstract
   is-set-bool : is-set bool
   is-set-bool = is-set-prop-in-id Eq-𝟚 is-prop-Eq-𝟚 reflexive-Eq-𝟚 eq-Eq-𝟚
+
+set-bool : hSet lzero
+set-bool = pair bool is-set-bool
 
 -- Exercise 8.4
 
@@ -539,13 +557,24 @@ abstract
     is-set A → is-set B → is-set (coprod A B)
   is-set-coprod = is-trunc-coprod neg-two-𝕋
 
+set-coprod :
+  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) → hSet (l1 ⊔ l2)
+set-coprod (pair A is-set-A) (pair B is-set-B) =
+  pair (coprod A B) (is-set-coprod is-set-A is-set-B)
+
 abstract
   is-set-unit : is-set unit
   is-set-unit = is-trunc-succ-is-trunc neg-one-𝕋 unit is-prop-unit
 
+set-unit : hSet lzero
+set-unit = pair unit is-set-unit
+
 abstract
   is-set-ℤ : is-set ℤ
   is-set-ℤ = is-set-coprod is-set-ℕ (is-set-coprod is-set-unit is-set-ℕ)
+
+set-ℤ : hSet lzero
+set-ℤ = pair ℤ is-set-ℤ
 
 -- Exercise 8.5
 

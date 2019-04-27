@@ -359,11 +359,13 @@ abstract
       ( Eq-canonical-pullback-eq f g t)
 
 eq-Eq-canonical-pullback :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) {t t' : canonical-pullback f g} →
-  Eq-canonical-pullback f g t t' → Id t t'
-eq-Eq-canonical-pullback f g {t} {t'} =
-  inv-is-equiv (is-equiv-Eq-canonical-pullback-eq f g t t')
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  ( f : A → X) (g : B → X) {t t' : canonical-pullback f g} →
+  ( α : Id (pr1 t) (pr1 t')) (β : Id (pr1 (pr2 t)) (pr1 (pr2 t'))) →
+  ( Id ((ap f α) ∙ (pr2 (pr2 t'))) ((pr2 (pr2 t)) ∙ (ap g β))) → Id t t'
+eq-Eq-canonical-pullback f g {pair a (pair b p)} {pair a' (pair b' p')} α β γ =
+  inv-is-equiv
+    ( is-equiv-Eq-canonical-pullback-eq f g (pair a (pair b p)) (pair a' (pair b' p'))) (pair α (pair β γ))
 
 {- We establish the uniquely uniqueness of pullbacks. -}
 
@@ -488,9 +490,9 @@ issec-inv-gap-prod A B (pair a (pair b p)) =
   eq-Eq-canonical-pullback
     ( const A unit star)
     ( const B unit star)
-    ( pair refl
-      ( pair refl
-        ( is-prop-is-contr' (is-prop-is-contr is-contr-unit star star) p refl)))
+    refl
+    refl
+    ( is-prop-is-contr' (is-prop-is-contr is-contr-unit star star) p refl)
 
 isretr-inv-gap-prod :
   {i j : Level} (A : UU i) (B : UU j) →
@@ -1549,16 +1551,6 @@ tot-pullback-rel : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (f : A → X) (g : B → X) (x : A) → UU _
 tot-pullback-rel {B = B} f g x = Σ B (λ y → Id (f x) (g y))
 
-{-
-square-eq-inv-vertical : {l : Level} {A : UU l}
-  {top-left top-right bottom-left bottom-right : A}
-  (left : Id top-left bottom-left) (bottom : Id bottom-left bottom-right)
-  (top : Id top-left top-right) (right : Id top-right bottom-right) →
-  Id (left ∙ bottom) (top ∙ right) →
-  Id ((inv left) ∙ top) (bottom ∙ (inv right))
-square-eq-inv-vertical refl bottom refl refl refl = refl
--}
-
 triangle-is-pullback-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   {f : A → X} {f' : A → X} (Hf : f ~ f')
@@ -1568,20 +1560,18 @@ triangle-is-pullback-htpy :
 triangle-is-pullback-htpy {A = A} {B} {X} {C} {f = f} {f'} Hf {g} {g'} Hg
   {pair p (pair q H)} {pair p' (pair q' H')} (pair Hp (pair Hq HH)) z =
   eq-Eq-canonical-pullback f g
-    ( pair
-      ( Hp z)
-      ( pair
-        ( Hq z)
-        ( ( inv
-            ( assoc (ap f (Hp z)) ((Hf (p' z)) ∙ (H' z)) (inv (Hg (q' z))))) ∙
-          ( inv
-            ( con-inv
-              ( (H z) ∙ (ap g (Hq z)))
-              ( Hg (q' z))
-              ( ( ap f (Hp z)) ∙ ((Hf (p' z)) ∙ (H' z)))
-              ( ( assoc (H z) (ap g (Hq z)) (Hg (q' z))) ∙
-                ( ( HH z) ∙
-                  ( assoc (ap f (Hp z)) (Hf (p' z)) (H' z)))))))))
+    ( Hp z)
+    ( Hq z)
+    ( ( inv
+        ( assoc (ap f (Hp z)) ((Hf (p' z)) ∙ (H' z)) (inv (Hg (q' z))))) ∙
+      ( inv
+        ( con-inv
+          ( (H z) ∙ (ap g (Hq z)))
+          ( Hg (q' z))
+          ( ( ap f (Hp z)) ∙ ((Hf (p' z)) ∙ (H' z)))
+          ( ( assoc (H z) (ap g (Hq z)) (Hg (q' z))) ∙
+            ( ( HH z) ∙
+              ( assoc (ap f (Hp z)) (Hf (p' z)) (H' z)))))))
 
 abstract
   is-pullback-htpy :
@@ -2392,26 +2382,25 @@ issec-inv-map-cone-fold {A = A} {B} {X} f g (pair (pair a b) (pair x α)) =
   eq-Eq-canonical-pullback
     ( functor-prod f g)
     ( diagonal X)
-    ( pair refl
-      ( pair
-        ( ap pr2 α)
-        ( ( ( ( inv (issec-pair-eq-triv' (pair (f a) (g b)) (pair x x) α)) ∙
-              ( ap
-                ( λ t → (eq-pair-triv ( pair t (ap pr2 α))))
-                ( ( ( inv right-unit) ∙
-                    ( inv (ap (concat _ (ap pr1 α)) (left-inv (ap pr2 α))))) ∙
-                  ( inv (assoc (ap pr1 α) (inv (ap pr2 α)) (ap pr2 α)))))) ∙
-            ( eq-pair-triv-concat
-              ( (ap pr1 α) ∙ (inv (ap pr2 α)))
-              ( ap pr2 α)
-              ( refl)
-              ( ap pr2 α))) ∙
+    refl
+    ( ap pr2 α)
+    ( ( ( ( inv (issec-pair-eq-triv' (pair (f a) (g b)) (pair x x) α)) ∙
           ( ap
-            ( concat
-              ( pair (g b) (g b))
-              ( eq-pair-triv
-                ( pair ((ap pr1 α) ∙ (inv (ap pr2 α))) refl)))
-            ( inv (ap-diagonal (ap pr2 α)))))))
+            ( λ t → (eq-pair-triv ( pair t (ap pr2 α))))
+            ( ( ( inv right-unit) ∙
+                ( inv (ap (concat _ (ap pr1 α)) (left-inv (ap pr2 α))))) ∙
+              ( inv (assoc (ap pr1 α) (inv (ap pr2 α)) (ap pr2 α)))))) ∙
+        ( eq-pair-triv-concat
+          ( (ap pr1 α) ∙ (inv (ap pr2 α)))
+          ( ap pr2 α)
+          ( refl)
+          ( ap pr2 α))) ∙
+      ( ap
+        ( concat
+          ( pair (g b) (g b))
+          ( eq-pair-triv
+            ( pair ((ap pr1 α) ∙ (inv (ap pr2 α))) refl)))
+        ( inv (ap-diagonal (ap pr2 α)))))
 
 ap-pr1-eq-pair-triv :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
@@ -2431,21 +2420,21 @@ isretr-inv-map-cone-fold :
   ((inv-map-cone-fold f g) ∘ (map-cone-fold f g)) ~ id
 isretr-inv-map-cone-fold { A = A} { B = B} { X = X} f g (pair a (pair b p)) =
   eq-Eq-canonical-pullback {A = A} {B = B} {X = X} f g
-    ( pair refl
-      ( pair refl
-        ( inv
-          ( ( ap
-              ( concat' (g b) refl)
-              ( ( ( ap
-                    ( λ t → t ∙
-                      ( inv (ap pr2 (eq-pair-triv'
-                        ( pair (f a) (g b))
-                        ( pair (g b) (g b))
-                        ( pair p refl)))))
-                      ( ap-pr1-eq-pair-triv p refl)) ∙
-                  ( ap (λ t → p ∙ (inv t)) (ap-pr2-eq-pair-triv p refl))) ∙
-                ( right-unit))) ∙
-            ( right-unit)))))
+    refl
+    refl
+    ( inv
+      ( ( ap
+          ( concat' (g b) refl)
+          ( ( ( ap
+                ( λ t → t ∙
+                  ( inv (ap pr2 (eq-pair-triv'
+                    ( pair (f a) (g b))
+                    ( pair (g b) (g b))
+                    ( pair p refl)))))
+                  ( ap-pr1-eq-pair-triv p refl)) ∙
+              ( ap (λ t → p ∙ (inv t)) (ap-pr2-eq-pair-triv p refl))) ∙
+            ( right-unit))) ∙
+        ( right-unit)))
 
 abstract
   is-equiv-map-cone-fold :
@@ -2799,12 +2788,10 @@ issec-inv-map-canonical-pullback-Π :
   ((map-canonical-pullback-Π f g) ∘ (inv-map-canonical-pullback-Π f g)) ~ id
 issec-inv-map-canonical-pullback-Π f g h =
   eq-htpy
-    ( λ i → eq-Eq-canonical-pullback (f i) (g i)
-      ( pair refl
-        ( pair refl
-          ( inv
-            ( ( right-unit) ∙
-              ( htpy-eq (issec-eq-htpy (λ i → (pr2 (pr2 (h i))))) i))))))
+    ( λ i → eq-Eq-canonical-pullback (f i) (g i) refl refl
+      ( inv
+        ( ( right-unit) ∙
+          ( htpy-eq (issec-eq-htpy (λ i → (pr2 (pr2 (h i))))) i))))
 
 isretr-inv-map-canonical-pullback-Π :
   {l1 l2 l3 l4 : Level} {I : UU l1}
@@ -2815,9 +2802,9 @@ isretr-inv-map-canonical-pullback-Π f g (pair α (pair β γ)) =
   eq-Eq-canonical-pullback
     ( postcomp-Π f)
     ( postcomp-Π g)
-    ( pair refl
-      ( pair refl
-        ( inv (right-unit ∙ (isretr-eq-htpy γ)))))
+    refl
+    refl
+    ( inv (right-unit ∙ (isretr-eq-htpy γ)))
 
 abstract
   is-equiv-map-canonical-pullback-Π :
@@ -2844,8 +2831,8 @@ triangle-map-canonical-pullback-Π f g c h =
     eq-Eq-canonical-pullback
       (f i)
       (g i)
-      ( pair refl (pair refl
-        ( (htpy-eq (issec-eq-htpy _) i) ∙ (inv right-unit)))))
+      refl refl
+      ( (htpy-eq (issec-eq-htpy _) i) ∙ (inv right-unit)))
 
 abstract
   is-pullback-cone-Π :
