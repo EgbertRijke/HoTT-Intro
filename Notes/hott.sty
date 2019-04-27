@@ -1,5 +1,5 @@
 % AUTHOR: Egbert Rijke
-% LAST MODIFIED: December 2017
+% LAST MODIFIED: May 2018
 
 % This package is designed to work with the amsart, amsbook or amsproc document
 % classes. It provides a set of macros to facilitate homotopy type theorists.
@@ -18,9 +18,10 @@
 \RequirePackage{amsmath}
 \RequirePackage{amsthm}
 \RequirePackage{amssymb}
-\RequirePackage[english]{babel}
 \RequirePackage[T1]{fontenc}
 \RequirePackage[utf8]{inputenc}
+\RequirePackage[english]{babel}
+\RequirePackage[theoremfont]{newtxtext}
 \RequirePackage{newtxmath}
 \RequirePackage{microtype}
 \RequirePackage{booktabs}
@@ -578,8 +579,8 @@
 \newcommand{\Thom}{\mathrm{Th}}
 
 %%% Suspension
-\newcommand{\susp}[1][]{\typefont{\Sigma}^{#1}}
-\newcommand{\suspspec}{\susp[\infty]}
+\newcommand{\susp}{\Sigma}
+\newcommand{\suspspec}{\susp^\infty}
 \newcommand{\north}{\mathsf{N}}
 \newcommand{\south}{\mathsf{S}}
 \newcommand{\merid}{\mathsf{merid}}
@@ -2384,7 +2385,7 @@
 \newtheorem{prob}[thm]{Problem}
 
 \newcommand{\pto}{\to_{\ast}}
-\newcommand{\suspsym}{\mathsf{\Sigma}}
+\newcommand{\suspsym}{\Sigma}
 \newcommand{\lra}       {\longrightarrow}
 \newcommand{\LLL}{\mathcal{L}}
 \newcommand{\RRR}{\mathcal{R}}

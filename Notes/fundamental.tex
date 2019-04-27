@@ -364,7 +364,12 @@ The proof is now concluded with an application of \cref{thm:id_fundamental}, usi
 \end{proof}
 
 \begin{exercises}
-\item Show that the map $\emptyt\to A$ is an embedding for every type $A$.
+\item
+  \begin{subexenum}
+  \item Show that the map $\emptyt\to A$ is an embedding for every type $A$.
+  \item Show that $\succN:\N\to\N$ is an embedding.
+  \item Show that $\inl:A\to A+B$ and $\inr:B\to A+B$ are embeddings for any two types $A$ and $B$.
+  \end{subexenum}
 \item Consider an equivalence $e:A\simeq B$. Construct an equivalence
   \begin{equation*}
     (e(x)=y)\simeq(x=e^{-1}(y))
@@ -387,7 +392,6 @@ with $H:f\htpy g\circ h$.
 \item Suppose that $g$ is an embedding. Show that $f$ is an embedding if and only if $h$ is an embedding.
 \item Suppose that $h$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.
 \end{subexenum}
-\item Show that for any two types $A$ and $B$, the coproduct inclusion maps $\inl:A \to A + B$ and $\inr : B \to A + B$ are embeddings.
 \item \label{ex:is-equiv-is-equiv-functor-coprod}Consider two maps $f:A\to A'$ and $g:B \to B'$.
   \begin{subexenum}
   \item Show that if the map

@@ -23,11 +23,11 @@ We define the \define{unit type}\index{1@{$\unit$}|see {unit type}}\index{unit t
 \begin{equation*}
 \ttt:\unit,
 \end{equation*}
-satisfying the induction principle\index{induction principle!of unit type} that for any type family $\Gamma,x:\unit\vdash P(x)~\mathrm{type}$, there is a term
+satisfying the induction principle\index{induction principle!of unit type} that for any type family of types $P(x)$ indexed by $x:\unit$, there is a term
 \begin{equation*}
 \indunit : P(\ttt)\to\prd{x:\unit}P(x)
 \end{equation*}
-in context $\Gamma$ for which the computation rule\index{computation rules!of unit type}
+for which the computation rule\index{computation rules!of unit type}
 \begin{equation*}
 \indunit(p,\ttt) \jdeq p
 \end{equation*}
@@ -44,7 +44,7 @@ In other words, by the induction principle for the unit type we obtain for every
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
 
 \begin{defn}
-We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{empty type|textbf} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type} that for any type family $P:\emptyt\to\type$, there is a term
+We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{empty type|textbf} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type} that for any family of types $P(x)$ indexed by $x:\empty$, there is a term
 \begin{equation*}
 \indempty : \prd{x:\emptyt}P(x).
 \end{equation*}
@@ -63,7 +63,7 @@ We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {bo
 \bfalse & : \bool \\
 \btrue & : \bool
 \end{align*}
-satisfying the induction principle\index{induction principle!of booleans} that for any type family $P:\bool\to\type$, there is a term
+satisfying the induction principle\index{induction principle!of booleans} that for any family of types $P(x)$ indexed by $x:\bool$, there is a term
 \begin{equation*}
 \indbool : P(\bfalse)\to \Big(P(\btrue)\to \prd{x:\bool}P(x)\Big)
 \end{equation*}
@@ -88,7 +88,7 @@ Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\inde
 \inl & : A \to A+B \\
 \inr & : B \to A+B
 \end{align*}
-satisfying the induction principle\index{induction principle!of coproduct} that for any type family $P:(A+B)\to\type$, there is a term
+satisfying the induction principle\index{induction principle!of coproduct} that for any family of types $P(x)$ indexed by $x:A+B$, there is a term
 \begin{equation*}
 \ind{+} : \Big(\prd{x:A}P(\inl(x))\Big)\to\Big(\prd{y:B}P(\inr(y))\Big)\to\prd{z:A+B}P(z)
 \end{equation*}
@@ -113,26 +113,18 @@ It is better to think of the $\Sigma$-type as the total space of a family of typ
 Let $A$ be a type in context $\Gamma$, and let $\Gamma,x:A\vdash B(x)~\mathrm{type}$ be a type family over $A$.
 The \define{dependent pair type}\index{Sigma type@{$\Sigma$-type}|textbf} is defined to be the inductive type $\sm{x:A}B(x)$ in context $\Gamma$ equipped with a \define{pairing function}\index{pairing function}
 \begin{equation*}
-\pairr{\blank,\blank}:\prd{x:A} \Big(B(x)\to \sm{y:A}B(y)\Big).
+(\blank,\blank):\prd{x:A} \Big(B(x)\to \sm{y:A}B(y)\Big).
 \end{equation*}
-The induction principle\index{induction principle|of Sigma types@{of $\Sigma$-types}} for $\sm{x:A}B(x)$ asserts that for every type family 
+The induction principle\index{induction principle|of Sigma types@{of $\Sigma$-types}} for $\sm{x:A}B(x)$ asserts that for any family of types $P(p)$ indexed by $p:\sm{x:A}B(x)$, there is a function
 \begin{equation*}
-\Gamma,p:\sm{x:A}B(x)\vdash P(p)~\mathrm{type}
-\end{equation*}
-one has
-\begin{equation*}
-\ind{\Sigma}:\Big(\prd{x:A}{y:B(x)}P(\pairr{x,y})\Big)\to\Big(\prd{p:\sm{x:A}B(x)}P(p)\Big).
+\ind{\Sigma}:\Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to\Big(\prd{p:\sm{x:A}B(x)}P(p)\Big).
 \end{equation*}
 satisfying the computation rule\index{computation rules!of Sigma types@{of $\Sigma$-types}}
 \begin{equation*}
-\ind{\Sigma}(f,\pairr{x,y})\jdeq f(x,y).
+\ind{\Sigma}(f,(x,y))\jdeq f(x,y).
 \end{equation*}
-Most of the time we write $\lam{(x,y)}f(x,y)$ for $\ind{\Sigma}(\lam{x}{y}f(x,y))$. 
+Sometimes we write $\lam{(x,y)}f(x,y)$ for $\ind{\Sigma}(\lam{x}{y}f(x,y))$. 
 \end{defn}
-
-\begin{rmk}
-Some authors write $(x:A)\times B(x)$ for the dependent pair type $\sm{x:A}B(x)$. 
-\end{rmk}
 
 \begin{defn}
 Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map|textbf}\index{projection maps!first projection|textbf}
@@ -145,7 +137,7 @@ is defined by induction as
 \end{equation*}
 The \define{second projection map}\index{second projection map|textbf}\index{projection map!second projection|textbf} is a dependent function
 \begin{equation*}
-\prd{p:\sm{x:A}B(x)} B(\proj 1(p))
+\proj 2 : \prd{p:\sm{x:A}B(x)} B(\proj 1(p))
 \end{equation*}
 defined by induction as
 \begin{equation*}
@@ -153,12 +145,10 @@ defined by induction as
 \end{equation*}
 By the computation rule we have
 \begin{align*}
-\proj 1 \pairr{x,y} & \jdeq x \\
-\proj 2 \pairr{x,y} & \jdeq y.
+\proj 1 (x,y) & \jdeq x \\
+\proj 2 (x,y) & \jdeq y.
 \end{align*}
 \end{defn}
-
-When one thinks of types as propositions, then the $\Sigma$-type has the r\^{o}le of the existential quantification.
 
 \subsection{Cartesian products}
 A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e., $B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product} $A\times B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its specification along with the induction principle for cartesian products.
@@ -166,7 +156,7 @@ A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\G
 \begin{defn}
 Let $A$ and $B$ be types in context $\Gamma$. The \define{(cartesian) product}\index{cartesian product|textbf}\index{product!of types|textbf} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor
 \begin{equation*}
-\pairr{\blank,\blank}:A\to (B\to A\times B).
+(\blank,\blank):A\to (B\to A\times B).
 \end{equation*}
 The induction principle\index{induction principle!of cartesian products} for $A\times B$ asserts that for any type family $P$ over $A\times B$, one has
 \begin{equation*}
@@ -195,8 +185,8 @@ name & type & constructors \\
 & & $\btrue : \bool$ \\
 \define{coproduct} & $A+B$ & $\inl : A \to A+B$ \\
 & & $\inr : B\to A+B$ & \\
-\define{product} & $A\times B$ & $\pairr{\blank,\blank}:A\to (B\to A\times B)$ \\
-\define{$\Sigma$-type} & $\sm{x:A}B(x)$ & $\pairr{\blank,\blank}:\prd{y:A} \big(B(y)\to \sm{x:A}B(x)\big)$ \\
+\define{product} & $A\times B$ & $(\blank,\blank):A\to (B\to A\times B)$ \\
+\define{$\Sigma$-type} & $\sm{x:A}B(x)$ & $(\blank,\blank):\prd{y:A} \big(B(y)\to \sm{x:A}B(x)\big)$ \\
 \bottomrule
 \end{tabular}
 \end{center}

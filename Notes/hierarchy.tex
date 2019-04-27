@@ -6,12 +6,16 @@
 
 %We will see [later] that there are types that are not $k$-types for any $k$.
 
-\subsection{Propositions and subtypes}
+\subsection{Propositions and sets in type theory}
 
 \begin{defn}
 A type $A$ is said to be a \define{proposition} if there is a term of type
 \begin{equation*}
 \isprop(A)\defeq\prd{x,y:A}\iscontr(x=y).
+\end{equation*}
+We define $\prop$ to be the type of all small propositions, i.e.,
+\begin{equation*}
+  \prop\defeq\sm{X:\UU}\isprop(A).
 \end{equation*}
 \end{defn}
 
@@ -26,33 +30,32 @@ follows from the induction principle of the empty type.
 In the following lemma we prove that in order to show that a type $A$ is a proposition, it suffices to show that any two terms of $A$ are equal. In other words, propositions are types with \define{proof irrelevance}.
 
 \begin{lem}\label{lem:isprop_eq}
-Let $A$ be a type. Then we have
-\begin{equation*}
-\isprop(A)\leftrightarrow \Big(\prd{x,y:A}x=y\Big).
-\end{equation*}
+  Let $A$ be a type. Then the following are equivalent:
+  \begin{enumerate}
+  \item The type $A$ is a proposition.
+  \item Any two terms of type $A$ can be identified, i.e., there is a dependent function
+    \begin{equation*}
+      \prd{x,y:A}\id{x}{y}.
+    \end{equation*}
+  \item The type $A$ is contractible as soon as it is inhabited, i.e., there is a function
+    \begin{equation*}
+      A \to \iscontr(A).
+    \end{equation*}
+  \end{enumerate}
 \end{lem}
 
 \begin{proof}
-Suppose $A$ is a proposition. By taking the center of contraction of $\id{x}{y}$ for each $x,y:A$ we obtain a term of type $\prd{x,y:A}\id{x}{y}$.
+  If $A$ is a proposition, then its identity types are contractible. Therefore the center of contraction of $\id{x}{y}$ is identification $\id{x}{y}$, for each $x,y:A$.
 
-Now suppose that $A$ is a type equipped with $H:\prd{x,y:A}\id{x}{y}$. Then we take $\ct{H(x,x)^{-1}}{H(x,y)}$ as the center of contraction of $\id{x}{y}$. To construct the contraction
-\begin{equation*}
-\prd{p:\id{x}{y}} \ct{H(x,x)^{-1}}{H(x,y)}=p
-\end{equation*}
-we proceed by path induction. Our goal is to show that
-\begin{equation*}
-\ct{H(x,x)^{-1}}{H(x,x)}=\refl{x}.\qedhere
-\end{equation*}
+  If $A$ comes equipped with $p:\prd{x,y:A}\id{x}{y}$, then for any $x:A$ the dependent function $p(x):\prd{y:A}\id{x}{y}$ is a contraction of $A$. Thus we obtain the function
+  \begin{equation*}
+    \lam{x}(x,p(x)):A\to\iscontr(A).
+  \end{equation*}
+
+  Finally, suppose that $A\to\iscontr(A)$. In order to show that $A$ is a proposition, let $x,y:A$. Since we have assumed $x:A$, it follows from our assumption that $A$ is contractible. Now it follows from \cref{ex:prop_contr} that the identity types of $A$ are also contractible, i.e., that $A$ is a proposition.
 \end{proof}
 
-By proof irrelevance it follows that propositions are contractible as soon as they are inhabited.
-
-\begin{cor}\label{cor:contr_prop}
-For any type $A$ we have
-\begin{equation*}
-\isprop(A)\leftrightarrow (A\to\iscontr(A)).
-\end{equation*}
-\end{cor}
+In the following lemma we show that propositions are closed under equivalences.
 
 \begin{lem}\label{lem:prop_equiv}
 Let $A$ and $B$ be types, and let $e:\eqv{A}{B}$. Then we have
@@ -71,7 +74,17 @@ Since $e$ is assumed to be an equivalence, it follows by \cref{cor:emb_equiv} th
 is an equivalence for any $x,y:A$. If $B$ is a proposition, then in particular the type $e(x)=e(y)$ is contractible for any $x,y:A$, so the claim follows from \cref{thm:contr_equiv}.
 \end{proof}
 
-In type theory terms always come equipped with their types, i.e., they never appear in isolation. This is useful from the perspective that terms are programs with a certain specification, but as a consequence we cannot consider subtypes in the same way as set theorists have subsets. Our definition of subtype is therefore considerably different:
+  In set theory, a set $y$ is said to be a subset of a set $x$, if any element of $y$ is an element of $x$, i.e., if the condition
+  \begin{equation*}
+    \forall_z (z\in y)\to (z\in x)
+  \end{equation*}
+  holds. We have already noted that type theory is different from set theory in that terms in type theory come equipped with a \emph{unique} type. Moreover, in set theory the proposition $x\in y$ is well-formed for any two sets $x$ and $y$, whereas in type theory the judgment $a:A$ is only well-formed if it is derived using the postulated inference rules. Because of these differences we must find a different way to talk about subtypes.
+
+  Note that in set theory there is a correspondence between the subsets of a set $x$, and the \emph{predicates} on $x$. A predicate on $x$ is just a proposition $P(z)$ that varies over the elements $z\in x$. Indeed, if $y$ is a subset of $x$, then the corresponding predicate is the proposition $z\in y$. Conversely, if $P$ is a predicate on $x$, then we obtain the subset
+  \begin{equation*}
+    \{z\in x\mid P(z)\}
+  \end{equation*}
+  of $x$. Now we have the right idea of subtypes in type theory: they are families of propositions.
 
 \begin{defn}
 A type family $B$ over $A$ is said to be a \define{subtype} of $A$ if for each $x:A$ the type $B(x)$ is a proposition.
