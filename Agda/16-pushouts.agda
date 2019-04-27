@@ -38,11 +38,7 @@ reflexive-htpy-cocone :
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
   htpy-cocone f g c c
 reflexive-htpy-cocone f g (pair i (pair j H)) =
-  pair
-    ( htpy-refl i)
-    ( pair
-      ( htpy-refl j)
-      ( htpy-right-unit H))
+  pair htpy-refl (pair htpy-refl htpy-right-unit)
 
 htpy-cocone-eq :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -59,16 +55,16 @@ is-contr-total-htpy-cocone f g c =
     ( λ i' jH' K → Σ ((pr1 (pr2 c)) ~ (pr1 jH'))
       ( coherence-htpy-cocone f g c (pair i' jH') K))
     ( is-contr-total-htpy (pr1 c))
-    ( pair (pr1 c) (htpy-refl (pr1 c)))
+    ( pair (pr1 c) htpy-refl)
     ( is-contr-total-Eq-structure
       ( λ j' H' → coherence-htpy-cocone f g c
         ( pair (pr1 c) (pair j' H'))
-        ( htpy-refl (pr1 c)))
+        ( htpy-refl))
       ( is-contr-total-htpy (pr1 (pr2 c)))
-      ( pair (pr1 (pr2 c)) (htpy-refl (pr1 (pr2 c))))
+      ( pair (pr1 (pr2 c)) htpy-refl)
       ( is-contr-is-equiv'
         ( Σ (((pr1 c) ∘ f) ~ ((pr1 (pr2 c)) ∘ g)) (λ H' → (pr2 (pr2 c)) ~ H'))
-        ( tot (λ H' M → (htpy-right-unit (pr2 (pr2 c))) ∙h M))
+        ( tot (λ H' M → htpy-right-unit ∙h M))
         ( is-equiv-tot-is-fiberwise-equiv (λ H' → is-equiv-htpy-concat _ _))
         ( is-contr-total-htpy (pr2 (pr2 c)))))
 
@@ -151,11 +147,7 @@ reflexive-htpy-generating-data-pushout :
   htpy-generating-data-pushout f g c P s s
 reflexive-htpy-generating-data-pushout f g (pair i (pair j H)) P
   (pair hA (pair hB hS)) =
-  pair
-    ( htpy-refl hA)
-    ( pair
-      ( htpy-refl hB)
-      ( htpy-right-unit hS))
+  pair htpy-refl (pair htpy-refl htpy-right-unit)
 
 htpy-generating-data-pushout-eq :
   {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -188,7 +180,7 @@ is-contr-total-htpy-generating-data-pushout
         coherence-htpy-generating-data-pushout f g
           ( pair i (pair j H)) P (pair hA (pair hB hS)) (pair α βγ) K L))
     ( is-contr-total-htpy hA)
-    ( pair hA (htpy-refl _))
+    ( pair hA htpy-refl)
     ( is-contr-total-Eq-structure
       ( λ β γ L →
         coherence-htpy-generating-data-pushout f g
@@ -196,15 +188,15 @@ is-contr-total-htpy-generating-data-pushout
           ( P)
           ( pair hA (pair hB hS))
           ( pair hA (pair β γ))
-          ( htpy-refl hA)
+          ( htpy-refl)
           ( L))
       ( is-contr-total-htpy hB)
-      ( pair hB (htpy-refl _))
+      ( pair hB htpy-refl)
       ( is-contr-is-equiv
         ( Σ ((s : S) → Id (tr P (H s) (hA (f s))) (hB (g s))) (λ γ → hS ~ γ))
-        ( tot (λ γ → htpy-concat _ (htpy-inv (htpy-right-unit hS))))
+        ( tot (λ γ → htpy-concat _ (htpy-inv htpy-right-unit)))
         ( is-equiv-tot-is-fiberwise-equiv
-          ( is-equiv-htpy-concat (htpy-inv (htpy-right-unit hS))))
+          ( is-equiv-htpy-concat (htpy-inv htpy-right-unit)))
         ( is-contr-total-htpy hS)))
 
 is-fiberwise-equiv-htpy-generating-data-pushout-eq :
@@ -356,7 +348,7 @@ htpy-precompose C H h = eq-htpy (h ·l H)
 
 compute-htpy-precompose :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : UU l3) (f : A → B) →
-  (htpy-precompose C (htpy-refl f)) ~ (htpy-refl _)
+  (htpy-precompose C (htpy-refl' f)) ~ htpy-refl
 compute-htpy-precompose C f h = eq-htpy-htpy-refl (h ∘ f)
 
 cone-pullback-property-pushout :
@@ -495,7 +487,7 @@ dependent-naturality-square :
   Id ((apd f p) ∙ q') ((ap (tr B p) q) ∙ (apd f' p)) →
   Id (tr (λ y → Id (f y) (f' y)) p q) q' 
 dependent-naturality-square f f' refl q q' s =
-  inv (s ∙ ((right-unit (ap id q)) ∙ (ap-id q)))
+  inv (s ∙ (right-unit ∙ (ap-id q)))
 
 htpy-eq-dgen-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -631,7 +623,7 @@ pullback-property-dependent-pullback-property-pushout
     ( λ h s → tr (λ x → Y) (H s) (h (f s)))
     ( λ h → eq-htpy (λ s → inv (tr-triv (H s) (h (f s)))))
     ( λ h s → h (g s))
-    ( htpy-refl _)
+    ( htpy-refl)
     { c = pair
       ( λ h a → h (i a))
       ( pair (λ h b → h (j b)) (λ h → eq-htpy (h ·l H)))}
@@ -641,7 +633,7 @@ pullback-property-dependent-pullback-property-pushout
       ( λ h → refl)
       ( pair
         ( λ h → refl)
-        ( λ h → (right-unit _) ∙
+        ( λ h → right-unit ∙
           ( ( ap eq-htpy
               ( eq-htpy (λ s →
                 inv-con

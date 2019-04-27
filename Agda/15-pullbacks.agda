@@ -109,7 +109,7 @@ htpy-cone-eq' : {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
     (λ L → ((pr2 (pr2 c)) ∙h (htpy-left-whisk g L)) ~
       ((htpy-left-whisk f (htpy-eq α)) ∙h (pr2 (pr2 c'))))
 htpy-cone-eq' f g (pair p qH) (pair .p .qH) refl refl =
-  pair (htpy-refl (pr1 qH)) (htpy-right-unit (pr2 qH))
+  pair htpy-refl (htpy-right-unit (pr2 qH))
 -}
 
 reflexive-htpy-cone :
@@ -117,11 +117,7 @@ reflexive-htpy-cone :
   (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
   htpy-cone f g c c
 reflexive-htpy-cone f g c = 
-  pair
-    ( htpy-refl (pr1 c))
-    ( pair
-      ( htpy-refl (pr1 (pr2 c)))
-      ( htpy-right-unit (pr2 (pr2 c))))
+  pair htpy-refl (pair htpy-refl htpy-right-unit)
       
 htpy-cone-eq :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -141,20 +137,20 @@ abstract
         Σ ( q ~ (pr1 qH'))
           ( coherence-htpy-cone f g (pair p (pair q H)) (pair p' qH') K))
       ( is-contr-total-htpy-nondep p)
-      ( pair p (htpy-refl p))
+      ( pair p htpy-refl)
       ( is-contr-total-Eq-structure
         ( λ q' H' →
             coherence-htpy-cone f g
             ( pair p (pair q H))
             ( pair p (pair q' H'))
-            ( htpy-refl p))
+            ( htpy-refl))
         ( is-contr-total-htpy-nondep q)
-        ( pair q (htpy-refl q))
+        ( pair q htpy-refl)
         ( is-contr-is-equiv'
           ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
-          ( tot (λ H' → htpy-concat H {h = H'} (htpy-right-unit H)))
+          ( tot (λ H' → htpy-concat H {h = H'} htpy-right-unit))
           ( is-equiv-tot-is-fiberwise-equiv
-            ( λ H' → is-equiv-htpy-concat (htpy-right-unit H) H'))
+            ( λ H' → is-equiv-htpy-concat htpy-right-unit H'))
             ( is-contr-total-htpy H)))
   
 {- A simple corollary is that the map htpy-cone-eq is a fiberwise 
@@ -241,7 +237,7 @@ abstract
       ( cone-map f g (cone-canonical-pullback f g))
       ( tot (λ p → choice-∞))
       ( mapping-into-Σ)
-      ( htpy-refl (cone-map f g (cone-canonical-pullback f g)))
+      ( htpy-refl)
       ( is-equiv-mapping-into-Σ)
       ( is-equiv-tot-is-fiberwise-equiv
         ( λ p → is-equiv-choice-∞))
@@ -331,7 +327,7 @@ reflexive-Eq-canonical-pullback :
   (f : A → X) (g : B → X) (t : canonical-pullback f g) →
   Eq-canonical-pullback f g t t
 reflexive-Eq-canonical-pullback f g (pair a (pair b p)) =
-  pair refl (pair refl (inv (right-unit p)))
+  pair refl (pair refl (inv right-unit))
 
 Eq-canonical-pullback-eq :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
@@ -357,15 +353,15 @@ abstract
         ( pair b refl)
         ( is-contr-is-equiv'
           ( Σ (Id (f a) (g b)) (λ p' → Id p p'))
-          ( tot (λ p' → (concat' p (inv (right-unit p))) ∘ inv))
+          ( tot (λ p' → (concat' p (inv right-unit)) ∘ inv))
           ( is-equiv-tot-is-fiberwise-equiv
             ( λ p' → is-equiv-comp
-              ( (concat' p (inv (right-unit p))) ∘ inv)
-              ( concat' p (inv (right-unit p)))
+              ( (concat' p (inv right-unit)) ∘ inv)
+              ( concat' p (inv right-unit))
               ( inv)
-              ( htpy-refl _)
+              ( htpy-refl)
               ( is-equiv-inv p p')
-              ( is-equiv-concat' p' (inv (right-unit p)))))
+              ( is-equiv-concat' p' (inv right-unit))))
           ( is-contr-total-path _ p)))
 
 abstract
@@ -449,11 +445,7 @@ htpy-cone-up-pullback-canonical-pullback :
   (f : A → X) (g : B → X) (c : cone f g C) →
   htpy-cone f g (cone-map f g (cone-canonical-pullback f g) (gap f g c)) c
 htpy-cone-up-pullback-canonical-pullback f g c =
-  pair
-    ( htpy-refl (pr1 c))
-    ( pair
-      ( htpy-refl (pr1 (pr2 c)))
-      ( htpy-right-unit (pr2 (pr2 c))))
+  pair htpy-refl ( pair htpy-refl htpy-right-unit)
 
 {- We show that the universal property of the pullback implies that the gap
    map is an equivalence. -}
@@ -496,7 +488,7 @@ abstract
 cone-prod :
   {i j : Level} (A : UU i) (B : UU j) →
   cone (const A unit star) (const B unit star) (A × B)
-cone-prod A B = pair pr1 (pair pr2 (htpy-refl (const (A × B) unit star)))
+cone-prod A B = pair pr1 (pair pr2 htpy-refl)
 
 {- Cartesian products are a special case of pullbacks. -}
 
@@ -546,7 +538,7 @@ cone-fiberwise-prod P Q =
     ( tot (λ x → pr1))
     ( pair
       ( tot (λ x → pr2))
-      ( htpy-refl pr1))
+      ( htpy-refl))
 
 {- We will show that the fiberwise product is a pullback by showing that the
    gap map is an equivalence. We do this by directly construct an inverse to
@@ -675,7 +667,7 @@ abstract
         ( λ s t → is-equiv-comp _
           ( concat (pr1 s) (pr2 (pr2 s)))
           ( concat' (pr1 t) (inv (pr2 (pr2 t))))
-          ( htpy-refl _)
+          ( htpy-refl)
           ( is-equiv-concat' (pr1 s) (inv (pr2 (pr2 t))))
           ( is-equiv-concat (pr2 (pr2 s)) (g (pr1 (pr2 t))))))
 
@@ -834,7 +826,7 @@ fib-square f g c x t =
 
 fib-square-id :
   {l1 l2 : Level} {B : UU l1} {X : UU l2} (g : B → X) (x : X) →
-  fib-square id g (pair g (pair id (htpy-refl g))) x ~ id
+  fib-square id g (pair g (pair id htpy-refl)) x ~ id
 fib-square-id g .(g b) (pair b refl) =
   refl
 
@@ -850,7 +842,7 @@ square-tot-fib-square f g c (pair .((pr1 c) x) (pair x refl)) =
   in
   eq-pair refl
     ( eq-pair refl
-      ( inv ((ap inv (right-unit (inv (H x)))) ∙ (inv-inv (H x)))))
+      ( inv ((ap inv right-unit) ∙ (inv-inv (H x)))))
 
 abstract
   is-fiberwise-equiv-fib-square-is-pullback :
@@ -977,7 +969,7 @@ abstract
       ( is-equiv-comp _
         ( tot (λ y → tot (λ x → inv)))
         ( Σ-swap A B (λ x y → Id (f x) (g y)))
-        ( htpy-refl _)
+        ( htpy-refl)
         ( is-equiv-Σ-swap A B (λ x y → Id (f x) (g y)))
         ( is-equiv-tot-is-fiberwise-equiv (λ y →
           ( is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-inv (f x) (g y))))))
@@ -1091,11 +1083,11 @@ fib-square-comp-vertical f g h
   (pair p (pair q H)) (pair p' (pair q' H')) .(p (p' a))
   (pair (pair .(p' a) refl) (pair a refl)) =
   eq-pair refl
-    ( ( right-unit (inv ((H (p' a)) ∙ (ap g (H' a))))) ∙
+    ( ( right-unit) ∙
       ( ( distributive-inv-concat (H (p' a)) (ap g (H' a))) ∙
         ( ( ap
             ( concat _ (inv (ap g (H' a))))
-            ( inv (right-unit (inv (H (p' a)))))) ∙
+            ( inv right-unit)) ∙
           ( ap
             ( concat' _
               ( pr2
@@ -1104,7 +1096,7 @@ fib-square-comp-vertical f g h
                   ( p (p' a))
                   ( pair (p' a) refl))))
             ( ( inv (ap-inv g (H' a))) ∙
-              ( ap (ap g) (inv (right-unit (inv (H' a))))))))))
+              ( ap (ap g) (inv right-unit)))))))
 
 abstract
   is-pullback-rectangle-is-pullback-left-square :
@@ -1602,7 +1594,7 @@ abstract
           ( (concat' (g' b) (inv (Hg b))) ∘ (concat (f' a) {z = g' b} (Hf a)))
           ( concat' (g' b) (inv (Hg b)))
           ( concat (f' a) {z = g' b} (Hf a))
-          ( htpy-refl _)
+          ( htpy-refl)
           ( is-equiv-concat (Hf a) (g' b))
           ( is-equiv-concat' (f a) (inv (Hg b)))))
 
@@ -1636,7 +1628,7 @@ tr-id-right-subst :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
   (p : Id x y) (b : B) → (q : Id b (f x)) →
   Id (tr (λ (a : A) → Id b (f a)) p q) (q ∙ (ap f p))
-tr-id-right-subst refl b q = inv (right-unit q)
+tr-id-right-subst refl b q = inv right-unit
 
 triangle-is-pullback-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
@@ -1711,32 +1703,28 @@ abstract
 reflexive-htpy-square :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c : cone f g C) →
-  htpy-square (htpy-refl f) (htpy-refl g) c c
+  htpy-square (htpy-refl {f = f}) (htpy-refl {f = g}) c c
 reflexive-htpy-square f g c =
-  let p = pr1 c
-      q = pr1 (pr2 c)
-      H = pr2 (pr2 c)
-  in
-  pair (htpy-refl p) (pair (htpy-refl q) (htpy-right-unit H))
+  pair htpy-refl (pair htpy-refl htpy-right-unit)
 
 htpy-square-eq-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
-  Id c c' → htpy-square (htpy-refl f) (htpy-refl g) c c'
+  Id c c' → htpy-square (htpy-refl {f = f}) (htpy-refl {f = g}) c c'
 htpy-square-eq-htpy-refl f g c .c refl =
-  pair (htpy-refl _) (pair (htpy-refl _) (htpy-right-unit _))
+  pair htpy-refl (pair htpy-refl htpy-right-unit)
 
 htpy-square-htpy-refl-htpy-cone :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) →
   (c c' : cone f g C) →
-  htpy-cone f g c c' → htpy-square (htpy-refl f) (htpy-refl g) c c'
+  htpy-cone f g c c' → htpy-square (htpy-refl {f = f}) (htpy-refl {f = g}) c c'
 htpy-square-htpy-refl-htpy-cone f g
   (pair p (pair q H)) (pair p' (pair q' H')) =
   tot
     ( λ K → tot
-      ( λ L M → ( htpy-ap-concat H _ _ (htpy-right-unit (g ·l L))) ∙h
-        ( M ∙h htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l K))))))
+      ( λ L M → ( htpy-ap-concat H _ _ htpy-right-unit) ∙h
+        ( M ∙h htpy-ap-concat' _ _ H' (htpy-inv htpy-right-unit))))
 
 abstract
   is-equiv-htpy-square-htpy-refl-htpy-cone :
@@ -1749,13 +1737,13 @@ abstract
     is-equiv-tot-is-fiberwise-equiv
       ( λ K → is-equiv-tot-is-fiberwise-equiv
         ( λ L → is-equiv-comp
-          ( λ M → ( htpy-ap-concat H _ _ (htpy-right-unit (g ·l L))) ∙h
+          ( λ M → ( htpy-ap-concat H _ _ htpy-right-unit) ∙h
             ( M ∙h
-              ( htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l K))))))
-          ( htpy-concat _ (htpy-ap-concat H _ _ (htpy-right-unit (g ·l L))))
+              ( htpy-ap-concat' _ _ H' (htpy-inv htpy-right-unit))))
+          ( htpy-concat _ (htpy-ap-concat H _ _ htpy-right-unit))
           ( htpy-concat' _
-            ( htpy-ap-concat' _ _ H' (htpy-inv (htpy-right-unit (f ·l K)))))
-          ( htpy-refl _)
+            ( htpy-ap-concat' _ _ H' (htpy-inv htpy-right-unit)))
+          ( htpy-refl)
           ( is-equiv-htpy-concat' _ _)
           ( is-equiv-htpy-concat _ _)))
 
@@ -1764,7 +1752,7 @@ abstract
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
     (f : A → X) (g : B → X) →
     (c : cone f g C) →
-    is-contr (Σ (cone f g C) (htpy-square (htpy-refl f) (htpy-refl g) c))
+    is-contr (Σ (cone f g C) (htpy-square (htpy-refl' f) (htpy-refl' g) c))
   is-contr-total-htpy-square-htpy-refl-htpy-refl {A = A} {B} {X} {C}
     f g (pair p (pair q H)) =
     let c = pair p (pair q H) in
@@ -1780,11 +1768,11 @@ abstract
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
     (f : A → X) {g g' : B → X} (Hg : g ~ g') →
     (c : cone f g C) →
-    is-contr (Σ (cone f g' C) (htpy-square (htpy-refl f) Hg c))
+    is-contr (Σ (cone f g' C) (htpy-square (htpy-refl' f) Hg c))
   is-contr-total-htpy-square-htpy-refl {C = C} f {g} =
     ind-htpy g
       ( λ g'' Hg' → ( c : cone f g C) →
-        is-contr (Σ (cone f g'' C) (htpy-square (htpy-refl f) Hg' c)))
+        is-contr (Σ (cone f g'' C) (htpy-square (htpy-refl' f) Hg' c)))
       ( is-contr-total-htpy-square-htpy-refl-htpy-refl f g)
 
 abstract
@@ -1806,13 +1794,13 @@ abstract
 tr-tr-htpy-refl-cone :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c : cone f g C) →
-  let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
-      tr-tr-c = tr (λ y → cone f y C) (eq-htpy (htpy-refl g)) tr-c
+  let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl {f = f})) c
+      tr-tr-c = tr (λ y → cone f y C) (eq-htpy (htpy-refl {f = g})) tr-c
   in
   Id tr-tr-c c
 tr-tr-htpy-refl-cone {C = C} f g c =
-  let tr-c = tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c
-      tr-tr-c = tr (λ g'' → cone f g'' C) (eq-htpy (htpy-refl g)) tr-c
+  let tr-c = tr (λ f''' → cone f''' g C) (eq-htpy htpy-refl) c
+      tr-tr-c = tr (λ g'' → cone f g'' C) (eq-htpy htpy-refl) tr-c
       α : Id tr-tr-c tr-c
       α = ap (λ t → tr (λ g'' → cone f g'' C) t tr-c) (eq-htpy-htpy-refl g)
       β : Id tr-c c
@@ -1823,13 +1811,13 @@ tr-tr-htpy-refl-cone {C = C} f g c =
 htpy-square-eq-htpy-refl-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
-  let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
-      tr-tr-c = tr (λ y → cone f y C) (eq-htpy (htpy-refl g)) tr-c
+  let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl {f = f})) c
+      tr-tr-c = tr (λ y → cone f y C) (eq-htpy (htpy-refl {f = g})) tr-c
   in
-  Id tr-tr-c c' → htpy-square (htpy-refl f) (htpy-refl g) c c'
+  Id tr-tr-c c' → htpy-square (htpy-refl' f) (htpy-refl' g) c c'
 htpy-square-eq-htpy-refl-htpy-refl f g c c' =
   ind-is-equiv
-    ( λ p → htpy-square (htpy-refl f) (htpy-refl g) c c')
+    ( λ p → htpy-square (htpy-refl' f) (htpy-refl' g) c c')
     ( λ (p : Id c c') → (tr-tr-htpy-refl-cone f g c) ∙ p)
     ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c')
     ( htpy-square-eq-htpy-refl f g c c')
@@ -1842,7 +1830,7 @@ comp-htpy-square-eq-htpy-refl-htpy-refl :
   ( htpy-square-eq-htpy-refl f g c c')
 comp-htpy-square-eq-htpy-refl-htpy-refl f g c c' =
   htpy-comp-is-equiv
-    ( λ p → htpy-square (htpy-refl f) (htpy-refl g) c c')
+    ( λ p → htpy-square (htpy-refl' f) (htpy-refl' g) c c')
     ( λ (p : Id c c') → (tr-tr-htpy-refl-cone f g c) ∙ p)
     ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c')
     ( htpy-square-eq-htpy-refl f g c c')
@@ -1852,23 +1840,23 @@ abstract
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
     (f : A → X) {g g' : B → X} (Hg : g ~ g') →
     (c : cone f g C) (c' : cone f g' C) →
-    let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl f)) c
+    let tr-c    = tr (λ x → cone x g C) (eq-htpy (htpy-refl {f = f})) c
         tr-tr-c = tr (λ y → cone f y C) (eq-htpy Hg) tr-c
     in
-    Id tr-tr-c c' → htpy-square (htpy-refl f) Hg c c'
+    Id tr-tr-c c' → htpy-square (htpy-refl' f) Hg c c'
   htpy-square-eq' {C = C} f {g} =
     ind-htpy g
       ( λ g'' Hg' →
         ( c : cone f g C) (c' : cone f g'' C) →
         Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
-          ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
-        htpy-square (htpy-refl f) Hg' c c')
+          ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl' f)) c)) c' →
+        htpy-square htpy-refl Hg' c c')
       ( htpy-square-eq-htpy-refl-htpy-refl f g)
 
   comp-htpy-square-eq' :
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
     (f : A → X) (g : B → X) (c c' : cone f g C) →
-    ( ( htpy-square-eq' f (htpy-refl g) c c') ∘
+    ( ( htpy-square-eq' f htpy-refl c c') ∘
       ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
     ( htpy-square-eq-htpy-refl f g c c')
   comp-htpy-square-eq' {A = A} {B} {X} {C} f g c c' =
@@ -1877,8 +1865,8 @@ abstract
         ( λ g'' Hg' →
           ( c : cone f g C) (c' : cone f g'' C) →
             Id (tr (λ g'' → cone f g'' C) (eq-htpy Hg')
-              ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl f)) c)) c' →
-          htpy-square (htpy-refl f) Hg' c c')
+              ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl' f)) c)) c' →
+          htpy-square htpy-refl Hg' c c')
       ( htpy-square-eq-htpy-refl-htpy-refl f g)) c) c'))
       ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
     ( comp-htpy-square-eq-htpy-refl-htpy-refl f g c c')
@@ -1905,7 +1893,7 @@ abstract
   comp-htpy-square-eq : 
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
     (f : A → X) (g : B → X) (c c' : cone f g C) →
-    ( ( htpy-square-eq (htpy-refl f) (htpy-refl g) c c') ∘
+    ( ( htpy-square-eq htpy-refl htpy-refl c c') ∘
       ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
     ( htpy-square-eq-htpy-refl f g c c')
   comp-htpy-square-eq {A = A} {B} {X} {C} f g c c' =
@@ -1917,7 +1905,7 @@ abstract
                  ( tr (λ f''' → cone f''' g C) (eq-htpy Hf') c)) c') →
             htpy-square Hf' Hg c c')
         ( λ g g' → htpy-square-eq' f {g = g} {g' = g'})) g) g)
-        (htpy-refl g)) c) c'))
+        htpy-refl) c) c'))
       ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
       ( comp-htpy-square-eq' f g c c')
 
@@ -1937,16 +1925,16 @@ abstract
         ind-htpy g
           ( λ g' Hg →
             ( c : cone f g C) (c' : cone f g' C) →
-              is-equiv (htpy-square-eq (htpy-refl f) Hg c c'))
+              is-equiv (htpy-square-eq htpy-refl Hg c c'))
           ( λ c c' →
             is-equiv-left-factor
               ( htpy-square-eq-htpy-refl f g c c')
-              ( htpy-square-eq (htpy-refl f) (htpy-refl g) c c')
+              ( htpy-square-eq htpy-refl htpy-refl c c')
               ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))
               ( htpy-inv (comp-htpy-square-eq f g c c'))
               ( fundamental-theorem-id c
                 ( reflexive-htpy-square f g c)
-                ( is-contr-total-htpy-square (htpy-refl f) (htpy-refl g) c)
+                ( is-contr-total-htpy-square (htpy-refl' f) (htpy-refl' g) c)
                 ( htpy-square-eq-htpy-refl f g c) c')
               ( is-equiv-concat (tr-tr-htpy-refl-cone f g c) c'))
           Hg c c')
@@ -2484,7 +2472,7 @@ issec-inv-map-cone-fold {A = A} {B} {X} f g (pair (pair a b) (pair x α)) =
         ( ( ( ( inv (issec-pair-eq-triv' (pair (f a) (g b)) (pair x x) α)) ∙
               ( ap
                 ( λ t → (eq-pair-triv ( pair t (ap pr2 α))))
-                ( ( ( inv (right-unit (ap pr1 α))) ∙
+                ( ( ( inv right-unit) ∙
                     ( inv (ap (concat _ (ap pr1 α)) (left-inv (ap pr2 α))))) ∙
                   ( inv (assoc (ap pr1 α) (inv (ap pr2 α)) (ap pr2 α)))))) ∙
             ( eq-pair-triv-concat
@@ -2530,8 +2518,8 @@ isretr-inv-map-cone-fold { A = A} { B = B} { X = X} f g (pair a (pair b p)) =
                         ( pair p refl)))))
                       ( ap-pr1-eq-pair-triv p refl)) ∙
                   ( ap (λ t → p ∙ (inv t)) (ap-pr2-eq-pair-triv p refl))) ∙
-                ( right-unit p))) ∙
-            ( right-unit p)))))
+                ( right-unit))) ∙
+            ( right-unit)))))
 
 abstract
   is-equiv-map-cone-fold :
@@ -2652,7 +2640,7 @@ triangle-map-cone-pair :
   ((map-cone-pair f g f' g') ∘ (functor-prod (gap f g c) (gap f' g' c')))
 triangle-map-cone-pair
   f g (pair p (pair q H)) f' g' (pair p' (pair q' H')) (pair z z') =
-  eq-pair refl (eq-pair refl (right-unit _))
+  eq-pair refl (eq-pair refl right-unit)
 
 abstract
   is-equiv-map-cone-pair :
@@ -2670,7 +2658,7 @@ abstract
             ( eq-pair-triv ∘ (map-cone-pair' f g f' g' t s)))) ∘
         ( swap-total-Eq-structure _ _ _)))
       ( swap-total-Eq-structure _ _ _)
-      ( htpy-refl _)
+      ( htpy-refl)
       ( is-equiv-swap-total-Eq-structure _ _ _)
       ( is-equiv-tot-is-fiberwise-equiv
         ( λ t → is-equiv-comp
@@ -2688,14 +2676,14 @@ abstract
             ( λ y → Id (f (pr1 t)) (g y))
             ( λ y → _)
             ( λ y p y' → Id (f' (pr2 t)) (g' y')))
-          ( htpy-refl _)
+          ( htpy-refl)
           ( is-equiv-swap-total-Eq-structure _ _ _)
           ( is-equiv-tot-is-fiberwise-equiv
             ( λ s → is-equiv-comp
               ( eq-pair-triv ∘ (map-cone-pair' f g f' g' t s))
               ( eq-pair-triv)
               ( map-cone-pair' f g f' g' t s)
-              ( htpy-refl _)
+              ( htpy-refl)
               ( is-equiv-map-cone-pair' f g f' g' t s)
               ( is-equiv-eq-pair-triv'
                 ( functor-prod f f' t)
@@ -2889,7 +2877,7 @@ issec-inv-map-canonical-pullback-Π f g h =
       ( pair refl
         ( pair refl
           ( inv
-            ( ( right-unit _) ∙
+            ( ( right-unit) ∙
               ( htpy-eq (issec-eq-htpy (λ i → (pr2 (pr2 (h i))))) i))))))
 
 isretr-inv-map-canonical-pullback-Π :
@@ -2903,7 +2891,7 @@ isretr-inv-map-canonical-pullback-Π f g (pair α (pair β γ)) =
     ( postcomp-Π g)
     ( pair refl
       ( pair refl
-        ( inv ((right-unit _) ∙ (isretr-eq-htpy γ)))))
+        ( inv (right-unit ∙ (isretr-eq-htpy γ)))))
 
 abstract
   is-equiv-map-canonical-pullback-Π :
@@ -2931,7 +2919,7 @@ triangle-map-canonical-pullback-Π f g c h =
       (f i)
       (g i)
       ( pair refl (pair refl
-        ( (htpy-eq (issec-eq-htpy _) i) ∙ (inv (right-unit _))))))
+        ( (htpy-eq (issec-eq-htpy _) i) ∙ (inv right-unit)))))
 
 abstract
   is-pullback-cone-Π :
@@ -2968,7 +2956,7 @@ id-hom-cospan :
   {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X) →
   hom-cospan f g f g
 id-hom-cospan f g =
-  pair id (pair id (pair id (pair (htpy-refl _) (htpy-refl _))))
+  pair id (pair id (pair id (pair htpy-refl htpy-refl)))
 
 functor-canonical-pullback :
   {l1 l2 l3 l1' l2' l3' : Level}

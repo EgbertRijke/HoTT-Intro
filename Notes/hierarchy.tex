@@ -29,7 +29,7 @@ follows from the induction principle of the empty type.
 
 In the following lemma we prove that in order to show that a type $A$ is a proposition, it suffices to show that any two terms of $A$ are equal. In other words, propositions are types with \define{proof irrelevance}.
 
-\begin{lem}\label{lem:isprop_eq}
+\begin{thm}\label{lem:isprop_eq}
   Let $A$ be a type. Then the following are equivalent:
   \begin{enumerate}
   \item The type $A$ is a proposition.
@@ -41,18 +41,25 @@ In the following lemma we prove that in order to show that a type $A$ is a propo
     \begin{equation*}
       A \to \iscontr(A).
     \end{equation*}
+  \item The map $\mathsf{const}_\ttt : A\to\unit$ is an embedding. 
   \end{enumerate}
-\end{lem}
+\end{thm}
 
 \begin{proof}
-  If $A$ is a proposition, then its identity types are contractible. Therefore the center of contraction of $\id{x}{y}$ is identification $\id{x}{y}$, for each $x,y:A$.
+  To show that (i) implies (ii), let $A$ be a proposition. Then its identity types are contractible, so the center of contraction of $\id{x}{y}$ is identification $\id{x}{y}$, for each $x,y:A$.
 
-  If $A$ comes equipped with $p:\prd{x,y:A}\id{x}{y}$, then for any $x:A$ the dependent function $p(x):\prd{y:A}\id{x}{y}$ is a contraction of $A$. Thus we obtain the function
+  To show that (ii) implies (iii), suppose that $A$ comes equipped with $p:\prd{x,y:A}\id{x}{y}$. Then for any $x:A$ the dependent function $p(x):\prd{y:A}\id{x}{y}$ is a contraction of $A$. Thus we obtain the function
   \begin{equation*}
     \lam{x}(x,p(x)):A\to\iscontr(A).
   \end{equation*}
 
-  Finally, suppose that $A\to\iscontr(A)$. In order to show that $A$ is a proposition, let $x,y:A$. Since we have assumed $x:A$, it follows from our assumption that $A$ is contractible. Now it follows from \cref{ex:prop_contr} that the identity types of $A$ are also contractible, i.e., that $A$ is a proposition.
+  To show that (iii) implies (iv), suppose that $A\to\iscontr(A)$ and let $x,y:A$. We have to show that
+  \begin{equation*}
+    \apfunc{\mathsf{const}_\ttt}:(x=y)\to (\ttt=\ttt)
+  \end{equation*}
+  is an equivalence. Since we have $x:A$ it follows that $A$ is contractible. Since the unit type is contractible it follows that $\mathsf{const}_\ttt$ is an equivalence. Therefore we conclude by \cref{cor:emb_equiv} that it is an embedding.
+
+  To show that (iv) implies (i), note that if $A\to\unit$ is an embedding, then the identity types of $A$ are equivalent to contractible types and therefore they must be contractible.
 \end{proof}
 
 In the following lemma we show that propositions are closed under equivalences.

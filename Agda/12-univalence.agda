@@ -180,7 +180,7 @@ eq-Eq-total-subuniverse P {s} {t} =
 
 tr-equiv-eq-ap : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {x y : A}
   (p : Id x y) → (map-equiv (equiv-eq (ap B p))) ~ tr B p
-tr-equiv-eq-ap refl = htpy-refl id
+tr-equiv-eq-ap refl = htpy-refl
 
 -- Exercise 10.2
 

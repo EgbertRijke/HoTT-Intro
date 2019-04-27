@@ -349,15 +349,10 @@ we really can't distinguish between the identity type and observational
 equality.
 
 In this section we will introduce \emph{identity systems}. Those are reflexive
-relations on a type that satisfy path induction. Identity systems are useful
-to \emph{characterize} the identity type of a given type. Characterizing
-identity types is one of the core activities in homotopy type theory, because
-in order to fully understand a type one has to understand in what ways two
-terms of this type can be identified.
+relations on a type that satisfy path induction. We consider identity systems because for many types we can construct a reflexive relation that behaves like the identity type, even though it is not given as such. When we show that a reflexive relation satisfies path induction, what we really show is that in type theory there is no way to distinguish between this relation and the identity type. An example we provide here is the observational equality on $\N$. Characterizing the identity type of a given type in this way is one of the core activities in homotopy type theory.
 
 \begin{defn}
-  Let $B$ be a type family over $A$, and let $a:A$ and $b:B(a)$ be given. We say that $B$ is an \define{(unary) identity system} if for every family of types
-  $P(x,y)$ indexed by $x:A$ and $y:B(x)$, there is a function map
+  Let $A$ be a type equipped with a term $a:A$. A \define{(unary) identity system} on $A$ at $a$ consists of a type family $B$ over $A$ equipped with $b:B(a)$, such that for any family of types $P(x,y)$ indexed by $x:A$ and $y:B(x)$, there is a function
   \begin{equation*}
     \mathsf{ind\usc{}id\usc{}sys}:P(a,b)\to \prd{x:A}{y:B(x)}P(x,y)
   \end{equation*}
@@ -372,44 +367,51 @@ terms of this type can be identified.
   Note that in the definition of identity systems we require an identification for the `computation rule', rather than a judgmental equality. 
 \end{rmk}
 
+\begin{defn}
+  Let $A$ be a type. A \define{(binary) identity system} on $A$ consists of a family of types $R(x,y)$ indexed by $x,y:A$ equipped with a dependent function
+  \begin{equation*}
+    \rho : \prd{x:A}R(x,x),
+  \end{equation*}
+  such that for each family of types $P(x,y,e)$ indexed by $x,y:A$ and $e:R(x,y)$ and each $a:A$, there is a function
+  \begin{equation*}
+    \mathsf{ind\usc{}id\usc{}sys}:P(a,a,\rho(a)) \to \Big(\prd{y:A}{e:R(a,y)}P(a,y,e)\Big)
+  \end{equation*}
+  equipped with an identification
+  \begin{equation*}
+    \mathsf{ind\usc{}id\usc{}sys}(p,a,\rho(a))=p.
+  \end{equation*}
+  for every $p:P(a,a,\rho(a))$.
+\end{defn}
+
 \begin{thm}
-  For any natural number $n$, the family $\mathsf{Eq}_\N(n,m)$ indexed by $m:\N$ is an identity system.
+  Observational equality on $\N$ is an identity system.
 \end{thm}
 
 \begin{proof}
-  Our first goal is to construct a function
+  First we note that for any family of types $P(m,n,e)$ indexed by $m,n:\N$ and $e:\EqN(m,n)$, there is a type family $P'$ given by
   \begin{equation*}
-    \mathsf{ind\usc{}Eq}_\N:P(n,\mathsf{refl\usc{}Eq}_\N(n))\to\prd{x:\N}{e:\EqN(n,x)}P(x,e)
+    P'(m,n,e)\defeq P(\succN(m),\succN(n),e).
   \end{equation*}
-  for any family of types $P(x,e)$ indexed by $x:\N$ and $e:\mathsf{Eq}_\N(n,x)$. The construction on $\mathsf{ind\usc{}Eq}_\N$ is by induction on $n:\N$ and $x:\N$. However, before we start the inductive argument we make sure to rearrange the order of the variables so that the inductive hypothesis will be strong enough: by induction on $n,m:\N$ we will construct for any
+  Similarly, for any $p:\prd{n:\N}P(n,n,\mathsf{refl\usc{}Eq}_\N(n))$ we have
+  \begin{equation*}
+    p':\prd{n:\N}P'(n,n,\mathsf{ref\usc{}Eq}_\N(n))
+  \end{equation*}
+  given by $p'(n)\defeq p(\succN(n))$. Now we define a function
+  \begin{equation*}
+    f(m,n,e,P):\Big(\prd{n:\N}P(n,n,\mathsf{refl\usc{}Eq}_\N(n))\Big)\to P(m,n,e)
+  \end{equation*}
+  for every $m,n:\N$, $e:\EqN(m,n)$ and $P:\prd{x,y:\N}\EqN(x,y)\to\UU$ by induction on $m,n:\N$ by
   \begin{align*}
-    e & :\mathsf{Eq}_\N(n,m) \\
-    P & :\prd{x:\N}\mathsf{Eq}_\N(n,x)\to \UU \\
-    p & :P(n,\mathsf{refl\usc{}Eq}_\N(n)),
+    f(\zeroN,\zeroN,\ttt,P,p) & \defeq p(\zeroN) \\
+    f(\zeroN,\succN(n)) & \defeq \indempty \\
+    f(\succN(m),\zeroN) & \defeq \indempty \\
+    f(\succN(m),\succN(n),e,P,p) & \defeq f(m,n,e,P',p').
   \end{align*}
-  a term $\mathsf{ind\usc{}Eq}_\N(p,m,e):P(m,e)$. There are four cases to consider:
-
-  In the case where $n\jdeq 0$ and $m\jdeq 0$, the type $\mathsf{Eq}_\N(n,m)$ is the unit type. We proceed by induction on $e$, and we note that $\mathsf{refl\usc{}Eq}_\N(0)\jdeq\ttt$. Therefore we take as our definition
+  Then we define $\mathsf{ind\usc{}Eq}_\N$ for every $P:\prd{x,y:\N}\EqN(x,y)\to\UU$ by
   \begin{equation*}
-    \mathsf{ind\usc{}Eq}_\N(p,0,\ttt)\defeq p:P(0,\mathsf{refl\usc{}Eq}_\N(0)).
+    \mathsf{ind\usc{}Eq}_\N(p,m,n,e)\defeq f(m,n,e,P,p).
   \end{equation*}
-
-  In the case where $m\jdeq 0$ and $n\jdeq \succN(n')$, the type $\mathsf{Eq}_\N(m,n)$ is empty, so we proceed by the induction principle of the empty type and we are done.
-
-  Similarly in the case where $m\jdeq\succN(m')$ and $n\jdeq 0$, the type $\mathsf{Eq}_\N(m,n)$ is empty, so we proceed by the induction principle of the empty type and we are done.
-
-  In the inductive steps for both $m$ and $n$ we use that
-  \begin{equation*}
-    \mathsf{Eq}_\N(\succN(m),\succN(n))\jdeq \mathsf{Eq}_\N(m,n).
-  \end{equation*}
-  The inductive hypothesis gives for every $e'$, $R'$, and $\rho'$ a term of type $R'(m,n,e')$. Therefore we simply apply the inductive hypothesis to the case where
-  \begin{align*}
-    R'(x,y,e) & \defeq R(\succN(x),\succN(y),e) \\
-    \rho'(x) & \defeq \rho(\succN(x)),
-  \end{align*}
-  to obtain a term of type $R'(m,n,e)$. This completes the construction of $\mathsf{ind\usc{}Eq}_\N$.
-  
-  Finally, we have to construct an identification
+  This completes the first part of the claim. For the second part, we have to construct an identification
   \begin{equation*}
     \mathsf{comp\usc{}Eq}_\N(p,n):\mathsf{ind\usc{}Eq}_\N(p,n,\mathsf{refl\usc{}Eq}_\N(n))= p
   \end{equation*}

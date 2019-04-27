@@ -235,18 +235,18 @@ htpy-nat :
   {i j : Level} {A : UU i} {B : UU j} {f g : A → B} (H : f ~ g)
   {x y : A} (p : Id x y) →
   Id (concat _ (H x) (ap g p)) (concat _ (ap f p) (H y))
-htpy-nat H refl = right-unit (H _)
+htpy-nat H refl = right-unit
 
 -- We will also need to undo concatenation on the left and right. One might notice that, in the terminology of Lecture 7, we almost show here that concat p and concat' q are embeddings.
 left-unwhisk :
   {i : Level} {A : UU i} {x y z : A} (p : Id x y) {q r : Id y z} →
   Id (p ∙ q) (p ∙ r) → Id q r
-left-unwhisk refl s = (inv (left-unit _)) ∙ (s ∙ (left-unit _))
+left-unwhisk refl s = (inv left-unit) ∙ (s ∙ left-unit)
 
 right-unwhisk :
   {i : Level} {A : UU i} {x y z : A} {p q : Id x y}
   (r : Id y z) → Id (p ∙ r) (q ∙ r) → Id p q
-right-unwhisk refl s = (inv (right-unit _)) ∙ (s ∙ (right-unit _))
+right-unwhisk refl s = (inv right-unit) ∙ (s ∙ right-unit)
 
 -- We will also need to compute with homotopies to the identity function. 
 htpy-red :
@@ -311,7 +311,7 @@ abstract
     ( pair g (pair G H)) y (pair x refl) =
     eq-Eq-fib f y (pair 
       ( H x)
-      ( ( right-unit (ap f (H x))) ∙
+      ( ( right-unit) ∙
         ( coherence-inv-has-inverse (pair g (pair G H)) x)))
   
   is-contr-map-has-inverse : {i j : Level} {A : UU i} {B : UU j} {f : A → B} →

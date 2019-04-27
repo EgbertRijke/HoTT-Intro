@@ -614,7 +614,7 @@ abstract
       ( map-compute-eq-coprod-inl-inl x x')
       ( inv-is-equiv (is-equiv-map-raise _ (Id x x')))
       ( Eq-coprod-eq _ _ (inl x) (inl x'))
-      ( htpy-refl _)
+      ( htpy-refl)
       ( is-equiv-Eq-coprod-eq _ _ (inl x) (inl x'))
       ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id x x')))
 
@@ -642,7 +642,7 @@ abstract
       ( map-compute-eq-coprod-inl-inr x y')
       ( inv-is-equiv (is-equiv-map-raise _ empty))
       ( Eq-coprod-eq _ _ (inl x) (inr y'))
-      ( htpy-refl _)
+      ( htpy-refl)
       ( is-equiv-Eq-coprod-eq _ _ (inl x) (inr y'))
       ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
   
@@ -670,7 +670,7 @@ abstract
       ( map-compute-eq-coprod-inr-inl y x')
       ( inv-is-equiv (is-equiv-map-raise _ empty))
       ( Eq-coprod-eq _ _ (inr y) (inl x'))
-      ( htpy-refl _)
+      ( htpy-refl)
       ( is-equiv-Eq-coprod-eq _ _ (inr y) (inl x'))
       ( is-equiv-inv-is-equiv (is-equiv-map-raise _ empty))
 
@@ -698,7 +698,7 @@ abstract
       ( map-compute-eq-coprod-inr-inr y y')
       ( inv-is-equiv (is-equiv-map-raise _ (Id y y')))
       ( Eq-coprod-eq _ _ (inr y) (inr y'))
-      ( htpy-refl _)
+      ( htpy-refl)
       ( is-equiv-Eq-coprod-eq _ _ (inr y) (inr y'))
       ( is-equiv-inv-is-equiv (is-equiv-map-raise _ (Id y y')))
 
@@ -739,7 +739,7 @@ abstract
     is-equiv i → is-equiv f → is-equiv g → is-equiv h
   is-equiv-top-is-equiv-left-square f g h i H Ei Ef Eg =
     is-equiv-right-factor (i ∘ f) g h H Eg
-      ( is-equiv-comp (i ∘ f) i f (htpy-refl _) Ef Ei)
+      ( is-equiv-comp (i ∘ f) i f htpy-refl Ef Ei)
 
 abstract
   is-emb-htpy :
@@ -1161,7 +1161,7 @@ fib-ap-eq-fib-fiberwise :
   (Id (tr (λ (a : A) → Id (f a) b) p (pr2 s)) (pr2 t)) →
   (Id (ap f p) (concat b (pr2 s) (inv (pr2 t))))
 fib-ap-eq-fib-fiberwise f (pair .x' p) (pair x' refl) refl =
-  inv ∘ (concat p (right-unit p))
+  inv ∘ (concat p right-unit)
 
 abstract
   is-fiberwise-equiv-fib-ap-eq-fib-fiberwise :
@@ -1172,9 +1172,9 @@ abstract
     is-equiv-comp
       ( fib-ap-eq-fib-fiberwise f (pair x y) (pair x refl) refl)
       ( inv)
-      ( concat y (right-unit y))
-      ( htpy-refl (fib-ap-eq-fib-fiberwise f (pair x y) (pair x refl) refl))
-      ( is-equiv-concat (right-unit y) refl)
+      ( concat y right-unit)
+      ( htpy-refl)
+      ( is-equiv-concat right-unit refl)
       ( is-equiv-inv (concat (f x) y refl) refl)
 
 fib-ap-eq-fib :
@@ -1207,7 +1207,7 @@ eq-fib-fib-ap :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) (x y : A)
   (q : Id (f x) (f y)) →
   Id (pair x q) (pair y (refl {x = f y})) → fib (ap f {x = x} {y = y}) q
-eq-fib-fib-ap f x y q = (tr (fib (ap f)) (right-unit q)) ∘ (fib-ap-eq-fib f (pair x q) (pair y refl))
+eq-fib-fib-ap f x y q = (tr (fib (ap f)) right-unit) ∘ (fib-ap-eq-fib f (pair x q) (pair y refl))
 
 abstract
   is-equiv-eq-fib-fib-ap :
@@ -1216,11 +1216,11 @@ abstract
   is-equiv-eq-fib-fib-ap f x y q =
     is-equiv-comp
       ( eq-fib-fib-ap f x y q)
-      ( tr (fib (ap f)) (right-unit q))
+      ( tr (fib (ap f)) right-unit)
       ( fib-ap-eq-fib f (pair x q) (pair y refl))
-      ( htpy-refl _)
+      ( htpy-refl)
       ( is-equiv-fib-ap-eq-fib f (pair x q) (pair y refl))
-      ( is-equiv-tr (fib (ap f)) (right-unit q))
+      ( is-equiv-tr (fib (ap f)) right-unit)
 
 -- Comparing fib and fib'
 

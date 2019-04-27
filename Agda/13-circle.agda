@@ -29,7 +29,7 @@ Eq-free-loops (pair x l) l' =
 
 reflexive-Eq-free-loops :
   { l1 : Level} {X : UU l1} (l : free-loops X) → Eq-free-loops l l
-reflexive-Eq-free-loops (pair x l) = pair refl (right-unit l)
+reflexive-Eq-free-loops (pair x l) = pair refl right-unit
 
 Eq-free-loops-eq :
   { l1 : Level} {X : UU l1} (l l' : free-loops X) →
@@ -47,9 +47,9 @@ abstract
       ( pair x refl)
       ( is-contr-is-equiv'
         ( Σ (Id x x) (λ l' → Id l l'))
-        ( tot (λ l' α → (right-unit l) ∙ α))
+        ( tot (λ l' α → right-unit ∙ α))
         ( is-equiv-tot-is-fiberwise-equiv
-          ( λ l' → is-equiv-concat (right-unit l) l'))
+          ( λ l' → is-equiv-concat right-unit l'))
         ( is-contr-total-path _ l))
 
 abstract
@@ -79,7 +79,7 @@ reflexive-Eq-dependent-free-loops :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (P : X → UU l2) →
   ( p : dependent-free-loops l P) → Eq-dependent-free-loops l P p p
 reflexive-Eq-dependent-free-loops (pair x l) P (pair y p) =
-  pair refl (right-unit p)
+  pair refl right-unit
 
 Eq-dependent-free-loops-eq :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (P : X → UU l2) →
@@ -100,9 +100,9 @@ abstract
       ( pair y refl)
       ( is-contr-is-equiv'
         ( Σ (Id (tr P l y) y) (λ p' → Id p p'))
-        ( tot (λ p' α → (right-unit p) ∙ α))
+        ( tot (λ p' α → right-unit ∙ α))
         ( is-equiv-tot-is-fiberwise-equiv
-          ( λ p' → is-equiv-concat (right-unit p) p'))
+          ( λ p' → is-equiv-concat right-unit p'))
         ( is-contr-total-path _ p))
 
 abstract
@@ -174,7 +174,7 @@ tr-Eq-subst :
   ( Id ((apd f p) ∙ r) ((ap (tr P p) q) ∙ (apd g p))) →
   ( Id (tr (Eq-subst f g) p q) r)
 tr-Eq-subst f g refl q .((ap id q) ∙ refl) refl =
-  inv ((right-unit _) ∙ (ap-id q))
+  inv (right-unit ∙ (ap-id q))
 
 dependent-free-loops-htpy :
   {l1 l2 : Level} {X : UU l1} {l : free-loops X} {P : X → UU l2}
@@ -246,7 +246,7 @@ triangle-comparison-free-loops (pair x l) Y f =
     ( λ x → Y)
     ( comparison-free-loops (pair x l) Y (ev-free-loop (pair x l) Y f))
     ( ev-free-loop' (pair x l) (λ x → Y) f)
-    ( pair refl ((right-unit _) ∙ (inv (apd-triv f l))))
+    ( pair refl (right-unit ∙ (inv (apd-triv f l))))
 
 abstract
   universal-property-dependent-universal-property-circle :
@@ -335,8 +335,7 @@ square-functor-dependent-free-loops (pair x l) {P} {Q} f h =
       ( ev-free-loop' (pair x l) P h))
     ( ev-free-loop' (pair x l) Q (postcomp-Π f h))
     ( pair refl
-      ( ( right-unit _) ∙
-        ( coherence-square-functor-dependent-free-loops f l h)))
+      ( right-unit ∙ (coherence-square-functor-dependent-free-loops f l h)))
 
 abstract
   is-equiv-functor-dependent-free-loops-is-fiberwise-equiv :

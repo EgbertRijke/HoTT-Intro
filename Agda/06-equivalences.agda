@@ -12,8 +12,16 @@ _~_ :
 f ~ g = (x : _) → Id (f x) (g x)
 
 htpy-refl :
+  {i j : Level} {A : UU i} {B : A → UU j} {f : (x : A) → B x} → f ~ f
+htpy-refl x = refl
+
+{- Most of the time we get by with htpy-refl. However, sometimes Agda wants us
+   to specify the implicit argument. The it is easier to call htpy-refl' than
+   to use Agda's {f = ?} notation. -}
+   
+htpy-refl' :
   {i j : Level} {A : UU i} {B : A → UU j} (f : (x : A) → B x) → f ~ f
-htpy-refl f x = refl
+htpy-refl' f = htpy-refl
 
 htpy-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x} →
@@ -38,22 +46,22 @@ htpy-assoc H K L x = assoc (H x) (K x) (L x)
 
 htpy-left-unit :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → (htpy-concat f (htpy-refl f) H) ~ H
-htpy-left-unit H x = left-unit (H x)
+  {H : f ~ g} → (htpy-concat f htpy-refl H) ~ H
+htpy-left-unit x = left-unit
 
 htpy-right-unit :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → (htpy-concat g H (htpy-refl g)) ~ H
-htpy-right-unit H x = right-unit (H x)
+  {H : f ~ g} → (htpy-concat g H htpy-refl) ~ H
+htpy-right-unit x = right-unit
 
 htpy-left-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → htpy-concat f (htpy-inv H) H ~ htpy-refl g
+  (H : f ~ g) → htpy-concat f (htpy-inv H) H ~ htpy-refl
 htpy-left-inv H x = left-inv (H x)
 
 htpy-right-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → htpy-concat g H (htpy-inv H) ~ htpy-refl f
+  (H : f ~ g) → htpy-concat g H (htpy-inv H) ~ htpy-refl
 htpy-right-inv H x = right-inv (H x)
 
 htpy-left-whisk :
@@ -173,7 +181,7 @@ inv-equiv e = pair (inv-map-equiv e) (is-equiv-inv-map-equiv e)
 
 is-equiv-id :
   {i : Level} (A : UU i) → is-equiv (id {i} {A})
-is-equiv-id A = pair (pair id (htpy-refl id)) (pair id (htpy-refl id))
+is-equiv-id A = pair (pair id htpy-refl) (pair id htpy-refl)
 
 equiv-id :
   {i : Level} (A : UU i) → A ≃ A
@@ -191,8 +199,8 @@ abstract
   is-equiv-Π-swap C =
     is-equiv-has-inverse
       ( inv-Π-swap C)
-      ( htpy-refl id)
-      ( htpy-refl id)
+      ( htpy-refl)
+      ( htpy-refl)
 
 -- Section 6.3 The identity type of a Σ-type
 
@@ -541,7 +549,7 @@ abstract
   is-equiv-comp' :
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
     is-equiv h → is-equiv g → is-equiv (g ∘ h)
-  is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h (htpy-refl _)
+  is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h htpy-refl
 
 equiv-comp :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
@@ -574,7 +582,7 @@ abstract
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
     is-equiv (g ∘ h) → is-equiv h → is-equiv g
   is-equiv-left-factor' g h =
-    is-equiv-left-factor (g ∘ h) g h (htpy-refl _)
+    is-equiv-left-factor (g ∘ h) g h htpy-refl
 
 abstract
   is-equiv-right-factor :
@@ -596,7 +604,7 @@ abstract
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) → 
     is-equiv g → is-equiv (g ∘ h) → is-equiv h
   is-equiv-right-factor' g h =
-    is-equiv-right-factor (g ∘ h) g h (htpy-refl _)
+    is-equiv-right-factor (g ∘ h) g h htpy-refl
 
 -- Exercise 6.6
 
@@ -1045,10 +1053,10 @@ abstract
     (q : Id y z) (r : Id x z) → is-equiv (con-inv p q r)
   is-equiv-con-inv p refl r =
     is-equiv-comp'
-      ( concat' r (inv (right-unit r)))
-      ( concat (concat _ p refl) (inv (right-unit p)))
-      ( is-equiv-concat (inv (right-unit p)) r)
-      ( is-equiv-concat' p (inv (right-unit r)))
+      ( concat' r (inv right-unit))
+      ( concat (concat _ p refl) (inv right-unit))
+      ( is-equiv-concat (inv right-unit) r)
+      ( is-equiv-concat' p (inv right-unit))
 
 htpy-inv-con :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
@@ -1098,4 +1106,4 @@ htpy-right-whisk-htpy-inv :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
   {g g' : B → C} (H : g ~ g') (f : A → B) →
   ((htpy-inv H) ·r f) ~ (htpy-inv (H ·r f))
-htpy-right-whisk-htpy-inv H f = htpy-refl _
+htpy-right-whisk-htpy-inv H f = htpy-refl

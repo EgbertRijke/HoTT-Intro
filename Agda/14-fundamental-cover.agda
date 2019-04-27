@@ -25,7 +25,7 @@ Eq-Fam-circle P Q =
 reflexive-Eq-Fam-circle :
   { l1 : Level} (P : Fam-circle l1) → Eq-Fam-circle P P
 reflexive-Eq-Fam-circle (pair X e) =
-  pair (equiv-id X) (htpy-refl _)
+  pair (equiv-id X) htpy-refl
 
 Eq-Fam-circle-eq :
   { l1 : Level} (P Q : Fam-circle l1) → Id P Q → Eq-Fam-circle P Q
@@ -225,7 +225,7 @@ tr-path-total-path-fiber :
   { y y' : B x} (q : Id y' y) (α : Id c (pair x y')) →
   Id ( tr (λ z → Id c (pair x z)) q α)
      ( α ∙ (inv (path-total-path-fiber B x q)))
-tr-path-total-path-fiber c x refl α = inv (right-unit α)
+tr-path-total-path-fiber c x refl α = inv right-unit
 
 segment-Σ :
   { l1 l2 l3 l4 : Level} {A : UU l1} {B : A → UU l2} →
@@ -608,7 +608,7 @@ reflexive-Eq-ELIM-ℤ :
   ( s : ELIM-ℤ P p0 pS) → Eq-ELIM-ℤ P p0 pS s s
 reflexive-Eq-ELIM-ℤ P p0 pS (pair f (pair p H)) =
   pair
-    ( htpy-refl f)
+    ( htpy-refl)
     ( pair
       ( inv (right-inv p))
       ( λ k → inv (right-inv (H k))))
@@ -641,15 +641,15 @@ abstract
         ( zero-Eq-ELIM-ℤ P p0 pS s (pair f t) H) ×
         ( succ-Eq-ELIM-ℤ P p0 pS s (pair f t) H))
       ( is-contr-total-htpy (pr1 s))
-      ( pair (pr1 s) (htpy-refl (pr1 s)))
+      ( pair (pr1 s) htpy-refl)
       ( is-contr-total-Eq-structure
         ( λ p K
           ( q : zero-Eq-ELIM-ℤ P p0 pS s
             ( pair (pr1 s) (pair p K))
-            ( htpy-refl (pr1 s))) →
+            ( htpy-refl)) →
           succ-Eq-ELIM-ℤ P p0 pS s
             ( pair (pr1 s) (pair p K))
-            ( htpy-refl (pr1 s)))
+            ( htpy-refl))
         ( is-contr-is-equiv'
           ( Σ (Id (pr1 s zero-ℤ) p0) (λ α → Id α (pr1 (pr2 s))))
              ( tot (λ α → con-inv refl α (pr1 (pr2 s))))
@@ -660,9 +660,9 @@ abstract
         ( is-contr-is-equiv'
           ( Σ ( ( k : ℤ) → Id (pr1 s (succ-ℤ k)) (pr1 (pS k) (pr1 s k)))
               ( λ β → β ~ (pr2 (pr2 s))))
-          ( tot (λ β → htpy-con-inv (htpy-refl _) β (pr2 (pr2 s))))
+          ( tot (λ β → htpy-con-inv htpy-refl β (pr2 (pr2 s))))
           ( is-equiv-tot-is-fiberwise-equiv
-            ( λ β → is-equiv-htpy-con-inv (htpy-refl _) β (pr2 (pr2 s))))
+            ( λ β → is-equiv-htpy-con-inv htpy-refl β (pr2 (pr2 s))))
           ( is-contr-total-htpy' (pr2 (pr2 s)))))
 
 abstract

@@ -42,12 +42,12 @@ assoc :
 assoc refl q r = refl
 
 left-unit :
-  {i : Level} {A : UU i} {x y : A} (p : Id x y) → Id (refl ∙ p) p
-left-unit p = refl
+  {i : Level} {A : UU i} {x y : A} {p : Id x y} → Id (refl ∙ p) p
+left-unit = refl
 
 right-unit :
-  {i : Level} {A : UU i} {x y : A} (p : Id x y) → Id (p ∙ refl) p
-right-unit refl = refl
+  {i : Level} {A : UU i} {x y : A} {p : Id x y} → Id (p ∙ refl) p
+right-unit {p = refl} = refl
 
 left-inv :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) →
@@ -194,7 +194,7 @@ con-inv :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z)
   (r : Id x z) → (Id (p ∙ q) r) → Id p (r ∙ (inv q))
 con-inv p refl r =
-  ( λ α → α ∙ (inv (right-unit r))) ∘ (concat (p ∙ refl) (inv (right-unit p)))
+  ( λ α → α ∙ (inv right-unit)) ∘ (concat (p ∙ refl) (inv right-unit))
 
 -- Exercise 5.4
 
