@@ -110,7 +110,7 @@ abstract
           ( λ t → eq-pair refl refl)))
         ( weak-funext A
           ( λ x → Σ (B x) (λ b → Id (f x) b))
-          ( λ x → is-contr-total-path (B x) (f x))))
+          ( λ x → is-contr-total-path (f x))))
       ( λ g → htpy-eq {g = g})
 
 -- From now on we will be assuming that function extensionality holds
@@ -172,13 +172,6 @@ abstract
           ( is-contr-total-htpy-Funext f (funext f))
           ( pair f htpy-refl)))
         ( contraction (is-contr-total-htpy-Funext f (funext f)) t))
-
-abstract
-  is-contr-total-htpy-nondep :
-    {i j : Level} {A : UU i} {B : UU j} (f : A → B) →
-    is-contr (Σ (A → B) (λ g → f ~ g))
-  is-contr-total-htpy-nondep {B = B} f =
-    is-contr-total-htpy-Funext {B = λ x → B} f (funext f)
 
 abstract
   Ind-htpy :

@@ -43,14 +43,14 @@ abstract
   is-contr-total-Eq-free-loops (pair x l) =
     is-contr-total-Eq-structure
       ( λ x l' p → Id (l ∙ p) (p ∙ l'))
-      ( is-contr-total-path _ x)
+      ( is-contr-total-path x)
       ( pair x refl)
       ( is-contr-is-equiv'
         ( Σ (Id x x) (λ l' → Id l l'))
         ( tot (λ l' α → right-unit ∙ α))
         ( is-equiv-tot-is-fiberwise-equiv
           ( λ l' → is-equiv-concat right-unit l'))
-        ( is-contr-total-path _ l))
+        ( is-contr-total-path l))
 
 abstract
   is-equiv-Eq-free-loops-eq :
@@ -96,14 +96,14 @@ abstract
   is-contr-total-Eq-dependent-free-loops (pair x l) P (pair y p) =
     is-contr-total-Eq-structure
       ( λ y' p' q → Id (p ∙ q) ((ap (tr P l) q) ∙ p'))
-      ( is-contr-total-path _ y)
+      ( is-contr-total-path y)
       ( pair y refl)
       ( is-contr-is-equiv'
         ( Σ (Id (tr P l y) y) (λ p' → Id p p'))
         ( tot (λ p' α → right-unit ∙ α))
         ( is-equiv-tot-is-fiberwise-equiv
           ( λ p' → is-equiv-concat right-unit p'))
-        ( is-contr-total-path _ p))
+        ( is-contr-total-path p))
 
 abstract
   is-equiv-Eq-dependent-free-loops-eq :

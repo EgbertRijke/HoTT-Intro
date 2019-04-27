@@ -93,9 +93,8 @@ abstract
 
 abstract
   is-contr-total-path :
-    {i : Level} (A : UU i) (a : A) →
-    is-contr (Σ A (λ x → Id a x))
-  is-contr-total-path A a = is-contr-is-sing _ _ (is-sing-total-path A a)
+    {i : Level} {A : UU i} (a : A) → is-contr (Σ A (λ x → Id a x))
+  is-contr-total-path {A = A} a = is-contr-is-sing _ _ (is-sing-total-path A a)
 
 -- Section 6.2 Contractible maps
 
@@ -326,9 +325,9 @@ abstract
   is-contr-map-is-equiv = is-contr-map-has-inverse ∘ has-inverse-is-equiv
 
 abstract
-  is-contr-total-path' : {i : Level} (A : UU i) (a : A) →
-    is-contr (Σ A (λ x → Id x a))
-  is-contr-total-path' A a = is-contr-map-is-equiv (is-equiv-id _) a
+  is-contr-total-path' :
+    {i : Level} {A : UU i} (a : A) → is-contr (Σ A (λ x → Id x a))
+  is-contr-total-path' a = is-contr-map-is-equiv (is-equiv-id _) a
 
 -- Exercises
 

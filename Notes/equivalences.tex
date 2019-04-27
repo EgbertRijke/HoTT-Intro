@@ -355,11 +355,11 @@ A \arrow[r,"i"] & B \arrow[r,"r"] & A,
 with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
 \item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a type indexed by $x:A,y:B(x)$. Construct an equivalence
 \begin{equation*}
-\mathsf{\Sigma\usc{}assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
+\Sigma\mathsf{\usc{}assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
 \end{equation*}
 \item \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
 \begin{equation*}
-\mathsf{\Sigma\usc{}swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
+\Sigma\mathsf{\usc{}swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
 \end{equation*}
 %\item \label{ex:sigma_base_equiv}Consider an equivalence $e:A'\eqv A$ and a type family $B$ over $A$. Show that the map
 %\begin{equation*}

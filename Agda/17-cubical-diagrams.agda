@@ -1140,6 +1140,12 @@ is-pullback-cone-ap f g (pair p (pair q H)) is-pb-c c1 c2 =
    cube. -}
 
 {-
+tr-id-left-subst :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
+  (p : Id x y) (b : B) → (q : Id (f x) b) →
+  Id (tr (λ (a : A) → Id (f a) b) p q) ((inv (ap f p)) ∙ q)
+tr-id-left-subst refl b q = refl
+
 square-fib-cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
   {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}

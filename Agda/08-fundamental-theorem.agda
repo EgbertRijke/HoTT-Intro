@@ -227,7 +227,7 @@ abstract
     is-contr (Σ A B) → (f : (x : A) → Id a x → B x) → is-fiberwise-equiv f
   fundamental-theorem-id {A = A} a b is-contr-AB f =
     is-fiberwise-equiv-is-equiv-tot f
-      ( is-equiv-is-contr (tot f) (is-contr-total-path A a) is-contr-AB)
+      ( is-equiv-is-contr (tot f) (is-contr-total-path a) is-contr-AB)
 
 abstract
   fundamental-theorem-id' :
@@ -239,7 +239,7 @@ abstract
       ( Σ A (Id a))
       ( tot f)
       ( is-equiv-tot-is-fiberwise-equiv is-fiberwise-equiv-f)
-      ( is-contr-total-path A a)
+      ( is-contr-total-path a)
 
 -- The canonical form of the fundamental theorem of identity types
 
@@ -261,7 +261,7 @@ abstract
       ( Σ A (Id a))
       ( tot (ind-Id a (λ x p → B x) b))
       ( is-equiv-tot-is-fiberwise-equiv H)
-      ( is-contr-total-path A a)
+      ( is-contr-total-path a)
 
 -- As an application we show that equivalences are embeddings.
 is-emb :
@@ -542,7 +542,7 @@ abstract
           ( is-contr-equiv'
             ( Σ A (Id x))
             ( equiv-inl (Σ A (Id x)))
-            ( is-contr-total-path A x))))
+            ( is-contr-total-path x))))
 
 abstract
   is-contr-total-Eq-coprod-inr :
@@ -567,7 +567,7 @@ abstract
           ( is-contr-equiv'
             ( Σ B (Id x))
             ( equiv-inr (Σ B (Id x)))
-            ( is-contr-total-path B x))))
+            ( is-contr-total-path x))))
 
 abstract
   is-equiv-Eq-coprod-eq-inl :
@@ -821,7 +821,7 @@ abstract
         ( is-contr-equiv'
           ( Σ A (Id x))
           ( equiv-tot-fam-equiv (λ y → equiv-raise _ (Id x y)))
-          ( is-contr-total-path A x)))
+          ( is-contr-total-path x)))
       ( λ y → ap inl)
 
 abstract
@@ -837,7 +837,7 @@ abstract
         ( is-contr-equiv'
           ( Σ B (Id x))
           ( equiv-tot-fam-equiv (λ y → equiv-raise _ (Id x y)))
-          ( is-contr-total-path B x)))
+          ( is-contr-total-path x)))
       ( λ y → ap inr)
 
 -- Exercise 7.6
@@ -880,8 +880,8 @@ abstract
                   ( htpy-concat (tot (λ x → id))
                     ( tot-htpy λ x → pr2 (R x))
                     ( tot-id B)))))
-          ( is-contr-total-path _ a))
-        ( is-contr-total-path _ a))
+          ( is-contr-total-path a))
+        ( is-contr-total-path a))
 
 abstract
   is-equiv-sec-is-equiv :

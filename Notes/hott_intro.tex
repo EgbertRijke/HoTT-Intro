@@ -26,38 +26,36 @@
 \setlength{\cftsectionnumwidth}{2em}
 \setlength{\cftsubsectionindent}{4em}
 \setlength{\cftsubsectionnumwidth}{3em}
-  
-%  \usetikzlibrary{mindmap}
-  
-%  \makeatletter
-%  \renewcommand{\@chapapp}{Chapter}
-%  \makeatother
-  
-%  \crefname{table}{Table}{Tables}
-%  \crefname{chapter}{Lecture}{Lectures}
-  
-  \newlist{exenum}{enumerate}{1}
-  \setlist[exenum]{noitemsep,label=\thesection.\arabic*}%,ref=\thechapter.\arabic*}
-  %\crefalias{exenumi}{Exercise} 
-  \crefname{exenumi}{Exercise}{Exercises}
-  
-  \newlist{subexenum}{enumerate}{1}
-  \setlist[subexenum]{noitemsep,label=(\alph*),ref=\theexenumi.\alph*}
-  \crefname{subexenumi}{Exercise}{Exercises}
-  
-  \newenvironment
-      {exercises}%
-      {%
-        \subsection*{Exercises}\addcontentsline{toc}{subsection}{Exercises}\sectionmark{Exercises}
-        \begin{exenum}}
-      {%
-      \end{exenum}}
-      
-      \addbibresource{bibliography.bib}
 
-      % Number subsubsections
+% We number sections independently of chapters, and subsections will be
+% numbered too.
+
 \counterwithout{section}{chapter}
 \settocdepth{subsection}
+
+% We set up the exercise environment, which produces list environment in a new
+% unnumbered subsection that also gets mentioned in the table of contents.
+
+\newlist{exenum}{enumerate}{1}
+\setlist[exenum]{noitemsep,label=\thesection.\arabic*}
+  %,ref=\thechapter.\arabic*}
+
+\crefname{exenumi}{Exercise}{Exercises}
+  
+\newlist{subexenum}{enumerate}{1}
+\setlist[subexenum]{noitemsep,label=(\alph*),ref=\theexenumi.\alph*}
+\crefname{subexenumi}{Exercise}{Exercises}
+  
+\newenvironment{exercises}
+{%
+\subsection*{Exercises}%
+\addcontentsline{toc}{subsection}{Exercises}%
+\sectionmark{Exercises}%
+\begin{exenum}}
+{%
+\end{exenum}}
+      
+\addbibresource{bibliography.bib}
 
 \makeindex
 
