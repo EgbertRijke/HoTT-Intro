@@ -173,13 +173,24 @@ is-trunc : {i : Level} (k : 𝕋) → UU i → UU i
 is-trunc neg-two-𝕋 A = is-contr A
 is-trunc (succ-𝕋 k) A = (x y : A) → is-trunc k (Id x y)
 
+1-type : (l : Level) → UU (lsuc l)
+1-type l = Σ (UU l) (is-trunc one-𝕋)
+
+_Truncated-Type_ : 𝕋 → (l : Level) → UU (lsuc l)
+k Truncated-Type l = Σ (UU l) (is-trunc k)
+
 abstract
   is-trunc-succ-is-trunc :
     {i : Level} (k : 𝕋) (A : UU i) →
     is-trunc k A → is-trunc (succ-𝕋 k) A
   is-trunc-succ-is-trunc neg-two-𝕋 A H = is-prop-is-contr H
-  is-trunc-succ-is-trunc (succ-𝕋 k) A H =
-    λ x y → is-trunc-succ-is-trunc k (Id x y) (H x y)
+  is-trunc-succ-is-trunc (succ-𝕋 k) A H x y =
+    is-trunc-succ-is-trunc k (Id x y) (H x y)
+
+truncated-type-succ-𝕋 :
+  (l : Level) (k : 𝕋) → k Truncated-Type l → (succ-𝕋 k) Truncated-Type l
+truncated-type-succ-𝕋 l k (pair A is-trunc-A) =
+  pair A (is-trunc-succ-is-trunc k A is-trunc-A)
 
 abstract
   is-trunc-is-equiv :
@@ -219,12 +230,17 @@ abstract
   is-trunc-succ-is-emb k f Ef H x y =
     is-trunc-is-equiv k (Id (f x) (f y)) (ap f {x} {y}) (Ef x y) (H (f x) (f y))
 
-is-trunc-map : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j} →
-  (A → B) → UU (i ⊔ j)
+is-trunc-map :
+  {i j : Level} (k : 𝕋) {A : UU i} {B : UU j} → (A → B) → UU (i ⊔ j)
 is-trunc-map k f = (y : _) → is-trunc k (fib f y)
 
+trunc-map : {i j : Level} (k : 𝕋) (A : UU i) (B : UU j) → UU (i ⊔ j)
+trunc-map k A B = Σ (A → B) (is-trunc-map k)
+
+
 abstract
-  is-trunc-pr1-is-trunc-fam : {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU j) →
+  is-trunc-pr1-is-trunc-fam :
+    {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU j) →
     ((x : A) → is-trunc k (B x)) → is-trunc-map k (pr1 {i} {j} {A} {B})
   is-trunc-pr1-is-trunc-fam k B H x =
     is-trunc-is-equiv k
@@ -232,6 +248,11 @@ abstract
       ( fib-fam-fib-pr1 B x)
       ( is-equiv-fib-fam-fib-pr1 B x)
       ( H x)
+
+trunc-pr1 :
+  {i j : Level} (k : 𝕋) {A : UU i} (B : A → k Truncated-Type j) →
+  trunc-map k (Σ A (λ x → pr1 (B x))) A
+trunc-pr1 k B = pair pr1 {!is-trunc-pr1-is-trunc-fam k (λ x → pr1 (B x)) (λ x → pr2 (B x))!}
 
 abstract
   is-trunc-fam-is-trunc-pr1 : {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU j) →

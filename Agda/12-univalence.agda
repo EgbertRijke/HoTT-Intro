@@ -174,6 +174,96 @@ eq-Eq-total-subuniverse :
 eq-Eq-total-subuniverse P {s} {t} =
   inv-is-equiv (is-equiv-Eq-total-subuniverse-eq P s t)
 
+-- Section 12.2 Groups in univalent mathematics
+
+Group-operations :
+  {l : Level} (G : hSet l) → UU l
+Group-operations (pair G is-set-G) =
+  (G → G → G) × (G × (G → G))
+
+Group-laws :
+  {l : Level} {G : hSet l} (μ : Group-operations G) → UU l
+Group-laws {G = pair G is-set-G} (pair μ (pair e i)) =
+  Σ ( (x y z : G) → Id (μ (μ x y) z) (μ x (μ y z))) ( λ assoc-μ →
+    Σ (((y : G) → Id (μ e y) y) × ((x : G) → Id (μ x e) x)) (λ unit-laws-μ →
+      ((x : G) → Id (μ (i x) x) e) × ((x : G) → Id (μ x (i x)) e)))
+
+is-prop-Group-laws :
+  {l : Level} {G : hSet l} (μ : Group-operations G) → is-prop (Group-laws μ)
+is-prop-Group-laws {G = pair G is-set-G} (pair μ (pair e i)) =
+  is-prop-prod
+    ( is-prop-Π (λ x →
+        is-prop-Π (λ y →
+          is-prop-Π (λ z → is-set-G (μ (μ x y) z) (μ x (μ y z))))))
+    ( is-prop-prod
+      ( is-prop-prod
+        ( is-prop-Π (λ y → is-set-G (μ e y) y))
+        ( is-prop-Π (λ x → is-set-G (μ x e) x)))
+      ( is-prop-prod
+        ( is-prop-Π (λ x → is-set-G (μ (i x) x) e))
+        ( is-prop-Π (λ x → is-set-G (μ x (i x)) e))))
+
+Group :
+  (l : Level) → UU (lsuc l)
+Group l =
+  Σ (hSet l) (λ G → Σ (Group-operations G) (λ μ → Group-laws μ))
+
+group-ℤ : Group lzero
+group-ℤ =
+  pair set-ℤ
+    ( pair
+      ( pair add-ℤ (pair zero-ℤ neg-ℤ))
+      ( pair associative-add-ℤ
+        ( pair
+          ( pair left-unit-law-add-ℤ right-unit-law-add-ℤ)
+          ( pair left-inverse-law-add-ℤ right-inverse-law-add-ℤ))))
+
+underlying-set-group :
+  {l : Level} → Group l → UU l
+underlying-set-group (pair (pair G is-set-G) t) = G
+
+preserves-mul-group :
+  {l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  (underlying-set-group G → underlying-set-group H) → UU (l1 ⊔ l2)
+preserves-mul-group 
+  ( pair (pair G is-set-G) (pair (pair μ-G (pair e-G i-G)) laws-μ-G))
+  ( pair (pair H is-set-H) (pair (pair μ-H (pair e-H i-H)) laws-μ-H))
+  f =
+  (x y : G) → Id (f (μ-G x y)) (μ-H (f x) (f y))
+
+preserves-unit-group :
+  {l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  (underlying-set-group G → underlying-set-group H) → UU l2
+preserves-unit-group
+  ( pair (pair G is-set-G) (pair (pair μ-G (pair e-G i-G)) laws-μ-G))
+  ( pair (pair H is-set-H) (pair (pair μ-H (pair e-H i-H)) laws-μ-H))
+  f =
+  Id (f e-G) e-H
+
+preserves-inv-group :
+  {l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  (underlying-set-group G → underlying-set-group H) → UU (l1 ⊔ l2)
+preserves-inv-group
+  ( pair (pair G is-set-G) (pair (pair μ-G (pair e-G i-G)) laws-μ-G))
+  ( pair (pair H is-set-H) (pair (pair μ-H (pair e-H i-H)) laws-μ-H))
+  f =
+  (x : G) → Id (f (i-G x)) (i-H (f x))
+
+complete-Hom-Group :
+  {l1 l2 : Level} → Group l1 → Group l2 → UU (l1 ⊔ l2)
+complete-Hom-Group G H =
+  Σ ( underlying-set-group G → underlying-set-group H) (λ f →
+     ( preserves-mul-group G H f) ×
+     ( ( preserves-unit-group G H f) × (preserves-inv-group G H f)))
+
+complete-id-group :
+  {l : Level} (G : Group l) → complete-Hom-Group G G
+complete-id-group (pair (pair G is-set-G) (pair (pair μ (pair e i)) laws-μ)) =
+  pair id
+    ( pair
+      ( λ x y → refl)
+      ( pair refl htpy-refl))
+
 -- Exercises
 
 -- Exercise 10.1
