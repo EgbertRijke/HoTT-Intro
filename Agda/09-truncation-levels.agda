@@ -252,7 +252,8 @@ abstract
 trunc-pr1 :
   {i j : Level} (k : 𝕋) {A : UU i} (B : A → k Truncated-Type j) →
   trunc-map k (Σ A (λ x → pr1 (B x))) A
-trunc-pr1 k B = pair pr1 {!is-trunc-pr1-is-trunc-fam k (λ x → pr1 (B x)) (λ x → pr2 (B x))!}
+trunc-pr1 k B =
+  pair pr1 (is-trunc-pr1-is-trunc-fam k (λ x → pr1 (B x)) (λ x → pr2 (B x)))
 
 abstract
   is-trunc-fam-is-trunc-pr1 : {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU j) →

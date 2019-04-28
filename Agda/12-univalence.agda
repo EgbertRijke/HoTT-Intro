@@ -208,6 +208,9 @@ Group :
 Group l =
   Σ (hSet l) (λ G → Σ (Group-operations G) (λ μ → Group-laws μ))
 
+{- We give two examples of groups. The first is the group ℤ of integers. The
+   second is the loop space of a pointed 1-type.  -}
+
 group-ℤ : Group lzero
 group-ℤ =
   pair set-ℤ
@@ -218,13 +221,44 @@ group-ℤ =
           ( pair left-unit-law-add-ℤ right-unit-law-add-ℤ)
           ( pair left-inverse-law-add-ℤ right-inverse-law-add-ℤ))))
 
-underlying-set-group :
+loop-space :
+  {l : Level} {A : UU l} → A → UU l
+loop-space a = Id a a
+
+set-loop-space :
+  {l : Level} (A : 1-type l) (a : pr1 A) → hSet l
+set-loop-space (pair A is-1-type-A) a =
+  pair (loop-space a) (is-1-type-A a a)
+
+group-loop-space :
+  {l : Level} (A : 1-type l) (a : pr1 A) → Group l
+group-loop-space (pair A is-1-type-A) a =
+  pair
+    ( set-loop-space (pair A is-1-type-A) a)
+    ( pair
+      ( pair
+        ( λ p q → p ∙ q)
+        ( pair refl inv))
+      ( pair assoc
+        ( pair
+          ( pair (λ y → left-unit) (λ y → right-unit))
+          ( pair left-inv right-inv))))
+
+{- Next we define group homomorphisms. We define first a notion of 'complete'
+   group homomorphisms, which is postulated to preserve all the group
+   operations. We do this because it is easier to first show that equality on
+   the type of all groups is equivalent to complete isomorphism. Then we show
+   that any ordinary group homomorphism preserves all the group operations as
+   a consequence of just preserving the group multiplication. It will follow
+   that equality of groups is equivalent to isomorphism. -}
+
+underlying-type-group :
   {l : Level} → Group l → UU l
-underlying-set-group (pair (pair G is-set-G) t) = G
+underlying-type-group (pair (pair G is-set-G) t) = G
 
 preserves-mul-group :
   {l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  (underlying-set-group G → underlying-set-group H) → UU (l1 ⊔ l2)
+  (underlying-type-group G → underlying-type-group H) → UU (l1 ⊔ l2)
 preserves-mul-group 
   ( pair (pair G is-set-G) (pair (pair μ-G (pair e-G i-G)) laws-μ-G))
   ( pair (pair H is-set-H) (pair (pair μ-H (pair e-H i-H)) laws-μ-H))
@@ -233,7 +267,7 @@ preserves-mul-group
 
 preserves-unit-group :
   {l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  (underlying-set-group G → underlying-set-group H) → UU l2
+  (underlying-type-group G → underlying-type-group H) → UU l2
 preserves-unit-group
   ( pair (pair G is-set-G) (pair (pair μ-G (pair e-G i-G)) laws-μ-G))
   ( pair (pair H is-set-H) (pair (pair μ-H (pair e-H i-H)) laws-μ-H))
@@ -242,27 +276,138 @@ preserves-unit-group
 
 preserves-inv-group :
   {l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  (underlying-set-group G → underlying-set-group H) → UU (l1 ⊔ l2)
+  (underlying-type-group G → underlying-type-group H) → UU (l1 ⊔ l2)
 preserves-inv-group
   ( pair (pair G is-set-G) (pair (pair μ-G (pair e-G i-G)) laws-μ-G))
   ( pair (pair H is-set-H) (pair (pair μ-H (pair e-H i-H)) laws-μ-H))
   f =
   (x : G) → Id (f (i-G x)) (i-H (f x))
 
-complete-Hom-Group :
+complete-Group-Hom :
   {l1 l2 : Level} → Group l1 → Group l2 → UU (l1 ⊔ l2)
-complete-Hom-Group G H =
-  Σ ( underlying-set-group G → underlying-set-group H) (λ f →
+complete-Group-Hom G H =
+  Σ ( underlying-type-group G → underlying-type-group H) (λ f →
      ( preserves-mul-group G H f) ×
      ( ( preserves-unit-group G H f) × (preserves-inv-group G H f)))
 
+Group-Hom :
+  {l1 l2 : Level} → Group l1 → Group l2 → UU (l1 ⊔ l2)
+Group-Hom G H =
+  Σ ( underlying-type-group G → underlying-type-group H)
+    ( preserves-mul-group G H)
+
+{- Now we show that any (ordinary) group homomorphism preserves the unit and
+   inverse operation on the group. In other words, any group homomorphism is
+   a complete group homomorphism in the above sense. -}
+
+underlying-function-group-hom :
+  {l1 l2 : Level} {G : Group l1} {H : Group l2} (f : Group-Hom G H) →
+  underlying-type-group G → underlying-type-group H
+underlying-function-group-hom f = (pr1 f)
+
+preserves-mul-Group-Hom :
+  {l1 l2 : Level} (G : Group l1) (H : Group l2) (f : Group-Hom G H) →
+  preserves-mul-group G H (underlying-function-group-hom f)
+preserves-mul-Group-Hom G H f = pr2 f
+
+preserves-unit-Group-Hom :
+  {l1 l2 : Level} (G : Group l1) (H : Group l2) (f : Group-Hom G H) →
+  preserves-unit-group G H (underlying-function-group-hom f)
+preserves-unit-Group-Hom
+  ( pair
+    ( pair G is-set-G)
+    ( pair
+      ( pair μ-G (pair e-G i-G))
+      ( pair assoc-G
+        ( pair
+          ( pair left-unit-G right-unit-G)
+          ( pair left-inv-G right-inv-G)))))
+  ( pair
+    ( pair H is-set-H)
+    ( pair
+      ( pair μ-H (pair e-H i-H))
+      ( pair assoc-H
+        ( pair
+          ( pair left-unit-H right-unit-H)
+          ( pair left-inv-H right-inv-H)))))
+  ( pair f μ-f) =
+  ( inv (left-unit-H (f e-G))) ∙
+  ( ( ap (λ x → μ-H x (f e-G)) (inv (left-inv-H (f e-G)))) ∙
+    ( ( assoc-H (i-H (f e-G)) (f e-G) (f e-G)) ∙
+      ( ( ap (μ-H (i-H (f e-G))) (inv (μ-f e-G e-G))) ∙
+        ( ( ap (λ x → μ-H (i-H (f e-G)) (f x)) (left-unit-G e-G)) ∙
+          ( left-inv-H (f e-G))))))
+
+preserves-inv-Group-Hom :
+  {l1 l2 : Level} (G : Group l1) (H : Group l2) (f : Group-Hom G H) →
+  preserves-inv-group G H (underlying-function-group-hom f)
+preserves-inv-Group-Hom
+  ( pair
+      ( pair G is-set-G)
+      ( pair
+        ( pair μ-G (pair e-G i-G))
+        ( pair assoc-G
+          ( pair
+            ( pair left-unit-G right-unit-G)
+            ( pair left-inv-G right-inv-G)))))
+  ( pair
+      ( pair H is-set-H)
+      ( pair
+        ( pair μ-H (pair e-H i-H))
+        ( pair assoc-H
+          ( pair
+            ( pair left-unit-H right-unit-H)
+            ( pair left-inv-H right-inv-H)))))
+  ( pair f μ-f) x =
+  ( inv ( right-unit-H (f (i-G x)))) ∙
+  ( ( ap (μ-H (f (i-G x))) (inv (right-inv-H (f x)))) ∙
+    ( ( inv (assoc-H (f (i-G x)) (f x) (i-H (f x)))) ∙
+      ( ( inv (ap (λ y → μ-H y (i-H (f x))) (μ-f (i-G x) x))) ∙
+        ( ( ap (λ y → μ-H (f y) (i-H (f x))) (left-inv-G x)) ∙
+          ( ( ap
+              ( λ y → μ-H y (i-H (f x)))
+              ( preserves-unit-Group-Hom
+                ( pair (pair G is-set-G)
+                  ( pair (pair μ-G (pair e-G i-G))
+                    ( pair assoc-G
+                      ( pair
+                        ( pair left-unit-G right-unit-G)
+                        ( pair left-inv-G right-inv-G)))))
+                ( pair (pair H is-set-H)
+                  ( pair (pair μ-H (pair e-H i-H))
+                    ( pair assoc-H
+                      ( pair
+                        ( pair left-unit-H right-unit-H)
+                        ( pair left-inv-H right-inv-H)))))
+                ( pair f μ-f))) ∙
+            ( left-unit-H (i-H (f x))))))))
+
+complete-Group-Hom-ordinary-Group-Hom :
+  {l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  Group-Hom G H → complete-Group-Hom G H
+complete-Group-Hom-ordinary-Group-Hom G H f =
+  pair
+    ( underlying-function-group-hom f)
+    ( pair
+      ( preserves-mul-Group-Hom G H f)
+      ( pair
+        ( preserves-unit-Group-Hom G H f)
+        ( preserves-inv-Group-Hom G H f)))
+
+{- Next, we construct the identity group homomorphism, and we show that
+   compositions of group homomorphisms are again group homomorphisms. -}
+   
 complete-id-group :
-  {l : Level} (G : Group l) → complete-Hom-Group G G
+  {l : Level} (G : Group l) → complete-Group-Hom G G
 complete-id-group (pair (pair G is-set-G) (pair (pair μ (pair e i)) laws-μ)) =
   pair id
     ( pair
       ( λ x y → refl)
       ( pair refl htpy-refl))
+
+{- Next, we prove the that the laws for a category hold for group homomorphisms,
+   i.e., we show that composition is associative and satisfies the left and
+   right unit laws. -}
 
 -- Exercises
 
