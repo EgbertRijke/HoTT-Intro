@@ -397,17 +397,112 @@ complete-Group-Hom-ordinary-Group-Hom G H f =
 {- Next, we construct the identity group homomorphism, and we show that
    compositions of group homomorphisms are again group homomorphisms. -}
    
-complete-id-group :
-  {l : Level} (G : Group l) → complete-Group-Hom G G
-complete-id-group (pair (pair G is-set-G) (pair (pair μ (pair e i)) laws-μ)) =
-  pair id
+id-group-hom :
+  {l : Level} (G : Group l) → Group-Hom G G
+id-group-hom (pair (pair G is-set-G) (pair (pair μ (pair e i)) laws-μ)) =
+  pair id (λ x y → refl)
+
+preserves-mul-composition-group-hom :
+  {l1 l2 l3 : Level} (G : Group l1) (H : Group l2) (K : Group l3) →
+  (f : Group-Hom G H) (g : Group-Hom H K) →
+  preserves-mul-group G K
+    ( (underlying-function-group-hom g) ∘ (underlying-function-group-hom f))
+preserves-mul-composition-group-hom
+  ( pair
+    ( pair G is-set-G)
     ( pair
-      ( λ x y → refl)
-      ( pair refl htpy-refl))
+      ( pair μ-G (pair e-G i-G))
+      ( pair assoc-G
+        ( pair
+          ( pair left-unit-G right-unit-G)
+          ( pair left-inv-G right-inv-G)))))
+  ( pair
+    ( pair H is-set-H)
+    ( pair
+      ( pair μ-H (pair e-H i-H))
+      ( pair assoc-H
+        ( pair
+          ( pair left-unit-H right-unit-H)
+          ( pair left-inv-H right-inv-H)))))
+  ( pair
+    ( pair K is-set-K)
+    ( pair
+      ( pair μ-K (pair e-K i-K))
+      ( pair assoc-K
+        ( pair
+          ( pair left-unit-K right-unit-K)
+          ( pair left-inv-K right-inv-K)))))
+  ( pair f μ-f) (pair g μ-g) x y =
+  ( ap g (μ-f x y)) ∙ (μ-g (f x) (f y))
+
+_∘Group_ :
+  { l1 l2 l3 : Level} {G : Group l1} {H : Group l2} {K : Group l3} →
+  Group-Hom H K → Group-Hom G H → Group-Hom G K
+_∘Group_ {G = G} {H = H} {K = K} g f =
+  pair
+    ( (underlying-function-group-hom g) ∘ (underlying-function-group-hom f))
+    ( preserves-mul-composition-group-hom G H K f g)
 
 {- Next, we prove the that the laws for a category hold for group homomorphisms,
    i.e., we show that composition is associative and satisfies the left and
-   right unit laws. -}
+   right unit laws. Before we show that these laws hold, we will characterize
+   the identity type of the typ of group homomorphisms. -}
+
+is-prop-preserves-mul-group :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2)
+  ( f : underlying-type-group G → underlying-type-group H) →
+  is-prop (preserves-mul-group G H f)
+is-prop-preserves-mul-group
+  (pair (pair G is-set-G) (pair (pair μ-G (pair e-G i-G)) laws-G))
+  (pair (pair H is-set-H) (pair (pair μ-H (pair e-H i-H)) laws-H)) f =
+  is-prop-Π (λ x →
+    is-prop-Π (λ y → is-set-H (f (μ-G x y)) (μ-H (f x) (f y))))
+
+htpy-Group-Hom :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2)
+  (f g : Group-Hom G H) → UU (l1 ⊔ l2)
+htpy-Group-Hom G H f g =
+  (underlying-function-group-hom f) ~ (underlying-function-group-hom g)
+
+reflexive-htpy-Group-Hom :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  ( f : Group-Hom G H) → htpy-Group-Hom G H f f
+reflexive-htpy-Group-Hom G H f = htpy-refl
+
+htpy-Group-Hom-eq :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  ( f g : Group-Hom G H) → Id f g → htpy-Group-Hom G H f g
+htpy-Group-Hom-eq G H f .f refl = reflexive-htpy-Group-Hom G H f
+
+is-contr-total-htpy-Group-Hom :
+  { l1 l2 : Level} (G : Group l1) ( H : Group l2) ( f : Group-Hom G H) →
+  is-contr (Σ (Group-Hom G H) (htpy-Group-Hom G H f))
+is-contr-total-htpy-Group-Hom G H f =
+  is-contr-total-Eq-substructure
+    ( is-contr-total-htpy (underlying-function-group-hom f))
+    ( is-prop-preserves-mul-group G H)
+    ( underlying-function-group-hom f)
+    ( htpy-refl)
+    ( preserves-mul-Group-Hom G H f )
+
+is-equiv-htpy-Group-Hom-eq :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  ( f g : Group-Hom G H) → is-equiv (htpy-Group-Hom-eq G H f g)
+is-equiv-htpy-Group-Hom-eq G H f =
+  fundamental-theorem-id f
+    ( reflexive-htpy-Group-Hom G H f)
+    ( is-contr-total-htpy-Group-Hom G H f)
+    ( htpy-Group-Hom-eq G H f)
+
+eq-htpy-Group-Hom :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  { f g : Group-Hom G H} → htpy-Group-Hom G H f g → Id f g
+eq-htpy-Group-Hom G H {f} {g} =
+  inv-is-equiv (is-equiv-htpy-Group-Hom-eq G H f g)
+
+
+{- Now we introduce the notion of group isomorphism. Finally, we will show that
+   isomorphic groups are equal. -}
 
 -- Exercises
 
