@@ -166,11 +166,10 @@ abstract
   is-contr-total-htpy f =
     pair
       ( pair f htpy-refl)
-      ( λ t → concat
-        ( center (is-contr-total-htpy-Funext f (funext f)))
+      ( λ t →
         ( inv (contraction
           ( is-contr-total-htpy-Funext f (funext f))
-          ( pair f htpy-refl)))
+          ( pair f htpy-refl))) ∙
         ( contraction (is-contr-total-htpy-Funext f (funext f)) t))
 
 abstract
@@ -396,12 +395,9 @@ abstract
     ( pair g (pair issec-g (pair isretr-g coh))) C =
     is-equiv-has-inverse
       (λ s y → tr C (issec-g y) (s (g y)))
-      ( λ s → eq-htpy (λ x → concat
-        ( tr C (ap f (isretr-g x)) (s (g (f x))))
-        ( ap (λ t → tr C t (s (g (f x)))) (coh x))
-        ( concat
-          ( tr (λ x → C (f x)) (isretr-g x) (s (g (f x))))
-          ( tr-precompose-fam C f (isretr-g x) (s (g (f x))))
+      ( λ s → eq-htpy (λ x → 
+        ( ap (λ t → tr C t (s (g (f x)))) (coh x)) ∙
+        ( ( tr-precompose-fam C f (isretr-g x) (s (g (f x)))) ∙
           ( apd s (isretr-g x)))))
       ( λ s → eq-htpy λ y → apd s (issec-g y))
 
@@ -505,10 +501,10 @@ abstract
   is-equiv-htpy-concat :
     {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
     {f g : (x : A) → B x} (H : f ~ g) →
-    (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H)
+    (h : (x : A) → B x) → is-equiv (htpy-concat H h)
   is-equiv-htpy-concat {A = A} {B = B} {f} =
     ind-htpy f
-      ( λ g H → (h : (x : A) → B x) → is-equiv (htpy-concat g {h = h} H))
+      ( λ g H → (h : (x : A) → B x) → is-equiv (htpy-concat H h))
       ( λ h → is-equiv-id (f ~ h))
 
 equiv-htpy-concat :
@@ -516,7 +512,7 @@ equiv-htpy-concat :
   {f g : (x : A) → B x} (H : f ~ g) (h : (x : A) → B x) →
   (g ~ h) ≃ (f ~ h)
 equiv-htpy-concat H h =
-  pair (htpy-concat _ {h = h} H) (is-equiv-htpy-concat H h)
+  pair (htpy-concat H h) (is-equiv-htpy-concat H h)
 
 htpy-concat' :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}

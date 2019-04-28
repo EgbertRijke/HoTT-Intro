@@ -324,11 +324,10 @@ coherence-htpy-square-rectangle-bl-fl-rectangle-br-fr-cube
   ( λ a' →
     ( ap
       ( concat
-        ( hD (h' (f' a')))
-        { z = hD (k' (g' a'))}
         ( rectangle-back-left-front-left-cube
           f g h k f' g' h' k' hA hB hC hD
-          top back-left back-right front-left front-right bottom a'))
+          top back-left back-right front-left front-right bottom a')
+        ( hD (k' (g' a'))))
       ( right-unit))) ∙h
   ( c)
 
@@ -1128,11 +1127,11 @@ is-pullback-cone-ap f g (pair p (pair q H)) is-pb-c c1 c2 =
           ( pair p (pair q H))
           ( cone-ap' f g (pair p (pair q H)) c1))
         ( is-equiv-is-contr _
-          ( is-contr-total-path _ (q c1))
-          ( is-contr-total-path _ (f (p c1))))
+          ( is-contr-total-path (q c1))
+          ( is-contr-total-path (f (p c1))))
         ( is-equiv-is-contr _
-          ( is-contr-total-path _ c1)
-          ( is-contr-total-path _ (p c1))))
+          ( is-contr-total-path c1)
+          ( is-contr-total-path (p c1))))
       ( c2))
 
 {- Next we show that for any commuting cube, if the bottom and top squares are
@@ -1140,11 +1139,6 @@ is-pullback-cone-ap f g (pair p (pair q H)) is-pb-c c1 c2 =
    cube. -}
 
 {-
-tr-id-left-subst :
-  {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
-  (p : Id x y) (b : B) → (q : Id (f x) b) →
-  Id (tr (λ (a : A) → Id (f a) b) p q) ((inv (ap f p)) ∙ q)
-tr-id-left-subst refl b q = refl
 
 square-fib-cube :
   {l1 l2 l3 l4 l1' l2' l3' l4' : Level}
@@ -1183,9 +1177,9 @@ square-fib-cube f g h k f' g' h' k' hA hB hC hD
             {!!}) ∙
           ( distributive-inv-concat (ap k (back-right a')) (front-right (g' a')) ∙
             ( ( ap
-                ( concat _ (inv (front-right (g' a'))))
+                ( concat (inv (front-right (g' a'))) ?)
                 ( inv (ap-inv k (back-right a')))) ∙
               ( ap
-                ( concat (k (hC (g' a'))) (inv (front-right (g' a'))))
+                ( concat (inv (front-right (g' a'))) ?)
                 ( ap (ap k) (inv right-unit))))))))
 -}

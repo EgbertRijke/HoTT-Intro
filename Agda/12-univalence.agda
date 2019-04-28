@@ -57,8 +57,8 @@ abstract
       ( is-sing-is-contr (Σ (UU i) (λ X → A ≃ X))
         ( pair
           ( pair A (pair id (is-equiv-id A)))
-          ( λ t → concat (center c)
-            ( inv (contraction c (pair A (pair id (is-equiv-id A)))))
+          ( λ t → 
+            ( inv (contraction c (pair A (pair id (is-equiv-id A))))) ∙
             ( contraction c t)))
         ( P)
         ( pair A (equiv-id A)))

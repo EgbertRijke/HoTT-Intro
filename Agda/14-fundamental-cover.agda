@@ -296,7 +296,7 @@ path-over-contraction-total-space' :
   UU _
 path-over-contraction-total-space' c {x} {x'} p {F} {F'} f e e' H h h' =
   ( postcomp-Π
-    ( λ y → concat' (pair x (map-equiv e y)) (segment-Σ p f e e' H y)) h) ~
+    ( λ y → concat' c (segment-Σ p f e e' H y)) h) ~
   ( precomp-Π
     ( map-equiv f)
     ( λ y' → Id c (pair x' (map-equiv e' y')))

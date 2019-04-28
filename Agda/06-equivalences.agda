@@ -28,15 +28,15 @@ htpy-inv :
   (f ~ g) → (g ~ f)
 htpy-inv H x = inv (H x)
 
-htpy-concat :
-  {i j : Level} {A : UU i} {B : A → UU j} {f : (x : A) → B x}
-  (g : (x : A) → B x) {h : (x : A) → B x} → (f ~ g) → (g ~ h) → (f ~ h)
-htpy-concat g H K x = concat (g x) (H x) (K x)
-
 _∙h_ :
   {i j : Level} {A : UU i} {B : A → UU j} {f g h : (x : A) → B x} →
   (f ~ g) → (g ~ h) → (f ~ h)
-_∙h_ {g = g} = htpy-concat g
+_∙h_ H K x = (H x) ∙ (K x)
+
+htpy-concat :
+  {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x} →
+  (f ~ g) → (h : (x : A) → B x) → (g ~ h) → (f ~ h)
+htpy-concat H h K x = concat (H x) (h x) (K x)
 
 htpy-assoc :
   {i j : Level} {A : UU i} {B : A → UU j} {f g h k : (x : A) → B x} →
@@ -46,22 +46,22 @@ htpy-assoc H K L x = assoc (H x) (K x) (L x)
 
 htpy-left-unit :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  {H : f ~ g} → (htpy-concat f htpy-refl H) ~ H
+  {H : f ~ g} → (htpy-refl ∙h H) ~ H
 htpy-left-unit x = left-unit
 
 htpy-right-unit :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  {H : f ~ g} → (htpy-concat g H htpy-refl) ~ H
+  {H : f ~ g} → (H ∙h htpy-refl) ~ H
 htpy-right-unit x = right-unit
 
 htpy-left-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → htpy-concat f (htpy-inv H) H ~ htpy-refl
+  (H : f ~ g) → ((htpy-inv H) ∙h H) ~ htpy-refl
 htpy-left-inv H x = left-inv (H x)
 
 htpy-right-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → htpy-concat g H (htpy-inv H) ~ htpy-refl
+  (H : f ~ g) → (H ∙h (htpy-inv H)) ~ htpy-refl
 htpy-right-inv H x = right-inv (H x)
 
 htpy-left-whisk :
@@ -352,22 +352,22 @@ equiv-inv x y = pair inv (is-equiv-inv x y)
 inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
   (Id x z) → (Id y z)
-inv-concat p z = concat _ (inv p)
+inv-concat p = concat (inv p)
 
 isretr-inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
-  ((inv-concat p z) ∘ (concat y {z} p)) ~ id
+  ((inv-concat p z) ∘ (concat p z)) ~ id
 isretr-inv-concat refl z q = refl
 
 issec-inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
-  ((concat y {z} p) ∘ (inv-concat p z)) ~ id
+  ((concat p z) ∘ (inv-concat p z)) ~ id
 issec-inv-concat refl z refl = refl
 
 abstract
   is-equiv-concat :
     {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
-    is-equiv (concat y {z} p)
+    is-equiv (concat p z)
   is-equiv-concat p z =
     is-equiv-has-inverse
       ( inv-concat p z)
@@ -377,31 +377,31 @@ abstract
 equiv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
   Id y z ≃ Id x z
-equiv-concat p z = pair (concat _ p) (is-equiv-concat p z)
+equiv-concat p z = pair (concat p z) (is-equiv-concat p z)
 
 concat' :
-  {i : Level} {A : UU i} {x : A} (y : A) {z : A} → Id y z → Id x y → Id x z
-concat' y q p = concat y p q
+  {i : Level} {A : UU i} (x : A) {y z : A} → Id y z → Id x y → Id x z
+concat' x q p = p ∙ q
 
 inv-concat' :
   {i : Level} {A : UU i} (x : A) {y z : A} → Id y z →
   Id x z → Id x y
-inv-concat' x q = concat' _ (inv q)
+inv-concat' x q = concat' x (inv q)
 
 isretr-inv-concat' :
   {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
-  ((inv-concat' x q) ∘ (concat' y q)) ~ id
+  ((inv-concat' x q) ∘ (concat' x q)) ~ id
 isretr-inv-concat' x refl refl = refl
 
 issec-inv-concat' :
   {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
-  ((concat' y q) ∘ (inv-concat' x q)) ~ id
+  ((concat' x q) ∘ (inv-concat' x q)) ~ id
 issec-inv-concat' x refl refl = refl
 
 abstract
   is-equiv-concat' :
     {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
-    is-equiv (concat' {x = x} y q)
+    is-equiv (concat' x q)
   is-equiv-concat' x q =
     is-equiv-has-inverse
       ( inv-concat' x q)
@@ -411,7 +411,7 @@ abstract
 equiv-concat' :
   {i : Level} {A : UU i} (x : A) {y z : A} (q : Id y z) →
   Id x y ≃ Id x z
-equiv-concat' x q = pair (concat' _ q) (is-equiv-concat' x q)
+equiv-concat' x q = pair (concat' x q) (is-equiv-concat' x q)
 
 inv-tr :
   {i j : Level} {A : UU i} (B : A → UU j) {x y : A} →
@@ -855,7 +855,7 @@ abstract
     ap pred-ℤ (right-predecessor-law-add-ℤ (inl m) n)
   right-predecessor-law-add-ℤ (inr (inl star)) n = refl
   right-predecessor-law-add-ℤ (inr (inr zero-ℕ)) n =
-    concat n (right-inverse-pred-ℤ n) (inv (left-inverse-pred-ℤ n))
+    (right-inverse-pred-ℤ n) ∙ (inv (left-inverse-pred-ℤ n))
   right-predecessor-law-add-ℤ (inr (inr (succ-ℕ x))) n =
     ( ap succ-ℤ (right-predecessor-law-add-ℤ (inr (inr x)) n)) ∙
     ( ( right-inverse-pred-ℤ (add-ℤ (inr (inr x)) n)) ∙ 
@@ -876,7 +876,7 @@ abstract
   right-successor-law-add-ℤ :
     (x y : ℤ) → Id (add-ℤ x (succ-ℤ y)) (succ-ℤ (add-ℤ x y))
   right-successor-law-add-ℤ (inl zero-ℕ) y =
-    concat y (left-inverse-pred-ℤ y) (inv (right-inverse-pred-ℤ y))
+    (left-inverse-pred-ℤ y) ∙ (inv (right-inverse-pred-ℤ y))
   right-successor-law-add-ℤ (inl (succ-ℕ x)) y =
     ( ap pred-ℤ (right-successor-law-add-ℤ (inl x) y)) ∙
     ( ( left-inverse-pred-ℤ (add-ℤ (inl x) y)) ∙
@@ -1053,8 +1053,8 @@ abstract
     (q : Id y z) (r : Id x z) → is-equiv (con-inv p q r)
   is-equiv-con-inv p refl r =
     is-equiv-comp'
-      ( concat' r (inv right-unit))
-      ( concat (concat _ p refl) (inv right-unit))
+      ( concat' p (inv right-unit))
+      ( concat (inv right-unit) r)
       ( is-equiv-concat (inv right-unit) r)
       ( is-equiv-concat' p (inv right-unit))
 
@@ -1075,7 +1075,7 @@ htpy-ap-concat :
   (H : f ~ g) (K K' : g ~ h) →
   K ~ K' → (H ∙h K) ~ (H ∙h K')
 htpy-ap-concat {g = g} {h} H K K' L x =
-  ap (concat (g x) {z = h x} (H x)) (L x)
+  ap (concat (H x) (h x)) (L x)
 
 htpy-ap-concat' :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →

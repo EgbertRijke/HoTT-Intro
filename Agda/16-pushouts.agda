@@ -194,7 +194,7 @@ is-contr-total-htpy-generating-data-pushout
       ( pair hB htpy-refl)
       ( is-contr-is-equiv
         ( Σ ((s : S) → Id (tr P (H s) (hA (f s))) (hB (g s))) (λ γ → hS ~ γ))
-        ( tot (λ γ → htpy-concat _ (htpy-inv htpy-right-unit)))
+        ( tot (htpy-concat (htpy-inv htpy-right-unit)))
         ( is-equiv-tot-is-fiberwise-equiv
           ( is-equiv-htpy-concat (htpy-inv htpy-right-unit)))
         ( is-contr-total-htpy hS)))
@@ -610,7 +610,7 @@ concat-eq-htpy {A = A} {B} {f} H K =
     ( λ g H →
       ( h : (x : A) → B x) (K : g ~ h) →
       Id (eq-htpy (H ∙h K)) ((eq-htpy H) ∙ (eq-htpy K)))
-    ( λ h K → ap (concat' _ (eq-htpy K)) (inv (eq-htpy-htpy-refl _))) H _ K
+    ( λ h K → ap (concat' f (eq-htpy K)) (inv (eq-htpy-htpy-refl _))) H _ K
 
 pullback-property-dependent-pullback-property-pushout :
   {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}

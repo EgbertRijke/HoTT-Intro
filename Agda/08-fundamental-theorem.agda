@@ -748,9 +748,9 @@ abstract
   is-emb-htpy f g H is-emb-g x y =
     is-equiv-top-is-equiv-left-square
       ( ap g)
-      ( concat' (f y) (H y))
+      ( concat' (f x) (H y))
       ( ap f)
-      ( concat (g x) (H x))
+      ( concat (H x) (g y))
       ( htpy-nat H)
       ( is-equiv-concat (H x) (g y))
       ( is-emb-g x y)
@@ -874,12 +874,8 @@ abstract
         ( is-contr-retract-of (Σ _ (λ y → Id a y))
           ( pair (tot i)
             ( pair (tot λ x → pr1 (R x))
-              ( htpy-concat
-                ( tot (λ x → pr1 (R x) ∘ i x))
-                ( htpy-inv (tot-comp i (λ x → pr1 (R x))))
-                  ( htpy-concat (tot (λ x → id))
-                    ( tot-htpy λ x → pr2 (R x))
-                    ( tot-id B)))))
+              ( ( htpy-inv (tot-comp i (λ x → pr1 (R x)))) ∙h
+                ( ( tot-htpy λ x → pr2 (R x)) ∙h (tot-id B)))))
           ( is-contr-total-path a))
         ( is-contr-total-path a))
 
@@ -892,9 +888,7 @@ abstract
         h = inv-is-equiv is-equiv-sec-f
     in
     is-equiv-htpy h
-      ( htpy-concat
-        ( f ∘ (g ∘ h))
-        ( htpy-left-whisk f (htpy-inv (issec-inv-is-equiv is-equiv-sec-f)))
+      ( ( htpy-left-whisk f (htpy-inv (issec-inv-is-equiv is-equiv-sec-f))) ∙h
         ( htpy-right-whisk issec-g h))
       ( is-equiv-inv-is-equiv is-equiv-sec-f)
 
@@ -1159,9 +1153,9 @@ fib-ap-eq-fib-fiberwise :
   {i j : Level} {A : UU i} {B : UU j}
   (f : A → B) {b : B} (s t : fib f b) (p : Id (pr1 s) (pr1 t)) →
   (Id (tr (λ (a : A) → Id (f a) b) p (pr2 s)) (pr2 t)) →
-  (Id (ap f p) (concat b (pr2 s) (inv (pr2 t))))
+  (Id (ap f p) ((pr2 s) ∙ (inv (pr2 t))))
 fib-ap-eq-fib-fiberwise f (pair .x' p) (pair x' refl) refl =
-  inv ∘ (concat p right-unit)
+  inv ∘ (concat right-unit refl)
 
 abstract
   is-fiberwise-equiv-fib-ap-eq-fib-fiberwise :
@@ -1172,15 +1166,15 @@ abstract
     is-equiv-comp
       ( fib-ap-eq-fib-fiberwise f (pair x y) (pair x refl) refl)
       ( inv)
-      ( concat y right-unit)
+      ( concat right-unit refl)
       ( htpy-refl)
       ( is-equiv-concat right-unit refl)
-      ( is-equiv-inv (concat (f x) y refl) refl)
+      ( is-equiv-inv (y ∙ refl) refl)
 
 fib-ap-eq-fib :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) {b : B}
   (s t : fib f b) → Id s t →
-  fib (ap f {x = pr1 s} {y = pr1 t}) (concat _ (pr2 s) (inv (pr2 t)))
+  fib (ap f {x = pr1 s} {y = pr1 t}) ((pr2 s) ∙ (inv (pr2 t)))
 fib-ap-eq-fib f s .s refl = pair refl (inv (right-inv (pr2 s)))
 
 triangle-fib-ap-eq-fib :

@@ -353,8 +353,8 @@ abstract
       ( λ p₀ →
         is-equiv-comp'
           ( concat
-            ( f x (tr P l p₀))
-            ( naturality-tr-fiberwise-transformation f l p₀))
+            ( naturality-tr-fiberwise-transformation f l p₀)
+            ( f x p₀))
           ( ap (f x))
           ( is-emb-is-equiv (f x) (is-equiv-f x) (tr P l p₀) p₀)
           ( is-equiv-concat

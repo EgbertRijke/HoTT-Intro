@@ -20,7 +20,7 @@ abstract
   contraction :
     {i : Level} {A : UU i} (is-contr-A : is-contr A) →
     (const A A (center is-contr-A) ~ id)
-  contraction (pair c C) x = concat c (inv (C c)) (C x)
+  contraction (pair c C) x = (inv (C c)) ∙ (C x)
   
   coh-contraction :
     {i : Level} {A : UU i} (is-contr-A : is-contr A) →
@@ -233,7 +233,7 @@ isretr-inv-has-inverse inv-f = pr2 (pr2 inv-f)
 htpy-nat :
   {i j : Level} {A : UU i} {B : UU j} {f g : A → B} (H : f ~ g)
   {x y : A} (p : Id x y) →
-  Id (concat _ (H x) (ap g p)) (concat _ (ap f p) (H y))
+  Id ((H x) ∙ (ap g p)) ((ap f p) ∙ (H y))
 htpy-nat H refl = right-unit
 
 -- We will also need to undo concatenation on the left and right. One might notice that, in the terminology of Lecture 7, we almost show here that concat p and concat' q are embeddings.
@@ -253,7 +253,7 @@ htpy-red :
   (x : A) → Id (H (f x)) (ap f (H x))
 htpy-red {_} {A} {f} H x =
   right-unwhisk (H x)
-    ( ( ap (concat (f x) (H (f x))) (inv (ap-id (H x)))) ∙
+    ( ( ap (concat (H (f x)) x) (inv (ap-id (H x)))) ∙
       ( htpy-nat H (H x)))
 
 square :

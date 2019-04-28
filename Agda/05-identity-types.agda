@@ -27,14 +27,13 @@ inv :
   {i : Level} {A : UU i} {x y : A} → Id x y → Id y x
 inv refl = refl
 
-concat :
-  {i : Level} {A : UU i} {x : A} (y : A) {z : A} →
-  Id x y → Id y z → Id x z
-concat x refl q = q
-
 _∙_ :
   {i : Level} {A : UU i} {x y z : A} → Id x y → Id y z → Id x z
-_∙_ {y = y} = concat y
+refl ∙ q = q
+
+concat :
+  {i : Level} {A : UU i} {x y : A} → Id x y → (z : A) → Id y z → Id x z
+concat p z q = p ∙ q 
 
 assoc :
   {i : Level} {A : UU i} {x y z w : A} (p : Id x y) (q : Id y z)
@@ -194,7 +193,7 @@ con-inv :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z)
   (r : Id x z) → (Id (p ∙ q) r) → Id p (r ∙ (inv q))
 con-inv p refl r =
-  ( λ α → α ∙ (inv right-unit)) ∘ (concat (p ∙ refl) (inv right-unit))
+  ( λ α → α ∙ (inv right-unit)) ∘ (concat (inv right-unit) r)
 
 -- Exercise 5.4
 
@@ -244,7 +243,7 @@ abstract
   right-unit-law-mul-ℕ zero-ℕ = refl
   right-unit-law-mul-ℕ (succ-ℕ x) =
     ( right-successor-law-add-ℕ (mul-ℕ x one-ℕ) zero-ℕ) ∙
-    ( ap succ-ℕ (concat _ (right-unit-law-add-ℕ _) (right-unit-law-mul-ℕ x)))
+    ( ap succ-ℕ ((right-unit-law-add-ℕ _) ∙ (right-unit-law-mul-ℕ x)))
   
   left-unit-law-mul-ℕ :
     (x : ℕ) → Id (mul-ℕ one-ℕ x) x

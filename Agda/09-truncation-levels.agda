@@ -32,10 +32,10 @@ abstract
     {i : Level} {A : UU i} → is-prop' A → is-prop A
   is-prop-is-prop' {i} {A} H x y =
     pair
-      (concat _ (inv (H x x)) (H x y))
-      (ind-Id x
-        (λ z p → Id (concat _ (inv (H x x)) (H x z)) p)
-        (left-inv (H x x)) y)
+      ( (inv (H x x)) ∙ (H x y))
+      ( ind-Id x
+        ( λ z p → Id ((inv (H x x)) ∙ (H x z)) p)
+        ( left-inv (H x x)) y)
 
 abstract
   is-prop'-is-prop :
@@ -80,10 +80,8 @@ abstract
   axiom-K-is-set :
     {i : Level} (A : UU i) → is-set A → axiom-K A
   axiom-K-is-set A H x p =
-    concat
-      (center (is-contr-is-prop-inh (H x x) refl))
-        (inv (contraction (is-contr-is-prop-inh (H x x) refl) refl))
-        (contraction (is-contr-is-prop-inh (H x x) refl) p)
+    ( inv (contraction (is-contr-is-prop-inh (H x x) refl) refl)) ∙ 
+    ( contraction (is-contr-is-prop-inh (H x x) refl) p)
 
 abstract
   is-equiv-prop-in-id :

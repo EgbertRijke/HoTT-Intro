@@ -220,6 +220,12 @@ htpy-precompose-total-lifts {A = A} {B} P {f} {g} H =
 {- We show that when htpy-precompose-total-lifts is applied to htpy-refl, it
    computes to htpy-refl. -}
 
+tr-id-left-subst :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
+  (p : Id x y) (b : B) → (q : Id (f x) b) →
+  Id (tr (λ (a : A) → Id (f a) b) p q) ((inv (ap f p)) ∙ q)
+tr-id-left-subst refl b q = refl
+
 compute-htpy-precompose-total-lifts :
   { l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
   ( f : A → B) →
@@ -589,9 +595,9 @@ is-contr-total-Eq-ΠΣ {A = A} {B} C t =
       ( λ a →
         is-contr-total-Eq-structure
         ( λ b c p → Id (tr (C a) p (pr2 (t a))) c)
-        ( is-contr-total-path (B a) (pr1 (t a)))
+        ( is-contr-total-path (pr1 (t a)))
         ( pair (pr1 (t a)) refl)
-        ( is-contr-total-path (C a (pr1 (t a))) (pr2 (t a)))))
+        ( is-contr-total-path (pr2 (t a)))))
 
 is-equiv-Eq-ΠΣ-eq :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)

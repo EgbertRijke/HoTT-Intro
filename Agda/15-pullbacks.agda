@@ -365,7 +365,10 @@ eq-Eq-canonical-pullback :
   ( Id ((ap f α) ∙ (pr2 (pr2 t'))) ((pr2 (pr2 t)) ∙ (ap g β))) → Id t t'
 eq-Eq-canonical-pullback f g {pair a (pair b p)} {pair a' (pair b' p')} α β γ =
   inv-is-equiv
-    ( is-equiv-Eq-canonical-pullback-eq f g (pair a (pair b p)) (pair a' (pair b' p'))) (pair α (pair β γ))
+    ( is-equiv-Eq-canonical-pullback-eq f g
+      ( pair a (pair b p))
+      ( pair a' (pair b' p')))
+    ( pair α (pair β γ))
 
 {- We establish the uniquely uniqueness of pullbacks. -}
 
@@ -600,7 +603,7 @@ cone-total-prod-fibers f g =
     ( λ t → pr1 (pr1 (pr2 t)))
     ( pair
       ( λ t → pr1 (pr2 (pr2 t)))
-       λ t → concat (pr1 t) (pr2 (pr1 (pr2 t))) (inv (pr2 (pr2 (pr2 t)))))
+      ( λ t → (pr2 (pr1 (pr2 t))) ∙ (inv (pr2 (pr2 (pr2 t))))))
 
 cone-span :
   {l1 l2 l3 l4 l5 l6 : Level} {A : UU l1} {B : UU l2}
@@ -665,8 +668,8 @@ abstract
         ( is-equiv-Σ-fib-to-domain f)
         ( is-equiv-Σ-fib-to-domain g)
         ( λ s t → is-equiv-comp _
-          ( concat (pr1 s) (pr2 (pr2 s)))
-          ( concat' (pr1 t) (inv (pr2 (pr2 t))))
+          ( concat (pr2 (pr2 s)) (g (pr1 (pr2 t))))
+          ( concat' (pr1 s) (inv (pr2 (pr2 t))))
           ( htpy-refl)
           ( is-equiv-concat' (pr1 s) (inv (pr2 (pr2 t))))
           ( is-equiv-concat (pr2 (pr2 s)) (g (pr1 (pr2 t))))))
@@ -822,7 +825,7 @@ fib-square f g c x t =
       q = pr1 (pr2 c)
       H = pr2 (pr2 c)
   in
-  pair (q (pr1 t) ) (concat (f (p (pr1 t))) (inv (H (pr1 t))) (ap f (pr2 t)))
+  pair (q (pr1 t) ) ((inv (H (pr1 t))) ∙ (ap f (pr2 t)))
 
 fib-square-id :
   {l1 l2 : Level} {B : UU l1} {X : UU l2} (g : B → X) (x : X) →
@@ -1010,10 +1013,13 @@ fib-square-comp-horizontal i j h c d .(pr1 d a) (pair a refl) =
       K = pr2 (pr2 c)
   in
   eq-pair refl
-    ( ( ap (concat' _ refl) (distributive-inv-concat (ap j (H a)) (K (k a)))) ∙
+    ( ( ap
+        ( concat' (h (l (k a))) refl)
+        ( distributive-inv-concat (ap j (H a)) (K (k a)))) ∙
       ( ( assoc (inv (K (k a))) (inv (ap j (H a))) refl) ∙
-        ( ap (concat _ (inv (K (k a))))
-          ( ( ap (concat' _ refl) (inv (ap-inv j (H a)))) ∙
+        ( ap
+          ( concat (inv (K (k a))) (j (i (f a))))
+          ( ( ap (concat' (j (g (k a))) refl) (inv (ap-inv j (H a)))) ∙
             ( inv (ap-concat j (inv (H a)) refl))))))
 
 fib-square-comp-vertical : 
@@ -1035,10 +1041,10 @@ fib-square-comp-vertical f g h
     ( ( right-unit) ∙
       ( ( distributive-inv-concat (H (p' a)) (ap g (H' a))) ∙
         ( ( ap
-            ( concat _ (inv (ap g (H' a))))
+            ( concat (inv (ap g (H' a))) (f (p (p' a))))
             ( inv right-unit)) ∙
           ( ap
-            ( concat' _
+            ( concat' (g (h (q' a)))
               ( pr2
                 ( fib-square f g
                   ( pair p (pair q H))
@@ -1287,7 +1293,7 @@ triangle-descent-square-fib-functor-coprod-inl-fib :
 triangle-descent-square-fib-functor-coprod-inl-fib
   {X = X} {X' = X'} f g h αA αB αA' αB' HA HB x (pair a' p) =
   eq-pair refl
-    ( ap (concat (αA (f a')) (inv (HA a')))
+    ( ap (concat (inv (HA a')) (αA x))
       ( ap-comp (ind-coprod _ αA αB) inl p))
 
 triangle-descent-square-fib-functor-coprod-inr-fib :
@@ -1306,7 +1312,7 @@ triangle-descent-square-fib-functor-coprod-inr-fib :
 triangle-descent-square-fib-functor-coprod-inr-fib
   {X = X} {X' = X'} f g h αA αB αA' αB' HA HB y ( pair b' p) =
   eq-pair refl
-    ( ap (concat (αB (g b')) (inv (HB b')))
+    ( ap (concat (inv (HB b')) (αB y))
       ( ap-comp (ind-coprod _ αA αB) inr p))
 
 abstract
@@ -1528,7 +1534,7 @@ map-is-pullback-htpy :
   canonical-pullback f' g' → canonical-pullback f g
 map-is-pullback-htpy {f = f} {f'} Hf {g} {g'} Hg =
   tot (λ a → tot (λ b →
-    ( concat' (g' b) (inv (Hg b))) ∘ (concat (f' a) {z = g' b} (Hf a))))
+    ( concat' (f a) (inv (Hg b))) ∘ (concat (Hf a) (g' b))))
 
 abstract
   is-equiv-map-is-pullback-htpy :
@@ -1540,9 +1546,9 @@ abstract
     is-equiv-tot-is-fiberwise-equiv (λ a →
       is-equiv-tot-is-fiberwise-equiv (λ b →
         is-equiv-comp
-          ( (concat' (g' b) (inv (Hg b))) ∘ (concat (f' a) {z = g' b} (Hf a)))
-          ( concat' (g' b) (inv (Hg b)))
-          ( concat (f' a) {z = g' b} (Hf a))
+          ( (concat' (f a) (inv (Hg b))) ∘ (concat (Hf a) (g' b)))
+          ( concat' (f a) (inv (Hg b)))
+          ( concat (Hf a) (g' b))
           ( htpy-refl)
           ( is-equiv-concat (Hf a) (g' b))
           ( is-equiv-concat' (f a) (inv (Hg b)))))
@@ -1656,12 +1662,19 @@ abstract
           ( λ M → ( htpy-ap-concat H _ _ htpy-right-unit) ∙h
             ( M ∙h
               ( htpy-ap-concat' _ _ H' (htpy-inv htpy-right-unit))))
-          ( htpy-concat _ (htpy-ap-concat H _ _ htpy-right-unit))
-          ( htpy-concat' _
+          ( htpy-concat
+            ( htpy-ap-concat H _ _ htpy-right-unit)
+            ( ((f ·l K) ∙h htpy-refl) ∙h H'))
+          ( htpy-concat'
+            ( H ∙h (g ·l L))
             ( htpy-ap-concat' _ _ H' (htpy-inv htpy-right-unit)))
           ( htpy-refl)
-          ( is-equiv-htpy-concat' _ _)
-          ( is-equiv-htpy-concat _ _)))
+          ( is-equiv-htpy-concat'
+            ( H ∙h (g ·l L))
+            ( λ x → ap (λ z → z ∙ H' x) (inv right-unit)))
+          ( is-equiv-htpy-concat
+            ( λ x → ap (_∙_ (H x)) right-unit)
+            ( ((f ·l K) ∙h htpy-refl) ∙h H'))))
 
 abstract
   is-contr-total-htpy-square-htpy-refl-htpy-refl :
@@ -1742,7 +1755,7 @@ comp-htpy-square-eq-htpy-refl-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
   (f : A → X) (g : B → X) (c c' : cone f g C) →
   ( (htpy-square-eq-htpy-refl-htpy-refl f g c c') ∘
-    (concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
+    (concat (tr-tr-htpy-refl-cone f g c) c')) ~
   ( htpy-square-eq-htpy-refl f g c c')
 comp-htpy-square-eq-htpy-refl-htpy-refl f g c c' =
   htpy-comp-is-equiv
@@ -1773,7 +1786,7 @@ abstract
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
     (f : A → X) (g : B → X) (c c' : cone f g C) →
     ( ( htpy-square-eq' f htpy-refl c c') ∘
-      ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
+      ( concat (tr-tr-htpy-refl-cone f g c) c')) ~
     ( htpy-square-eq-htpy-refl f g c c')
   comp-htpy-square-eq' {A = A} {B} {X} {C} f g c c' =
     htpy-right-whisk
@@ -1784,7 +1797,7 @@ abstract
               ( tr (λ f''' → cone f''' g C) (eq-htpy (htpy-refl' f)) c)) c' →
           htpy-square htpy-refl Hg' c c')
       ( htpy-square-eq-htpy-refl-htpy-refl f g)) c) c'))
-      ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
+      ( concat (tr-tr-htpy-refl-cone f g c) c') ∙h
     ( comp-htpy-square-eq-htpy-refl-htpy-refl f g c c')
 
 abstract
@@ -1810,7 +1823,7 @@ abstract
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4}
     (f : A → X) (g : B → X) (c c' : cone f g C) →
     ( ( htpy-square-eq htpy-refl htpy-refl c c') ∘
-      ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))) ~
+      ( concat (tr-tr-htpy-refl-cone f g c) c')) ~
     ( htpy-square-eq-htpy-refl f g c c')
   comp-htpy-square-eq {A = A} {B} {X} {C} f g c c' =
     htpy-right-whisk
@@ -1822,7 +1835,7 @@ abstract
             htpy-square Hf' Hg c c')
         ( λ g g' → htpy-square-eq' f {g = g} {g' = g'})) g) g)
         htpy-refl) c) c'))
-      ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c)) ∙h
+      ( concat (tr-tr-htpy-refl-cone f g c) c') ∙h
       ( comp-htpy-square-eq' f g c c')
 
 abstract
@@ -1846,7 +1859,7 @@ abstract
             is-equiv-left-factor
               ( htpy-square-eq-htpy-refl f g c c')
               ( htpy-square-eq htpy-refl htpy-refl c c')
-              ( concat c {z = c'} (tr-tr-htpy-refl-cone f g c))
+              ( concat (tr-tr-htpy-refl-cone f g c) c')
               ( htpy-inv (comp-htpy-square-eq f g c c'))
               ( fundamental-theorem-id c
                 ( reflexive-htpy-square f g c)
@@ -2388,7 +2401,7 @@ issec-inv-map-cone-fold {A = A} {B} {X} f g (pair (pair a b) (pair x α)) =
           ( ap
             ( λ t → (eq-pair-triv ( pair t (ap pr2 α))))
             ( ( ( inv right-unit) ∙
-                ( inv (ap (concat _ (ap pr1 α)) (left-inv (ap pr2 α))))) ∙
+                ( inv (ap (concat (ap pr1 α) x) (left-inv (ap pr2 α))))) ∙
               ( inv (assoc (ap pr1 α) (inv (ap pr2 α)) (ap pr2 α)))))) ∙
         ( eq-pair-triv-concat
           ( (ap pr1 α) ∙ (inv (ap pr2 α)))
@@ -2397,9 +2410,9 @@ issec-inv-map-cone-fold {A = A} {B} {X} f g (pair (pair a b) (pair x α)) =
           ( ap pr2 α))) ∙
       ( ap
         ( concat
-          ( pair (g b) (g b))
           ( eq-pair-triv
-            ( pair ((ap pr1 α) ∙ (inv (ap pr2 α))) refl)))
+            ( pair ((ap pr1 α) ∙ (inv (ap pr2 α))) refl))
+          ( pair x x))
         ( inv (ap-diagonal (ap pr2 α)))))
 
 ap-pr1-eq-pair-triv :
@@ -2424,7 +2437,7 @@ isretr-inv-map-cone-fold { A = A} { B = B} { X = X} f g (pair a (pair b p)) =
     refl
     ( inv
       ( ( ap
-          ( concat' (g b) refl)
+          ( concat' (f a) refl)
           ( ( ( ap
                 ( λ t → t ∙
                   ( inv (ap pr2 (eq-pair-triv'
