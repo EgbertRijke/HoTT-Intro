@@ -176,6 +176,74 @@ eq-Eq-total-subuniverse P {s} {t} =
 
 -- Section 12.2 Groups in univalent mathematics
 
+has-associative-mul :
+  {l : Level} (X : hSet l) → UU l
+has-associative-mul (pair X is-set-X) =
+  Σ ( X → (X → X)) (λ μ →
+    ( x y z : X) → Id (μ (μ x y) z) (μ x (μ y z)))
+
+Semi-Group :
+  (l : Level) → UU (lsuc l)
+Semi-Group l = Σ (hSet l) has-associative-mul
+
+is-monoid :
+  {l : Level} → Semi-Group l → UU l
+is-monoid (pair (pair X is-set-X) (pair μ assoc-μ)) =
+  Σ X (λ e → ((y : X) → Id (μ e y) y) × ((x : X) → Id (μ x e) x))
+
+Monoid :
+  (l : Level) → UU (lsuc l)
+Monoid l = Σ (Semi-Group l) is-monoid
+
+abstract
+  is-prop-is-monoid' :
+    {l : Level} (G : Semi-Group l) → is-prop' (is-monoid G)
+  is-prop-is-monoid' (pair (pair X is-set-X) (pair μ assoc-μ))
+    (pair e (pair left-unit-e right-unit-e))
+    (pair e' (pair left-unit-e' right-unit-e')) =
+    eq-subtype
+      ( λ e → is-prop-prod
+        ( is-prop-Π (λ y → is-set-X (μ e y) y))
+        ( is-prop-Π (λ x → is-set-X (μ x e) x)))
+      ( (inv (left-unit-e' e)) ∙ (right-unit-e e'))
+
+abstract
+  is-prop-is-monoid :
+    {l : Level} (G : Semi-Group l) → is-prop (is-monoid G)
+  is-prop-is-monoid G = is-prop-is-prop' (is-prop-is-monoid' G)
+
+is-group :
+  {l : Level} (G : Monoid l) → UU l
+is-group (pair (pair (pair X is-set-X) (pair μ assoc-μ)) (pair e laws-e)) =
+  Σ (X → X) (λ i → ((x : X) → Id (μ (i x) x) e) × ((x : X) → Id (μ x (i x)) e))
+
+abstract
+  is-prop-is-group' :
+    {l : Level} (G : Monoid l) → is-prop' (is-group G)
+  is-prop-is-group'
+    ( pair
+      ( pair (pair X is-set-X) (pair μ assoc-μ))
+      ( pair e (pair left-unit-e right-unit-e)))
+    ( pair i (pair left-inv-i right-inv-i))
+    ( pair i' (pair left-inv-i' right-inv-i')) =
+    eq-subtype
+      ( λ i →
+        is-prop-prod
+          ( is-prop-Π (λ x → is-set-X (μ (i x) x) e))
+          ( is-prop-Π (λ x → is-set-X (μ x (i x)) e)))
+      ( eq-htpy
+        ( λ x →                                           -- i x
+          ( inv (right-unit-e (i x))) ∙                   -- = (ix)·1
+          ( ( ap (μ (i x)) (inv (right-inv-i' x))) ∙      -- = (ix)·(x·i'x)
+            ( ( inv (assoc-μ (i x) x (i' x))) ∙           -- = (ix·x)·(i'x)
+              ( ( ap (λ y → μ y (i' x)) (left-inv-i x)) ∙ -- = 1·(i'x)
+                ( left-unit-e (i' x)))))))                -- = i' x
+
+abstract
+  is-prop-is-group :
+    {l : Level} (G : Monoid l) → is-prop (is-group G)
+  is-prop-is-group G = is-prop-is-prop' (is-prop-is-group' G)
+
 Group-operations :
   {l : Level} (G : hSet l) → UU l
 Group-operations (pair G is-set-G) =

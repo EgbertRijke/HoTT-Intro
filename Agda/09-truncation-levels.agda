@@ -56,6 +56,88 @@ is-subtype :
   {i j : Level} {A : UU i} (B : A → UU j) → UU (i ⊔ j)
 is-subtype B = (x : _) → is-prop (B x)
 
+double-structure-swap :
+  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
+  Σ (Σ A B) (λ t → C (pr1 t)) → Σ (Σ A C) (λ t → B (pr1 t))
+double-structure-swap A B C (pair (pair a b) c) = (pair (pair a c) b)
+
+htpy-double-structure-swap :
+  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
+  ((double-structure-swap A C B) ∘ (double-structure-swap A B C)) ~ id
+htpy-double-structure-swap A B C (pair (pair a b) c) =
+  eq-pair (eq-pair refl refl) refl
+
+is-equiv-double-structure-swap :
+  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
+  is-equiv (double-structure-swap A B C)
+is-equiv-double-structure-swap A B C =
+  is-equiv-has-inverse
+    ( double-structure-swap A C B)
+    ( htpy-double-structure-swap A C B)
+    ( htpy-double-structure-swap A B C)
+
+{- The following is a general construction that will help us show that
+   the identity type of a subtype agrees with the identity type of the 
+   original type. We already know that the first projection of a family of
+   propositions is an embedding, but the following lemma still has its uses. -}
+
+abstract
+  is-contr-total-Eq-substructure :
+    {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {P : A → UU l3} →
+    is-contr (Σ A B) → (is-subtype P) → (a : A) (b : B a) (p : P a) →
+    is-contr (Σ (Σ A P) (λ t → B (pr1 t)))
+  is-contr-total-Eq-substructure {A = A} {B} {P}
+    is-contr-AB is-subtype-P a b p =
+    is-contr-is-equiv
+      ( Σ (Σ A B) (λ t → P (pr1 t)))
+      ( double-structure-swap A P B)
+      ( is-equiv-double-structure-swap A P B)
+      ( is-contr-is-equiv'
+        ( P a)
+        ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (pair a b))
+        ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (pair a b))
+        ( is-contr-is-prop-inh (is-subtype-P a) p))
+
+Eq-total-subtype :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} → is-subtype B →
+  (Σ A B) → (Σ A B) → UU l1
+Eq-total-subtype is-subtype-B p p' = Id (pr1 p) (pr1 p') 
+
+reflexive-Eq-total-subtype :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (is-subtype-B : is-subtype B) →
+  (p : Σ A B) → Eq-total-subtype is-subtype-B p p
+reflexive-Eq-total-subtype is-subtype-B (pair x y) = refl
+
+Eq-total-subtype-eq :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (is-subtype-B : is-subtype B) →
+  (p p' : Σ A B) → Id p p' → Eq-total-subtype is-subtype-B p p'
+Eq-total-subtype-eq is-subtype-B p .p refl =
+  reflexive-Eq-total-subtype is-subtype-B p
+
+is-contr-total-Eq-total-subtype :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (is-subtype-B : is-subtype B) →
+  (p : Σ A B) → is-contr (Σ (Σ A B) (Eq-total-subtype is-subtype-B p))
+is-contr-total-Eq-total-subtype is-subtype-B (pair x y) =
+  is-contr-total-Eq-substructure
+    ( is-contr-total-path x)
+    ( is-subtype-B)
+    x refl y
+
+is-equiv-Eq-total-subtype-eq :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (is-subtype-B : is-subtype B) →
+  (p p' : Σ A B) → is-equiv (Eq-total-subtype-eq is-subtype-B p p')
+is-equiv-Eq-total-subtype-eq is-subtype-B p =
+  fundamental-theorem-id p
+    ( reflexive-Eq-total-subtype is-subtype-B p)
+    ( is-contr-total-Eq-total-subtype is-subtype-B p)
+    ( Eq-total-subtype-eq is-subtype-B p)
+
+eq-subtype :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (is-subtype-B : is-subtype B) →
+  {p p' : Σ A B} → Eq-total-subtype is-subtype-B p p' → Id p p'
+eq-subtype is-subtype-B {p} {p'} =
+  inv-is-equiv (is-equiv-Eq-total-subtype-eq is-subtype-B p p')
+
 -- Section 8.2 Sets
 
 is-set :

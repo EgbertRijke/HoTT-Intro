@@ -659,48 +659,6 @@ abstract
     is-emb (map-equiv {A = A} {B = B})
   is-emb-map-equiv = is-emb-pr1-is-subtype is-subtype-is-equiv
 
-double-structure-swap :
-  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
-  Σ (Σ A B) (λ t → C (pr1 t)) → Σ (Σ A C) (λ t → B (pr1 t))
-double-structure-swap A B C (pair (pair a b) c) = (pair (pair a c) b)
-
-htpy-double-structure-swap :
-  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
-  ((double-structure-swap A C B) ∘ (double-structure-swap A B C)) ~ id
-htpy-double-structure-swap A B C (pair (pair a b) c) =
-  eq-pair (eq-pair refl refl) refl
-
-is-equiv-double-structure-swap :
-  {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2) (C : A → UU l3) →
-  is-equiv (double-structure-swap A B C)
-is-equiv-double-structure-swap A B C =
-  is-equiv-has-inverse
-    ( double-structure-swap A C B)
-    ( htpy-double-structure-swap A C B)
-    ( htpy-double-structure-swap A B C)
-
-{- The following is a general construction that will help us show that
-   the identity type of a subtype agrees with the identity type of the 
-   original type. We already know that the first projection of a family of
-   propositions is an embedding, but the following lemma still has its uses. -}
-
-abstract
-  is-contr-total-Eq-substructure :
-    {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {P : A → UU l3} →
-    is-contr (Σ A B) → (is-subtype P) → (a : A) (b : B a) (p : P a) →
-    is-contr (Σ (Σ A P) (λ t → B (pr1 t)))
-  is-contr-total-Eq-substructure {A = A} {B} {P}
-    is-contr-AB is-subtype-P a b p =
-    is-contr-is-equiv
-      ( Σ (Σ A B) (λ t → P (pr1 t)))
-      ( double-structure-swap A P B)
-      ( is-equiv-double-structure-swap A P B)
-      ( is-contr-is-equiv'
-        ( P a)
-        ( left-unit-law-Σ-map-gen (λ t → P (pr1 t)) is-contr-AB (pair a b))
-        ( is-equiv-left-unit-law-Σ-map-gen _ is-contr-AB (pair a b))
-        ( is-contr-is-prop-inh (is-subtype-P a) p))
-
 {- For example, we show that homotopies are equivalent to identifications of
    equivalences. -}
 
