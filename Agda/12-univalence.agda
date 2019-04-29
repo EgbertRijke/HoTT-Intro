@@ -361,28 +361,28 @@ is-prop-preserves-mul G (pair (pair H is-set-H) (pair μ-H assoc-H)) f =
     is-prop-Π (λ y →
       is-set-H (f (mul-semi-group G x y)) (μ-H (f x) (f y))))
 
-Semi-Group-Hom :
+hom-Semi-Group :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) → UU (l1 ⊔ l2)
-Semi-Group-Hom G H =
+hom-Semi-Group G H =
   Σ ( underlying-type-semi-group G → underlying-type-semi-group H) (λ f →
     ( (x y : underlying-type-semi-group G) →
       Id (f (mul-semi-group G x y)) (mul-semi-group H (f x) (f y))))
 
 underlying-map-semi-group-hom :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
-  ( Semi-Group-Hom G H) →
+  ( hom-Semi-Group G H) →
   ( underlying-type-semi-group G) → (underlying-type-semi-group H)
 underlying-map-semi-group-hom G H f = pr1 f
 
 preserves-mul-semi-group-hom :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
-  ( f : Semi-Group-Hom G H) →
+  ( f : hom-Semi-Group G H) →
   preserves-mul G H (underlying-map-semi-group-hom G H f)
 preserves-mul-semi-group-hom G H f = pr2 f
 
 preserves-unit-monoid :
   { l1 l2 : Level} (G : Monoid l1) (H : Monoid l2) →
-  (f : Semi-Group-Hom (semi-group-monoid G) (semi-group-monoid H)) → UU l2
+  (f : hom-Semi-Group (semi-group-monoid G) (semi-group-monoid H)) → UU l2
 preserves-unit-monoid
   ( pair ( pair (pair G is-set-G) (pair μ-G assoc-G))
          ( pair e-G (pair left-unit-G right-unit-G)))
@@ -394,23 +394,23 @@ preserves-unit-monoid
 Monoid-Hom :
   { l1 l2 : Level} (G : Monoid l1) (H : Monoid l2) → UU (l1 ⊔ l2)
 Monoid-Hom G H =
-  Σ ( Semi-Group-Hom (semi-group-monoid G) (semi-group-monoid H))
+  Σ ( hom-Semi-Group (semi-group-monoid G) (semi-group-monoid H))
     ( preserves-unit-monoid G H)
 
-Group-Hom :
+hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) → UU (l1 ⊔ l2)
-Group-Hom G H = Semi-Group-Hom (underlying-semi-group G) (underlying-semi-group H)
+hom-Group G H = hom-Semi-Group (underlying-semi-group G) (underlying-semi-group H)
 
 preserves-unit :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  ( f : Group-Hom G H) → UU l2
+  ( f : hom-Group G H) → UU l2
 preserves-unit G H f =
   preserves-unit-monoid (monoid-group G) (monoid-group H) f
 
 abstract
   preserves-unit-group-hom :
     { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-    ( f : Group-Hom G H) → preserves-unit G H f
+    ( f : hom-Group G H) → preserves-unit G H f
   preserves-unit-group-hom
     ( pair ( pair ( pair (pair G is-set-G) (pair μ-G assoc-G))
                   ( pair e-G (pair left-unit-G right-unit-G)))
@@ -428,7 +428,7 @@ abstract
 
 preserves-inverses :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  ( f : Group-Hom G H) → UU (l1 ⊔ l2)
+  ( f : hom-Group G H) → UU (l1 ⊔ l2)
 preserves-inverses
   ( pair ( pair ( pair (pair G is-set-G) (pair μ-G assoc-G))
                 ( pair e-G (pair left-unit-G right-unit-G)))
@@ -442,7 +442,7 @@ preserves-inverses
 abstract
   preserves-inverses-group-hom' :
     { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-    ( f : Group-Hom G H) →
+    ( f : hom-Group G H) →
     preserves-unit G H f → preserves-inverses G H f
   preserves-inverses-group-hom'
     ( pair ( pair ( pair (pair G is-set-G) (pair μ-G assoc-G))
@@ -465,20 +465,20 @@ abstract
 abstract
   preserves-inverses-group-hom :
     { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-    ( f : Group-Hom G H) → preserves-inverses G H f
+    ( f : hom-Group G H) → preserves-inverses G H f
   preserves-inverses-group-hom G H f =
     preserves-inverses-group-hom' G H f (preserves-unit-group-hom G H f)
 
-Group-Hom' :
+hom-Group' :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) → UU (l1 ⊔ l2)
-Group-Hom' G H =
-  Σ ( Group-Hom G H) (λ f →
+hom-Group' G H =
+  Σ ( hom-Group G H) (λ f →
     ( preserves-unit G H f) × (preserves-inverses G H f))
 
-preserves-all-Group-Hom :
+preserves-all-hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  Group-Hom G H → Group-Hom' G H
-preserves-all-Group-Hom G H f =
+  hom-Group G H → hom-Group' G H
+preserves-all-hom-Group G H f =
   pair f
     ( pair
       ( preserves-unit-group-hom G H f)
@@ -487,29 +487,29 @@ preserves-all-Group-Hom G H f =
 {- Next, we construct the identity group homomorphism, and we show that
    compositions of group homomorphisms are again group homomorphisms. -}
 
-id-semi-group-hom :
-  {l : Level} (G : Semi-Group l) → Semi-Group-Hom G G
-id-semi-group-hom (pair (pair G is-set-G) (pair μ assoc-G)) =
+id-Semi-Group :
+  {l : Level} (G : Semi-Group l) → hom-Semi-Group G G
+id-Semi-Group (pair (pair G is-set-G) (pair μ assoc-G)) =
   pair id (λ x y → refl)
 
-id-group-hom :
-  {l : Level} (G : Group l) → Group-Hom G G
-id-group-hom G = id-semi-group-hom (underlying-semi-group G)
+id-Group :
+  {l : Level} (G : Group l) → hom-Group G G
+id-Group G = id-Semi-Group (underlying-semi-group G)
 
-composition-Semi-Group-Hom :
+composition-Semi-Group :
   {l1 l2 l3 : Level} →
   (G : Semi-Group l1) (H : Semi-Group l2) (K : Semi-Group l3) →
-  (Semi-Group-Hom H K) → (Semi-Group-Hom G H) → (Semi-Group-Hom G K)
-composition-Semi-Group-Hom G H K (pair g μ-g) (pair f μ-f) =
+  (hom-Semi-Group H K) → (hom-Semi-Group G H) → (hom-Semi-Group G K)
+composition-Semi-Group G H K (pair g μ-g) (pair f μ-f) =
   pair
     ( g ∘ f)
     ( λ x y → (ap g (μ-f x y)) ∙ (μ-g (f x) (f y)))
 
-composition-Group-Hom :
+composition-hom-Group :
   {l1 l2 l3 : Level} (G : Group l1) (H : Group l2) (K : Group l3) →
-  (Group-Hom H K) → (Group-Hom G H) → (Group-Hom G K)
-composition-Group-Hom G H K =
-  composition-Semi-Group-Hom
+  (hom-Group H K) → (hom-Group G H) → (hom-Group G K)
+composition-hom-Group G H K =
+  composition-Semi-Group
     ( underlying-semi-group G)
     ( underlying-semi-group H)
     ( underlying-semi-group K)
@@ -522,27 +522,27 @@ composition-Group-Hom G H K =
 
 {- First we characterize the identity type of the semi-group homomorphisms. -}
 
-htpy-Semi-Group-Hom :
+htpy-hom-Semi-Group :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2)
-  (f g : Semi-Group-Hom G H) → UU (l1 ⊔ l2)
-htpy-Semi-Group-Hom G H f g = (pr1 f) ~ (pr1 g)
+  (f g : hom-Semi-Group G H) → UU (l1 ⊔ l2)
+htpy-hom-Semi-Group G H f g = (pr1 f) ~ (pr1 g)
 
-reflexive-htpy-Semi-Group-Hom :
+reflexive-htpy-hom-Semi-Group :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
-  ( f : Semi-Group-Hom G H) → htpy-Semi-Group-Hom G H f f
-reflexive-htpy-Semi-Group-Hom G H f = htpy-refl
+  ( f : hom-Semi-Group G H) → htpy-hom-Semi-Group G H f f
+reflexive-htpy-hom-Semi-Group G H f = htpy-refl
 
-htpy-Semi-Group-Hom-eq :
+htpy-hom-Semi-Group-eq :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
-  ( f g : Semi-Group-Hom G H) → Id f g → htpy-Semi-Group-Hom G H f g
-htpy-Semi-Group-Hom-eq G H f .f refl = reflexive-htpy-Semi-Group-Hom G H f 
+  ( f g : hom-Semi-Group G H) → Id f g → htpy-hom-Semi-Group G H f g
+htpy-hom-Semi-Group-eq G H f .f refl = reflexive-htpy-hom-Semi-Group G H f 
 
 abstract
-  is-contr-total-htpy-Semi-Group-Hom :
+  is-contr-total-htpy-hom-Semi-Group :
     { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
-    ( f : Semi-Group-Hom G H) →
-    is-contr (Σ (Semi-Group-Hom G H) (htpy-Semi-Group-Hom G H f))
-  is-contr-total-htpy-Semi-Group-Hom G H f =
+    ( f : hom-Semi-Group G H) →
+    is-contr (Σ (hom-Semi-Group G H) (htpy-hom-Semi-Group G H f))
+  is-contr-total-htpy-hom-Semi-Group G H f =
     is-contr-total-Eq-substructure
       ( is-contr-total-htpy (underlying-map-semi-group-hom G H f))
       ( is-prop-preserves-mul G H)
@@ -551,69 +551,88 @@ abstract
       ( preserves-mul-semi-group-hom G H f)
 
 abstract
-  is-equiv-htpy-Semi-Group-Hom-eq :
+  is-equiv-htpy-hom-Semi-Group-eq :
     { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
-    ( f g : Semi-Group-Hom G H) → is-equiv (htpy-Semi-Group-Hom-eq G H f g)
-  is-equiv-htpy-Semi-Group-Hom-eq G H f =
+    ( f g : hom-Semi-Group G H) → is-equiv (htpy-hom-Semi-Group-eq G H f g)
+  is-equiv-htpy-hom-Semi-Group-eq G H f =
     fundamental-theorem-id f
-      ( reflexive-htpy-Semi-Group-Hom G H f)
-      ( is-contr-total-htpy-Semi-Group-Hom G H f)
-      ( htpy-Semi-Group-Hom-eq G H f)
+      ( reflexive-htpy-hom-Semi-Group G H f)
+      ( is-contr-total-htpy-hom-Semi-Group G H f)
+      ( htpy-hom-Semi-Group-eq G H f)
 
-eq-htpy-Semi-Group-Hom :
+eq-htpy-hom-Semi-Group :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
-  { f g : Semi-Group-Hom G H} → htpy-Semi-Group-Hom G H f g → Id f g
-eq-htpy-Semi-Group-Hom G H {f} {g} =
-  inv-is-equiv (is-equiv-htpy-Semi-Group-Hom-eq G H f g)
+  { f g : hom-Semi-Group G H} → htpy-hom-Semi-Group G H f g → Id f g
+eq-htpy-hom-Semi-Group G H {f} {g} =
+  inv-is-equiv (is-equiv-htpy-hom-Semi-Group-eq G H f g)
 
-associative-comp-Semi-Group-Hom :
+associative-Semi-Group :
   { l1 l2 l3 l4 : Level} (G : Semi-Group l1) (H : Semi-Group l2)
-  ( K : Semi-Group l3) (L : Semi-Group l4) (h : Semi-Group-Hom K L) →
-  ( g : Semi-Group-Hom H K) (f : Semi-Group-Hom G H) →
-  Id ( composition-Semi-Group-Hom G H L
-       ( composition-Semi-Group-Hom H K L h g) f)
-     ( composition-Semi-Group-Hom G K L h
-       ( composition-Semi-Group-Hom G H K g f))
-associative-comp-Semi-Group-Hom G H K L (pair h μ-h) (pair g μ-g) (pair f μ-f) =
-  eq-htpy-Semi-Group-Hom G L htpy-refl
+  ( K : Semi-Group l3) (L : Semi-Group l4) (h : hom-Semi-Group K L) →
+  ( g : hom-Semi-Group H K) (f : hom-Semi-Group G H) →
+  Id ( composition-Semi-Group G H L
+       ( composition-Semi-Group H K L h g) f)
+     ( composition-Semi-Group G K L h
+       ( composition-Semi-Group G H K g f))
+associative-Semi-Group G H K L (pair h μ-h) (pair g μ-g) (pair f μ-f) =
+  eq-htpy-hom-Semi-Group G L htpy-refl
+
+left-unit-law-Semi-Group :
+  { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2)
+  ( f : hom-Semi-Group G H) →
+  Id ( composition-Semi-Group G H H (id-Semi-Group H) f) f
+left-unit-law-Semi-Group G
+  (pair (pair H is-set-H) (pair μ-H assoc-H)) (pair f μ-f) =
+  eq-htpy-hom-Semi-Group G
+    ( pair (pair H is-set-H) (pair μ-H assoc-H))
+    ( htpy-refl)
+
+right-unit-law-Semi-Group :
+  { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2)
+  ( f : hom-Semi-Group G H) →
+  Id ( composition-Semi-Group G G H f (id-Semi-Group G)) f
+right-unit-law-Semi-Group
+  (pair (pair G is-set-G) (pair μ-G assoc-G)) H (pair f μ-f) =
+  eq-htpy-hom-Semi-Group
+    ( pair (pair G is-set-G) (pair μ-G assoc-G)) H htpy-refl
 
 {- Now we characterize the identity type of group homomorphisms. -}
 
-htpy-Group-Hom :
+htpy-hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  ( f g : Group-Hom G H) → UU (l1 ⊔ l2)
-htpy-Group-Hom G H f g =
-  htpy-Semi-Group-Hom (underlying-semi-group G) (underlying-semi-group H) f g
+  ( f g : hom-Group G H) → UU (l1 ⊔ l2)
+htpy-hom-Group G H f g =
+  htpy-hom-Semi-Group (underlying-semi-group G) (underlying-semi-group H) f g
 
-reflexive-htpy-Group-Hom :
+reflexive-htpy-hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  ( f : Group-Hom G H) → htpy-Group-Hom G H f f
-reflexive-htpy-Group-Hom G H =
-  reflexive-htpy-Semi-Group-Hom
+  ( f : hom-Group G H) → htpy-hom-Group G H f f
+reflexive-htpy-hom-Group G H =
+  reflexive-htpy-hom-Semi-Group
     ( underlying-semi-group G)
     ( underlying-semi-group H)
 
-htpy-Group-Hom-eq :
+htpy-hom-Group-eq :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  ( f g : Group-Hom G H) → Id f g → htpy-Group-Hom G H f g
-htpy-Group-Hom-eq G H =
-  htpy-Semi-Group-Hom-eq
+  ( f g : hom-Group G H) → Id f g → htpy-hom-Group G H f g
+htpy-hom-Group-eq G H =
+  htpy-hom-Semi-Group-eq
     ( underlying-semi-group G)
     ( underlying-semi-group H)
 
-is-contr-total-htpy-Group-Hom :
-  { l1 l2 : Level} (G : Group l1) (H : Group l2) (f : Group-Hom G H) →
-  is-contr (Σ (Group-Hom G H) (htpy-Group-Hom G H f))
-is-contr-total-htpy-Group-Hom G H =
-  is-contr-total-htpy-Semi-Group-Hom
+is-contr-total-htpy-hom-Group :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) (f : hom-Group G H) →
+  is-contr (Σ (hom-Group G H) (htpy-hom-Group G H f))
+is-contr-total-htpy-hom-Group G H =
+  is-contr-total-htpy-hom-Semi-Group
     ( underlying-semi-group G)
     ( underlying-semi-group H)
 
-is-equiv-htpy-Group-Hom-eq :
+is-equiv-htpy-hom-Group-eq :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
-  ( f g : Group-Hom G H) → is-equiv (htpy-Group-Hom-eq G H f g)
-is-equiv-htpy-Group-Hom-eq G H =
-  is-equiv-htpy-Semi-Group-Hom-eq
+  ( f g : hom-Group G H) → is-equiv (htpy-hom-Group-eq G H f g)
+is-equiv-htpy-hom-Group-eq G H =
+  is-equiv-htpy-hom-Semi-Group-eq
     ( underlying-semi-group G)
     ( underlying-semi-group H)
 
