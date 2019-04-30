@@ -258,7 +258,7 @@ Group l = Σ (Semi-Group l) is-group
 
 underlying-semi-group-Group :
   {l : Level} → Group l → Semi-Group l
-underlying-semi-group-Group G = (pr1 G)
+underlying-semi-group-Group G = pr1 G
 
 {- We show that being a group is a proposition. -}
 
@@ -492,10 +492,10 @@ composition-Semi-Group G H K (pair g μ-g) (pair f μ-f) =
     ( g ∘ f)
     ( λ x y → (ap g (μ-f x y)) ∙ (μ-g (f x) (f y)))
 
-composition-hom-Group :
+composition-Group :
   {l1 l2 l3 : Level} (G : Group l1) (H : Group l2) (K : Group l3) →
   (hom-Group H K) → (hom-Group G H) → (hom-Group G K)
-composition-hom-Group G H K =
+composition-Group G H K =
   composition-Semi-Group
     ( underlying-semi-group-Group G)
     ( underlying-semi-group-Group H)
@@ -589,7 +589,9 @@ htpy-hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
   ( f g : hom-Group G H) → UU (l1 ⊔ l2)
 htpy-hom-Group G H f g =
-  htpy-hom-Semi-Group (underlying-semi-group-Group G) (underlying-semi-group-Group H) f g
+  htpy-hom-Semi-Group
+    ( underlying-semi-group-Group G)
+    ( underlying-semi-group-Group H) f g
 
 reflexive-htpy-hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
@@ -770,22 +772,22 @@ abstract
     equiv-Semi-Group' G H ≃ iso-Semi-Group G H
   equiv-iso-Semi-Group-equiv-Semi-Group G H =
     ( ( ( equiv-total-subtype
-        ( λ f → is-subtype-is-equiv (underlying-map-Semi-Group G H f))
-        ( is-prop-is-iso-Semi-Group G H)
-        ( is-iso-is-equiv-hom-Semi-Group G H)
-        ( is-equiv-hom-is-iso-Semi-Group G H)) ∘e
-      ( ( inv-equiv
-          ( equiv-Σ-assoc
-            ( underlying-type-Semi-Group G → underlying-type-Semi-Group H)
-            ( preserves-mul G H)
-            ( λ f → is-equiv (underlying-map-Semi-Group G H f)))) ∘e
-        ( equiv-tot-fam-equiv
-          ( λ f → equiv-swap-prod (is-equiv f) (preserves-mul G H f))))) ∘e
-    ( equiv-Σ-assoc
-      ( underlying-type-Semi-Group G → underlying-type-Semi-Group H)
-      ( is-equiv)
-      ( λ e → preserves-mul G H (map-equiv e)))) ∘e
-    equiv-tr (equiv-Semi-Group G) (η-pair H)
+          ( λ f → is-subtype-is-equiv (underlying-map-Semi-Group G H f))
+          ( is-prop-is-iso-Semi-Group G H)
+          ( is-iso-is-equiv-hom-Semi-Group G H)
+          ( is-equiv-hom-is-iso-Semi-Group G H)) ∘e
+        ( ( inv-equiv
+            ( equiv-Σ-assoc
+              ( underlying-type-Semi-Group G → underlying-type-Semi-Group H)
+              ( preserves-mul G H)
+              ( λ f → is-equiv (underlying-map-Semi-Group G H f)))) ∘e
+          ( equiv-tot-fam-equiv
+            ( λ f → equiv-swap-prod (is-equiv f) (preserves-mul G H f))))) ∘e
+      ( equiv-Σ-assoc
+        ( underlying-type-Semi-Group G → underlying-type-Semi-Group H)
+        ( is-equiv)
+        ( λ e → preserves-mul G H (map-equiv e)))) ∘e
+    ( equiv-tr (equiv-Semi-Group G) (η-pair H))
 
 center-total-preserves-mul-id :
   { l1 : Level} (G : Semi-Group l1) →
@@ -869,9 +871,61 @@ is-equiv-iso-eq-Semi-Group G =
     ( is-contr-total-iso-Semi-Group G)
     ( iso-eq-Semi-Group G)
 
+equiv-iso-eq-Semi-Group :
+  { l1 : Level} (G H : Semi-Group l1) → Id G H ≃ iso-Semi-Group G H
+equiv-iso-eq-Semi-Group G H =
+  pair (iso-eq-Semi-Group G H) (is-equiv-iso-eq-Semi-Group G H)
+
 eq-iso-Semi-Group :
   { l1 : Level} (G H : Semi-Group l1) → iso-Semi-Group G H → Id G H
 eq-iso-Semi-Group G H = inv-is-equiv (is-equiv-iso-eq-Semi-Group G H)
+
+{- Finally we show that isomorphic groups are equal. -}
+
+iso-Group :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) → UU (l1 ⊔ l2)
+iso-Group G H =
+  iso-Semi-Group
+    ( underlying-semi-group-Group G)
+    ( underlying-semi-group-Group H)
+
+iso-id-Group :
+  { l1 : Level} (G : Group l1) → iso-Group G G
+iso-id-Group G = iso-id-Semi-Group (underlying-semi-group-Group G)
+
+iso-eq-Group :
+  { l1 : Level} (G H : Group l1) → Id G H → iso-Group G H
+iso-eq-Group G .G refl = iso-id-Group G
+
+abstract
+  equiv-iso-eq-Group' :
+    { l1 : Level} (G H : Group l1) → Id G H ≃ iso-Group G H
+  equiv-iso-eq-Group' G H =
+    ( equiv-iso-eq-Semi-Group
+      ( underlying-semi-group-Group G)
+      ( underlying-semi-group-Group H)) ∘e
+    ( equiv-ap-pr1-is-subtype is-prop-is-group {s = G} {t = H})
+
+abstract
+  is-contr-total-iso-Group :
+    { l1 : Level} (G : Group l1) → is-contr (Σ (Group l1) (iso-Group G))
+  is-contr-total-iso-Group {l1} G =
+    is-contr-equiv'
+      ( Σ (Group l1) (Id G))
+      ( equiv-tot-fam-equiv (λ H → equiv-iso-eq-Group' G H))
+      ( is-contr-total-path G)
+
+is-equiv-iso-eq-Group :
+  { l1 : Level} (G H : Group l1) → is-equiv (iso-eq-Group G H)
+is-equiv-iso-eq-Group G =
+  fundamental-theorem-id G
+    ( iso-id-Group G)
+    ( is-contr-total-iso-Group G)
+    ( iso-eq-Group G)
+
+eq-iso-Group :
+  { l1 : Level} (G H : Group l1) → iso-Group G H → Id G H
+eq-iso-Group G H = inv-is-equiv (is-equiv-iso-eq-Group G H)
 
 -- Exercises
 

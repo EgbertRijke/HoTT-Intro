@@ -423,6 +423,13 @@ abstract
         ( is-equiv-fib-fam-fib-pr1 _ x)
         ( is-subtype-B x))
 
+equiv-ap-pr1-is-subtype : {i j : Level} {A : UU i} {B : A → UU j} →
+  is-subtype B → {s t : Σ A B} → Id s t ≃ Id (pr1 s) (pr1 t)
+equiv-ap-pr1-is-subtype is-subtype-B {s} {t} =
+  pair
+    ( ap pr1)
+    ( is-emb-pr1-is-subtype is-subtype-B s t)
+
 abstract
   is-subtype-is-emb-pr1 : {i j : Level} {A : UU i} {B : A → UU j} →
     is-emb (pr1 {B = B}) → is-subtype B
