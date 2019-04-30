@@ -284,11 +284,24 @@ abstract
     is-trunc-is-equiv k (Id (f x) (f y)) (ap f {x} {y})
       (is-emb-is-equiv f is-equiv-f x y) (H (f x) (f y))
 
-is-trunc-equiv :
-  {i j : Level} (k : 𝕋) {A : UU i} (B : UU  j) (e : A ≃ B) →
-  is-trunc k B → is-trunc k A
-is-trunc-equiv k B (pair f is-equiv-f) =
-  is-trunc-is-equiv k B f is-equiv-f
+abstract
+  is-set-is-equiv :
+    {i j : Level} {A : UU i} (B : UU j) (f : A → B) → is-equiv f →
+    is-set B → is-set A
+  is-set-is-equiv = is-trunc-is-equiv zero-𝕋
+
+abstract
+  is-trunc-equiv :
+    {i j : Level} (k : 𝕋) {A : UU i} (B : UU  j) (e : A ≃ B) →
+    is-trunc k B → is-trunc k A
+  is-trunc-equiv k B (pair f is-equiv-f) =
+    is-trunc-is-equiv k B f is-equiv-f
+
+abstract
+  is-set-equiv :
+    {i j : Level} {A : UU i} (B : UU j) (e : A ≃ B) →
+    is-set B → is-set A
+  is-set-equiv = is-trunc-equiv zero-𝕋
 
 abstract
   is-trunc-is-equiv' :
@@ -300,11 +313,24 @@ abstract
       ( is-equiv-inv-is-equiv is-equiv-f)
       ( is-trunc-A)
 
-is-trunc-equiv' :
-  {i j : Level} (k : 𝕋) (A : UU i) {B : UU j} (e : A ≃ B) →
-  is-trunc k A → is-trunc k B
-is-trunc-equiv' k A (pair f is-equiv-f) =
-  is-trunc-is-equiv' k A f is-equiv-f
+abstract
+  is-set-is-equiv' :
+    {i j : Level} (A : UU i) {B : UU j} (f : A → B) → is-equiv f →
+    is-set A → is-set B
+  is-set-is-equiv' = is-trunc-is-equiv' zero-𝕋
+
+abstract
+  is-trunc-equiv' :
+    {i j : Level} (k : 𝕋) (A : UU i) {B : UU j} (e : A ≃ B) →
+    is-trunc k A → is-trunc k B
+  is-trunc-equiv' k A (pair f is-equiv-f) =
+    is-trunc-is-equiv' k A f is-equiv-f
+
+abstract
+  is-set-equiv' :
+    {i j : Level} (A : UU i) {B : UU j} (e : A ≃ B) →
+    is-set A → is-set B
+  is-set-equiv' = is-trunc-equiv' zero-𝕋
 
 abstract
   is-trunc-succ-is-emb : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
@@ -863,6 +889,24 @@ abstract
       ( g)
       ( λ y → center (is-prop-B (f (g y)) y))
       ( λ x → center (is-prop-A (g (f x)) x))
+
+equiv-prop :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} → is-prop A → is-prop B →
+  ( A → B) → (B → A) → A ≃ B
+equiv-prop is-prop-A is-prop-B f g =
+  pair f (is-equiv-is-prop is-prop-A is-prop-B g)
+
+equiv-total-subtype :
+  { l1 l2 l3 : Level} {A : UU l1} {P : A → UU l2} {Q : A → UU l3} →
+  ( is-subtype-P : is-subtype P) (is-subtype-Q : is-subtype Q) →
+  ( f : (x : A) → P x → Q x) →
+  ( g : (x : A) → Q x → P x) →
+  ( Σ A P) ≃ (Σ A Q)
+equiv-total-subtype is-subtype-P is-subtype-Q f g =
+  pair
+    ( tot f)
+    ( is-equiv-tot-is-fiberwise-equiv {f = f}
+      ( λ x → is-equiv-is-prop (is-subtype-P x) (is-subtype-Q x) (g x)))
 
 abstract
   is-emb-is-injective : {l1 l2 : Level} {A : UU l1} (is-set-A : is-set A)

@@ -785,6 +785,12 @@ abstract
       ( Σ-assoc-assoc' A B C)
       ( Σ-assoc-assoc A B C)
 
+equiv-Σ-assoc :
+  {i j k : Level} (A : UU i) (B : A → UU j) (C : (Σ A B) → UU k) →
+  Σ (Σ A B) C ≃ Σ A (λ x → Σ (B x) (λ y → C (pair x y)))
+equiv-Σ-assoc A B C =
+  pair (Σ-assoc A B C) (is-equiv-Σ-assoc A B C)
+
 -- Exercise 6.11
 
 Σ-swap :
