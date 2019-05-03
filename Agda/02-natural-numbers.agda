@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --exact-split #-}
 
 module 02-natural-numbers where
 
@@ -108,6 +108,6 @@ sequence-UU n = UU (Level-ℕ n)
 -- into Setω.
 
 {-
-Π-sequence-UU : UU _
+Π-sequence-UU : Setω
 Π-sequence-UU = (n : ℕ) → sequence-UU n
 -}

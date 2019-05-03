@@ -1,5 +1,38 @@
 \section{The identity types of pushouts}
 
+\subsection{Characterizing the identity types of pushouts}
+
+\begin{defn}
+  Consider a span $\mathcal{S}$
+  \begin{equation*}
+    \begin{tikzcd}
+      A & S \arrow[l,swap,"f"] \arrow[r,"g"] & B,
+    \end{tikzcd}
+  \end{equation*}
+  and consider $P,Q:\mathsf{Fam\usc{}pushout}(\mathcal{S})$. We define the type $\mathsf{hom\usc{}Fam\usc{}pushout}(\mathcal{S})$ to be the type of triples $(h_A,h_B,h_S)$ consisting of
+  \begin{align*}
+    h_A & : \prd{x:A} P_A(x)\to Q_A(x) \\
+    h_B & : \prd{y:B} P_B(y)\to Q_B(y)
+  \end{align*}
+  equipped with a homotopy $h_S$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      P_A(f(s)) \arrow[r,"h_A(f(s))"] \arrow[d,swap,"P_S(s)"] & Q_A(f(s)) \arrow[d,"Q_S(s)"] \\
+      P_B(g(s)) \arrow[r,swap,"h_B(g(s))"] & Q_B(g(s))
+    \end{tikzcd}
+  \end{equation*}
+  commutes for every $s:S$.
+\end{defn}
+
+\begin{defn}
+  Consider a span $\mathcal{S}$ equipped with $a:A$, and consider
+  $P:\mathsf{Fam\usc{}pushout}(\mathcal{S})$ equipped with $p:P_A(a)$. We say that $P$ is \define{universal} if for every $Q:\mathsf{Fam\usc{}pushout}(\mathcal{S})$ the evaluation map
+  \begin{equation*}
+    \mathsf{hom\usc{}Fam\usc{}pushout}(P,Q)\to Q_A(a)
+  \end{equation*}
+  given by $h\mapsto h_A(a,p)$ is an equivalence.
+\end{defn}
+
 \begin{thm}
   Consider a pushout square
   \begin{equation*}

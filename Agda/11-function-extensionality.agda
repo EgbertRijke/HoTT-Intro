@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --exact-split #-}
 
 module 11-function-extensionality where
 
@@ -232,10 +232,29 @@ abstract
     is-set B → is-set (A → B)
   is-set-function-type = is-trunc-function-type zero-𝕋
 
+{- The type theoretic principle of choice is the assertion that Π distributes
+   over Σ. In other words, there is an equivalence
+
+   ((x : A) → Σ (B x) (C x)) ≃ Σ ((x : A) → B x) (λ f → (x : A) → C x (f x)).
+
+   In the following we construct this equivalence, and we also characterize the
+   relevant identity types. 
+
+   We call the type on the left-hand side Π-total-fam, and we call the type on
+   the right-hand side type-choice-∞. -}
+   
+Π-total-fam :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
+  (C : (x : A) → B x → UU l3) → UU (l1 ⊔ (l2 ⊔ l3))
+Π-total-fam {A = A} {B} C = (x : A) → Σ (B x) (C x)
+
 type-choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
   (C : (x : A) → B x → UU l3) → UU (l1 ⊔ (l2 ⊔ l3))
 type-choice-∞ {A = A} {B} C = Σ ((x : A) → B x) (λ f → (x : A) → C x (f x))
+
+{- We compute the identity type of Π-total-fam. Note that its characterization
+   is again of the form Π-total-fam. -}
 
 {- We compute the identity type of type-choice-∞. Note that its identity 
    type is again of the form type-choice-∞. -}
@@ -285,11 +304,6 @@ abstract
   eq-Eq-type-choice-∞ C {t} {t'} =
     inv-is-equiv (is-equiv-Eq-type-choice-∞-eq C t t')
 
-Π-total-fam :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2}
-  (C : (x : A) → B x → UU l3) → UU (l1 ⊔ (l2 ⊔ l3))
-Π-total-fam {A = A} {B} C = (x : A) → Σ (B x) (C x)
-
 choice-∞ :
   {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
   Π-total-fam C → type-choice-∞ C
@@ -324,6 +338,11 @@ abstract
       ( issec-inv-choice-∞ {A = A} {B = B} {C = C})
       ( isretr-inv-choice-∞ {A = A} {B = B} {C = C})
 
+equiv-choice-∞ :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3) →
+  Π-total-fam C ≃ type-choice-∞ C
+equiv-choice-∞ C = pair choice-∞ is-equiv-choice-∞
+
 abstract
   is-equiv-inv-choice-∞ :
     {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
@@ -333,6 +352,11 @@ abstract
       ( choice-∞ {A = A} {B = B} {C = C})
       ( isretr-inv-choice-∞ {A = A} {B = B} {C = C})
       ( issec-inv-choice-∞ {A = A} {B = B} {C = C})
+
+equiv-inv-choice-∞ :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3) →
+  (type-choice-∞ C) ≃ (Π-total-fam C)
+equiv-inv-choice-∞ C = pair inv-choice-∞ is-equiv-inv-choice-∞
 
 mapping-into-Σ :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : B → UU l3} →
@@ -344,6 +368,63 @@ abstract
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
     {C : B → UU l3} → is-equiv (mapping-into-Σ {A = A} {C = C})
   is-equiv-mapping-into-Σ = is-equiv-choice-∞
+
+{- Next we compute the identity type of products of total spaces. Note again
+   that the identity type of a product of total spaces is again a product of
+   total spaces. -}
+
+Eq-Π-total-fam :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → UU (l1 ⊔ (l2 ⊔ l3))
+Eq-Π-total-fam {A = A} C t t' =
+  Π-total-fam (λ x (p : Id (pr1 (t x)) (pr1 (t' x))) →
+    Id (tr (C x) p (pr2 (t x))) (pr2 (t' x)))
+
+reflexive-Eq-Π-total-fam :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : (a : A) → Σ (B a) (C a)) → Eq-Π-total-fam C t t
+reflexive-Eq-Π-total-fam C t a = pair refl refl
+
+Eq-Π-total-fam-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → Id t t' → Eq-Π-total-fam C t t'
+Eq-Π-total-fam-eq C t .t refl = reflexive-Eq-Π-total-fam C t
+
+is-contr-total-Eq-Π-total-fam :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t : (a : A) → Σ (B a) (C a)) →
+  is-contr (Σ ((a : A) → Σ (B a) (C a)) (Eq-Π-total-fam C t))
+is-contr-total-Eq-Π-total-fam {A = A} {B} C t =
+  is-contr-equiv'
+    ( (a : A) →
+      Σ (Σ (B a) (C a)) (λ t' →
+        Σ (Id (pr1 (t a)) (pr1 t')) (λ p →
+          Id (tr (C a) p (pr2 (t a))) (pr2 t'))))
+    ( equiv-choice-∞
+      ( λ x t' →
+        Σ ( Id (pr1 (t x)) (pr1 t'))
+          ( λ p → Id (tr (C x) p (pr2 (t x))) (pr2 t'))))
+    ( is-contr-Π
+      ( λ a →
+        is-contr-total-Eq-structure
+        ( λ b c p → Id (tr (C a) p (pr2 (t a))) c)
+        ( is-contr-total-path (pr1 (t a)))
+        ( pair (pr1 (t a)) refl)
+        ( is-contr-total-path (pr2 (t a)))))
+
+is-equiv-Eq-Π-total-fam-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → is-equiv (Eq-Π-total-fam-eq C t t')
+is-equiv-Eq-Π-total-fam-eq C t =
+  fundamental-theorem-id t
+    ( reflexive-Eq-Π-total-fam C t)
+    ( is-contr-total-Eq-Π-total-fam C t)
+    ( Eq-Π-total-fam-eq C t)
+
+eq-Eq-Π-total-fam :
+  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
+  (t t' : (a : A) → Σ (B a) (C a)) → Eq-Π-total-fam C t t' → Id t t'
+eq-Eq-Π-total-fam C t t' = inv-is-equiv (is-equiv-Eq-Π-total-fam-eq C t t')
 
 -- Section 9.2 Universal properties
 
@@ -1681,3 +1762,16 @@ automorphism-Π :
   ( (a : A) → B a) ≃ ((a : A) → B a)
 automorphism-Π e f =
   pair (map-automorphism-Π e f) (is-equiv-map-automorphism-Π e f)
+
+-- is-contr-total-Eq-Π
+
+is-contr-total-Eq-Π :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3) →
+  ( is-contr-total-C : (x : A) → is-contr (Σ (B x) (C x))) →
+  ( f : (x : A) → B x) →
+  is-contr (Σ ((x : A) → B x) (λ g → (x : A) → C x (g x)))
+is-contr-total-Eq-Π {A = A} {B} C is-contr-total-C f =
+  is-contr-equiv'
+    ( (x : A) → Σ (B x) (C x))
+    ( equiv-choice-∞ C)
+    ( is-contr-Π is-contr-total-C)

@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --allow-unsolved-metas --exact-split #-}
 
 module 18-descent where
 
@@ -394,11 +394,11 @@ is-equiv-Fam-pushout-cocone-UU l f g =
         ( λ s → equiv-eq)
         ( λ s → univalence (PA (f s)) (PB (g s)))))
 
-gen-fam-pushout :
+Fam-pushout-fam :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
   (P : X → UU l) → Fam-pushout l f g
-gen-fam-pushout f g (pair i (pair j H)) P =
+Fam-pushout-fam f g (pair i (pair j H)) P =
   pair
     ( P ∘ i)
     ( pair
@@ -410,13 +410,13 @@ equiv-eq-ap-fam :
   Id (equiv-tr B p) (equiv-eq (ap B p))
 equiv-eq-ap-fam B refl = eq-htpy-equiv htpy-refl
 
-triangle-gen-fam-pushout :
+triangle-Fam-pushout-fam :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
-  ( gen-fam-pushout {l = l} f g c) ~
+  ( Fam-pushout-fam {l = l} f g c) ~
   ( ( Fam-pushout-cocone-UU l f g) ∘
     ( cocone-map f g {Y = UU l} c))
-triangle-gen-fam-pushout {l = l} {S} {A} {B} {X} f g (pair i (pair j H)) P =
+triangle-Fam-pushout-fam {l = l} {S} {A} {B} {X} f g (pair i (pair j H)) P =
   eq-pair refl (eq-pair refl (eq-htpy (λ s → equiv-eq-ap-fam P (H s))))
 
 coherence-Eq-Fam-pushout :
@@ -556,62 +556,6 @@ isretr-eq-Eq-Fam-pushout :
 isretr-eq-Eq-Fam-pushout l f g s t =
   isretr-inv-is-equiv
     ( is-equiv-Eq-Fam-pushout-eq l f g s t)
-
-{- Next we compute the identity type of products of total spaces. Note again
-   that the identity type of a product of total spaces is again a product of
-   total spaces. -}
-
-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → UU (l1 ⊔ (l2 ⊔ l3))
-Eq-ΠΣ {A = A} C t t' =
-  (a : A) →
-    Σ (Id (pr1 (t a)) (pr1 (t' a))) (λ p →
-      Id (tr (C a) p (pr2 (t a))) (pr2 (t' a)))
-
-reflexive-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : (a : A) → Σ (B a) (C a)) → Eq-ΠΣ C t t
-reflexive-Eq-ΠΣ C t a = pair refl refl
-
-Eq-ΠΣ-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → Id t t' → Eq-ΠΣ C t t'
-Eq-ΠΣ-eq C t .t refl = reflexive-Eq-ΠΣ C t
-
-is-contr-total-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t : (a : A) → Σ (B a) (C a)) →
-  is-contr (Σ ((a : A) → Σ (B a) (C a)) (Eq-ΠΣ C t))
-is-contr-total-Eq-ΠΣ {A = A} {B} C t =
-  is-contr-is-equiv
-    ( (a : A) →
-      Σ (Σ (B a) (C a)) (λ t' →
-        Σ (Id (pr1 (t a)) (pr1 t')) (λ p →
-          Id (tr (C a) p (pr2 (t a))) (pr2 t'))))
-    ( inv-choice-∞)
-    ( is-equiv-inv-choice-∞)
-    ( is-contr-Π
-      ( λ a →
-        is-contr-total-Eq-structure
-        ( λ b c p → Id (tr (C a) p (pr2 (t a))) c)
-        ( is-contr-total-path (pr1 (t a)))
-        ( pair (pr1 (t a)) refl)
-        ( is-contr-total-path (pr2 (t a)))))
-
-is-equiv-Eq-ΠΣ-eq :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → is-equiv (Eq-ΠΣ-eq C t t')
-is-equiv-Eq-ΠΣ-eq C t =
-  fundamental-theorem-id t
-    ( reflexive-Eq-ΠΣ C t)
-    ( is-contr-total-Eq-ΠΣ C t)
-    ( Eq-ΠΣ-eq C t)
-
-eq-Eq-ΠΣ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : (a : A) → Σ (B a) (C a)) → Eq-ΠΣ C t t' → Id t t'
-eq-Eq-ΠΣ C t t' = inv-is-equiv (is-equiv-Eq-ΠΣ-eq C t t')
 
 
 {- Since the identity types of type-choice-∞ and of products of total spaces
