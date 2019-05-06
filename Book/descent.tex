@@ -92,14 +92,14 @@ The dependent functions $h_A$ and $h_B$ are simply given by
 \end{align*}
 The homotopy $h_S$ is defined by $h_S(s)\defeq\apd{h}{H(s)}$, using the dependent action on paths of $h$. We call such triples $(h_A,h_B,h_S)$ \define{dependent cocones} on $P$ over the cocone $(i,j,H)$, and will write $\mathsf{dep\usc{}cocone}_{(i,j,H)}(P)$ for this type of dependent cocones. Thus, we have a function
 \begin{equation*}
-  \mathsf{dep\usc{}cocone\usc{}map}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
+  \mathsf{ev\usc{}pushout}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
 \end{equation*}
 We are now in position to define the induction principle and the dependent universal property of pushouts.
 
 \begin{defn}
   We say that $X$ satisfies the \define{induction principle of the pushout of $\mathcal{S}$} if the function
   \begin{equation*}
-  \mathsf{dep\usc{}cocone\usc{}map}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
+  \mathsf{ev\usc{}pushout}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
   \end{equation*}
   has a section for every type family $P$ over $X$.
 \end{defn}
@@ -107,12 +107,12 @@ We are now in position to define the induction principle and the dependent unive
 \begin{defn}
   We say that $X$ satisfies the \define{dependent universal property of the pushout of $\mathcal{S}$} if the function
   \begin{equation*}
-  \mathsf{dep\usc{}cocone\usc{}map}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
+  \mathsf{ev\usc{}pushout}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
   \end{equation*}
   is an equivalence for every type family $P$ over $X$.
 \end{defn}
 
-\begin{rmk}
+\begin{rmk}\label{rmk:comp-pushout}
   For $(h_A,h_B,h_S)$ and $(h'_A,h'_B,h'_S)$ in $\mathsf{dep\usc{}cocone}_{(i,j,H)}(P)$, the type of identifications $(h_A,h_B,h_S)=(h'_A,h'_B,h'_S)$ is equivalent to the type of triples $(K_A,K_B,K_S)$ consisting of
   \begin{align*}
     K_A & : \prd{a:A}h_A(a)=h'_A(a) \\
@@ -205,9 +205,53 @@ We are now in position to define the induction principle and the dependent unive
 
   To see that (iii) implies (ii) we recall that transport with respect to a trivial family is homotopic to the identity function. Thus we obtain the pullback property from the dependent pullback property using the trivial family $\lam{c}T$ over $C$.
 
-  To see that (iii) implies (iv) we note that $\mathsf{dep\usc{}cocone\usc{}map}(P)$ is an equivalence if and only if the gap map of the square in \cref{eq:dppp2} is an equivalence.
+  To see that (iii) implies (iv) we note that $\mathsf{ev\usc{}pushout}(P)$ is an equivalence if and only if the gap map of the square in \cref{eq:dppp2} is an equivalence.
 
-  It is clear that (iv) implies (v), so it remains to show that (v) implies (iv). 
+  It is clear that (iv) implies (v), so it remains to show that (v) implies (iv). If $X$ satisfies the induction principle of pushouts, then the map
+  \begin{equation*}
+    \mathsf{ev\usc{}pushout}:\Big(\prd{x:X}P(x)\Big)\to\mathsf{dep\usc{}cocone}_{(i,j,H)}(P)
+  \end{equation*}
+  has a section, i.e., it comes equipped with
+  \begin{align*}
+    \mathsf{ind\usc{}pushout} & :\mathsf{dep\usc{}cocone}_{(i,j,H)}(P)\to\Big(\prd{x:X}P(x)\Big) \\
+    \mathsf{comp\usc{}pushout} & : \mathsf{ev\usc{}pushout}\circ\mathsf{ind\usc{}pushout} \htpy\idfunc.
+  \end{align*}
+  To see that $\mathsf{ev\usc{}pushout}$ is an equivalence it therefore suffices to construct a homotopy
+  \begin{equation*}
+    \mathsf{ind\usc{}pushout}(\mathsf{ev\usc{}pushout}(h))\htpy h
+  \end{equation*}
+  for any $h:\prd{x:X}P(x)$. From the fact that $\mathsf{ind\usc{}pushout}$ is a section of $\mathsf{ev\usc{}pushout}$ we obtain an identification
+  \begin{equation*}
+    \mathsf{ev\usc{}pushout}(\mathsf{ind\usc{}pushout}(\mathsf{ev\usc{}pushout}(h)))= \mathsf{ev\usc{}pushout}(h).
+  \end{equation*}
+  Therefore we observe that it suffices to construct a homotopy $h\htpy h'$ for any two functions $h,h':\prd{x:X}P(x)$ that come equipped with an identification
+  \begin{equation*}
+    \mathsf{ev\usc{}pushout}(h)=\mathsf{ev\usc{}pushout}(h').
+  \end{equation*}
+  Now we recall from \cref{rmk:comp-pushout} that this type of identifications is equivalent to the type of triples $(K_A,K_B,K_S)$ consisting of
+  \begin{align*}
+    K_A & : \prd{a:A}h(i(a))=h'(i(a)) \\
+    K_B & : \prd{b:B}h(j(b))=h'(j(b))
+  \end{align*}
+  and a homotopy $K_S$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=8em]
+      \mathsf{tr}_P(H(s),h(i(f(s)))) \arrow[r,equals,"\ap{\mathsf{tr}_P(H(s))}{K_A(f(s))}"] \arrow[d,equals,swap,"\apd{h}{H(s)}"] & \mathsf{tr}_P(H(s),{h'(i(f(s)))}) \arrow[d,equals,"\apd{h'}{H(s)}"] \\
+      h(j(g(s))) \arrow[r,equals,swap,"K_B(g(s))"] & h'(j(g(s)))
+    \end{tikzcd}
+  \end{equation*}
+  commutes for every $s:S$. Note that from such an identification $K_S(s)$ we also obtain an identification
+  \begin{equation*}
+    \mathsf{K'_S(s)} : \mathsf{tr}_{x\mapsto h(x)=h'(x)}(H(s),K_A(f(s)))=K_B(g(s)).
+  \end{equation*}
+  Indeed, by path inducgtion on $p:x=x'$ we obtain an identification $\mathsf{tr}_{x\mapsto h(x)=h'(x)}(p,q)=q'$, for any $p:x=x'$, any $q:h(x)=h'(x)$ and any $q':h(x')=h'(x')$ for which the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      \mathsf{tr}_P(p,h(x)) \arrow[r,equals,"\ap{\mathsf{tr}_P(p)}{q}"] \arrow[d,equals,swap,"\apd{h}{p}"] & \mathsf{tr}_P(p,h'(x)) \arrow[d,equals,"\apd{h'}{p}"] \\
+      h(x') \arrow[r,equals,swap,"{q'}"] & h'(x')
+    \end{tikzcd}
+  \end{equation*}
+  Now we see that the triple $(K_A,K_B,K'_S)$ forms a dependent cocone on the family $x\mapsto h(x)=h'(x)$. Therefore we obtain a homotopy $h\htpy h'$ as an application of the induction principle for pushouts at the family $x\mapsto h(x)=h'(x)$.
 \end{proof}
 
 \subsection{Type families over pushouts}

@@ -49,11 +49,11 @@ coherence-htpy-dep-cocone :
   (P : X → UU l5) (c' c'' : dep-cocone f g c P)
   (K : (pr1 c') ~ (pr1 c'')) (L : (pr1 (pr2 c')) ~ (pr1 (pr2 c''))) →
   UU (l1 ⊔ l5)
-coherence-htpy-dep-cocone {S = S} f g (pair i (pair j H)) P
-  c' c'' K L =
+coherence-htpy-dep-cocone {S = S} f g c P
+  h h' K L =
   (s : S) → 
-  Id ( ((pr2 (pr2 c')) s) ∙ (L (g s)))
-     ( (ap (tr P (H s)) (K (f s))) ∙ ((pr2 (pr2 c'')) s))
+  Id ( ((pr2 (pr2 h)) s) ∙ (L (g s)))
+     ( (ap (tr P (pr2 (pr2 c) s)) (K (f s))) ∙ ((pr2 (pr2 h')) s))
 
 htpy-dep-cocone :
   {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -295,49 +295,41 @@ dependent-pullback-property-pushout l {S} {A} {B} f g {X}
 
 dependent-naturality-square :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (f f' : (x : A) → B x)
-  {x x' : A} (p : Id x x') (q : Id (f x) (f' x)) (q' : Id (f x') (f' x')) →
+  {x x' : A} (p : Id x x') {q : Id (f x) (f' x)} {q' : Id (f x') (f' x')} →
   Id ((apd f p) ∙ q') ((ap (tr B p) q) ∙ (apd f' p)) →
   Id (tr (λ y → Id (f y) (f' y)) p q) q' 
-dependent-naturality-square f f' refl q q' s =
+dependent-naturality-square f f' refl {q} {q'} s =
   inv (s ∙ (right-unit ∙ (ap-id q)))
 
 htpy-eq-dep-cocone-map :
-  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  ( H : (l : Level) → Ind-pushout l f g c) →
-  {l : Level} {P : X → UU l} (h h' : (x : X) → P x) →
+  { l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  ( f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ( H : Ind-pushout l f g c) { P : X → UU l} (h h' : (x : X) → P x) →
   Id (dep-cocone-map f g c P h) (dep-cocone-map f g c P h') → h ~ h'
-htpy-eq-dep-cocone-map f g (pair i (pair j H)) I {l} {P} h h' p =
-  let c = (pair i (pair j H))
-      K = pr1 (htpy-dep-cocone-eq f g c P p)
-      L = pr1 (pr2 (htpy-dep-cocone-eq f g c P p))
-      M = pr2 (pr2 (htpy-dep-cocone-eq f g c P p))
-  in
-  pr1
-    ( I _ (λ x → Id (h x) (h' x)))
+htpy-eq-dep-cocone-map f g c ind-c {P} h h' p =
+  ind-pushout f g c ind-c
+    ( λ x → Id (h x) (h' x)) 
     ( pair
-      ( K)
+      ( pr1 (htpy-dep-cocone-eq f g c P p))
       ( pair
-        ( L)
+        ( pr1 (pr2 (htpy-dep-cocone-eq f g c P p)))
         ( λ s →
-          dependent-naturality-square h h' (H s) (K (f s)) (L (g s)) (M s))))
+          dependent-naturality-square h h' (pr2 (pr2 c) s)
+            ( pr2 (pr2 (htpy-dep-cocone-eq f g c P p)) s))))
 
 dependent-universal-property-pushout-Ind-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
   ((l : Level) → Ind-pushout l f g c) →
   ((l : Level) → dependent-universal-property-pushout l f g c)
-dependent-universal-property-pushout-Ind-pushout f g c H l P =
-  let ind-pushout  = pr1 (H l P)
-      comp-pushout = pr2 (H l P)
-  in
+dependent-universal-property-pushout-Ind-pushout f g c ind-c l P =
   is-equiv-has-inverse
-    ( ind-pushout)
-    ( comp-pushout)
-    ( λ h → eq-htpy (htpy-eq-dep-cocone-map f g c H
-      ( ind-pushout (dep-cocone-map f g c P h))
+    ( ind-pushout f g c (ind-c l) P)
+    ( pr2 (ind-c l P))
+    ( λ h → eq-htpy (htpy-eq-dep-cocone-map f g c (ind-c l)
+      ( ind-pushout f g c (ind-c l) P (dep-cocone-map f g c P h))
       ( h)
-      ( pr2 (H l P) (dep-cocone-map f g c P h))))
+      ( pr2 (ind-c l P) (dep-cocone-map f g c P h))))
 
 {- Proof of Theorem 18.1.4, (iv) implies (v). -}
    
@@ -922,10 +914,9 @@ is-contr-total-fam-equiv :
   {l1 l2 : Level} {A : UU l1} (B : A → UU l2) →
   is-contr (Σ (A → UU l2) (λ B' → (a : A) → (B a) ≃ (B' a)))
 is-contr-total-fam-equiv {l2 = l2} {A} B =
-  is-contr-is-equiv'
+  is-contr-equiv'
     ( (a : A) → Σ (UU l2) (λ B' → B a ≃ B'))
-    ( choice-∞)
-    ( is-equiv-choice-∞)
+    ( equiv-choice-∞ (λ x Y → (B x) ≃ Y))
     ( is-contr-Π (λ a → is-contr-total-equiv (B a)))
 
 is-contr-total-Eq-Fam-pushout :
