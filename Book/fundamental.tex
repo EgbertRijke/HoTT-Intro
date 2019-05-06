@@ -3,11 +3,13 @@
 \section{The fundamental theorem of identity types}\label{chap:fundamental}
 \sectionmark{The fundamental theorem}
 
-In many situations in homotopy type theory it is important to know what the identity types are. For example, we have used a characterization of the identity types of the fibers of a map in order to conclude that any equivalence is a contractible map. Therefore it is a routine task to give for any given type of interest, a characterization of its identity type. The fundamental theorem of identity types is our main tool to carry out such characterizations. To name a few applications, we will show in \cref{thm:eq_nat} that the identity type of the natural numbers is equivalent to its observational equality, and we will show in \cref{thm:eq-circle} that the loop space of the circle is equivalent to $\Z$.
-
-In order to prove the fundamental theorem of identity types, we first need the basic fact that a family of maps is a family of equivalences if and only if it induces an equivalence on total spaces. This fact will also be used in many other situations, most notably in the characterization of pullback squares in \cref{cor:pb_fibequiv}.
+For many types it is useful to have a characterization of their identity types. For example, we have used a characterization of the identity types of the fibers of a map in order to conclude that any equivalence is a contractible map. The fundamental theorem of identity types is our main tool to carry out such characterizations, and with the fundamental theorem it becomes a routine task to characterize an identity type whenever that is of interest.
 
 Our first application of the fundamental theorem of identity types in the present lecture is a simple proof that any equivalence is an embedding. Embeddings are maps that induce equivalences on identity types, i.e., they are the homotopical analogue of injective maps. In our second application we characterize the identity types of coproducts.
+
+Throughout the rest of this book we will encounter many more occasions to characterize identity types. For example, we will show in \cref{thm:eq_nat} that the identity type of the natural numbers is equivalent to its observational equality, and we will show in \cref{thm:eq-circle} that the loop space of the circle is equivalent to $\Z$.
+
+In order to prove the fundamental theorem of identity types, we first prove the basic fact that a family of maps is a family of equivalences if and only if it induces an equivalence on total spaces. This fact will also be used in many other situations, most notably in the characterization of pullback squares in \cref{cor:pb_fibequiv}.
 
 \subsection{Families of equivalences}
 Consider a family
@@ -135,9 +137,109 @@ We now combine \cref{thm:fib_equiv,lem:total-equiv-base-equiv}.
   By the assumption that $f$ is an equivalence, it follows that the map $\sm{x:A}D(f(x))\to \sm{y:B}D(y)$ is an equivalence. Therefore it follows that $\total[f]{g}$ is an equivalence if and only if $\total{g}$ is an equivalence. Now the claim follows, since $\total{g}$ is an equivalence if and only if $g$ if a family of equivalences.
 \end{proof}
 
+\begin{comment}
+\subsection{Identity systems}
+
+Many types come equipped with a reflexive relation that possesses a similar
+structure as the identity type. The observational equality on the natural
+numbers is such an example. We have see that it is a reflexive, symmetric, and
+transitive relation, and moreover it is contained in any other reflexive
+relation. As we will see in this section, the observational equality on the
+natural numbers even satisfies a variant of path induction, so in type theory
+we really can't distinguish between the identity type and observational
+equality.
+
+In this section we will introduce \emph{identity systems}. Those are reflexive
+relations on a type that satisfy path induction. We consider identity systems because for many types we can construct a reflexive relation that behaves like the identity type, even though it is not given as such. When we show that a reflexive relation satisfies path induction, what we really show is that in type theory there is no way to distinguish between this relation and the identity type. An example we provide here is the observational equality on $\N$. Characterizing the identity type of a given type in this way is one of the core activities in homotopy type theory.
+
+\begin{defn}
+  Let $A$ be a type equipped with a term $a:A$. A \define{(unary) identity system} on $A$ at $a$ consists of a type family $B$ over $A$ equipped with $b:B(a)$, such that for any family of types $P(x,y)$ indexed by $x:A$ and $y:B(x)$, there is a function
+  \begin{equation*}
+    \mathsf{ind\usc{}id\usc{}sys}:P(a,b)\to \prd{x:A}{y:B(x)}P(x,y)
+  \end{equation*}
+  equipped with an identification
+  \begin{equation*}
+    \mathsf{ind\usc{}id\usc{}sys}(p,a,b)=p.
+  \end{equation*}
+  for every $p:P(a,b)$.
+\end{defn}
+
+\begin{rmk}
+  Note that in the definition of identity systems we require an identification for the `computation rule', rather than a judgmental equality. 
+\end{rmk}
+
+\begin{defn}
+  Let $A$ be a type. A \define{(binary) identity system} on $A$ consists of a family of types $R(x,y)$ indexed by $x,y:A$ equipped with a dependent function
+  \begin{equation*}
+    \rho : \prd{x:A}R(x,x),
+  \end{equation*}
+  such that for each family of types $P(x,y,e)$ indexed by $x,y:A$ and $e:R(x,y)$ and each $a:A$, there is a function
+  \begin{equation*}
+    \mathsf{ind\usc{}id\usc{}sys}:P(a,a,\rho(a)) \to \Big(\prd{y:A}{e:R(a,y)}P(a,y,e)\Big)
+  \end{equation*}
+  equipped with an identification
+  \begin{equation*}
+    \mathsf{ind\usc{}id\usc{}sys}(p,a,\rho(a))=p.
+  \end{equation*}
+  for every $p:P(a,a,\rho(a))$.
+\end{defn}
+
+\begin{thm}
+  Observational equality on $\N$ is an identity system.
+\end{thm}
+
+\begin{proof}
+  First we note that for any family of types $P(m,n,e)$ indexed by $m,n:\N$ and $e:\EqN(m,n)$, there is a type family $P'$ given by
+  \begin{equation*}
+    P'(m,n,e)\defeq P(\succN(m),\succN(n),e).
+  \end{equation*}
+  Similarly, for any $p:\prd{n:\N}P(n,n,\mathsf{refl\usc{}Eq}_\N(n))$ we have
+  \begin{equation*}
+    p':\prd{n:\N}P'(n,n,\mathsf{ref\usc{}Eq}_\N(n))
+  \end{equation*}
+  given by $p'(n)\defeq p(\succN(n))$. Now we define a function
+  \begin{equation*}
+    f(m,n,e,P):\Big(\prd{n:\N}P(n,n,\mathsf{refl\usc{}Eq}_\N(n))\Big)\to P(m,n,e)
+  \end{equation*}
+  for every $m,n:\N$, $e:\EqN(m,n)$ and $P:\prd{x,y:\N}\EqN(x,y)\to\UU$ by induction on $m,n:\N$ by
+  \begin{align*}
+    f(\zeroN,\zeroN,\ttt,P,p) & \defeq p(\zeroN) \\
+    f(\zeroN,\succN(n)) & \defeq \indempty \\
+    f(\succN(m),\zeroN) & \defeq \indempty \\
+    f(\succN(m),\succN(n),e,P,p) & \defeq f(m,n,e,P',p').
+  \end{align*}
+  Then we define $\mathsf{ind\usc{}Eq}_\N$ for every $P:\prd{x,y:\N}\EqN(x,y)\to\UU$ by
+  \begin{equation*}
+    \mathsf{ind\usc{}Eq}_\N(p,m,n,e)\defeq f(m,n,e,P,p).
+  \end{equation*}
+  This completes the first part of the claim. For the second part, we have to construct an identification
+  \begin{equation*}
+    \mathsf{comp\usc{}Eq}_\N(p,n):\mathsf{ind\usc{}Eq}_\N(p,n,\mathsf{refl\usc{}Eq}_\N(n))= p
+  \end{equation*}
+  for any $p:P(n,\mathsf{refl\usc{}Eq}_\N(n))$. This is again by induction on $n:\N$.
+\end{proof}
+\end{comment}
+
 \subsection{The fundamental theorem}
 
-The fundamental theorem of identity types (\cref{thm:id_fundamental}) tells us when, for a type family $B$ over $A$ and a fixed $a:A$, there is a family of equivalences $\prd{x:A}(a=x)\simeq B(x)$. In other words, it tells us when a family $B$ is a characterization of the identity type of $A$.
+Many types come equipped with a reflexive relation that possesses a similar
+structure as the identity type. The observational equality on the natural
+numbers is such an example. We have see that it is a reflexive, symmetric, and
+transitive relation, and moreover it is contained in any other reflexive
+relation. Thus, it is natural to ask whether observational equality on the natural numbers is equivalent to the identity type.
+
+The fundamental theorem of identity types (\cref{thm:id_fundamental}) is a general theorem that can be used to answer such questions. It describes a necessary and sufficient condition on a type family $B$ over a type $A$ equipped with a point $a:A$, for there to be a family of equivalences $\prd{x:A}(a=x)\simeq B(x)$. In other words, it tells us when a family $B$ is a characterization of the identity type of $A$.
+
+Before we state the fundamental theorem of identity types we introduce the notion of \emph{identity systems}. Those are families $B$ over a $A$ that satisfy an induction principle that is similar to the path induction principle, where the `computation rule' is stated with an identification.
+
+\begin{defn}
+  Let $A$ be a type equipped with a term $a:A$. A \define{(unary) identity system} on $A$ at $a$ consists of a type family $B$ over $A$ equipped with $b:B(a)$, such that for any family of types $P(x,y)$ indexed by $x:A$ and $y:B(x)$,
+  the function
+  \begin{equation*}
+    h\mapsto h(a,b):\Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to P(a,b)
+  \end{equation*}
+  has a section.
+\end{defn}
 
 The most important implication in the fundamental theorem is that (ii) implies (i). Occasionally we will also use the third equivalent statement. We note that the fundamental theorem also appears as Theorem 5.8.4 in \cite{hottbook}.
 
@@ -367,7 +469,6 @@ The proof is now concluded with an application of \cref{thm:id_fundamental}, usi
 \item
   \begin{subexenum}
   \item Show that the map $\emptyt\to A$ is an embedding for every type $A$.
-  \item Show that $\succN:\N\to\N$ is an embedding.
   \item Show that $\inl:A\to A+B$ and $\inr:B\to A+B$ are embeddings for any two types $A$ and $B$.
   \end{subexenum}
 \item Consider an equivalence $e:A\simeq B$. Construct an equivalence

@@ -470,6 +470,8 @@ abstract
 
 -- Exercise 8.1
 
+-- Exercise 8.1
+
 diagonal : {l : Level} (A : UU l) → A → A × A
 diagonal A x = pair x x
 

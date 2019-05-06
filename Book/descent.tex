@@ -62,72 +62,84 @@ in which also the front left and right squares are pullback squares. Thus the co
 
 We note that the computation rules in our treatment for the induction principle of homotopy pushouts are weak. In other words, they are identifications. In this course we have no need for judgmental computation rules. Our focus is instead on universal properties. We refer the reader who is interested in the more `traditional' higher inductive types with judgmental computation rules to \cite{hottbook}.
 
-\subsection{The induction principle of pushouts}
+\subsection{Five equivalent characterizations of homotopy pushouts}
 
-The pushout $A\sqcup^{\mathcal{S}} B$ of a span $\mathcal{S}$ from $A$ to $B$ comes equipped with the structure of a cocone\index{inl@{$\inl$}!for pushouts}\index{inr@{$\inr$}!for pushouts}\index{glue@{$\glue$}}
+Consider a commuting square
+\begin{equation}\label{eq:descent-pushout-square}
+  \begin{tikzcd}
+    S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+    A \arrow[r,swap,"i"] & H
+  \end{tikzcd}
+\end{equation}
+with $H:i\circ f \htpy j \circ g$, where we will sometimes write $\mathcal{S}$ for the span $A\leftarrow S\rightarrow B$. Our first goal is to formulate the induction
+principle for pushouts, which specifies how to construct a section of an arbitrary type family $P$ over $X$. Like the induction principle for the circle, the induction principle of pushouts has to take both the point constructors and the path constructors of $X$ into account. In our case, the point constructors are the maps
 \begin{align*}
-\inl & : A \to A \sqcup^{\mathcal{S}} B \\
-\inr & : B \to A \sqcup^{\mathcal{S}} B \\
-\glue & : \prd{x:S} \inl(f(x))=\inr(g(x))
+  i & : A \to X \\
+  j & : B \to X,
+  \intertext{and the path constructor is the homotopy}
+  H & : \prd{s:S}i(f(s))=j(g(s)).
 \end{align*}
-
-
-To see what the induction principle has to be, consider first a dependent function $s:\prd{x:A\sqcup^{\mathcal{S}}B}P(x)$. When we evaluate this function at the constructors, we obtain
+Therefore, we obtain for any section $h:\prd{x:X}P(x)$ a triple $(h_A,h_B,h_S)$ consisting of
 \begin{align*}
-s\circ \inl & : \prd{a:A} P(\inl(a)) \\
-s\circ \inr & : \prd{b:B} P(\inr(b)) \\
-\apdfunc{s}\circ \glue & : \prd{x:S} \mathsf{tr}_P(\glue(x),s(f(x)))=s(g(x)).
+  h_A & : \prd{a:A}P(i(a)) \\
+  h_B & : \prd{b:B}P(j(b)) \\
+  h_S & : \prd{s:S} \mathsf{tr}_P(H(s),h(i(f(s))))=h(j(g(s))).
 \end{align*}
+The dependent functions $h_A$ and $h_B$ are simply given by
+\begin{align*}
+  h_A & \defeq h\circ i \\
+  h_B & \defeq h\circ j.
+\end{align*}
+The homotopy $h_S$ is defined by $h_S(s)\defeq\apd{h}{H(s)}$, using the dependent action on paths of $h$. We call such triples $(h_A,h_B,h_S)$ \define{dependent cocones} on $P$ over the cocone $(i,j,H)$, and will write $\mathsf{dep\usc{}cocone}_{(i,j,H)}(P)$ for this type of dependent cocones. Thus, we have a function
+\begin{equation*}
+  \mathsf{dep\usc{}cocone\usc{}map}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
+\end{equation*}
+We are now in position to define the induction principle and the dependent universal property of pushouts.
 
 \begin{defn}
-Consider a span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and let $P$ be a family over $A\sqcup^{\mathcal{S}} B$. The \define{dependent action on generators}\index{dependent action on generators!for pushouts|textbf} is defined to be the map\index{dgen_S@{$\mathsf{dgen}_{\mathcal{S}}$}|textbf}
-\begin{align*}
-\mathsf{dgen}_{\mathcal{S}}^P & : \Big(\prd{x:A\sqcup^{\mathcal{S}} B} P(x)\Big) \to \Big(\sm{f': \prd{a:A}P(\inl(a))}{g':\prd{b:B}P(\inr(b))}\Big.\\
-& \qquad\qquad\qquad\qquad\qquad\qquad \Big.\prd{x:S} \mathsf{tr}_P(\glue(x),f'(f(x)))=g'(g(x))\Big).
-\end{align*}
-given by $s\mapsto (s\circ\inl,s\circ\inr,\apdfunc{s}\circ\glue)$.
+  We say that $X$ satisfies the \define{induction principle of the pushout of $\mathcal{S}$} if the function
+  \begin{equation*}
+  \mathsf{dep\usc{}cocone\usc{}map}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
+  \end{equation*}
+  has a section for every type family $P$ over $X$.
 \end{defn}
 
-We can now fully specify homotopy pushouts.
-
 \begin{defn}
-Given a span $\mathcal{S}\jdeq (S,f,g)$, the \define{(homotopy) pushout}\index{pushout|textbf} $A\sqcup^{\mathcal{S}} B$ of $\mathcal{S}$ is defined to be the higher inductive\index{higher inductive types} type equipped with\index{inl@{$\inl$}!for pushouts|textbf}\index{inr@{$\inr$}!for pushouts|textbf}\index{glue@{$\glue$}|textbf}
-\begin{align*}
-\inl & : A \to A \sqcup^{\mathcal{S}} B \\
-\inr & : B \to A \sqcup^{\mathcal{S}} B \\
-\glue & : \prd{x:S} \inl(f(x))=\inr(g(x)),
-\end{align*}
-satisfying the \define{induction principle} for pushouts\index{induction principle!for pushouts|textbf}, which asserts that for each type family $P$ over $A\sqcup^{\mathcal{S}} B$ the map $\mathsf{dgen}_{\mathcal{S}}^P$ has a section.
+  We say that $X$ satisfies the \define{dependent universal property of the pushout of $\mathcal{S}$} if the function
+  \begin{equation*}
+  \mathsf{dep\usc{}cocone\usc{}map}(P):\Big(\prd{x:X}P(x)\Big)\to \mathsf{dep\usc{}cocone}_{(i,j,H)}(P).
+  \end{equation*}
+  is an equivalence for every type family $P$ over $X$.
 \end{defn}
 
 \begin{rmk}
-The induction principle of the pushout $A\sqcup^{\mathcal{S}} B$ provides us with a dependent function
-\begin{equation*}
-\ind{\mathcal{S}}(f',g',G) : \prd{x:A\sqcup^{\mathcal{S}} B} P(x),
-\end{equation*}
-for every
-\begin{align*}
-f' & : \prd{a:A}P(\inl(a)) \\
-g' & : \prd{b:B}P(\inr(b)) \\
-G & : \prd{x:S} \mathsf{tr}_P(\glue(x),f'(f(x)))=g'(g(x))
-\end{align*}
-Moreover, the function $\ind{\mathcal{S}}(f',g',G)$ comes equipped with an identification
-\begin{equation*}
-\mathsf{dgen}_{\mathcal{S}}(\ind{\mathcal{S}}(f',g',G))=(f',g',G).
-\end{equation*}
-Writing $s\defeq \ind{\mathcal{S}}(f',g',G)$, we see that such an identification between triples is equivalently described by a triple $(H,K,L)$ consisting of
-\begin{align*}
-H : s\circ \inl \htpy f' \\
-K : s\circ\inr \htpy g' 
-\end{align*}
-and a homotopy $L$ witnessing that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-\mathsf{tr}_{P}(\glue(x),s(\inl(f(x)))) \arrow[r,equals,"\ap{\mathsf{tr}_P(\glue(x))}{H(x)}"] \arrow[d,equals,swap,"\apd{s}{\glue(x)}"] & \mathsf{tr}_{P}(\glue(x),f'(f(x))) \arrow[d,equals,"G(x)"] \\
-s(\inr(g(x))) \arrow[r,equals,swap,"K(x)"] & g'(g(x))
-\end{tikzcd}
-\end{equation*}
-commutes, for every $x:S$. These are the \define{computation rules} for pushouts\index{computation rules!for pushouts}.
+  For $(h_A,h_B,h_S)$ and $(h'_A,h'_B,h'_S)$ in $\mathsf{dep\usc{}cocone}_{(i,j,H)}(P)$, the type of identifications $(h_A,h_B,h_S)=(h'_A,h'_B,h'_S)$ is equivalent to the type of triples $(K_A,K_B,K_S)$ consisting of
+  \begin{align*}
+    K_A & : \prd{a:A}h_A(a)=h'_A(a) \\
+    K_B & : \prd{b:B}h_B(b)=h'_B(b),
+  \end{align*}
+  and a homotopy $K_S$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=8em]
+      \mathsf{tr}_P(H(s),h_A(f(s))) \arrow[r,equals,"\ap{\mathsf{tr}_P(H(s))}{K_A(f(s))}"] \arrow[d,equals,swap,"h_S(s)"] & \mathsf{tr}_P(H(s),{h'_A(f(s))}) \arrow[d,equals,"h'_S(s)"] \\
+      h_B(g(s)) \arrow[r,equals,swap,"K_B(g(s))"] & h_B(g(s))
+    \end{tikzcd}
+  \end{equation*}
+  commutes for every $s:S$.
+
+  Therefore we see that the induction principle of the pushout of $\mathcal{S}$ provides us, for every dependent cocone $(h_A,h_B,h_S)$ of $P$ over $(i,j,H)$, with a dependent function $h:\prd{x:A}P(x)$ equipped with homotopies
+  \begin{align*}
+    K_A & : \prd{a:A}h(i(a))=h_A(a) \\
+    K_B & : \prd{b:B}h(j(b))=h_B(b),
+  \end{align*}
+  and a homotopy $K_S$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=8em]
+      \mathsf{tr}_P(H(s),h(i(f(s)))) \arrow[r,equals,"\ap{\mathsf{tr}_P(H(s))}{K_A(f(s))}"] \arrow[d,equals,swap,"\apd{h}{H(s)}"] & \mathsf{tr}_P(H(s),{h_A(f(s))}) \arrow[d,equals,"h_S(s)"] \\
+      h(j(g(s))) \arrow[r,equals,swap,"K_B(g(s))"] & h_B(g(s))
+    \end{tikzcd}
+  \end{equation*}
+  commutes for every $s:S$. These homotopies are the \define{computation rules} for pushouts\index{computation rules!for pushouts}. The dependent universal property is equivalent to the assertion that for every dependent cocone $(h_A,h_B,h_S)$, the type of quadruples $(h,K_A,K_B,K_S)$ is contractible.
 \end{rmk}
 
 \begin{thm}\label{defn:dependent-pullback-property-pushout}
@@ -154,20 +166,15 @@ commutes, for every $x:S$. These are the \define{computation rules} for pushouts
       \lam{h}\mathsf{eq\usc{}htpy}(\lam{s}\apd{h}{H(s)}),
     \end{equation*}
     is a pullback square.
-  \item The type $C$ satisfies the \define{dependent universal property} of pushouts: For any family $P$ over $C$, the map
-    \begin{equation*}
-      \mathsf{gen}_P : \Big(\prd{c:C}P(c)\Big)\to \sm{i':\prd{a:A}P(i(a))}{j':\prd{b:B}P(j(b))}\prd{s:S}\mathsf{tr}_P(H(s),j'(f(s)))=j'(g(s))
-    \end{equation*}
-    is an equivalence.
-  \item The type $C$ satisfies the \define{induction principle} of pushouts: For any family $P$ over $C$ the map $\mathsf{gen}_P$ has a section.
+  \item The type $C$ satisfies the \define{dependent universal property} of pushouts.
+  \item The type $C$ satisfies the \define{induction principle} of pushouts.
   \end{enumerate}
 \end{thm}
 
 \begin{proof}
-  We have already seen in \cref{thm:pushout_up} that (i) $\Leftrightarrow$ (ii).
-  Next, we show that (ii) $\Rightarrow$ (iii), which is the most complicated implication to prove.
+  We have already seen in \cref{thm:pushout_up} that (i) and (ii) are equivalent.
 
-  To see this, note that we have a commuting cube
+  To see that (ii) implies (iii), note that we have a commuting cube
   \begin{equation*}
     \begin{tikzcd}[column sep=tiny]
       &  \sm{h:C\to C}\prd{c:C}P(h(c)) \arrow[dl] \arrow[d] \arrow[dr] \\
@@ -198,9 +205,9 @@ commutes, for every $x:S$. These are the \define{computation rules} for pushouts
 
   To see that (iii) implies (ii) we recall that transport with respect to a trivial family is homotopic to the identity function. Thus we obtain the pullback property from the dependent pullback property using the trivial family $\lam{c}T$ over $C$.
 
-  To see that (iii) $\Leftrightarrow$ (iv) we note that $\mathsf{gen}$ is an equivalence if and only if the gap map of the square in \cref{eq:dppp2} is an equivalence.
+  To see that (iii) implies (iv) we note that $\mathsf{dep\usc{}cocone\usc{}map}(P)$ is an equivalence if and only if the gap map of the square in \cref{eq:dppp2} is an equivalence.
 
-  It is clear that (iv) implies (v), so it remains to see that (v) implies (iv). TODO
+  It is clear that (iv) implies (v), so it remains to show that (v) implies (iv). 
 \end{proof}
 
 \subsection{Type families over pushouts}
