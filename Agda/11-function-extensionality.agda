@@ -526,18 +526,23 @@ abstract
     (λ x → (ind-is-equiv C f is-equiv-f h) (f x)) ~ h
   htpy-comp-is-equiv C f is-equiv-f h = htpy-eq (comp-is-equiv C f is-equiv-f h)
 
+precomp :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : UU l3) →
+  (B → C) → (A → C)
+precomp f C = precomp-Π f (λ b → C)
+
 abstract
   is-equiv-precomp-is-equiv-precomp-Π :
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-    ((C : B → UU l3) → is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))) →
-    ((C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f))
+    ((C : B → UU l3) → is-equiv (precomp-Π f C)) →
+    ((C : UU l3) → is-equiv (precomp f C))
   is-equiv-precomp-is-equiv-precomp-Π f is-equiv-precomp-Π-f C =
     is-equiv-precomp-Π-f (λ y → C)
 
 abstract
   is-equiv-precomp-is-equiv :
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) → is-equiv f →
-    (C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f)
+    (C : UU l3) → is-equiv (precomp f C)
   is-equiv-precomp-is-equiv f is-equiv-f =
     is-equiv-precomp-is-equiv-precomp-Π f
       ( is-equiv-precomp-Π-is-equiv f is-equiv-f)
@@ -545,8 +550,7 @@ abstract
 abstract
   is-equiv-is-equiv-precomp :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-    ((l3 : Level) (C : UU l3) → is-equiv (λ (g : B → C) → g ∘ f)) →
-    is-equiv f
+    ((l : Level) (C : UU l) → is-equiv (precomp f C)) → is-equiv f
   is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
     let retr-f = center (is-contr-map-is-equiv (is-equiv-precomp-f _ A) id) in
     is-equiv-has-inverse
@@ -1038,7 +1042,7 @@ abstract
       ( λ l X → is-equiv-right-factor
         ( λ (s : Y → X) → pair (s ∘ i) (s ∘ j))
         ( ev-inl-inr (λ t → X))
-        ( λ s → s ∘ (ind-coprod (λ t → Y) i j))
+        ( precomp (ind-coprod (λ t → Y) i j) X)
         ( λ s → refl)
         ( universal-property-coprod X)
         ( H _ X))
@@ -1053,7 +1057,7 @@ abstract
     is-equiv-comp
       ( λ s → pair (s ∘ i) (s ∘ j))
       ( ev-inl-inr (λ t → Y))
-      ( λ s → s ∘ (ind-coprod (λ t → X) i j))
+      ( precomp (ind-coprod (λ t → X) i j) Y)
       ( λ s → refl)
       ( is-equiv-precomp-is-equiv
         ( ind-coprod (λ t → X) i j)
@@ -1092,7 +1096,7 @@ abstract
       ( λ l Y → is-equiv-right-factor
         ( λ f → f x)
         ( ev-star (λ t → Y))
-        ( λ f → f ∘ (ind-unit x))
+        ( precomp (ind-unit x) Y)
         ( λ f → refl)
         ( universal-property-unit Y)
         ( H _ Y))
@@ -1106,7 +1110,7 @@ abstract
     is-equiv-comp
       ( λ f → f x)
       ( ev-star (λ t → Y))
-      ( λ f → f ∘ (ind-unit x))
+      ( precomp (ind-unit x) Y)
       ( λ f → refl)
       ( is-equiv-precomp-is-equiv (ind-unit x) is-equiv-ind-unit Y)
       ( universal-property-unit Y)

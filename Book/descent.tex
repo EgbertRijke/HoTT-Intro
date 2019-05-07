@@ -408,7 +408,12 @@ We define a commuting square
 \sm{a:A}P_A(a) \arrow[r,swap,"{i'}"] & \sm{x:X}P(x)
 \end{tikzcd}
 \end{equation*}
-with a homotopy $H':i'\circ f'\htpy j'\circ g'$.
+with a homotopy $H':i'\circ f'\htpy j'\circ g'$. We will write $\mathcal{S'}$ for the span
+\begin{equation*}
+\begin{tikzcd}
+\sm{a:A}P_A(a) & \sm{x:S}P_A(f(x)) \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] & \sm{b:B}P_B(b).
+\end{tikzcd}
+\end{equation*}
 \end{defn}
 
 \begin{constr}
@@ -419,25 +424,16 @@ g' & \defeq \total[g]{e_S} \\
 i' & \defeq \total[i]{e_A} \\
 j' & \defeq \total[j]{e_B}.
 \end{align*}
-The remaining goal is to construct a homotopy $H':i'\circ f'\htpy j'\circ g'$. Thus, we have to show that
+Then it remains to construct a homotopy $H':i'\circ f'\htpy j'\circ g'$. In order to construct this homotopy, we have to construct an identification
 \begin{equation*}
 (i(f(x)),e_A(y))=(j(g(x)),e_B(e_S(y)))
 \end{equation*}
-for any $x:S$ and $y:P_A(f(x))$. We have he identification
+for any $x:S$ and $y:P_A(f(x))$. Note that have the identification
 \begin{equation*}
 \mathsf{eq\usc{}pair}(H(x),e_S(x,y)^{-1})
 \end{equation*}
 of this type.
 \end{constr}
-
-\begin{defn}
-We will write $\mathcal{S'}$ for the span
-\begin{equation*}
-\begin{tikzcd}
-\sm{a:A}P_A(a) & \sm{x:S}P_A(f(x)) \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] & \sm{b:B}P_B(b).
-\end{tikzcd}
-\end{equation*}
-\end{defn}
 
 \begin{lem}[The flattening lemma]\label{lem:flattening}
 The commuting square\index{flattening lemma!for pushouts|textit}
@@ -455,7 +451,7 @@ is a pushout square.
   \begin{equation*}
     \begin{tikzcd}
       & T^{\sm{x:X}P(x)} \arrow[dl] \arrow[d] \arrow[dr] \\
-      T^{\sm{a:A}P_A(a)} \arrow[d] & \prd{x:X}P(x) \arrow[dl] \arrow[dr] & T^{\sm{b:B}P_B(b)} \arrow[dl,crossing over] \arrow[d] \\
+      T^{\sm{a:A}P_A(a)} \arrow[d] & \prd{x:X}T^{P(x)} \arrow[dl] \arrow[dr] & T^{\sm{b:B}P_B(b)} \arrow[dl,crossing over] \arrow[d] \\
       \prd{a:A}T^{P_A(a)} \arrow[dr] & T^{\sm{x:S}P_A(f(x))} \arrow[from=ul,crossing over] \arrow[d] & \prd{b:B}T^{P_B(b)} \arrow[dl] \\
       & \prd{x:S}T^{P_A(f(x))}
     \end{tikzcd}

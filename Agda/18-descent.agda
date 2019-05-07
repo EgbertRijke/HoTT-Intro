@@ -701,7 +701,7 @@ COHERENCE-HTPY-INV-CHOICE-∞ P {f} {g} H =
 coherence-htpy-inv-choice-∞-htpy-refl :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
   (f : A → B) → COHERENCE-HTPY-INV-CHOICE-∞ P (htpy-refl' f)
-coherence-htpy-inv-choice-∞-htpy-refl P f =
+coherence-htpy-inv-choice-∞-htpy-refl {X = X} P f =
   ( htpy-ap-concat
     ( coherence-square-inv-choice-∞ P f)
     ( inv-choice-∞ ·l ( htpy-precompose-total-lifts P htpy-refl))
@@ -710,10 +710,10 @@ coherence-htpy-inv-choice-∞-htpy-refl P f =
       ap (ap inv-choice-∞) (compute-htpy-precompose-total-lifts P f h))) ∙h
   ( htpy-inv
     ( htpy-ap-concat'
-      ( ( htpy-precompose _ htpy-refl) ·r inv-choice-∞)
+      ( ( htpy-precomp htpy-refl (Σ X P)) ·r inv-choice-∞)
       ( htpy-refl)
       ( htpy-refl)
-      ( λ h → compute-htpy-precompose _ f (inv-choice-∞ h))))
+      ( λ h → compute-htpy-precomp f (Σ X P) (inv-choice-∞ h))))
 
 abstract
   coherence-htpy-inv-choice-∞ :
@@ -761,14 +761,14 @@ is-pullback-cone-family-dependent-pullback-property {S = S} {A} {B} {X}
     ( cone-family-dependent-pullback-property f g c P)
     ( pb-c _ X)
     ( is-pullback-top-is-pullback-bottom-cube-is-equiv
-      ( precompose (Σ X P) i)
-      ( precompose (Σ X P) j)
-      ( precompose (Σ X P) f)
-      ( precompose (Σ X P) g)
-      ( toto (fam-lifts A P) (precompose X i) (precompose-lifts P i))
-      ( toto (fam-lifts B P) (precompose X j) (precompose-lifts P j))
-      ( toto (fam-lifts S P) (precompose X f) (precompose-lifts P f))
-      ( toto (fam-lifts S P) (precompose X g) (precompose-lifts P g))
+      ( precomp i (Σ X P))
+      ( precomp j (Σ X P))
+      ( precomp f (Σ X P))
+      ( precomp g (Σ X P))
+      ( toto (fam-lifts A P) (precomp i X) (precompose-lifts P i))
+      ( toto (fam-lifts B P) (precomp j X) (precompose-lifts P j))
+      ( toto (fam-lifts S P) (precomp f X) (precompose-lifts P f))
+      ( toto (fam-lifts S P) (precomp g X) (precompose-lifts P g))
       ( inv-choice-∞) 
       ( inv-choice-∞)
       ( inv-choice-∞)
@@ -778,7 +778,7 @@ is-pullback-cone-family-dependent-pullback-property {S = S} {A} {B} {X}
       ( htpy-refl)
       ( htpy-refl)
       ( htpy-refl)
-      ( htpy-precompose _ H)
+      ( htpy-precomp H (Σ X P))
       ( coherence-htpy-inv-choice-∞ P H)
       ( is-equiv-inv-choice-∞)
       ( is-equiv-inv-choice-∞)
@@ -811,6 +811,8 @@ dependent-pullback-property-pullback-property-pushout
 
 -- Section 16.2 Families over pushouts
 
+{- Definition 18.2.1 -}
+
 Fam-pushout :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ lsuc l)))
@@ -821,55 +823,53 @@ Fam-pushout l {S} {A} {B} f g =
 
 {- We characterize the identity type of Fam-pushout. -}
 
-coherence-Eq-Fam-pushout :
-  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (P Q : Fam-pushout l f g) →
-  (eA : (a : A) → (pr1 P a) ≃ (pr1 Q a))
-  (eB : (b : B) → (pr1 (pr2 P) b) ≃ (pr1 (pr2 Q) b)) →
-  UU (l1 ⊔ l)
-coherence-Eq-Fam-pushout {S = S}
-  f g P Q eA eB =
+coherence-equiv-Fam-pushout :
+  { l1 l2 l3 l l' : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  { f : S → A} {g : S → B}
+  ( P : Fam-pushout l f g) (Q : Fam-pushout l' f g) →
+  ( eA : (a : A) → (pr1 P a) ≃ (pr1 Q a))
+  ( eB : (b : B) → (pr1 (pr2 P) b) ≃ (pr1 (pr2 Q) b)) →
+  UU (l1 ⊔ l ⊔ l')
+coherence-equiv-Fam-pushout {S = S} {f = f} {g} P Q eA eB =
   ( s : S) →
     ( (map-equiv (eB (g s))) ∘ (map-equiv (pr2 (pr2 P) s))) ~
     ( (map-equiv (pr2 (pr2 Q) s)) ∘ (map-equiv (eA (f s))))
     
-Eq-Fam-pushout :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) →
-  (s t : Fam-pushout l f g) → UU (l1 ⊔ (l2 ⊔ (l3 ⊔ l)))
-Eq-Fam-pushout l {S} {A} {B} f g P Q =
+equiv-Fam-pushout :
+  {l1 l2 l3 l l' : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} →
+  Fam-pushout l f g → Fam-pushout l' f g → UU (l1 ⊔ l2 ⊔ l3 ⊔ l ⊔ l')
+equiv-Fam-pushout {S = S} {A} {B} {f} {g} P Q =
   Σ ( (a : A) → (pr1 P a) ≃ (pr1 Q a)) ( λ eA →
     Σ ( (b : B) → (pr1 (pr2 P) b) ≃ (pr1 (pr2 Q) b))
-      ( coherence-Eq-Fam-pushout f g P Q eA))
+      ( coherence-equiv-Fam-pushout P Q eA))
 
-reflexive-Eq-Fam-pushout :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s : Fam-pushout l f g) →
-  Eq-Fam-pushout l f g s s
-reflexive-Eq-Fam-pushout l f g (pair PA (pair PB PS)) =
+reflexive-equiv-Fam-pushout :
+  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} (P : Fam-pushout l f g) →
+  equiv-Fam-pushout P P
+reflexive-equiv-Fam-pushout (pair PA (pair PB PS)) =
   pair (λ a → equiv-id (PA a))
     ( pair
       ( λ b → equiv-id (PB b))
       ( λ s → htpy-refl))
 
-Eq-Fam-pushout-eq :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {s t : Fam-pushout l f g} →
-  Id s t → Eq-Fam-pushout l f g s t
-Eq-Fam-pushout-eq l f g {s} {.s} refl =
-  reflexive-Eq-Fam-pushout l f g s
+equiv-Fam-pushout-eq :
+  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} {P Q : Fam-pushout l f g} →
+  Id P Q → equiv-Fam-pushout P Q
+equiv-Fam-pushout-eq {P = P} {.P} refl =
+  reflexive-equiv-Fam-pushout P
 
-is-contr-total-Eq-Fam-pushout :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s : Fam-pushout l f g) →
-  is-contr
-    ( Σ ( Fam-pushout l f g)
-      ( Eq-Fam-pushout l f g s))
-is-contr-total-Eq-Fam-pushout l {S} {A} {B} f g P =
+is-contr-total-equiv-Fam-pushout :
+  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} (P : Fam-pushout l f g) →
+  is-contr (Σ (Fam-pushout l f g) (equiv-Fam-pushout P))
+is-contr-total-equiv-Fam-pushout {S = S} {A} {B} {f} {g} P =
   is-contr-total-Eq-structure
     ( λ PA' t eA →
       Σ ( (b : B) → (pr1 (pr2 P) b) ≃ (pr1 t b))
-        ( coherence-Eq-Fam-pushout f g P (pair PA' t) eA))
+        ( coherence-equiv-Fam-pushout P (pair PA' t) eA))
     ( is-contr-total-Eq-Π
       ( λ a X → (pr1 P a) ≃ X)
       ( λ a → is-contr-total-equiv (pr1 P a))
@@ -877,8 +877,8 @@ is-contr-total-Eq-Fam-pushout l {S} {A} {B} f g P =
     ( pair (pr1 P) (λ a → equiv-id (pr1 P a)))
     ( is-contr-total-Eq-structure
       ( λ PB' PS' eB →
-        coherence-Eq-Fam-pushout
-          f g P (pair (pr1 P) (pair PB' PS'))
+        coherence-equiv-Fam-pushout
+          P (pair (pr1 P) (pair PB' PS'))
           (λ a → equiv-id (pr1 P a)) eB)
       ( is-contr-total-Eq-Π
         ( λ b Y → (pr1 (pr2 P) b) ≃ Y)
@@ -890,43 +890,64 @@ is-contr-total-Eq-Fam-pushout l {S} {A} {B} f g P =
         ( λ s → is-contr-total-htpy-equiv (pr2 (pr2 P) s))
         ( pr2 (pr2 P))))
 
-is-equiv-Eq-Fam-pushout-eq :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) (s t : Fam-pushout l f g) →
-  is-equiv (Eq-Fam-pushout-eq l f g {s} {t})
-is-equiv-Eq-Fam-pushout-eq l f g s =
-  fundamental-theorem-id s
-    ( reflexive-Eq-Fam-pushout l f g s)
-    ( is-contr-total-Eq-Fam-pushout l f g s)
-    ( λ t → Eq-Fam-pushout-eq l f g {s} {t})
+is-equiv-equiv-Fam-pushout-eq :
+  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} (P Q : Fam-pushout l f g) →
+  is-equiv (equiv-Fam-pushout-eq {P = P} {Q})
+is-equiv-equiv-Fam-pushout-eq P =
+  fundamental-theorem-id P
+    ( reflexive-equiv-Fam-pushout P)
+    ( is-contr-total-equiv-Fam-pushout P)
+    ( λ Q → equiv-Fam-pushout-eq {P = P} {Q})
 
-eq-Eq-Fam-pushout :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {s t : Fam-pushout l f g} →
-  (Eq-Fam-pushout l f g s t) → Id s t
-eq-Eq-Fam-pushout l f g {s} {t} =
-  inv-is-equiv
-    ( is-equiv-Eq-Fam-pushout-eq l f g s t)
+equiv-equiv-Fam-pushout :
+  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} (P Q : Fam-pushout l f g) →
+  Id P Q ≃ equiv-Fam-pushout P Q
+equiv-equiv-Fam-pushout P Q =
+  pair
+    ( equiv-Fam-pushout-eq)
+    ( is-equiv-equiv-Fam-pushout-eq P Q)
 
-issec-eq-Eq-Fam-pushout :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {s t : Fam-pushout l f g} →
-  ( ( Eq-Fam-pushout-eq l f g {s} {t}) ∘
-    ( eq-Eq-Fam-pushout l f g {s} {t})) ~ id
-issec-eq-Eq-Fam-pushout l f g {s} {t} =
-  issec-inv-is-equiv
-    ( is-equiv-Eq-Fam-pushout-eq l f g s t)
+eq-equiv-Fam-pushout :
+  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} {P Q : Fam-pushout l f g} →
+  (equiv-Fam-pushout P Q) → Id P Q
+eq-equiv-Fam-pushout {P = P} {Q} =
+  inv-is-equiv (is-equiv-equiv-Fam-pushout-eq P Q)
 
-isretr-eq-Eq-Fam-pushout :
-  {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {s t : Fam-pushout l f g} →
-  ( ( eq-Eq-Fam-pushout l f g {s} {t}) ∘
-    ( Eq-Fam-pushout-eq l f g {s} {t})) ~ id
-isretr-eq-Eq-Fam-pushout l f g {s} {t} =
-  isretr-inv-is-equiv
-    ( is-equiv-Eq-Fam-pushout-eq l f g s t)
+issec-eq-equiv-Fam-pushout :
+  { l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  { f : S → A} {g : S → B} {P Q : Fam-pushout l f g} →
+  ( ( equiv-Fam-pushout-eq {P = P} {Q}) ∘
+    ( eq-equiv-Fam-pushout {P = P} {Q})) ~ id
+issec-eq-equiv-Fam-pushout {P = P} {Q} =
+  issec-inv-is-equiv (is-equiv-equiv-Fam-pushout-eq P Q)
+
+isretr-eq-equiv-Fam-pushout :
+  {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  {f : S → A} {g : S → B} {P Q : Fam-pushout l f g} →
+  ( ( eq-equiv-Fam-pushout {P = P} {Q}) ∘
+    ( equiv-Fam-pushout-eq {P = P} {Q})) ~ id
+isretr-eq-equiv-Fam-pushout {P = P} {Q} =
+  isretr-inv-is-equiv (is-equiv-equiv-Fam-pushout-eq P Q)
 
 {- This concludes the characterization of the identity type of Fam-pushout. -}
+
+{- Definition 18.2.2 -}
+
+Fam-pushout-fam :
+  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  (P : X → UU l) → Fam-pushout l f g
+Fam-pushout-fam f g c P =
+  pair
+    ( P ∘ (pr1 c))
+    ( pair
+      ( P ∘ (pr1 (pr2 c)))
+      ( λ s → (pair (tr P (pr2 (pr2 c) s)) (is-equiv-tr P (pr2 (pr2 c) s)))))
+
+{- Theorem 18.2.3 -}
 
 Fam-pushout-cocone-UU :
   {l1 l2 l3 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
@@ -946,17 +967,6 @@ is-equiv-Fam-pushout-cocone-UU l f g =
         ( λ s → equiv-eq)
         ( λ s → univalence (PA (f s)) (PB (g s)))))
 
-Fam-pushout-fam :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
-  (f : S → A) (g : S → B) (c : cocone f g X) →
-  (P : X → UU l) → Fam-pushout l f g
-Fam-pushout-fam f g (pair i (pair j H)) P =
-  pair
-    ( P ∘ i)
-    ( pair
-      ( P ∘ j)
-      ( λ s → (pair (tr P (H s)) (is-equiv-tr P (H s)))))
-
 htpy-equiv-eq-ap-fam :
   {l1 l2 : Level} {A : UU l1} (B : A → UU l2) {x y : A} (p : Id x y) →
   htpy-equiv (equiv-tr B p) (equiv-eq (ap B p))
@@ -967,59 +977,203 @@ triangle-Fam-pushout-fam :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g X) →
   ( Fam-pushout-fam {l = l} f g c) ~
-  ( ( Fam-pushout-cocone-UU l f g) ∘
-    ( cocone-map f g {Y = UU l} c))
+  ( ( Fam-pushout-cocone-UU l f g) ∘ ( cocone-map f g {Y = UU l} c))
 triangle-Fam-pushout-fam {l = l} {S} {A} {B} {X} f g (pair i (pair j H)) P =
-  eq-Eq-Fam-pushout l f g
+  eq-equiv-Fam-pushout
     ( pair
       ( λ a → equiv-id (P (i a)))
       ( pair
         ( λ b → equiv-id (P (j b)))
         ( λ s → htpy-equiv-eq-ap-fam P (H s))))
 
-{- Since the identity types of type-choice-∞ and of products of total spaces
-   are again of the same form, it follows that the action on paths of
-   inv-choice-∞ is again of the form inv-choice-∞.
--}
+is-equiv-Fam-pushout-fam :
+  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  ((l' : Level) → universal-property-pushout l' f g c) →
+  is-equiv (Fam-pushout-fam {l = l} f g c)
+is-equiv-Fam-pushout-fam {l = l} f g c up-c =
+  is-equiv-comp
+    ( Fam-pushout-fam f g c)
+    ( Fam-pushout-cocone-UU l f g)
+    ( cocone-map f g c)
+    ( triangle-Fam-pushout-fam f g c)
+    ( up-c (lsuc l) (UU l))
+    ( is-equiv-Fam-pushout-cocone-UU l f g)
 
-square-ap-inv-choice-∞ :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3)
-  (t t' : type-choice-∞ C) →
-  coherence-square
-    ( Eq-type-choice-∞-eq C t t')
-    ( ap inv-choice-∞ {x = t} {y = t'})
-    ( inv-choice-∞)
-    ( Eq-Π-total-fam-eq C (inv-choice-∞ t) (inv-choice-∞ t'))
-square-ap-inv-choice-∞ C (pair f g) .(pair f g) refl = refl
+equiv-Fam-pushout-fam :
+  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  ((l' : Level) → universal-property-pushout l' f g c) →
+  (X → UU l) ≃ Fam-pushout l f g
+equiv-Fam-pushout-fam f g c up-c =
+  pair
+    ( Fam-pushout-fam f g c)
+    ( is-equiv-Fam-pushout-fam f g c up-c)
 
-coherence-square-inv-is-equiv-horizontal :
-  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
-  (f : A → B) (g : A → C) (h : B → D) (k : C → D) (H : (h ∘ f) ~ (k ∘ g)) →
-  (is-equiv-h : is-equiv h) → (is-equiv-g : is-equiv g) →
-  coherence-square (inv-is-equiv is-equiv-g) k f (inv-is-equiv is-equiv-h)
-coherence-square-inv-is-equiv-horizontal f g h k H is-equiv-h is-equiv-g c =
-  ( ap
-    ( (inv-is-equiv is-equiv-h) ∘ k)
-    ( inv (issec-inv-is-equiv is-equiv-g c))) ∙
-  ( ( ap
-      ( inv-is-equiv is-equiv-h)
-      ( inv (H (inv-is-equiv is-equiv-g c)))) ∙
-    ( isretr-inv-is-equiv is-equiv-h (f (inv-is-equiv is-equiv-g c))))
+{- Corollary 18.2.4 -}
 
-{- The type of pushouts on a span S is now defined to be the type of types
-   equipped with the structure of a cocone on S, that satisfies the induction
-   principle for pushouts. 
+uniqueness-Fam-pushout :
+  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  ((l' : Level) → universal-property-pushout l' f g c) →
+  ( P : Fam-pushout l f g) →
+  is-contr
+    ( Σ (X → UU l) (λ Q →
+      equiv-Fam-pushout (Fam-pushout-fam f g c Q) P))
+uniqueness-Fam-pushout {l = l} f g c up-c P =
+  is-contr-equiv'
+    ( fib (Fam-pushout-fam f g c) P)
+    ( equiv-tot-fam-equiv
+      ( λ Q → equiv-equiv-Fam-pushout (Fam-pushout-fam f g c Q) P))
+    ( is-contr-map-is-equiv
+      ( is-equiv-Fam-pushout-fam f g c up-c)
+      ( P))
 
-   In order to ensure that PUSHOUT is a small type, we only require that
-   pushouts eliminate into universe level lsuc (l1 ⊔ l2 ⊔ l3). This is strong
-   enough to define families over the pushouts using types that have size
-   similar to the size of the original span. -}
+-- Section 18.3 The Flattening lemma for pushouts
 
-PUSHOUT :
-  {l1 l2 l3 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) →
-  UU (lsuc (lsuc l1) ⊔ (lsuc (lsuc l2) ⊔ (lsuc (lsuc l3))))
-PUSHOUT {l1} {l2} {l3} f g =
-  Σ ( UU (l1 ⊔ (l2 ⊔ l3)))
-    ( λ X → Σ (cocone f g X)
-      ( λ c → Ind-pushout (lsuc (l1 ⊔ (l2 ⊔ l3))) f g c)) 
+{- Definition 18.3.1 -}
+
+cocone-flattening-pushout :
+  { l1 l2 l3 l4 l5 : Level}
+  { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  ( f : S → A) (g : S → B) (c : cocone f g X)
+  ( P : Fam-pushout l5 f g)
+  ( Q : X → UU l5)
+  ( e : equiv-Fam-pushout P (Fam-pushout-fam f g c Q)) →
+  cocone
+    ( toto (pr1 P) f (λ s → id))
+    ( toto (pr1 (pr2 P)) g (λ s → map-equiv (pr2 (pr2 P) s)))
+    ( Σ X Q)
+cocone-flattening-pushout f g c P Q e =
+  pair
+    ( toto Q
+      ( pr1 c)
+      ( λ a → map-equiv (pr1 e a)))
+    ( pair
+      ( toto Q
+        ( pr1 (pr2 c))
+        ( λ b → map-equiv (pr1 (pr2 e) b)))
+      ( htpy-toto Q
+        ( pr2 (pr2 c))
+        ( λ s → map-equiv (pr1 e (f s)))
+        ( λ s → htpy-inv (pr2 (pr2 e) s))))
+
+{- Theorem 18.3.2 The flattening lemma -}
+
+coherence-bottom-flattening-lemma' :
+  {l1 l2 l3 : Level} {B : UU l1} {Q : B → UU l2} {T : UU l3}
+  {b b' : B} (α : Id b b') {y : Q b} {y' : Q b'} (β : Id (tr Q α y) y')
+  (h : (b : B) → Q b → T) → Id (h b y) (h b' y')
+coherence-bottom-flattening-lemma' refl refl h = refl
+
+coherence-bottom-flattening-lemma :
+  {l1 l2 l3 l4 l5 : Level}
+  {A : UU l1} {B : UU l2} {P : A → UU l3} {Q : B → UU l4} {T : UU l5}
+  {f f' : A → B} (H : f ~ f')
+  {g : (a : A) → P a → Q (f a)}
+  {g' : (a : A) → P a → Q (f' a)}
+  (K : (a : A) → ((tr Q (H a)) ∘ (g a)) ~ (g' a))
+  (h : (b : B) → Q b → T) → (a : A) (p : P a) →
+  Id (h (f a) (g a p)) (h (f' a) (g' a p))
+coherence-bottom-flattening-lemma H K h a p =
+  coherence-bottom-flattening-lemma' (H a) (K a p) h
+
+coherence-cube-flattening-lemma :
+  {l1 l2 l3 l4 l5 : Level}
+  {A : UU l1} {B : UU l2} {P : A → UU l3} {Q : B → UU l4} {T : UU l5}
+  {f f' : A → B} (H : f ~ f')
+  {g : (a : A) → P a → Q (f a)}
+  {g' : (a : A) → P a → Q (f' a)}
+  (K : (a : A) → ((tr Q (H a)) ∘ (g a)) ~ (g' a))
+  (h : Σ B Q → T) →
+  Id ( eq-htpy
+       ( λ a → eq-htpy
+         ( coherence-bottom-flattening-lemma H K (ev-pair h) a)))
+     ( ap ev-pair
+       ( htpy-precomp (htpy-toto Q H g K) T h))
+coherence-cube-flattening-lemma {A = A} {B} {P} {Q} {T} {f = f} {f'} H {g} {g'} K = ind-htpy f
+    ( λ f' H' →
+      (g : (a : A) → P a → Q (f a)) (g' : (a : A) → P a → Q (f' a))
+      (K : (a : A) → ((tr Q (H' a)) ∘ (g a)) ~ (g' a)) (h : Σ B Q → T) →
+      Id ( eq-htpy
+           ( λ a → eq-htpy
+             ( coherence-bottom-flattening-lemma H' K (ev-pair h) a)))
+         ( ap ev-pair
+           ( htpy-precomp (htpy-toto Q H' g K) T h)))
+    ( λ g g' K h → {!ind-htpy g (λ g' K' → (h : Σ B Q → T) →
+      Id ( eq-htpy
+           ( λ a → eq-htpy
+             ( coherence-bottom-flattening-lemma htpy-refl (λ a → htpy-eq (K' a)) (ev-pair h) a)))
+         ( ap ev-pair
+           ( htpy-precomp (htpy-toto Q htpy-refl g (λ a → htpy-eq (K' a))) T h))) ? (λ a → eq-htpy (K a)) h!})
+    H g g' K
+  
+  
+flattening-pushout' :
+  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  ( P : Fam-pushout l5 f g)
+  ( Q : X → UU l5)
+  ( e : equiv-Fam-pushout P (Fam-pushout-fam f g c Q)) →
+  (l : Level) →
+  pullback-property-pushout l
+    ( toto (pr1 P) f (λ s → id))
+    ( toto (pr1 (pr2 P)) g (λ s → map-equiv (pr2 (pr2 P) s)))
+    ( cocone-flattening-pushout f g c P Q e)
+flattening-pushout' f g c P Q e l T =
+  is-pullback-top-is-pullback-bottom-cube-is-equiv
+    ( ( postcomp-Π (λ x → precomp-Π (map-equiv (pr1 e x)) (λ q → T))) ∘
+      ( precomp-Π (pr1 c) (λ x → (Q x) → T)))
+    ( ( postcomp-Π (λ x → precomp-Π (map-equiv (pr1 (pr2 e) x)) (λ q → T))) ∘
+      ( precomp-Π (pr1 (pr2 c)) (λ x → (Q x) → T)))
+    ( precomp-Π f (λ a → (pr1 P a) → T))
+    ( ( postcomp-Π (λ s → precomp (map-equiv (pr2 (pr2 P) s)) T)) ∘
+      ( precomp-Π g (λ b → (pr1 (pr2 P) b) → T)))
+    ( precomp (toto Q (pr1 c) (λ a → map-equiv (pr1 e a))) T)
+    ( precomp (toto Q (pr1 (pr2 c)) (λ b → map-equiv (pr1 (pr2 e) b))) T)
+    ( precomp (toto (pr1 P) f (λ s → id)) T)
+    ( precomp (toto (pr1 (pr2 P)) g (λ s → map-equiv (pr2 (pr2 P) s))) T)
+    ev-pair
+    ev-pair
+    ev-pair
+    ev-pair
+    ( htpy-precomp
+      ( htpy-toto Q
+        ( pr2 (pr2 c))
+        ( λ s → map-equiv (pr1 e (f s)))
+        ( λ s → htpy-inv (pr2 (pr2 e) s)))
+      ( T))
+    htpy-refl
+    htpy-refl
+    htpy-refl
+    htpy-refl
+    ( λ h → eq-htpy (λ s → eq-htpy
+      ( coherence-bottom-flattening-lemma
+        ( pr2 (pr2 c))
+        ( λ s → htpy-inv (pr2 (pr2 e) s))
+        ( h)
+        ( s))))
+    {!!}
+    is-equiv-ev-pair
+    is-equiv-ev-pair
+    is-equiv-ev-pair
+    is-equiv-ev-pair
+    {!!}
+
+flattening-pushout :
+  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g X) →
+  ( P : Fam-pushout l5 f g)
+  ( Q : X → UU l5)
+  ( e : equiv-Fam-pushout P (Fam-pushout-fam f g c Q)) →
+  (l : Level) →
+  universal-property-pushout l
+    ( toto (pr1 P) f (λ s → id))
+    ( toto (pr1 (pr2 P)) g (λ s → map-equiv (pr2 (pr2 P) s)))
+    ( cocone-flattening-pushout f g c P Q e)
+flattening-pushout f g c P Q e l =
+  universal-property-pushout-pullback-property-pushout l
+    ( toto (pr1 P) f (λ s → id))
+    ( toto (pr1 (pr2 P)) g (λ s → map-equiv (pr2 (pr2 P) s)))
+    ( cocone-flattening-pushout f g c P Q e)
+    ( flattening-pushout' f g c P Q e l)

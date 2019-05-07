@@ -742,7 +742,10 @@ is-pullback-top-is-pullback-bottom-cube-is-equiv
                 ( htpy-inv c)) ∙h
               ( htpy-assoc
                   ( h ·l back-left) (front-left ·r f') (hD ·l top))) ∙h
-            ( htpy-ap-concat' _ _ ((front-left ·r f') ∙h (hD ·l top))
+            ( htpy-ap-concat'
+              ( h ·l back-left)
+              ( (h ·l back-left) ∙h htpy-refl)
+              ( (front-left ·r f') ∙h (hD ·l top))
               ( htpy-inv htpy-right-unit)))))
       ( is-pullback-rectangle-is-pullback-top h k hC
         ( pair f (pair g bottom))

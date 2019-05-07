@@ -18,6 +18,8 @@ hom-Fam-pushout {S = S} {A} {B}
       ( s : S) → ((hB (g s)) ∘ (map-equiv (pr2 (pr2 P) s))) ~
       ( (map-equiv (pr2 (pr2 Q) s)) ∘ (hA (f s)))))
 
+{- We characterize the identity type of hom-Fam-pushout. -}
+
 Eq-hom-Fam-pushout :
   { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   ( f : S → A) (g : S → B) →
@@ -71,8 +73,8 @@ is-contr-total-Eq-hom-Fam-pushout {S = S} {A} {B} f g P Q h =
     ( is-contr-total-Eq-structure
       ( λ kB ke (HB : (y : B) → (pr1 (pr2 h) y) ~ kB y) →
         (s : S) →
-          ( ( ((HB (g s)) ·r (map-equiv (pr2 (pr2 P) s))) ∙h (ke s))) ~
-          (( (pr2 (pr2 h) s) ∙h ((map-equiv (pr2 (pr2 Q) s)) ·l htpy-refl))))
+          ( ((HB (g s)) ·r (map-equiv (pr2 (pr2 P) s))) ∙h (ke s)) ~
+          ( (pr2 (pr2 h) s) ∙h ((map-equiv (pr2 (pr2 Q) s)) ·l htpy-refl)))
       ( is-contr-total-Eq-Π
         ( λ y τ → (pr1 (pr2 h) y) ~ τ)
         ( λ y → is-contr-total-htpy (pr1 (pr2 h) y))
@@ -86,10 +88,26 @@ is-contr-total-Eq-hom-Fam-pushout {S = S} {A} {B} f g P Q h =
         ( λ s →
           ((pr2 (pr2 h) s) ∙h ((map-equiv (pr2 (pr2 Q) s)) ·l htpy-refl)))))
 
+is-equiv-hom-Fam-pushout :
+  { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  { f : S → A} {g : S → B} {P : Fam-pushout l4 f g} {Q : Fam-pushout l5 f g} →
+  hom-Fam-pushout f g P Q → UU _
+is-equiv-hom-Fam-pushout {A = A} {B} {f} {g} {P} {Q} h =
+  ((a : A) → is-equiv (pr1 h a)) × ((b : B) → is-equiv (pr1 (pr2 h) b)) 
+
 is-Eq-pushout :
   { l1 l2 l3 l4 : Level} (l5 : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   ( f : S → A) (g : S → B) (a : A) →
-  (P : Fam-pushout l4 f g) (p₀ : pr1 P a) → UU (l1 ⊔ l2 ⊔ l3 ⊔ l4 ⊔ lsuc l5)
+  ( P : Fam-pushout l4 f g) (p₀ : pr1 P a) → UU (l1 ⊔ l2 ⊔ l3 ⊔ l4 ⊔ lsuc l5)
 is-Eq-pushout l5 f g a P p₀ =
-  (Q : Fam-pushout l5 f g) (q : (pr1 Q) a) →
+  ( Q : Fam-pushout l5 f g) (q : (pr1 Q) a) →
   is-contr (Σ (hom-Fam-pushout f g P Q) (λ h → Id ((pr1 h) a p₀) q))
+
+is-identity-is-Eq-pushout :
+  { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l5}
+  ( f : S → A) (g : S → B) (c : cocone f g X) →
+  ( up-X : (l : Level) → universal-property-pushout l f g c) →
+  ( a : A) (P : Fam-pushout l4 f g) (p₀ : pr1 P a) →
+  is-Eq-pushout _ f g a P p₀ →
+  Eq-Fam-pushout _ f g P (Fam-pushout-fam f g c (Id (pr1 c a)))
+is-identity-is-Eq-pushout f g c up-X a P p₀ is-eq-P = ?

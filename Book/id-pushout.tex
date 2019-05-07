@@ -9,7 +9,7 @@
       A & S \arrow[l,swap,"f"] \arrow[r,"g"] & B,
     \end{tikzcd}
   \end{equation*}
-  and consider $P,Q:\mathsf{Fam\usc{}pushout}(\mathcal{S})$. We define the type $\mathsf{hom\usc{}Fam\usc{}pushout}(\mathcal{S})$ to be the type of triples $(h_A,h_B,h_S)$ consisting of
+  and consider $P,Q:\mathsf{Fam\usc{}pushout}(\mathcal{S})$. A morphism of descent data from $P$ to $Q$ is defined to be a triple $(h_A,h_B,h_S)$ consisting of
   \begin{align*}
     h_A & : \prd{x:A} P_A(x)\to Q_A(x) \\
     h_B & : \prd{y:B} P_B(y)\to Q_B(y)
@@ -21,7 +21,9 @@
       P_B(g(s)) \arrow[r,swap,"h_B(g(s))"] & Q_B(g(s))
     \end{tikzcd}
   \end{equation*}
-  commutes for every $s:S$.
+  commutes for every $s:S$. We write $\mathsf{hom\usc{}Fam\usc{}pushout}(\mathcal{S})$ for the type of morphisms of descent data.
+
+  An equivalence of descent data from $P$ to $Q$ is a morphism $h$ such that $h_A$ and $h_B$ are families of equivalences.
 \end{defn}
 
 \begin{defn}
@@ -41,23 +43,19 @@
       A \arrow[r,swap,"i"] & X
     \end{tikzcd}
   \end{equation*}
-  with $H:i\circ f \htpy j\circ g$, and let $a:A$. Furthermore consider $P\jdeq(P_A,P_B,r,e)$ consisting of type families $P_A$ over $A$ and $P_B$ over $B$, equipped with a point $r:P_A(a)$, and a family of equivalences
-  \begin{equation*}
-    e:\prd{s:S} P_A(f(s)) \simeq P_B(g(s)).
-  \end{equation*}
-  If $P$ is the initial such object, then we have two families of equivalences
+  with $H:i\circ f \htpy j\circ g$, and let $a:A$. Furthermore consider a pair $(P,p_0)$ consisting of $P:\mathsf{Fam\usc{}pushout}(\mathcal{S})$ and $p:P_A(a)$. If $P$ is universal, then we have two families of equivalences
   \begin{align*}
-    \alpha & : \prd{x:A}P_A(x)\simeq (i(a)=i(x)) \\
-    \beta & : \prd{y:B} P_B(y)\simeq (i(a)=j(b)) 
+    e_A & : \prd{x:A}P_A(x)\simeq (i(a)=i(x)) \\
+    e_B & : \prd{y:B} P_B(y)\simeq (i(a)=j(b)) 
   \end{align*}
-  such that $\alpha(a,r)=\refl{i(a)}$, and the square
+  equipped with a homotopy $e_S$ witnessing that the square
   \begin{equation*}
     \begin{tikzcd}[column sep=huge]
       P_A(f(s)) \arrow[r,"e(s)"] \arrow[d,swap,"\alpha(f(s))"] & P_B(g(s)) \arrow[d,"\beta(g(s))"] \\
       (i(a)=i(f(s))) \arrow[r,swap,"\lam{p}\ct{p}{H(s)}"] & (i(a)=g(s))
     \end{tikzcd}
   \end{equation*}
-  commutes for each $s:S$
+  commutes for each $s:S$, and an identification $e_A(a,r)=\refl{i(a)}$
 \end{thm}
 
 \begin{thm}
@@ -66,6 +64,10 @@
     X \to_\ast (Y\simeq Y).
   \end{equation*}
 \end{thm}
+
+\begin{proof}
+  The type of pairs $(Y,\mu)$ consisting of a pointed type $Y$ and a pointed map $\mu:X\to_\ast (Y \simeq Y)$ is equivalent to the type of triples $(Y,Z,\mu)$ consisting of a pointed type $Y$, a type $Z$, and a map $\mu:X\to (Y\simeq Z)$.  
+\end{proof}
 
 \begin{cor}
   The loop space of $\sphere{2}$ is the initial type $X$ equipped with a point $x_0:X$ and a homotopy $H:\idfunc\htpy\idfunc$.
