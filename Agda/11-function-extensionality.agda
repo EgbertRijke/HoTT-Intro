@@ -753,8 +753,8 @@ reflexive-htpy-equiv e = htpy-refl
 
 htpy-equiv-eq :
   {l1 l2 : Level} {A : UU l1} {B : UU l2}
-  (e e' : A ≃ B) (p : Id e e') → htpy-equiv e e'
-htpy-equiv-eq e .e refl =
+  {e e' : A ≃ B} (p : Id e e') → htpy-equiv e e'
+htpy-equiv-eq {e = e} {.e} refl =
   reflexive-htpy-equiv e
 
 abstract
@@ -771,12 +771,12 @@ abstract
 
   is-equiv-htpy-equiv-eq :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} (e e' : A ≃ B) →
-    is-equiv (htpy-equiv-eq e e')
+    is-equiv (htpy-equiv-eq {e = e} {e'})
   is-equiv-htpy-equiv-eq e =
     fundamental-theorem-id e
       ( reflexive-htpy-equiv e)
       ( is-contr-total-htpy-equiv e)
-      ( htpy-equiv-eq e)
+      ( λ e' → htpy-equiv-eq {e = e} {e'})
 
 eq-htpy-equiv :
   { l1 l2 : Level} {A : UU l1} {B : UU l2} {e e' : A ≃ B} →
