@@ -98,10 +98,10 @@ abstract
         ( is-equiv-fib-ftr-fib-tot f (pair x z))
         ( is-contr-map-is-equiv is-equiv-tot-f (pair x z)))
 
-equiv-tot-fam-equiv :
+equiv-tot :
   {i j k : Level} {A : UU i} {B : A → UU j} {C : A → UU k} →
   ((x : A) → B x ≃ C x) → (Σ A B) ≃ (Σ A C)
-equiv-tot-fam-equiv e =
+equiv-tot e =
   pair
     ( tot (λ x → map-equiv (e x)))
     ( is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-map-equiv (e x)))
@@ -201,6 +201,19 @@ abstract
       ( is-equiv-tot-is-fiberwise-equiv is-fiberwise-equiv-g)
       ( is-equiv-Σ-map-base-map D f is-equiv-f)
 
+equiv-toto :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
+  (D : B → UU l4) (e : A ≃ B) (g : (x : A) → C x ≃ D (map-equiv e x)) →
+  Σ A C ≃ Σ B D
+equiv-toto D e g =
+  pair
+    ( toto D (map-equiv e) (λ x → map-equiv (g x)))
+    ( is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map D
+      ( map-equiv e)
+      ( λ x → map-equiv (g x))
+      ( is-equiv-map-equiv e)
+      ( λ x → is-equiv-map-equiv (g x)))
+
 abstract
   is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map :
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
@@ -275,7 +288,7 @@ abstract
     fundamental-theorem-id x refl
       ( is-contr-equiv
         ( fib f (f x))
-        ( equiv-tot-fam-equiv (λ y → equiv-inv (f x) (f y)))
+        ( equiv-tot (λ y → equiv-inv (f x) (f y)))
         ( is-contr-map-is-equiv is-equiv-f (f x)))
       ( λ y p → ap f p)
 
@@ -532,8 +545,8 @@ abstract
           ( Σ A (Id x))
           ( Σ B (λ y → empty)))
         ( equiv-functor-coprod
-          ( equiv-tot-fam-equiv (λ y → equiv-raise _ (Id x y)))
-          ( equiv-tot-fam-equiv (λ y → equiv-raise _ empty)))
+          ( equiv-tot (λ y → equiv-raise _ (Id x y)))
+          ( equiv-tot (λ y → equiv-raise _ empty)))
         ( is-contr-equiv
           ( coprod (Σ A (Id x)) empty)
           ( equiv-functor-coprod
@@ -557,8 +570,8 @@ abstract
       ( is-contr-equiv'
         ( coprod (Σ A (λ y → empty)) (Σ B (Id x)))
         ( equiv-functor-coprod
-          ( equiv-tot-fam-equiv (λ y → equiv-raise _ empty))
-          ( equiv-tot-fam-equiv (λ y → equiv-raise _ (Id x y))))
+          ( equiv-tot (λ y → equiv-raise _ empty))
+          ( equiv-tot (λ y → equiv-raise _ (Id x y))))
         ( is-contr-equiv
           ( coprod empty (Σ B (Id x)))
           ( equiv-functor-coprod
@@ -820,7 +833,7 @@ abstract
           ( λ y → is-equiv-Eq-coprod-eq A B (inl x) (inl y)))
         ( is-contr-equiv'
           ( Σ A (Id x))
-          ( equiv-tot-fam-equiv (λ y → equiv-raise _ (Id x y)))
+          ( equiv-tot (λ y → equiv-raise _ (Id x y)))
           ( is-contr-total-path x)))
       ( λ y → ap inl)
 
@@ -836,7 +849,7 @@ abstract
           ( λ y → is-equiv-Eq-coprod-eq A B (inr x) (inr y)))
         ( is-contr-equiv'
           ( Σ B (Id x))
-          ( equiv-tot-fam-equiv (λ y → equiv-raise _ (Id x y)))
+          ( equiv-tot (λ y → equiv-raise _ (Id x y)))
           ( is-contr-total-path x)))
       ( λ y → ap inr)
 

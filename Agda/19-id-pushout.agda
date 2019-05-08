@@ -107,7 +107,149 @@ eq-htpy-hom-Fam-pushout :
 eq-htpy-hom-Fam-pushout P Q h k =
   inv-is-equiv (is-equiv-htpy-hom-Fam-pushout-eq P Q h k)
 
-{- We construct the identity morphism and composition. -}
+{- Next, we show that hom-Fam-pushout is equivalent to the type of families
+   of maps between the induced families on the pushout. -}
+
+Naturality-fam-maps :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : A → UU l3}
+  ( f : (a : A) → B a → C a) {x x' : A} (p : Id x x') → UU _
+Naturality-fam-maps {B = B} {C} f {x} {x'} p =
+  (y : B x) → Id (f x' (tr B p y)) (tr C p (f x y))
+
+naturality-fam-maps :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : A → UU l3}
+  ( f : (a : A) → B a → C a) {x x' : A} (p : Id x x') →
+  Naturality-fam-maps f p
+naturality-fam-maps f refl y = refl
+
+hom-Fam-pushout-map :
+  { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X) →
+  ( P : X → UU l5) (Q : X → UU l6) → ((x : X) → P x → Q x) →
+  hom-Fam-pushout (Fam-pushout-fam c P) (Fam-pushout-fam c Q)
+hom-Fam-pushout-map {f = f} {g} c P Q h =
+  pair
+    ( precomp-Π (pr1 c) (λ x → P x → Q x) h)
+    ( pair
+      ( precomp-Π (pr1 (pr2 c)) (λ x → P x → Q x) h)
+      ( λ s → naturality-fam-maps h (pr2 (pr2 c) s)))
+
+square-path-over-fam-maps :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : A → UU l3}
+  { x x' : A} (p : Id x x') (f : B x → C x) (f' : B x' → C x') →
+  Id (tr (λ a → B a → C a) p f) f' →
+  ( y : B x) → Id (f' (tr B p y)) (tr C p (f y))
+square-path-over-fam-maps refl f f' = htpy-inv ∘ htpy-eq 
+
+is-equiv-square-path-over-fam-maps :
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : A → UU l3}
+  { x x' : A} (p : Id x x') (f : B x → C x) (f' : B x' → C x') →
+  is-equiv (square-path-over-fam-maps p f f')
+is-equiv-square-path-over-fam-maps refl f f' =
+  is-equiv-comp' htpy-inv htpy-eq (funext f f') (is-equiv-htpy-inv f f')
+
+hom-Fam-pushout-dep-cocone :
+  { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X) →
+  ( P : X → UU l5) (Q : X → UU l6) →
+  dep-cocone f g c (λ x → P x → Q x) →
+  hom-Fam-pushout (Fam-pushout-fam c P) (Fam-pushout-fam c Q)
+hom-Fam-pushout-dep-cocone {f = f} {g} c P Q =
+  tot (λ hA → tot (λ hB →
+    postcomp-Π (λ s →
+      square-path-over-fam-maps (pr2 (pr2 c) s) (hA (f s)) (hB (g s)))))
+
+is-equiv-hom-Fam-pushout-dep-cocone :
+  { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X) →
+  ( P : X → UU l5) (Q : X → UU l6) →
+  is-equiv (hom-Fam-pushout-dep-cocone c P Q)
+is-equiv-hom-Fam-pushout-dep-cocone {f = f} {g} c P Q =
+  is-equiv-tot-is-fiberwise-equiv (λ hA →
+    is-equiv-tot-is-fiberwise-equiv (λ hB →
+      is-equiv-postcomp-Π _
+        ( λ s → is-equiv-square-path-over-fam-maps
+          ( pr2 (pr2 c) s)
+          ( hA (f s))
+          ( hB (g s)))))
+
+coherence-naturality-fam-maps :
+  { l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} (P : B → UU l3) (Q : B → UU l4) →
+  { f f' : A → B} (H : f ~ f') (h : (b : B) → P b → Q b) (a : A) →
+  Id ( square-path-over-fam-maps (H a) (h (f a)) (h (f' a)) (apd h (H a)))
+     ( naturality-fam-maps h (H a))
+coherence-naturality-fam-maps {A = A} {B} P Q {f} {f'} H h a =
+  ind-htpy f
+    ( λ f' H →
+      ( h : (b : B) → P b → Q b) (a : A) →
+      Id ( square-path-over-fam-maps (H a) (h (f a)) (h (f' a)) (apd h (H a)))
+         ( naturality-fam-maps h (H a)))
+    ( λ h a → refl)
+    H h a
+
+triangle-hom-Fam-pushout-dep-cocone :
+  { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X) →
+  ( P : X → UU l5) (Q : X → UU l6) →
+  ( hom-Fam-pushout-map c P Q) ~
+  ( ( hom-Fam-pushout-dep-cocone c P Q) ∘
+    ( dep-cocone-map f g c (λ x → P x → Q x)))
+triangle-hom-Fam-pushout-dep-cocone {f = f} {g} c P Q h =
+  eq-htpy-hom-Fam-pushout
+    ( Fam-pushout-fam c P)
+    ( Fam-pushout-fam c Q)
+    ( hom-Fam-pushout-map c P Q h)
+    ( hom-Fam-pushout-dep-cocone c P Q
+      ( dep-cocone-map f g c (λ x → P x → Q x) h))
+    ( pair
+      ( λ a → htpy-refl)
+      ( pair
+        ( λ b → htpy-refl)
+        ( λ s →
+          ( htpy-eq
+            ( coherence-naturality-fam-maps P Q (pr2 (pr2 c)) h s)) ∙h
+          ( htpy-inv htpy-right-unit))))
+
+is-equiv-hom-Fam-pushout-map :
+  { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X) →
+  ( up-X : (l : Level) → universal-property-pushout l f g c)
+  ( P : X → UU l5) (Q : X → UU l6) →
+  is-equiv (hom-Fam-pushout-map c P Q)
+is-equiv-hom-Fam-pushout-map {l5 = l5} {l6} {f = f} {g} c up-X P Q =
+  is-equiv-comp
+    ( hom-Fam-pushout-map c P Q)
+    ( hom-Fam-pushout-dep-cocone c P Q)
+    ( dep-cocone-map f g c (λ x → P x → Q x))
+    ( triangle-hom-Fam-pushout-dep-cocone c P Q)
+    ( dependent-universal-property-universal-property-pushout
+      f g c up-X (l5 ⊔ l6) (λ x → P x → Q x))
+    ( is-equiv-hom-Fam-pushout-dep-cocone c P Q)
+
+equiv-hom-Fam-pushout-map :
+  { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X) →
+  ( up-X : (l : Level) → universal-property-pushout l f g c)
+  ( P : X → UU l5) (Q : X → UU l6) →
+  ( (x : X) → P x → Q x) ≃
+  hom-Fam-pushout (Fam-pushout-fam c P) (Fam-pushout-fam c Q)
+equiv-hom-Fam-pushout-map c up-X P Q =
+  pair
+    ( hom-Fam-pushout-map c P Q)
+    ( is-equiv-hom-Fam-pushout-map c up-X P Q)
+
+{-
+map-hom-Fam-pushout :
+  { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X) →
+  ( up-X : (l : Level) → universal-property-pushout l f g c)
+  ( P : Fam-pushout l5 f g) (Q : Fam-pushout l6  f g) → hom-Fam-pushout P Q →
+  (x : X) → fam-Fam-pushout c up-X P x → fam-Fam-pushout c up-X Q x
+map-hom-Fam-pushout c up-X P Q h = {!!}
+-}
+
+{- We construct the identity morphism and composition, and we show that 
+   morphisms equipped with two-sided inverses are equivalences. -}
 
 id-hom-Fam-pushout :
   { l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -125,21 +267,21 @@ comp-hom-Fam-pushout :
   { f : S → A} {g : S → B} →
   ( P : Fam-pushout l4 f g) (Q : Fam-pushout l5 f g) (R : Fam-pushout l6 f g) →
   hom-Fam-pushout Q R → hom-Fam-pushout P Q → hom-Fam-pushout P R
-comp-hom-Fam-pushout {f = f} {g} P Q R (pair kA (pair kB kS)) (pair hA (pair hB hS)) =
+comp-hom-Fam-pushout {f = f} {g} P Q R k h =
   pair
-    ( λ a → (kA a) ∘ (hA a))
+    ( λ a → (pr1 k a) ∘ (pr1 h a))
     ( pair
-      ( λ b → (kB b) ∘ (hB b))
+      ( λ b → (pr1 (pr2 k) b) ∘ (pr1 (pr2 h) b))
       ( λ s → coherence-square-comp-horizontal
-        ( hA (f s))
-        ( kA (f s))
+        ( pr1 h (f s))
+        ( pr1 k (f s))
         ( map-equiv (pr2 (pr2 P) s))
         ( map-equiv (pr2 (pr2 Q) s))
         ( map-equiv (pr2 (pr2 R) s))
-        ( hB (g s))
-        ( kB (g s))
-        ( hS s)
-        ( kS s)))
+        ( pr1 (pr2 h) (g s))
+        ( pr1 (pr2 k) (g s))
+        ( pr2 (pr2 h) s)
+        ( pr2 (pr2 k) s)))
 
 has-inverse-hom-Fam-pushout :
   { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -161,16 +303,101 @@ is-equiv-hom-Fam-pushout :
   hom-Fam-pushout P Q → UU (l2 ⊔ l3 ⊔ l4 ⊔ l5)
 is-equiv-hom-Fam-pushout {A = A} {B} {f} {g} P Q h =
   ((a : A) → is-equiv (pr1 h a)) × ((b : B) → is-equiv (pr1 (pr2 h) b))
-  
+
+is-equiv-has-inverse-hom-Fam-pushout :
+  { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  { f : S → A} {g : S → B} →
+  ( P : Fam-pushout l4 f g) (Q : Fam-pushout l5 f g) (h : hom-Fam-pushout P Q) →
+  has-inverse-hom-Fam-pushout P Q h → is-equiv-hom-Fam-pushout P Q h
+is-equiv-has-inverse-hom-Fam-pushout P Q h has-inv-h =
+  pair
+    ( λ a →
+      is-equiv-has-inverse
+        ( pr1 (pr1 has-inv-h) a)
+        ( pr1 (pr1 (pr2 has-inv-h)) a)
+        ( pr1 (pr2 (pr2 has-inv-h)) a))
+    ( λ b →
+      is-equiv-has-inverse
+        ( pr1 (pr2 (pr1 has-inv-h)) b)
+        ( pr1 (pr2 (pr1 (pr2 has-inv-h))) b)
+        ( pr1 (pr2 (pr2 (pr2 has-inv-h))) b))
+
+equiv-is-equiv-hom-Fam-pushout :
+  { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  { f : S → A} {g : S → B} (P : Fam-pushout l4 f g) (Q : Fam-pushout l5 f g) →
+  ( h : hom-Fam-pushout P Q) →
+  is-equiv-hom-Fam-pushout P Q h → equiv-Fam-pushout P Q
+equiv-is-equiv-hom-Fam-pushout P Q h is-equiv-h =
+  pair
+    ( λ a → pair (pr1 h a) (pr1 is-equiv-h a))
+    ( pair
+      ( λ b → pair (pr1 (pr2 h) b) (pr2 is-equiv-h b))
+      ( pr2 (pr2 h)))
+
 {- Definition 19.1.2. Universal families over spans -}
 
+ev-pt-hom-Fam-pushout :
+  { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  { f : S → A} {g : S → B} (P : Fam-pushout l4 f g) (Q : Fam-pushout l5 f g)
+  {a : A} → (pr1 P a) → (hom-Fam-pushout P Q) → pr1 Q a
+ev-pt-hom-Fam-pushout P Q {a} p h = pr1 h a p 
+
 is-universal-Fam-pushout :
-  { l1 l2 l3 l4 : Level} (l5 : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  { l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
   { f : S → A} {g : S → B} (P : Fam-pushout l4 f g) (a : A) (p : pr1 P a) →
-  UU (l1 ⊔ l2 ⊔ l3 ⊔ l4 ⊔ lsuc l5)
-is-universal-Fam-pushout l5 {f = f} {g} P a p =
-  ( Q : Fam-pushout l5 f g) (q : (pr1 Q) a) →
-  is-contr (Σ (hom-Fam-pushout P Q) (λ h → Id ((pr1 h) a p) q))
+  UU (l1 ⊔ l2 ⊔ l3 ⊔ l4 ⊔ lsuc l)
+is-universal-Fam-pushout l {f = f} {g} P a p =
+  ( Q : Fam-pushout l f g) → is-equiv (ev-pt-hom-Fam-pushout P Q p)
+
+triangle-is-universal-id-Fam-pushout' :
+  { l l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X)
+  (a : A) ( Q : (x : X) → UU l) →
+  ( ev-refl (pr1 c a) {B = λ x p → Q x}) ~
+  ( ( ev-pt-hom-Fam-pushout
+      ( Fam-pushout-fam c (Id (pr1 c a)))
+      ( Fam-pushout-fam c Q)
+      ( refl)) ∘
+    ( hom-Fam-pushout-map c (Id (pr1 c a)) Q))
+triangle-is-universal-id-Fam-pushout' c a Q = htpy-refl
+
+is-universal-id-Fam-pushout' :
+  { l l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X)
+  ( up-X : (l' : Level) → universal-property-pushout l' f g c) (a : A) →
+  ( Q : (x : X) → UU l) →
+  is-equiv
+    ( ev-pt-hom-Fam-pushout
+      ( Fam-pushout-fam c (Id (pr1 c a)))
+      ( Fam-pushout-fam c Q)
+      ( refl))
+is-universal-id-Fam-pushout' c up-X a Q =
+  is-equiv-left-factor
+    ( ev-refl (pr1 c a) {B = λ x p → Q x})
+    ( ev-pt-hom-Fam-pushout
+      ( Fam-pushout-fam c (Id (pr1 c a)))
+      ( Fam-pushout-fam c Q)
+      ( refl))
+    ( hom-Fam-pushout-map c (Id (pr1 c a)) Q)
+    ( triangle-is-universal-id-Fam-pushout' c a Q)
+    ( is-equiv-ev-refl (pr1 c a))
+    ( is-equiv-hom-Fam-pushout-map c up-X (Id (pr1 c a)) Q)
+
+is-universal-id-Fam-pushout :
+  { l1 l2 l3 l4 : Level} (l : Level)
+  { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
+  { f : S → A} {g : S → B} (c : cocone f g X)
+  ( up-X : (l' : Level) → universal-property-pushout l' f g c) (a : A) →
+  is-universal-Fam-pushout l (Fam-pushout-fam c (Id (pr1 c a))) a refl
+is-universal-id-Fam-pushout l {S = S} {A} {B} {X} {f} {g} c up-X a Q =
+  inv-map-equiv
+    ( precomp-Π-equiv
+      ( equiv-Fam-pushout-fam c up-X)
+      ( λ (Q : Fam-pushout l f g) →
+        is-equiv (ev-pt-hom-Fam-pushout
+          ( Fam-pushout-fam c (Id (pr1 c a))) Q refl)))
+    ( is-universal-id-Fam-pushout' c up-X a)
+    ( Q)
 
 {- Theorem 19.1.3. Characterization of identity types of pushouts. -}
 
@@ -180,13 +407,10 @@ hom-identity-is-universal-Fam-pushout :
   ( up-X : (l : Level) → universal-property-pushout l f g c) →
   ( P : Fam-pushout l4 f g) (a : A) (p : pr1 P a) →
   is-universal-Fam-pushout l5 P a p →
-  Σ ( hom-Fam-pushout P (Fam-pushout-fam f g c (Id (pr1 c a))))
+  Σ ( hom-Fam-pushout P (Fam-pushout-fam c (Id (pr1 c a))))
     ( λ h → Id (pr1 h a p) refl)
 hom-identity-is-universal-Fam-pushout {f = f} {g} c up-X P a p is-univ-P =
-  center
-    ( is-univ-P
-      ( Fam-pushout-fam f g c (Id (pr1 c a)))
-      ( refl))
+  {!!}
 
 is-identity-is-universal-Fam-pushout :
   { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l5}
@@ -194,6 +418,6 @@ is-identity-is-universal-Fam-pushout :
   ( up-X : (l : Level) → universal-property-pushout l f g c) →
   ( P : Fam-pushout l4 f g) (a : A) (p : pr1 P a) →
   is-universal-Fam-pushout l5 P a p →
-  Σ ( equiv-Fam-pushout P (Fam-pushout-fam f g c (Id (pr1 c a))))
+  Σ ( equiv-Fam-pushout P (Fam-pushout-fam c (Id (pr1 c a))))
     ( λ e → Id (map-equiv (pr1 e a) p) refl)
 is-identity-is-universal-Fam-pushout {f = f} {g} c up-X a P p₀ is-eq-P = {!!}

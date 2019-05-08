@@ -215,6 +215,8 @@ abstract
   eq-Eq-ℕ : (n m : ℕ) → Eq-ℕ n m → Id n m
   eq-Eq-ℕ = least-reflexive-Eq-ℕ Id (λ n → refl)
 
+  
+
 abstract
   is-set-ℕ : is-set ℕ
   is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ refl-Eq-ℕ eq-Eq-ℕ

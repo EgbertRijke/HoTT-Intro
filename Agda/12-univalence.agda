@@ -781,7 +781,7 @@ abstract
               ( underlying-type-Semi-Group G → underlying-type-Semi-Group H)
               ( preserves-mul G H)
               ( λ f → is-equiv (underlying-map-Semi-Group G H f)))) ∘e
-          ( equiv-tot-fam-equiv
+          ( equiv-tot
             ( λ f → equiv-swap-prod (is-equiv f) (preserves-mul G H f))))) ∘e
       ( equiv-Σ-assoc
         ( underlying-type-Semi-Group G → underlying-type-Semi-Group H)
@@ -845,7 +845,7 @@ is-contr-total-iso-Semi-Group :
 is-contr-total-iso-Semi-Group {l1} G =
   is-contr-equiv'
     ( Σ (Semi-Group l1) (λ H → equiv-Semi-Group' G H))
-    ( equiv-tot-fam-equiv (λ H → equiv-iso-Semi-Group-equiv-Semi-Group G H))
+    ( equiv-tot (λ H → equiv-iso-Semi-Group-equiv-Semi-Group G H))
     ( is-contr-total-equiv-Semi-Group G)
 
 iso-id-Semi-Group :
@@ -912,7 +912,7 @@ abstract
   is-contr-total-iso-Group {l1} G =
     is-contr-equiv'
       ( Σ (Group l1) (Id G))
-      ( equiv-tot-fam-equiv (λ H → equiv-iso-eq-Group' G H))
+      ( equiv-tot (λ H → equiv-iso-eq-Group' G H))
       ( is-contr-total-path G)
 
 is-equiv-iso-eq-Group :

@@ -136,7 +136,7 @@ abstract
         ( pair q htpy-refl)
         ( is-contr-equiv'
           ( Σ ((f ∘ p) ~ (g ∘ q)) (λ H' → H ~ H'))
-          ( equiv-tot-fam-equiv
+          ( equiv-tot
             ( λ H' → equiv-htpy-concat htpy-right-unit H'))
             ( is-contr-total-htpy H)))
   
@@ -183,7 +183,7 @@ abstract
   is-contr-universal-property-pullback {C = C} f g c up C' c' =
     is-contr-equiv'
       ( Σ (C' → C) (λ h → Id (cone-map f g c h) c'))
-      ( equiv-tot-fam-equiv
+      ( equiv-tot
         (λ h → equiv-htpy-cone f g (cone-map f g c h) c'))
       ( is-contr-map-is-equiv (up C')  c')
 
@@ -343,7 +343,7 @@ abstract
         ( pair b refl)
         ( is-contr-equiv'
           ( Σ (Id (f a) (g b)) (λ p' → Id p p'))
-          ( equiv-tot-fam-equiv
+          ( equiv-tot
             ( λ p' → (equiv-concat' p' (inv right-unit)) ∘e (equiv-inv p p')))
           ( is-contr-total-path p)))
 
