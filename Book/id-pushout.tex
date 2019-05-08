@@ -1,15 +1,16 @@
 \section{The identity types of pushouts}
 
-\subsection{Characterizing the identity types of pushouts}
-
+\subsection{Characterizing families of maps over pushouts}
+  
 \begin{defn}
-  Consider a span $\mathcal{S}$
+    Consider a span $\mathcal{S}$
   \begin{equation*}
     \begin{tikzcd}
       A & S \arrow[l,swap,"f"] \arrow[r,"g"] & B,
     \end{tikzcd}
   \end{equation*}
-  and consider $P,Q:\mathsf{Fam\usc{}pushout}(\mathcal{S})$. A morphism of descent data from $P$ to $Q$ is defined to be a triple $(h_A,h_B,h_S)$ consisting of
+  and consider $P,Q:\mathsf{Fam\usc{}pushout}(\mathcal{S})$.
+  A morphism of descent data from $P$ to $Q$ over $\mathcal{S}$ is defined to be a triple $(h_A,h_B,h_S)$ consisting of
   \begin{align*}
     h_A & : \prd{x:A} P_A(x)\to Q_A(x) \\
     h_B & : \prd{y:B} P_B(y)\to Q_B(y)
@@ -21,19 +22,91 @@
       P_B(g(s)) \arrow[r,swap,"h_B(g(s))"] & Q_B(g(s))
     \end{tikzcd}
   \end{equation*}
-  commutes for every $s:S$. We write $\mathsf{hom\usc{}Fam\usc{}pushout}(\mathcal{S})$ for the type of morphisms of descent data.
+  commutes for every $s:S$. We write $\mathsf{hom}_{\mathcal{S}}(P,Q)$ for the type of morphisms of descent data over $\mathcal{S}$.
 
   An equivalence of descent data from $P$ to $Q$ is a morphism $h$ such that $h_A$ and $h_B$ are families of equivalences.
 \end{defn}
+
+\begin{rmk}
+  The identity type $h=h'$ of $\mathsf{hom}_{\mathcal{S}}(P,Q)$ is characterized as the type of triples $(H_A,H_B,H_S)$ consisting of
+  \begin{align*}
+    H_A & : \prd{a:A} h_A(a)\htpy h'_A(a) \\
+    H_B & : \prd{b:B} h_B(b)\htpy h'_B(b)
+  \end{align*}
+  and a homotopy $K_S(s)$ witnessing that the square
+  %      ( ((HB (g s)) ·r (map-equiv (pr2 (pr2 P) s))) ∙h (pr2 (pr2 k) s)) ~
+%      ((pr2 (pr2 h) s) ∙h ((map-equiv (pr2 (pr2 Q) s)) ·l (HA (f s))))
+  \begin{equation*}
+    \begin{tikzcd}
+      h_B(g(s))\circ P_S(s) \arrow[d] \arrow[r] & Q_S(s)\circ h_A(f(s)) \arrow[d] \\
+      h'_B(g(s))\circ P_S(s) \arrow[r] & Q_S(s)\circ h'_A(g(s))
+    \end{tikzcd}
+  \end{equation*}
+  of homotopies commutes for every $s:S$.
+\end{rmk}
+
+\begin{defn}\label{defn:hom-Fam-pushout-map}
+  Consider a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+      A \arrow[r,swap,"i"] & X
+    \end{tikzcd}
+  \end{equation*}
+  with $H:i\circ f \htpy j \circ f$, and let $P$ and $Q$ be type families over $X$. We define a map
+  \begin{equation*}
+    \Big(\prd{x:X}P(x)\to Q(x)\Big) \to \mathsf{hom}_{\mathcal{S}}(\mathsf{desc\usc{}fam}(P),\mathsf{desc\usc{}fam}(Q)).
+  \end{equation*}
+\end{defn}
+
+\begin{proof}
+  Let $h:\prd{x:X}P(x)\to Q(x)$. Then we define
+  \begin{align*}
+    h_A & : \prd{a:A}P(i(a))\to Q(i(a)) \\
+    h_B & : \prd{b:B}P(j(b))\to Q(j(b))
+  \end{align*}
+  by $h_A(a,p)\defeq h(i(a),p)$ and $h_B(b,q)\defeq h(j(b),q)$. Then it remains to define for every $s:S$ a homotopy $h_S(s)$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      P(i(f(s))) \arrow[r,"h_A(f(s))"] \arrow[d,swap,"\mathsf{tr}_P(H(s))"] & Q(i(f(s))) \arrow[d,"\mathsf{tr}_Q(H(s))"] \\
+      P(j(g(s))) \arrow[r,swap,"h_B(g(s))"] & Q(j(g(s)))
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Note that every family of maps $h:\prd{x:X}P(x)\to Q(x)$ is natural in the sense that for any path $p:x=x'$ in $X$ the square
+  \begin{equation*}
+    \begin{tikzcd}
+      P(x) \arrow[r,"h(x)"] \arrow[d,swap,"\mathsf{tr}_P(p)"] & Q(x) \arrow[d,"\mathsf{tr}_Q(p)"] \\
+      P(x') \arrow[r,swap,"{h(x')}"] & Q(x')
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Therefore the homotopy $h_S(s)$ is obtained by this naturality.
+\end{proof}
+
+\begin{thm}
+  The map defined in \cref{defn:hom-Fam-pushout-map} is an equivalence.
+\end{thm}
+
+\subsection{Characterizing the identity types of pushouts}
 
 \begin{defn}
   Consider a span $\mathcal{S}$ equipped with $a:A$, and consider
   $P:\mathsf{Fam\usc{}pushout}(\mathcal{S})$ equipped with $p:P_A(a)$. We say that $P$ is \define{universal} if for every $Q:\mathsf{Fam\usc{}pushout}(\mathcal{S})$ the evaluation map
   \begin{equation*}
-    \mathsf{hom\usc{}Fam\usc{}pushout}(P,Q)\to Q_A(a)
+    \mathsf{hom}_{\mathcal{S}}(P,Q)\to Q_A(a)
   \end{equation*}
   given by $h\mapsto h_A(a,p)$ is an equivalence.
 \end{defn}
+
+\begin{lem}
+  Consider a pushout square
+  \begin{equation*}
+    \begin{tikzcd}
+      S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
+      A \arrow[r,swap,"i"] & X
+    \end{tikzcd}
+  \end{equation*}
+  with $H:i\circ f \htpy j\circ g$, and let $a:A$. Furthermore, let $P$ be the descent data for the type family $x\mapsto i(a)=x$ over $X$. Then $P$ is universal.
+\end{lem}
 
 \begin{thm}
   Consider a pushout square
