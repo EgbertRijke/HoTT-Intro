@@ -27,15 +27,13 @@
   An equivalence of descent data from $P$ to $Q$ is a morphism $h$ such that $h_A$ and $h_B$ are families of equivalences.
 \end{defn}
 
-\begin{rmk}
+\begin{rmk}\label{rmk:id-hom-Fam-pushout}
   The identity type $h=h'$ of $\mathsf{hom}_{\mathcal{S}}(P,Q)$ is characterized as the type of triples $(H_A,H_B,H_S)$ consisting of
   \begin{align*}
     H_A & : \prd{a:A} h_A(a)\htpy h'_A(a) \\
     H_B & : \prd{b:B} h_B(b)\htpy h'_B(b)
   \end{align*}
   and a homotopy $K_S(s)$ witnessing that the square
-  %      ( ((HB (g s)) ·r (map-equiv (pr2 (pr2 P) s))) ∙h (pr2 (pr2 k) s)) ~
-%      ((pr2 (pr2 h) s) ∙h ((map-equiv (pr2 (pr2 Q) s)) ·l (HA (f s))))
   \begin{equation*}
     \begin{tikzcd}
       h_B(g(s))\circ P_S(s) \arrow[d] \arrow[r] & Q_S(s)\circ h_A(f(s)) \arrow[d] \\
@@ -59,7 +57,7 @@
   \end{equation*}
 \end{defn}
 
-\begin{proof}
+\begin{constr}
   Let $h:\prd{x:X}P(x)\to Q(x)$. Then we define
   \begin{align*}
     h_A & : \prd{a:A}P(i(a))\to Q(i(a)) \\
@@ -72,19 +70,66 @@
       P(j(g(s))) \arrow[r,swap,"h_B(g(s))"] & Q(j(g(s)))
     \end{tikzcd}
   \end{equation*}
-  commutes. Note that every family of maps $h:\prd{x:X}P(x)\to Q(x)$ is natural in the sense that for any path $p:x=x'$ in $X$ the square
+  commutes. Note that every family of maps $h:\prd{x:X}P(x)\to Q(x)$ is natural in the sense that for any path $p:x=x'$ in $X$, there is a homotopy $\psi(p,h)$ witnessing that the square
   \begin{equation*}
     \begin{tikzcd}
       P(x) \arrow[r,"h(x)"] \arrow[d,swap,"\mathsf{tr}_P(p)"] & Q(x) \arrow[d,"\mathsf{tr}_Q(p)"] \\
       P(x') \arrow[r,swap,"{h(x')}"] & Q(x')
     \end{tikzcd}
   \end{equation*}
-  commutes. Therefore the homotopy $h_S(s)$ is obtained by this naturality.
-\end{proof}
+  commutes. Therefore we define $h_S(s)\defeq\psi(H(s),h)$.
+\end{constr}
 
-\begin{thm}
+\begin{thm}\label{thm:hom-Fam-pushout}
   The map defined in \cref{defn:hom-Fam-pushout-map} is an equivalence.
 \end{thm}
+
+\begin{proof}
+  We will first construct a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-3em]
+      \phantom{\mathsf{hom}_{\mathcal{S}}(\mathsf{desc\usc{}fam}(P),\mathsf{desc\usc{}fam}(Q))} & \prd{x:X}P(x)\to Q(x) \arrow[dl] \arrow[dr] & \phantom{\mathsf{dep\usc{}cocone}_{(i,j,H)}(x\mapsto P(x)\to Q(x))} \\
+      \mathsf{dep\usc{}cocone}_{(i,j,H)}(x\mapsto P(x)\to Q(x)) \arrow[rr,densely dotted] & &
+      \mathsf{hom}_{\mathcal{S}}(\mathsf{desc\usc{}fam}(P),\mathsf{desc\usc{}fam}(Q))
+    \end{tikzcd}
+  \end{equation*}
+  Recall from \cref{thm:dependent-pullback-property-pushout} that $X$ satisfies the dependent universal property, so the map on the left is an equivalence. Therefore we will prove the claim by showing that the bottom map is an equivalence.
+
+  In order to construct the bottom map, we first note that for any two maps $\alpha:P(x)\to Q(x)$ and $\alpha':P(x')\to Q(x')$ and any path $p:x=x'$, there is an equivalence
+  \begin{equation*}
+    \varphi(p,f,f'):\Big(\mathsf{tr}_{x\mapsto P(x)\to Q(x)}(p,f)=f'\Big) \simeq \Big(\prd{y:B(x)} f'(\mathsf{tr}_B(p,y))=\mathsf{tr}_C(p,f(y))\Big).
+  \end{equation*}
+  The equivalence $\varphi$ is defined by path induction on $p$, where we take
+  \begin{equation*}
+    \varphi(\refl{},f,f')\defeq \mathsf{htpy\usc{}eq}\circ\mathsf{inv}.
+  \end{equation*}
+  Now we define the bottom map in the asserted triangle to be the map
+  \begin{equation*}
+    (h_A,h_B,h_S)\mapsto (h_A,h_B,\lam{s}\varphi(H(s),h_A(f(s)),h_B(g(s)),h_S(s))).
+  \end{equation*}
+  Note that this map is an equivalence, since it is the induced map on total spaces of an equivalence.
+
+  It remains to show that the triangle commutes. By \cref{rmk:id-hom-Fam-pushout} it suffices to construct families of homotopies
+  \begin{align*}
+    K_A : \prd{a:A} h_{i(a)}\htpy h_{i(a)} \\
+    K_B : \prd{b:B} h_{j(b)}\htpy h_{j(b)}
+  \end{align*}
+  and for each $s:S$ a homotopy $K_S(s)$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=13em]
+      h_{j(g(s))} \circ \mathsf{tr}_P(H(s)) \arrow[d] \arrow[r,"{\psi(H(s),h)}"] & \mathsf{tr}_Q(H(s)) \circ h_{i(f(s))} \arrow[d] \\
+      h_{j(g(s))} \circ \mathsf{tr}_P(H(s)) \arrow[r,swap,"{\varphi(H(s),h_{i(f(s))},h_{j(g(s))},\apd{h}{H(s)})}"] & \mathsf{tr}_Q(H(s))\circ h_{i(f(s))}
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Of course, we take $K_A(a)\defeq\mathsf{htpy\usc{}refl}$ and $K_B(b)\defeq\mathsf{htpy\usc{}refl}$, so it suffices to show that
+  \begin{equation*}
+    \psi(H(s),h)\htpy \varphi(H(s),h_{i(f(s))},h_{j(g(s))},\apd{h}{H(s)}).
+  \end{equation*}
+  Now we would like to proceed by homotopy induction on $H:i\circ f \htpy j\circ g$. However, we can only do so after we generalize the problem sufficiently to a situation where $H$ has free endpoints. It is indeed possible by homotopy induction to construct for every $f,g:S\to X$ equipped with a homotopy $H:f\htpy g$, every family of maps $h:\prd{x:X}P(x)\to Q(x)$ and every $s:S$, a homotopy
+  \begin{equation*}
+    \psi(H(s),h)\htpy \varphi(H(s),h_{f(s)},h_{g(s)},\apd{h}{H(s)}).\qedhere
+  \end{equation*}
+\end{proof}
 
 \subsection{Characterizing the identity types of pushouts}
 
@@ -107,6 +152,23 @@
   \end{equation*}
   with $H:i\circ f \htpy j\circ g$, and let $a:A$. Furthermore, let $P$ be the descent data for the type family $x\mapsto i(a)=x$ over $X$. Then $P$ is universal.
 \end{lem}
+
+\begin{proof}
+  Since $\mathsf{desc\usc{}fam}$ is an equivalence, it suffices to show that for every type family $Q$ over $X$, the map
+  \begin{equation*}
+    \mathsf{hom}_{\mathcal{S}}(\mathsf{desc\usc{}fam}(\mathsf{Id}(i(a))),\mathsf{desc\usc{}fam}(Q))\to Q(i(a))
+  \end{equation*}
+  given by $h\mapsto h_A(a,\refl{i(a)})$ is an equivalence. 
+  Note that we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}
+      \prd{x:X}(i(a)=x)\to Q(x) \arrow[r] \arrow[dr,swap,"\mathsf{ev\usc{}refl}"] &
+      \mathsf{hom}_{\mathcal{S}}(\mathsf{desc\usc{}fam}(\mathsf{Id}(i(a))),\mathsf{desc\usc{}fam}(Q)) \arrow[d,"{h\mapsto h_A(\refl{i(a)})}"] \\
+      & Q(i(a))
+    \end{tikzcd}
+  \end{equation*}
+  The map $\mathsf{ev\usc{}refl}$ is an equivalence by \cref{thm:yoneda}, and the top map is an equivalence by \cref{thm:hom-Fam-pushout}. Therefore it follows that the remaining map is an equivalence.
+\end{proof}
 
 \begin{thm}
   Consider a pushout square
