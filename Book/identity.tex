@@ -71,11 +71,11 @@ The induction principle for identity types is sometimes called \define{identific
   \end{prooftree}
   Furthermore we postulate that any universe is closed under identity types, i.e., that there is a function
   \begin{equation*}
-    \check{\mathsf{Id}}:\prd{A:\UU}\mathrm{El}(A)\to\mathrm{El}(A)\to\UU
+    \check{\mathsf{Id}}:\prd{A:\UU}\mathsf{Ty}(A)\to\mathsf{Ty}(A)\to\UU
   \end{equation*}
   satisfying
   \begin{equation*}
-    \mathrm{El}(\check{\mathsf{Id}}(A,a,x))\jdeq a=_{\mathrm{El}(A)} x.
+    \mathsf{Ty}(\check{\mathsf{Id}}(A,a,x))\jdeq a=_{\mathsf{Ty}(A)} x.
   \end{equation*}
 \end{rmk}
 
@@ -85,7 +85,7 @@ The induction principle for identity types is sometimes called \define{identific
     \AxiomC{$\Gamma,x:A\vdash x:A$}
     \UnaryInfC{$\Gamma,x:A,y:A\vdash x=_A y~\mathrm{type}$}
   \end{prooftree}
-  In this way we obtain the 'binary' identity type. Its constructor is then also indexed by $x:A$. We have the following introduction rule
+  In this way we obtain the `binary' identity type. Its constructor is then also indexed by $x:A$. We have the following introduction rule
   \begin{prooftree}
     \AxiomC{$\Gamma,x:A\vdash x:A$}
     \UnaryInfC{$\Gamma,x:A\vdash \refl{x}:x=_A x$}

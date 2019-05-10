@@ -21,9 +21,9 @@ satisfying the judgmental equality $\mathsf{Ty}(\check{\Sigma}(X,P)\jdeq\sm{x:\m
 \subsection{Type theoretic universes}
 The induction principle for inductive types can be used to prove universal quantifications. 
 However, it would also be nice if we could construct \emph{new type families} over inductive types, using their induction principles.
-To be able to do this, we introduce a \emph{universe}, a type of which the terms represent types. The idea is that the universe $\UU$ comes equipped with a type family $\mathrm{El}$, so that for each $X:\UU$ we have an associated type $\mathrm{El}(X)$, the type of \emph{elements} of $X$. 
+To be able to do this, we introduce a \emph{universe}, a type of which the terms represent types. The idea is that the universe $\UU$ comes equipped with a type family $\mathsf{Ty}$, so that for each $X:\UU$ we have an associated type $\mathsf{Ty}(X)$, the type of \emph{elements} of $X$. 
 
-We assume there is a closed type $\UU$\index{U@{$\UU$}|textbf} called the \define{universe}\index{universe|textbf}, and a type family $\mathrm{El}$\index{El@{$\mathrm{El}$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}.
+We assume there is a closed type $\UU$\index{U@{$\UU$}|textbf} called the \define{universe}\index{universe|textbf}, and a type family $\mathsf{Ty}$\index{El@{$\mathsf{Ty}$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}.
 \begin{center}
 \begin{minipage}{.4\textwidth}
 \begin{prooftree}
@@ -34,7 +34,7 @@ We assume there is a closed type $\UU$\index{U@{$\UU$}|textbf} called the \defin
 \begin{minipage}{.4\textwidth}
 \begin{prooftree}
 \AxiomC{}
-\UnaryInfC{$X:\UU \vdash \mathrm{El}(X)~\mathrm{type}$}
+\UnaryInfC{$X:\UU \vdash \mathsf{Ty}(X)~\mathrm{type}$}
 \end{prooftree}
 \end{minipage}
 \end{center}
@@ -44,13 +44,13 @@ We postulate that the universe is closed under the type constructors, by the fol
 \item The universe is closed under $\Pi$-types
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A:\UU$}
-\AxiomC{$\Gamma\vdash B:\mathrm{El}(A)\to\UU$}
+\AxiomC{$\Gamma\vdash B:\mathsf{Ty}(A)\to\UU$}
 \BinaryInfC{$\Gamma \vdash \check{\Pi}(A,B):\UU$}
 \end{prooftree}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A:\UU$}
-\AxiomC{$\Gamma\vdash B:\mathrm{El}(A)\to\UU$}
-\BinaryInfC{$\Gamma \vdash \mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))~\mathrm{type}$}
+\AxiomC{$\Gamma\vdash B:\mathsf{Ty}(A)\to\UU$}
+\BinaryInfC{$\Gamma \vdash \mathsf{Ty}(\check{\Pi}(A,B))\jdeq \prd{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))~\mathrm{type}$}
 \end{prooftree}
 \item The type of natural numbers is in the universe
 \begin{prooftree}
@@ -59,7 +59,7 @@ We postulate that the universe is closed under the type constructors, by the fol
 \end{prooftree}
 \begin{prooftree}
 \AxiomC{}
-\UnaryInfC{$\vdash \mathrm{El}(\check{\N})\jdeq \mathbb{N}~\mathrm{type}$}
+\UnaryInfC{$\vdash \mathsf{Ty}(\check{\N})\jdeq \mathbb{N}~\mathrm{type}$}
 \end{prooftree}
 \item Similarly we postulate that the universe contains the empty type, the unit type, the booleans, coproducts, products, and $\Sigma$-types. These closure properties of the universe are given concisely in \cref{tab:universe}.
 \begin{table}
@@ -67,16 +67,16 @@ We postulate that the universe is closed under the type constructors, by the fol
 \caption{\label{tab:universe}Closure properties of the universe}
 \begin{tabular}{lll}
 \toprule
-Premises & Type encoding\index{type encoding@{type encoding $\check{A}$}} in $\UU$ & Type of elements $\mathrm{El}(\blank)$ \\
+Premises & Type encoding\index{type encoding@{type encoding $\check{A}$}} in $\UU$ & Type of elements $\mathsf{Ty}(\blank)$ \\
 \midrule
-$A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Pi}(A,B)$ & $\prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))$ \\
+$A:\UU,B:\mathsf{Ty}(A)\to\UU$ & $\check{\Pi}(A,B)$ & $\prd{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))$ \\
 & $\check{\nat}$ & $\nat$ \\
 & $\check{\emptyt}$ &  $\emptyt$ \\
 & $\check{\unit}$ &  $\unit$ \\
 & $\check{\bool}$ &  $\bool$ \\
-$A,B:\UU$ & $A\mathbin{\check{+}}B$ &  $\mathrm{El}(A)+\mathrm{El}(B)$ \\
-$A,B:\UU$ & $A\mathbin{\check{\times}}B$ &  $\mathrm{El}(A)\times\mathrm{El}(B)$ \\
-$A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Sigma}(A,B)$ & $\sm{x:\mathrm{El}(A)}\mathrm{El}(B(x))$ \\
+$A,B:\UU$ & $A\mathbin{\check{+}}B$ &  $\mathsf{Ty}(A)+\mathsf{Ty}(B)$ \\
+$A,B:\UU$ & $A\mathbin{\check{\times}}B$ &  $\mathsf{Ty}(A)\times\mathsf{Ty}(B)$ \\
+$A:\UU,B:\mathsf{Ty}(A)\to\UU$ & $\check{\Sigma}(A,B)$ & $\sm{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -84,7 +84,7 @@ $A:\UU,B:\mathrm{El}(A)\to\UU$ & $\check{\Sigma}(A,B)$ & $\sm{x:\mathrm{El}(A)}\
 \end{enumerate}
 
 \begin{defn}
-We say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} if it occurs in the universe, i.e., if there is a term $\check{A}:\UU$ in context $\Gamma$ such that $\Gamma\vdash\mathrm{El}(\check{A})\jdeq A~\mathrm{type}$.
+We say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} if it occurs in the universe, i.e., if there is a term $\check{A}:\UU$ in context $\Gamma$ such that $\Gamma\vdash\mathsf{Ty}(\check{A})\jdeq A~\mathrm{type}$.
 \end{defn}
 
 In particular, if $A$ is a small type in context $\Gamma$ and $B$ is a small type in context $\Gamma,x:A$, then $\prd{x:A}B(x)$ is again a small type in context $\Gamma$.
@@ -97,7 +97,7 @@ B:A\to\UU
 \end{defn}
 
 \begin{rmk}
-If $A$ is small, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathrm{El}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
+If $A$ is small, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathsf{Ty}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
 \end{rmk}
 
 \begin{eg}
@@ -133,15 +133,15 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
 A second example of this kind is the notion of \emph{observational equality} on the natural numbers.
 
 \begin{defn}\label{defn:obs_nat}
-We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathrm{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathrm{Eq}_\N$}|textbf} satisfying
+We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathsf{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathsf{Eq}_\N$}|textbf} satisfying
 \begin{align*}
-\mathrm{Eq}_\N(0,0) & \jdeq \unit & \mathrm{Eq}_\N(S(n),0) & \jdeq \emptyt \\
-\mathrm{Eq}_\N(0,S(n)) & \jdeq \emptyt & \mathrm{Eq}_\N(S(n),S(m)) & \jdeq \mathrm{Eq}_\N(n,m).
+\mathsf{Eq}_\N(0,0) & \jdeq \unit & \mathsf{Eq}_\N(S(n),0) & \jdeq \emptyt \\
+\mathsf{Eq}_\N(0,S(n)) & \jdeq \emptyt & \mathsf{Eq}_\N(S(n),S(m)) & \jdeq \mathsf{Eq}_\N(n,m).
 \end{align*}
 \end{defn}
 
 \begin{constr}
-We define $\mathrm{Eq}_\N$ by double induction on $\N$. By the first application of induction it suffices to provide
+We define $\mathsf{Eq}_\N$ by double induction on $\N$. By the first application of induction it suffices to provide
 \begin{align*}
 E_0 & : \N\to\UU \\
 E_S & : \N\to (\N\to\UU)\to(\N\to\UU)
@@ -158,8 +158,8 @@ E_S(n,X,S(m)) & \jdeq X(m)
 \end{align*}
 Therefore we have by the computation rule for the first induction that the judgmental equality
 \begin{align*}
-\mathrm{Eq}_\N(0,m) & \jdeq E_0(m) \\
-\mathrm{Eq}_\N(S(n),m) & \jdeq E_S(n,\mathrm{Eq}_\N(n),m)
+\mathsf{Eq}_\N(0,m) & \jdeq E_0(m) \\
+\mathsf{Eq}_\N(S(n),m) & \jdeq E_S(n,\mathsf{Eq}_\N(n),m)
 \end{align*}
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
@@ -189,32 +189,32 @@ In other words, it would be \emph{inconsistent} to admit proofs by contradiction
   \end{subexenum}
 \item Construct a function
   \begin{equation*}
-    \check{\Pi}:\prd{A:\UU} (\mathrm{El}(A)\to\UU)\to \UU
+    \check{\Pi}:\prd{A:\UU} (\mathsf{Ty}(A)\to\UU)\to \UU
   \end{equation*}
   such that
   \begin{equation*}
-    \mathrm{El}(\check{\Pi}(A,B))\jdeq \prd{x:\mathrm{El}(A)}\mathrm{El}(B(x))
+    \mathsf{Ty}(\check{\Pi}(A,B))\jdeq \prd{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))
   \end{equation*}
-  holds for every $A:\UU$ and $B:\mathrm{El}(A)\to\UU$. 
+  holds for every $A:\UU$ and $B:\mathsf{Ty}(A)\to\UU$. 
   
   \emph{A similar exercise can be posed for $\Sigma$ and $+$ (and for $\to$ and $\times$ as special cases of $\Pi$ and $\Sigma$).}
 \item \label{ex:obs_nat_eqrel}Show that observational equality on $\N$\index{observational equality!on N@{on $\N$}!is an equivalence relation} is an equivalence relation\index{equivalence relation!observational equality on N@{observational equality on $\N$}}, i.e., construct terms of the following types:
   \begin{align*}
-    & \prd{n:\N} \mathrm{Eq}_\N(n,n) \\
-    & \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(m,n) \\
-    & \prd{n,m,l:\N} \mathrm{Eq}_\N(n,m)\to (\mathrm{Eq}_\N(m,l)\to \mathrm{Eq}_\N(n,l)).
+    & \prd{n:\N} \EqN(n,n) \\
+    & \prd{n,m:\N} \EqN(n,m)\to \EqN(m,n) \\
+    & \prd{n,m,l:\N} \EqN(n,m)\to (\EqN(m,l)\to \EqN(n,l)).
   \end{align*}
 \item \label{ex:obs_nat_least}\index{observational equality!on N@{on $\N$}!is least reflexive relation}Let $R$ be a reflexive binary relation\index{reflexive relation}\index{relation!reflexive} on $\N$, i.e., $R$ is of type $\N\to (\N\to\UU)$ and comes equipped with a term $\rho:\prd{n:\N}R(n,n)$. Show that
   \begin{equation*}
-    \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to R(n,m).
+    \prd{n,m:\N} \EqN(n,m)\to R(n,m).
   \end{equation*}
 \item \index{observational equality!on N@{on $\N$}!is preserved by functions}Show that every function $f:\N\to \N$ preserves observational equality in the sense that
   \begin{equation*}
-    \prd{n,m:\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)).
+    \prd{n,m:\N} \EqN(n,m)\to \EqN(f(n),f(m)).
   \end{equation*}
   \emph{Hint: to get the inductive step going the induction hypothesis has to be strong enough. Construct by double induction a term of type}
   \begin{equation*}
-    \prd{n,m:\N}{f:\N\to\N} \mathrm{Eq}_\N(n,m)\to \mathrm{Eq}_\N(f(n),f(m)),
+    \prd{n,m:\N}{f:\N\to\N} \EqN(n,m)\to \EqN(f(n),f(m)),
   \end{equation*}
   \emph{and pull out the universal quantification over $f:\N\to\N$ by \cref{ex:swap}.}
 \item 
@@ -226,11 +226,11 @@ In other words, it would be \emph{inconsistent} to admit proofs by contradiction
   \end{subexenum}
 \item \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
   \begin{subexenum}
-  \item Define observational equality $\mathrm{Eq}_\bool$\index{Eq_bool@{$\mathrm{Eq}_\bool$}|textbf} on the booleans.
-  \item Show that $\mathrm{Eq}_\bool$ is reflexive.\index{observational equality!on 2@{on $\bool$}!is reflexive}
+  \item Define observational equality $\mathsf{Eq}_\bool$\index{Eq_bool@{$\mathsf{Eq}_\bool$}|textbf} on the booleans.
+  \item Show that $\mathsf{Eq}_\bool$ is reflexive.\index{observational equality!on 2@{on $\bool$}!is reflexive}
   \item Show that for any reflexive relation $R:\bool\to(\bool\to \UU)$ one has\index{observational equality!on 2@{on $\bool$}!is least reflexive relation}
     \begin{equation*}
-      \prd{x,y:\bool} \mathrm{Eq}_\bool(x,y)\to R(x,y).
+      \prd{x,y:\bool} \mathsf{Eq}_\bool(x,y)\to R(x,y).
     \end{equation*}
   \end{subexenum}
 \item \label{ex:int_order}

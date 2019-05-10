@@ -949,11 +949,11 @@ isretr-eq-equiv-Fam-pushout {P = P} {Q} =
 
 {- Definition 18.2.2 -}
 
-Fam-pushout-fam :
+desc-fam :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   {f : S → A} {g : S → B} (c : cocone f g X) →
   (P : X → UU l) → Fam-pushout l f g
-Fam-pushout-fam c P =
+desc-fam c P =
   pair
     ( P ∘ (pr1 c))
     ( pair
@@ -985,12 +985,12 @@ htpy-equiv-eq-ap-fam :
 htpy-equiv-eq-ap-fam B {x} {.x} refl =
   reflexive-htpy-equiv (equiv-id (B x))
 
-triangle-Fam-pushout-fam :
+triangle-desc-fam :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   {f : S → A} {g : S → B} (c : cocone f g X) →
-  ( Fam-pushout-fam {l = l} c) ~
+  ( desc-fam {l = l} c) ~
   ( ( Fam-pushout-cocone-UU l {f = f} {g}) ∘ ( cocone-map f g {Y = UU l} c))
-triangle-Fam-pushout-fam {l = l} {S} {A} {B} {X} (pair i (pair j H)) P =
+triangle-desc-fam {l = l} {S} {A} {B} {X} (pair i (pair j H)) P =
   eq-equiv-Fam-pushout
     ( pair
       ( λ a → equiv-id (P (i a)))
@@ -998,29 +998,29 @@ triangle-Fam-pushout-fam {l = l} {S} {A} {B} {X} (pair i (pair j H)) P =
         ( λ b → equiv-id (P (j b)))
         ( λ s → htpy-equiv-eq-ap-fam P (H s))))
 
-is-equiv-Fam-pushout-fam :
+is-equiv-desc-fam :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   {f : S → A} {g : S → B} (c : cocone f g X) →
   ((l' : Level) → universal-property-pushout l' f g c) →
-  is-equiv (Fam-pushout-fam {l = l} {f = f} {g} c)
-is-equiv-Fam-pushout-fam {l = l} {f = f} {g} c up-c =
+  is-equiv (desc-fam {l = l} {f = f} {g} c)
+is-equiv-desc-fam {l = l} {f = f} {g} c up-c =
   is-equiv-comp
-    ( Fam-pushout-fam c)
+    ( desc-fam c)
     ( Fam-pushout-cocone-UU l)
     ( cocone-map f g c)
-    ( triangle-Fam-pushout-fam c)
+    ( triangle-desc-fam c)
     ( up-c (lsuc l) (UU l))
     ( is-equiv-Fam-pushout-cocone-UU l)
 
-equiv-Fam-pushout-fam :
+equiv-desc-fam :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   {f : S → A} {g : S → B} (c : cocone f g X) →
   ((l' : Level) → universal-property-pushout l' f g c) →
   (X → UU l) ≃ Fam-pushout l f g
-equiv-Fam-pushout-fam c up-c =
+equiv-desc-fam c up-c =
   pair
-    ( Fam-pushout-fam c)
-    ( is-equiv-Fam-pushout-fam c up-c)
+    ( desc-fam c)
+    ( is-equiv-desc-fam c up-c)
 
 {- Corollary 18.2.4 -}
 
@@ -1031,14 +1031,14 @@ uniqueness-Fam-pushout :
   ( P : Fam-pushout l f g) →
   is-contr
     ( Σ (X → UU l) (λ Q →
-      equiv-Fam-pushout P (Fam-pushout-fam c Q)))
+      equiv-Fam-pushout P (desc-fam c Q)))
 uniqueness-Fam-pushout {l = l} f g c up-c P =
   is-contr-equiv'
-    ( fib (Fam-pushout-fam c) P)
+    ( fib (desc-fam c) P)
     ( equiv-tot (λ Q →
-      ( equiv-equiv-Fam-pushout P (Fam-pushout-fam c Q)) ∘e
-      ( equiv-inv (Fam-pushout-fam c Q) P)))
-    ( is-contr-map-is-equiv (is-equiv-Fam-pushout-fam c up-c) P)
+      ( equiv-equiv-Fam-pushout P (desc-fam c Q)) ∘e
+      ( equiv-inv (desc-fam c Q) P)))
+    ( is-contr-map-is-equiv (is-equiv-desc-fam c up-c) P)
 
 fam-Fam-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
@@ -1052,7 +1052,7 @@ issec-fam-Fam-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   {f : S → A} {g : S → B} (c : cocone f g X) →
   (up-X : (l' : Level) → universal-property-pushout l' f g c) →
-  ((Fam-pushout-fam {l = l} c) ∘ (fam-Fam-pushout c up-X)) ~ id
+  ((desc-fam {l = l} c) ∘ (fam-Fam-pushout c up-X)) ~ id
 issec-fam-Fam-pushout {f = f} {g} c up-X P =
   inv (eq-equiv-Fam-pushout (pr2 (center (uniqueness-Fam-pushout f g c up-X P))))
 
@@ -1098,7 +1098,7 @@ cocone-flattening-pushout :
   ( f : S → A) (g : S → B) (c : cocone f g X)
   ( P : Fam-pushout l5 f g)
   ( Q : X → UU l5)
-  ( e : equiv-Fam-pushout P (Fam-pushout-fam f g c Q)) →
+  ( e : equiv-Fam-pushout P (desc-fam f g c Q)) →
   cocone
     ( toto (pr1 P) f (λ s → id))
     ( toto (pr1 (pr2 P)) g (λ s → map-equiv (pr2 (pr2 P) s)))
@@ -1173,7 +1173,7 @@ flattening-pushout' :
   (f : S → A) (g : S → B) (c : cocone f g X) →
   ( P : Fam-pushout l5 f g)
   ( Q : X → UU l5)
-  ( e : equiv-Fam-pushout P (Fam-pushout-fam f g c Q)) →
+  ( e : equiv-Fam-pushout P (desc-fam f g c Q)) →
   (l : Level) →
   pullback-property-pushout l
     ( toto (pr1 P) f (λ s → id))
@@ -1224,7 +1224,7 @@ flattening-pushout :
   (f : S → A) (g : S → B) (c : cocone f g X) →
   ( P : Fam-pushout l5 f g)
   ( Q : X → UU l5)
-  ( e : equiv-Fam-pushout P (Fam-pushout-fam f g c Q)) →
+  ( e : equiv-Fam-pushout P (desc-fam f g c Q)) →
   (l : Level) →
   universal-property-pushout l
     ( toto (pr1 P) f (λ s → id))

@@ -228,10 +228,10 @@ The type of natural numbers is a set.
 \end{thm}
 
 \begin{proof}
-We will apply \cref{lem:prop_to_id}. Note that the observational equality $\mathrm{Eq}_\N:\N\to(\N\to\UU)$ on $\N$ (\cref{defn:obs_nat}) is a reflexive relation by \cref{ex:obs_nat_eqrel}, and moreover that $\mathrm{Eq}_\N(n,m)$ is a proposition for every $n,m:\N$ (proof by double induction).
+We will apply \cref{lem:prop_to_id}. Note that the observational equality $\mathsf{Eq}_\N:\N\to(\N\to\UU)$ on $\N$ (\cref{defn:obs_nat}) is a reflexive relation by \cref{ex:obs_nat_eqrel}, and moreover that $\mathsf{Eq}_\N(n,m)$ is a proposition for every $n,m:\N$ (proof by double induction).
 Therefore it suffices to show that
 \begin{equation*}
-\prd{m,n:\nat}\mathrm{Eq}_\N(m,n)\to (\id{m}{n}).
+\prd{m,n:\nat}\mathsf{Eq}_\N(m,n)\to (\id{m}{n}).
 \end{equation*}
 This follows from the fact that observational equality is the \emph{least} reflexive relation, which was shown in \cref{ex:obs_nat_least}.
 \end{proof}

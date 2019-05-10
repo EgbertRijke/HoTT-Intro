@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
 module 19-id-pushout where
 
@@ -128,7 +128,7 @@ hom-Fam-pushout-map :
   { l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   { f : S → A} {g : S → B} (c : cocone f g X) →
   ( P : X → UU l5) (Q : X → UU l6) → ((x : X) → P x → Q x) →
-  hom-Fam-pushout (Fam-pushout-fam c P) (Fam-pushout-fam c Q)
+  hom-Fam-pushout (desc-fam c P) (desc-fam c Q)
 hom-Fam-pushout-map {f = f} {g} c P Q h =
   pair
     ( precomp-Π (pr1 c) (λ x → P x → Q x) h)
@@ -150,7 +150,7 @@ hom-Fam-pushout-dep-cocone :
   { f : S → A} {g : S → B} (c : cocone f g X) →
   ( P : X → UU l5) (Q : X → UU l6) →
   dep-cocone f g c (λ x → P x → Q x) →
-  hom-Fam-pushout (Fam-pushout-fam c P) (Fam-pushout-fam c Q)
+  hom-Fam-pushout (desc-fam c P) (desc-fam c Q)
 hom-Fam-pushout-dep-cocone {f = f} {g} c P Q =
   tot (λ hA → tot (λ hB →
     postcomp-Π (λ s →
@@ -200,8 +200,8 @@ triangle-hom-Fam-pushout-dep-cocone :
     ( dep-cocone-map f g c (λ x → P x → Q x)))
 triangle-hom-Fam-pushout-dep-cocone {f = f} {g} c P Q h =
   eq-htpy-hom-Fam-pushout
-    ( Fam-pushout-fam c P)
-    ( Fam-pushout-fam c Q)
+    ( desc-fam c P)
+    ( desc-fam c Q)
     ( hom-Fam-pushout-map c P Q h)
     ( hom-Fam-pushout-dep-cocone c P Q
       ( dep-cocone-map f g c (λ x → P x → Q x) h))
@@ -236,7 +236,7 @@ equiv-hom-Fam-pushout-map :
   ( up-X : (l : Level) → universal-property-pushout l f g c)
   ( P : X → UU l5) (Q : X → UU l6) →
   ( (x : X) → P x → Q x) ≃
-  hom-Fam-pushout (Fam-pushout-fam c P) (Fam-pushout-fam c Q)
+  hom-Fam-pushout (desc-fam c P) (desc-fam c Q)
 equiv-hom-Fam-pushout-map c up-X P Q =
   pair
     ( hom-Fam-pushout-map c P Q)
@@ -257,8 +257,7 @@ is-universal-Fam-pushout :
 is-universal-Fam-pushout l {f = f} {g} P a p =
   ( Q : Fam-pushout l f g) → is-equiv (ev-pt-hom-Fam-pushout P Q p)
 
-{- We show that the descent data of the identity type is a universal family over
-   the span. -}
+{- Lemma 19.2.2. The descent data of the identity type is a universal family. -}
 
 triangle-is-universal-id-Fam-pushout' :
   { l l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
@@ -266,8 +265,8 @@ triangle-is-universal-id-Fam-pushout' :
   (a : A) ( Q : (x : X) → UU l) →
   ( ev-refl (pr1 c a) {B = λ x p → Q x}) ~
   ( ( ev-pt-hom-Fam-pushout
-      ( Fam-pushout-fam c (Id (pr1 c a)))
-      ( Fam-pushout-fam c Q)
+      ( desc-fam c (Id (pr1 c a)))
+      ( desc-fam c Q)
       ( refl)) ∘
     ( hom-Fam-pushout-map c (Id (pr1 c a)) Q))
 triangle-is-universal-id-Fam-pushout' c a Q = htpy-refl
@@ -279,15 +278,15 @@ is-universal-id-Fam-pushout' :
   ( Q : (x : X) → UU l) →
   is-equiv
     ( ev-pt-hom-Fam-pushout
-      ( Fam-pushout-fam c (Id (pr1 c a)))
-      ( Fam-pushout-fam c Q)
+      ( desc-fam c (Id (pr1 c a)))
+      ( desc-fam c Q)
       ( refl))
 is-universal-id-Fam-pushout' c up-X a Q =
   is-equiv-left-factor
     ( ev-refl (pr1 c a) {B = λ x p → Q x})
     ( ev-pt-hom-Fam-pushout
-      ( Fam-pushout-fam c (Id (pr1 c a)))
-      ( Fam-pushout-fam c Q)
+      ( desc-fam c (Id (pr1 c a)))
+      ( desc-fam c Q)
       ( refl))
     ( hom-Fam-pushout-map c (Id (pr1 c a)) Q)
     ( triangle-is-universal-id-Fam-pushout' c a Q)
@@ -299,14 +298,14 @@ is-universal-id-Fam-pushout :
   { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
   { f : S → A} {g : S → B} (c : cocone f g X)
   ( up-X : (l' : Level) → universal-property-pushout l' f g c) (a : A) →
-  is-universal-Fam-pushout l (Fam-pushout-fam c (Id (pr1 c a))) a refl
+  is-universal-Fam-pushout l (desc-fam c (Id (pr1 c a))) a refl
 is-universal-id-Fam-pushout l {S = S} {A} {B} {X} {f} {g} c up-X a Q =
   inv-map-equiv
     ( precomp-Π-equiv
-      ( equiv-Fam-pushout-fam c up-X)
+      ( equiv-desc-fam c up-X)
       ( λ (Q : Fam-pushout l f g) →
         is-equiv (ev-pt-hom-Fam-pushout
-          ( Fam-pushout-fam c (Id (pr1 c a))) Q refl)))
+          ( desc-fam c (Id (pr1 c a))) Q refl)))
     ( is-universal-id-Fam-pushout' c up-X a)
     ( Q)
 
@@ -404,7 +403,7 @@ hom-identity-is-universal-Fam-pushout :
   ( up-X : (l : Level) → universal-property-pushout l f g c) →
   ( P : Fam-pushout l4 f g) (a : A) (p : pr1 P a) →
   is-universal-Fam-pushout l5 P a p →
-  Σ ( hom-Fam-pushout P (Fam-pushout-fam c (Id (pr1 c a))))
+  Σ ( hom-Fam-pushout P (desc-fam c (Id (pr1 c a))))
     ( λ h → Id (pr1 h a p) refl)
 hom-identity-is-universal-Fam-pushout {f = f} {g} c up-X P a p is-univ-P =
   {!!}
@@ -415,6 +414,6 @@ is-identity-is-universal-Fam-pushout :
   ( up-X : (l : Level) → universal-property-pushout l f g c) →
   ( P : Fam-pushout l4 f g) (a : A) (p : pr1 P a) →
   is-universal-Fam-pushout l5 P a p →
-  Σ ( equiv-Fam-pushout P (Fam-pushout-fam c (Id (pr1 c a))))
+  Σ ( equiv-Fam-pushout P (desc-fam c (Id (pr1 c a))))
     ( λ e → Id (map-equiv (pr1 e a) p) refl)
 is-identity-is-universal-Fam-pushout {f = f} {g} c up-X a P p₀ is-eq-P = {!!}
