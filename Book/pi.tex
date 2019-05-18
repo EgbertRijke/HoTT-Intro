@@ -201,17 +201,17 @@ Composition of functions is associative\index{associativity!of function composit
 \end{lem}
 
 \begin{proof}
-  The main idea of the proof is that both $((h\circ g)\circ f)(x)$ and $(h\circ (g\circ f))(x)$ evaluate to $h(g(f(x))$, and therefore $(h\circ g)\circ f$ and $h\circ(g\circ f)$ must be judgmentally equal.
-
-  This idea is made formal in the following derivation:
+  The main idea of the proof is that both $((h\circ g)\circ f)(x)$ and $(h\circ (g\circ f))(x)$ evaluate to $h(g(f(x))$, and therefore $(h\circ g)\circ f$ and $h\circ(g\circ f)$ must be judgmentally equal. This idea is made formal in the following derivation:
   \begin{prooftree}
     \AxiomC{$\Gamma\vdash f:A\to B$}
     \UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
     \AxiomC{$\Gamma\vdash g:B\to C$}
     \UnaryInfC{$\Gamma,y:B\vdash g(y):C$}
+    \UnaryInfC{$\Gamma,x:A,y:B\vdash g(y):C$}
     \BinaryInfC{$\Gamma,x:A\vdash g(f(x)):C$}
     \AxiomC{$\Gamma\vdash h:C\to D$}
     \UnaryInfC{$\Gamma,z:C\vdash h(z):D$}
+    \UnaryInfC{$\Gamma,x:A,z:C\vdash h(z):D$}
     \BinaryInfC{$\Gamma,x:A\vdash h(g(f(x))):D$}
     \UnaryInfC{$\Gamma,x:A\vdash h(g(f(x)))\jdeq h(g(f(x))):D$}
     \UnaryInfC{$\Gamma,x:A\vdash (h\circ g)(f(x))\jdeq h((g\circ f)(x)):D$}
@@ -303,13 +303,41 @@ Therefore the induction principle for $\N$ is as follows:
   \UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S):\prd{n:\N} P(n)$
 \end{prooftree}
 
+\begin{rmk}
+  The induction principle of $\N$ might also be formulated as an inference rule
+  \begin{prooftree}
+    \AxiomC{$\Gamma,n:\N\vdash P(n)~\mathrm{type}$}
+    \UnaryInfC{$\Gamma\vdash \mathsf{ind}_{\N} : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big)\to \prd{n:\N}P(n)\Big)$}
+  \end{prooftree}
+  To see that indeed we get such a function from the induction principle, we note that the induction principle is stated to hold in an \emph{arbitrary} context $\Gamma$. In particular, by weakening and the variable rule we have the following well-formed terms:
+  \begin{align*}
+    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) & \vdash p_0 : P(\zeroN) \\
+    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) & \vdash p_S : \prd{n:\N}P(n)\to P(\succN(n)).
+  \end{align*}
+  Therefore, the induction principle of $\N$ provides us with a term
+  \begin{equation*}
+    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) \vdash \mathsf{ind}_\N(p_0,p_S) : \prd{n:\N}P(n).
+  \end{equation*}
+  By $\lambda$-abstraction we now obtain a function
+  \begin{equation*}
+    \mathsf{ind}_\N : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big) \to \prd{n:\N}P(n)\Big)
+  \end{equation*}
+  in context $\Gamma$. Therefore we see that it does not really matter whether we present the induction principle of $\N$ in a more verbose way as an inference rule with the base case and the inductive step as hypotheses, or as a function taking variables for the base case and the inductive step as arguments.
+\end{rmk}
+
 \subsubsection{The computation rules of $\N$}
 Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $\zeroN$ or a successor, i.e., with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
 \begin{prooftree}
-\AxiomC{$\cdots$}
-%\RightLabel{$\N{-}\mathrm{Comp}(\zeroN)$}
-\UnaryInfC{$\Gamma \vdash \ind{\N}(p_0,p_S,\zeroN)\jdeq p_0 : P(\zeroN)$}
+    \def\fCenter{\Gamma}
+  \Axiom$\fCenter, n:\N\vdash P(n)~\mathrm{type}$
+  \noLine
+  \UnaryInf$\fCenter\ \vdash p_0:P(\zeroN)$
+  \noLine
+  \UnaryInf$\fCenter\ \vdash p_S:\prd{n:\N}P(n)\to P(\succN(n))$
+  \RightLabel{$\N{-}\mathrm{Ind}$}
+  \UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S,\zeroN)\jdeq p_0 : P(\zeroN)$
 \end{prooftree}
+and similarly, with the same hypotheses as for the computation rule for the base case,
 \begin{prooftree}
 \AxiomC{$\cdots$}
 %\RightLabel{$\N{-}\mathrm{Comp}(\succN)$}
@@ -371,6 +399,24 @@ We combine this derivation with the induction principle of $\N$ to complete the 
 \end{prooftree}
 The asserted judgmental equalities then hold by the computation rules for $\N$.
 \end{proof}
+
+\begin{rmk}
+  When we define a function $f:\prd{n:\N} P(n)$, we will often do so just by indicating its definition on $\zeroN$ and its definition on $\succN(n)$, by writing
+  \begin{align*}
+    f(\zeroN) & \defeq p_0 \\
+    f(\succN(n)) & \defeq p_S(n,f(n)).
+  \end{align*}
+  For example, the definition of addition on the natural numbers could be given as
+  \begin{align*}
+    \addN(\zeroN,n) & \defeq n \\
+    \addN(\succN(m),n) & \defeq \succN(\addN(m,n)).
+  \end{align*}
+  This way of defining a function is called \emph{pattern matching}. A more formal inductive argument can be obtained from a definition by pattern matching if it is possible to obtain from the expression $p_S(n,f(n))$ a general dependent function
+  \begin{equation*}
+    p_S : \prd{n:\N} P(n)\to P(\succN(n)).
+  \end{equation*}
+  In practice this is usually the case. Computer proof assistants such as Agda have sofisticated algorithms to allow for definitions by pattern matching.
+\end{rmk}
 
 \begin{rmk}
 The rules that we provided so far are not sufficient to also conclude that $n+\zeroN\jdeq n$ and $n+ \succN(m)\jdeq \succN(n+m)$. However, once we have introduced the \emph{identity type} in \cref{chap:identity} we will nevertheless be able to \emph{identify} $n+\zeroN$ with $n$, and $n+ \succN(m)$ with $\succN(n+m)$. See \cref{ex:semi-ring-laws-N}. 

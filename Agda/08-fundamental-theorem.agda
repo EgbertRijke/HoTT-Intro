@@ -281,6 +281,18 @@ is-emb :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 is-emb f = (x y : _) → is-equiv (ap f {x} {y})
 
+_↪_ :
+  {i j : Level} → UU i → UU j → UU (i ⊔ j)
+A ↪ B = Σ (A → B) is-emb
+
+map-emb :
+  {i j : Level} {A : UU i} {B : UU j} → A ↪ B → A → B
+map-emb f = pr1 f
+
+is-emb-map-emb :
+  { i j : Level} {A : UU i} {B : UU j} (f : A ↪ B) → is-emb (map-emb f)
+is-emb-map-emb f = pr2 f
+
 abstract
   is-emb-is-equiv :
     {i j : Level} {A : UU i} {B : UU j} (f : A → B) → is-equiv f → is-emb f

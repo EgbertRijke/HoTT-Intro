@@ -53,6 +53,8 @@
 
 \hypersetup{pdfpagemode=UseOutlines}
 
+\tikzcdset{arrow style=tikz,diagrams={>={Straight Barb[scale=0.8]}}}
+
 % \DefineVerbatimEnvironment
 %   {code}{Verbatim}
 %   {}
@@ -352,10 +354,9 @@
 
 \newcommand{\idfunc}[1][]{\mathsf{id}_{#1}}
 \newcommand{\const}{\mathsf{const}}
-\newcommand{\zeroN}{0_\N}
-\newcommand{\succN}{\mathsf{succ}_\N}
-\newcommand{\EqN}{\mathsf{Eq}_\N}
-\newcommand{\addN}{\mathsf{add_\N}}
+\newcommand{\zeroN}{0_{\N}}
+\newcommand{\succN}{\mathsf{succ}_{\N}}
+\newcommand{\EqN}{\mathsf{Eq}_{\N}} \newcommand{\addN}{\mathsf{add_{\N}}}
 \newcommand{\evpair}{\mathsf{ev\usc{}pair}}
 \newcommand{\evpt}{\mathsf{ev\usc{}pt}}
 \newcommand{\evtruefalse}{\mathsf{ev\usc{}true\usc{}false}}
@@ -372,9 +373,9 @@
 \newcommand{\indprod}{\mathsf{ind}_{\times}}
 \newcommand{\indN}{\mathsf{ind}_{\mathbb{N}}}
 \newcommand{\indZ}{\mathsf{ind}_{\mathbb{Z}}}
-\newcommand{\zeroZ}{0_\Z}
-\newcommand{\succZ}{\mathsf{succ}_\Z}
-\newcommand{\addZ}{\mathsf{add}_\Z}
+\newcommand{\zeroZ}{0_{\Z}}
+\newcommand{\succZ}{\mathsf{succ}_{\Z}}
+\newcommand{\addZ}{\mathsf{add}_{\Z}}
 \newcommand{\indid}[1]{\ind{=_{#1}}} % (Martin-Lof) path induction principle for identity types
 \newcommand{\indidb}[1]{\ind{=_{#1}}'} % (Paulin-Mohring) based path induction principle for identity types 
 \newcommand{\singind}{\mathsf{sing\usc{}ind}}
@@ -592,7 +593,7 @@
 \newcommand{\sequence}[3][n]{({#2}_{#1},{#3}_{#1})_{#1}}
 
 %%% Natural numbers
-\newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
+\newcommand{\N}{{\mathbb{N}}}
 %\newcommand{\N}{\textbf{N}}
 \let\nat\N
 \newcommand{\natp}{\ensuremath{\nat'}\xspace} % alternative nat in induction chapter
@@ -616,7 +617,7 @@
 \newcommand{\vect}[2]{\ensuremath{\mathsf{Vec}_{#1}(#2)}\xspace}
 
 %%% Integers
-\newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\Z}{{\mathbb{Z}}}
 \newcommand{\Zmodtwo}{\Z_2}
 \newcommand{\Zsuc}{\mathsf{succ}}
 \newcommand{\Zpred}{\mathsf{pred}}

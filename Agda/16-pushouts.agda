@@ -17,6 +17,8 @@ cocone :
 cocone {A = A} {B = B} f g X =
   Σ (A → X) (λ i → Σ (B → X) (λ j → (i ∘ f) ~ (j ∘ g)))
 
+{- We characterize the identity type of the type of cocones with vertex C. -}
+
 coherence-htpy-cocone :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c c' : cocone f g X) →

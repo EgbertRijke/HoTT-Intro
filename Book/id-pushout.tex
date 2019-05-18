@@ -209,6 +209,14 @@
 \end{cor}
 
 \begin{exercises}
+\item Consider the suspension
+  \begin{equation*}
+    \begin{tikzcd}
+      P \arrow[r] \arrow[d] & \unit \arrow[d,"\south"] \\
+      \unit \arrow[r,swap,"\north"] & \susp{P}
+    \end{tikzcd}
+  \end{equation*}
+  of a proposition $P$. Show that $(\north=\south)\simeq P$. 
 \item Show that if $X$ has decidable equality, then $\susp{X}$ is a $1$-type.
 \item Consider a pushout square
   \begin{equation*}
@@ -226,5 +234,25 @@
   \end{align*}
   for any $b,y:B$.
   \item Use \cref{ex:trunc-join-with-prop} to show that if $B$ is a $k$-type, then so is $X$, for any $k\geq 0$.
+  \end{subexenum}
+\item Consider the join
+  \begin{equation*}
+    \begin{tikzcd}
+      P \times X \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & X \arrow[d,"\inr"] \\
+      P \arrow[r,swap,"\inl"] & \join{P}{X}
+    \end{tikzcd}
+  \end{equation*}
+  of a proposition $P$ and an arbitrary type $X$.
+  \begin{subexenum}
+  \item Show that for any $x,y:X$ there is an equivalence
+    $e:(\inr(x)=\inr(y))\simeq \join{P}{(x=y)}$ for which the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      \phantom{\join{P}{(x=y)}} & (x=y) \arrow[dl,swap,"\apfunc{\inr}"] \arrow[dr,"\inr"] & \phantom{(\inr(x)=\inr(y))} \\
+      (\inr(x)=\inr(y)) \arrow[rr,swap,"e"] & & \join{P}{(x=y)}
+    \end{tikzcd}
+  \end{equation*}
+  commutes.
+\item \label{ex:trunc-join-with-prop}Show that if $X$ is a $k$-type, then so is $\join{P}{X}$.
   \end{subexenum}
 \end{exercises}

@@ -11,9 +11,20 @@ is-prop :
   {i : Level} (A : UU i) → UU i
 is-prop A = (x y : A) → is-contr (Id x y)
 
+{- We introduce the universe of all propositions. -}
 hProp :
   (l : Level) → UU (lsuc l)
 hProp l = Σ (UU l) is-prop
+
+type-Prop :
+  {l : Level} → hProp l → UU l
+type-Prop P = pr1 P
+
+is-prop-type-Prop :
+  {l : Level} (P : hProp l) → is-prop (type-Prop P)
+is-prop-type-Prop P = pr2 P
+
+{- The empty type is a proposition. -}
 
 abstract
   is-prop-empty : is-prop empty
@@ -147,6 +158,14 @@ is-set A = (x y : A) → is-prop (Id x y)
 hSet :
   (i : Level) → UU (lsuc i)
 hSet i = Σ (UU i) is-set
+
+type-Set :
+  {l : Level} → hSet l → UU l
+type-Set X = pr1 X
+
+is-set-type-Set :
+  {l : Level} (X : hSet l) → is-set (type-Set X)
+is-set-type-Set X = pr2 X
 
 axiom-K :
   {i : Level} → UU i → UU i
@@ -715,157 +734,6 @@ abstract
 set-ℤ : hSet lzero
 set-ℤ = pair ℤ is-set-ℤ
 
--- Exercise 8.5
-
-decide : {l : Level} (A : UU l) → UU l
-decide A = coprod A (¬ A)
-
-has-decidable-equality : {l : Level} (A : UU l) → UU l
-has-decidable-equality A = (x y : A) → decide (Id x y)
-
-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
-  decide (Id x y) → UU lzero
-splitting-decidable-equality A x y (inl p) = unit
-splitting-decidable-equality A x y (inr f) = empty
-
-abstract
-  is-prop-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
-    (t : decide (Id x y)) →
-    is-prop (splitting-decidable-equality A x y t)
-  is-prop-splitting-decidable-equality A x y (inl p) = is-prop-unit
-  is-prop-splitting-decidable-equality A x y (inr f) = is-prop-empty
-
-reflexive-splitting-decidable-equality : {l : Level} (A : UU l) (x : A) →
-  (t : decide (Id x x)) → splitting-decidable-equality A x x t
-reflexive-splitting-decidable-equality A x (inl p) = star
-reflexive-splitting-decidable-equality A x (inr f) =
-  ind-empty {P = λ t → splitting-decidable-equality A x x (inr f)} (f refl)
-
-eq-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
-  (t : decide (Id x y)) →
-  splitting-decidable-equality A x y t → Id x y
-eq-splitting-decidable-equality A x y (inl p) t = p
-eq-splitting-decidable-equality A x y (inr f) t =
-  ind-empty {P = λ s → Id x y} t 
-
-abstract
-  is-set-has-decidable-equality : {l : Level} (A : UU l) →
-    has-decidable-equality A → is-set A
-  is-set-has-decidable-equality A d =
-    is-set-prop-in-id
-      ( λ x y → splitting-decidable-equality A x y (d x y))
-      ( λ x y → is-prop-splitting-decidable-equality A x y (d x y))
-      ( λ x → reflexive-splitting-decidable-equality A x (d x x))
-      ( λ x y → eq-splitting-decidable-equality A x y (d x y))
-
--- Exercise 8.6
-
--- Exercise 8.6.a
-
-Eq-𝟚-eq : (x y : bool) → Id x y → Eq-𝟚 x y
-Eq-𝟚-eq x .x refl = reflexive-Eq-𝟚 x
-
-abstract
-  has-decidable-equality-𝟚 : has-decidable-equality bool
-  has-decidable-equality-𝟚 true true = inl refl
-  has-decidable-equality-𝟚 true false = inr (Eq-𝟚-eq true false)
-  has-decidable-equality-𝟚 false true = inr (Eq-𝟚-eq false true)
-  has-decidable-equality-𝟚 false false = inl refl
-
-Eq-ℕ-eq : (x y : ℕ) → Id x y → Eq-ℕ x y
-Eq-ℕ-eq x .x refl = refl-Eq-ℕ x
-
-abstract
-  injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y
-  injective-succ-ℕ zero-ℕ zero-ℕ p = refl
-  injective-succ-ℕ zero-ℕ (succ-ℕ y) p =
-    ind-empty
-      { P = λ t → Id zero-ℕ (succ-ℕ y)}
-      ( Eq-ℕ-eq one-ℕ (succ-ℕ (succ-ℕ y)) p)
-  injective-succ-ℕ (succ-ℕ x) zero-ℕ p =
-    ind-empty
-      { P = λ t → Id (succ-ℕ x) zero-ℕ}
-      ( Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) one-ℕ p)
-  injective-succ-ℕ (succ-ℕ x) (succ-ℕ y) p =
-    ap succ-ℕ (eq-Eq-ℕ x y (Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) (succ-ℕ (succ-ℕ y)) p))
-
-abstract
-  has-decidable-equality-ℕ : has-decidable-equality ℕ
-  has-decidable-equality-ℕ zero-ℕ zero-ℕ = inl refl
-  has-decidable-equality-ℕ zero-ℕ (succ-ℕ y) = inr (Eq-ℕ-eq zero-ℕ (succ-ℕ y))
-  has-decidable-equality-ℕ (succ-ℕ x) zero-ℕ = inr (Eq-ℕ-eq (succ-ℕ x) zero-ℕ)
-  has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
-    functor-coprod
-      ( ap succ-ℕ)
-      ( λ (f : ¬ (Id x y)) p → f (injective-succ-ℕ x y p))
-      ( has-decidable-equality-ℕ x y)
-
--- Exercise 8.6.b
-
-abstract
-  has-decidable-equality-coprod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    has-decidable-equality A → has-decidable-equality B →
-    has-decidable-equality (coprod A B)
-  has-decidable-equality-coprod dec-A dec-B (inl x) (inl y) =
-    functor-coprod
-      ( ap inl)
-      ( λ f p → f (inv-is-equiv (is-emb-inl _ _ x y) p))
-      ( dec-A x y)
-  has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inl x) (inr y) =
-    inr
-      ( λ p →
-        inv-is-equiv
-          ( is-equiv-map-raise _ empty)
-          ( Eq-coprod-eq A B (inl x) (inr y) p))
-  has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inr x) (inl y) =
-    inr
-      ( λ p →
-        inv-is-equiv
-          ( is-equiv-map-raise _ empty)
-          ( Eq-coprod-eq A B (inr x) (inl y) p))
-  has-decidable-equality-coprod dec-A dec-B (inr x) (inr y) =
-    functor-coprod
-      ( ap inr)
-      ( λ f p → f (inv-is-equiv (is-emb-inr _ _ x y) p))
-      ( dec-B x y)
-
-abstract
-  has-decidable-equality-prod-aux : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    (x x' : A) (y y' : B) → decide (Id x x') → decide (Id y y') →
-    decide (Id (pair x y) (pair x' y'))
-  has-decidable-equality-prod-aux x x' y y' (inl p) (inl q) =
-    inl (eq-pair-triv (pair p q))
-  has-decidable-equality-prod-aux x x' y y' (inl p) (inr g) =
-    inr (λ h → g (ap pr2 h))
-  has-decidable-equality-prod-aux x x' y y' (inr f) (inl q) =
-    inr (λ h → f (ap pr1 h))
-  has-decidable-equality-prod-aux x x' y y' (inr f) (inr g) =
-    inr (λ h → f (ap pr1 h))
-
-abstract
-  has-decidable-equality-prod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    has-decidable-equality A → has-decidable-equality B →
-    has-decidable-equality (A × B)
-  has-decidable-equality-prod dec-A dec-B (pair x y) (pair x' y') =
-    has-decidable-equality-prod-aux x x' y y' (dec-A x x') (dec-B y y')
-
--- Exercise 8.6.c
-
-decide-retract-of :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  A retract-of B → decide B → decide A
-decide-retract-of (pair i (pair r H)) (inl b) = inl (r b)
-decide-retract-of (pair i (pair r H)) (inr f) = inr (f ∘ i)
-
-abstract
-  has-decidable-equality-retract-of :
-    {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    A retract-of B → has-decidable-equality B → has-decidable-equality A
-  has-decidable-equality-retract-of (pair i (pair r H)) d x y =
-    decide-retract-of
-      ( Id-retract-of-Id (pair i (pair r H)) x y)
-      ( d (i x) (i y))
-
 -- Exercise 8.7
 
 abstract
@@ -1049,21 +917,3 @@ abstract
     (f : A → B) → is-trunc-map k f → is-trunc-map (succ-𝕋 k) f
   is-trunc-map-succ-is-trunc-map k f is-trunc-f b =
     is-trunc-succ-is-trunc k (fib f b) (is-trunc-f b)
-
-{- Elementary number theory -} 
-
-abstract
-  is-decidable-leq-ℕ :
-    (m n : ℕ) → decide (leq-ℕ m n)
-  is-decidable-leq-ℕ zero-ℕ zero-ℕ = inl star
-  is-decidable-leq-ℕ zero-ℕ (succ-ℕ n) = inl star
-  is-decidable-leq-ℕ (succ-ℕ m) zero-ℕ = inr id
-  is-decidable-leq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-leq-ℕ m n
-
-abstract
-  is-decidable-le-ℕ :
-    (m n : ℕ) → decide (le-ℕ m n)
-  is-decidable-le-ℕ zero-ℕ zero-ℕ = inr id
-  is-decidable-le-ℕ zero-ℕ (succ-ℕ n) = inl star
-  is-decidable-le-ℕ (succ-ℕ m) zero-ℕ = inr id
-  is-decidable-le-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-le-ℕ m n

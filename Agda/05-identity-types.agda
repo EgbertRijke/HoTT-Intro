@@ -328,3 +328,32 @@ Mac-Lane-pentagon :
   in
   Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
 Mac-Lane-pentagon refl refl refl refl = refl
+
+
+{- The following code is an experiment that shows that constructions in an
+   abstract environment do remember the specific definitions of previous
+   definitions in abstract environments. -}
+   
+abstract
+  abstract-concat :
+    {l : Level} {A : UU l} {x y z : A} → Id x y → Id y z → Id x z
+  abstract-concat refl q = q
+
+  abstract-left-unit-law :
+    {l : Level} {A : UU l} {x y : A} (q : Id x y) → Id (abstract-concat refl q) q
+  abstract-left-unit-law q = refl
+
+{- We just make some random definition to make sure that we are not in the 
+   same abstract envirnoment anymore. -}
+one : ℕ
+one = succ-ℕ zero-ℕ
+
+abstract
+  abstract-right-unit-law :
+    {l : Level} {A : UU l} {x y : A} (p : Id x y) →
+      Id (abstract-concat p refl) p
+  abstract-right-unit-law refl = refl
+  
+  {- The term refl should not be accepted if the definition of abstract-concat
+     were forgotten. A definition that would work under all circumstances is
+     abstract-left-unit refl. -}

@@ -170,6 +170,7 @@ satisfying the computation rule\index{computation rules!of cartesian product} th
 
 The projection maps are defined similarly to the projection maps of $\Sigma$-types. When one thinks of types as propositions\index{propositions as types!conjunction}, then $A\times B$ is interpreted as the conjunction of $A$ and $B$.
 
+\begin{comment}
 \subsection{Overview of the inductive types}
 The following table gives an overview of the 'primitive' inductive types that we have introduced so far. Many types of interest can be defined in terms of these inductive types, along with the identity type which we will introduce in \cref{chap:identity}.
 \begin{center}
@@ -190,6 +191,7 @@ name & type & constructors \\
 \bottomrule
 \end{tabular}
 \end{center}
+\end{comment}
 
 \subsection{The type of integers}
 
@@ -201,9 +203,9 @@ name & type & constructors \\
   \end{align*}
   which are both of type $\N\to\Z$, and the constants
   \begin{align*}
-    -1 & \defeq \mathsf{neg}(0)\\
-    0 & \defeq \inr(\inl(\ttt))\\
-    1 & \defeq \mathsf{pos}(0).
+    -1_\Z & \defeq \mathsf{in\usc{}neg}(0)\\
+    0_\Z & \defeq \inr(\inl(\ttt))\\
+    1_\Z & \defeq \mathsf{in\usc{}pos}(0).
   \end{align*}
 \end{defn}
 
@@ -212,18 +214,18 @@ In the following lemma we derive an induction principle\index{induction principl
 \begin{lem}\label{lem:Z_ind}
   Consider a type family $P$ over $\Z$. If we are given
   \begin{align*}
-    p_{-1} & :P(-1) \\
-    p_{-S} & : \prd{n:\N}P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(S(n)))\\
-    p_{0} & : P(0) \\
-    P_{1} & : P(1) \\
-    P_{S} & : \prd{n:\N}P(\mathsf{in\usc{}pos}(n))\to P(\mathsf{in\usc{}pos}(S(n))),
+    p_{-1} & :P(-1_\Z) \\
+    p_{-S} & : \prd{n:\N}P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n)))\\
+    p_{0} & : P(0_\Z) \\
+    P_{1} & : P(1_\Z) \\
+    P_{S} & : \prd{n:\N}P(\mathsf{in\usc{}pos}(n))\to P(\mathsf{in\usc{}pos}(\succN(n))),
   \end{align*}
   then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:
   \begin{align*}
-    f(-1) & \jdeq p_{-1} \\
+    f(-1_\Z) & \jdeq p_{-1} \\
     f(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\mathsf{in\usc{}neg}(n))) \\
-    f(0) & \jdeq p_{0} \\
-    f(1) & \jdeq p_{1} \\
+    f(0_\Z) & \jdeq p_{0} \\
+    f(1_\Z) & \jdeq p_{1} \\
     f(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \jdeq p_S(n,f(\mathsf{in\usc{}pos}(n))).
   \end{align*}
 \end{lem}
@@ -250,7 +252,7 @@ We define the \define{successor function}\index{successor function!on Z@{on $\Z$
 \mathsf{succ}_\Z(-1_\Z) & \defeq 0_\N \\
 \mathsf{succ}_\Z(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
 \mathsf{succ}_\Z(0_\Z) & \defeq 1_\N \\
-\mathsf{succ}_\Z(1_\Z) & \defeq \mathsf{in\usc{}pos}(2_\N) \\
+\mathsf{succ}_\Z(1_\Z) & \defeq \mathsf{in\usc{}pos}(1_\N) \\
 \mathsf{succ}_\Z(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}pos}(\mathsf{succ}_\N(\mathsf{succ}_\N(n))).
 \end{align*}
 \end{defn}

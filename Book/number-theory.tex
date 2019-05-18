@@ -2,23 +2,9 @@
 
 In this chapter our goal is to show how to use the language of type theory to do some elementary number theory. In particular, we define the greatest common divisor of any two numbers, and we use the trial division algorithm to show that being a prime is decidable.
 
-Some ideas to include in this chapter:
-\begin{enumerate}
-\item Show that the ordering $\leq$ is a decidable relation.
-\item Construct the greatest common divisor and the least common multiple.
-\item Show that $\mathsf{is\usc{}prime}(n)$ is a decidable proposition.
-\item Show that there are infinitely many primes.
-\item If $2^n-1$ is prime, then $n$ is prime.
-\item Fermat's little theorem.
-\item Introduce the groups $\Z/n\Z$
-\item Define Euler's totient function $\varphi$, prove basic properties, and prove Euler's theorem that $a^{\varphi(n)}\equiv 1 \mod n$ if $a$ and $n$ are coprime.
-\item Introduce $\mathbb{Q}$ and prove irrationality of $\sqrt{2}$.
-\end{enumerate}
-
-Something to consider: if it is reasonable to place this chapter right after chapter 5, that might be better.
-
-
 \subsection{Decidability}
+
+A common way of reasoning in mathematics is via a proof by contradiction: ``in order to show that $P$ holds we show that it cannot be the case that $P$ doesn't hold". There are no inference rules in type theory that allow us to obtain a term of type $P$ from a term of type $\neg\neg P$. However, for some propositions $P$ one can construct a function $\neg\neg P \to P$. The \emph{decidable propositions} from a class of such propositions $P$ for which we can show $\neg\neg P \to P$.
 
 \begin{defn}
   A type $A$ is said to be decidable if it comes equipped with a term of type
@@ -33,7 +19,22 @@ Something to consider: if it is reasonable to place this chapter right after cha
     \inl(\ttt) & :\mathsf{is\usc{}decidable}(\unit) \\
     \inr(\idfunc) & : \mathsf{is\usc{}decidable}(\emptyt).\qedhere
   \end{align*}
+  Any type $A$ equipped with a point $a:A$ is decidable.
 \end{eg}
+
+\begin{lem}
+  For each $m,n:\N$, the types $\EqN(m,n)$, $m\leq n$ and $m<n$ are decidable.
+\end{lem}
+
+\begin{proof}
+  The proofs in each of the three cases is similar, so we only show that $\EqN(m,n)$ is decidable for each $m,n:\N$. This is done by induction on $m$ and $n$. Note that the types
+  \begin{align*}
+    \EqN(\zeroN,\zeroN) & \jdeq \unit \\
+    \EqN(\zeroN,\succN(n)) & \jdeq \emptyt \\
+    \EqN(\succN(m),\zeroN) & \jdeq \emptyt 
+  \end{align*}
+  are all decidable. Moreover, the type $\EqN(\succN(m),\succN(n))\jdeq \EqN(m,n)$ is decidable by the inductive hypothesis.
+\end{proof}
 
 Typically we are mostly interested in decidability of propositions. However, we have defined the notion of decidability for general types. Therefore it is the case that the type natural numbers, or indeed any type $A$ that comes equipped with a point $a:A$, is decidable. One reason for defining decidability in this generality is that we can now formulate a theorem that shows that if the identity types of a given type are all decidable, then that type must be a set.
 
@@ -44,6 +45,18 @@ Typically we are mostly interested in decidability of propositions. However, we 
 \begin{lem}
   Equality on the natural numbers is decidable.
 \end{lem}
+
+\begin{proof}
+  We use the canonical family of maps
+  \begin{equation*}
+    f : \prd{n:\N} (m= n) \to \mathsf{Eq}_\N(m,n)
+  \end{equation*}
+  to write the decision algorithm
+  \begin{equation*}
+    d:\prd{m,n:\N} (m=n)+\neg(m=n).
+  \end{equation*}
+  by induction on $m,n:\N$. 
+\end{proof}
 
 We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a set. In fact, any type with decidable equality is a set.
 
@@ -65,17 +78,77 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
 \end{proof}
 
 \begin{lem}
-  The ordering relations $\leq$ and $<$ on $\N$ are decidable.
+  Suppose that $A$ and $B$ are types with decidable equality. Then the coproduct $A+B$ also has decidable equality.
 \end{lem}
 
+\begin{cor}
+  The type $\Z$ has decidable equality.
+\end{cor}
+
+\begin{cor}
+  For any $n:\N$ the type $\mathsf{Fin}(n)$ has decidable equality. 
+\end{cor}
+
+It should be noted, however, that if $P$ is a decidable subset of $\N$, then it is not necessarily the case that the proposition $\prd{n:\N}P(n)$ is decidable. Intuitively, this is because an algorithm that checks case by case whether $P(n)$ holds only halts when it finds an $n$ for which $P(n)$ doesn't hold. The best we get is the following
+
+\begin{thm}
+  Let $n:\N$, and let $P$ be a decidable subset of $\mathsf{Fin}(n)$. Then the proposition
+  \begin{equation*}
+    \prd{i:\mathsf{Fin}(n)}P(i)
+  \end{equation*}
+  is decidable. 
+\end{thm}
+
+\begin{lem}
+  For any decidable subtype $P$ of $\mathsf{Fin}(n)$ there is a function
+  \begin{equation*}
+    \neg\neg\Big(\sm{i:\mathsf{Fin}(n)}P(i)\Big)\to
+    \Big(\sm{i:\mathsf{Fin}(n)}P(i)\Big).
+  \end{equation*}
+  In other words, any non-empty decidable subset of $\mathsf{Fin}(n)$ is inhabited.
+\end{lem}
+
+\subsection{The pigeonhole principle}
+
+The pigeonhole principle states that if we place more than $n$ balls in $n$ bags, then at least one bag will contain more than one ball. In this section we will give a type theoretical proof of the pigeonhole principle.
+
+\begin{thm}\label{thm:pigeonhole}
+  For any $m,n:\N$ and any function $f:\mathsf{Fin}(m)\to\mathsf{Fin}(n)$, if $m>n$, then there is an $i:\mathsf{Fin}(n)$ which is in the image of more than one point in $\mathsf{Fin}(m)$.
+\end{thm}
+
 \begin{proof}
-  We first show by induction on $m,n:\N$ that the relation $\leq$ is decidable.
+  The pigeonhole principle is proven by induction on $m,n:\N$. In the base case for $m$ we immediately obtain a contradiction from the assumption that $m>n$. For the inductive step on $m$ and the base case for $n$, we note that $\mathsf{Fin}(\succN(m))\jdeq \mathsf{Fin}(m)+\unit$ and $\mathsf{Fin}(\zeroN)\jdeq \empty$. Therefore $f:\mathsf{Fin}(\succN(m))\to\mathsf{Fin}(\zeroN)$ is a function from a pointed type to the empty type, which gives us a contradiction.
+
+  It remains to give the inductive step for $n$. Let $i\defeq f(\inr(\ttt)):\mathsf{Fin}(\succN(n))$. Since the ordering relation $<$ on $\N$ is decidable, we can decide whether $i$ is in the image of more than one point in $\mathsf{Fin}(m)$. If this is the case, this completes the proof. If this is not the case, note that we have a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      \mathsf{Fin}(m) \arrow[r,"{f'}"] \arrow[d,swap,"\inl"] & \mathsf{Fin}(n) \arrow[d,"{\hat{i}}"] \\
+      \mathsf{Fin}(\succN(m)) \arrow[r,swap,"f"] & \mathsf{Fin}(\succN(n))
+    \end{tikzcd}
+  \end{equation*}
+  where $\hat{i}$ is the inclusion that omits the value $i$. The function $f':\mathsf{Fin}(m)\to\mathsf{Fin}(n)$ is defined 
+
+  Now note that both the left and right maps in this square are embeddings, and that by the induction hypothesis the pigeonhole principle applies to the function $f':\mathsf{Fin}(m)\to\mathsf{Fin}(n)$. 
 \end{proof}
+
+\begin{cor}\label{cor:pigeonhole}
+  Given $m>n$, no function $\mathsf{Fin}(m)\to\mathsf{Fin}(n)$ is an embedding.
+\end{cor}
+
+It is straightforward to see that the statements of \cref{thm:pigeonhole,cor:pigeonhole} are equivalent, and one might argue that the statement of \cref{cor:pigeonhole} is the more `type theoretical way' of phrasing the pigeonhole principle. However, the relation to counting the number of points that get mapped to 
+
+\begin{thm}\label{thm:generalized-pigeonhole}
+  For any $m,n:\N$ and any function $f:\mathsf{Fin}(m)\to\mathsf{Fin}(n)$, if $m>kn$ for some $k:\N$, then there is an $i:\mathsf{Fin}(n)$ which is in the image of more than $k$ points in $\mathsf{Fin}(m)$. 
+\end{thm}
 
 \subsection{Defining the greatest common divisor}
 
 \begin{lem}
-  The divisibility relation $d,n\mapsto d\mid n$ is decidable.
+  For any $d,n:\N$, the type $d\mid n$ is a decidable proposition.
+\end{lem}
+
+\begin{lem}
+  For any decidable subtype of $\mathsf{Fin}(n)$, if it contains a number $i:\mathsf{Fin}(n)$, then it contains both a minimal and maximal element.
 \end{lem}
 
 \begin{defn}
@@ -92,8 +165,20 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   For any $n:\N$, the proposition $\mathsf{is\usc{}prime}(n)$ is decidable.
 \end{thm}
 
+\subsection{The infinitude of primes}
+
+\begin{thm}
+  There are infinitely many primes.
+\end{thm}
+
+Some further ideas to include in this chapter:
+\begin{enumerate}
+\item If $2^n-1$ is prime, then $n$ is prime.
+\item Fermat's little theorem.
+\end{enumerate}
 
 \begin{exercises}
+\item Show that $\mathsf{is\usc{}decidable}(P)$ is a proposition, for any proposition $P$.
 \item
   \begin{subexenum}
   \item Show that $\nat$ and $\bool$ have decidable equality. Hint: to show that $\mathbb{N}$ has decidable equality, show first that the successor function is injective.
@@ -102,4 +187,6 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   \end{subexenum}
 \item Define the prime-counting function $\pi:\N\to\N$.
 \item (The Cantor-Schr\"oder-Bernstein theorem) Let $X$ and $Y$ be two sets with decidable equality, and consider two maps $f:X\to Y$ and $g:Y\to X$, both of which we assume to be injective. Construct an equivalence $X\simeq Y$.
+\item For any $k:\Z$, define a function $i\mapsto i+k \mod n$ of type $\mathsf{Fin}(n)\to\mathsf{Fin}(n)$. Show that this function is an equivalence.
+  \item For any $k:\Z$, define a function $i\mapsto i\cdot k \mod n$ of type $\mathsf{Fin}(n)\to\mathsf{Fin}(n)$. Show that this function is an equivalence if and only if $\gcd(n,k)=1$.
 \end{exercises}

@@ -44,8 +44,11 @@ Eq-ℕ (succ-ℕ m) (succ-ℕ n) = Eq-ℕ m n
 {- In this exercise we were asked to show that (A + ¬A) implies (¬¬A → A). In 
    other words, we get double negation elimination for the types that are 
    decidable. -}
-   
-dne-dec : {i : Level} (A : UU i) → (coprod A (¬ A)) → (¬ (¬ A) → A)
+
+decide : {l : Level} (A : UU l) → UU l
+decide A = coprod A (¬ A)
+
+dne-dec : {i : Level} (A : UU i) → decide A → (¬ (¬ A) → A)
 dne-dec A (inl x) p = x
 dne-dec A (inr x) p = ind-empty (p x)
 

@@ -51,46 +51,19 @@ we say that $B$ is a \define{family} of types over $A$ (or indexed by $A$) in co
 \begin{equation*}
   \Gamma,x:A\vdash b(x):B(x),
 \end{equation*}
-we say that $b$ is a \define{section} of the family $B$ over $A$ in context $\Gamma$. Note that $B$ and $b$ also depend on the variables declared in the context $\Gamma$, even though we have not explicitly mentioned them. It is common practice to not mention every variable in the context $\Gamma$ in such situations.
-
-\begin{comment}
-\subsection{Renaming variables}
-In some situations one might want to change the name of a variable in a context. This is allowed, provided that the new variable does not occur anywhere else in the context, so that also after renaming no variable is declared more than once. 
-The inference rules that rename a variable are sometimes called \define{$\alpha$-conversion}\index{alpha-conversion@{$\alpha$-conversion}}\index{conversion rules!alpha-conversion@{$\alpha$-conversion}}\index{rule!alpha conversion@{$\alpha$-conversion}} rules. 
-
-If we are given a type $A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[x'/x]$ in context $\Gamma,x':A,\Delta[x'/x]$, where $B[x'/x]$ is an abbreviation for
-\begin{equation*}
-B(x_1,\ldots,x_{n-1},x',x_{n+1},\ldots,x_{n+m-1})
-\end{equation*}
-This definition of \define{renaming}\index{variable renaming|textbf} the variable $x$ by $x'$ is understood to be recursive over the length of $\Delta$. The first variable renaming rule\index{rule!variable renaming} postulates that the renaming of a variable preserves well-formedness of types:
-\begin{prooftree}
-\AxiomC{$\Gamma,x:A,\Delta\vdash B~\mathrm{type}$}
-\RightLabel{$x'/x$}
-\UnaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash B[x'/x]~\mathrm{type}$}
-\end{prooftree}
-
-Similarly we obtain for any term $b:B$ in context $\Gamma,x:A,\Delta$ a term $b[x'/x]:B[x'/x]$, and there is a variable renaming rule postulating that the renaming of a variable preserves the well-formedness of terms.
-In fact, there is variable renaming rule for each of the four kinds of judgments. To avoid having to state essentially the same rule four times in a row, we postulate the four variable renaming rules all at once using a \emph{generic judgment}\index{generic judgment} $\mathcal{J}$. 
-\begin{prooftree}
-\AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
-\RightLabel{$x'/x$}
-\UnaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash \mathcal{J}[x'/x]$}
-\end{prooftree}
-where $\mathcal{J}$ may be a typing judgment, a judgment of equality of types, a term judgment, or a judgment of equality of terms.
-We will use generic judgments extensively to postulate the rest of the rules of dependent type theory.
-\end{comment}
+we say that $b$ is a \define{section} of the family $B$ over $A$ in context $\Gamma$. Note that $A$, $B$, and $b$ also depend on the variables declared in the context $\Gamma$, even though we have not explicitly mentioned them. It is common practice to not mention every variable in the context $\Gamma$ in such situations.
 
 \subsection{Inference rules}\label{sec:rules}
 
 In this section we present the basic inference rules of dependent type theory. Those rules are valid to be used in any type theoretic derivation. There are only four sets of inference rules:
 \begin{enumerate}
-\item Rules for judgmental equality. 
-\item Rules for substitution.
+\item Rules for judgmental equality 
+\item Rules for substitution
 \item Rules for weakening
 \item The ``variable rule''
 \end{enumerate}
 
-\subsubsection*{Inference rules governing judgmental equality}
+\subsubsection*{Judgmental equality}
 
 In this set of inference rules we ensure that judgmental equality (both on types and on terms) are equivalence relations, and we make sure that in any context $\Gamma$, we can change the type of any variable to a judgmentally equal type.
 
@@ -160,7 +133,7 @@ Similarly, there are variable conversion rules for judgmental equality of types,
 \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
 \BinaryInfC{$\Gamma,x:A',\Delta\vdash \mathcal{J}$}
 \end{prooftree}
-An analogous \emph{term conversion rule}\index{term conversion rule}\index{conversion rule!term}\index{rule!term conversion}, stated in \cref{ex:term_conversion}, converting the type of a term to a judgmentally equal type, is derivable using the `structural rules' of type theory described in the next section.
+An analogous \emph{term conversion rule}\index{term conversion rule}\index{conversion rule!term}\index{rule!term conversion}, stated in \cref{ex:term_conversion}, converting the type of a term to a judgmentally equal type, is derivable using the rules for substitution and weakening, and the variable rule.
 
 \subsubsection*{Substitution}
 If we are given a term $a:A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[a/x]$ in context $\Gamma,\Delta[a/x]$, where $B[a/x]$ is an abbreviation for

@@ -279,25 +279,31 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
 \end{proof}
 
 \begin{exercises}
-\item Show that for any term $a:A$ the functions
-\begin{align*}
-\ind{\unit}(a) & : \unit \to A \\
-\mathsf{const}_a & : \unit \to A
-\end{align*}
-are homotopic.
-\item Let $A$ and $B$ be types, and consider the constant map $\mathsf{const}_b:A\to B$ for some $b:B$. Construct a homotopy
-\begin{equation*}
-\mathsf{ap}_{\mathsf{const}_b}(x,y)\htpy \mathsf{const}_{\refl{b}}
-\end{equation*}
-for any $x,y:A$.
+%  \item Show that for any term $a:A$ the functions
+%    \begin{align*}
+%      \ind{\unit}(a) & : \unit \to A \\
+%      \mathsf{const}_a & : \unit \to A
+%    \end{align*}
+%    are homotopic.
+%  \item Let $A$ and $B$ be types, and consider the constant map $\mathsf{const}_b:A\to B$ for some $b:B$. Construct a homotopy
+%    \begin{equation*}
+%      \mathsf{ap}_{\mathsf{const}_b}(x,y)\htpy \mathsf{const}_{\refl{b}}
+%    \end{equation*}
+%    for any $x,y:A$.
 \item \label{ex:equiv_grpd_ops}Show that the functions
-\begin{align*}
-\mathsf{inv} & :(\id{x}{y})\to(\id{y}{x}) \\
-\mathsf{concat}(p) & : (\id{y}{z})\to(\id{x}{z}) \\
-\mathsf{concat'}(q) & : (\id{x}{y}) \to (\id{x}{z}) \\
-\mathsf{tr}_B(p) & :B(x)\to B(y)
-\end{align*}
-are equivalences, where $\mathsf{concat'}(q,p)\defeq \ct{p}{q}$\index{concat'@{$\mathsf{concat'}$}}. Give their inverses explicitly.
+  \begin{align*}
+    \mathsf{inv} & :(\id{x}{y})\to(\id{y}{x}) \\
+    \mathsf{concat}(p) & : (\id{y}{z})\to(\id{x}{z}) \\
+    \mathsf{concat'}(q) & : (\id{x}{y}) \to (\id{x}{z}) \\
+    \mathsf{tr}_B(p) & :B(x)\to B(y)
+  \end{align*}
+  are equivalences, where $\mathsf{concat'}(q,p)\defeq \ct{p}{q}$\index{concat'@{$\mathsf{concat'}$}}. Give their inverses explicitly.
+\item Show that the maps
+  \begin{align*}
+    \inl & : X \to X+\emptyt &     \proj 1 & : \emptyt \times X \to \emptyt \\
+    \inr & : X \to \emptyt+X &    \proj 2 & : X \times \emptyt \to \emptyt
+  \end{align*}
+  are equivalences.
 \item
   \begin{subexenum}
   \item \label{ex:htpy_equiv}\index{equivalence!homotopic maps} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
@@ -307,108 +313,108 @@ are equivalences, where $\mathsf{concat'}(q,p)\defeq \ct{p}{q}$\index{concat'@{$
   \item Show that for any two homotopic equivalences $e,e':\eqv{A}{B}$, their inverses are also homotopic.
   \end{subexenum}
 \item \label{ex:3_for_2}\index{equivalence!three@{3-for-2 property}}\index{3-for-2 property!of equivalences}
-Consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
-& X.
-\end{tikzcd}
-\end{equation*}
-with $H:f\htpy g\circ h$.
-\begin{subexenum}
-\item Suppose that the map $h$ has a section $s:B \to A$. Show that the triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-B \arrow[rr,"s"] \arrow[dr,swap,"g"] & & A \arrow[dl,"f"] \\
-& X.
-\end{tikzcd}
-\end{equation*}
-commutes, and that $f$ has a section if and only if $g$ has a section.
-\item Suppose that the map $g$ has a retraction $r:X\to B$. Show that the triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"f"] \arrow[dr,swap,"h"] & & X \arrow[dl,"r"] \\
-& B.
-\end{tikzcd}
-\end{equation*}
-commutes, and that $f$ has a retraction if and only if $h$ has a retraction.
-\item (The \define{3-for-2 property} for equivalences.) Show that if any two of the functions
-\begin{equation*}
-f,\qquad g,\qquad h
-\end{equation*}
-are equivalences, then so is the third.
-\end{subexenum}
+  Consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+      & X.
+    \end{tikzcd}
+  \end{equation*}
+  with $H:f\htpy g\circ h$.
+  \begin{subexenum}
+  \item Suppose that the map $h$ has a section $s:B \to A$. Show that the triangle
+    \begin{equation*}
+      \begin{tikzcd}[column sep=tiny]
+        B \arrow[rr,"s"] \arrow[dr,swap,"g"] & & A \arrow[dl,"f"] \\
+        & X.
+      \end{tikzcd}
+    \end{equation*}
+    commutes, and that $f$ has a section if and only if $g$ has a section.
+  \item Suppose that the map $g$ has a retraction $r:X\to B$. Show that the triangle
+    \begin{equation*}
+      \begin{tikzcd}[column sep=tiny]
+        A \arrow[rr,"f"] \arrow[dr,swap,"h"] & & X \arrow[dl,"r"] \\
+        & B.
+      \end{tikzcd}
+    \end{equation*}
+    commutes, and that $f$ has a retraction if and only if $h$ has a retraction.
+  \item (The \define{3-for-2 property} for equivalences.) Show that if any two of the functions
+    \begin{equation*}
+      f,\qquad g,\qquad h
+    \end{equation*}
+    are equivalences, then so is the third.
+  \end{subexenum}
 \item \label{ex:neg_equiv} 
-\begin{subexenum}
-\item Define the negation function on the booleans, and show that it is an equivalence.\index{negation function!is an equivalence}
-\item Use the observational equality on the booleans, defined in \cref{ex:obs_bool}, to show that $\btrue\neq\bfalse$.
-\item Show that for any $b:\bool$, the constant function $\mathsf{const}_b$ is not an equivalence.
-\end{subexenum}
+  \begin{subexenum}
+  \item Define the negation function on the booleans, and show that it is an equivalence.\index{negation function!is an equivalence}
+  \item Use the observational equality on the booleans, defined in \cref{ex:obs_bool}, to show that $\btrue\neq\bfalse$.
+  \item Show that for any $b:\bool$, the constant function $\mathsf{const}_b$ is not an equivalence.
+  \end{subexenum}
 \item \label{ex:succ_equiv} Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}
 \item \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is symmetric}
 \item \label{ex:retr_id} Consider a section-retraction pair
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[r,"i"] & B \arrow[r,"r"] & A,
-\end{tikzcd}
-\end{equation*}
-with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
-\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a type indexed by $x:A,y:B(x)$. Construct an equivalence
-\begin{equation*}
-\Sigma\mathsf{\usc{}assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
-\end{equation*}
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"i"] & B \arrow[r,"r"] & A,
+    \end{tikzcd}
+  \end{equation*}
+  with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
+\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence
+  \begin{equation*}
+    \Sigma\mathsf{\usc{}assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
+  \end{equation*}
 \item \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
-\begin{equation*}
-\Sigma\mathsf{\usc{}swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
-\end{equation*}
-%\item \label{ex:sigma_base_equiv}Consider an equivalence $e:A'\eqv A$ and a type family $B$ over $A$. Show that the map
-%\begin{equation*}
-%\lam{(x',y)}(e(x'),y) : \Big(\sm{x':A'}B(e(x'))\Big)\to\Big(\sm{x:A}B(x)\Big)
-%\end{equation*}
-%is an equivalence.
+  \begin{equation*}
+    \Sigma\mathsf{\usc{}swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
+  \end{equation*}
+  %\item \label{ex:sigma_base_equiv}Consider an equivalence $e:A'\eqv A$ and a type family $B$ over $A$. Show that the map
+  %\begin{equation*}
+  %\lam{(x',y)}(e(x'),y) : \Big(\sm{x':A'}B(e(x'))\Big)\to\Big(\sm{x:A}B(x)\Big)
+  %\end{equation*}
+  %is an equivalence.
 \item \label{ex:int_group_laws}\index{Z@{$\Z$}!group laws} In this exercise we will show that the laws for abelian groups hold for addition on the integers. Note: these are obvious facts, but the proof terms that show \emph{how} the group laws hold are nevertheless fairly involved. This exercise is perfect for a formalization project. 
-\begin{subexenum}
-\item Show that addition satisfies the left and right unit laws, i.e., construct terms
-\begin{align*}
-\mathsf{left\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x:\Z} 0 + x = x \\
-\mathsf{right\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x : \Z} x + 0 = x.
-\end{align*}
-\item Show that addition respects predecessors and successor on both sides, i.e., construct terms
-\begin{align*}
-\mathsf{left\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} \mathsf{pred}_{\mathbb{Z}}(x)+y = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
-\mathsf{right\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{pred}_{\mathbb{Z}}(y) = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
-\mathsf{left\usc{}successor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} \mathsf{succ}_{\mathbb{Z}}(x)+y = \mathsf{succ}_{\mathbb{Z}}(x+y) \\
-\mathsf{right\usc{}successor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{succ}_{\mathbb{Z}}(y) = \mathsf{succ}_{\mathbb{Z}}(x+y).
-\end{align*}
-Hint: to avoid an excessive number of cases, use induction on $x$ but not on $y$. You may need to use the homotopies $\mathsf{succ}_{\mathbb{Z}}\circ \mathsf{pred}_{\mathbb{Z}}\htpy \idfunc$ and $\mathsf{pred}_{\mathbb{Z}}\circ\mathsf{succ}_{\mathbb{Z}}$ constructed in exercise \cref{ex:succ_equiv}.
-\item Use part (b) to show that addition on the integers is associative and commutative, i.e., construct terms
-\begin{align*}
-\mathsf{assoc\usc{}add\usc{}}\Z & : \prd{x,y,z:\Z} (x+y)+z = x + (y+z) \\
-\mathsf{comm\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+y = y+x.
-\end{align*}
-Hint: Especially in the construction of the associator there is a risk of running into an unwieldy amount of cases if you use $\Z$-induction on all arguments. Avoid induction on $y$ and $z$.
-\item Show that addition satisfies the left and right inverse laws:
-\begin{align*}
-\mathsf{left\usc{}inverse\usc{}law\usc{}add\usc{}}\Z & : \prd{x : \Z} (-x)+x=0 \\
-\mathsf{right\usc{}inverse\usc{}law\usc{}add\usc{}}\Z & : \prd{x : \Z} x + (-x)=0.
-\end{align*}
-Conclude that the functions $y \mapsto x + y$ and $x\mapsto x + y$ are equivalences for any $x:\Z$ and $y:\Z$, respectively.
-\end{subexenum}
+  \begin{subexenum}
+  \item Show that addition satisfies the left and right unit laws, i.e., construct terms
+    \begin{align*}
+      \mathsf{left\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x:\Z} 0 + x = x \\
+      \mathsf{right\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x : \Z} x + 0 = x.
+    \end{align*}
+  \item Show that addition respects predecessors and successor on both sides, i.e., construct terms
+    \begin{align*}
+      \mathsf{left\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} \mathsf{pred}_{\mathbb{Z}}(x)+y = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
+      \mathsf{right\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{pred}_{\mathbb{Z}}(y) = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
+      \mathsf{left\usc{}successor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} \mathsf{succ}_{\mathbb{Z}}(x)+y = \mathsf{succ}_{\mathbb{Z}}(x+y) \\
+      \mathsf{right\usc{}successor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{succ}_{\mathbb{Z}}(y) = \mathsf{succ}_{\mathbb{Z}}(x+y).
+    \end{align*}
+    Hint: to avoid an excessive number of cases, use induction on $x$ but not on $y$. You may need to use the homotopies $\mathsf{succ}_{\mathbb{Z}}\circ \mathsf{pred}_{\mathbb{Z}}\htpy \idfunc$ and $\mathsf{pred}_{\mathbb{Z}}\circ\mathsf{succ}_{\mathbb{Z}}$ constructed in exercise \cref{ex:succ_equiv}.
+  \item Use part (b) to show that addition on the integers is associative and commutative, i.e., construct terms
+    \begin{align*}
+      \mathsf{assoc\usc{}add\usc{}}\Z & : \prd{x,y,z:\Z} (x+y)+z = x + (y+z) \\
+      \mathsf{comm\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+y = y+x.
+    \end{align*}
+    Hint: Especially in the construction of the associator there is a risk of running into an unwieldy amount of cases if you use $\Z$-induction on all arguments. Avoid induction on $y$ and $z$.
+  \item Show that addition satisfies the left and right inverse laws:
+    \begin{align*}
+      \mathsf{left\usc{}inverse\usc{}law\usc{}add\usc{}}\Z & : \prd{x : \Z} (-x)+x=0 \\
+      \mathsf{right\usc{}inverse\usc{}law\usc{}add\usc{}}\Z & : \prd{x : \Z} x + (-x)=0.
+    \end{align*}
+    Conclude that the functions $y \mapsto x + y$ and $x\mapsto x + y$ are equivalences for any $x:\Z$ and $y:\Z$, respectively.
+  \end{subexenum}
 \item \label{ex:coproduct_functor}In this exercise we will construct the \define{functorial action} of coproducts.
-\begin{subexenum}
-\item Construct for any two maps $f:A \to A'$ and $g:B \to B'$, a map
-\begin{equation*}
-f+g:A+B \to A'+B'.
-\end{equation*}
-\item Show that if $H:f\htpy f'$ and $K:g\htpy g'$, then there is a homotopy
-\begin{equation*}
-H+K:(f+g)\htpy (f'+g').
-\end{equation*}
-\item Show that $\idfunc[A]+\idfunc[B]\htpy \idfunc[A+B]$.
-\item Show that for any $f:A\to A'$, $f':A'\to A''$, $g:B\to B'$, and $g':B'\to B''$ there is a homotopy
-\begin{equation*}
-(f'\circ f)+(g'\circ g) \htpy (f'+g')\circ (f\circ g).
-\end{equation*}
-\item \label{ex:coproduct_functor_equivalence}Show that if $f$ and $g$ are equivalences, then so is $f+g$. (The converse of this statement also holds, see \cref{ex:is-equiv-is-equiv-functor-coprod}.)
-\end{subexenum}
+  \begin{subexenum}
+  \item Construct for any two maps $f:A \to A'$ and $g:B \to B'$, a map
+    \begin{equation*}
+      f+g:A+B \to A'+B'.
+    \end{equation*}
+  \item Show that if $H:f\htpy f'$ and $K:g\htpy g'$, then there is a homotopy
+    \begin{equation*}
+      H+K:(f+g)\htpy (f'+g').
+    \end{equation*}
+  \item Show that $\idfunc[A]+\idfunc[B]\htpy \idfunc[A+B]$.
+  \item Show that for any $f:A\to A'$, $f':A'\to A''$, $g:B\to B'$, and $g':B'\to B''$ there is a homotopy
+    \begin{equation*}
+      (f'\circ f)+(g'\circ g) \htpy (f'+g')\circ (f\circ g).
+    \end{equation*}
+  \item \label{ex:coproduct_functor_equivalence}Show that if $f$ and $g$ are equivalences, then so is $f+g$. (The converse of this statement also holds, see \cref{ex:is-equiv-is-equiv-functor-coprod}.)
+  \end{subexenum}
 \end{exercises}

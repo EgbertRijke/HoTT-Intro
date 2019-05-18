@@ -1301,20 +1301,31 @@ postcomp-Π-equiv e =
 -- Exercise 9.13
 
 hom-slice :
-  {l1 l2 l3 : Level} (X : UU l1) {A : UU l2} {B : UU l3}
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) → UU (l1 ⊔ (l2 ⊔ l3))
-hom-slice X {A} {B} f g = Σ (A → B) (λ h → f ~ (g ∘ h))
+hom-slice {A = A} {B} f g = Σ (A → B) (λ h → f ~ (g ∘ h))
+
+map-hom-slice :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) → hom-slice f g → A → B
+map-hom-slice f g h = pr1 h
+
+triangle-hom-slice :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) (h : hom-slice f g) →
+  f ~ (g ∘ (map-hom-slice f g h))
+triangle-hom-slice f g h = pr2 h
   
 fiberwise-hom-hom-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
-  hom-slice X f g → (x : X) → (fib f x) → (fib g x)
+  hom-slice f g → (x : X) → (fib f x) → (fib g x)
 fiberwise-hom-hom-slice f g (pair h H) = fib-triangle f g h H
 
 hom-slice-fiberwise-hom :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
-  ((x : X) → (fib f x) → (fib g x)) → hom-slice X f g
+  ((x : X) → (fib f x) → (fib g x)) → hom-slice f g
 hom-slice-fiberwise-hom f g α =
   pair
     ( λ a → pr1 (α (f a) (pair a refl)))
@@ -1371,7 +1382,7 @@ equiv-slice X {A} {B} f g = Σ (A ≃ B) (λ e → f ~ (g ∘ (map-equiv e)))
 hom-slice-equiv-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
-  equiv-slice X f g → hom-slice X f g
+  equiv-slice X f g → hom-slice f g
 hom-slice-equiv-slice f g (pair (pair h is-equiv-h) H) = pair h H
 
 {- We first prove two closely related generic lemmas that establishes 
@@ -1407,7 +1418,7 @@ abstract
   is-fiberwise-equiv-fiberwise-equiv-equiv-slice :
     {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
     (f : A → X) (g : B → X)
-    (t : hom-slice X f g) → is-equiv (pr1 t) →
+    (t : hom-slice f g) → is-equiv (pr1 t) →
     is-fiberwise-equiv (fiberwise-hom-hom-slice f g t)
   is-fiberwise-equiv-fiberwise-equiv-equiv-slice f g (pair h H) =
     is-fiberwise-equiv-is-equiv-triangle f g h H
@@ -1415,7 +1426,7 @@ abstract
 left-factor-fiberwise-equiv-equiv-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
-  Σ (hom-slice X f g) (λ hH → is-equiv (pr1 hH)) →
+  Σ (hom-slice f g) (λ hH → is-equiv (pr1 hH)) →
   Σ ((x : X) → (fib f x) → (fib g x)) is-fiberwise-equiv
 left-factor-fiberwise-equiv-equiv-slice f g =
   toto
@@ -1427,7 +1438,7 @@ swap-equiv-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
   (f : A → X) (g : B → X) →
   equiv-slice X f g →
-  Σ (hom-slice X f g) (λ hH → is-equiv (pr1 hH))
+  Σ (hom-slice f g) (λ hH → is-equiv (pr1 hH))
 swap-equiv-slice {A = A} {B} f g =
   double-structure-swap (A → B) is-equiv (λ h → f ~ (g ∘ h))
 
@@ -1452,7 +1463,7 @@ abstract
   is-equiv-hom-slice-is-fiberwise-equiv-fiberwise-hom-hom-slice :
     {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
     (f : A → X) (g : B → X) →
-    (t : hom-slice X f g) →
+    (t : hom-slice f g) →
     ((x : X) → is-equiv (fiberwise-hom-hom-slice f g t x)) →
     is-equiv (pr1 t)
   is-equiv-hom-slice-is-fiberwise-equiv-fiberwise-hom-hom-slice
@@ -1485,7 +1496,7 @@ abstract
 hom-over-morphism :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}
   (i : X → Y) (f : A → X) (g : B → Y) → UU (l1 ⊔ (l2 ⊔ l4))
-hom-over-morphism i f g = hom-slice _ (i ∘ f) g
+hom-over-morphism i f g = hom-slice (i ∘ f) g
 
 fiberwise-hom-hom-over-morphism :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {Y : UU l4}

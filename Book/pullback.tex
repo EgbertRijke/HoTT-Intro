@@ -14,41 +14,113 @@ gives rise to a commuting square
 A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
-where $\total[f]{g}$ is defined as $\lam{(x,p)}(f(x),g(x,y))$. 
-We will show in \cref{thm:pb_fibequiv} that $g$ is a family of equivalences\index{family of equivalences} if and only if this square is a \emph{pullback square}\index{pullback square}. This generalization of \cref{thm:fib_equiv} is therefore abstracting away from the notion of families of equivalences, and it serves as our motivating theorem to introduce pullbacks. The connection between pullbacks and families of equivalences has an important role in the descent theorem\index{descent} in \cref{chap:descent}.
+where $\total[f]{g}$ is defined as $\lam{(x,p)}(f(x),g(x,y))$. In the main theorem of this chapter we show that $g$ is a family of equivalences if and only if this square satisfies a certain universal property: the universal property of \emph{pullback squares}.
 
-\subsection{Cartesian squares}
-
-Recall that a square
+Pullback squares are of interest because they appear in many situations. Cartesian products, fibers of maps, and substitutions can all be presented as pullbacks. More precisely: examples of commuting squares that satisfy the universal property of pullbacks include
 \begin{equation*}
-\begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X
-\end{tikzcd}
+  \begin{tikzcd}
+    A\times B \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & B \arrow[d,"\mathsf{const}_\ttt"] &[1ex]
+    \fib{f}{y} \arrow[r,"\mathsf{const}_\ttt"] \arrow[d,swap,"\proj 1"] & \unit \arrow[d,"\mathsf{const}_y"] &
+    \sm{x:A}Q(f(x)) \arrow[d,swap,"\proj 1"] \arrow[r,"{\total[f]{\lam{x}\idfunc}}"] &[2em] \sm{y:B}Q(y) \arrow[d,"\proj 1"] \\
+    A \arrow[r,swap,"\mathsf{const}_\ttt"] & \unit & A \arrow[r,swap,"f"] & B & A \arrow[r,swap,"f"] & B.
+  \end{tikzcd}
 \end{equation*}
-is said to \define{commute}\index{commuting square|textbf} if there is a homotopy $H:f\circ p\htpy g\circ q$. 
-The pullback property is a \emph{universal property} of the upper left corner of a commuting square (in our case $C$), characterizing the maps \emph{into} it.
+Moreover, the fact that a family of maps $g:\prd{x:A}P(x)\to Q(f(x))$ is a family of equivalences if and only if it induces a pullback square has the very useful corollary that a square of the form
+\begin{equation*}
+  \begin{tikzcd}
+    C \arrow[d,swap,"p"] \arrow[r] & D \arrow[d,"q"] \\
+    A \arrow[r,swap,"f"] & B
+  \end{tikzcd}
+\end{equation*}
+is a pullback square if and only if the induced family of maps between the fibers
+\begin{equation*}
+  \prd{x:A}\fib{p}{x}\to\fib{q}{f(x)}
+\end{equation*}
+is a family of equivalences. This connection between pullbacks and \emph{fiberwise equivalences} has an important role in the descent theorem\index{descent} in \cref{chap:descent}.
 
-To describe the universal property of pullbacks we first need to have a closer look at the \emph{anatomy} of commuting squares.
+A second reason for studying pullback squares is that the dual notion of \emph{pushouts} is an important tool to construct new types, including the $n$-spheres for arbitrary $n$. The duality of pullbacks and pushouts makes it possible to obtain proofs of many statements about pushouts from their dual statements about pullbacks.
+
+\subsection{The universal property of pullbacks}
 
 \begin{defn}\label{defn:cospan}
-A commuting square
-\begin{equation*}
-\begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X
-\end{tikzcd}
-\end{equation*}
-with $H:f\circ p\htpy g\circ q$ can be dissected into three parts, consisting of a \emph{cospan}, a type, and a \emph{cone}, where
-\begin{enumerate}
-\item A \define{cospan}\index{cospan|textbf} consists of three types $A$, $X$, and $B$, and maps $f:A\to X$ and $g:B\to X$.
-\item Given a type $C$, a \define{cone}\index{cone!on a cospan|textbf} on the cospan $A \stackrel{f}{\rightarrow} X \stackrel{g}{\leftarrow} B$ with \define{vertex} $C$\index{vertex!of a cone|textbf} consists of maps $p:C\to A$, $q:C\to B$ and a homotopy $H:f\circ p\htpy g\circ q$. We write\index{cone(C)@{$\mathsf{cone}(\blank)$}|textbf}
+  A \define{cospan}\index{cospan|textbf} consists of three types $A$, $X$, and $B$, and maps $f:A\to X$ and $g:B\to X$.
+\end{defn}
+
+\begin{defn}
+  Consider a cospan
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"f"] & X & B \arrow[l,swap,"g"] 
+    \end{tikzcd}
+  \end{equation*}
+  and a type $C$. A \define{cone}\index{cone!on a cospan|textbf} on the cospan $A \rightarrow X \leftarrow B$ with \define{vertex} $C$\index{vertex!of a cone|textbf} consists of maps $p:C\to A$, $q:C\to B$ and a homotopy $H:f\circ p\htpy g\circ q$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+      A \arrow[r,swap,"f"] & X
+    \end{tikzcd}
+  \end{equation*}
+  commutes. We write\index{cone(C)@{$\mathsf{cone}(\blank)$}|textbf}
 \begin{equation*}
 \mathsf{cone}(C)\defeq \sm{p:C\to A}{q:C\to B}f\circ p\htpy g\circ q
 \end{equation*}
 for the type of cones with vertex $C$.
-\end{enumerate}
 \end{defn}
+
+It is good practice to characterize the identity type of any type of importance. In the following lemma we give a characterization of the identity type of the type $\mathsf{cone}(C)$ of cones on $A\rightarrow X\leftarrow B$ with vertex $C$. Such characterizations are entirely routine in homotopy type theory.
+
+\begin{lem}\label{lem:id_cone}%
+\index{identity type!of cone@{of $\mathsf{cone}(C)$}|textit}%
+Let $(p,q,H)$ and $(p',q',H')$ be cones on a cospan $f:A\rightarrow X \leftarrow B:g$, both with vertex $C$. Then the type $(p,q,H)=(p',q',H')$ is equivalent to the type of triples $(K,L,M)$ consisting of
+\begin{align*}
+K & : p \htpy p' \\
+L & : q \htpy q'
+\end{align*}
+and a homotopy $M : \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+f\circ p \arrow[r,"f\cdot K"] \arrow[d,swap,"H"] & f\circ p' \arrow[d,"{H'}"] \\
+g\circ q \arrow[r,swap,"g\cdot L"] & g\circ q'
+\end{tikzcd}
+\end{equation*}
+of homotopies commutes.
+\end{lem}
+
+\begin{comment}
+\begin{rmk}
+The homotopy $M$ is a homotopy of homotopies, and for each $z:C$ the identification $M(z)$ witnesses that the square of identifications
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+f(p(z)) \arrow[r,equals,"\ap{f}{K(z)}"] \arrow[d,equals,swap,"H(z)"] & f(p'(z)) \arrow[d,equals,"{H'(z)}"] \\
+g(q(z)) \arrow[r,equals,swap,"\ap{g}{L(z)}"] & g(q'(z))
+\end{tikzcd}
+\end{equation*}
+commutes. 
+\end{rmk}
+\end{comment}
+
+\begin{proof}
+By the fundamental theorem of identity types (\cref{thm:id_fundamental}) it suffices to show that the type
+\begin{equation*}
+  \sm{(p',q',H'):\sm{p':C\to A}{q':C\to B}f\circ p'\htpy g \circ q'}{K:p\htpy p'}{L:q\htpy q'} \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}
+\end{equation*}
+is contractible. Using associativity of $\Sigma$-types and commutativity of cartesian products, it is easy to show that this type is equivalent to the type
+\begin{equation*}
+  \sm{(p',K):\sm{p':C\to A}p\htpy p'}\sm{(q',L):\sm{q':C\to B}q\htpy q'}\sm{H:f\circ p'\htpy g \circ q'}\ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}
+\end{equation*}
+Now we observe that the types $\sm{p':C\to A}p\htpy p'$ and $\sm{q':C\to B}q\htpy q'$ are contractible, with centers of contraction
+\begin{samepage}
+\begin{align*}
+(p,\mathsf{htpy\usc{}refl}_p) & : \sm{p':C'\to A} p\htpy p' \\
+(q,\mathsf{htpy\usc{}refl}_q) & : \sm{q':C'\to B} q\htpy q'.
+\end{align*}%
+\end{samepage}%
+Thus we apply \cref{ex:contr_in_sigma} to see that the type of tuples $((p',K),(q',L),(H',M))$ is equivalent to the type
+\begin{equation*}
+\sm{H':f\circ p'\htpy g\circ q'} \ct{H}{\mathsf{htpy\usc{}refl}_{g\circ q}}\htpy \ct{\mathsf{htpy\usc{}refl}_{f\circ p}}{H'}.
+\end{equation*}
+Of course, the type $\ct{H}{\mathsf{htpy\usc{}refl}_{g\circ q}}\htpy \ct{\mathsf{htpy\usc{}refl}_{f\circ p}}{H'}$ is equivalent to the type $H\htpy H'$, and $\sm{H':f\circ p\htpy g\circ q} H\htpy H'$ is contractible.
+\end{proof}
 
 Given a cone with vertex $C$ on a span $A\stackrel{f}{\rightarrow} X \stackrel{g}{\leftarrow} B$ and a map $h:C'\to C$, we construct a new cone with vertex $C'$ in the following definition.
 
@@ -85,62 +157,9 @@ C' \arrow[drr,bend left=15,"{q'}"] \arrow[dr,densely dotted,"h"] \arrow[ddr,bend
 \end{equation*}
 since the universal property states that for every cone $(p',q',H')$ with vertex $C'$, the type of pairs $(h,\alpha)$ consisting of $h:C'\to C$ equipped with $\alpha:\mathsf{cone\usc{}map}((p,q,H),h)=(p',q',H')$ is contractible by \cref{thm:contr_equiv}.
 
-In order to see what goes on in the universal property of pullbacks, we need to first characterize the identity type of $\mathsf{cone}(C)$, for any type $C$.
-
-\begin{lem}\label{lem:id_cone}%
-\index{identity type!of cone@{of $\mathsf{cone}(C)$}|textit}%
-Let $(p,q,H)$ and $(p',q',H')$ be cones on a cospan $f:A\rightarrow X \leftarrow B:g$, both with vertex $C$. Then the type $(p,q,H)=(p',q',H')$ is equivalent to the type of triples $(K,L,M)$ consisting of
-\begin{align*}
-K & : p \htpy p' \\
-L & : q \htpy q' \\
-M & : \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}
-\end{align*}
-\end{lem}
-
-\begin{rmk}
-The homotopy $M$ witnesses that the square
-\begin{equation*}
-\begin{tikzcd}
-f\circ p \arrow[r,"f\cdot K"] \arrow[d,swap,"H"] & f\circ p' \arrow[d,"{H'}"] \\
-g\circ q \arrow[r,swap,"g\cdot L"] & g\circ q'
-\end{tikzcd}
-\end{equation*}
-of homotopies commutes. Therefore $M$ is a homotopy of homotopies, and for each $z:C$ the identification $M(z)$ witnesses that the square of identifications
-\begin{equation*}
-\begin{tikzcd}[column sep=huge]
-f(p(z)) \arrow[r,equals,"\ap{f}{K(z)}"] \arrow[d,equals,swap,"H(z)"] & f(p'(z)) \arrow[d,equals,"{H'(z)}"] \\
-g(q(z)) \arrow[r,equals,swap,"\ap{g}{L(z)}"] & g(q'(z))
-\end{tikzcd}
-\end{equation*}
-commutes. 
-\end{rmk}
-
-\begin{proof}[Proof of \cref{lem:id_cone}]
-By the fundamental theorem of identity types (\cref{thm:id_fundamental}) and associativity of $\Sigma$-types (\cref{ex:sigma_assoc}) it suffices to show that the type
-\begin{equation*}
-\sm{p':C\to A}{q':C\to B}{H':f\circ p'\htpy g\circ q'}{K:p\htpy p'}{L:q\htpy q'} \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}
-\end{equation*}
-is contractible. Now we apply \cref{ex:sigma_swap} repeatedly to see that this type is equivalent to the type
-\begin{equation*}
-\sm{p':C\to A}{K: p\htpy p'}{q':C\to B}{L: q\htpy q'}{H':f\circ p'\htpy g\circ q'} \ct{H}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}.
-\end{equation*}
-The types $\sm{p':C\to A} p\htpy p'$ and $\sm{q':C\to B} q\htpy q'$ are contractible by function extensionality, and  we have
-\begin{samepage}
-\begin{align*}
-(p,\mathsf{htpy\usc{}refl}_p) & : \sm{p':C'\to A} p\htpy p' \\
-(q,\mathsf{htpy\usc{}refl}_q) & : \sm{q':C'\to B} q\htpy q'.
-\end{align*}%
-\end{samepage}%
-Thus we apply \cref{ex:contr_in_sigma} to see that the type of tuples $(p',K,q',L,H',M)$ is equivalent to the type
-\begin{equation*}
-\sm{H':f\circ p'\htpy g\circ q'} \ct{H}{\mathsf{htpy\usc{}refl}_{g\circ q}}\htpy \ct{\mathsf{htpy\usc{}refl}_{f\circ p}}{H'}.
-\end{equation*}
-Of course, the type $\ct{H}{\mathsf{htpy\usc{}refl}_{g\circ q}}\htpy \ct{\mathsf{htpy\usc{}refl}_{f\circ p}}{H'}$ is equivalent to the type $H\htpy H'$, and $\sm{H':f\circ p\htpy g\circ q} H\htpy H'$ is contractible.
-\end{proof}
-
 As a corollary we obtain the following characterization of the universal property of pullbacks.
 
-\begin{thm}\label{thm:pullback_up}
+\begin{lem}\label{thm:pullback_up}
 Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -152,72 +171,24 @@ with $H:f\circ p\htpy g\circ q$
 Then the following are equivalent:\index{universal property!of pullbacks (characterization)|textit}
 \begin{enumerate}
 \item The square is a pullback square.
-\item For every type $C'$ and every cone $(p',q',H')$ with vertex $C'$, the type of quadruples $(h,K,L,M)$ consisting of
+\item For every type $C'$ and every cone $(p',q',H')$ with vertex $C'$, the type of quadruples $(h,K,L,M)$ consisting of a map $h:C'\to C$, homotopies
 \begin{align*}
-h & : C'\to C \\
 K & : p\circ h \htpy p' \\
-L & : q\circ h \htpy q' \\
-M & : \ct{(H\cdot h)}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}
+L & : q\circ h \htpy q',
 \end{align*}
-is contractible.
-\end{enumerate}
-\end{thm}
-
-\begin{rmk}
-The homotopy $M$ in \cref{thm:pullback_up} witnesses that the square
+and a homotopy $M : \ct{(H\cdot h)}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H'}$ witnessing that the square
 \begin{equation*}
 \begin{tikzcd}
 f\circ p\circ h \arrow[r,"f\cdot K"] \arrow[d,swap,"H\cdot h"] & f\circ p' \arrow[d,"{H'}"] \\
 g\circ q\circ h \arrow[r,swap,"g\cdot L"] & g\circ q'
 \end{tikzcd}
 \end{equation*}
-of homotopies commutes.
-\end{rmk}
-
-\subsection{The unique existence of pullbacks}
-
-\begin{defn}
-Let $f:A\to X$ and $B\to X$ be maps. Then we define
-\begin{align*}
-A\times_X B & \defeq \sm{x:A}{y:B}f(x)=g(y) \\
-\pi_1 & \defeq \proj 1 & & : A\times_X B\to A \\
-\pi_2 & \defeq \proj 1\circ\proj 2 & & : A\times_X B\to B\\
-\pi_3 & \defeq \proj 2\circ\proj 2 & & : f\circ \pi_1 \htpy g\circ\pi_2.
-\end{align*}
-The type $A\times_X B$ is called the \define{canonical pullback}\index{canonical pullback|textbf} of $f$ and $g$.
-\end{defn}
-
-Note that $A\times_X B$ depends on $f$ and $g$, although this dependency is not visible in the notation.
-
-\begin{thm}
-Given maps $f:A\to X$ and $g:B\to X$, the commuting square\index{canonical pullback|textit}
-\begin{equation*}
-\begin{tikzcd}
-A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & X,
-\end{tikzcd}
-\end{equation*}
-is a pullback square.
-\end{thm}
+commutes, is contractible.
+\end{enumerate}
+\end{lem}
 
 \begin{proof}
-Let $C$ be a type. Our goal is to show that the map
-\begin{equation*}
-\mathsf{cone\usc{}map}(\pi_1,\pi_2,\pi_3): (C\to A\times_X B)\to \mathsf{cone}(C)
-\end{equation*}
-is an equivalence. 
-By double application of \cref{thm:choice} we obtain equivalences
-\begin{align*}
-(C\to A\times_X B) & \jdeq C\to \sm{x:A}{y:B}f(x)=g(y) \\
-& \eqvsym \sm{p:C\to A}\prd{z:C}\sm{y:B} f(p(z))= y \\
-& \eqvsym \sm{p:C\to A}{q:C\to B}\prd{z:C} f(p(z))= g(q(z)) \\
-& \jdeq \mathsf{cone}(C)
-\end{align*}
-The composite of these equivalences is the map
-\begin{equation*}
-\lam{f}(\lam{z}\proj 1(f(z)),\lam{z} \proj 1(\proj 2(f(z))),\lam{z}\proj 2(\proj 2(f(z)))),
-\end{equation*}
-which is \emph{exactly} the map $\mathsf{cone\usc{}map}(\pi_1,\pi_2,\pi_3)$, and since it is a composite of equivalences it follows that it is itself an equivalence.
+The map $\mathsf{cone\usc{}map}(p,q,H)$ is an equivalence if and only if its fibers are contractible. By \cref{lem:id_cone} it follows that the fibers of $\mathsf{cone\usc{}map}(p,q,H)$ are equivalent the the described type of quadruples ($h,K,L,M)$.
 \end{proof}
 
 In the following lemma we establish the uniqueness of pullbacks up to equivalence via a \emph{3-for-2 property} for pullbacks.
@@ -267,13 +238,7 @@ Thus we see that the triangle
 & \mathsf{cone}(D)
 \end{tikzcd}
 \end{equation*}
-commutes. Therefore it follows from the 3-for-2 property of equivalences established in \cref{ex:3_for_2}, that if any two of the following properties hold, then so does the third:
-\begin{enumerate}
-\item The map $\mathsf{cone\usc{}map}(p,q,H):(D\to C)\to \mathsf{cone}(D)$ is an equivalence,
-\item The map $\mathsf{cone\usc{}map}(p',q',H'):(D\to C')\to \mathsf{cone}(D)$ is an equivalence,
-\item The map $h\circ\blank : (D\to C')\to (D\to C)$ is an equivalence.
-\end{enumerate}
-Thus the 3-for-2 property for pullbacks follows from the fact that $h$ is an equivalence if and only if $h\circ\blank : (D\to C')\to (D\to C)$ is an equivalence for any type $D$, which was established in \cref{lem:postcomp_equiv}.
+commutes. Therefore it follows from the 3-for-2 property of equivalences established in \cref{ex:3_for_2}, that if any two of the maps in this triangle is an equivalence, then so is the third. Now the claim follows from the fact that $h$ is an equivalence if and only if $h\circ\blank : (D\to C')\to (D\to C)$ is an equivalence for any type $D$, which was established in \cref{lem:postcomp_equiv}.
 \end{proof}
 
 Pullbacks are not only unique in the sense that any two pullbacks of the same cospan are equivalent, they are \emph{uniquely unique}\index{uniquely uniqueness!of pullbacks} in the sense that the type of quadruples $(h,K,L,M)$ as in \cref{lem:pb_3for2} is contractible.
@@ -300,11 +265,59 @@ is contractible.
 We have seen that the type of quadruples $(h,K,L,M)$ is equivalent to the fiber of $\mathsf{cone\usc{}map}(p,q,H)$ at $(p',q',H')$. By \cref{lem:pb_3for2} it follows that $h$ is an equivalence. Since $\isequiv(h)$ is a proposition by \cref{ex:isprop_isequiv}, and hence contractible as soon as it is inhabited, it follows that the type of quadruples $(e,K,L,M)$ is contractible. 
 \end{proof}
 
+\subsection{Canonical pullbacks}
+
+For every cospan we can construct a \emph{canonical pullback}.
+
+\begin{defn}
+Let $f:A\to X$ and $B\to X$ be maps. Then we define
+\begin{align*}
+A\times_X B & \defeq \sm{x:A}{y:B}f(x)=g(y) \\
+\pi_1 & \defeq \proj 1 & & : A\times_X B\to A \\
+\pi_2 & \defeq \proj 1\circ\proj 2 & & : A\times_X B\to B\\
+\pi_3 & \defeq \proj 2\circ\proj 2 & & : f\circ \pi_1 \htpy g\circ\pi_2.
+\end{align*}
+The type $A\times_X B$ is called the \define{canonical pullback}\index{canonical pullback|textbf} of $f$ and $g$.
+\end{defn}
+
+Note that $A\times_X B$ depends on $f$ and $g$, although this dependency is not visible in the notation.
+
+\begin{thm}\label{thm:canonical-pullback}
+Given maps $f:A\to X$ and $g:B\to X$, the commuting square\index{canonical pullback|textit}
+\begin{equation*}
+\begin{tikzcd}
+A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"g"] \\
+A \arrow[r,swap,"f"] & X,
+\end{tikzcd}
+\end{equation*}
+is a pullback square.
+\end{thm}
+
+\begin{proof}
+Let $C$ be a type. Our goal is to show that the map
+\begin{equation*}
+\mathsf{cone\usc{}map}(\pi_1,\pi_2,\pi_3): (C\to A\times_X B)\to \mathsf{cone}(C)
+\end{equation*}
+is an equivalence. 
+By double application of \cref{thm:choice} we obtain equivalences
+\begin{align*}
+(C\to A\times_X B) & \jdeq C\to \sm{x:A}{y:B}f(x)=g(y) \\
+& \eqvsym \sm{p:C\to A}\prd{z:C}\sm{y:B} f(p(z))= y \\
+& \eqvsym \sm{p:C\to A}{q:C\to B}\prd{z:C} f(p(z))= g(q(z)) \\
+& \jdeq \mathsf{cone}(C)
+\end{align*}
+The composite of these equivalences is the map
+\begin{equation*}
+\lam{f}(\lam{z}\proj 1(f(z)),\lam{z} \proj 1(\proj 2(f(z))),\lam{z}\proj 2(\proj 2(f(z)))),
+\end{equation*}
+which is \emph{exactly} the map $\mathsf{cone\usc{}map}(\pi_1,\pi_2,\pi_3)$, and since it is a composite of equivalences it follows that it is itself an equivalence.
+\end{proof}
+
 \begin{defn}
 Given a commuting square
 \begin{equation*}
 \begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,"p"] & B \arrow[d,"g"] \\
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
 A \arrow[r,swap,"f"] & X
 \end{tikzcd}
 \end{equation*}
@@ -312,17 +325,16 @@ with $H:f\circ p \htpy g \circ q$, we define the \define{gap map}\index{gap map|
 \begin{equation*}
 \mathsf{gap}(p,q,H):C \to A\times_X B
 \end{equation*}
-by $\lam{z}(p(z),q(z),H(z))$. Furthermore, we will write\index{is_pullback@{$\mathsf{is\usc{}pullback}$}|textbf}
-\begin{equation*}
-\mathsf{is\usc{}pullback}(f,g,H)\defeq \isequiv(\mathsf{gap}(p,q,H)).
-\end{equation*}
+by $\lam{z}(p(z),q(z),H(z))$.
 \end{defn}
+
+The following theorem provides a useful characterization of pullback squares, because in many situations it is easier to show that the gap map is an equivalence.
 
 \begin{thm}\label{thm:is_pullback}
 Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
-C \arrow[r,"q"] \arrow[d,"p"] & B \arrow[d,"g"] \\
+C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
 A \arrow[r,swap,"f"] & X
 \end{tikzcd}
 \end{equation*}
@@ -337,22 +349,23 @@ with $H:f\circ p \htpy g \circ q$. The following are equivalent:
 \end{thm}
 
 \begin{proof}
-Note that there are homotopies
+  Observe that we are in the situation of \cref{lem:pb_3for2}. Indeed, we have two commuting squares
+  \begin{equation*}
+    \begin{tikzcd}
+      A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_2"] & B \arrow[d,"g"] &[2em] C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+      A \arrow[r,swap,"f"] & X & A \arrow[r,swap,"f"] & X,
+    \end{tikzcd}
+  \end{equation*}
+  and we have the gap map $\mathsf{gap}:C\to A\times_X B$, which comes equipped with the homotopies
 \begin{align*}
-K & : \pi_1\circ \mathsf{gap}(p,q,H) \htpy p \\
-L & : \pi_2\circ \mathsf{gap}(p,q,H) \htpy q \\
-M & : \ct{(\pi_3\cdot \mathsf{gap}(p,q,H))}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H}.
+K & : \pi_1\circ \mathsf{gap} \htpy p & K & \defeq \lam{z}\refl{p(z)} \\
+L & : \pi_2\circ \mathsf{gap} \htpy q & L & \defeq \lam{z}\refl{q(z)} \\
+M & : \ct{(\pi_3\cdot \mathsf{gap})}{(g\cdot L)} \htpy \ct{(f\cdot K)}{H} & M & \defeq \lam{z}\mathsf{right\usc{}unit}(H(z)).
 \end{align*}
-given by 
-\begin{align*}
-K & \defeq \lam{z}\refl{p(z)} \\
-L & \defeq \lam{z}\refl{q(z)} \\
-M & \defeq \lam{z}\ct{\mathsf{right\usc{}unit}(H(z))}{\mathsf{left\usc{}unit}(H(z))^{-1}}.
-\end{align*}
-Therefore the claim follows by \cref{lem:pb_3for2}.
+Since $A\times_X B$ is shown to be a pullback in \cref{thm:canonical-pullback}, it follows from \cref{lem:pb_3for2} that $C$ is a pullback if and only if the gap map is an equivalence.
 \end{proof}
 
-\subsection{Fiber products}
+\subsection{Cartesian products and fiberwise products as pullbacks}
 
 An important special case of pullbacks occurs when the cospan is of the form
 \begin{equation*}
@@ -420,7 +433,7 @@ A \arrow[r,swap,"f"] & X
 is a pullback square.
 \end{cor}
 
-\subsection{Fibers as pullbacks}
+\subsection{Fibers of maps as pullbacks}
 
 \begin{lem}\label{lem:fib_pb}
 For any function $f:A\to B$, and any $b:B$, consider the square
@@ -644,9 +657,7 @@ is a pullback square, is equivalent to the type of families of equivalences
 \end{equation*}
 \end{cor}
 
-\subsection{The pullback pasting property}
-
-The following theorem is also called the \define{pasting property} of pullbacks.\index{pasting property!of pullbacks|textit}
+One useful application of the connection between pullbacks and families of equivalences is the following theorem, which is also called the \define{pasting property} of pullbacks.\index{pasting property!of pullbacks|textit}
 
 \begin{thm}\label{thm:pb_pasting}
 Consider a commuting diagram of the form
