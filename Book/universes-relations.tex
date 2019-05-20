@@ -18,100 +18,110 @@ One of the aspects that make universes useful is that they are postulated to be 
 \end{equation*}
 satisfying the judgmental equality $\mathsf{Ty}(\check{\Sigma}(X,P)\jdeq\sm{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x))$. We will similarly assume that any universe is closed under $\Pi$-types and the other ways of forming types. However, there is an important restriction: it would be inconsistent to assume that the universe is contained in itself. One way of thinking about this is that universes are types of \emph{small} types, and it cannot be the case that the universe is small with respect to itself. We address this problem by assuming that there are many universes: enough universes so that any type family can be obtained by substituting into the universal type family of some universe.
 
-\subsection{Type theoretic universes}
-The induction principle for inductive types can be used to prove universal quantifications. 
-However, it would also be nice if we could construct \emph{new type families} over inductive types, using their induction principles.
-To be able to do this, we introduce a \emph{universe}, a type of which the terms represent types. The idea is that the universe $\UU$ comes equipped with a type family $\mathsf{Ty}$, so that for each $X:\UU$ we have an associated type $\mathsf{Ty}(X)$, the type of \emph{elements} of $X$. 
-
-We assume there is a closed type $\UU$\index{U@{$\UU$}|textbf} called the \define{universe}\index{universe|textbf}, and a type family $\mathsf{Ty}$\index{El@{$\mathsf{Ty}$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}.
-\begin{center}
-\begin{minipage}{.4\textwidth}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash\UU~\mathrm{type}$}
-\end{prooftree}
-\end{minipage}\quad
-\begin{minipage}{.4\textwidth}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$X:\UU \vdash \mathsf{Ty}(X)~\mathrm{type}$}
-\end{prooftree}
-\end{minipage}
-\end{center}
-
-We postulate that the universe is closed under the type constructors, by the following rules:
-\begin{enumerate}
-\item The universe is closed under $\Pi$-types
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A:\UU$}
-\AxiomC{$\Gamma\vdash B:\mathsf{Ty}(A)\to\UU$}
-\BinaryInfC{$\Gamma \vdash \check{\Pi}(A,B):\UU$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A:\UU$}
-\AxiomC{$\Gamma\vdash B:\mathsf{Ty}(A)\to\UU$}
-\BinaryInfC{$\Gamma \vdash \mathsf{Ty}(\check{\Pi}(A,B))\jdeq \prd{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))~\mathrm{type}$}
-\end{prooftree}
-\item The type of natural numbers is in the universe
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \check{\N}:\UU$}
-\end{prooftree}
-\begin{prooftree}
-\AxiomC{}
-\UnaryInfC{$\vdash \mathsf{Ty}(\check{\N})\jdeq \mathbb{N}~\mathrm{type}$}
-\end{prooftree}
-\item Similarly we postulate that the universe contains the empty type, the unit type, the booleans, coproducts, products, and $\Sigma$-types. These closure properties of the universe are given concisely in \cref{tab:universe}.
-\begin{table}
-\begin{center}
-\caption{\label{tab:universe}Closure properties of the universe}
-\begin{tabular}{lll}
-\toprule
-Premises & Type encoding\index{type encoding@{type encoding $\check{A}$}} in $\UU$ & Type of elements $\mathsf{Ty}(\blank)$ \\
-\midrule
-$A:\UU,B:\mathsf{Ty}(A)\to\UU$ & $\check{\Pi}(A,B)$ & $\prd{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))$ \\
-& $\check{\nat}$ & $\nat$ \\
-& $\check{\emptyt}$ &  $\emptyt$ \\
-& $\check{\unit}$ &  $\unit$ \\
-& $\check{\bool}$ &  $\bool$ \\
-$A,B:\UU$ & $A\mathbin{\check{+}}B$ &  $\mathsf{Ty}(A)+\mathsf{Ty}(B)$ \\
-$A,B:\UU$ & $A\mathbin{\check{\times}}B$ &  $\mathsf{Ty}(A)\times\mathsf{Ty}(B)$ \\
-$A:\UU,B:\mathsf{Ty}(A)\to\UU$ & $\check{\Sigma}(A,B)$ & $\sm{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-\end{table}
-\end{enumerate}
-
+\subsection{Specification of type theoretic universes}
 \begin{defn}
-We say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} if it occurs in the universe, i.e., if there is a term $\check{A}:\UU$ in context $\Gamma$ such that $\Gamma\vdash\mathsf{Ty}(\check{A})\jdeq A~\mathrm{type}$.
-\end{defn}
-
-In particular, if $A$ is a small type in context $\Gamma$ and $B$ is a small type in context $\Gamma,x:A$, then $\prd{x:A}B(x)$ is again a small type in context $\Gamma$.
-
-\begin{defn}
-Let $A$ be a type in context $\Gamma$. A \define{family of small types}\index{family of small types|textbf} over $A$ is defined to be a map
-\begin{equation*}
-B:A\to\UU
-\end{equation*}
+  A \define{universe}\index{universe|textbf} in type theory is a closed type $\UU$\index{U@{$\UU$}|textbf} equipped with a type family $\mathsf{Ty}$\index{Ty@{$\mathsf{Ty}$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}, equipped with the following structure:
+  \begin{enumerate}
+  \item $\UU$ is closed under $\Pi$, in the sense that it comes equipped with a function
+    \begin{equation*}
+      \check{\Pi} :\prd{X:\UU}(\mathsf{Ty}(X)\to\UU)\to\UU
+    \end{equation*}
+    for which the judgmental equality
+    \begin{equation*}
+      \mathsf{Ty}\big(\check{\Pi}(X,P)\big)\jdeq \prd{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x)).
+    \end{equation*}
+    holds, for every $X:\UU$ and $P:\mathsf{Ty}(X)\to\UU$.
+  \item $\UU$ is closed under $\Sigma$ in the sense that it comes equipped with a function
+    \begin{equation*}
+      \check{\Sigma} :\prd{X:\UU}(\mathsf{Ty}(X)\to\UU)\to\UU
+    \end{equation*}
+    for which the judgmental equality
+    \begin{equation*}
+      \mathsf{Ty}\big(\check{\Sigma}(X,P)\big) \jdeq \sm{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x))
+    \end{equation*}
+    holds, for every $X:\UU$ and $P:\mathsf{Ty}(X)\to\UU$.
+  \item $\UU$ is closed under identity types, in the sense that it comes equipped with a function
+    \begin{equation*}
+      \check{\mathrm{I}} : \prd{X:\UU}\mathsf{Ty}(X)\to(\mathsf{Ty}(X)\to\UU)
+    \end{equation*}
+    for which the judgmental equality
+    \begin{equation*}
+      \mathsf{Ty}\big(\check{\mathrm{I}}(X,x,y)\big)\jdeq (\id{x}{y})
+    \end{equation*}
+    holds, for every $X:\UU$ and $x,y:\mathsf{Ty}(X)$.
+  \item $\UU$ is closed under coproducts, in the sense that it comes equipped with a function
+    \begin{equation*}
+      \check{+}:\UU\to (\UU\to\UU)
+    \end{equation*}
+    that satisfies $\mathsf{Ty}\big(X\check{+}Y\big)\jdeq \mathsf{Ty}(X)+\mathsf{Ty}(Y)$.
+  \item $\UU$ contains terms $\check{\emptyt},\check{\unit},\check{\N}:\UU$
+    that satisfy the judgmental equalities
+    \begin{align*}
+      \mathsf{Ty}\big(\check{\emptyt}\big) & \jdeq \emptyt \\
+      \mathsf{Ty}\big(\check{\unit}\big) & \jdeq \unit \\
+      \mathsf{Ty}(\check{\N}) & \jdeq \N.
+    \end{align*}
+  \end{enumerate}
 \end{defn}
 
 \begin{rmk}
-If $A$ is small, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathsf{Ty}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
+  Since ordinar function types are defined as a special case of dependent function types, we don't have to assume that universes are closed under ordinary function types. Similarly, it follows from the assumption that universes are closed under dependent pair types that universes are closed under cartesian product types.
 \end{rmk}
 
+\begin{rmk}
+We will assume that for every finite list of types
+\begin{align*}
+  \Gamma_1 & \vdash A_1~\mathrm{type} \\
+  & \vdots \\
+  \Gamma_n & \vdash A_n~\mathrm{type},
+\end{align*}
+there is a universe $\UU$ that contains each $A_i$ in the sense that $\UU$ comes equipped with a term
+\begin{align*}
+  \Gamma_i\vdash \check{A}_i:\UU
+\end{align*}
+that for which the judgment
+\begin{equation*}
+  \Gamma_i\vdash \mathsf{Ty}\big(\check{A}_i\big)\jdeq A_i~\mathrm{type}
+\end{equation*}
+holds. By this assumption it is rarely necessary to work with more than one universe at the same time. Occasionally, we might need a universe $\UU$ and a second universe $\mathcal{V}$ that contains $\UU$ as well as all the types in $\UU$.
+\end{rmk}
+
+In the following definition we introduce some terminology regarding being in a universe. We think of a universe as a type of types that are \emph{small} with respect to that universe.
+
+\begin{defn}
+  Consider a universe $\UU$. We say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
+  \begin{equation*}
+    \Gamma\vdash\mathsf{Ty}\big(\check{A}\big)\jdeq A~\mathrm{type}
+  \end{equation*}
+  holds. If $A$ is small with respect to $\UU$, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathsf{Ty}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
+\end{defn}
+
+\begin{rmk}
+  Another way of phrasing the condition that any universe $\UU$ is closed under $\Pi$-types, is that the dependent function type of a family of small types indexed by a small type is again small. Similarly, it follows for any universe that dependent pair types and identity types of small types are again small.
+
+  By our assumption that any finite list of types is contained in \emph{some} universe, it follows that any type is small with respect to some universe.
+\end{rmk}
+
+\begin{defn}
+  Consider a universe $\UU$, and let $B$ be a type family over an arbitrary type $A$. We say that $B$ is small with respect to $\UU$ if it comes equipped with a function
+  \begin{equation*}
+    \check{B}:A\to\UU
+  \end{equation*}
+  for which the judgmental equality $\mathsf{Ty}\big(\check{B}(x)\big)\jdeq B(x)$ holds, for every $x:A$.
+\end{defn}
+
 \begin{eg}
-One important way to use the universe is to define types of \define{structured types}\index{structured types}. We give some examples:
+One important way to use a universe $\UU$ is to define types of \define{structured types}\index{structured types}. We give some examples:
 \begin{enumerate}
-\item The type of small \define{pointed types}\index{pointed types} is defined as
+\item The type of $\UU$-small \define{pointed types}\index{pointed types} is defined as
 \begin{equation*}
 \UU_\ast\defeq \sm{A:\UU}A,
 \end{equation*}
-\item The type of small \define{graphs}\index{graphs} is defined as the type
+\item The type of $\UU$-small \define{graphs}\index{graphs} is defined as the type
 \begin{equation*}
 \mathsf{Gph}_\UU \defeq \sm{A:\UU} A\to (A\to \UU),
 \end{equation*}
-\item The type of small \define{reflexive graphs}\index{reflexive graphs} is defined as the type
+\item The type of $\UU$-small \define{reflexive graphs}\index{reflexive graphs} is defined as the type
 \begin{equation*}
 \mathsf{rGph}_\UU \defeq \sm{A:\UU}{R:A\to (A\to \UU)}\prd{a:A}R(a,a).
 \end{equation*}
@@ -125,8 +135,8 @@ Another important way to use the universe is to \emph{define} new type families 
 \begin{defn}\label{defn:fin}
 We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}|textbf}\index{finite types|textbf} by induction on $\N$\index{family!of finite types}, taking
 \begin{align*}
-\mathsf{Fin}(0) & \defeq \emptyt \\
-\mathsf{Fin}(n+1) & \defeq \mathsf{Fin}(n)+\unit
+\mathsf{Fin}(\zeroN) & \defeq \emptyt \\
+\mathsf{Fin}(\succN(n)) & \defeq \mathsf{Fin}(n)+\unit
 \end{align*}
 \end{defn}
 
@@ -135,8 +145,8 @@ A second example of this kind is the notion of \emph{observational equality} on 
 \begin{defn}\label{defn:obs_nat}
 We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathsf{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathsf{Eq}_\N$}|textbf} satisfying
 \begin{align*}
-\mathsf{Eq}_\N(0,0) & \jdeq \unit & \mathsf{Eq}_\N(S(n),0) & \jdeq \emptyt \\
-\mathsf{Eq}_\N(0,S(n)) & \jdeq \emptyt & \mathsf{Eq}_\N(S(n),S(m)) & \jdeq \mathsf{Eq}_\N(n,m).
+\mathsf{Eq}_\N(\zeroN,\zeroN) & \jdeq \unit & \mathsf{Eq}_\N(\succN(n),\zeroN) & \jdeq \emptyt \\
+\mathsf{Eq}_\N(\zeroN,\succN(n)) & \jdeq \emptyt & \mathsf{Eq}_\N(\succN(n),\succN(m)) & \jdeq \mathsf{Eq}_\N(n,m).
 \end{align*}
 \end{defn}
 
@@ -148,38 +158,23 @@ E_S & : \N\to (\N\to\UU)\to(\N\to\UU)
 \end{align*}
 We define $E_0$ by induction, taking $E_{00}\defeq \unit$ and $E_{0S}(n,X,m)\defeq \emptyt$. The resulting family $E_0$ satisfies
 \begin{align*}
-E_0(0) & \jdeq \unit \\
-E_0(S(n)) & \jdeq \emptyt.
+E_0(\zeroN) & \jdeq \unit \\
+E_0(\succN(n)) & \jdeq \emptyt.
 \end{align*} 
 We define $E_S$ by induction, taking $E_{S0}\defeq \emptyt$ and $E_{S0}(n,X,m)\defeq X(m)$. The resulting family $E_S$ satisfies
 \begin{align*}
-E_S(n,X,0) & \jdeq \emptyt \\
-E_S(n,X,S(m)) & \jdeq X(m) 
+E_S(n,X,\zeroN) & \jdeq \emptyt \\
+E_S(n,X,\succN(m)) & \jdeq X(m) 
 \end{align*}
 Therefore we have by the computation rule for the first induction that the judgmental equality
 \begin{align*}
-\mathsf{Eq}_\N(0,m) & \jdeq E_0(m) \\
-\mathsf{Eq}_\N(S(n),m) & \jdeq E_S(n,\mathsf{Eq}_\N(n),m)
+\mathsf{Eq}_\N(\zeroN,m) & \jdeq E_0(m) \\
+\mathsf{Eq}_\N(\succN(n),m) & \jdeq E_S(n,\mathsf{Eq}_\N(n),m)
 \end{align*}
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
 
 We can also define observational equality for many other kinds of types, such as $\bool$ or $\Z$. In each of these cases, what sets the observational equality apart from other relations is that it is the \emph{least} reflexive relation. However, the definitions of observational equality in the various situations are always very specific to the type they are defined on. In the next chapter we introduce the \emph{identity type}, which is an equality type defined uniformly for all types. In \cref{chap:hierarchy} we will show that the observational equality on $\N$ is equivalent to the identity type on $\N$.
-
-\subsection{Negations and decidability}
-Using the empty type we can define the \emph{negation} of a type. The idea is that if $A$ is false (i.e., has no terms), then from $A$ follows everything.
-
-\begin{defn}
-For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
-\end{defn}
-
-Note that $\neg A$ is the type of functions from $A$ to $\emptyt$. Therefore one can construct a term of type $\neg A$ by constructing a term $f(x):\emptyt$ using $x:A$. In other words, to construct a term of type $\neg A$ one assumes $A$ and derives a contradiction. This proof technique is called \define{proof of negation}.
-
-Proof of negation is not to be confused with \emph{proof by contradiction}. In type theory there is no way of obtaining a term of type $A$ from a term of type $(A\to \emptyt)\to\emptyt$. Even stronger: we will use the univalence axiom to obtain a term of type
-\begin{equation*}
-  \neg\Big(\prd{A:\UU}((A\to\emptyt)\to\emptyt)\to A\Big).
-\end{equation*}
-In other words, it would be \emph{inconsistent} to admit proofs by contradiction as a valid way of constructing terms of general types. Nevertheless it turns out that a restricted form of proof by contradiction is still consistent with the univalence axiom.
 
 \begin{exercises}
 \item Let $A$ be a type.

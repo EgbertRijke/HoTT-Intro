@@ -1,19 +1,25 @@
 \section{The univalence axiom}
 
-\subsection{Type extensionality}
+\subsection{Equivalent forms of the univalence axiom}
 
 The univalence axiom characterizes the identity type of the universe. Roughly speaking, it asserts that equivalent types are equal. It is considered to be an \emph{extensionality principle}\index{extensionality principle!types} for types. In the following theorem we introduce the univalence axiom and give two more equivalent ways of stating this.
+
+\begin{defn}
+  The \define{univalence axiom}\index{univalence axiom|textbf} on a universe $\UU$ is the statement that for any $A:\UU$ the family of maps\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}|textbf}
+\begin{equation*}
+\mathsf{equiv\usc{}eq}\defeq \mathsf{path\usc{}ind}_A(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
+\end{equation*}
+is a family of equivalences.\index{identity type!universe} A universe satisfying the univalence axiom is referred to as a \define{univalent universe}. If $\UU$ is a univalent universe we will write
+$\mathsf{eq\usc{}equiv}$\index{eq equiv@{$\mathsf{eq\usc{}equiv}$}|textbf}
+for the inverse of $\mathsf{equiv\usc{}eq}$.
+\end{defn}
+
+The following theorem is a special case of \cref{thm:id_fundamental}. Subsequently we will assume that any type is contained in a univalent universe.
 
 \begin{thm}\label{thm:univalence}
 The following are equivalent:
 \begin{enumerate}
-\item The \define{univalence axiom}\index{univalence axiom|textbf}: for any $A:\UU$ the map\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}|textbf}
-\begin{equation*}
-\mathsf{equiv\usc{}eq}\defeq \mathsf{path\usc{}ind}_A(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
-\end{equation*}
-is a family of equivalences.\index{identity type!universe} If this is the case, we write
-$\mathsf{eq\usc{}equiv}$\index{eq equiv@{$\mathsf{eq\usc{}equiv}$}|textbf}
-for the inverse of $\mathsf{equiv\usc{}eq}$.
+\item The univalence axiom holds.
 \item The type
 \begin{equation*}
 \sm{B:\UU}\eqv{A}{B}
@@ -30,20 +36,6 @@ the map
 given by $f\mapsto f(A,\idfunc[A])$ has a section.
 \end{enumerate}
 \end{thm}
-
-\begin{proof}
-The equivalence of (i) and (ii) is a direct consequence of \cref{thm:id_fundamental}. 
-To see that (ii) and (iii) are equivalent, note that we have a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=-1em]
-\prd{t:\sm{B:\UU}\eqv{A}{B}}P(t) \arrow[rr,"\mathsf{ev\usc{}pair}"] \arrow[dr,"\varphi","{f\mapsto f((A,\idfunc[A]))}"'] & & \prd{B:\UU}{e:\eqv{A}{B}} P((B,e)) \arrow[dl,"{f\mapsto f(A,\idfunc[A])}","\psi"'] \\
-& P((A,\idfunc[A]))
-\end{tikzcd}
-\end{equation*}
-The map $\ind{\Sigma}$ has a section. Therefore it follows from \cref{ex:3_for_2} that $\varphi$ has a section if and only if $\psi$ has a section. By \cref{thm:contractible} it follows that $\varphi$ has a section if and only if $\sm{B:\UU}\eqv{A}{B}$ is contractible. 
-\end{proof}
-
-From now on we will assume that the univalence axiom holds.
 
 \subsection{Groups in univalent mathematics}
 

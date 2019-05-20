@@ -2,6 +2,21 @@
 
 In this chapter our goal is to show how to use the language of type theory to do some elementary number theory. In particular, we define the greatest common divisor of any two numbers, and we use the trial division algorithm to show that being a prime is decidable.
 
+\subsection{Negations and decidability}
+Using the empty type we can define the \emph{negation} of a type. The idea is that if $A$ is false (i.e., has no terms), then from $A$ follows everything.
+
+\begin{defn}
+For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
+\end{defn}
+
+Note that $\neg A$ is the type of functions from $A$ to $\emptyt$. Therefore one can construct a term of type $\neg A$ by constructing a term $f(x):\emptyt$ using $x:A$. In other words, to construct a term of type $\neg A$ one assumes $A$ and derives a contradiction. This proof technique is called \define{proof of negation}.
+
+Proof of negation is not to be confused with \emph{proof by contradiction}. In type theory there is no way of obtaining a term of type $A$ from a term of type $(A\to \emptyt)\to\emptyt$. Even stronger: we will use the univalence axiom to obtain a term of type
+\begin{equation*}
+  \neg\Big(\prd{A:\UU}((A\to\emptyt)\to\emptyt)\to A\Big).
+\end{equation*}
+In other words, it would be \emph{inconsistent} to admit proofs by contradiction as a valid way of constructing terms of general types. Nevertheless it turns out that a restricted form of proof by contradiction is still consistent with the univalence axiom.
+
 \subsection{Decidability}
 
 A common way of reasoning in mathematics is via a proof by contradiction: ``in order to show that $P$ holds we show that it cannot be the case that $P$ doesn't hold". There are no inference rules in type theory that allow us to obtain a term of type $P$ from a term of type $\neg\neg P$. However, for some propositions $P$ one can construct a function $\neg\neg P \to P$. The \emph{decidable propositions} from a class of such propositions $P$ for which we can show $\neg\neg P \to P$.
