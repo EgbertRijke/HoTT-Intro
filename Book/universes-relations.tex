@@ -1,146 +1,192 @@
-\section{The universe and type-valued relations}
+\section{Type theoretic universes}
 
-In this lecture we introduce type theoretic \emph{universes}. Universes are types that consist of types. In other words, a universe is a type $\UU$ that comes equipped with a type family $\mathsf{Ty}$ over $\UU$, and for any $X:\UU$ we think of $X$ as an \emph{encoding} of the type $\mathsf{Ty}(X)$. We call this type family the \emph{universal type family}.
+To complete our specification of dependent type theory, we introduce type theoretic \emph{universes}. Universes are types that consist of types. In other words, a universe is a type $\UU$ that comes equipped with a type family $\Ty$ over $\UU$, and for any $X:\UU$ we think of $X$ as an \emph{encoding} of the type $\Ty(X)$. We call this type family the \emph{universal type family}.
 
 There are several reasons to equip type theory with universes. One reason is that it enables us to define new type families over inductive types, using their induction principle. For example, since the universe is itself a type, we can use the induction principle of $\bool$ to obtain a map $P:\bool\to\UU$ from any two terms $X_0,X_1:\UU$. Then we obtain a type family over $\bool$ by substituting $P$ into the universal type family:
 \begin{equation*}
-  x:\bool\vdash \mathsf{Ty}(P(x))~\mathrm{type}
+  x:\bool\vdash \Ty(P(x))~\mathrm{type}
 \end{equation*}
-satisfying $\mathsf{Ty}(P(0_\bool))\jdeq \mathsf{Ty}(X_0)$ and $\mathsf{Ty}(P(1_\bool))\jdeq \mathsf{Ty}(X_1)$.
+satisfying $\Ty(P(0_\bool))\jdeq \Ty(X_0)$ and $\Ty(P(1_\bool))\jdeq \Ty(X_1)$.
 
 We use this way of defining type families to define many familiar relations over $\N$, such as $\leq$ and $<$. We also introduce a relation called \emph{observational equality} $\mathsf{Eq}_\N$ on $\N$, which we can think of as equality of $\N$. This relation is reflexive, symmetric, and transitive, and moreover it is the least reflexive relation. Furthermore, one of the most important aspects of observational equality $\mathsf{Eq}_\N$ on $\N$ is that $\mathsf{Eq}_\N(m,n)$ is a type for every $m,n:\N$, unlike judgmental equality. Therefore we can use type theory to reason about observational equality on $\N$. Indeed, in the exercises we show that some very elementary mathematics can already be done at this early stage in our development of type theory.
 
 A second reason to introduce universes is that it allows us to define many types of types equipped with structure. One of the most important examples is the type of groups, which is the type of types equipped with the group operations satisfying the group laws, and for which the underlying type is a set. We won't discuss the condition for a type to be a set until \cref{chap:hierarchy}, so the definition of groups in type theory will be given much later. Therefore we illustrate this use of the universe by giving simpler examples: pointed types, graphs, and reflexive graphs.
 
-One of the aspects that make universes useful is that they are postulated to be closed under all the type constructors. For example, if we are given $X:\UU$ and $P:\mathsf{Ty}(X)\to \UU$, then the universe is equipped with a term
+One of the aspects that make universes useful is that they are postulated to be closed under all the type constructors. For example, if we are given $X:\UU$ and $P:\Ty(X)\to \UU$, then the universe is equipped with a term
 \begin{equation*}
   \check{\Sigma}(X,P):\UU
 \end{equation*}
-satisfying the judgmental equality $\mathsf{Ty}(\check{\Sigma}(X,P)\jdeq\sm{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x))$. We will similarly assume that any universe is closed under $\Pi$-types and the other ways of forming types. However, there is an important restriction: it would be inconsistent to assume that the universe is contained in itself. One way of thinking about this is that universes are types of \emph{small} types, and it cannot be the case that the universe is small with respect to itself. We address this problem by assuming that there are many universes: enough universes so that any type family can be obtained by substituting into the universal type family of some universe.
+satisfying the judgmental equality $\Ty(\check{\Sigma}(X,P)\jdeq\sm{x:\Ty(X)}\Ty(P(x))$. We will similarly assume that any universe is closed under $\Pi$-types and the other ways of forming types. However, there is an important restriction: it would be inconsistent to assume that the universe is contained in itself. One way of thinking about this is that universes are types of \emph{small} types, and it cannot be the case that the universe is small with respect to itself. We address this problem by assuming that there are many universes: enough universes so that any type family can be obtained by substituting into the universal type family of some universe.
 
 \subsection{Specification of type theoretic universes}
+
+In the following definition we already state that universes are closed under identity types. Identity types will be introduced in \cref{chap:identity}.
+
 \begin{defn}
-  A \define{universe}\index{universe|textbf} in type theory is a closed type $\UU$\index{U@{$\UU$}|textbf} equipped with a type family $\mathsf{Ty}$\index{Ty@{$\mathsf{Ty}$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}, equipped with the following structure:
+  A \define{universe}\index{universe|textbf} in type theory is a closed type $\UU$\index{U@{$\UU$}|textbf} equipped with a type family $\Ty$\index{Ty@{$\Ty$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}, equipped with the following structure:
   \begin{enumerate}
   \item $\UU$ is closed under $\Pi$, in the sense that it comes equipped with a function
     \begin{equation*}
-      \check{\Pi} :\prd{X:\UU}(\mathsf{Ty}(X)\to\UU)\to\UU
+      \check{\Pi} :\prd{X:\UU}(\Ty(X)\to\UU)\to\UU
     \end{equation*}
     for which the judgmental equality
     \begin{equation*}
-      \mathsf{Ty}\big(\check{\Pi}(X,P)\big)\jdeq \prd{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x)).
+      \Ty\big(\check{\Pi}(X,P)\big)\jdeq \prd{x:\Ty(X)}\Ty(P(x)).
     \end{equation*}
-    holds, for every $X:\UU$ and $P:\mathsf{Ty}(X)\to\UU$.
+    holds, for every $X:\UU$ and $P:\Ty(X)\to\UU$.
   \item $\UU$ is closed under $\Sigma$ in the sense that it comes equipped with a function
     \begin{equation*}
-      \check{\Sigma} :\prd{X:\UU}(\mathsf{Ty}(X)\to\UU)\to\UU
+      \check{\Sigma} :\prd{X:\UU}(\Ty(X)\to\UU)\to\UU
     \end{equation*}
     for which the judgmental equality
     \begin{equation*}
-      \mathsf{Ty}\big(\check{\Sigma}(X,P)\big) \jdeq \sm{x:\mathsf{Ty}(X)}\mathsf{Ty}(P(x))
+      \Ty\big(\check{\Sigma}(X,P)\big) \jdeq \sm{x:\Ty(X)}\Ty(P(x))
     \end{equation*}
-    holds, for every $X:\UU$ and $P:\mathsf{Ty}(X)\to\UU$.
+    holds, for every $X:\UU$ and $P:\Ty(X)\to\UU$.
   \item $\UU$ is closed under identity types, in the sense that it comes equipped with a function
     \begin{equation*}
-      \check{\mathrm{I}} : \prd{X:\UU}\mathsf{Ty}(X)\to(\mathsf{Ty}(X)\to\UU)
+      \check{\mathrm{I}} : \prd{X:\UU}\Ty(X)\to(\Ty(X)\to\UU)
     \end{equation*}
     for which the judgmental equality
     \begin{equation*}
-      \mathsf{Ty}\big(\check{\mathrm{I}}(X,x,y)\big)\jdeq (\id{x}{y})
+      \Ty\big(\check{\mathrm{I}}(X,x,y)\big)\jdeq (\id{x}{y})
     \end{equation*}
-    holds, for every $X:\UU$ and $x,y:\mathsf{Ty}(X)$.
+    holds, for every $X:\UU$ and $x,y:\Ty(X)$.
   \item $\UU$ is closed under coproducts, in the sense that it comes equipped with a function
     \begin{equation*}
       \check{+}:\UU\to (\UU\to\UU)
     \end{equation*}
-    that satisfies $\mathsf{Ty}\big(X\check{+}Y\big)\jdeq \mathsf{Ty}(X)+\mathsf{Ty}(Y)$.
+    that satisfies $\Ty\big(X\check{+}Y\big)\jdeq \Ty(X)+\Ty(Y)$.
   \item $\UU$ contains terms $\check{\emptyt},\check{\unit},\check{\N}:\UU$
     that satisfy the judgmental equalities
     \begin{align*}
-      \mathsf{Ty}\big(\check{\emptyt}\big) & \jdeq \emptyt \\
-      \mathsf{Ty}\big(\check{\unit}\big) & \jdeq \unit \\
-      \mathsf{Ty}(\check{\N}) & \jdeq \N.
+      \Ty\big(\check{\emptyt}\big) & \jdeq \emptyt \\
+      \Ty\big(\check{\unit}\big) & \jdeq \unit \\
+      \Ty(\check{\N}) & \jdeq \N.
     \end{align*}
   \end{enumerate}
+  Given a universe $\UU$, we say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
+  \begin{equation*}
+    \Gamma\vdash\Ty\big(\check{A}\big)\jdeq A~\mathrm{type}
+  \end{equation*}
+  holds. If $A$ is small with respect to $\UU$, we usually write simply $A$ for $\check{A}$ and also $A$ for $\Ty(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
 \end{defn}
 
 \begin{rmk}
   Since ordinar function types are defined as a special case of dependent function types, we don't have to assume that universes are closed under ordinary function types. Similarly, it follows from the assumption that universes are closed under dependent pair types that universes are closed under cartesian product types.
 \end{rmk}
 
-\begin{rmk}
-We will assume that for every finite list of types
+\subsection{Assuming enough universes}
+  Most of the time we will get by with assuming one universe $\UU$, and indeed we recommend on a first reading of this text to simply assume that there is one universe $\UU$. However, sometimes we might need a second universe $\mathcal{V}$ that contains $\UU$ as well as all the types in $\UU$. In such situations we cannot get by with a single universe, because the assumption that $\UU$ is a term of itself would lead to inconsistencies like the Russel's paradox.
+
+  Russel's paradox is the famous argument that there cannot be a set of all sets. If there were such a set $S$, then we could consider Russel's subset
+  \begin{equation*}
+    R:=\{x\in S\mid x\notin x\}.
+  \end{equation*}
+  Russell then observed that $R\in R$ if and only if $R\notin R$, so we reach a contradiction. A variant of this argument reaches a similar contradiction when we assume that $\UU$ is a universe that contains a term $\check{\UU}:\UU$ such that $\mathcal{T}\big(\check{\UU}\big)\jdeq \UU$. In order to avoid such paradoxes, Russell and Whitehead formulated the \emph{ramified theory of types} in their book \emph{Principia Mathematica}. The ramified theory of types is a precursor of Martin L\"of's type theory that we are studying in this course.  
+
+  Even though the universe is not a term of itself, it is still convenient if every type, including any universe, is small with respect to \emph{some} universe. Therefore we will assume that there are sufficiently many universes: we will assume that for every finite list of types
 \begin{align*}
   \Gamma_1 & \vdash A_1~\mathrm{type} \\
-  & \vdots \\
+  & ~\vdots \\
   \Gamma_n & \vdash A_n~\mathrm{type},
 \end{align*}
 there is a universe $\UU$ that contains each $A_i$ in the sense that $\UU$ comes equipped with a term
 \begin{align*}
   \Gamma_i\vdash \check{A}_i:\UU
 \end{align*}
-that for which the judgment
+for which the judgment
 \begin{equation*}
-  \Gamma_i\vdash \mathsf{Ty}\big(\check{A}_i\big)\jdeq A_i~\mathrm{type}
+  \Gamma_i\vdash \Ty\big(\check{A}_i\big)\jdeq A_i~\mathrm{type}
 \end{equation*}
-holds. By this assumption it is rarely necessary to work with more than one universe at the same time. Occasionally, we might need a universe $\UU$ and a second universe $\mathcal{V}$ that contains $\UU$ as well as all the types in $\UU$.
-\end{rmk}
-
-In the following definition we introduce some terminology regarding being in a universe. We think of a universe as a type of types that are \emph{small} with respect to that universe.
-
-\begin{defn}
-  Consider a universe $\UU$. We say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
-  \begin{equation*}
-    \Gamma\vdash\mathsf{Ty}\big(\check{A}\big)\jdeq A~\mathrm{type}
-  \end{equation*}
-  holds. If $A$ is small with respect to $\UU$, we usually write simply $A$ for $\check{A}$ and also $A$ for $\mathsf{Ty}(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
-\end{defn}
+holds. With this assumption it will rarely be necessary to work with more than one universe at the same time.
 
 \begin{rmk}
-  Another way of phrasing the condition that any universe $\UU$ is closed under $\Pi$-types, is that the dependent function type of a family of small types indexed by a small type is again small. Similarly, it follows for any universe that dependent pair types and identity types of small types are again small.
+  Using the assumption that for any finite list of types in context there is a universe that contains those types, we obtain many specific universes:
+  \begin{enumerate}
+  \item There is a \emph{base universe} $\UU_0$ that we obtain using the empty list of types in context. This is a universe, but it isn't specified to contain any further types.
+  \item Given a finite list
+    \begin{align*}
+      \Gamma_1 & \vdash A_1~\mathrm{type} \\
+      & ~\vdots \\
+      \Gamma_n & \vdash A_n~\mathrm{type},
+    \end{align*}
+    of types in context, and a universe $\UU$ that contains them, there is a universe $\UU^+$ that contains all the types in $\UU$ as well as $\UU$. More precisely, it is specified by the finite list
+    \begin{align*}
+      & \vdash \UU~\mathrm{type} \\
+      X:\UU & \vdash \mathcal{T}(X)~\mathrm{type}.
+    \end{align*}
+    Note that since the universe $\UU^+$ contains all the types in $\UU$, it also contains the types $A_1,\ldots,A_n$. To see this, we derive that there is a code for $A_i$ in $\UU^+$.
+    \begin{prooftree}
+      \AxiomC{$\Gamma_i\vdash\check{A}_i:\UU$}
+      \AxiomC{$X:\UU\vdash\check{\mathcal{T}}(X):\UU^+$}
+      \UnaryInfC{$\Gamma_i,X:\UU\vdash\check{\mathcal{T}}(X):\UU^+$}
+      \BinaryInfC{$\Gamma_i\vdash\check{\mathcal{T}}(\check{A}_i):\UU^+$}
+    \end{prooftree}
+    We leave it as an exercise to derive the judgmental equality
+    \begin{equation*}
+      \mathcal{T}^+(\check{\mathcal{T}}(\check{A}_i))\jdeq A_i.
+    \end{equation*}
+  \item Given two finite lists
+    \begin{align*}
+      \Gamma_1 & \vdash A_1~\mathrm{type} & \Delta_1 & \vdash B_1~\mathrm{type} \\
+      & ~\vdots & & ~\vdots \\
+      \Gamma_n & \vdash A_n~\mathrm{type} & \Delta_m & \vdash B_m~\mathrm{type}
+    \end{align*}
+    of types in context, and two universes $\mathcal{U}$ and $\mathcal{V}$ that contain $A_1,\ldots,A_n$ and $B_1,\ldots,B_m$ respectively, there is a universe $\UU\sqcup\mathcal{V}$ that contains the types of both $\UU$ and $\mathcal{V}$. The universe $\UU\sqcup\mathcal{V}$ is specified by the finite list
+    \begin{align*}
+      X:\UU & \vdash \mathcal{T}_{\mathcal{U}}(X)~\mathrm{type} \\
+      Y:\mathcal{V} & \vdash \mathcal{T}_{\mathcal{V}}(Y) ~\mathrm{type}.
+    \end{align*}
+    With an argument similar to the previous construction of a universe, we see that the universe $\UU\sqcup\mathcal{V}$ contains the types $A_1,\ldots,A_n$ as well as the types $B_1,\ldots,B_m$.
 
-  By our assumption that any finite list of types is contained in \emph{some} universe, it follows that any type is small with respect to some universe.
+    Note that we could also directly obtain a universe $\mathcal{W}$ that contains the types $A_1,\ldots,A_n$ and $B_1,\ldots,B_m$. However, this universe might not contain all the types in $\UU$ or all the types in $\mathcal{V}$.
+  \end{enumerate}
+  Since we don't postulate any relations between the universes, there are indeed very few of them. For example, the base universe $\UU_0$ might contain many more types than it is postulated to contain. Nevertheless, there are some relations between the universes. For instance, there is a function $\UU\to\UU^+$, since we can simply derive
+  \begin{prooftree}
+    \AxiomC{$X:\UU\vdash \check{\mathcal{T}}(X):\UU^+$}
+    \UnaryInfC{$\vdash \lam{X}\check{\mathcal{T}}(X) : \UU\to\UU^+$}
+  \end{prooftree}
+  Similarly, there are functions $\UU\to \UU\sqcup\mathcal{V}$ and $\mathcal{V}\to \UU\sqcup\mathcal{V}$ for any two universes $\UU$ and $\mathcal{V}$.
 \end{rmk}
 
+\subsection{Pointed types}
+
 \begin{defn}
-  Consider a universe $\UU$, and let $B$ be a type family over an arbitrary type $A$. We say that $B$ is small with respect to $\UU$ if it comes equipped with a function
+  A \define{pointed type} is a pair $(A,a)$ consisting of a type $A$ and a term $a:A$. The type of all pointed types in a universe $\UU$ is defined to be
   \begin{equation*}
-    \check{B}:A\to\UU
+    \UU_\ast \defeq \sm{X:\UU}X.
   \end{equation*}
-  for which the judgmental equality $\mathsf{Ty}\big(\check{B}(x)\big)\jdeq B(x)$ holds, for every $x:A$.
 \end{defn}
 
-\begin{eg}
-One important way to use a universe $\UU$ is to define types of \define{structured types}\index{structured types}. We give some examples:
-\begin{enumerate}
-\item The type of $\UU$-small \define{pointed types}\index{pointed types} is defined as
-\begin{equation*}
-\UU_\ast\defeq \sm{A:\UU}A,
-\end{equation*}
-\item The type of $\UU$-small \define{graphs}\index{graphs} is defined as the type
-\begin{equation*}
-\mathsf{Gph}_\UU \defeq \sm{A:\UU} A\to (A\to \UU),
-\end{equation*}
-\item The type of $\UU$-small \define{reflexive graphs}\index{reflexive graphs} is defined as the type
-\begin{equation*}
-\mathsf{rGph}_\UU \defeq \sm{A:\UU}{R:A\to (A\to \UU)}\prd{a:A}R(a,a).
-\end{equation*}
-\end{enumerate}
-Once we have introduced the \emph{identity types} we will also be able to state the types of groups, rings, and many other structured types. However, when doing so one has to be cautious to make sure that the underlying type is in the level of sets, in the hierarchy of homotopical complexity of types.
-\end{eg}
-
-\subsection{Defining families and relations using a universe}
-Another important way to use the universe is to \emph{define} new type families by induction. For example, we can define the finite types as family over the natural numbers.
-
-\begin{defn}\label{defn:fin}
-We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}|textbf}\index{finite types|textbf} by induction on $\N$\index{family!of finite types}, taking
-\begin{align*}
-\mathsf{Fin}(\zeroN) & \defeq \emptyt \\
-\mathsf{Fin}(\succN(n)) & \defeq \mathsf{Fin}(n)+\unit
-\end{align*}
+\begin{defn}
+  Consider two pointed types $(A,a)$ and $(B,b)$. A \define{pointed map} from $(A,a)$ to $(B,b)$ is a pair $(f,p)$ consisting of a function $f:A\to B$ and an identification $p:f(a)=b$. We write
+  \begin{equation*}
+    A\to_\ast B \defeq \sm{f:A\to B}f(a)=b
+  \end{equation*}
+  for the type of all pointed maps from $(A,a)$ to $(B,b)$, leaving the base point implicit.
 \end{defn}
 
-A second example of this kind is the notion of \emph{observational equality} on the natural numbers.
+Since we have a type $\UU_\ast$ of \emph{all} pointed types in a universe $\UU$, we can start defining operations on $\UU_\ast$. An important example of such an operation is to take the loop space of a pointed type.
+
+\begin{defn}
+  We define the \define{loop space} operation $\Omega : \UU_\ast \to \UU_\ast$
+  \begin{equation*}
+    \Omega(A,a)\defeq \big((a=a),\refl{a}\big).
+  \end{equation*}
+\end{defn}
+
+We can even go further and define the \emph{iterated loop space} of a pointed type. Note that this definition could not be given in type theory if we didn't have universes.
+
+\begin{defn}
+  Given a pointed type $(A,a)$ and a natural number $n$, we define the $n$-th loop space $\Omega^n(A,a)$ by induction on $n:\N$, taking
+  \begin{align*}
+    \Omega^0(A,a) & \defeq (A,a) \\
+    \Omega^{n+1}(A,a) & \defeq \Omega(\Omega^n(A,a)).
+  \end{align*}
+\end{defn}
+
+\subsection{Relations on the natural numbers}
 
 \begin{defn}\label{defn:obs_nat}
 We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathsf{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathsf{Eq}_\N$}|textbf} satisfying
@@ -174,7 +220,58 @@ Therefore we have by the computation rule for the first induction that the judgm
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
 
-We can also define observational equality for many other kinds of types, such as $\bool$ or $\Z$. In each of these cases, what sets the observational equality apart from other relations is that it is the \emph{least} reflexive relation. However, the definitions of observational equality in the various situations are always very specific to the type they are defined on. In the next chapter we introduce the \emph{identity type}, which is an equality type defined uniformly for all types. In \cref{chap:hierarchy} we will show that the observational equality on $\N$ is equivalent to the identity type on $\N$.
+\begin{lem}
+  Suppose $R:\N\to(\N\to\UU)$ is a reflexive relation on $\N$, i.e., $R$ comes equipped with
+  \begin{equation*}
+    \rho : \prd{n:\N}R(n,n).
+  \end{equation*}
+  Then there is a family of maps
+  \begin{equation*}
+    \prd{m,n:\N}\EqN(m,n)\to R(m,n).
+  \end{equation*}
+\end{lem}
+
+\begin{proof}
+  We will prove by induction on $m,n:\N$ that there is a term of type
+  \begin{equation*}
+    f_{m,n}:\prd{e:\EqN(m,n)}{R:\N\to(\N\to\UU)}\Big(\prd{x:\N}R(x,x)\Big)\to R(m,n)
+  \end{equation*}
+  The dependent function $f_{m,n}$ is defined by
+  \begin{align*}
+    f_{\zeroN,\zeroN} & \defeq \lam{\ttt}{r}{\rho}\rho(\zeroN) \\
+    f_{\zeroN,\succN(n)} & \defeq \indempty \\
+    f_{\succN(m),\zeroN} & \defeq \indempty \\
+    f_{\succN(m),\succN(n)} & \defeq \lam{e}{R}{\rho}f_{m,n}(e,R',\rho'),
+  \end{align*}
+  where $R'$ and $\rho'$ are given by
+  \begin{align*}
+    R'(m,n) & \defeq R(\succN(m),\succN(n)) \\
+    \rho'(n) & \defeq \rho(\succN(n)).\qedhere
+  \end{align*}
+\end{proof}
+
+We can also define observational equality for many other kinds of types, such as $\bool$ or $\Z$. In each of these cases, what sets the observational equality apart from other relations is that it is the \emph{least} reflexive relation. 
+
+\subsection{The finite types}
+
+\begin{defn}\label{defn:fin}
+We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}|textbf}\index{finite types|textbf} by induction on $\N$\index{family!of finite types}, taking
+\begin{align*}
+\mathsf{Fin}(\zeroN) & \defeq \emptyt \\
+\mathsf{Fin}(\succN(n)) & \defeq \mathsf{Fin}(n)+\unit
+\end{align*}
+\end{defn}
+
+\begin{defn}
+  For each $n:\N$, we define a map
+  \begin{equation*}
+    \prd{m:\N} \big((m<n)\to \mathsf{Fin}(n)\big)
+  \end{equation*}
+\end{defn}
+
+\begin{proof}
+  We construct this map by induction on $n,m:\N$. In the base case for $n$, the map is constructed by induction on the empty type, since the relation $m<\zeroN$ never holds. For the inductive step
+\end{proof}
 
 \begin{exercises}
 \item Let $A$ be a type.
@@ -184,13 +281,13 @@ We can also define observational equality for many other kinds of types, such as
   \end{subexenum}
 \item Construct a function
   \begin{equation*}
-    \check{\Pi}:\prd{A:\UU} (\mathsf{Ty}(A)\to\UU)\to \UU
+    \check{\Pi}:\prd{A:\UU} (\Ty(A)\to\UU)\to \UU
   \end{equation*}
   such that
   \begin{equation*}
-    \mathsf{Ty}(\check{\Pi}(A,B))\jdeq \prd{x:\mathsf{Ty}(A)}\mathsf{Ty}(B(x))
+    \Ty(\check{\Pi}(A,B))\jdeq \prd{x:\Ty(A)}\Ty(B(x))
   \end{equation*}
-  holds for every $A:\UU$ and $B:\mathsf{Ty}(A)\to\UU$. 
+  holds for every $A:\UU$ and $B:\Ty(A)\to\UU$. 
   
   \emph{A similar exercise can be posed for $\Sigma$ and $+$ (and for $\to$ and $\times$ as special cases of $\Pi$ and $\Sigma$).}
 \item \label{ex:obs_nat_eqrel}Show that observational equality on $\N$\index{observational equality!on N@{on $\N$}!is an equivalence relation} is an equivalence relation\index{equivalence relation!observational equality on N@{observational equality on $\N$}}, i.e., construct terms of the following types:
@@ -251,5 +348,18 @@ We can also define observational equality for many other kinds of types, such as
     \begin{equation*}
       \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
     \end{equation*}
+  \end{subexenum}
+\item
+  \begin{subexenum}
+  \item For each $i:\mathsf{Fin}(\succN(n))$, define a function
+    \begin{equation*}
+      \mathsf{skip}_i : \mathsf{Fin}(n)\to\mathsf{Fin}(\succN(n))
+    \end{equation*}
+    that includes $\mathsf{Fin}(n)$ in $\mathsf{Fin}(\succN(n))$ by skipping $i$.
+  \item For each $i:\mathsf{Fin}(n)$, define a function
+    \begin{equation*}
+      \mathsf{double}_i : \mathsf{Fin}(\succN(n))\to\mathsf{Fin}(n)
+    \end{equation*}
+    that projects $\mathsf{Fin}(\succN(n))$ onto $\mathsf{Fin}(n)$ by doubling at $i$. 
   \end{subexenum}
 \end{exercises}

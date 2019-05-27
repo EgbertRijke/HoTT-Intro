@@ -14,7 +14,7 @@ gives rise to a commuting square
 A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
-where $\total[f]{g}$ is defined as $\lam{(x,p)}(f(x),g(x,y))$. In the main theorem of this chapter we show that $g$ is a family of equivalences if and only if this square satisfies a certain universal property: the universal property of \emph{pullback squares}.
+where $\total[f]{g}$ is defined as $\lam{(x,y)}(f(x),g(x,y))$. In the main theorem of this chapter we show that $g$ is a family of equivalences if and only if this square satisfies a certain universal property: the universal property of \emph{pullback squares}.
 
 Pullback squares are of interest because they appear in many situations. Cartesian products, fibers of maps, and substitutions can all be presented as pullbacks. Moreover, the fact that a family of maps $g:\prd{x:A}P(x)\to Q(f(x))$ is a family of equivalences if and only if it induces a pullback square has the very useful corollary that a square of the form
 \begin{equation*}
@@ -261,7 +261,7 @@ We have seen that the type of quadruples $(h,K,L,M)$ is equivalent to the fiber 
 For every cospan we can construct a \emph{canonical pullback}.
 
 \begin{defn}
-Let $f:A\to X$ and $B\to X$ be maps. Then we define
+Let $f:A\to X$ and $g:B\to X$ be maps. Then we define
 \begin{align*}
 A\times_X B & \defeq \sm{x:A}{y:B}f(x)=g(y) \\
 \pi_1 & \defeq \proj 1 & & : A\times_X B\to A \\
@@ -304,7 +304,7 @@ is an equivalence. Note that we have the commuting triangle
 \begin{equation*}
   \begin{tikzcd}[column sep=-4em]
     C\to\sm{x:A}{y:B}f(x)=g(y) \arrow[dd,swap,"\mathsf{cone\usc{}map}"] \arrow[dr,"\mathsf{choice}"] \\
-    & \sm{p:C\to A}\prd{z:C}\sm{y:B} f(p(z))= y \arrow[dl,"\mathsf{choice}"] \\
+    & \sm{p:C\to A}\prd{z:C}\sm{y:B} f(p(z))= g(y) \arrow[dl,"\mathsf{choice}"] \\
     \sm{p:C\to A}{q:C\to B} f\circ p \htpy g\circ q.
   \end{tikzcd}
 \end{equation*}
@@ -412,9 +412,10 @@ is a pullback square.
 \begin{proof}
 By \cref{thm:is_pullback} it suffices to show that the gap map is an equivalence. The gap map is homotopic to the function
 \begin{equation*}
-\lam{(x,(p,q))}((x,p),(x,q),\refl{x})
+\lam{(x,(p,q))}((x,p),(x,q),\refl{x}).
 \end{equation*}
-is an equivalence. The inverse of this function is the map 
+It is easy to check that this function is an equivalence. I
+ts inverse is the map 
 \begin{equation*}
 \lam{((x,p),(y,q),\alpha)}(y,(\mathsf{tr}_P(\alpha,p),q)).\qedhere
 \end{equation*}
@@ -424,7 +425,7 @@ is an equivalence. The inverse of this function is the map
 For any $f:A\to X$ and $g:B\to X$, the square
 \begin{equation*}
 \begin{tikzcd}[column sep=8em]
-\sm{x:X}\fib{f}{x}\times\fib{g}{y} \arrow[r,"{\lam{(x,((a,p),(b,q)))}b}"] \arrow[d,swap,"{\lam{(x,((a,p),(b,q)))}a}"] & B \arrow[d,"g"]  \\
+\sm{x:X}\fib{f}{x}\times\fib{g}{x} \arrow[r,"{\lam{(x,((a,p),(b,q)))}b}"] \arrow[d,swap,"{\lam{(x,((a,p),(b,q)))}a}"] & B \arrow[d,"g"]  \\
 A \arrow[r,swap,"f"] & X
 \end{tikzcd}
 \end{equation*}

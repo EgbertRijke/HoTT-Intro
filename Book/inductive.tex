@@ -56,6 +56,17 @@ The induction principle for the empty type can also be used to construct a funct
 \end{equation*}
 for any type $A$. Indeed, to obtain this function one first weakens $A$ to obtain the constant family over $\emptyt$ with value $A$, and then the induction principle gives the desired function.
 
+Thus we see that from the empty type anything follows. Therefore, we we see that anything follows from $A$, if we have a function from $A$ to the empty type. This motivates the following definition.
+
+\begin{defn}
+  For any type $A$ we define \define{negation} of $A$ by
+  \begin{equation*}
+    \neg A\defeq A\to\emptyt.
+  \end{equation*}
+\end{defn}
+
+Just as one is used to in mathematics, a proof of $\neg A$ is therefore the derivation of an absurdity from the assumption that $A$ holds, i.e., a function from $A$ to $\emptyt$.
+
 \subsection{The booleans}
 \begin{defn}
 We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with

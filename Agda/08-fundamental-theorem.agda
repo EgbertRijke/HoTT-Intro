@@ -781,6 +781,12 @@ abstract
       ( is-emb-g x y)
       ( is-equiv-concat' (f x) (H y))
 
+abstract
+  is-emb-htpy' :
+    {i j : Level} {A : UU i} {B : UU j} (f g : A → B) → (f ~ g) →
+    is-emb f → is-emb g
+  is-emb-htpy' f g H is-emb-f = is-emb-htpy g f (htpy-inv H) is-emb-f
+
 -- Exercise 7.4
 
 abstract

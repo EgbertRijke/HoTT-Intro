@@ -1,18 +1,28 @@
 \section{Dependent type theory}
 \label{ch:dtt}
 
-Type theory is a system of inference rules that can be combined to make \emph{derivations}. An \define{inference rule} is an expression of the form
+Type theory is a system of inference rules that can be combined to make \emph{derivations}. In these derivations, the goal is often to construct a term of a certain type. Such terms can be functions if the type of the constructed term is a function type; proofs of properties if the type of the constructed term is a proposition; and identification if the type of the constructed term is an identity type, and so on. In many respects, a type is just a collection of mathematical objects and constructing terms of them is the everyday mathematical task or challenge. The system of inference rules that we call type theory offers a principled way of engaging in mathematical activity.
+
+\subsection{Judgments and contexts in type theory}\label{sec:judgments}
+
+An \define{inference rule} is an expression of the form
 \begin{prooftree}
   \AxiomC{$\mathcal{H}_1$\quad $\mathcal{H}_2$ \quad \dots \quad $\mathcal{H}_n$}
   \UnaryInfC{$\mathcal{C}$}
 \end{prooftree}
-containing above the horizontal line a finite list $\mathcal{H}_1$, $\mathcal{H}_2$, \dots, $\mathcal{H}_n$ of \emph{judgments} for the hypotheses, and below the horizontal line a single judgment $\mathcal{C}$ for the conclusion.
-
-In \cref{sec:judgments} we explain what the judgments of type theory are. In \cref{sec:rules} we postulate the inference rules. Since we don't introduce any ways of forming new types, the set of inference rules is actually quite small. In \cref{sec:derivations} we give some examples of derivations that can be made in type theory.
-
-\subsection{Judgments and contexts in type theory}\label{sec:judgments}
-
-Since type theory is about types and their terms, there are four kinds of judgments: we can judge whether a certain object is a type, whether it is a term, and we can make a judgment about equality of types or terms. More formally, these are the four judgments of type theory:
+containing above the horizontal line a finite list $\mathcal{H}_1$, $\mathcal{H}_2$, \dots, $\mathcal{H}_n$ of \emph{judgments} for the hypotheses, and below the horizontal line a single judgment $\mathcal{C}$ for the conclusion. A very simple example that we will encounter in \cref{ch:pi} when we introduce function types, is the inference rule
+\begin{prooftree}
+  \AxiomC{$\Gamma\vdash a:A$}
+  \AxiomC{$\Gamma\vdash f:A\to B$}
+  \BinaryInfC{$\Gamma\vdash f(a):B$}
+\end{prooftree}
+This rule asserts that in any context $\Gamma$ we may use a term $a:A$ and a function $f:A\to B$ to obtain a term $f(a):B$. Each of the expressions
+\begin{align*}
+  \Gamma & \vdash a :A \\
+  \Gamma & \vdash f : A \to B \\
+  \Gamma & \vdash f(a):B
+\end{align*}
+are examples of judgments. There are four kinds of judgments in type theory:
 \begin{enumerate}
 \item \emph{$A$ is a (well-formed) \define{type}\index{well-formed type}\index{type} in context $\Gamma$.}\index{judgment!type in context} The symbolic expression for this judgment is
   \begin{equation*}
@@ -31,7 +41,7 @@ Since type theory is about types and their terms, there are four kinds of judgme
     \Gamma\vdash a\jdeq b:A
   \end{equation*}
 \end{enumerate}
-Thus we see that any judgment is of the form $\Gamma\vdash\mathcal{J}$, consisting of a context $\Gamma$ and an expression $\mathcal{J}$ asserting that $A$ is a type, $A$ and $B$ are equal types, $a$ is a term of type $A$, or $a$ and $b$ are equal terms of type $A$. A \define{context}\index{context|textbf} is an expression of the form
+Thus we see that any judgment is of the form $\Gamma\vdash\mathcal{J}$, consisting of a context $\Gamma$ and an expression $\mathcal{J}$ asserting that $A$ is a type, that $A$ and $B$ are equal types, that $a$ is a term of type $A$, or that $a$ and $b$ are equal terms of type $A$. A \define{context}\index{context|textbf} is an expression of the form
 \begin{equation}\label{eq:context}
 x_1:A_1,~x_2:A_2(x_1),~\ldots,~x_n:A_n(x_1,\ldots,x_{n-1})
 \end{equation}
@@ -39,9 +49,16 @@ satisfying the condition that for each $1\leq k\leq n$ we can derive, using the 
 \begin{equation}\label{eq:context-condition}
   x_1:A_1,~x_2:A_2(x_1),~\ldots,~x_{k-1}:A_{k-1}(x_1,\ldots,x_{k-2})\vdash A_k(x_1,\ldots,x_{k-1})~\mathrm{type}.
 \end{equation}
-In other words, to check that an expression of the form \cref{eq:context} is a context, one starts on the left and works their way to the right verifying that each variable $x_k$ is assigned a well-formed type. We say that a context as in \cref{eq:context} \define{declares the variables}\index{variable declaration} $x_1,\ldots,x_n$. We may use variable names other than $x_1,\ldots,x_n$, as long as \emph{no variable is declared more than once.}
+In other words, to check that an expression of the form \cref{eq:context} is a context, one starts on the left and works their way to the right verifying that each variable $x_k$ is assigned a well-formed type. We say that a context as in \cref{eq:context} \define{declares the variables}\index{variable declaration} $x_1,\ldots,x_n$. We may use variable names other than $x_1,\ldots,x_n$, as long as no variable is declared more than once.
 
 Note that the context of length $0$ satisfies the requirement in \cref{eq:context-condition} vacuously. This context is called the \define{empty context}\index{context!empty context|textbf}\index{empty context|textbf}. An expression of the form $x_1:A_1$ is a context if and only if $A_1$ is a well-formed type in the empty context. Such types are called \define{closed types}\index{closed type|textbf}. We will soon encounter the type $\N$ of natural numbers, which is an example of a closed type. There is also the notion of \define{closed term}\index{closed term|textbf}, which is simply a term in the empty context. The next case is that an expression of the form $x_1:A_1,~x_2:A_2(x_1)$ is a context if and only if $A_1$ is a well-formed type in the empty context, and $A_2(x_1)$ is a well-formed type in context $x_1:A_1$, and so on.
+
+It is a feature of \emph{dependent} type theory that all judgments are context-dependent, and indeed that even the types of the variables may depend on any previously declared variables. For example, when we introduce the \emph{identity type} in \cref{chap:identity}, we make full use of the machinery of dependent types, as is clear from how they are introduced:
+\begin{prooftree}
+  \AxiomC{$\Gamma\vdash A~\mathrm{type}$}
+  \UnaryInfC{$\Gamma,x:A,y:A\vdash x=y~\mathrm{type}$}
+\end{prooftree}
+This rule asserts that given a type $A$ in context $\Gamma$, we may form a type $x=y$ in context $\Gamma,x:A,y:A$. Note that in order to know that the expression $\Gamma,x:A,y:A$ is indeed a well-formed context, we need to know that $A$ is a well-formed type in context $\Gamma,x:A$. This is an instance of \emph{weakening}, which we will describe shortly.
 
 In the situation where we have
 \begin{equation*}
@@ -70,7 +87,7 @@ In this set of inference rules we ensure that judgmental equality (both on types
 \begin{samepage}
 The rules postulating that judgmental equality on types and on terms is an equivalence relation are as follows\index{judgmental equality!equivalence relation}:
 \begin{center}
-\begin{small}
+%\begin{small}
 \begin{minipage}{.2\textwidth}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
@@ -111,7 +128,7 @@ The rules postulating that judgmental equality on types and on terms is an equiv
 \BinaryInfC{$\Gamma\vdash a\jdeq a'': A$}
 \end{prooftree}
 \end{minipage}
-\end{small}
+%\end{small}
 \end{center}
 \end{samepage}
 
@@ -285,7 +302,7 @@ then we can change the variable $y$ to a fresh variable $y'$ and weaken the judg
   \Gamma,y:B,x:A,y':B,\Delta[y'/y]\vdash\mathcal{J}[y'/y].
 \end{equation*}
 Now we can substitute $y$ for $y'$ to obtain the desired judgment $\Gamma,y:B,x:A,\Delta\vdash\mathcal{J}$. The formal derivation is as follows:
-\begin{small}
+%\begin{small}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \RightLabel{$\delta_B$}
@@ -300,7 +317,7 @@ Now we can substitute $y$ for $y'$ to obtain the desired judgment $\Gamma,y:B,x:
 \RightLabel{$S_{W_A(y)}$}
 \BinaryInfC{$\Gamma,y:B,x:A,\Delta\vdash \mathcal{J}$}
 \end{prooftree}
-\end{small}
+%\end{small}
 
 
 \begin{comment}

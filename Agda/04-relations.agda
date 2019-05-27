@@ -414,3 +414,18 @@ ordinal-ind-ℕ :
 ordinal-ind-ℕ P f =
   conclusion-ordinal-ind-ℕ P
     ( induction-ordinal-ind-ℕ P (succ-ordinal-ind-ℕ P f))
+
+-- Exercise
+
+skip :
+  (n : ℕ) → Fin (succ-ℕ n) → Fin n → Fin (succ-ℕ n)
+skip (succ-ℕ n) (inl i) (inl j) = inl (skip n i j)
+skip (succ-ℕ n) (inl i) (inr star) = inr star
+skip (succ-ℕ n) (inr star) j = inl j
+
+double :
+  (n : ℕ) → Fin n → Fin (succ-ℕ n) → Fin n
+double (succ-ℕ n) (inl i) (inl j) = inl (double n i j)
+double (succ-ℕ n) (inl j) (inr star) = inr star
+double (succ-ℕ n) (inr star) (inl j) = j
+double (succ-ℕ n) (inr star) (inr star) = inr star

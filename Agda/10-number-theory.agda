@@ -9,9 +9,9 @@ open 09-truncation-levels public
 
 {- Recall that a proposition P is decidable if P + (¬ P) holds. -}
 
-decidable-Prop :
+classical-Prop :
   (l : Level) → UU (lsuc l)
-decidable-Prop l = Σ (hProp l) (λ P → decide (pr1 P))
+classical-Prop l = Σ (hProp l) (λ P → decide (pr1 P))
 
 abstract
   is-decidable-Eq-ℕ :
@@ -144,17 +144,17 @@ Eq-ℕ-eq : (x y : ℕ) → Id x y → Eq-ℕ x y
 Eq-ℕ-eq x .x refl = refl-Eq-ℕ x
 
 abstract
-  injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y
-  injective-succ-ℕ zero-ℕ zero-ℕ p = refl
-  injective-succ-ℕ zero-ℕ (succ-ℕ y) p =
+  is-injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y
+  is-injective-succ-ℕ zero-ℕ zero-ℕ p = refl
+  is-injective-succ-ℕ zero-ℕ (succ-ℕ y) p =
     ind-empty
       { P = λ t → Id zero-ℕ (succ-ℕ y)}
       ( Eq-ℕ-eq one-ℕ (succ-ℕ (succ-ℕ y)) p)
-  injective-succ-ℕ (succ-ℕ x) zero-ℕ p =
+  is-injective-succ-ℕ (succ-ℕ x) zero-ℕ p =
     ind-empty
       { P = λ t → Id (succ-ℕ x) zero-ℕ}
       ( Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) one-ℕ p)
-  injective-succ-ℕ (succ-ℕ x) (succ-ℕ y) p =
+  is-injective-succ-ℕ (succ-ℕ x) (succ-ℕ y) p =
     ap succ-ℕ (eq-Eq-ℕ x y (Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) (succ-ℕ (succ-ℕ y)) p))
 
 abstract
@@ -165,7 +165,7 @@ abstract
   has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
     functor-coprod
       ( ap succ-ℕ)
-      ( λ (f : ¬ (Id x y)) p → f (injective-succ-ℕ x y p))
+      ( λ (f : ¬ (Id x y)) p → f (is-injective-succ-ℕ x y p))
       ( has-decidable-equality-ℕ x y)
 
 {- The Pigeon hole principle. -}
@@ -174,13 +174,13 @@ abstract
    subset of a finite set. -}
 
 count-Fin-succ-ℕ :
-  {l : Level} (n : ℕ) (P : Fin (succ-ℕ n) → decidable-Prop l) →
+  {l : Level} (n : ℕ) (P : Fin (succ-ℕ n) → classical-Prop l) →
   ℕ → decide (pr1 (pr1 (P (inr star)))) → ℕ
 count-Fin-succ-ℕ n P m (inl x) = succ-ℕ m
 count-Fin-succ-ℕ n P m (inr x) = m
 
 count-Fin :
-  (l : Level) (n : ℕ) (P : Fin n → decidable-Prop l) → ℕ
+  (l : Level) (n : ℕ) (P : Fin n → classical-Prop l) → ℕ
 count-Fin l zero-ℕ P = zero-ℕ
 count-Fin l (succ-ℕ n) P =
   count-Fin-succ-ℕ n P
@@ -190,7 +190,7 @@ count-Fin l (succ-ℕ n) P =
 {- Next we prove the pigeonhole principle. -}
 
 decidable-Eq-Fin :
-  (n : ℕ) (i j : Fin n) → decidable-Prop lzero
+  (n : ℕ) (i j : Fin n) → classical-Prop lzero
 decidable-Eq-Fin n i j =
   pair
     ( pair (Id i j) (is-set-Fin n i j))
@@ -206,6 +206,95 @@ pigeonhole-principle :
 pigeonhole-principle zero-ℕ (succ-ℕ n) f H = {!!}
 pigeonhole-principle (succ-ℕ m) n f H = {!!}
 -}
+
+-- The greatest common divisor
+
+{- First we show that mul-ℕ n is an embedding whenever n > 0. In order to do
+   this, we have to show that add-ℕ n is injective. -}
+   
+is-injective-add-ℕ :
+  (n : ℕ) → is-injective is-set-ℕ is-set-ℕ (add-ℕ n)
+is-injective-add-ℕ zero-ℕ k l p = p
+is-injective-add-ℕ (succ-ℕ n) k l p =
+  is-injective-add-ℕ n k l (is-injective-succ-ℕ (add-ℕ n k) (add-ℕ n l) p)
+
+is-injective-add-ℕ' :
+  (n : ℕ) → is-injective is-set-ℕ is-set-ℕ (λ m → add-ℕ m n)
+is-injective-add-ℕ' n k l p =
+  is-injective-add-ℕ n k l
+    (((commutative-add-ℕ n k) ∙ p) ∙ (commutative-add-ℕ l n))
+
+is-injective-mul-ℕ :
+  (n : ℕ) → (le-ℕ zero-ℕ n) → is-injective is-set-ℕ is-set-ℕ (mul-ℕ n)
+is-injective-mul-ℕ (succ-ℕ n) star zero-ℕ zero-ℕ p = refl
+is-injective-mul-ℕ (succ-ℕ n) star zero-ℕ (succ-ℕ l) p =
+  ind-empty
+    ( Eq-ℕ-eq
+      ( zero-ℕ)
+      ( succ-ℕ (add-ℕ (mul-ℕ n (succ-ℕ l)) l))
+      ( ( inv (right-zero-law-mul-ℕ n)) ∙
+        ( ( inv (right-unit-law-add-ℕ (mul-ℕ n zero-ℕ))) ∙
+          ( p ∙ (right-successor-law-add-ℕ (mul-ℕ n (succ-ℕ l)) l)))))
+is-injective-mul-ℕ (succ-ℕ n) star (succ-ℕ k) zero-ℕ p =
+  ind-empty
+    ( Eq-ℕ-eq
+      ( succ-ℕ (add-ℕ (mul-ℕ n (succ-ℕ k)) k))
+      ( zero-ℕ)
+      ( ( inv (right-successor-law-add-ℕ (mul-ℕ n (succ-ℕ k)) k)) ∙
+        ( p ∙ ( right-zero-law-mul-ℕ (succ-ℕ n)))))
+is-injective-mul-ℕ (succ-ℕ n) star (succ-ℕ k) (succ-ℕ l) p =
+  ap succ-ℕ
+    ( is-injective-mul-ℕ (succ-ℕ n) star k l
+      ( is-injective-add-ℕ (succ-ℕ n)
+        ( mul-ℕ (succ-ℕ n) k)
+        ( mul-ℕ (succ-ℕ n) l)
+        ( ( inv (right-successor-law-mul-ℕ (succ-ℕ n) k) ∙ p) ∙
+          ( right-successor-law-mul-ℕ (succ-ℕ n) l))))
+
+is-emb-mul-ℕ :
+  (n : ℕ) → (le-ℕ zero-ℕ n) → is-emb (mul-ℕ n)
+is-emb-mul-ℕ n le =
+  is-emb-is-injective is-set-ℕ is-set-ℕ
+    ( mul-ℕ n)
+    ( is-injective-mul-ℕ n le)
+
+is-emb-mul-ℕ' :
+  (n : ℕ) → (le-ℕ zero-ℕ n) → is-emb (λ m → mul-ℕ m n)
+is-emb-mul-ℕ' n t =
+  is-emb-htpy'
+    ( mul-ℕ n)
+    ( λ m → mul-ℕ m n)
+    ( commutative-mul-ℕ n)
+    ( is-emb-mul-ℕ n t)
+
+{- We conclude that the division relation is a property. -}
+
+is-prop-div-ℕ :
+  (m n : ℕ) → (le-ℕ zero-ℕ m) → is-prop (div-ℕ m n)
+is-prop-div-ℕ (succ-ℕ m) n star =
+  is-prop-map-is-emb
+    ( λ z → mul-ℕ z (succ-ℕ m))
+    ( is-emb-mul-ℕ' (succ-ℕ m) star)
+    n
+
+{- Next, we show that the division relation is decidable. We do this by showing
+   that for any strictly monotone map f : ℕ → ℕ, any fiber of f is decidable. -}
+
+is-monotone-endo-ℕ :
+  (f : ℕ → ℕ) → UU lzero
+is-monotone-endo-ℕ f = (m n : ℕ) → (leq-ℕ m n) → (leq-ℕ (f m) (f n))
+
+is-strictly-monotone-endo-ℕ :
+  (f : ℕ → ℕ) → UU lzero
+is-strictly-monotone-endo-ℕ f = (m n : ℕ) → (le-ℕ m n) → (le-ℕ (f m) (f n))
+
+is-decidable-fib-endo-ℕ :
+  (f : ℕ → ℕ) → is-strictly-monotone-endo-ℕ f → (n : ℕ) → decide (fib f n)
+is-decidable-fib-endo-ℕ f H n = {!!}
+
+is-decidable-div-ℕ :
+  (m n : ℕ) → (le-ℕ zero-ℕ m) → decide (div-ℕ m n)
+is-decidable-div-ℕ m n t = {!!}
 
 -- Exercises
 
@@ -337,3 +426,53 @@ least-element-non-empty-decidable-subset-ℕ P d (pair zero-ℕ p) =
   pair (pair zero-ℕ p) {!!}
 least-element-non-empty-decidable-subset-ℕ P d (pair (succ-ℕ n) p) = {!!}
 -}
+
+zero-Fin :
+  (n : ℕ) → Fin (succ-ℕ n)
+zero-Fin zero-ℕ = inr star
+zero-Fin (succ-ℕ n) = inl (zero-Fin n)
+
+succ-Fin :
+  (n : ℕ) → Fin n → Fin n
+succ-Fin (succ-ℕ n) (inr star) = zero-Fin n
+succ-Fin (succ-ℕ (succ-ℕ n)) (inl (inl x)) = inl (succ-Fin (succ-ℕ n) (inl x))
+succ-Fin (succ-ℕ (succ-ℕ n)) (inl (inr star)) = inr star
+
+iterated-succ-Fin :
+  (k : ℕ) → (n : ℕ) → Fin n → Fin n
+iterated-succ-Fin zero-ℕ n = id
+iterated-succ-Fin (succ-ℕ k) n = (succ-Fin n) ∘ (iterated-succ-Fin k n)
+
+quotient-ℕ-Fin :
+  (n : ℕ) → Fin (succ-ℕ n)
+quotient-ℕ-Fin n = iterated-succ-Fin n (succ-ℕ n) (zero-Fin n)
+
+pred-Fin :
+  (n : ℕ) → Fin n → Fin n
+pred-Fin (succ-ℕ zero-ℕ) (inr star) = inr star
+pred-Fin (succ-ℕ (succ-ℕ n)) (inl x) = {!!}
+pred-Fin (succ-ℕ (succ-ℕ n)) (inr star) = inl (inr star)
+
+add-Fin :
+  (n : ℕ) → Fin n → Fin n → Fin n
+add-Fin (succ-ℕ n) (inl x) j = {!!}
+add-Fin (succ-ℕ n) (inr x) j = {!!}
+
+
+idempotent-succ-Fin :
+  (n : ℕ) (i : Fin n) → Id (iterated-succ-Fin n n i) i
+idempotent-succ-Fin (succ-ℕ zero-ℕ) (inr star) = refl
+idempotent-succ-Fin (succ-ℕ (succ-ℕ n)) (inl x) = {!!}
+idempotent-succ-Fin (succ-ℕ (succ-ℕ n)) (inr x) = {!!}
+
+in-nat-ℤ : ℕ → ℤ
+in-nat-ℤ zero-ℕ = zero-ℤ
+in-nat-ℤ (succ-ℕ n) = in-pos n
+
+div-ℤ :
+  (k l : ℤ) → UU lzero
+div-ℤ k l = Σ ℤ (λ x → Id (mul-ℤ x k) l)
+
+_≡_mod_ :
+  (k l : ℤ) (n : ℕ) → UU lzero
+k ≡ l mod n = div-ℤ (in-nat-ℤ n) (add-ℤ k (neg-ℤ l))
