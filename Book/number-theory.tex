@@ -2,21 +2,6 @@
 
 In this chapter our goal is to show how to use the language of type theory to do some elementary number theory. In particular, we define the greatest common divisor of any two numbers, and we use the trial division algorithm to show that being a prime is decidable.
 
-\subsection{Negations and decidability}
-Using the empty type we can define the \emph{negation} of a type. The idea is that if $A$ is false (i.e., has no terms), then from $A$ follows everything.
-
-\begin{defn}
-For any type $A$, we define $\neg A\defeq A\to \emptyt$.\index{negation!of a type}\index{not ($\neg$)|see {negation, of a type}}
-\end{defn}
-
-Note that $\neg A$ is the type of functions from $A$ to $\emptyt$. Therefore one can construct a term of type $\neg A$ by constructing a term $f(x):\emptyt$ using $x:A$. In other words, to construct a term of type $\neg A$ one assumes $A$ and derives a contradiction. This proof technique is called \define{proof of negation}.
-
-Proof of negation is not to be confused with \emph{proof by contradiction}. In type theory there is no way of obtaining a term of type $A$ from a term of type $(A\to \emptyt)\to\emptyt$. Even stronger: we will use the univalence axiom to obtain a term of type
-\begin{equation*}
-  \neg\Big(\prd{A:\UU}((A\to\emptyt)\to\emptyt)\to A\Big).
-\end{equation*}
-In other words, it would be \emph{inconsistent} to admit proofs by contradiction as a valid way of constructing terms of general types. Nevertheless it turns out that a restricted form of proof by contradiction is still consistent with the univalence axiom.
-
 \subsection{Decidability}
 
 A common way of reasoning in mathematics is via a proof by contradiction: ``in order to show that $P$ holds we show that it cannot be the case that $P$ doesn't hold". There are no inference rules in type theory that allow us to obtain a term of type $P$ from a term of type $\neg\neg P$. However, for some propositions $P$ one can construct a function $\neg\neg P \to P$. The \emph{decidable propositions} from a class of such propositions $P$ for which we can show $\neg\neg P \to P$.
@@ -26,6 +11,11 @@ A common way of reasoning in mathematics is via a proof by contradiction: ``in o
   \begin{equation*}
     \mathsf{is\usc{}decidable}(A)\defeq A+\neg A.
   \end{equation*}
+  Decidable propositions are called \define{classical}. We will write
+  \begin{equation*}
+    \mathsf{classical\usc{}Prop} \defeq \sm{P:\mathsf{Prop}}\mathsf{is\usc{}decidable}(P)
+  \end{equation*}
+  for the type of all classical propositions (with respect to a universe $\UU$).
 \end{defn}
 
 \begin{eg}
@@ -62,18 +52,14 @@ Typically we are mostly interested in decidability of propositions. However, we 
 \end{lem}
 
 \begin{proof}
-  We use the canonical family of maps
+  Since we have an equivalence
   \begin{equation*}
-    f : \prd{n:\N} (m= n) \to \mathsf{Eq}_\N(m,n)
+    (m=n) \simeq \mathsf{Eq}_\N(m,n)
   \end{equation*}
-  to write the decision algorithm
-  \begin{equation*}
-    d:\prd{m,n:\N} (m=n)+\neg(m=n).
-  \end{equation*}
-  by induction on $m,n:\N$. 
+  for each $m,n$, and since $\mathsf{Eq}_\N(m,n)$ is decidable, the claim follows.
 \end{proof}
 
-We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a set. In fact, any type with decidable equality is a set.
+We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a set. In fact, any type with decidable equality is a set. This fact is known as Hedberg's theorem. Our proof of Hedberg's theorem might appear to be slightly complicated compared to the proof in \cite{hottbook}. This is due to the fact that we haven't introduced function extensionality yet, which is used there to observe that $\neg\neg(x=y)$ is a proposition for any $x,y:A$.
 
 \begin{thm}[Hedberg]
   Any type with decidable equality is a set.
@@ -84,12 +70,31 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   \begin{equation*}
     d:\prd{x,y:A}(x=y)+\neg(x=y).
   \end{equation*}
-  Consider the type family $D(x,y):((\id{x}{y})+\neg(\id{x}{y}))\to\UU$ given by
+  Our proof is an application of \cref{lem:prop_to_id}. In order to construct a binary relation $R$, we first consider the type family $D(x,y):((\id{x}{y})+\neg(\id{x}{y}))\to\UU$ given by
   \begin{align*}
     D(x,y,\inl(p)) & \defeq \unit \\
     D(x,y,\inr(p)) & \defeq \emptyt.
   \end{align*}
-  We use $D$ to show that any type with decidable equality is a set.
+  Now we define the binary relation $R:A\to (A\to\UU)$ by
+  \begin{equation*}
+    R(x,y)\defeq D(x,y,d(x,y)).
+  \end{equation*}
+  It follows that $R(x,y)$ is a proposition for every $x,y:A$, since $D(x,y,z)$ is a proposition for every $z:(x=y)+\neg(x=y)$.
+
+  To see that $R$ is reflexive, we first construct a term of type
+  \begin{equation*}
+    \rho':\prd{x:A}{p:(x=x)+\neg(x=x)}D(x,x,p)
+  \end{equation*}
+  For any $x:A$ we define $\rho'(x)$ by induction on $p:(x=x)+\neg(x=x)$. For $p:x=x$ we take $\rho'(x,\inl(p))\defeq\ttt$. For $p:\neg(x=x)$ we obtain $p(\refl{x}):\emptyt$, from which we obtain a term of $D(x,x,\inr(p))$ by the induction principle of $\emptyt$. This completes the definition of $\rho'$, so now we define
+  \begin{equation*}
+    \rho \defeq \lam{x}\rho'(x,d(x,x)):\prd{x:A}R(x,x).
+  \end{equation*}
+  
+  It remains to show that $R(x,y)\to (x=y)$ for any $x,y:A$. We use the same technique, and show first that
+  \begin{equation*}
+    \alpha:D(x,y,p)\to (x=y)
+  \end{equation*}
+  for any $x,y:A$ and $p:(x=y)+\neg(x=y)$. This function is constructed by case analisys on $p$. Given $p:x=y$, we simply define $\alpha(x,y,\inl(p))\defeq p$. Given $p:\neg(x=y)$ the type $D(x,y,p)$ is empty, so we obtain $\alpha(x,y,\inr(p))$ from the induction principle of $\emptyt$.
 \end{proof}
 
 \begin{lem}
@@ -103,6 +108,29 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
 \begin{cor}
   For any $n:\N$ the type $\mathsf{Fin}(n)$ has decidable equality. 
 \end{cor}
+
+\subsection{The well-ordering principle for decidable subsets of \texorpdfstring{$\N$}{ℕ}}
+
+\begin{defn}
+  A \define{decidable subset} of a type $A$ is a map
+  \begin{equation*}
+    P:A\to\mathsf{classical\usc{}Prop}.
+  \end{equation*}
+\end{defn}
+
+\begin{defn}
+  Let $P:\N\to\mathsf{classical\usc{}Prop}$ be a decidable subset of $\N$, and let $n:\N$ be a natural number equipped with $p:P(n)$. We say that $n$ is the \define{minimal element} of $P$ if it comes equipped with a term of type
+  \begin{equation*}
+    \mathsf{is\usc{}minimal}_P(n,p)\defeq \Big(\prd{m:\N}P(m)\to (n\leq m)\Big)
+  \end{equation*}
+\end{defn}
+
+\begin{thm}
+  Let $P:\N\to\mathsf{classical\usc{}Prop}$ be a decidable subset of $\N$. Then there is a function
+  \begin{equation*}
+    \Big(\sm{n:\N}P(n)\Big)\to\Big(\sm{n:\N}{p:P(n)}\mathsf{is\usc{}minimal}_P(n,p)\Big).
+  \end{equation*}
+\end{thm}
 
 It should be noted, however, that if $P$ is a decidable subset of $\N$, then it is not necessarily the case that the proposition $\prd{n:\N}P(n)$ is decidable. Intuitively, this is because an algorithm that checks case by case whether $P(n)$ holds only halts when it finds an $n$ for which $P(n)$ doesn't hold. The best we get is the following
 

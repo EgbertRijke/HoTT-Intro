@@ -199,18 +199,23 @@ This implies axiom $K$.
 For the converse, if $A$ satisfies axiom $K$, then for any $p,q:\id{x}{y}$ we have $\id{\ct{p}{q^{-1}}}{\refl{x}}$, and hence $\id{p}{q}$. This shows that $\id{x}{y}$ is a proposition, and hence that $A$ is a set.
 \end{proof}
 
-\begin{lem}\label{lem:prop_to_id}
+\begin{thm}\label{lem:prop_to_id}
 Let $A$ be a type, and let $R:A\to A\to\UU$ be a binary relation on $A$ satisfying
 \begin{enumerate}
 \item Each $R(x,y)$ is a proposition,
-\item $R$ is reflexive, as witnessed by $\rho:\prd{x:A}R(x,x)$.
+\item $R$ is reflexive, as witnessed by $\rho:\prd{x:A}R(x,x)$,
+\item There is a map
+  \begin{equation*}
+    R(x,y)\to (x=y)
+  \end{equation*}
+  for each $x,y:A$.
 \end{enumerate}
 Then any family of maps
 \begin{equation*}
-\prd{x,y:A}R(x,y)\to (\id{x}{y})
+\prd{x,y:A}(\id{x}{y})\to R(x,y)
 \end{equation*}
-is a family of equivalences. Consequently, if there is such a family of maps, then $A$ is a set.
-\end{lem}
+is a family of equivalences. Consequently, the type $A$ is a set.
+\end{thm}
 
 \begin{proof}
 Let $f:\prd{x,y:A}R(x,y)\to(\id{x}{y})$. 
@@ -218,9 +223,36 @@ Since $R$ is assumed to be reflexive, we also have a family of maps
 \begin{equation*}
 \mathsf{path\usc{}ind}_x(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
 \end{equation*}
-Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. We conclude by \cref{ex:id_fundamental_retr} that for each $x,y:A$, the map $f(x,y):R(x,y)\to(\id{x}{y})$ must be an equivalence.
+Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. Therefore it follows that $\sm{y:A}R(x,y)$ is a retract of $\sm{y:A}x=y$, which is contractible. We conclude that $\sm{y:A}R(x,y)$ is contractible, and therefore that any family of maps
+\begin{equation*}
+  \prd{y:A}(x=y)\to R(x,y)
+\end{equation*}
+is a family of equivalences.
 
 Now it also follows that $A$ is a set, since its identity types are equivalent to propositions, and therefore they are propositions by \cref{lem:prop_equiv}. 
+\end{proof}
+
+\begin{defn}
+  A map $f:A\to B$ is said to be \define{injective} if for any $x,y:A$ there is a map
+  \begin{equation*}
+    (f(x)=f(y))\to (x=y).
+  \end{equation*}
+\end{defn}
+
+\begin{cor}
+  Any injective map into a set is an embedding.
+\end{cor}
+
+\begin{proof}
+  Let $f:A\to B$ be an injective map between sets. Now consider the relation
+  \begin{equation*}
+    R(x,y)\defeq (f(x)=f(y)).
+  \end{equation*}
+  Note that $R$ is reflexive, and that $R(x,y)$ is a proposition for each $x,y:A$. Moreover, by the assumption that $f$ is injective, we have
+  \begin{equation*}
+    R(x,y)\to (x=y)
+  \end{equation*}
+  for any $x,y:A$. Therefore we are in the situation of \cref{lem:prop_to_id}, so it follows that the map $\apfunc{f} : (x=y)\to (f(x)=f(y))$ is an equivalence.
 \end{proof}
 
 \begin{thm}\label{thm:eq_nat}
@@ -427,7 +459,19 @@ commutes. This square commutes by the naturality of homotopies, proven in \cref{
 \end{comment}
 
 \begin{exercises}
-\item Show that $\succN:\N\to\N$ is an embedding.
+\item
+  \begin{subexenum}
+  \item Show that $\succN:\N\to\N$ is an embedding.
+  \item Show that $n\mapsto m+n$ is an embedding, for each $m:\N$. Moreover, conclude that there is an equivalence
+    \begin{equation*}
+      \fib{\mathsf{add}_\N(m)}{n}\simeq (m\leq n).
+    \end{equation*}
+  \item Show that $n\mapsto mn$ is an embedding, for each $m>0$ in $\N$. Conclude that the divisibility relation
+    \begin{equation*}
+      d\mid n
+    \end{equation*}
+    is a proposition for each $d,n:\N$ such that $d>0$. 
+  \end{subexenum}
 \item \label{ex:diagonal}Let $A$ be a type, and let the \define{diagonal} of $A$ be the map $\delta_A:A\to A\times A$ given by $\lam{x}(x,x)$. 
 \begin{subexenum}
 \item Show that
@@ -448,14 +492,6 @@ is a $k$-truncated map.
 \item \label{ex:eq_bool}Show that $\bool$ is a set by applying \cref{lem:prop_to_id} with the observational equality on $\bool$ defined in \cref{ex:obs_bool}.
 \item \label{ex:set_coprod}Show that for any two $(k+2)$-types $A$ and $B$, the disjoint sum $A+B$ is again a $(k+2)$-type. Conclude that $\mathbb{Z}$ is a set.
 \item Use \cref{ex:contr_retr,ex:retr_id} to show that if $A$ is a retract of a $k$-type $B$, then $A$ is also a $k$-type.
-\item \label{ex:injective}A map $f:A\to B$ between sets is said to be \define{injective} if for every $x,y:A$ there is a map
-\begin{equation*}
-(f(x)= f(y))\to (x=y).
-\end{equation*}
-\begin{subexenum}
-\item Use \cref{ex:eq_bool} to show that $\mathsf{const}_\bfalse,\mathsf{const}_\btrue:\unit\to \bool$ are injective maps.
-\item Show that a map between sets is injective if and only if it is an embedding.
-\end{subexenum}
 \item Show that a type $A$ is a $(k+1)$-type if and only if the map $\mathsf{const}_x:\unit\to A$ is $k$-truncated for every $x:A$.
 \item Consider a commuting triangle
 \begin{equation*}
