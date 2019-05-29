@@ -267,23 +267,23 @@ is a family of equivalences if and only if $\sm{x:A}B(x)$ is contractible.
 
 \begin{proof}
   First we show that (i) and (ii) are equivalent.
-  By \cref{thm:fib_equiv} it follows that the family of maps $\mathsf{path\usc{}ind}_a(b)$ is a family of equivalences if and only if it induces an equivalence
+  By \cref{thm:fib_equiv} it follows that the family of maps $f$ is a family of equivalences if and only if it induces an equivalence
   \begin{equation*}
     \eqv{\Big(\sm{x:A}a=x\Big)}{\Big(\sm{x:A}B(x)\Big)}
   \end{equation*}
   on total spaces. We have that $\sm{x:A}a=x$ is contractible. Now it follows by \cref{ex:contr_equiv}, applied in the case
   \begin{equation*}
     \begin{tikzcd}[column sep=3em]
-      \sm{x:A}a=x \arrow[rr,"\total{\mathsf{path\usc{}ind}_a(b)}"] \arrow[dr,swap,"\eqvsym"] & & \sm{x:A}B(x) \arrow[dl] \\
+      \sm{x:A}a=x \arrow[rr,"\total{f}"] \arrow[dr,swap,"\eqvsym"] & & \sm{x:A}B(x) \arrow[dl] \\
       & \unit & \phantom{\sm{x:A}a=x}
     \end{tikzcd}
   \end{equation*}
-  that $\total{\mathsf{path\usc{}ind}_a(b)}$ is an equivalence if and only if $\sm{x:A}B(x)$ is contractible.
+  that $\total{f}$ is an equivalence if and only if $\sm{x:A}B(x)$ is contractible.
 
   Now we show that (ii) and (iii) are equivalent. Note that we have the following commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=0]
-      \prd{t:\sm{x:A}B(x)}P(t) \arrow[rr,"\mathsf{ev\usc{}pair}"] \arrow[dr,swap,"{\mathsf{ev\usc{}pt}(a,b)}"] & & \prd{x:A}{y:B(x)}P(x,y) \arrow[dl,"{\lam{f}f(a,b)}"] \\
+      \prd{t:\sm{x:A}B(x)}P(t) \arrow[rr,"\mathsf{ev\usc{}pair}"] \arrow[dr,swap,"{\mathsf{ev\usc{}pt}(a,b)}"] & & \prd{x:A}{y:B(x)}P(x,y) \arrow[dl,"{\lam{h}h(a,b)}"] \\
       \phantom{\prd{x:A}{y:B(x)}P(x,y)} & P(a,b)
     \end{tikzcd}
   \end{equation*}
