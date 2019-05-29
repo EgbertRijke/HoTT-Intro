@@ -41,19 +41,7 @@ A common way of reasoning in mathematics is via a proof by contradiction: ``in o
   are all decidable. Moreover, the type $\EqN(\succN(m),\succN(n))\jdeq \EqN(m,n)$ is decidable by the inductive hypothesis.
 \end{proof}
 
-Typically we are mostly interested in decidability of propositions. However, we have defined the notion of decidability for general types. Therefore it is the case that the type natural numbers, or indeed any type $A$ that comes equipped with a point $a:A$, is decidable. We have at two reasons for defining decidability in this generality.
-
-At this stage of our development of type theory, where we have not yet discussed function extensionality or propositional truncations, it may be hard to show that some types are propositions. Function extensionality is used, for example, to show that
-  \begin{equation*}
-    \prd{x:A}P(x)
-  \end{equation*}
-  is a proposition for any subtype $P$ of $A$. Function extensionality is the subject of \cref{chap:funext}. Moreover, the type
-  \begin{equation*}
-    \sm{x:A}P(x)
-  \end{equation*}
-  is only a proposition in very specific circumstances. The \emph{proposition} `there exists an $x:A$ for which $P(x)$ holds' is formed using an operation called the \emph{propositional truncation}. Propositional truncations are introduced in \cref{chap:image}. Nevertheless, it is perfectly doable to develop some elementary number theory and discrete mathematics in dependent type theory without function extensionality or propositional truncations.
-
-  A second reason is that for a general type, the condition that its identity types are decidable is of some interest. We now study such types.
+Typically we are mostly interested in decidability of propositions. However, we have defined the notion of decidability for general types, because the condition on an arbitrary type that its identity types are decidable is of some interest. We now study such types.
 
 \begin{defn}
   We say that a type $A$ has decidable equality if the identity type $x=y$ is decidable for every $x,y:A$. 
@@ -118,39 +106,43 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   for any $x,y:A$ and $p:(x=y)+\neg(x=y)$. This function is constructed by case analisys on $p$. Given $p:x=y$, we simply define $\alpha(x,y,\inl(p))\defeq p$. Given $p:\neg(x=y)$ the type $D(x,y,p)$ is empty, so there is nothing to define.
 \end{proof}
 
-\subsection{The well-ordering principle for decidable subsets of \texorpdfstring{$\N$}{ℕ}}
+\subsection{The well-ordering principle for decidable families over \texorpdfstring{$\N$}{ℕ}}
 
 \begin{defn}
-  A \define{decidable subset} of a type $A$ is a map
+  A family $P$ over a type $A$ is said to be decidable if $P(x)$ is decidable for every $x:A$. A \define{decidable subset} of a type $A$ is a map
   \begin{equation*}
     P:A\to\mathsf{classical\usc{}Prop}.
   \end{equation*}
 \end{defn}
 
 \begin{defn}
-  Let $P:\N\to\mathsf{classical\usc{}Prop}$ be a decidable subset of $\N$, and let $n:\N$ be a natural number equipped with $p:P(n)$. We say that $n$ is the \define{minimal element} of $P$ if it comes equipped with a term of type
+  Let $P$ be a decidable family over $\N$, and let $n:\N$ be a natural number equipped with $p:P(n)$. We say that $n$ is a \define{minimal $P$-element} if it comes equipped with a term of type
   \begin{equation*}
     \mathsf{is\usc{}minimal}_P(n,p)\defeq \Big(\prd{m:\N}P(m)\to (n\leq m)\Big)
   \end{equation*}
 \end{defn}
 
+The following theorem is the well-ordering principle of $\N$. 
+
 \begin{thm}
-  Let $P:\N\to\mathsf{classical\usc{}Prop}$ be a decidable subset of $\N$. Then there is a function
+  Let $P$ be a decidable family over $\N$. Then there is a function
   \begin{equation*}
     \Big(\sm{n:\N}P(n)\Big)\to\Big(\sm{m:\N}{p:P(m)}\mathsf{is\usc{}minimal}_P(m,p)\Big).
   \end{equation*}
 \end{thm}
 
 \begin{proof}
-  We show by induction on $n:\N$ that there is a function
+  Consider a universe $\UU$ that contains $P$. We show by induction on $n:\N$ that there is a function
   \begin{equation*}
-    P(n)\to \Big(\sm{m:\N}{p:P(m)}\mathsf{is\usc{}minimal}_P(m,p)\Big) 
+    Q(n)\to \Big(\sm{m:\N}{p:Q(m)}\mathsf{is\usc{}minimal}_Q(m,p)\Big) 
   \end{equation*}
-  for every decidable subset $P$ of $\N$. The base case is trivial, since $\zeroN$ is the least natural number. For the inductive step, suppose that $P(\succN(n))$ holds. Note that $P(0)$ is decidable, so we proceed by case analysis on $P(0)$. If $P(0)$ holds, then we have obtained a minimal element in $P$. If $P(0)$ doesn't hold, then consider the decidable subset $P'$ of $\N$ given by
+  for every decidable family $Q:\N\to\UU$. Note that we performed a swap in the order of quantification, using the universe that contains $P$. This slightly strengthens the inductive hypothesis, which we will be able to exploit.
+
+  The base case is trivial, since $\zeroN$ is the least natural number. For the inductive step, suppose that $Q(\succN(n))$ holds. Note that $Q(\zeroN)$ is assumed to be decidable, so we proceed by case analysis on $Q(\zeroN)+\neg Q(\zeroN)$. Given $q:Q(\zeroN)$, it follows immediately that $\zeroN$ must be minimal. In the case where $\neg Q(\zeroN)$, we consider the decidable subset $Q'$ of $\N$ given by
   \begin{equation*}
-    P'(n)\defeq P(\succN(n)).
+    Q'(n)\defeq Q(\succN(n)).
   \end{equation*}
-  Since $P'(n)$ holds we obtain a minimal element in $P'$. Of course, by the assumption that $P(0)$ doesn't hold, the minimal element of $P'$ is also the minimal element of $P$.
+  Since we have $q:Q'(n)$, we obtain a minimal element in $Q'$ by the inductive hypothesis. Of course, by the assumption that $Q(\zeroN)$ doesn't hold, the minimal element of $Q'$ is also the minimal element of $Q$.
 \end{proof}
 
 \subsection{The pigeonhole principle}
@@ -189,8 +181,14 @@ It is straightforward to see that the statements of \cref{thm:pigeonhole,cor:pig
 \subsection{Defining the greatest common divisor}
 
 \begin{lem}
-  For any $d,n:\N$, the type $d\mid n$ is a decidable proposition.
+  For any $d,n:\N$, the type $d\mid n$ is decidable.
 \end{lem}
+
+\begin{proof}
+  We give the proof by case analysis on $(d=\zeroN)+(d\neq\zeroN)$. If $d=\zeroN$, then $d\mid n$ holds if and only if $\zeroN=n$, which is decidable.
+
+  If $d\neq\zeroN$, then it follows that $n\leq nd$. Therefore we obtain by the well-ordering principle of the natural numbers a minimal $m:\N$ that satisfies the decidable property $n\leq md$. Now we observe that $d\mid n$ holds if and only if $n=md$, which is decidable.
+\end{proof}
 
 \begin{lem}
   For any decidable subtype of $\mathsf{Fin}(n)$, if it contains a number $i:\mathsf{Fin}(n)$, then it contains both a minimal and maximal element.
