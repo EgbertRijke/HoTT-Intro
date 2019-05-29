@@ -41,7 +41,19 @@ A common way of reasoning in mathematics is via a proof by contradiction: ``in o
   are all decidable. Moreover, the type $\EqN(\succN(m),\succN(n))\jdeq \EqN(m,n)$ is decidable by the inductive hypothesis.
 \end{proof}
 
-Typically we are mostly interested in decidability of propositions. However, we have defined the notion of decidability for general types. Therefore it is the case that the type natural numbers, or indeed any type $A$ that comes equipped with a point $a:A$, is decidable. One reason for defining decidability in this generality is that we can now formulate a theorem that shows that if the identity types of a given type are all decidable, then that type must be a set.
+Typically we are mostly interested in decidability of propositions. However, we have defined the notion of decidability for general types. Therefore it is the case that the type natural numbers, or indeed any type $A$ that comes equipped with a point $a:A$, is decidable. We have at two reasons for defining decidability in this generality.
+
+At this stage of our development of type theory, where we have not yet discussed function extensionality or propositional truncations, it may be hard to show that some types are propositions. Function extensionality is used, for example, to show that
+  \begin{equation*}
+    \prd{x:A}P(x)
+  \end{equation*}
+  is a proposition for any subtype $P$ of $A$. Function extensionality is the subject of \cref{chap:funext}. Moreover, the type
+  \begin{equation*}
+    \sm{x:A}P(x)
+  \end{equation*}
+  is only a proposition in very specific circumstances. The \emph{proposition} `there exists an $x:A$ for which $P(x)$ holds' is formed using an operation called the \emph{propositional truncation}. Propositional truncations are introduced in \cref{chap:image}. Nevertheless, it is perfectly doable to develop some elementary number theory and discrete mathematics in dependent type theory without function extensionality or propositional truncations.
+
+  A second reason is that for a general type, the condition that its identity types are decidable is of some interest. We now study such types.
 
 \begin{defn}
   We say that a type $A$ has decidable equality if the identity type $x=y$ is decidable for every $x,y:A$. 
@@ -58,6 +70,18 @@ Typically we are mostly interested in decidability of propositions. However, we 
   \end{equation*}
   for each $m,n$, and since $\mathsf{Eq}_\N(m,n)$ is decidable, the claim follows.
 \end{proof}
+
+\begin{lem}
+  Suppose that $A$ and $B$ are types with decidable equality. Then the coproduct $A+B$ also has decidable equality.
+\end{lem}
+
+\begin{cor}
+  The type $\Z$ has decidable equality.
+\end{cor}
+
+\begin{cor}
+  For any $n:\N$ the type $\mathsf{Fin}(n)$ has decidable equality. 
+\end{cor}
 
 We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a set. In fact, any type with decidable equality is a set. This fact is known as Hedberg's theorem. Our proof of Hedberg's theorem might appear to be slightly complicated compared to the proof in \cite{hottbook}. This is due to the fact that we haven't introduced function extensionality yet, which is used there to observe that $\neg\neg(x=y)$ is a proposition for any $x,y:A$.
 
@@ -81,33 +105,18 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   \end{equation*}
   It follows that $R(x,y)$ is a proposition for every $x,y:A$, since $D(x,y,z)$ is a proposition for every $z:(x=y)+\neg(x=y)$.
 
-  To see that $R$ is reflexive, we first construct a term of type
+  To see that $R$ is reflexive it suffices to construct a term of type
   \begin{equation*}
     \rho':\prd{x:A}{p:(x=x)+\neg(x=x)}D(x,x,p)
   \end{equation*}
-  For any $x:A$ we define $\rho'(x)$ by induction on $p:(x=x)+\neg(x=x)$. For $p:x=x$ we take $\rho'(x,\inl(p))\defeq\ttt$. For $p:\neg(x=x)$ we obtain $p(\refl{x}):\emptyt$, from which we obtain a term of $D(x,x,\inr(p))$ by the induction principle of $\emptyt$. This completes the definition of $\rho'$, so now we define
-  \begin{equation*}
-    \rho \defeq \lam{x}\rho'(x,d(x,x)):\prd{x:A}R(x,x).
-  \end{equation*}
+  For any $x:A$ we define $\rho'(x)$ by case analysis on $p:(x=x)+\neg(x=x)$. Given $p:x=x$, we take $\rho'(x,\inl(p))\defeq\ttt$. Given $p:\neg(x=x)$, we obtain $p(\refl{x}):\emptyt$, so there is nothing to define in this case. This completes the definition of $\rho'$.
   
-  It remains to show that $R(x,y)\to (x=y)$ for any $x,y:A$. We use the same technique, and show first that
+  It remains to show that $R(x,y)\to (x=y)$ for any $x,y:A$. Note that it suffices to construct a function
   \begin{equation*}
     \alpha:D(x,y,p)\to (x=y)
   \end{equation*}
-  for any $x,y:A$ and $p:(x=y)+\neg(x=y)$. This function is constructed by case analisys on $p$. Given $p:x=y$, we simply define $\alpha(x,y,\inl(p))\defeq p$. Given $p:\neg(x=y)$ the type $D(x,y,p)$ is empty, so we obtain $\alpha(x,y,\inr(p))$ from the induction principle of $\emptyt$.
+  for any $x,y:A$ and $p:(x=y)+\neg(x=y)$. This function is constructed by case analisys on $p$. Given $p:x=y$, we simply define $\alpha(x,y,\inl(p))\defeq p$. Given $p:\neg(x=y)$ the type $D(x,y,p)$ is empty, so there is nothing to define.
 \end{proof}
-
-\begin{lem}
-  Suppose that $A$ and $B$ are types with decidable equality. Then the coproduct $A+B$ also has decidable equality.
-\end{lem}
-
-\begin{cor}
-  The type $\Z$ has decidable equality.
-\end{cor}
-
-\begin{cor}
-  For any $n:\N$ the type $\mathsf{Fin}(n)$ has decidable equality. 
-\end{cor}
 
 \subsection{The well-ordering principle for decidable subsets of \texorpdfstring{$\N$}{ℕ}}
 
@@ -128,28 +137,21 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
 \begin{thm}
   Let $P:\N\to\mathsf{classical\usc{}Prop}$ be a decidable subset of $\N$. Then there is a function
   \begin{equation*}
-    \Big(\sm{n:\N}P(n)\Big)\to\Big(\sm{n:\N}{p:P(n)}\mathsf{is\usc{}minimal}_P(n,p)\Big).
+    \Big(\sm{n:\N}P(n)\Big)\to\Big(\sm{m:\N}{p:P(m)}\mathsf{is\usc{}minimal}_P(m,p)\Big).
   \end{equation*}
 \end{thm}
 
-It should be noted, however, that if $P$ is a decidable subset of $\N$, then it is not necessarily the case that the proposition $\prd{n:\N}P(n)$ is decidable. Intuitively, this is because an algorithm that checks case by case whether $P(n)$ holds only halts when it finds an $n$ for which $P(n)$ doesn't hold. The best we get is the following
-
-\begin{thm}
-  Let $n:\N$, and let $P$ be a decidable subset of $\mathsf{Fin}(n)$. Then the proposition
+\begin{proof}
+  We show by induction on $n:\N$ that there is a function
   \begin{equation*}
-    \prd{i:\mathsf{Fin}(n)}P(i)
+    P(n)\to \Big(\sm{m:\N}{p:P(m)}\mathsf{is\usc{}minimal}_P(m,p)\Big) 
   \end{equation*}
-  is decidable. 
-\end{thm}
-
-\begin{lem}
-  For any decidable subtype $P$ of $\mathsf{Fin}(n)$ there is a function
+  for every decidable subset $P$ of $\N$. The base case is trivial, since $\zeroN$ is the least natural number. For the inductive step, suppose that $P(\succN(n))$ holds. Note that $P(0)$ is decidable, so we proceed by case analysis on $P(0)$. If $P(0)$ holds, then we have obtained a minimal element in $P$. If $P(0)$ doesn't hold, then consider the decidable subset $P'$ of $\N$ given by
   \begin{equation*}
-    \neg\neg\Big(\sm{i:\mathsf{Fin}(n)}P(i)\Big)\to
-    \Big(\sm{i:\mathsf{Fin}(n)}P(i)\Big).
+    P'(n)\defeq P(\succN(n)).
   \end{equation*}
-  In other words, any non-empty decidable subset of $\mathsf{Fin}(n)$ is inhabited.
-\end{lem}
+  Since $P'(n)$ holds we obtain a minimal element in $P'$. Of course, by the assumption that $P(0)$ doesn't hold, the minimal element of $P'$ is also the minimal element of $P$.
+\end{proof}
 
 \subsection{The pigeonhole principle}
 
@@ -221,7 +223,20 @@ Some further ideas to include in this chapter:
 \end{enumerate}
 
 \begin{exercises}
-\item Show that $\mathsf{is\usc{}decidable}(P)$ is a proposition, for any proposition $P$.
+\item Show that for any $f:\mathsf{Fin}(m)\to\mathsf{Fin}(n)$ and any $i:\mathsf{Fin}(n)$, the type $\fib{f}{i}$ is decidable.
+\item Consider a decidable type $P(i)$ indexed by $i:\mathsf{Fin}(n)$.
+  \begin{subexenum}
+  \item Show that the type
+    \begin{equation*}
+      \prd{i:\mathsf{Fin}(n)}P(i)
+    \end{equation*}
+    is decidable.
+  \item Show that the type
+    \begin{equation*}
+      \sm{i:\mathsf{Fin}(n)}P(i)
+    \end{equation*}
+    is decidable.
+  \end{subexenum}
 \item
   \begin{subexenum}
   \item Show that $\nat$ and $\bool$ have decidable equality. Hint: to show that $\mathbb{N}$ has decidable equality, show first that the successor function is injective.
