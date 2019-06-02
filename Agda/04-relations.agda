@@ -45,12 +45,13 @@ Eq-ℕ (succ-ℕ m) (succ-ℕ n) = Eq-ℕ m n
    other words, we get double negation elimination for the types that are 
    decidable. -}
 
-decide : {l : Level} (A : UU l) → UU l
-decide A = coprod A (¬ A)
+is-decidable : {l : Level} (A : UU l) → UU l
+is-decidable A = coprod A (¬ A)
 
-dne-dec : {i : Level} (A : UU i) → decide A → (¬ (¬ A) → A)
-dne-dec A (inl x) p = x
-dne-dec A (inr x) p = ind-empty (p x)
+double-negation-elim-is-decidable :
+  {i : Level} (A : UU i) → is-decidable A → (¬ (¬ A) → A)
+double-negation-elim-is-decidable A (inl x) p = x
+double-negation-elim-is-decidable A (inr x) p = ind-empty (p x)
 
 -- Exercise 3.3
 
@@ -128,8 +129,7 @@ preserve_Eq-ℕ f =
 -- The definition of ≤ 
 
 leq-ℕ : ℕ → ℕ → UU lzero
-leq-ℕ zero-ℕ zero-ℕ = unit
-leq-ℕ zero-ℕ (succ-ℕ m) = unit
+leq-ℕ zero-ℕ m = unit
 leq-ℕ (succ-ℕ n) zero-ℕ = empty
 leq-ℕ (succ-ℕ n) (succ-ℕ m) = leq-ℕ n m
 
@@ -414,18 +414,3 @@ ordinal-ind-ℕ :
 ordinal-ind-ℕ P f =
   conclusion-ordinal-ind-ℕ P
     ( induction-ordinal-ind-ℕ P (succ-ordinal-ind-ℕ P f))
-
--- Exercise
-
-skip :
-  (n : ℕ) → Fin (succ-ℕ n) → Fin n → Fin (succ-ℕ n)
-skip (succ-ℕ n) (inl i) (inl j) = inl (skip n i j)
-skip (succ-ℕ n) (inl i) (inr star) = inr star
-skip (succ-ℕ n) (inr star) j = inl j
-
-double :
-  (n : ℕ) → Fin n → Fin (succ-ℕ n) → Fin n
-double (succ-ℕ n) (inl i) (inl j) = inl (double n i j)
-double (succ-ℕ n) (inl j) (inr star) = inr star
-double (succ-ℕ n) (inr star) (inl j) = j
-double (succ-ℕ n) (inr star) (inr star) = inr star

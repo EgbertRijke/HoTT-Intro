@@ -1,6 +1,12 @@
 \section{Elementary number theory}
 
-In this chapter our goal is to show how to use the language of type theory to do some elementary number theory. In particular, we define the greatest common divisor of any two numbers, and we use the trial division algorithm to show that being a prime is decidable.
+One of the things type theory is great for, is for the formalization of mathematics in a computer proof assistant. Those are programs that can compile any type theoretical construction to check that this construction indeed has the type it was claimed it has.
+
+At this point in our development of type theory there are two areas of mathematics that would be natural to try to do in type theory: discrete mathematics and elementary number theory. Indeed, how does one define in type theory the greatest common divisor of two natural numbers, or how does one show that there are infinitely many primes? How does one even formalize that every non-empty subset of the natural numbers has a least element?
+
+To answer these questions we will run into questions of decidability. How do we write a term that decides wheter a number is prime or not? Or indeed, is it even true that every non-empty subset of the natural numbers has a least element? What about the subset of $\N$ that contains $1$, and it contains $0$ if and only if Goldbach's conjecture holds? Finding the least element of this subset is equivalent to settling the conjecture!
+
+Therefore, we will prove the well-foundedness of the natural numbers for decidable subsets of $\N$. In fact, we will show it for decidable families, because sometimes we don't know in advance whether a family of types is in fact a subtype. A consequence of involving decidability in the well-foundedness of the natural numbers is that for many properties one has to prove that they are decidable. Luckily this is the case: many of the familiar properties that one encounters in number theory are indeed decidable.
 
 \subsection{Decidability}
 
@@ -47,21 +53,32 @@ Typically we are mostly interested in decidability of propositions. However, we 
   We say that a type $A$ has decidable equality if the identity type $x=y$ is decidable for every $x,y:A$. 
 \end{defn}
 
-\begin{lem}
+\begin{cor}
   Equality on the natural numbers is decidable.
-\end{lem}
+\end{cor}
 
 \begin{proof}
-  Since we have an equivalence
-  \begin{equation*}
-    (m=n) \simeq \mathsf{Eq}_\N(m,n)
-  \end{equation*}
-  for each $m,n$, and since $\mathsf{Eq}_\N(m,n)$ is decidable, the claim follows.
+  This follows immediately from the equivalences $(m=n)\simeq \EqN(m,n)$, and the fact that $\EqN(m,n)$ is decidable.
 \end{proof}
 
 \begin{lem}
   Suppose that $A$ and $B$ are types with decidable equality. Then the coproduct $A+B$ also has decidable equality.
 \end{lem}
+
+\begin{proof}
+  Our goal is to construct a dependent function
+  \begin{equation*}
+    d_{A+B} : \prd{z,z':A+B}\mathsf{is\usc{}decidable}(z=z').
+  \end{equation*}
+  This function is constructed by coproduct induction on both $z$ and $z'$, so we have four cases to consider. Recall from \cref{thm:id-coprod-compute} that we have equivalences
+  \begin{align*}
+    (\inl(x)=\inl(x')) & \simeq (x=x') \\
+    (\inl(x)=\inr(y')) & \simeq \emptyt \\
+    (\inr(y)=\inl(x')) & \simeq \emptyt \\
+    (\inr(y)=\inr(y')) & \simeq (y=y').
+  \end{align*}
+  Therefore the type $z=z'$ is equivalent to a decidable type in each of the four cases.
+\end{proof}
 
 \begin{cor}
   The type $\Z$ has decidable equality.
@@ -122,7 +139,7 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   \end{equation*}
 \end{defn}
 
-The following theorem is the well-ordering principle of $\N$. 
+Note that the type $\mathsf{is\usc{}minimal}_P(n,p)$ doesn't depend on $p$. However, it doesn't make much sense that $n$ is a minimal element of $P$ unless we already know that $n$ is in $P$. Indeed, if we would omit the hypothesis that $n$ is in $P$, it would be more accurate to say that $n$ is a \emph{lower bound} of $P$. The following theorem is the well-ordering principle of $\N$. 
 
 \begin{thm}
   Let $P$ be a decidable family over $\N$. Then there is a function
@@ -148,6 +165,18 @@ The following theorem is the well-ordering principle of $\N$.
 \subsection{The pigeonhole principle}
 
 The pigeonhole principle states that if we place more than $n$ balls in $n$ bags, then at least one bag will contain more than one ball. In this section we will give a type theoretical proof of the pigeonhole principle.
+
+First we give a definition of a function that counts the number of elements in a decidable subset of $\mathsf{Fin}(n)$.
+
+\begin{defn}
+  Let $P$ be a decidable subset of $\mathsf{Fin}(n)$. We define the number $|P|:\N$ of elements in $P$.
+\end{defn}
+
+\begin{proof}[Construction]
+  We give the proof by induction on $n:\N$. In the base case we note that $\mathsf{Fin}(\zeroN)$ has no elements, so we define $|P|\defeq\zeroN$.
+
+  For the inductive step, we define $|P|$ by case analysis on $P(\inr(\ttt))+\neg P(\inr(\ttt))$. Let $P'$ be the family over $\mathsf{Fin}(n)$ given by $P'(i)\defeq P(\inl(i))$. In the case where $P(\inr(\ttt))$ holds, then we define $|P|\defeq \succN |P'|$. In the case where $P(\inr(\ttt))$ doesn't hold we define $|P|\defeq |P'|$.
+\end{proof}
 
 \begin{thm}\label{thm:pigeonhole}
   For any $m,n:\N$ and any function $f:\mathsf{Fin}(m)\to\mathsf{Fin}(n)$, if $m>n$, then there is an $i:\mathsf{Fin}(n)$ which is in the image of more than one point in $\mathsf{Fin}(m)$.
@@ -208,6 +237,8 @@ It is straightforward to see that the statements of \cref{thm:pigeonhole,cor:pig
   For any $n:\N$, the proposition $\mathsf{is\usc{}prime}(n)$ is decidable.
 \end{thm}
 
+It is important to note that, even when we prove that a type such as $\mathsf{is\usc{}prime}(n)$ is decidable, it is only after we \emph{evaluate} the proof term that we know whether the type under consideration has a term or not. In other words, for any given $n$ we don't know right away whether it is prime or not. Evaluating whether $n$ is prime can be computationally costly, so it may be desirable in any specific situation to give a separate mathematical \emph{argument} that decides whether or not the number is prime.
+
 \subsection{The infinitude of primes}
 
 \begin{thm}
@@ -244,5 +275,9 @@ Some further ideas to include in this chapter:
 \item Define the prime-counting function $\pi:\N\to\N$.
 \item (The Cantor-Schr\"oder-Bernstein theorem) Let $X$ and $Y$ be two sets with decidable equality, and consider two maps $f:X\to Y$ and $g:Y\to X$, both of which we assume to be injective. Construct an equivalence $X\simeq Y$.
 \item For any $k:\Z$, define a function $i\mapsto i+k \mod n$ of type $\mathsf{Fin}(n)\to\mathsf{Fin}(n)$. Show that this function is an equivalence.
-  \item For any $k:\Z$, define a function $i\mapsto i\cdot k \mod n$ of type $\mathsf{Fin}(n)\to\mathsf{Fin}(n)$. Show that this function is an equivalence if and only if $\gcd(n,k)=1$.
+\item For any $k:\Z$, define a function $i\mapsto i\cdot k \mod n$ of type $\mathsf{Fin}(n)\to\mathsf{Fin}(n)$. Show that this function is an equivalence if and only if $\gcd(n,k)=1$.
+\item Show that
+  \begin{equation*}
+    \sum_{i=0}^n \binom{n-i}{i}=F_{n+1}
+  \end{equation*}
 \end{exercises}

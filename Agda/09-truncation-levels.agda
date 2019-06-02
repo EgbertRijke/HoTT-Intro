@@ -734,6 +734,20 @@ abstract
 set-ℤ : hSet lzero
 set-ℤ = pair ℤ is-set-ℤ
 
+is-set-empty : is-set empty
+is-set-empty ()
+
+abstract
+  is-set-Fin :
+    (n : ℕ) → is-set (Fin n)
+  is-set-Fin zero-ℕ = is-set-empty
+  is-set-Fin (succ-ℕ n) =
+    is-set-coprod (is-set-Fin n) is-set-unit
+
+set-Fin :
+  (n : ℕ) → hSet lzero
+set-Fin n = pair (Fin n) (is-set-Fin n)
+
 -- Exercise 8.7
 
 abstract
