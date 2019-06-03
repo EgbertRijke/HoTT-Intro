@@ -173,29 +173,97 @@ First we give a definition of a function that counts the number of elements in a
 \end{defn}
 
 \begin{proof}[Construction]
-  We give the proof by induction on $n:\N$. In the base case we note that $\mathsf{Fin}(\zeroN)$ has no elements, so we define $|P|\defeq\zeroN$.
+  We give the construction of $|P|$ by induction on $n:\N$. In the base case we note that $\mathsf{Fin}(\zeroN)$ has no elements, so we define $|P|\defeq\zeroN$.
 
   For the inductive step, we define $|P|$ by case analysis on $P(\inr(\ttt))+\neg P(\inr(\ttt))$. Let $P'$ be the family over $\mathsf{Fin}(n)$ given by $P'(i)\defeq P(\inl(i))$. In the case where $P(\inr(\ttt))$ holds, then we define $|P|\defeq \succN |P'|$. In the case where $P(\inr(\ttt))$ doesn't hold we define $|P|\defeq |P'|$.
 \end{proof}
+
+\begin{defn}
+  For any $i:\mathsf{Fin}(\succN(n))$ we define a function
+  \begin{equation*}
+    \mathsf{skip}(i):\mathsf{Fin}(n)\to\mathsf{Fin}(\succN(n)).
+  \end{equation*}
+\end{defn}
+
+\begin{proof}[Construction]
+  The function $\mathsf{skip}(i)$ is defined by induction on $n:\N$. In the base case, the function
+  \begin{equation*}
+    \mathsf{skip}(i):\mathsf{Fin}(\zeroN)\to\mathsf{Fin}(\succN(\zeroN))
+  \end{equation*}
+  is defined to be the unique map out of the empty type. In the successor case we define
+  \begin{equation*}
+    \mathsf{skip}(i) : \mathsf{Fin}(\succN(n))\to\mathsf{Fin}(\succN(\succN(n))) 
+  \end{equation*}
+  by induction on $i:\mathsf{Fin}(\succN(\succN(n)))$. The function
+  \begin{equation*}
+    \mathsf{skip}(\inl(i)):\mathsf{Fin}(\succN(n))\to\mathsf{Fin}(\succN(\succN(n)))
+  \end{equation*}
+  is a map between coproducts, so it can be defined using the functorial action of coproducts of \cref{ex:coproduct_functor}. We take
+  \begin{equation*}
+    \mathsf{skip}(\inl(i))\defeq \mathsf{skip}(i)+\idfunc.
+  \end{equation*}
+  The function 
+  \begin{equation*}
+    \mathsf{skip}(\inr(i)):\mathsf{Fin}(\succN(n))\to\mathsf{Fin}(\succN(\succN(n)))
+  \end{equation*}
+  is just the function $\inl$.
+\end{proof}
+
+\begin{lem}
+  For each $i:\mathsf{Fin}(\succN(n))$, the function
+  \begin{equation*}
+    \mathsf{skip}(i):\mathsf{Fin}(n)\to\mathsf{Fin}(\succN(n))
+  \end{equation*}
+  is an embedding.
+\end{lem}
+
+\begin{proof}
+  This assertion is proven by induction on $n$. In the base case, we note that any map out of the empty type is an embedding, by \cref{ex:is-emb-empty}. In the inductive step we proceed by case analysis on $i:\mathsf{Fin}(\succN(\succN(n)))$. In the case of $\inl(i)$ we note that
+  \begin{equation*}
+    \mathsf{skip}(\inl(i))\jdeq \mathsf{skip}(i)+\idfunc
+  \end{equation*}
+  is the functorial action of coproducts on two embeddings. Therefore we conclude by \cref{ex:is-emb-coprod} that this map is an embedding. In the case of $\inr(i)$ we note that $\inl$ is an embedding by \cref{ex:is-emb-inl-inr}.
+\end{proof}
+
+\begin{lem}
+  Consider a map $g:\mathsf{Fin}(m)\to\mathsf{Fin}(\succN(n))$. Furthermore, suppose that $i:\mathsf{Fin}(\succN(n))$ is not in the image of $g$, i.e.~that $\neg(\fib{g}{i})$. Then we can construct a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}
+      & \mathsf{Fin}(n) \arrow[d,"\mathsf{skip}(i)"] \\
+      \mathsf{Fin}(m) \arrow[r,swap,"g"] \arrow[ur,densely dotted,"f"] & \mathsf{Fin}(\succN(n)).
+    \end{tikzcd}
+  \end{equation*}
+\end{lem}
+
+Finally, we prove the pigeonhole principle.
 
 \begin{thm}\label{thm:pigeonhole}
   For any $m,n:\N$ and any function $f:\mathsf{Fin}(m)\to\mathsf{Fin}(n)$, if $m>n$, then there is an $i:\mathsf{Fin}(n)$ which is in the image of more than one point in $\mathsf{Fin}(m)$.
 \end{thm}
 
 \begin{proof}
-  The pigeonhole principle is proven by induction on $m,n:\N$. In the base case for $m$ we immediately obtain a contradiction from the assumption that $m>n$. For the inductive step on $m$ and the base case for $n$, we note that $\mathsf{Fin}(\succN(m))\jdeq \mathsf{Fin}(m)+\unit$ and $\mathsf{Fin}(\zeroN)\jdeq \empty$. Therefore $f:\mathsf{Fin}(\succN(m))\to\mathsf{Fin}(\zeroN)$ is a function from a pointed type to the empty type, which gives us a contradiction.
+  The pigeonhole principle is proven by induction on $m,n:\N$. In the base case for $m$ there is nothing to show because $m>n$ is empty. For the inductive step on $m$ and the base case for $n$, we note that $\mathsf{Fin}(\succN(m))\jdeq \mathsf{Fin}(m)+\unit$ and $\mathsf{Fin}(\zeroN)\jdeq \emptyt$. Therefore $f:\mathsf{Fin}(\succN(m))\to\mathsf{Fin}(\zeroN)$ is a function from a pointed type to the empty type, which gives us a contradiction.
 
-  It remains to give the inductive step for $n$. Let $i\defeq f(\inr(\ttt)):\mathsf{Fin}(\succN(n))$. Since the ordering relation $<$ on $\N$ is decidable, we can decide whether $i$ is in the image of more than one point in $\mathsf{Fin}(m)$. If this is the case, this completes the proof. If this is not the case, note that we have a commuting square
+  It remains to give the inductive step for $n$. Let $i\defeq f(\inr(\ttt)):\mathsf{Fin}(\succN(n))$. Since the ordering relation $<$ on $\N$ is decidable, we can decide whether $i$ is in the image of more than one point in $\mathsf{Fin}(m)$ by deciding whether or not $1<|P|$ holds for
+  \begin{equation*}
+    P(j)\defeq (f(j)=i)
+  \end{equation*}
+  If this is the case, this completes the proof.
+
+  Now suppose that $1\not<|P|$. Since $P(\inr(\ttt))$ holds it follows that $|P|=1$. Now we observe that $i$ is not in the image of $f\circ \inl$. Therefore we obtain a commuting square
   \begin{equation*}
     \begin{tikzcd}
-      \mathsf{Fin}(m) \arrow[r,"{f'}"] \arrow[d,swap,"\inl"] & \mathsf{Fin}(n) \arrow[d,"{\hat{i}}"] \\
-      \mathsf{Fin}(\succN(m)) \arrow[r,swap,"f"] & \mathsf{Fin}(\succN(n))
+      \mathsf{Fin}(m) \arrow[r,densely dotted,"{f'}"] \arrow[d,swap,"\inl"] & \mathsf{Fin}(n) \arrow[d,"{\mathsf{skip}(i)}"] \\
+      \mathsf{Fin}(\succN(m)) \arrow[r,swap,"f"] & \mathsf{Fin}(\succN(n)).
     \end{tikzcd}
   \end{equation*}
-  where $\hat{i}$ is the inclusion that omits the value $i$. The function $f':\mathsf{Fin}(m)\to\mathsf{Fin}(n)$ is defined 
 
-  Now note that both the left and right maps in this square are embeddings, and that by the induction hypothesis the pigeonhole principle applies to the function $f':\mathsf{Fin}(m)\to\mathsf{Fin}(n)$. 
-\end{proof}
+  Note that the induction hypothesis the pigeonhole principle applies to the function $f':\mathsf{Fin}(m)\to\mathsf{Fin}(n)$. Since $m>n$ it follows that there is an element $j:\mathsf{Fin}(n)$ that is in the image of $f'$ of more than one element of $\mathsf{Fin}(m)$. Now we observe that there is an equivalence
+  \begin{equation*}
+    \fib{f'}{j}\simeq \fib{f}{\mathsf{skip}(i,j)}
+  \end{equation*}
+  because both the left and right maps in the commuting square are embeddings. Therefore we conclude that $\mathsf{skip}(i,j)$ is in the image of $f$ of more than one element of $\mathsf{Fin}(\succN(m))$. 
+ \end{proof}
 
 \begin{cor}\label{cor:pigeonhole}
   Given $m>n$, no function $\mathsf{Fin}(m)\to\mathsf{Fin}(n)$ is an embedding.

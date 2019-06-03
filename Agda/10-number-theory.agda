@@ -278,7 +278,7 @@ skip-skip zero-ℕ (inl x) (inl x₁) ()
 skip-skip zero-ℕ (inl x) (inr x₁) ()
 skip-skip zero-ℕ (inr x) (inl x₁) ()
 skip-skip zero-ℕ (inr x) (inr x₁) ()
-skip-skip (succ-ℕ n) (inl i) (inl j) (inl k) = ?
+skip-skip (succ-ℕ n) (inl i) (inl j) (inl k) = {!!}
 skip-skip (succ-ℕ n) (inl x) (inl x₁) (inr x₂) = {!!}
 skip-skip (succ-ℕ n) (inl x) (inr x₁) (inl x₂) = {!!}
 skip-skip (succ-ℕ n) (inl x) (inr x₁) (inr x₂) = {!!}
