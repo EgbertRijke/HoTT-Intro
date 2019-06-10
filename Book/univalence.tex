@@ -97,22 +97,51 @@ We emphasize that the following lemma is a typical statement of \emph{univalent 
   For any semi-group $G$ the type $\mathsf{is\usc{}group}(G)$ is a proposition.
 \end{lem}
 
-\begin{eg}
-An important class of examples consists of the \define{loop space}\index{loop space|textbf} $x=x$ of a $1$-type $X$, for any $x:X$. 
-We will write $\loopspace{X,x}$ for the loop space of $X$ at $x$. 
-Since $X$ is assumed to be a $1$-type, it follows that the type $\loopspace{X,x}$ is a set. Then we have
-\begin{align*}
-\refl{x} & : \loopspace{X,x} \\
-\mathsf{inv} & : \loopspace{X,x} \to \loopspace{X,x} \\
-\mathsf{concat} & : \loopspace{X,x} \to (\loopspace{X,x}\to \loopspace{X,x}),
-\end{align*}
-and these operations satisfy the group laws, since the group laws are just a special case of the groupoid laws for identity types, constructed in \cref{sec:groupoid}.
+\begin{proof}
+  We have already seen that the type $\mathsf{is\usc{}unital}(G)$ is a proposition. Therefore it suffices to show that the type $\mathsf{is\usc{}group}'(G,e)$ is a proposition for any $e:\mathsf{is\usc{}unital}(G)$.
 
-Using higher inductive types we will show in \cref{chap:image} that \emph{every} group is of this form.
+  Since a semi-group $G$ is assumed to be a set, we note that the types of the inverse laws are propositions. Therefore it suffices to show that any two inverse operations satisfying the inverse laws are homotopic.
+
+  Let $x\mapsto x^{-1}$ and $x\mapsto \bar{x}^{-1}$ be two inverse operations on a unital semi-group $G$, both satisfying the inverse laws. Then we have the following identifications
+  \begin{align*}
+    x^{-1} & = \mu_G(e_G,x^{-1}) \\
+    & = \mu_G(\mu_G(\bar{x}^{-1},x),x^{-1}) \\
+    & = \mu_G(\bar{x}^{-1},\mu_G(x,x^{-1})) \\
+    & = \mu_G(\bar{x}^{-1},e_G) \\
+    & = \bar{x}^{-1}
+  \end{align*}
+  for any $x:G$. Thus the two inverses of $x$ are the same, so the claim follows.
+\end{proof}
+
+\begin{eg}
+  An important class of examples consists of the \define{loop space}\index{loop space|textbf} $x=x$ of a $1$-type $X$, for any $x:X$. 
+  We will write $\loopspace{X,x}$ for the loop space of $X$ at $x$. 
+  Since $X$ is assumed to be a $1$-type, it follows that the type $\loopspace{X,x}$ is a set. Then we have
+  \begin{align*}
+    \refl{x} & : \loopspace{X,x} \\
+    \mathsf{inv} & : \loopspace{X,x} \to \loopspace{X,x} \\
+    \mathsf{concat} & : \loopspace{X,x} \to (\loopspace{X,x}\to \loopspace{X,x}),
+  \end{align*}
+  and these operations satisfy the group laws, since the group laws are just a special case of the groupoid laws for identity types, constructed in \cref{sec:groupoid}.
+  
+  Using higher inductive types we will show in \cref{chap:image} that \emph{every} group is of this form.
 \end{eg}
 
 \begin{eg}
-The type $\Z$ of integers\index{Z@{$\Z$}!is a group} can be given the structure of a group, with the group operation being addition. The fact that $\Z$ is a set follows from \cref{thm:eq_nat,ex:set_coprod}. The group laws were shown in \cref{ex:int_group_laws}. 
+  The type $\Z$ of integers\index{Z@{$\Z$}!is a group} can be given the structure of a group, with the group operation being addition. The fact that $\Z$ is a set follows from \cref{thm:eq_nat,ex:set_coprod}. The group laws were shown in \cref{ex:int_group_laws}. 
+\end{eg}
+
+\begin{eg}
+  Our last class of examples consists of the \define{automorphism groups} on $1$-types. Given a $1$-type $X$, we define
+  \begin{equation*}
+    \mathsf{Aut}(X)\defeq (X\simeq X).
+  \end{equation*}
+  The group operation of $\mathsf{Aut}(X)$ is just composition of equivalences, and the unit of the group is the identity function. Note however, that although function composition is strictly associative and satisfies the unit laws strictly, composition of equivalences only satisfies the group laws up to identification because the proof that composites are equivalences is carried along.
+
+  Important special cases of the automorphism groups are the symmetry groups
+  \begin{equation*}
+    \mathcal{S}_n\defeq \mathsf{Aut}(\mathsf{Fin}(n)).
+  \end{equation*}
 \end{eg}
 
 \subsubsection{Homomorphisms of semi-groups and groups}
@@ -414,6 +443,11 @@ r & \defeq \lam{(f,H)}{x}\mathsf{tr}_B(...,\proj 2(f(x)))
 \end{comment}
 
 \begin{exercises}
+\item Let $X$ be a set. Show that the map
+  \begin{equation*}
+    \mathsf{equiv\usc{}eq} : (X=X)\to (\eqv{X}{X})
+  \end{equation*}
+  is a group isomorphism.
 \item \label{ex:tr_ap} Show that for any $P:X\to \UU$ and any $p:x=y$ in $X$, we have\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}}\index{transport}
 \begin{equation*}
 \mathsf{equiv\usc{}eq}(\ap{P}{p})\htpy \mathsf{tr}_P(p).
@@ -463,5 +497,18 @@ by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{equiv@{$\
   \begin{subexenum}
   \item Show that $\mathsf{is\usc{}decidable}(P)$ is a proposition, for any proposition $P$.
   \item Show that $\mathsf{classical\usc{}Prop}$ is equivalent to $\bool$.
+  \end{subexenum}
+\item
+  \begin{subexenum}
+  \item Consider a group $G$. Show that the function
+    \begin{equation*}
+      \mu_G:G\to (G\simeq G)
+    \end{equation*}
+    is an injective group homomorphism.
+  \item Consider a type $A$. Show that the concatenation function
+    \begin{equation*}
+      \mathsf{concat}:\loopspace{A}\to (\loopspace{A}\simeq\loopspace{A})
+    \end{equation*}
+    is an embedding.
   \end{subexenum}
 \end{exercises}

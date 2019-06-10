@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
 module 10-number-theory where
 
@@ -105,6 +105,7 @@ abstract
 {- Decidable equality of Fin n. -}
 
 has-decidable-equality-empty : has-decidable-equality empty
+has-decidable-equality-empty ()
 
 has-decidable-equality-unit :
   has-decidable-equality unit
@@ -269,6 +270,7 @@ double (succ-ℕ n) (inl j) (inr star) = inr star
 double (succ-ℕ n) (inr star) (inl j) = j
 double (succ-ℕ n) (inr star) (inr star) = inr star
 
+{-
 skip-skip :
   (n : ℕ) (i : Fin (succ-ℕ (succ-ℕ n))) (j : Fin (succ-ℕ n)) →
     ( ( skip (succ-ℕ n) i) ∘ (skip n j)) ~
@@ -286,6 +288,7 @@ skip-skip (succ-ℕ n) (inr x) (inl x₁) (inl x₂) = {!!}
 skip-skip (succ-ℕ n) (inr x) (inl x₁) (inr x₂) = {!!}
 skip-skip (succ-ℕ n) (inr x) (inr x₁) (inl x₂) = {!!}
 skip-skip (succ-ℕ n) (inr x) (inr x₁) (inr x₂) = {!!}
+-}
 
 {-
 pigeonhole-principle :
