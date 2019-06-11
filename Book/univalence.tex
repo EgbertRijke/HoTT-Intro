@@ -37,6 +37,64 @@ given by $f\mapsto f(A,\idfunc[A])$ has a section.
 \end{enumerate}
 \end{thm}
 
+\subsection{Univalence implies function extensionality}
+One of the first applications of the univalence axiom was Voevodsky's theorem that the univalence axiom on a universe $\UU$ implies function extensionality for types in $\UU$. The proof uses the fact that weak function extensionality implies function extensionality.
+
+We will also make use of the following lemma. Note that this statement was also part of \cref{lem:postcomp_equiv}. That exercise is solved using function extensionality. Since our present goal is to derive function extensionality from the univalence axiom, we cannot make use of that exercise.
+
+\begin{lem}\label{lem:postcomp-equiv}
+  For any equivalence $e:\eqv{X}{Y}$ in a univalent universe $\UU$, and any type $A$, the post-composition map
+  \begin{equation*}
+    e\circ\blank : (A \to X) \to (A\to Y)
+  \end{equation*}
+  is an equivalence.
+\end{lem}
+
+\begin{proof}
+  The statement is obvious for the identity equivalence $\idfunc : \eqv{X}{X}$. Therefore the claim follows by equivalence induction, which is by \cref{thm:univalence} one of the equivalent forms of the univalence axiom.
+\end{proof}
+
+\begin{thm}
+  For any universe $\UU$, the univalence axiom on $\UU$ implies function extensionality on $\UU$.
+\end{thm}
+
+\begin{proof}
+Note that \cref{thm:funext_wkfunext} also holds when it is restricted to small types. 
+Therefore it suffices to show that univalence implies the weak principle of function extensionality.
+
+Suppose that $B:A\to \UU$ is a family of contractible types. Our goal is to show that the product $\prd{x:A}B(x)$ is contractible.
+Since each $B(x)$ is contractible, the projection map $\proj 1:\big(\sm{x:A}B(x)\big)\to A$ is an equivalence by \cref{ex:proj_fiber}.
+
+Now it follows by \cref{lem:postcomp-equiv} that $\proj1\circ\blank$ is an equivalence. Consequently, it follows from \cref{thm:contr_equiv} that the fibers of
+\begin{equation*}
+\proj 1\circ\blank : \Big(A\to \sm{x:A}B(x)\Big)\to (A\to A)
+\end{equation*}
+are contractible. In particular, the fiber at $\idfunc[A]$ is contractible. Therefore it suffices to show that $\prd{x:A}B(x)$ is a retract of $\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]$. In other words, we will construct
+\begin{equation*}
+\begin{tikzcd}
+\Big(\prd{x:A}B(x)\Big) \arrow[r,"i"] & {\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]} \arrow[r,"r"] & \Big(\prd{x:A}B(x)\Big),
+\end{tikzcd}
+\end{equation*}
+and a homotopy $r\circ i\htpy \idfunc$.
+
+We define the function $i$ by
+\begin{equation*}
+  i(f) \defeq (\lam{x}(x,f(x)),\refl{\idfunc}).
+\end{equation*}
+To see that this definition is correct, we need to know that
+\begin{equation*}
+  \lam{x}\proj 1(x,f(x))\jdeq \idfunc.
+\end{equation*}
+This is indeed the case, by the $\eta$-rule for $\Pi$-types.
+
+Next, we define the function $r$. Let $h:A\to \sm{x:A}B(x)$, and let $p:\proj 1 \circ h = \idfunc$. Then we have the homotopy $H\defeq\mathsf{htpy\usc{}eq}(p):\proj 1 \circ h \htpy \idfunc$. Then we have $\proj 2(h(x)):B(\proj 1(h(x)))$ and we have the identification $H(x):\proj 1(h(x))=x$. Therefore we define $r$ by
+\begin{equation*}
+  r((h,p),x)\defeq \mathsf{tr}_B(H(x),\proj 2(h(x))).
+\end{equation*}
+
+We note that if $p\jdeq \refl{\idfunc}$, then $H(x)\jdeq\refl{x}$. In this case we have the judgmental equality $r((h,\refl{}),x)\jdeq\proj 2 (h(x))$. Thus we see that $r\circ i\jdeq \idfunc$ by another application of the $\eta$-rule for $\Pi$-types.
+\end{proof}
+
 \subsection{Groups in univalent mathematics}
 
 In this section we exhibit a typical way to use the univalence axiom, showing that isomorphic groups can be identified.
@@ -147,68 +205,53 @@ We emphasize that the following lemma is a typical statement of \emph{univalent 
 \subsubsection{Homomorphisms of semi-groups and groups}
 
 \begin{defn}
-  Let $G$ and $H$ be semi-groups. A homomorphism $f:G\to H$ of semi-groups consists of a function $f:G\to H$ between their underlying types, equipped with a term of type
+  Let $G$ and $H$ be semi-groups. A homomorphism $f:G\to H$ of semi-groups is a pair $(f,\mu_f)$ consisting of a function $f:G\to H$ between their underlying types, and a term
   \begin{equation*}
-    \prd{x,y:G} f(\mu_G(x,y))=\mu_H(f(x),f(y))
+    \mu_f:\prd{x,y:G} f(\mu_G(x,y))=\mu_H(f(x),f(y))
   \end{equation*}
-  witnessing that $f$ preserves the binary operation of $G$. A homomorphism $f:G\to H$ of groups is defined to be a semi-group homomorphism betweein their underlying semi-groups. 
+  witnessing that $f$ preserves the binary operation of $G$. We will write
+  \begin{equation*}
+    \mathsf{hom}(G,H)
+  \end{equation*}
+  for the type of all semi-group homomorphisms from $G$ to $H$.
 \end{defn}
 
-\begin{lem}
-For any two groups $\mathcal{G}$, and $\mathcal{H}$, the type $\mathrm{hom}(\mathcal{G},\mathcal{H})$ is equivalent to the type of quadruples $(f,\alpha,\beta,\gamma)$ consisting of
-\begin{align*}
-f & : G \to H \\
-\alpha & : f(1)=1 \\
-\beta & : \prd{x:G}f(x^{-1})=f(x)^{-1} \\
-\gamma & : \prd{x,y:G} f(xy)=f(x)f(y).
-\end{align*}
-\end{lem}
-
-\begin{proof}
-It suffices to show that for any group homomorphism $f:\mathrm{hom}(\mathcal{G},\mathcal{H})$, the types $f(1)=1$ and 
-\begin{equation*}
-\Big(\prd{x:G}f(x^{-1})=f(x)^{-1}\Big)
-\end{equation*}
-are contractible. Since $G$ is a set, both types are propositions. Therefore it suffices to show they are inhabited. In other words, it suffices to show that any group homomorphism preserves the unit element and inverses. These are just calculations, where each step is an application of a group law:
-\begin{align*}
-f(1) & = 1f(1)               & f(x^{-1}) & = f(x^{-1})1 \\
-     & = (f(1)^{-1}f(1))f(1) &           & = f(x^{-1})(f(x)f(x)^{-1}) \\
-     & = f(1)^{-1}(f(1)f(1)) &           & = (f(x^{-1})f(x))f(x)^{-1} \\
-     & = f(1)^{-1}f(11)      &           & = f(x^{-1}x)f(x)^{-1} \\
-     & = f(1)^{-1}f(1)       &           & = f(1)f(x)^{-1} \\
-     & = 1.                  &           & = 1f(x)^{-1} \\
-     &                       &           & = f(x)^{-1}.\qedhere
-\end{align*}
-\end{proof}
+\begin{rmk}
+  Since it is a property for a function to preserve the multiplication of a semi-group, it follows easily that equality of semi-group homomorphisms is equivalent to the type of homotopies between their underlying functions.
+\end{rmk}
 
 \begin{rmk}
-Since preservation of the group operation is a property, we will usually write $h$ for the group homomorphism $(h,p)$.
-Moreover, from \cref{thm:subtype} we obtain that the projection map
-\begin{equation*}
-\proj 1:\mathrm{hom}(\mathcal{G},\mathcal{G}')\to (G\to G')
-\end{equation*}
-is an embedding. Therefore the equality type $(h,p)=(h',p')$ is equivalent to $h=h'$. In other words, to show that two group homomorphisms are equal it suffices to show that their underlying maps are equal.
+  The \define{identity homomorphism} on a semi-group $G$ is defined to be the pair consisting of
+  \begin{align*}
+    \idfunc & : G \to G \\
+    \lam{x}{y}\refl{xy} & : \prd{x,y:G} xy = xy.
+  \end{align*}
+  Let $f:G\to H$ and $g:H\to K$ be semi-group homomorphisms. Then the composite function $g\circ f:G\to K$ is also a semi-group homomorphism, since we have the identifications
+  \begin{equation*}
+    \begin{tikzcd}
+      g(f(xy)) \arrow[r,equals] & g(f(x)f(y)) \arrow[r,equals] & g(f(x))g(f(y)).
+    \end{tikzcd}
+  \end{equation*}
+  Since the identity type of semi-group homomorphisms is equivalent to the type of homotopies between semi-group homomorphisms it is easy to see that semi-group homomorphisms satisfy the laws of a category, i.e., that we have the identifications
+  \begin{align*}
+    \idfunc\circ f & = f \\
+    g\circ \idfunc & = g \\
+    (h\circ g) \circ f & = h \circ (g \circ f)
+  \end{align*}
+  for any composable semi-group homomorphisms $f$, $g$, and $h$. Note, however that these equalities are not expected to hold judgmentally, since preservation of the semi-group operation is part of the data of a semi-group homomorphism.
 \end{rmk}
 
 \begin{defn}
-Let $\mathcal{G}$ be a group. Then the \define{identity homomorphism}\index{group homomorphism!identity homomorphism|textbf} $\idfunc[\mathcal{G}]:\mathrm{hom}(\mathcal{G},\mathcal{G})$ is defined to be the pair $(\idfunc[G],p)$, where 
-\begin{equation*}
-p(x,y)\defeq \refl{xy}. 
-\end{equation*}
+  A homomorphism $f:G\to H$ of groups is defined to be a semi-group homomorphism between their underlying semi-groups. We will write
+  \begin{equation*}
+    \mathsf{hom}(G,H)
+  \end{equation*}
+  for the type of all group homomorphisms from $G$ to $H$.
 \end{defn}
 
-\begin{defn}
-Let $h:\mathrm{hom}(\mathcal{G},\mathcal{H})$ and $k:\mathrm{hom}(\mathcal{H},\mathcal{K})$ be group homomorphisms, with proofs $p$ and $q$ that $h$ and $k$ preserve the group operation, respectively. Then we define\index{group homomorphism!composition|textbf}
-\begin{equation*}
-k\circ h:\mathrm{hom}(\mathcal{G},\mathcal{K})
-\end{equation*}
-to be the group homomorphism with underlying map $k\circ h$. This map preserves the group operation since
-\begin{equation*}
-\begin{tikzcd}
-k(h(xy)) \arrow[r,equals] & k(h(x)h(y)) \arrow[r,equals] & k(h(x))k(h(y)).
-\end{tikzcd}
-\end{equation*}
-\end{defn}
+\begin{rmk}
+  Since a group homomorphism is just a semi-group homomorphism between the underlying semi-groups, we immediately obtain the identity homomorphism, composition, and the category laws are satisfied.
+\end{rmk}
 
 \subsubsection{Isomorphic semi-groups are equal}
 
@@ -302,145 +345,66 @@ It is straightforward to see that the type of group isomorphisms $\mathcal{G}\co
 
 \subsubsection{Isomorphic groups are equal}
 
-\subsection{Equivalence relations}
+\subsection{Categories in univalent mathematics}
 
-\begin{defn}\label{defn:eq_rel}
-Let $R:A\to (A\to\prop)$ be a binary relation valued in the propositions. We say that $R$ is an \define{($0$-)equivalence relation}\index{equivalence relation|textbf}\index{0-equivalence relation|see {equivalence relation}} if $R$ comes equipped with
-\begin{align*}
-\rho & : \prd{x:A}R(x,x) \\
-\sigma & : \prd{x,y:A} R(x,y)\to R(y,x) \\
-\tau & : \prd{x,y,z:A} R(x,y)\to (R(y,z)\to R(x,z)).
-\end{align*}
-Given an equivalence relation $R:A\to (A\to\prop)$, the \define{equivalence class}\index{equivalence class|textbf} $[x]_R$ of $x:A$ is defined to be
-\begin{equation*}
-[x]_R\defeq R(x).
-\end{equation*}
-\end{defn}
+In our proof of the fact that isomorphic groups are equal we have made extensive use of the notion of group homomorphism. What we have shown, in fact, is that there is a category of groups which is \emph{Rezk complete} in the sense that the type of isomorphisms between two objects is equivalent to the type of identifications between those objects. In this final section we briefly introduce the notion of Rezk complete category. There are many more examples of categories, such as the categories of rings, or modules over a ring.
 
 \begin{defn}
-Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
-We define for any $x,y:A$ a map\index{class_eq@{$\mathsf{class\usc{}eq}$}|textbf}
-\begin{equation*}
-\mathsf{class\usc{}eq}:R(x,y)\to ([x]_R=[y]_R).
-\end{equation*}
+  A \define{pre-category} $\mathcal{C}$ consists of
+  \begin{enumerate}
+  \item A type $A$ of \define{objects}.
+  \item For every two objects $x,y:A$ a set
+    \begin{equation*}
+      \mathsf{hom}(x,y)
+    \end{equation*}
+    of \define{morphisms} from $x$ to $y$.
+  \item For every object $x:A$ an \define{identity morphism}
+    \begin{equation*}
+      \idfunc : \mathsf{hom}(x,x)
+    \end{equation*}
+  \item For every two morphisms $f:\mathsf{hom}(x,y)$ and $g:\mathsf{hom}(y,z)$, a morphism
+    \begin{equation*}
+      g\circ f :\mathsf{hom}(x,z)
+    \end{equation*}
+    called the \define{composite} of $f$ and $g$.
+  \item the following terms
+    \begin{align*}
+      \mathsf{left\usc{}unit}_{\mathcal{C}} & : \idfunc \circ f = f \\
+      \mathsf{right\usc{}unit}_{\mathcal{C}} & : g \circ \idfunc = g \\
+      \mathsf{assoc}_{\mathcal{C}} & : (h \circ g) \circ f = h \circ (g \circ f)
+    \end{align*}
+    witnessing that the category laws are satisfied.
+  \end{enumerate}
 \end{defn}
 
-\begin{proof}[Construction.]
-Let $r:R(x,y)$. By function extensionality, the identity type $R(x)=R(y)$ is equivalent to the type
-\begin{equation*}
-\prd{z:A}R(x,z)=R(y,z).
-\end{equation*}
-Let $z:A$. By the univalence axiom, the type $R(x,z)=R(y,z)$ is equivalent to the type
-\begin{equation*}
-\eqv{R(x,z)}{R(y,z)}.
-\end{equation*}
-We have the map $\tau_{y,x,z}(\sigma(r)):R(x,z)\to R(y,z)$. Since this is a map between propositions, we only have to construct a map in the converse direction to show that it is an equivalence. The map in the converse direction is just $\tau_{x,y,z}(r):R(y,z)\to R(x,z)$. 
-\end{proof}
+\begin{eg}
+  By \cref{rmk:category-semi-group,rmk:category-group} we have pre-categories of semi-groups and of groups.
+\end{eg}
 
-\begin{thm}\label{thm:equivalence_classes}
-Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
-Then for any $x,y:A$ the map
-\begin{equation*}
-\mathsf{class\usc{}eq} : R(x,y)\to ([x]_R=[y]_R)
-\end{equation*}
-is an equivalence.
-\end{thm}
-
-\begin{proof}
-By the 3-for-2 property of equivalences, it suffices to show that the map
-\begin{equation*}
-\lam{r}{z}\tau_{y,x,z}(\sigma(r)) : R(x,y)\to \prd{z:A} \eqv{R(x,z)}{R(y,z)}
-\end{equation*}
-is an equivalence. Since this is a map between propositions, it suffices to construct a map of type
-\begin{equation*}
-\Big(\prd{z:A} \eqv{R(x,z)}{R(y,z)}\Big)\to R(x,y).
-\end{equation*}
-This map is simply $\lam{f} \sigma_{y,x}(f_x(\rho(x)))$. 
-\end{proof}
+\begin{defn}
+  Given a pre-category $\mathcal{C}$, a morphism $f:\mathsf{hom}(x,y)$ is said to be an \define{isomorphism} if there exists a morphism $g:\mathsf{hom}(y,x)$ such that
+  \begin{align*}
+    g\circ f & = \idfunc \\
+    f \circ g & \idfunc.
+  \end{align*}
+  We will write $\mathsf{iso}(x,y)$ for the type of all isomorphisms in $\mathcal{C}$ from $x$ to $y$.
+\end{defn}
 
 \begin{rmk}
-By \cref{thm:equivalence_classes} we can begin to think of the \emph{quotient}\index{quotient} $A/R$ of a type $A$ by an equivalence relation $R$. Classically, the quotient is described as the set of equivalence classes, and \cref{thm:equivalence_classes} establishes that two equivalence classes $[x]_R$ and $[y]_R$ are equal precisely when $x$ and $y$ are related by $R$.
-
-However, the type $A\to\prop$ may contain many more terms than just the $R$-equivalence classes. Therefore we are facing the task of finding a type theoretic description of the smallest subtype of $A\to\prop$ containing the equivalence classes.
-Another to think about this is as the \emph{image}\index{image} of $R$ in $A\to \prop$. 
-The construction of the (homotopy) image of a map can be done with \emph{higher inductive types}\index{higher inductive type}, which we will do in \cref{chap:image}.
+  Just as in the case for semi-groups and groups, the condition that $f:\mathsf{hom}(x,y)$ is an isomorphism is a property of $f$.
 \end{rmk}
 
-The notion of $0$-equivalence relation which we defined in \cref{defn:eq_rel} fits in a hierarchy of `$n$-equivalence relations'\index{n-equivalence relation@{$n$-equivalence relation}}, the study of which is a research topic on its own. However, we already know an example of a relation that should count as an `$\infty$-equivalence relation'\index{infinity-equivalence relation@{$\infty$-equivalence relation}}: the identity type. Analogous to \cref{thm:equivalence_classes}, the following theorem shows that the canonical map
-\begin{equation*}
-(x=y)\to (\idtypevar{A}(x)=\idtypevar{A}(y))
-\end{equation*}
-is an equivalence, for any $x,y:A$. In other words, $\idtypevar{A}(x)$ can be thought of as the equivalence class of $x$ with respect to the relation $\idtypevar{A}$.
+\begin{defn}
+  A pre-category $\mathcal{C}$ is said to be \define{Rezk-complete} if the canonical map
+  \begin{equation*}
+    (x=y)\to \mathsf{iso}(x,y)
+  \end{equation*}
+  is an equivalence for any two objects $x$ and $y$ of $\mathcal{C}$. Rezk-complete pre-categories are also called \define{categories}.
+\end{defn}
 
-\begin{thm}
-Assuming the univalence axiom on $\UU$, the map
-\begin{equation*}
-\idtypevar{A}:A\to (A\to\UU)
-\end{equation*}
-is an embedding, for any type $A:\UU$.\index{identity type!is an embedding|textit}
-\end{thm}
-
-\begin{proof}
-Let $a:A$. By function extensionality it suffices to show that the canonical map
-\begin{equation*}
-(a=b)\to \idtypevar{A}(a)\htpy\idtypevar{A}(b)
-\end{equation*}
-that sends $\refl{a}$ to $\lam{x}\refl{(a=x)}$ is an equivalence for every $b:A$, and by univalence it therefore suffices to show that the canonical map
-\begin{equation*}
-(a=b)\to \prd{x:A}\eqv{(a=x)}{(b=x)}
-\end{equation*}
-that sends $\refl{a}$ to $\lam{x}\idfunc[(a=x)]$ is an equivalence for every $b:B$. To do this we employ the type theoretic Yoneda lemma, \cref{thm:yoneda}.
-
-By the type theoretic Yoneda lemma\index{Yoneda lemma} we have an equivalence
-\begin{equation*}
-\Big(\prd{x:A} (b=x)\to (a=x)\Big)\to (a=b)
-\end{equation*}
-given by $\lam{f} f(b,\refl{b})$, for every $b:A$. Note that any family of maps $\prd{x:A}(b=x)\to (a=x)$ induces an equivalence of total spaces by \cref{ex:contr_equiv}, since their total spaces are are both contractible by \cref{cor:contr_path}. It follows that we have an equivalence
-\begin{equation*}
-\varphi_b:\Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)\to (a=b)
-\end{equation*}
-given by $\lam{f} f(b,\refl{b})$, for every $b:A$. 
-
-Note that $\varphi_a(\lam{x}\idfunc[(a=x)])\jdeq\refl{a}$. Therefore it follows by another application of \cref{thm:yoneda} that the unique family of maps 
-\begin{equation*}
-\alpha_b:(a=b)\to \Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)
-\end{equation*}
-that satisfies $\alpha_a(\refl{a})=\lam{x}\idfunc[(a=x)]$ is a family of sections of $\varphi$. 
-It follows that $\alpha$ is a family of equivalences. Now the proof is completed by reverting the direction of the family of equivalences in the codomain.
-\end{proof}
-
-\begin{comment}
-\subsection{Univalence implies function extensionality}
-The first application of the univalence axiom was Voevodsky's proof of function extensionality. Just for the purpose of the following theorem we drop our assumption of function extensionality. 
-
-\begin{thm}
-The univalence axiom implies function extensionality for small types. 
-\end{thm}
-
-\begin{proof}
-Note that \cref{thm:funext_wkfunext} also holds when it is restricted to small types. 
-Therefore it suffices to show that univalence implies the weak principle of function extensionality.
-
-To see this, we first note that for any equivalence $e:\eqv{X}{Y}$, the post-composition map $e\circ \blank:\eqv{(A\to X)}{(A\to Y)}$. This is is obvious in the case $e\jdeq\idfunc[A]$, so it follows from equivalence induction.
-
-Now suppose that $B:A\to \UU$ is a family of contractible types. Our goal is to show that the product $\prd{x:A}B(x)$ is contractible.
-Since each $B(x)$ is contractible, the projection map $\proj 1:\big(\sm{x:A}B(x)\big)\to A$ is an equivalence by \cref{ex:proj_fiber}. It follows from \cref{thm:contr_equiv} that the fibers of
-\begin{equation*}
-\proj 1\circ\blank : \Big(A\to \sm{x:A}B(x)\Big)\to (A\to A)
-\end{equation*}
-are contractible. In particular, the fiber at $\idfunc[A]$ is contractible. Therefore it suffices to show that $\prd{x:A}B(x)$ is a retract of $\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]$. In other words, we will construct
-\begin{equation*}
-\begin{tikzcd}
-\Big(\prd{x:A}B(x)\Big) \arrow[r,"i"] & {\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]} \arrow[r,"r"] & \Big(\prd{x:A}B(x)\Big),
-\end{tikzcd}
-\end{equation*}
-and a homotopy $r\circ i\htpy \idfunc$. We define
-\begin{align*}
-i & \defeq \lam{f}(\lam{x}(x,f(x)),\lam{x}\refl{x}) \\
-r & \defeq \lam{(f,H)}{x}\mathsf{tr}_B(...,\proj 2(f(x)))
-\end{align*}
-\end{proof}
-\end{comment}
+\begin{eg}
+  The pre-categories of semi-groups and groups are Rezk-complete. Therefore they form categories.
+\end{eg}
 
 \begin{exercises}
 \item Let $X$ be a set. Show that the map
@@ -511,4 +475,10 @@ by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{equiv@{$\
     \end{equation*}
     is an embedding.
   \end{subexenum}
+\item Let $f:\mathsf{hom}(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that
+  \begin{align*}
+    f(e_G) & = e_H \\
+    f(x^{-1}) & = f(x)^{-1}.
+  \end{align*}
+\item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit.
 \end{exercises}

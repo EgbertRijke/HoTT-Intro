@@ -257,6 +257,11 @@ abstract
       ( isretr-pair-eq s t)
       ( issec-pair-eq s t)
 
+η-pair :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (t : Σ A B) →
+  Id (pair (pr1 t) (pr2 t)) t
+η-pair t = eq-pair refl refl
+
 {- We also define a function eq-pair-triv, which is like eq-pair but simplified 
    for the case where B is just a type. -}
 

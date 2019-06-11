@@ -101,8 +101,8 @@ abstract
     ( λ t → P (pr1 t) (pr2 t))
 
 ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
-  P A (pair id (is-equiv-id A)) → (B : UU i) (e : A ≃ B) → P B e
-ind-equiv A P = pr1 (Ind-equiv A P)
+  P A (pair id (is-equiv-id A)) → {B : UU i} (e : A ≃ B) → P B e
+ind-equiv A P p {B} = pr1 (Ind-equiv A P) p B
 
 -- Subuniverses
 
@@ -173,6 +173,35 @@ eq-Eq-total-subuniverse :
   {s t : total-subuniverse P} → Eq-total-subuniverse P s t → Id s t
 eq-Eq-total-subuniverse P {s} {t} =
   inv-is-equiv (is-equiv-Eq-total-subuniverse-eq P s t)
+
+-- Section 12.2 Univalence implies function extensionality
+
+is-equiv-postcomp-univalence :
+  {l1 l2 : Level} {X Y : UU l1} (A : UU l2) (e : X ≃ Y) →
+  is-equiv (postcomp A (map-equiv e))
+is-equiv-postcomp-univalence {X = X} A =
+  ind-equiv X
+    ( λ Y e → is-equiv (postcomp A (map-equiv e)))
+    ( is-equiv-id (A → X))
+
+weak-funext-univalence :
+  {l : Level} {A : UU l} {B : A → UU l} → WEAK-FUNEXT A B
+weak-funext-univalence {A = A} {B} is-contr-B =
+  is-contr-retract-of
+    ( fib (postcomp A (pr1 {B = B})) id)
+    ( pair
+      ( λ f → pair (λ x → pair x (f x)) refl)
+      ( pair
+        ( λ h x → tr B (htpy-eq (pr2 h) x) (pr2 (pr1 h x)))
+        ( htpy-refl)))
+    ( is-contr-map-is-equiv
+      ( is-equiv-postcomp-univalence A (equiv-pr1 is-contr-B))
+      ( id))
+
+funext-univalence :
+  {l : Level} {A : UU l} {B : A → UU l} (f : (x : A) → B x) → FUNEXT f
+funext-univalence {A = A} {B} f =
+  FUNEXT-WEAK-FUNEXT (λ A B → weak-funext-univalence) A B f
 
 -- Section 12.2 Groups in univalent mathematics
 
@@ -813,11 +842,6 @@ preserves-mul' G H μ-H e = preserves-mul G (pair H μ-H) (map-equiv e)
 equiv-Semi-Group' :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) → UU (l1 ⊔ l2)
 equiv-Semi-Group' G H = equiv-Semi-Group G (pair (pr1 H) (pr2 H))
-
-η-pair :
-  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (t : Σ A B) →
-  Id (pair (pr1 t) (pr2 t)) t
-η-pair (pair x y) = refl
 
 abstract
   equiv-iso-Semi-Group-equiv-Semi-Group :

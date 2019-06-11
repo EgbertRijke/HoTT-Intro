@@ -673,10 +673,15 @@ abstract
 
 -- Exercise 9.3
 
+postcomp :
+  {l1 l2 l3 : Level} {X : UU l1} {Y : UU l2} (A : UU l3) →
+  (X → Y) → (A → X) → (A → Y)
+postcomp A f h = f ∘ h
+
 abstract
   is-equiv-is-equiv-postcomp :
     {l1 l2 : Level} {X : UU l1} {Y : UU l2} (f : X → Y) →
-    ({l3 : Level} (A : UU l3) → is-equiv (λ (h : A → X) → f ∘ h)) → is-equiv f
+    ({l3 : Level} (A : UU l3) → is-equiv (postcomp A f)) → is-equiv f
   is-equiv-is-equiv-postcomp {X = X} {Y = Y} f post-comp-equiv-f =
     let sec-f = center (is-contr-map-is-equiv (post-comp-equiv-f Y) id) in
     is-equiv-has-inverse
@@ -690,10 +695,10 @@ abstract
 abstract
   is-equiv-postcomp-is-equiv :
     {l1 l2 : Level} {X : UU l1} {Y : UU l2} (f : X → Y) → is-equiv f →
-    ({l3 : Level} (A : UU l3) → is-equiv (λ (h : A → X) → f ∘ h))
+    ({l3 : Level} (A : UU l3) → is-equiv (postcomp A f))
   is-equiv-postcomp-is-equiv {X = X} {Y = Y} f is-equiv-f A =
     is-equiv-has-inverse 
-      ( λ (g : A → Y) → (inv-is-equiv is-equiv-f) ∘ g)
+      ( postcomp A (inv-is-equiv is-equiv-f))
       ( λ g → eq-htpy (htpy-right-whisk (issec-inv-is-equiv is-equiv-f) g))
       ( λ h → eq-htpy (htpy-right-whisk (isretr-inv-is-equiv is-equiv-f) h))
 
@@ -1290,10 +1295,10 @@ abstract
       ( λ g → eq-htpy (λ i → issec-inv-is-equiv (is-equiv-e i) (g i)))
       ( λ f → eq-htpy (λ i → isretr-inv-is-equiv (is-equiv-e i) (f i)))
 
-postcomp-Π-equiv :
+equiv-postcomp-Π :
   {l1 l2 l3 : Level} {I : UU l1} {A : I → UU l2} {B : I → UU l3}
   (e : (i : I) → (A i) ≃ (B i)) → ((i : I) → A i) ≃ ((i : I) → B i)
-postcomp-Π-equiv e =
+equiv-postcomp-Π e =
   pair
     ( postcomp-Π (λ i → map-equiv (e i)))
     ( is-equiv-postcomp-Π _ (λ i → is-equiv-map-equiv (e i)))

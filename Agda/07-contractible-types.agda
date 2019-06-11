@@ -688,6 +688,11 @@ abstract
         ( equiv-fib-fam-fib-pr1 B x)
         ( is-contr-B x))
 
+equiv-pr1 :
+  {i j : Level} {A : UU i} {B : A → UU j} →
+  ((a : A) → is-contr (B a)) → (Σ A B) ≃ A
+equiv-pr1 is-contr-B = pair pr1 (is-equiv-pr1-is-contr _ is-contr-B)
+
 abstract
   is-contr-is-equiv-pr1 :
     {i j : Level} {A : UU i} (B : A → UU j) →
