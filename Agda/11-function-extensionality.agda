@@ -819,6 +819,65 @@ abstract
 
 -- Exercise 9.5
 
+{- We use that is-equiv is a proposition to show that the type of equivalences
+   between k-types is again a k-type. -}
+   
+is-contr-equiv-is-contr :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  is-contr A → is-contr B → is-contr (A ≃ B)
+is-contr-equiv-is-contr is-contr-A is-contr-B =
+  pair
+    ( equiv-is-contr is-contr-A is-contr-B)
+    ( λ e → eq-htpy-equiv
+      ( λ x →
+        is-prop-is-contr' is-contr-B (center is-contr-B) (map-equiv e x)))
+
+is-trunc-is-contr :
+  { l : Level} (k : 𝕋) {A : UU l} → is-contr A → is-trunc k A
+is-trunc-is-contr neg-two-𝕋 is-contr-A = is-contr-A
+is-trunc-is-contr (succ-𝕋 k) is-contr-A x y =
+  is-trunc-is-contr k (is-prop-is-contr is-contr-A x y)
+
+is-trunc-is-prop :
+  { l : Level} (k : 𝕋) {A : UU l} → is-prop A → is-trunc (succ-𝕋 k) A
+is-trunc-is-prop k is-prop-A x y = is-trunc-is-contr k (is-prop-A x y)
+
+is-trunc-equiv-is-trunc :
+  { l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
+  is-trunc k A → is-trunc k B → is-trunc k (A ≃ B)
+is-trunc-equiv-is-trunc neg-two-𝕋 is-trunc-A is-trunc-B =
+  is-contr-equiv-is-contr is-trunc-A is-trunc-B
+is-trunc-equiv-is-trunc (succ-𝕋 k) is-trunc-A is-trunc-B = 
+  is-trunc-Σ (succ-𝕋 k)
+    ( is-trunc-Π (succ-𝕋 k) (λ x → is-trunc-B))
+    ( λ x → is-trunc-is-prop k (is-subtype-is-equiv x))
+
+is-prop-equiv-is-prop :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  is-prop A → is-prop B → is-prop (A ≃ B)
+is-prop-equiv-is-prop = is-trunc-equiv-is-trunc neg-one-𝕋
+
+prop-equiv :
+  { l1 l2 : Level} → hProp l1 → hProp l2 → hProp (l1 ⊔ l2)
+prop-equiv P Q =
+  pair
+    ( type-Prop P ≃ type-Prop Q)
+    ( is-prop-equiv-is-prop (is-prop-type-Prop P) (is-prop-type-Prop Q))
+
+is-set-equiv-is-set :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  is-set A → is-set B → is-set (A ≃ B)
+is-set-equiv-is-set = is-trunc-equiv-is-trunc zero-𝕋
+
+set-equiv :
+  { l1 l2 : Level} → hSet l1 → hSet l2 → hSet (l1 ⊔ l2)
+set-equiv A B =
+  pair
+    ( type-Set A ≃ type-Set B)
+    ( is-set-equiv-is-set (is-set-type-Set A) (is-set-type-Set B))
+
+{- Now we turn to the exercise. -}
+
 _↔_ :
   {l1 l2 : Level} → hProp l1 → hProp l2 → UU (l1 ⊔ l2)
 P ↔ Q = (pr1 P → pr1 Q) × (pr1 Q → pr1 P)
@@ -842,13 +901,11 @@ abstract
       ( is-prop-function-type (pr1 Q) (pr1 P) (pr2 P))
 
 abstract
-  is-prop-equiv-is-prop :
+  is-prop-equiv-Prop :
     {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
     is-prop ((pr1 P) ≃ (pr1 Q))
-  is-prop-equiv-is-prop P Q =
-    is-prop-Σ
-      ( is-prop-function-type (pr1 P) (pr1 Q) (pr2 Q))
-      ( is-subtype-is-equiv)
+  is-prop-equiv-Prop P Q =
+    is-prop-equiv-is-prop (pr2 P) (pr2 Q)
 
 abstract
   is-equiv-equiv-iff :
@@ -856,7 +913,7 @@ abstract
   is-equiv-equiv-iff P Q =
     is-equiv-is-prop
       ( is-prop-iff P Q)
-      ( is-prop-equiv-is-prop P Q)
+      ( is-prop-equiv-Prop P Q)
       ( iff-equiv P Q)
 
 abstract

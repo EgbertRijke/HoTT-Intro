@@ -203,7 +203,7 @@ funext-univalence :
 funext-univalence {A = A} {B} f =
   FUNEXT-WEAK-FUNEXT (λ A B → weak-funext-univalence) A B f
 
--- Section 12.2 Groups in univalent mathematics
+-- Section 12.3 Groups in univalent mathematics
 
 {- We first introduce semi-groups, and then groups. We do this because the
    category of groups is a full subcategory of the category of semi-groups.
@@ -468,6 +468,78 @@ group-loop-space-1-type :
   {l : Level} (A : 1-type l) (a : pr1 A) → Group l
 group-loop-space-1-type (pair A is-1-type-A) a =
   group-loop-space A a (is-1-type-A a a)
+
+{- We introduce the automorphism group on a set X. -}
+
+aut-Set :
+  {l : Level} (X : hSet l) → hSet l
+aut-Set X = set-equiv X X
+
+associative-comp-equiv :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4} →
+  (e : A ≃ B) (f : B ≃ C) (g : C ≃ D) →
+  Id ((g ∘e f) ∘e e) (g ∘e (f ∘e e))
+associative-comp-equiv e f g = eq-htpy-equiv htpy-refl
+
+has-associative-mul-aut-Set :
+  {l : Level} (X : hSet l) → has-associative-mul (aut-Set X)
+has-associative-mul-aut-Set X =
+  pair
+    ( λ e f → f ∘e e)
+    ( λ e f g → inv (associative-comp-equiv e f g))
+
+aut-Semi-Group :
+  {l : Level} (X : hSet l) → Semi-Group l
+aut-Semi-Group X =
+  pair
+    ( aut-Set X)
+    ( has-associative-mul-aut-Set X)
+
+left-unit-law-equiv :
+  {l1 l2 : Level} {X : UU l1} {Y : UU l2} (e : X ≃ Y) →
+  Id ((equiv-id Y) ∘e e) e
+left-unit-law-equiv e = eq-htpy-equiv htpy-refl
+
+right-unit-law-equiv :
+  {l1 l2 : Level} {X : UU l1} {Y : UU l2} (e : X ≃ Y) →
+  Id (e ∘e (equiv-id X)) e
+right-unit-law-equiv e = eq-htpy-equiv htpy-refl
+
+is-unital-aut-Semi-Group :
+  {l : Level} (X : hSet l) → is-unital (aut-Semi-Group X)
+is-unital-aut-Semi-Group X =
+  pair
+    ( equiv-id (type-Set X))
+    ( pair
+      ( right-unit-law-equiv)
+      ( left-unit-law-equiv))
+
+left-inverse-law-equiv :
+  {l1 l2 : Level} {X : UU l1} {Y : UU l2} (e : X ≃ Y) →
+  Id ((inv-equiv e) ∘e e) (equiv-id X)
+left-inverse-law-equiv e =
+  eq-htpy-equiv (isretr-inv-is-equiv (is-equiv-map-equiv e))
+
+right-inverse-law-equiv :
+  {l1 l2 : Level} {X : UU l1} {Y : UU l2} (e : X ≃ Y) →
+  Id (e ∘e (inv-equiv e)) (equiv-id Y)
+right-inverse-law-equiv e =
+  eq-htpy-equiv (issec-inv-is-equiv (is-equiv-map-equiv e))
+
+is-group-aut-Semi-Group' :
+  {l : Level} (X : hSet l) →
+  is-group' (aut-Semi-Group X) (is-unital-aut-Semi-Group X)
+is-group-aut-Semi-Group' X =
+  pair
+    ( inv-equiv)
+    ( pair right-inverse-law-equiv left-inverse-law-equiv)
+
+aut-Group :
+  {l : Level} → hSet l → Group l
+aut-Group X =
+  pair
+    ( aut-Semi-Group X)
+    ( pair (is-unital-aut-Semi-Group X) (is-group-aut-Semi-Group' X))
 
 {- Now we introduce homomorphisms of semi-groups. Group homomorphisms are just
    homomorphisms between their underlying semi-groups. -}
@@ -1132,3 +1204,11 @@ preserves-all-hom-Group G H f =
     ( pair
       ( preserves-unit-group-hom G H f)
       ( preserves-inverses-group-hom G H f))
+
+-- Exercise
+
+{-
+hom-mul-Group :
+  {l : Level} (G : Group l) →
+  hom-Group G Aut
+-}

@@ -248,7 +248,7 @@ equiv-tr-contraction-total-space' :
   ( H : ((map-equiv e') ∘ (map-equiv f)) ~ ((tr B p) ∘ (map-equiv e))) →
   ( contraction-total-space' c x' e') ≃ (contraction-total-space' c x e)
 equiv-tr-contraction-total-space' c p f e e' H =
-  ( postcomp-Π-equiv
+  ( equiv-postcomp-Π
     ( λ y → equiv-concat' c (inv (segment-Σ p f e e' H y)))) ∘e
   ( precomp-Π-equiv f _)
 

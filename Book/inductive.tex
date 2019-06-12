@@ -297,4 +297,24 @@ We define the \define{successor function}\index{successor function!on Z@{on $\Z$
     \ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
   \end{align*}
   In other words, \emph{type theory cannot distinguish between the types $\bool$ and $\unit+\unit$.}
+\item For any type $A$ we can define the type $\mathsf{list}_A$ of \define{lists} elements of $A$ as the inductive type with constructors
+  \begin{align*}
+    \mathsf{empty\usc{}list} & : \mathsf{list}_A \\
+    \mathsf{append\usc{}list} & : A \to (\mathsf{list}_A \to \mathsf{list}_A).
+  \end{align*}
+  \begin{subexenum}
+  \item Write down the induction principle and the computation rules for $\mathsf{list}_A$.
+  \item Define a function $\mathsf{length}:\mathsf{list}_A\to\N$.
+  \item Define a function $\mathsf{reverse} : \mathsf{list}_A \to \mathsf{list}_A$ that reverses the order of the elements in any list.
+  \item Define a function
+    \begin{equation*}
+      \mathsf{concat\usc{}list} : \mathsf{list}_A \to (\mathsf{list}_A \to \mathsf{list}_A)
+    \end{equation*}
+    that concatenates any two lists of elements in $A$.
+  \item Define a function
+    \begin{equation*}
+      \mathsf{sum} : \mathsf{list}_\N \to \N
+    \end{equation*}
+    that adds all the elements in a list of natural numbers.
+  \end{subexenum}
 \end{exercises}
