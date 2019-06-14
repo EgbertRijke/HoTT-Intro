@@ -11,7 +11,7 @@ open 09-truncation-levels public
 
 classical-Prop :
   (l : Level) → UU (lsuc l)
-classical-Prop l = Σ (hProp l) (λ P → is-decidable (pr1 P))
+classical-Prop l = Σ (UU-Prop l) (λ P → is-decidable (pr1 P))
 
 abstract
   is-decidable-Eq-ℕ :

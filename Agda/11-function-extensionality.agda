@@ -858,7 +858,7 @@ is-prop-equiv-is-prop :
 is-prop-equiv-is-prop = is-trunc-equiv-is-trunc neg-one-𝕋
 
 prop-equiv :
-  { l1 l2 : Level} → hProp l1 → hProp l2 → hProp (l1 ⊔ l2)
+  { l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
 prop-equiv P Q =
   pair
     ( type-Prop P ≃ type-Prop Q)
@@ -870,7 +870,7 @@ is-set-equiv-is-set :
 is-set-equiv-is-set = is-trunc-equiv-is-trunc zero-𝕋
 
 set-equiv :
-  { l1 l2 : Level} → hSet l1 → hSet l2 → hSet (l1 ⊔ l2)
+  { l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU-Set (l1 ⊔ l2)
 set-equiv A B =
   pair
     ( type-Set A ≃ type-Set B)
@@ -879,22 +879,22 @@ set-equiv A B =
 {- Now we turn to the exercise. -}
 
 _↔_ :
-  {l1 l2 : Level} → hProp l1 → hProp l2 → UU (l1 ⊔ l2)
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU (l1 ⊔ l2)
 P ↔ Q = (pr1 P → pr1 Q) × (pr1 Q → pr1 P)
 
 equiv-iff :
-  {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
+  {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) →
   (P ↔ Q) → (pr1 P ≃ pr1 Q)
 equiv-iff P Q t = pair (pr1 t) (is-equiv-is-prop (pr2 P) (pr2 Q) (pr2 t))
 
 iff-equiv :
-  {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
+  {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) →
   (pr1 P ≃ pr1 Q) → (P ↔ Q)
 iff-equiv P Q equiv-PQ = pair (pr1 equiv-PQ) (inv-is-equiv (pr2 equiv-PQ))
 
 abstract
   is-prop-iff :
-    {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) → is-prop (P ↔ Q)
+    {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → is-prop (P ↔ Q)
   is-prop-iff P Q =
     is-prop-prod
       ( is-prop-function-type (pr1 P) (pr1 Q) (pr2 Q))
@@ -902,14 +902,14 @@ abstract
 
 abstract
   is-prop-equiv-Prop :
-    {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) →
+    {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) →
     is-prop ((pr1 P) ≃ (pr1 Q))
   is-prop-equiv-Prop P Q =
     is-prop-equiv-is-prop (pr2 P) (pr2 Q)
 
 abstract
   is-equiv-equiv-iff :
-    {l1 l2 : Level} (P : hProp l1) (Q : hProp l2) → is-equiv (equiv-iff P Q)
+    {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → is-equiv (equiv-iff P Q)
   is-equiv-equiv-iff P Q =
     is-equiv-is-prop
       ( is-prop-iff P Q)
@@ -1629,7 +1629,7 @@ abstract
 -- Exercise 9.15
 
 set-isomorphism :
-  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) → UU (l1 ⊔ l2)
+  {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) → UU (l1 ⊔ l2)
 set-isomorphism A B =
   Σ ((pr1 A) → (pr1 B)) has-inverse
 
@@ -1640,7 +1640,7 @@ has-inverse-is-half-adjoint-equivalence f =
   tot (λ g → tot (λ G → pr1))
 
 set-isomorphism-equiv-fiberwise :
-  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+  {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) →
   (f : (pr1 A) → (pr1 B)) → is-equiv f → has-inverse f
 set-isomorphism-equiv-fiberwise A B f =
   ( has-inverse-is-half-adjoint-equivalence f) ∘
@@ -1648,7 +1648,7 @@ set-isomorphism-equiv-fiberwise A B f =
 
 abstract
   is-equiv-has-inverse-is-half-adjoint-equivalence-is-set :
-    {l1 l2 : Level} (A : hSet l1) (B : hSet l2) (f : (pr1 A) → (pr1 B)) →
+    {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) (f : (pr1 A) → (pr1 B)) →
     is-equiv (has-inverse-is-half-adjoint-equivalence f)
   is-equiv-has-inverse-is-half-adjoint-equivalence-is-set
     (pair A is-set-A) (pair B is-set-B) f =
@@ -1661,7 +1661,7 @@ abstract
 
 abstract
   is-fiberwise-equiv-set-isomorphism-equiv-fiberwise :
-    {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+    {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) →
     is-fiberwise-equiv (set-isomorphism-equiv-fiberwise A B)
   is-fiberwise-equiv-set-isomorphism-equiv-fiberwise A B f =
     is-equiv-comp
@@ -1673,14 +1673,14 @@ abstract
       ( is-equiv-has-inverse-is-half-adjoint-equivalence-is-set A B f)
 
 set-isomorphism-equiv :
-  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+  {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) →
   ((pr1 A) ≃ (pr1 B)) → set-isomorphism A B
 set-isomorphism-equiv A B =
   tot (set-isomorphism-equiv-fiberwise A B)
 
 abstract
   is-equiv-set-isomorphism-equiv :
-    {l1 l2 : Level} (A : hSet l1) (B : hSet l2) →
+    {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) →
     is-equiv (set-isomorphism-equiv A B)
   is-equiv-set-isomorphism-equiv A B =
     is-equiv-tot-is-fiberwise-equiv

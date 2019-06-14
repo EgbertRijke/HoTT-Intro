@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
 module 12-univalence where
 
@@ -213,7 +213,7 @@ funext-univalence {A = A} {B} f =
    isomorphisms are equivalent to identifications of groups. -}
 
 has-associative-mul :
-  {l : Level} (X : hSet l) → UU l
+  {l : Level} (X : UU-Set l) → UU l
 has-associative-mul X =
   Σ ( ( type-Set X) →
       ( ( type-Set X) → (type-Set X))) (λ μ →
@@ -221,12 +221,12 @@ has-associative-mul X =
 
 Semi-Group :
   (l : Level) → UU (lsuc l)
-Semi-Group l = Σ (hSet l) has-associative-mul
+Semi-Group l = Σ (UU-Set l) has-associative-mul
 
 {- Bureaucracy of semi-groups. -}
 
 set-Semi-Group :
-  {l : Level} → Semi-Group l → hSet l
+  {l : Level} → Semi-Group l → UU-Set l
 set-Semi-Group G = pr1 G
 
 type-Semi-Group :
@@ -314,7 +314,7 @@ semi-group-Group :
 semi-group-Group G = pr1 G
 
 set-Group :
-  {l : Level} → Group l → hSet l
+  {l : Level} → Group l → UU-Set l
 set-Group G = pr1 (semi-group-Group G)
 
 type-Group :
@@ -435,7 +435,7 @@ loop-space :
 loop-space a = Id a a
 
 set-loop-space :
-  {l : Level} (A : UU l) (a : A) (is-set-Ω : is-set (Id a a)) → hSet l
+  {l : Level} (A : UU l) (a : A) (is-set-Ω : is-set (Id a a)) → UU-Set l
 set-loop-space A a is-set-Ω = pair (Id a a) is-set-Ω
 
 semi-group-loop-space :
@@ -455,7 +455,7 @@ group-loop-space A a is-set-Ω =
       ( pair inv (pair left-inv right-inv)))
 
 set-loop-space-1-type :
-  {l : Level} (A : 1-type l) (a : pr1 A) → hSet l
+  {l : Level} (A : 1-type l) (a : pr1 A) → UU-Set l
 set-loop-space-1-type (pair A is-1-type-A) a =
   set-loop-space A a (is-1-type-A a a)
 
@@ -472,7 +472,7 @@ group-loop-space-1-type (pair A is-1-type-A) a =
 {- We introduce the automorphism group on a set X. -}
 
 aut-Set :
-  {l : Level} (X : hSet l) → hSet l
+  {l : Level} (X : UU-Set l) → UU-Set l
 aut-Set X = set-equiv X X
 
 associative-comp-equiv :
@@ -482,14 +482,14 @@ associative-comp-equiv :
 associative-comp-equiv e f g = eq-htpy-equiv htpy-refl
 
 has-associative-mul-aut-Set :
-  {l : Level} (X : hSet l) → has-associative-mul (aut-Set X)
+  {l : Level} (X : UU-Set l) → has-associative-mul (aut-Set X)
 has-associative-mul-aut-Set X =
   pair
     ( λ e f → f ∘e e)
     ( λ e f g → inv (associative-comp-equiv e f g))
 
 aut-Semi-Group :
-  {l : Level} (X : hSet l) → Semi-Group l
+  {l : Level} (X : UU-Set l) → Semi-Group l
 aut-Semi-Group X =
   pair
     ( aut-Set X)
@@ -506,7 +506,7 @@ right-unit-law-equiv :
 right-unit-law-equiv e = eq-htpy-equiv htpy-refl
 
 is-unital-aut-Semi-Group :
-  {l : Level} (X : hSet l) → is-unital (aut-Semi-Group X)
+  {l : Level} (X : UU-Set l) → is-unital (aut-Semi-Group X)
 is-unital-aut-Semi-Group X =
   pair
     ( equiv-id (type-Set X))
@@ -527,7 +527,7 @@ right-inverse-law-equiv e =
   eq-htpy-equiv (issec-inv-is-equiv (is-equiv-map-equiv e))
 
 is-group-aut-Semi-Group' :
-  {l : Level} (X : hSet l) →
+  {l : Level} (X : UU-Set l) →
   is-group' (aut-Semi-Group X) (is-unital-aut-Semi-Group X)
 is-group-aut-Semi-Group' X =
   pair
@@ -535,7 +535,7 @@ is-group-aut-Semi-Group' X =
     ( pair right-inverse-law-equiv left-inverse-law-equiv)
 
 aut-Group :
-  {l : Level} → hSet l → Group l
+  {l : Level} → UU-Set l → Group l
 aut-Group X =
   pair
     ( aut-Semi-Group X)
@@ -905,7 +905,7 @@ total-is-equiv-hom-Semi-Group G H =
   Σ (hom-Semi-Group G H) (λ f → is-equiv (map-hom-Semi-Group G H f))
 
 preserves-mul' :
-  { l1 l2 : Level} (G : Semi-Group l1) (H : hSet l2)
+  { l1 l2 : Level} (G : Semi-Group l1) (H : UU-Set l2)
   ( μ-H : has-associative-mul H) →
   ( e : (type-Semi-Group G) ≃ (type-Set H)) →
   UU (l1 ⊔ l2)
@@ -1117,6 +1117,166 @@ abstract
   is-contr-UU-contr : (i : Level) → is-contr (Σ (UU i) is-contr)
   is-contr-UU-contr i =
     pair (center-UU-contr i) (contraction-UU-contr)
+
+is-trunc-UU-trunc :
+  (k : 𝕋) (i : Level) → is-trunc (succ-𝕋 k) (Σ (UU i) (is-trunc k))
+is-trunc-UU-trunc k i X Y =
+  is-trunc-is-equiv k
+    ( Id (pr1 X) (pr1 Y))
+    ( ap pr1)
+    ( is-emb-pr1-is-subtype
+      ( is-prop-is-trunc k) X Y)
+    ( is-trunc-is-equiv k
+      ( (pr1 X) ≃ (pr1 Y))
+      ( equiv-eq)
+      ( univalence (pr1 X) (pr1 Y))
+      ( is-trunc-equiv-is-trunc k (pr2 X) (pr2 Y)))
+
+ev-true-false :
+  {l : Level} (A : UU l) → (f : bool → A) → A × A
+ev-true-false A f = pair (f true) (f false)
+
+map-universal-property-bool :
+  {l : Level} {A : UU l} →
+  A × A → (bool → A)
+map-universal-property-bool (pair x y) true = x
+map-universal-property-bool (pair x y) false = y
+
+issec-map-universal-property-bool :
+  {l : Level} {A : UU l} →
+  ((ev-true-false A) ∘ map-universal-property-bool) ~ id
+issec-map-universal-property-bool (pair x y) =
+  eq-pair-triv (pair refl refl)
+
+isretr-map-universal-property-bool' :
+  {l : Level} {A : UU l} (f : bool → A) →
+  (map-universal-property-bool (ev-true-false A f)) ~ f
+isretr-map-universal-property-bool' f true = refl
+isretr-map-universal-property-bool' f false = refl
+
+isretr-map-universal-property-bool :
+  {l : Level} {A : UU l} →
+  (map-universal-property-bool ∘ (ev-true-false A)) ~ id
+isretr-map-universal-property-bool f =
+  eq-htpy (isretr-map-universal-property-bool' f)
+
+universal-property-bool :
+  {l : Level} (A : UU l) →
+  is-equiv (λ (f : bool → A) → pair (f true) (f false))
+universal-property-bool A =
+  is-equiv-has-inverse
+    map-universal-property-bool
+    issec-map-universal-property-bool
+    isretr-map-universal-property-bool
+
+ev-true :
+  {l : Level} {A : UU l} → (bool → A) → A
+ev-true f = f true
+
+triangle-ev-true :
+  {l : Level} (A : UU l) →
+  (ev-true) ~ (pr1 ∘ (ev-true-false A))
+triangle-ev-true A = htpy-refl
+
+aut-bool-bool :
+  bool → (bool ≃ bool)
+aut-bool-bool true = equiv-id bool
+aut-bool-bool false = equiv-neg-𝟚
+
+bool-aut-bool :
+  (bool ≃ bool) → bool
+bool-aut-bool e = map-equiv e true
+
+decide-true-false :
+  (b : bool) → coprod (Id b true) (Id b false)
+decide-true-false true = inl refl
+decide-true-false false = inr refl
+
+eq-false :
+  (b : bool) → (¬ (Id b true)) → (Id b false)
+eq-false true p = ind-empty (p refl)
+eq-false false p = refl
+
+eq-true :
+  (b : bool) → (¬ (Id b false)) → Id b true
+eq-true true p = refl
+eq-true false p = ind-empty (p refl)
+
+eq-false-equiv' :
+  (e : bool ≃ bool) → Id (map-equiv e true) true →
+  is-decidable (Id (map-equiv e false) false) → Id (map-equiv e false) false
+eq-false-equiv' e p (inl q) = q
+eq-false-equiv' e p (inr x) =
+  ind-empty
+    ( Eq-𝟚-eq true false
+      ( ap pr1
+        ( is-prop-is-contr'
+          ( is-contr-map-is-equiv (is-equiv-map-equiv e) true)
+          ( pair true p)
+          ( pair false (eq-true (map-equiv e false) x)))))
+
+eq-false-equiv :
+  (e : bool ≃ bool) → Id (map-equiv e true) true → Id (map-equiv e false) false
+eq-false-equiv e p =
+  eq-false-equiv' e p (has-decidable-equality-𝟚 (map-equiv e false) false)
+
+{-
+eq-true-equiv :
+  (e : bool ≃ bool) →
+  ¬ (Id (map-equiv e true) true) → Id (map-equiv e false) true
+eq-true-equiv e f = {!!}
+
+issec-bool-aut-bool' :
+  ( e : bool ≃ bool) (d : is-decidable (Id (map-equiv e true) true)) →
+  htpy-equiv (aut-bool-bool (bool-aut-bool e)) e
+issec-bool-aut-bool' e (inl p) true =
+  ( htpy-equiv-eq (ap aut-bool-bool p) true) ∙ (inv p)
+issec-bool-aut-bool' e (inl p) false =
+  ( htpy-equiv-eq (ap aut-bool-bool p) false) ∙
+  ( inv (eq-false-equiv e p))
+issec-bool-aut-bool' e (inr f) true =
+  ( htpy-equiv-eq
+    ( ap aut-bool-bool (eq-false (map-equiv e true) f)) true) ∙
+  ( inv (eq-false (map-equiv e true) f))
+issec-bool-aut-bool' e (inr f) false =
+  ( htpy-equiv-eq (ap aut-bool-bool {!eq-true-equiv e ?!}) {!!}) ∙
+  ( inv {!!})
+
+issec-bool-aut-bool :
+  (aut-bool-bool ∘ bool-aut-bool) ~ id
+issec-bool-aut-bool e =
+  eq-htpy-equiv
+    ( issec-bool-aut-bool' e
+      ( has-decidable-equality-𝟚 (map-equiv e true) true))
+-}
+
+-- Exercise
+
+unit-classical-Prop : classical-Prop lzero
+unit-classical-Prop =
+  pair (pair {!!} {!!}) {!!}
+
+raise-unit-classical-Prop :
+  (l : Level) → classical-Prop l
+raise-unit-classical-Prop l =
+  pair
+    ( pair
+      ( raise l unit)
+      ( is-prop-is-equiv' unit
+        ( map-raise l unit)
+        ( is-equiv-map-raise l unit)
+        ( is-prop-unit)))
+    ( inl (map-raise l unit star))
+
+bool-classical-Prop :
+  (l : Level) → classical-Prop l → bool
+bool-classical-Prop l (pair P (inl x)) = true
+bool-classical-Prop l (pair P (inr x)) = false
+
+classical-Prop-bool :
+  (l : Level) → bool → classical-Prop l
+classical-Prop-bool l true = raise-unit-classical-Prop l
+classical-Prop-bool l false = {!!}
 
 -- Exercise
 

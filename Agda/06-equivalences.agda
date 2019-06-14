@@ -617,10 +617,6 @@ abstract
    equivalence. Moreover, we show that any constant function on the booleans is
    not an equivalence. -}
 
-neg-𝟚 : bool → bool
-neg-𝟚 true = false
-neg-𝟚 false = true
-
 neg-neg-𝟚 : (neg-𝟚 ∘ neg-𝟚) ~ id
 neg-neg-𝟚 true = refl
 neg-neg-𝟚 false = refl

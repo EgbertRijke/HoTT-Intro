@@ -95,6 +95,84 @@ Next, we define the function $r$. Let $h:A\to \sm{x:A}B(x)$, and let $p:\proj 1 
 We note that if $p\jdeq \refl{\idfunc}$, then $H(x)\jdeq\refl{x}$. In this case we have the judgmental equality $r((h,\refl{}),x)\jdeq\proj 2 (h(x))$. Thus we see that $r\circ i\jdeq \idfunc$ by another application of the $\eta$-rule for $\Pi$-types.
 \end{proof}
 
+\subsection{Propositional extensionality, posets, and subuniverses}
+
+\begin{thm}\label{thm:propositional-extensionality}
+  Propositions satisfy \define{propositional extensionality}:
+  for any two propositions $P$ and $Q$, the canonical map
+  \begin{equation*}
+    (P=Q)\to (P\leftrightarrow Q)
+  \end{equation*}
+  is an equivalence.
+\end{thm}
+
+\begin{proof}
+  We note that the identity type $P=Q$ is an identity type in $\prop$. However, since $\mathsf{is\usc{}prop}(X)$ is a proposition for any type $X$, it follows that the map
+  \begin{equation*}
+    \apfunc{\proj 1} : (P = Q) \to (\proj 1(P) = \proj 1(Q))
+  \end{equation*}
+  is an equivalence. Note that usually we just write $P$ for the underlying type $\proj 1(P)$ of a proposition $P:\prop$, but here it is useful to keep the notation explicit. Now we observe that we have a commuting square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      (P=Q) \arrow[d,swap,"\apfunc{\proj 1}"] \arrow[r] & (P\leftrightarrow Q) \\
+      (\proj 1(P)=\proj 1(Q)) \arrow[r,swap,"\mathsf{equiv\usc{}eq}"] & (\proj 1(P)\simeq\proj 1(Q)) \arrow[u,swap,"\simeq"]
+    \end{tikzcd}
+  \end{equation*}
+  Since the left, bottom, and right map are equivalences, it follows that the top map is an equivalence.
+\end{proof}
+
+\begin{defn}
+  A \define{partially ordered set (poset)} is a set $P$ equipped with a relation
+  \begin{equation*}
+    \blank\leq\blank : P \to (P \to \prop)
+  \end{equation*}
+  that is \define{reflexive} (for every $x:P$ we have $x\leq x$), \define{transitive} (for every $x,y,z:P$ such that $x\leq y$ and $y\leq z$ we have $x\leq z$), and \define{anti-symmetric} (for every $x,y:P$ such that $x\leq y$ and $y\leq x$ we have $x=y$).
+\end{defn}
+
+\begin{eg}
+  The type $\prop$ is a poset, where the ordering relation is given by implication: $P$ is less than $Q$ if $P\to Q$. The fact that $P\to Q$ is a proposition is a special case of \cref{cor:funtype_trunc}. The relation $P\to Q$ is reflexive by the identity function, and transitive by function composition. Moreover, the relation $P\to Q$ is anti-symmetric by \cref{thm:propositional-extensionality}.
+\end{eg}
+
+\begin{eg}
+  The type of natural numbers comes equipped with at least two important poset structures. The first is given by the usual ordering relation $\leq$, and the second is given by the relation $d\mid n$ that $d$ divides $n$.
+\end{eg}
+
+\begin{thm}
+  For any poset $P$ and any type $X$, the set $P^X$ is a poset. In particular the type of subtypes of any type is a poset.
+\end{thm}
+
+\begin{proof}
+  Let $P$ be a poset with ordering $\leq$, and let $X$ be a type. Then $P^X$ is a set by \cref{cor:funtype_trunc}. For any $f,g:X\to P$ we define
+  \begin{equation*}
+    (f\leq g) \defeq \prd{x:X}f(x)\leq g(x).
+  \end{equation*}
+  Reflexivity and transitivity follow immediately from reflexivity and transitivity of the original relation. Moreover, by the anti-symmetry of the orignal relation it follows that
+  \begin{equation*}
+    (f\leq g)\times (g\leq f) \to (f\htpy g). 
+  \end{equation*}
+  Therefore we obtain an identification $f=g$ by function extensionality. The last claim follows immediately from the fact that a subtype of $X$ is a map $X\to\prop$, and the fact that $\prop$ is a poset.
+\end{proof}
+
+Another important application of the univalence axiom is that any subuniverse is closed under equivalences. In this section we let $\UU$ be a univalent universe.
+
+\begin{thm}
+  Let $P:\UU\to\prop$ be a subuniverse of $\UU$. Then we have
+  \begin{equation*}
+    (X\simeq Y)\to (P(X) \to P(Y))
+  \end{equation*}
+  for any two types $X,Y:\UU$.
+\end{thm}
+
+\begin{proof}
+  We define the map $(X\simeq Y)\to (P(X)\to P(Y))$ as the composite
+  \begin{equation*}
+    \begin{tikzcd}
+      (X\simeq Y) \arrow[r,"\mathsf{eq\usc{}equiv}"] &[2em] (X=Y) \arrow[r,"\mathsf{tr}_P"] & (P(X)\to P(Y)).
+    \end{tikzcd}\qedhere
+  \end{equation*}
+\end{proof}
+
+
 \subsection{Groups in univalent mathematics}
 
 In this section we exhibit a typical way to use the univalence axiom, showing that isomorphic groups can be identified.
@@ -381,6 +459,10 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
   By \cref{rmk:category-semi-group,rmk:category-group} we have pre-categories of semi-groups and of groups.
 \end{eg}
 
+\begin{eg}
+  A pre-category satisfying the condition that every hom-set is a proposition is a \define{preorder}. 
+\end{eg}
+
 \begin{defn}
   Given a pre-category $\mathcal{C}$, a morphism $f:\mathsf{hom}(x,y)$ is said to be an \define{isomorphism} if there exists a morphism $g:\mathsf{hom}(y,x)$ such that
   \begin{align*}
@@ -404,6 +486,10 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
 
 \begin{eg}
   The pre-categories of semi-groups and groups are Rezk-complete. Therefore they form categories.
+\end{eg}
+
+\begin{eg}
+  A pre-order is Rezk-complete if and only if it is anti-symmetric. In other words, a poset is precisely a category for which all the hom-sets are propositions. Thus, we see that the anti-symmetry axiom can be seen as a univalence axiom for pre-orders.
 \end{eg}
 
 \begin{exercises}

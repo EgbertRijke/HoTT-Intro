@@ -12,16 +12,16 @@ is-prop :
 is-prop A = (x y : A) → is-contr (Id x y)
 
 {- We introduce the universe of all propositions. -}
-hProp :
+UU-Prop :
   (l : Level) → UU (lsuc l)
-hProp l = Σ (UU l) is-prop
+UU-Prop l = Σ (UU l) is-prop
 
 type-Prop :
-  {l : Level} → hProp l → UU l
+  {l : Level} → UU-Prop l → UU l
 type-Prop P = pr1 P
 
 is-prop-type-Prop :
-  {l : Level} (P : hProp l) → is-prop (type-Prop P)
+  {l : Level} (P : UU-Prop l) → is-prop (type-Prop P)
 is-prop-type-Prop P = pr2 P
 
 {- The empty type is a proposition. -}
@@ -33,6 +33,9 @@ abstract
 abstract
   is-prop-unit : is-prop unit
   is-prop-unit = is-prop-is-contr is-contr-unit
+
+unit-Prop : UU-Prop lzero
+unit-Prop = pair unit is-prop-unit
 
 is-prop' :
   {i : Level} (A : UU i) → UU i
@@ -155,16 +158,16 @@ is-set :
   {i : Level} → UU i → UU i
 is-set A = (x y : A) → is-prop (Id x y)
 
-hSet :
+UU-Set :
   (i : Level) → UU (lsuc i)
-hSet i = Σ (UU i) is-set
+UU-Set i = Σ (UU i) is-set
 
 type-Set :
-  {l : Level} → hSet l → UU l
+  {l : Level} → UU-Set l → UU l
 type-Set X = pr1 X
 
 is-set-type-Set :
-  {l : Level} (X : hSet l) → is-set (type-Set X)
+  {l : Level} (X : UU-Set l) → is-set (type-Set X)
 is-set-type-Set X = pr2 X
 
 axiom-K :
@@ -240,7 +243,7 @@ abstract
   is-set-ℕ : is-set ℕ
   is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ refl-Eq-ℕ eq-Eq-ℕ
 
-set-ℕ : hSet lzero
+set-ℕ : UU-Set lzero
 set-ℕ = pair ℕ is-set-ℕ
 
 -- Section 8.3 General truncation levels
@@ -590,7 +593,7 @@ abstract
   is-set-Σ = is-trunc-Σ zero-𝕋
 
 set-Σ :
-  {l1 l2 : Level} (A : hSet l1) (B : pr1 A → hSet l2) → hSet (l1 ⊔ l2)
+  {l1 l2 : Level} (A : UU-Set l1) (B : pr1 A → UU-Set l2) → UU-Set (l1 ⊔ l2)
 set-Σ (pair A is-set-A) B =
   pair
     ( Σ A (λ x → (pr1 (B x))))
@@ -602,7 +605,7 @@ abstract
   is-set-prod = is-trunc-prod zero-𝕋
 
 set-prod :
-  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) → hSet (l1 ⊔ l2)
+  {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) → UU-Set (l1 ⊔ l2)
 set-prod (pair A is-set-A) (pair B is-set-B) =
   pair (A × B) (is-set-prod is-set-A is-set-B)
 
@@ -656,7 +659,7 @@ abstract
   is-set-bool : is-set bool
   is-set-bool = is-set-prop-in-id Eq-𝟚 is-prop-Eq-𝟚 reflexive-Eq-𝟚 eq-Eq-𝟚
 
-set-bool : hSet lzero
+set-bool : UU-Set lzero
 set-bool = pair bool is-set-bool
 
 -- Exercise 8.4
@@ -716,7 +719,7 @@ abstract
   is-set-coprod = is-trunc-coprod neg-two-𝕋
 
 set-coprod :
-  {l1 l2 : Level} (A : hSet l1) (B : hSet l2) → hSet (l1 ⊔ l2)
+  {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) → UU-Set (l1 ⊔ l2)
 set-coprod (pair A is-set-A) (pair B is-set-B) =
   pair (coprod A B) (is-set-coprod is-set-A is-set-B)
 
@@ -724,14 +727,14 @@ abstract
   is-set-unit : is-set unit
   is-set-unit = is-trunc-succ-is-trunc neg-one-𝕋 unit is-prop-unit
 
-set-unit : hSet lzero
+set-unit : UU-Set lzero
 set-unit = pair unit is-set-unit
 
 abstract
   is-set-ℤ : is-set ℤ
   is-set-ℤ = is-set-coprod is-set-ℕ (is-set-coprod is-set-unit is-set-ℕ)
 
-set-ℤ : hSet lzero
+set-ℤ : UU-Set lzero
 set-ℤ = pair ℤ is-set-ℤ
 
 is-set-empty : is-set empty
@@ -745,7 +748,7 @@ abstract
     is-set-coprod (is-set-Fin n) is-set-unit
 
 set-Fin :
-  (n : ℕ) → hSet lzero
+  (n : ℕ) → UU-Set lzero
 set-Fin n = pair (Fin n) (is-set-Fin n)
 
 -- Exercise 8.7

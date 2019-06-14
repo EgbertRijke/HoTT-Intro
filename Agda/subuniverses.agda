@@ -2,8 +2,8 @@
 
 module subuniverses where
 
-import Lecture15
-open Lecture15 public
+import 12-univalence
+open 12-univalence public
 
 {-
 is-local :
@@ -60,7 +60,7 @@ Eq-localizations (pair P H) X
       up' = pr2 (pr2 t)
   in
   Σ ( Y ≃ Y')
-    ( λ e → ((eqv-map e) ∘ l) ~ l' )
+    ( λ e → ((map-equiv e) ∘ l) ~ l' )
 
 reflexive-Eq-localizations :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
@@ -80,7 +80,7 @@ is-contr-total-Eq-localizations :
 is-contr-total-Eq-localizations
   (pair P H) X (pair (pair Y p) (pair l up)) =
   is-contr-total-Eq-structure
-    ( λ Y' l' e → ((eqv-map e) ∘ l) ~ (pr1 l'))
+    ( λ Y' l' e → ((map-equiv e) ∘ l) ~ (pr1 l'))
     ( is-contr-total-Eq-total-subuniverse (pair P H) (pair Y p))
     ( pair (pair Y p) (equiv-id Y))
     ( is-contr-total-Eq-substructure
@@ -94,7 +94,7 @@ is-equiv-Eq-localizations-eq :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →
   ( s t : has-localization P X) → is-equiv (Eq-localizations-eq P X s t)
 is-equiv-Eq-localizations-eq P X s =
-  id-fundamental-gen s
+  fundamental-theorem-id s
   ( reflexive-Eq-localizations P X s)
   ( is-contr-total-Eq-localizations P X s)
   ( Eq-localizations-eq P X s)
@@ -318,7 +318,7 @@ square-dependent-elimination-localization :
     ( toto-dependent-elimination-localization P X has-loc-X Z))
 square-dependent-elimination-localization
   (pair P H) X (pair (pair Y p) (pair l up)) Z q =
-  coherence-square-inv-choice-∞ l
+  htpy-refl
 
 is-equiv-toto-dependent-elimination-localization :
   {l1 l2 : Level} (P : subuniverse l1 l2) (X : UU l1) →

@@ -92,6 +92,26 @@ Just as in the cases for the unit type and the empty type, the induction princip
 \end{equation*}
 for any type $A$.
 
+\begin{eg}
+  Using the induction principle of $\bool$ we can define all the operations of Boolean algebra. For example, the \define{boolean negation} operation $\neg : \bool \to \bool$ is defined by
+  \begin{align*}
+    \neg\btrue & \defeq \bfalse & \neg\bfalse & \defeq \btrue.
+  \end{align*}
+  The \define{boolean conjunction} operation $\blank\land\blank : \bool \to (\bool\to \bool)$is defined by
+  \begin{align*}
+    \btrue\land\btrue & \defeq \btrue & \bfalse\land\btrue & \defeq \bfalse \\
+    \btrue\land\bfalse & \defeq \bfalse & \bfalse\land\bfalse & \defeq \bfalse.
+  \end{align*}
+  The \define{boolean disjunction} operation $\blank\lor\blank : \bool \to (\bool\to \bool)$ is defined by
+  \begin{align*}
+    \btrue\lor\btrue & \defeq \btrue & \bfalse\lor\btrue & \defeq \btrue \\
+    \btrue\lor\bfalse & \defeq \btrue & \bfalse\lor\bfalse & \defeq \bfalse.
+  \end{align*}  
+  We leave the definitions of some of the other boolean operations as \cref{ex:boolean-operation}. Note that the method of defing the boolean operations by the induction principle of $\bool$ is not that different from defining them by truth tables.
+
+  Boolean logic is important, but it won't be very prominent in this course. The reason is simple: in type theory it is more natural to use the `logic' of types that is provided by the inference rules.
+\end{eg}
+
 \subsection{Coproducts}
 \begin{defn}
 Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with
@@ -269,6 +289,17 @@ We define the \define{successor function}\index{successor function!on Z@{on $\Z$
 \end{defn}
 
 \begin{exercises}
+\item \label{ex:boolean-operation}Define the following operations of Boolean algebra:
+  \begin{center}
+    \begin{tabular}{ll}
+      exclusive disjunction & $p \oplus q$ \\
+      implication & $p \Rightarrow q$ \\
+      if and only if & $p \Leftrightarrow q$ \\
+      Peirce's arrow (neither \dots{} nor) & $p \downarrow q$ \\
+      Sheffer stroke (not both) & $p\mid q$.
+    \end{tabular}
+  \end{center}
+  Here $p$ and $q$ range over $\bool$. 
 \item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}_\Z:\Z\to \Z$.
 \item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define group operations
   \begin{align*}

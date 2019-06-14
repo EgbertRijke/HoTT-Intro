@@ -342,7 +342,7 @@ Let $f:X\to Y$ be a map. Show that the following are equivalent:
 Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the map $\proj 1 : (\eqv{A}{B})\to (A\to B)$ is an embedding.
 \item \label{ex:prop_equiv}
 \begin{subexenum}
-\item Let $P$ and $Q$ be propositions. Show that
+\item \label{ex:equiv-bi-implication}Let $P$ and $Q$ be propositions. Show that
 \begin{equation*}
 \eqv{(P\leftrightarrow Q)}{(\eqv{P}{Q})}.
 \end{equation*}
@@ -491,4 +491,9 @@ K & : g\circ f = \idfunc[A].
   \begin{equation*}
     \Big(\prd{i:I}\iscontr(A_i)\Big)\leftrightarrow \iscontr\Big(\prd{i:I}A_i\Big).
   \end{equation*}
+\item Construct equivalences
+  \begin{align*}
+    \mathsf{Fin}(n^m) & \simeq (\mathsf{Fin}(m)\to\mathsf{Fin}(n)) \\
+    \mathsf{Fin}(n!) & \simeq (\mathsf{Fin}(n)\simeq\mathsf{Fin}(n)).
+  \end{align*}
 \end{exercises}

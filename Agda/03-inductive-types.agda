@@ -5,6 +5,9 @@ module 03-inductive-types where
 import 02-natural-numbers
 open 02-natural-numbers public
 
+
+-- The unit type
+
 data unit : UU lzero where
   star : unit
   
@@ -12,6 +15,8 @@ data unit : UU lzero where
 
 ind-unit : {i : Level} {P : unit → UU i} → P star → ((x : unit) → P x)
 ind-unit p star = p
+
+-- The empty type
 
 data empty : UU lzero where
 
@@ -23,8 +28,28 @@ ind-empty ()
 ¬ : {i : Level} → UU i → UU i
 ¬ A = A → empty
 
+-- The type of booleans
+
 data bool : UU lzero where
   true false : bool
+
+neg-𝟚 : bool → bool
+neg-𝟚 true = false
+neg-𝟚 false = true
+
+conjunction-𝟚 : bool → (bool → bool)
+conjunction-𝟚 true true = true
+conjunction-𝟚 true false = false
+conjunction-𝟚 false true = false
+conjunction-𝟚 false false = false
+
+disjunction-𝟚 : bool → (bool → bool)
+disjunction-𝟚 true true = true
+disjunction-𝟚 true false = true
+disjunction-𝟚 false true = true
+disjunction-𝟚 false false = false
+
+-- Coproducts
 
 data coprod {i j : Level} (A : UU i) (B : UU j) : UU (i ⊔ j)  where
   inl : A → coprod A B
@@ -35,6 +60,8 @@ ind-coprod : {i j k : Level} {A : UU i} {B : UU j} (C : coprod A B → UU k) →
   (t : coprod A B) → C t
 ind-coprod C f g (inl x) = f x
 ind-coprod C f g (inr x) = g x
+
+-- Dependent pair types
 
 data Σ {i j : Level} (A : UU i) (B : A → UU j) : UU (i ⊔ j) where
   pair : (x : A) → (B x → Σ A B)
@@ -49,6 +76,8 @@ pr1 (pair a b) = a
 pr2 : {i j : Level} {A : UU i} {B : A → UU j} → (t : Σ A B) → B (pr1 t)
 pr2 (pair a b) = b
 
+-- Cartesian products
+
 prod : {i j : Level} (A : UU i) (B : UU j) → UU (i ⊔ j)
 prod A B = Σ A (λ a → B)
 
@@ -59,29 +88,37 @@ pair' = pair
 _×_ :  {i j : Level} (A : UU i) (B : UU j) → UU (i ⊔ j)
 A × B = prod A B
 
--- The integers
+-- The type of integers
+
 ℤ : UU lzero
 ℤ = coprod ℕ (coprod unit ℕ)
 
 -- Inclusion of the negative integers
+
 in-neg : ℕ → ℤ
 in-neg n = inl n
 
 -- Negative one
+
 neg-one-ℤ : ℤ
 neg-one-ℤ = in-neg zero-ℕ
 
 -- Zero
+
 zero-ℤ : ℤ
 zero-ℤ = inr (inl star)
 
 -- One
+
 one-ℤ : ℤ
 one-ℤ = inr (inr zero-ℕ)
 
 -- Inclusion of the positive integers
+
 in-pos : ℕ → ℤ
 in-pos n = inr (inr n)
+
+{- We prove an induction principle for the integers. -}
 
 ind-ℤ : {i : Level} (P : ℤ → UU i) → P neg-one-ℤ → ((n : ℕ) → P (inl n) → P (inl (succ-ℕ n))) → P zero-ℤ → P one-ℤ → ((n : ℕ) → P (inr (inr (n))) → P (inr (inr (succ-ℕ n)))) → (k : ℤ) → P k
 ind-ℤ P p-1 p-S p0 p1 pS (inl zero-ℕ) = p-1
@@ -149,3 +186,36 @@ Fibonacci-ℤ (inr (inr zero-ℕ)) = one-ℤ
 Fibonacci-ℤ (inr (inr (succ-ℕ zero-ℕ))) = one-ℤ
 Fibonacci-ℤ (inr (inr (succ-ℕ (succ-ℕ x)))) =
   add-ℤ (Fibonacci-ℤ (inr (inr x))) (Fibonacci-ℤ (inr (inr (succ-ℕ x))))
+
+-- Exercise
+
+exclusive-disjunction-𝟚 : bool → (bool → bool)
+exclusive-disjunction-𝟚 true true = false
+exclusive-disjunction-𝟚 true false = true
+exclusive-disjunction-𝟚 false true = true
+exclusive-disjunction-𝟚 false false = false
+
+implication-𝟚 : bool → (bool → bool)
+implication-𝟚 true true = true
+implication-𝟚 true false = false
+implication-𝟚 false true = true
+implication-𝟚 false false = true
+
+bi-implication-𝟚 : bool → (bool → bool)
+bi-implication-𝟚 true true = true
+bi-implication-𝟚 true false = false
+bi-implication-𝟚 false true = false
+bi-implication-𝟚 false false = true
+
+peirce-arrow-𝟚 : bool → (bool → bool)
+peirce-arrow-𝟚 true true = false
+peirce-arrow-𝟚 true false = false
+peirce-arrow-𝟚 false true = false
+peirce-arrow-𝟚 false false = true
+
+sheffer-stroke-𝟚 : bool → (bool → bool)
+sheffer-stroke-𝟚 true true = false
+sheffer-stroke-𝟚 true false = true
+sheffer-stroke-𝟚 false true = true
+sheffer-stroke-𝟚 false false = true
+
