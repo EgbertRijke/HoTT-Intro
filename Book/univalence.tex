@@ -72,7 +72,7 @@ Now it follows by \cref{lem:postcomp-equiv} that $\proj1\circ\blank$ is an equiv
 are contractible. In particular, the fiber at $\idfunc[A]$ is contractible. Therefore it suffices to show that $\prd{x:A}B(x)$ is a retract of $\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]$. In other words, we will construct
 \begin{equation*}
 \begin{tikzcd}
-\Big(\prd{x:A}B(x)\Big) \arrow[r,"i"] & {\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]} \arrow[r,"r"] & \Big(\prd{x:A}B(x)\Big),
+\Big(\prd{x:A}B(x)\Big) \arrow[r,"i"] & \Big(\sm{f:A\to\sm{x:A}B(x)}\proj 1\circ f=\idfunc[A]\Big) \arrow[r,"r"] & \Big(\prd{x:A}B(x)\Big),
 \end{tikzcd}
 \end{equation*}
 and a homotopy $r\circ i\htpy \idfunc$.
@@ -103,15 +103,17 @@ We note that if $p\jdeq \refl{\idfunc}$, then $H(x)\jdeq\refl{x}$. In this case 
   \begin{equation*}
     (P=Q)\to (P\leftrightarrow Q)
   \end{equation*}
-  is an equivalence.
+  is an equivalence. It follows that the type $\prop$ of propositions in $\UU$ is a set.
 \end{thm}
+
+Note that for any $P:\prop$, we usually also write $P$ for the underlying type of the proposition $P$. If we would be more formal about it we would have to write $\proj 1(P)$ for the underlying type, since $\prop$ is the $\Sigma$-type $\sm{X:\UU}\mathsf{is\usc{}prop}(X)$. In the following proof it is clearer if we use the more formal notation $\proj 1(P)$ for the underlying type of a proposition $P$.
 
 \begin{proof}
   We note that the identity type $P=Q$ is an identity type in $\prop$. However, since $\mathsf{is\usc{}prop}(X)$ is a proposition for any type $X$, it follows that the map
   \begin{equation*}
     \apfunc{\proj 1} : (P = Q) \to (\proj 1(P) = \proj 1(Q))
   \end{equation*}
-  is an equivalence. Note that usually we just write $P$ for the underlying type $\proj 1(P)$ of a proposition $P:\prop$, but here it is useful to keep the notation explicit. Now we observe that we have a commuting square
+  is an equivalence. Now we observe that we have a commuting square
   \begin{equation*}
     \begin{tikzcd}[column sep=huge]
       (P=Q) \arrow[d,swap,"\apfunc{\proj 1}"] \arrow[r] & (P\leftrightarrow Q) \\
@@ -128,6 +130,10 @@ We note that if $p\jdeq \refl{\idfunc}$, then $H(x)\jdeq\refl{x}$. In this case 
   \end{equation*}
   that is \define{reflexive} (for every $x:P$ we have $x\leq x$), \define{transitive} (for every $x,y,z:P$ such that $x\leq y$ and $y\leq z$ we have $x\leq z$), and \define{anti-symmetric} (for every $x,y:P$ such that $x\leq y$ and $y\leq x$ we have $x=y$).
 \end{defn}
+
+\begin{rmk}
+  The condition that $X$ is a set can be omitted from the definition of a poset. Indeed, if $X$ is any type that comes equipped with a $\prop$-valued ordering relation $\leq$ that is reflexive and anti-symmetric, then $X$ is a set by \cref{lem:prop_to_id}.
+\end{rmk}
 
 \begin{eg}
   The type $\prop$ is a poset, where the ordering relation is given by implication: $P$ is less than $Q$ if $P\to Q$. The fact that $P\to Q$ is a proposition is a special case of \cref{cor:funtype_trunc}. The relation $P\to Q$ is reflexive by the identity function, and transitive by function composition. Moreover, the relation $P\to Q$ is anti-symmetric by \cref{thm:propositional-extensionality}.
@@ -498,10 +504,10 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
     \mathsf{equiv\usc{}eq} : (X=X)\to (\eqv{X}{X})
   \end{equation*}
   is a group isomorphism.
-\item \label{ex:tr_ap} Show that for any $P:X\to \UU$ and any $p:x=y$ in $X$, we have\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}}\index{transport}
-\begin{equation*}
-\mathsf{equiv\usc{}eq}(\ap{P}{p})\htpy \mathsf{tr}_P(p).
-\end{equation*}
+%\item \label{ex:tr_ap} Show that for any $P:X\to \UU$ and any $p:x=y$ in $X$, we have\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}}\index{transport}
+%\begin{equation*}
+%\mathsf{equiv\usc{}eq}(\ap{P}{p})\htpy \mathsf{tr}_P(p).
+%\end{equation*}
 \item \label{ex:istrunc_UUtrunc}
 \begin{subexenum}
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.\index{universe!of contractible types}
@@ -566,5 +572,9 @@ by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{equiv@{$\
     f(e_G) & = e_H \\
     f(x^{-1}) & = f(x)^{-1}.
   \end{align*}
-\item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit.
+\item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.
+\item Recall that $\UU_\ast$ is the universe of pointed types. Construct for any pointed type $(X,x_0)$ an equivalence
+  \begin{equation*}
+    \Big(\sm{P:X\to \UU}P(x_0)\Big)\simeq \sm{(A,a_0):\UU_\ast}(A,a_0)\to_\ast(X,x_0).
+  \end{equation*}
 \end{exercises}

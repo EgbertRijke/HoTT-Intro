@@ -223,7 +223,10 @@ abstract
     (i : (x y : A) → R x y → Id x y) →
     is-set A
   is-set-prop-in-id R p ρ i x y =
-    is-prop-is-equiv' (R x y) (i x y) (is-equiv-prop-in-id R p ρ i x y) (p x y)
+    is-prop-is-equiv'
+      ( R x y)
+      ( i x y)
+      ( is-equiv-prop-in-id R p ρ i x y) (p x y)
 
 abstract
   is-prop-Eq-ℕ :
@@ -237,11 +240,13 @@ abstract
   eq-Eq-ℕ : (n m : ℕ) → Eq-ℕ n m → Id n m
   eq-Eq-ℕ = least-reflexive-Eq-ℕ Id (λ n → refl)
 
-  
-
 abstract
   is-set-ℕ : is-set ℕ
-  is-set-ℕ = is-set-prop-in-id Eq-ℕ is-prop-Eq-ℕ refl-Eq-ℕ eq-Eq-ℕ
+  is-set-ℕ =
+    is-set-prop-in-id
+      Eq-ℕ
+      is-prop-Eq-ℕ
+      refl-Eq-ℕ eq-Eq-ℕ
 
 set-ℕ : UU-Set lzero
 set-ℕ = pair ℕ is-set-ℕ
