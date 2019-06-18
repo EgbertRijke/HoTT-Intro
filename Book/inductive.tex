@@ -112,7 +112,7 @@ for any type $A$.
   Boolean logic is important, but it won't be very prominent in this course. The reason is simple: in type theory it is more natural to use the `logic' of types that is provided by the inference rules.
 \end{eg}
 
-\subsection{Coproducts}
+\subsection{Coproducts and the type of integers}
 \begin{defn}
 Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with
 \begin{align*}
@@ -131,9 +131,79 @@ for which the computation rules\index{computation rules!of coproduct}
 hold. Sometimes we write $[f,g]$ for $\ind{+}(f,g)$.
 \end{defn}
 
-The coproduct of two types is sometimes also called the \define{disjoint sum}.
-When one thinks of types as propositions, then the coproduct plays the role of the disjunction.\index{propositions as types!disjunction}
-To construct a term of type $A+B$ you first have to decide whether it is of the form $\inl$ or $\inr$, and then you construct a term of $A$ or $B$ accordingly. Of course, this is to be contrasted with the \emph{double negation translation}\index{double negation translation!disjunction} of the disjunction, which is read as `not neither $A$ nor $B$'. 
+The coproduct of two types is sometimes also called the \define{disjoint sum}. By the induction principle of coproducts it follows that we have a function
+\begin{equation*}
+  (A\to X) \to \big((B\to X) \to (A+B\to X)\big)
+\end{equation*}
+for any type $X$. Note that this special case of the induction principle of coproducts is very much like the elimination rule of disjunction in first order logic: if $P$, $P'$, and $Q$ are propositions, then we have
+\begin{equation*}
+  (P\to Q)\to \big((P'\to Q)\to (P\lor P'\to Q)\big).
+\end{equation*}
+Indeed, we can think of \emph{propositions as types} and of terms as their constructive proofs. Under this interpretation of type theory the coproduct is indeed the disjunction.
+
+An important example of a type that can be defined using coproducts is the type $\Z$ of integers.
+
+\begin{defn}
+  We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$. The type of integers comes equipped with inclusion functions of the positive and negative integers
+  \begin{align*}
+    \mathsf{in\usc{}pos} & \defeq \inr\circ\inr \\
+    \mathsf{in\usc{}neg} & \defeq \inl,
+  \end{align*}
+  which are both of type $\N\to\Z$, and the constants
+  \begin{align*}
+    -1_\Z & \defeq \mathsf{in\usc{}neg}(0)\\
+    0_\Z & \defeq \inr(\inl(\ttt))\\
+    1_\Z & \defeq \mathsf{in\usc{}pos}(0).
+  \end{align*}
+\end{defn}
+
+In the following lemma we derive an induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which can be used in many familiar constructions on $\Z$, such as in the definitions of addition and multiplication.
+
+\begin{lem}\label{lem:Z_ind}
+  Consider a type family $P$ over $\Z$. If we are given
+  \begin{align*}
+    p_{-1} & :P(-1_\Z) \\
+    p_{-S} & : \prd{n:\N}P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n)))\\
+    p_{0} & : P(0_\Z) \\
+    P_{1} & : P(1_\Z) \\
+    P_{S} & : \prd{n:\N}P(\mathsf{in\usc{}pos}(n))\to P(\mathsf{in\usc{}pos}(\succN(n))),
+  \end{align*}
+  then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:
+  \begin{align*}
+    f(-1_\Z) & \jdeq p_{-1} \\
+    f(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\mathsf{in\usc{}neg}(n))) \\
+    f(0_\Z) & \jdeq p_{0} \\
+    f(1_\Z) & \jdeq p_{1} \\
+    f(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \jdeq p_S(n,f(\mathsf{in\usc{}pos}(n))).
+  \end{align*}
+\end{lem}
+
+\begin{proof}
+  Since $\Z$ is the coproduct of $\N$ and $\unit+\N$, it suffices to define
+  \begin{align*}
+    p_{inl} & : \prd{n:\N}P(\inl(n)) \\
+    p_{inr} & : \prd{t:\unit+\N}P(\inr(t)).
+  \end{align*}
+  Note that $\mathsf{in\usc{}neg}\jdeq\inl$ and $-1_\Z\jdeq \mathsf{in\usc{}neg}(\zeroN)$. In order to define $p_{inl}$ we use induction on the natural numbers, so it suffices to define
+  \begin{align*}
+    p_{-1} & : P(-1) \\
+    p_{-S} & : \prd{n:\N} P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n))).
+  \end{align*}
+  Similarly, we proceed by coproduct induction, followed by induction on $\unit$ in the left case and induction on $\N$ on the right case, in order to define $p_{inr}$. 
+\end{proof}
+
+As an application we define the successor function on the integers.
+
+\begin{defn}
+We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $\mathsf{succ}_\Z:\Z\to\Z$ using the induction principle of \cref{lem:Z_ind}, taking
+\begin{align*}
+\mathsf{succ}_\Z(-1_\Z) & \defeq 0_\N \\
+\mathsf{succ}_\Z(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
+\mathsf{succ}_\Z(0_\Z) & \defeq 1_\N \\
+\mathsf{succ}_\Z(1_\Z) & \defeq \mathsf{in\usc{}pos}(1_\N) \\
+\mathsf{succ}_\Z(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}pos}(\mathsf{succ}_\N(\mathsf{succ}_\N(n))).
+\end{align*}
+\end{defn}
 
 \subsection{Dependent pair types}
 The \emph{dependent pair type}\index{dependent pair type|see {$\Sigma$-type}} (or $\Sigma$-type) can be thought of as a `type indexed' disjoint sum.
@@ -223,70 +293,6 @@ name & type & constructors \\
 \end{tabular}
 \end{center}
 \end{comment}
-
-\subsection{The type of integers}
-
-\begin{defn}
-  We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$. The type of integers comes equipped with inclusion functions of the positive and negative integers
-  \begin{align*}
-    \mathsf{in\usc{}pos} & \defeq \inr\circ\inr \\
-    \mathsf{in\usc{}neg} & \defeq \inl,
-  \end{align*}
-  which are both of type $\N\to\Z$, and the constants
-  \begin{align*}
-    -1_\Z & \defeq \mathsf{in\usc{}neg}(0)\\
-    0_\Z & \defeq \inr(\inl(\ttt))\\
-    1_\Z & \defeq \mathsf{in\usc{}pos}(0).
-  \end{align*}
-\end{defn}
-
-In the following lemma we derive an induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which can be used in many familiar constructions on $\Z$, such as in the definitions of addition and multiplication.
-
-\begin{lem}\label{lem:Z_ind}
-  Consider a type family $P$ over $\Z$. If we are given
-  \begin{align*}
-    p_{-1} & :P(-1_\Z) \\
-    p_{-S} & : \prd{n:\N}P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n)))\\
-    p_{0} & : P(0_\Z) \\
-    P_{1} & : P(1_\Z) \\
-    P_{S} & : \prd{n:\N}P(\mathsf{in\usc{}pos}(n))\to P(\mathsf{in\usc{}pos}(\succN(n))),
-  \end{align*}
-  then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:
-  \begin{align*}
-    f(-1_\Z) & \jdeq p_{-1} \\
-    f(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\mathsf{in\usc{}neg}(n))) \\
-    f(0_\Z) & \jdeq p_{0} \\
-    f(1_\Z) & \jdeq p_{1} \\
-    f(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \jdeq p_S(n,f(\mathsf{in\usc{}pos}(n))).
-  \end{align*}
-\end{lem}
-
-\begin{proof}
-  Since $\Z$ is the coproduct of $\N$ and $\unit+\N$, it suffices to define
-  \begin{align*}
-    p_{inl} & : \prd{n:\N}P(\inl(n)) \\
-    p_{inr} & : \prd{t:\unit+\N}P(\inr(t)).
-  \end{align*}
-  Note that $\mathsf{in\usc{}neg}\jdeq\inl$ and $-1_\Z\jdeq \mathsf{in\usc{}neg}(\zeroN)$. In order to define $p_{inl}$ we use induction on the natural numbers, so it suffices to define
-  \begin{align*}
-    p_{-1} & : P(-1) \\
-    p_{-S} & : \prd{n:\N} P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n))).
-  \end{align*}
-  Similarly, we proceed by coproduct induction, followed by induction on $\unit$ in the left case and induction on $\N$ on the right case, in order to define $p_{inr}$. 
-\end{proof}
-
-As an application we define the successor function on the integers.
-
-\begin{defn}
-We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $\mathsf{succ}_\Z:\Z\to\Z$ using the induction principle of \cref{lem:Z_ind}, taking
-\begin{align*}
-\mathsf{succ}_\Z(-1_\Z) & \defeq 0_\N \\
-\mathsf{succ}_\Z(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
-\mathsf{succ}_\Z(0_\Z) & \defeq 1_\N \\
-\mathsf{succ}_\Z(1_\Z) & \defeq \mathsf{in\usc{}pos}(1_\N) \\
-\mathsf{succ}_\Z(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}pos}(\mathsf{succ}_\N(\mathsf{succ}_\N(n))).
-\end{align*}
-\end{defn}
 
 \begin{exercises}
 \item \label{ex:boolean-operation}Define the following operations of Boolean algebra:

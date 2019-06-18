@@ -1,0 +1,108 @@
+\section{Sets}
+
+\subsection{Equivalence relations}
+
+\begin{defn}\label{defn:eq_rel}
+Let $R:A\to (A\to\prop)$ be a binary relation valued in the propositions. We say that $R$ is an \define{($0$-)equivalence relation}\index{equivalence relation|textbf}\index{0-equivalence relation|see {equivalence relation}} if $R$ comes equipped with
+\begin{align*}
+\rho & : \prd{x:A}R(x,x) \\
+\sigma & : \prd{x,y:A} R(x,y)\to R(y,x) \\
+\tau & : \prd{x,y,z:A} R(x,y)\to (R(y,z)\to R(x,z)).
+\end{align*}
+Given an equivalence relation $R:A\to (A\to\prop)$, the \define{equivalence class}\index{equivalence class|textbf} $[x]_R$ of $x:A$ is defined to be
+\begin{equation*}
+[x]_R\defeq R(x).
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
+We define for any $x,y:A$ a map\index{class_eq@{$\mathsf{class\usc{}eq}$}|textbf}
+\begin{equation*}
+\mathsf{class\usc{}eq}:R(x,y)\to ([x]_R=[y]_R).
+\end{equation*}
+\end{defn}
+
+\begin{proof}[Construction.]
+Let $r:R(x,y)$. By function extensionality, the identity type $R(x)=R(y)$ is equivalent to the type
+\begin{equation*}
+\prd{z:A}R(x,z)=R(y,z).
+\end{equation*}
+Let $z:A$. By the univalence axiom, the type $R(x,z)=R(y,z)$ is equivalent to the type
+\begin{equation*}
+\eqv{R(x,z)}{R(y,z)}.
+\end{equation*}
+We have the map $\tau_{y,x,z}(\sigma(r)):R(x,z)\to R(y,z)$. Since this is a map between propositions, we only have to construct a map in the converse direction to show that it is an equivalence. The map in the converse direction is just $\tau_{x,y,z}(r):R(y,z)\to R(x,z)$. 
+\end{proof}
+
+\begin{thm}\label{thm:equivalence_classes}
+Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
+Then for any $x,y:A$ the map
+\begin{equation*}
+\mathsf{class\usc{}eq} : R(x,y)\to ([x]_R=[y]_R)
+\end{equation*}
+is an equivalence.
+\end{thm}
+
+\begin{proof}
+By the 3-for-2 property of equivalences, it suffices to show that the map
+\begin{equation*}
+\lam{r}{z}\tau_{y,x,z}(\sigma(r)) : R(x,y)\to \prd{z:A} \eqv{R(x,z)}{R(y,z)}
+\end{equation*}
+is an equivalence. Since this is a map between propositions, it suffices to construct a map of type
+\begin{equation*}
+\Big(\prd{z:A} \eqv{R(x,z)}{R(y,z)}\Big)\to R(x,y).
+\end{equation*}
+This map is simply $\lam{f} \sigma_{y,x}(f_x(\rho(x)))$. 
+\end{proof}
+
+\begin{rmk}
+By \cref{thm:equivalence_classes} we can begin to think of the \emph{quotient}\index{quotient} $A/R$ of a type $A$ by an equivalence relation $R$. Classically, the quotient is described as the set of equivalence classes, and \cref{thm:equivalence_classes} establishes that two equivalence classes $[x]_R$ and $[y]_R$ are equal precisely when $x$ and $y$ are related by $R$.
+
+However, the type $A\to\prop$ may contain many more terms than just the $R$-equivalence classes. Therefore we are facing the task of finding a type theoretic description of the smallest subtype of $A\to\prop$ containing the equivalence classes.
+Another to think about this is as the \emph{image}\index{image} of $R$ in $A\to \prop$. 
+The construction of the (homotopy) image of a map can be done with \emph{higher inductive types}\index{higher inductive type}, which we will do in \cref{chap:image}.
+\end{rmk}
+
+The notion of $0$-equivalence relation which we defined in \cref{defn:eq_rel} fits in a hierarchy of `$n$-equivalence relations'\index{n-equivalence relation@{$n$-equivalence relation}}, the study of which is a research topic on its own. However, we already know an example of a relation that should count as an `$\infty$-equivalence relation'\index{infinity-equivalence relation@{$\infty$-equivalence relation}}: the identity type. Analogous to \cref{thm:equivalence_classes}, the following theorem shows that the canonical map
+\begin{equation*}
+(x=y)\to (\idtypevar{A}(x)=\idtypevar{A}(y))
+\end{equation*}
+is an equivalence, for any $x,y:A$. In other words, $\idtypevar{A}(x)$ can be thought of as the equivalence class of $x$ with respect to the relation $\idtypevar{A}$.
+
+\begin{thm}
+Assuming the univalence axiom on $\UU$, the map
+\begin{equation*}
+\idtypevar{A}:A\to (A\to\UU)
+\end{equation*}
+is an embedding, for any type $A:\UU$.\index{identity type!is an embedding|textit}
+\end{thm}
+
+\begin{proof}
+Let $a:A$. By function extensionality it suffices to show that the canonical map
+\begin{equation*}
+(a=b)\to \idtypevar{A}(a)\htpy\idtypevar{A}(b)
+\end{equation*}
+that sends $\refl{a}$ to $\lam{x}\refl{(a=x)}$ is an equivalence for every $b:A$, and by univalence it therefore suffices to show that the canonical map
+\begin{equation*}
+(a=b)\to \prd{x:A}\eqv{(a=x)}{(b=x)}
+\end{equation*}
+that sends $\refl{a}$ to $\lam{x}\idfunc[(a=x)]$ is an equivalence for every $b:B$. To do this we employ the type theoretic Yoneda lemma, \cref{thm:yoneda}.
+
+By the type theoretic Yoneda lemma\index{Yoneda lemma} we have an equivalence
+\begin{equation*}
+\Big(\prd{x:A} (b=x)\to (a=x)\Big)\to (a=b)
+\end{equation*}
+given by $\lam{f} f(b,\refl{b})$, for every $b:A$. Note that any family of maps $\prd{x:A}(b=x)\to (a=x)$ induces an equivalence of total spaces by \cref{ex:contr_equiv}, since their total spaces are are both contractible by \cref{cor:contr_path}. It follows that we have an equivalence
+\begin{equation*}
+\varphi_b:\Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)\to (a=b)
+\end{equation*}
+given by $\lam{f} f(b,\refl{b})$, for every $b:A$. 
+
+Note that $\varphi_a(\lam{x}\idfunc[(a=x)])\jdeq\refl{a}$. Therefore it follows by another application of \cref{thm:yoneda} that the unique family of maps 
+\begin{equation*}
+\alpha_b:(a=b)\to \Big(\prd{x:A} \eqv{(b=x)}{(a=x)}\Big)
+\end{equation*}
+that satisfies $\alpha_a(\refl{a})=\lam{x}\idfunc[(a=x)]$ is a family of sections of $\varphi$. 
+It follows that $\alpha$ is a family of equivalences. Now the proof is completed by reverting the direction of the family of equivalences in the codomain.
+\end{proof}
