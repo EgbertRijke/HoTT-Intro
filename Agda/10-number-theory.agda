@@ -406,6 +406,9 @@ is-emb-mul-ℕ' n t =
 
 {- We conclude that the division relation is a property. -}
 
+div-ℕ : ℕ → ℕ → UU lzero
+div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
+
 is-prop-div-ℕ :
   (m n : ℕ) → (le-ℕ zero-ℕ m) → is-prop (div-ℕ m n)
 is-prop-div-ℕ (succ-ℕ m) n star =
@@ -700,3 +703,32 @@ div-ℤ k l = Σ ℤ (λ x → Id (mul-ℤ x k) l)
 _≡_mod_ :
   (k l : ℤ) (n : ℕ) → UU lzero
 k ≡ l mod n = div-ℤ (in-nat-ℤ n) (add-ℤ k (neg-ℤ l))
+
+-- From before
+
+two-ℕ : ℕ
+two-ℕ = succ-ℕ one-ℕ
+
+is-even-ℕ : ℕ → UU lzero
+is-even-ℕ n = Σ ℕ (λ m → Id (mul-ℕ two-ℕ m) n)
+
+is-prime : ℕ → UU lzero
+is-prime n = (one-ℕ < n) × ((m : ℕ) → (one-ℕ < m) → (div-ℕ m n) → Id m n)
+
+{- The Goldbach conjecture asserts that every even number above 2 is the sum
+   of two primes. -}
+
+Goldbach-conjecture : UU lzero
+Goldbach-conjecture =
+  ( n : ℕ) → (two-ℕ < n) → (is-even-ℕ n) →
+    Σ ℕ (λ p → (is-prime p) × (Σ ℕ (λ q → (is-prime q) × Id (add-ℕ p q) n)))
+
+is-twin-prime : ℕ → UU lzero
+is-twin-prime n = (is-prime n) × (is-prime (succ-ℕ (succ-ℕ n)))
+
+{- The twin prime conjecture asserts that there are infinitely many twin 
+   primes. We assert that there are infinitely twin primes by asserting that 
+   for every n : ℕ there is a twin prime that is larger than n. -}
+   
+Twin-prime-conjecture : UU lzero
+Twin-prime-conjecture = (n : ℕ) → Σ ℕ (λ p → (is-twin-prime p) × (leq-ℕ n p))

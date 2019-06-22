@@ -2,8 +2,8 @@
 
 module 05-identity-types where
 
-import 04-relations
-open 04-relations public
+import 03-inductive-types
+open 03-inductive-types public
 
 -- Section 5.1
 
@@ -110,70 +110,9 @@ refl-path-over :
   path-over B refl y y
 refl-path-over B x y = refl
 
--- Section 5.5 Identity systems
-
-succ-fam-Eq-ℕ :
-  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i) →
-  (m n : ℕ) → Eq-ℕ m n → UU i
-succ-fam-Eq-ℕ R m n e = R (succ-ℕ m) (succ-ℕ n) e
-
-succ-refl-fam-Eq-ℕ :
-  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i)
-  (ρ : (n : ℕ) → R n n (refl-Eq-ℕ n)) →
-  (n : ℕ) → (succ-fam-Eq-ℕ R n n (refl-Eq-ℕ n))
-succ-refl-fam-Eq-ℕ R ρ n = ρ (succ-ℕ n)
-
-path-ind-Eq-ℕ :
-  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i)
-  ( ρ : (n : ℕ) → R n n (refl-Eq-ℕ n)) →
-  ( m n : ℕ) (e : Eq-ℕ m n) → R m n e
-path-ind-Eq-ℕ R ρ zero-ℕ zero-ℕ star = ρ zero-ℕ
-path-ind-Eq-ℕ R ρ zero-ℕ (succ-ℕ n) ()
-path-ind-Eq-ℕ R ρ (succ-ℕ m) zero-ℕ ()
-path-ind-Eq-ℕ R ρ (succ-ℕ m) (succ-ℕ n) e =
-  path-ind-Eq-ℕ (succ-fam-Eq-ℕ R) (succ-refl-fam-Eq-ℕ R ρ) m n e
-
-comp-path-ind-Eq-ℕ :
-  {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i)
-  ( ρ : (n : ℕ) → R n n (refl-Eq-ℕ n)) →
-  ( n : ℕ) → Id (path-ind-Eq-ℕ R ρ n n (refl-Eq-ℕ n)) (ρ n)
-comp-path-ind-Eq-ℕ R ρ zero-ℕ = refl
-comp-path-ind-Eq-ℕ R ρ (succ-ℕ n) =
-  comp-path-ind-Eq-ℕ (succ-fam-Eq-ℕ R) (succ-refl-fam-Eq-ℕ R ρ) n
-
 -- Exercises
 
 -- Exercise 5.1
-
-two-ℕ : ℕ
-two-ℕ = succ-ℕ one-ℕ
-
-is-even-ℕ : ℕ → UU lzero
-is-even-ℕ n = Σ ℕ (λ m → Id (mul-ℕ two-ℕ m) n)
-
-div-ℕ : ℕ → ℕ → UU lzero
-div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
-
-is-prime : ℕ → UU lzero
-is-prime n = (one-ℕ < n) × ((m : ℕ) → (one-ℕ < m) → (div-ℕ m n) → Id m n)
-
-{- The Goldbach conjecture asserts that every even number above 2 is the sum
-   of two primes. -}
-
-Goldbach-conjecture : UU lzero
-Goldbach-conjecture =
-  ( n : ℕ) → (two-ℕ < n) → (is-even-ℕ n) →
-    Σ ℕ (λ p → (is-prime p) × (Σ ℕ (λ q → (is-prime q) × Id (add-ℕ p q) n)))
-
-is-twin-prime : ℕ → UU lzero
-is-twin-prime n = (is-prime n) × (is-prime (succ-ℕ (succ-ℕ n)))
-
-{- The twin prime conjecture asserts that there are infinitely many twin 
-   primes. We assert that there are infinitely twin primes by asserting that 
-   for every n : ℕ there is a twin prime that is larger than n. -}
-   
-Twin-prime-conjecture : UU lzero
-Twin-prime-conjecture = (n : ℕ) → Σ ℕ (λ p → (is-twin-prime p) × (leq-ℕ n p))
 
 -- Exercise 5.2
 

@@ -2,8 +2,8 @@
 
 module 06-equivalences where
 
-import 05-identity-types
-open 05-identity-types public
+import 06-universes
+open 06-universes public
 
 -- Section 6.1 Homotopies
 
@@ -642,26 +642,6 @@ abstract
     not-true-is-false (inv (issec true))
 
 -- Exercise 6.7
-
-{- In this exercise we show that the successor function on the integers is an
-   equivalence. -}
-
-abstract
-  left-inverse-pred-ℤ :
-    (k : ℤ) → Id (pred-ℤ (succ-ℤ k)) k
-  left-inverse-pred-ℤ (inl zero-ℕ) = refl
-  left-inverse-pred-ℤ (inl (succ-ℕ x)) = refl
-  left-inverse-pred-ℤ (inr (inl star)) = refl
-  left-inverse-pred-ℤ (inr (inr zero-ℕ)) = refl
-  left-inverse-pred-ℤ (inr (inr (succ-ℕ x))) = refl
-  
-  right-inverse-pred-ℤ :
-    (k : ℤ) → Id (succ-ℤ (pred-ℤ k)) k
-  right-inverse-pred-ℤ (inl zero-ℕ) = refl
-  right-inverse-pred-ℤ (inl (succ-ℕ x)) = refl
-  right-inverse-pred-ℤ (inr (inl star)) = refl
-  right-inverse-pred-ℤ (inr (inr zero-ℕ)) = refl
-  right-inverse-pred-ℤ (inr (inr (succ-ℕ x))) = refl
   
   is-equiv-succ-ℤ : is-equiv succ-ℤ
   is-equiv-succ-ℤ =
@@ -820,149 +800,6 @@ abstract
       ( Σ-swap-swap A B C)
 
 -- Exercise 6.12
-
-{- Exercise 6.12 (a) simply asks to prove the unit laws. The left unit law 
-   holds by judgmental equality. -}
-
-abstract
-  left-unit-law-add-ℤ :
-    (k : ℤ) → Id (add-ℤ zero-ℤ k) k
-  left-unit-law-add-ℤ k = refl
-  
-  right-unit-law-add-ℤ :
-    (k : ℤ) → Id (add-ℤ k zero-ℤ) k
-  right-unit-law-add-ℤ (inl zero-ℕ) = refl
-  right-unit-law-add-ℤ (inl (succ-ℕ x)) =
-    ap pred-ℤ (right-unit-law-add-ℤ (inl x))
-  right-unit-law-add-ℤ (inr (inl star)) = refl
-  right-unit-law-add-ℤ (inr (inr zero-ℕ)) = refl
-  right-unit-law-add-ℤ (inr (inr (succ-ℕ x))) =
-    ap succ-ℤ (right-unit-law-add-ℤ (inr (inr x)))
-
-{- Exercise 6.12 (b) asks to show the left and right predecessor and successor 
-   laws. These are helpful to give proofs of associativity and commutativity. 
-   -}
-
-abstract
-  left-predecessor-law-add-ℤ :
-    (x y : ℤ) → Id (add-ℤ (pred-ℤ x) y) (pred-ℤ (add-ℤ x y))
-  left-predecessor-law-add-ℤ (inl n) y = refl
-  left-predecessor-law-add-ℤ (inr (inl star)) y = refl
-  left-predecessor-law-add-ℤ (inr (inr zero-ℕ)) y =
-    ( ap (λ t → add-ℤ t y) (left-inverse-pred-ℤ zero-ℤ)) ∙ 
-    ( inv (left-inverse-pred-ℤ y))
-  left-predecessor-law-add-ℤ (inr (inr (succ-ℕ x))) y =
-    ( ap (λ t → (add-ℤ t y)) (left-inverse-pred-ℤ (inr (inr x)))) ∙
-    ( inv (left-inverse-pred-ℤ (add-ℤ (inr (inr x)) y)))
-
-  right-predecessor-law-add-ℤ :
-    (x y : ℤ) → Id (add-ℤ x (pred-ℤ y)) (pred-ℤ (add-ℤ x y))
-  right-predecessor-law-add-ℤ (inl zero-ℕ) n = refl
-  right-predecessor-law-add-ℤ (inl (succ-ℕ m)) n =
-    ap pred-ℤ (right-predecessor-law-add-ℤ (inl m) n)
-  right-predecessor-law-add-ℤ (inr (inl star)) n = refl
-  right-predecessor-law-add-ℤ (inr (inr zero-ℕ)) n =
-    (right-inverse-pred-ℤ n) ∙ (inv (left-inverse-pred-ℤ n))
-  right-predecessor-law-add-ℤ (inr (inr (succ-ℕ x))) n =
-    ( ap succ-ℤ (right-predecessor-law-add-ℤ (inr (inr x)) n)) ∙
-    ( ( right-inverse-pred-ℤ (add-ℤ (inr (inr x)) n)) ∙ 
-      ( inv (left-inverse-pred-ℤ (add-ℤ (inr (inr x)) n))))
-
-abstract
-  left-successor-law-add-ℤ :
-    (x y : ℤ) → Id (add-ℤ (succ-ℤ x) y) (succ-ℤ (add-ℤ x y))
-  left-successor-law-add-ℤ (inl zero-ℕ) y =
-    ( ap (λ t → add-ℤ t y) (right-inverse-pred-ℤ zero-ℤ)) ∙
-    ( inv (right-inverse-pred-ℤ y))
-  left-successor-law-add-ℤ (inl (succ-ℕ x)) y =
-    ( inv (right-inverse-pred-ℤ (add-ℤ (inl x) y))) ∙
-    ( ap succ-ℤ (inv (left-predecessor-law-add-ℤ (inl x) y)))
-  left-successor-law-add-ℤ (inr (inl star)) y = refl
-  left-successor-law-add-ℤ (inr (inr x)) y = refl
-
-  right-successor-law-add-ℤ :
-    (x y : ℤ) → Id (add-ℤ x (succ-ℤ y)) (succ-ℤ (add-ℤ x y))
-  right-successor-law-add-ℤ (inl zero-ℕ) y =
-    (left-inverse-pred-ℤ y) ∙ (inv (right-inverse-pred-ℤ y))
-  right-successor-law-add-ℤ (inl (succ-ℕ x)) y =
-    ( ap pred-ℤ (right-successor-law-add-ℤ (inl x) y)) ∙
-    ( ( left-inverse-pred-ℤ (add-ℤ (inl x) y)) ∙
-      ( inv (right-inverse-pred-ℤ (add-ℤ (inl x) y))))
-  right-successor-law-add-ℤ (inr (inl star)) y = refl
-  right-successor-law-add-ℤ (inr (inr zero-ℕ)) y = refl
-  right-successor-law-add-ℤ (inr (inr (succ-ℕ x))) y =
-    ap succ-ℤ (right-successor-law-add-ℤ (inr (inr x)) y)
-
-{- Exercise 6.12 (c) asks to prove associativity and commutativity. Note that 
-   we avoid an unwieldy amount of cases by only using induction on the first 
-   argument. The resulting proof term is fairly short, and we don't have to 
-   present ℤ as a certain quotient of ℕ × ℕ. -}
-
-abstract
-  associative-add-ℤ :
-    (x y z : ℤ) → Id (add-ℤ (add-ℤ x y) z) (add-ℤ x (add-ℤ y z))
-  associative-add-ℤ (inl zero-ℕ) y z =
-    ( ap (λ t → add-ℤ t z) (left-predecessor-law-add-ℤ zero-ℤ y)) ∙
-    ( ( left-predecessor-law-add-ℤ y z) ∙
-      ( inv (left-predecessor-law-add-ℤ zero-ℤ (add-ℤ y z))))
-  associative-add-ℤ (inl (succ-ℕ x)) y z =
-    ( ap (λ t → add-ℤ t z) (left-predecessor-law-add-ℤ (inl x) y)) ∙
-    ( ( left-predecessor-law-add-ℤ (add-ℤ (inl x) y) z) ∙
-      ( ( ap pred-ℤ (associative-add-ℤ (inl x) y z)) ∙ 
-        ( inv (left-predecessor-law-add-ℤ (inl x) (add-ℤ y z)))))
-  associative-add-ℤ (inr (inl star)) y z = refl
-  associative-add-ℤ (inr (inr zero-ℕ)) y z =
-    ( ap (λ t → add-ℤ t z) (left-successor-law-add-ℤ zero-ℤ y)) ∙ 
-    ( ( left-successor-law-add-ℤ y z) ∙ 
-      ( inv (left-successor-law-add-ℤ zero-ℤ (add-ℤ y z))))
-  associative-add-ℤ (inr (inr (succ-ℕ x))) y z =
-    ( ap (λ t → add-ℤ t z) (left-successor-law-add-ℤ (inr (inr x)) y)) ∙
-    ( ( left-successor-law-add-ℤ (add-ℤ (inr (inr x)) y) z) ∙
-      ( ( ap succ-ℤ (associative-add-ℤ (inr (inr x)) y z)) ∙
-        ( inv (left-successor-law-add-ℤ (inr (inr x)) (add-ℤ y z)))))
-
-abstract
-  commutative-add-ℤ :
-    (x y : ℤ) → Id (add-ℤ x y) (add-ℤ y x)
-  commutative-add-ℤ (inl zero-ℕ) y =
-    ( left-predecessor-law-add-ℤ zero-ℤ y) ∙
-    ( inv
-      ( ( right-predecessor-law-add-ℤ y zero-ℤ) ∙
-        ( ap pred-ℤ (right-unit-law-add-ℤ y))))
-  commutative-add-ℤ (inl (succ-ℕ x)) y =
-    ( ap pred-ℤ (commutative-add-ℤ (inl x) y)) ∙ 
-    ( inv (right-predecessor-law-add-ℤ y (inl x)))
-  commutative-add-ℤ (inr (inl star)) y = inv (right-unit-law-add-ℤ y)
-  commutative-add-ℤ (inr (inr zero-ℕ)) y =
-    inv
-      ( ( right-successor-law-add-ℤ y zero-ℤ) ∙
-        ( ap succ-ℤ (right-unit-law-add-ℤ y)))
-  commutative-add-ℤ (inr (inr (succ-ℕ x))) y =
-    ( ap succ-ℤ (commutative-add-ℤ (inr (inr x)) y)) ∙ 
-    ( inv (right-successor-law-add-ℤ y (inr (inr x))))
-
-{- Exercise 6.12 (d) finally asks to show the inverse laws, completing the 
-   verification of the group laws. Combined with associativity and 
-   commutativity we conclude that (add-ℤ x) and (λ x → add-ℤ x y) are 
-   equivalences, for every x : ℤ and y : ℤ, respectively. -}
-
-abstract
-  left-inverse-law-add-ℤ :
-    (x : ℤ) → Id (add-ℤ (neg-ℤ x) x) zero-ℤ
-  left-inverse-law-add-ℤ (inl zero-ℕ) = refl
-  left-inverse-law-add-ℤ (inl (succ-ℕ x)) =
-    ( ap succ-ℤ (right-predecessor-law-add-ℤ (inr (inr x)) (inl x))) ∙ 
-    ( ( right-inverse-pred-ℤ (add-ℤ (inr (inr x)) (inl x))) ∙
-      ( left-inverse-law-add-ℤ (inl x))) 
-  left-inverse-law-add-ℤ (inr (inl star)) = refl
-  left-inverse-law-add-ℤ (inr (inr x)) =
-    ( commutative-add-ℤ (inl x) (inr (inr x))) ∙ 
-    ( left-inverse-law-add-ℤ (inl x))
-  
-  right-inverse-law-add-ℤ :
-    (x : ℤ) → Id (add-ℤ x (neg-ℤ x)) zero-ℤ
-  right-inverse-law-add-ℤ x =
-    ( commutative-add-ℤ x (neg-ℤ x)) ∙ (left-inverse-law-add-ℤ x)
 
 abstract
   is-equiv-add-ℤ-right :
