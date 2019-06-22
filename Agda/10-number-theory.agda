@@ -182,11 +182,6 @@ minimal-element-ℕ :
   {l : Level} (P : ℕ → UU l) → UU l
 minimal-element-ℕ P = Σ ℕ (λ n → Σ (P n) (is-minimal-element-ℕ P n))
 
-leq-zero-ℕ :
-  (n : ℕ) → leq-ℕ zero-ℕ n
-leq-zero-ℕ zero-ℕ = star
-leq-zero-ℕ (succ-ℕ n) = star
-
 is-minimal-element-succ-ℕ :
   {l : Level} (P : ℕ → UU l) (d : (n : ℕ) → is-decidable (P n))
   (m : ℕ) (pm : P (succ-ℕ m))
@@ -710,7 +705,7 @@ two-ℕ : ℕ
 two-ℕ = succ-ℕ one-ℕ
 
 is-even-ℕ : ℕ → UU lzero
-is-even-ℕ n = Σ ℕ (λ m → Id (mul-ℕ two-ℕ m) n)
+is-even-ℕ n = div-ℕ two-ℕ n
 
 is-prime : ℕ → UU lzero
 is-prime n = (one-ℕ < n) × ((m : ℕ) → (one-ℕ < m) → (div-ℕ m n) → Id m n)

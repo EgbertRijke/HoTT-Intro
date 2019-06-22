@@ -296,3 +296,419 @@ abstract
   {- The term refl should not be accepted if the definition of abstract-concat
      were forgotten. A definition that would work under all circumstances is
      abstract-left-unit refl. -}
+
+-- The ring axioms for ℤ
+
+abstract
+  left-inverse-pred-ℤ :
+    (k : ℤ) → Id (pred-ℤ (succ-ℤ k)) k
+  left-inverse-pred-ℤ (inl zero-ℕ) = refl
+  left-inverse-pred-ℤ (inl (succ-ℕ x)) = refl
+  left-inverse-pred-ℤ (inr (inl star)) = refl
+  left-inverse-pred-ℤ (inr (inr zero-ℕ)) = refl
+  left-inverse-pred-ℤ (inr (inr (succ-ℕ x))) = refl
+  
+  right-inverse-pred-ℤ :
+    (k : ℤ) → Id (succ-ℤ (pred-ℤ k)) k
+  right-inverse-pred-ℤ (inl zero-ℕ) = refl
+  right-inverse-pred-ℤ (inl (succ-ℕ x)) = refl
+  right-inverse-pred-ℤ (inr (inl star)) = refl
+  right-inverse-pred-ℤ (inr (inr zero-ℕ)) = refl
+  right-inverse-pred-ℤ (inr (inr (succ-ℕ x))) = refl
+
+{- Exercise 6.12 (a) simply asks to prove the unit laws. The left unit law 
+   holds by judgmental equality. -}
+
+abstract
+  left-unit-law-add-ℤ :
+    (k : ℤ) → Id (add-ℤ zero-ℤ k) k
+  left-unit-law-add-ℤ k = refl
+  
+  right-unit-law-add-ℤ :
+    (k : ℤ) → Id (add-ℤ k zero-ℤ) k
+  right-unit-law-add-ℤ (inl zero-ℕ) = refl
+  right-unit-law-add-ℤ (inl (succ-ℕ x)) =
+    ap pred-ℤ (right-unit-law-add-ℤ (inl x))
+  right-unit-law-add-ℤ (inr (inl star)) = refl
+  right-unit-law-add-ℤ (inr (inr zero-ℕ)) = refl
+  right-unit-law-add-ℤ (inr (inr (succ-ℕ x))) =
+    ap succ-ℤ (right-unit-law-add-ℤ (inr (inr x)))
+
+{- Exercise 6.12 (b) asks to show the left and right predecessor and successor 
+   laws. These are helpful to give proofs of associativity and commutativity. 
+   -}
+
+abstract
+  left-predecessor-law-add-ℤ :
+    (x y : ℤ) → Id (add-ℤ (pred-ℤ x) y) (pred-ℤ (add-ℤ x y))
+  left-predecessor-law-add-ℤ (inl n) y = refl
+  left-predecessor-law-add-ℤ (inr (inl star)) y = refl
+  left-predecessor-law-add-ℤ (inr (inr zero-ℕ)) y =
+    ( ap (λ t → add-ℤ t y) (left-inverse-pred-ℤ zero-ℤ)) ∙ 
+    ( inv (left-inverse-pred-ℤ y))
+  left-predecessor-law-add-ℤ (inr (inr (succ-ℕ x))) y =
+    ( ap (λ t → (add-ℤ t y)) (left-inverse-pred-ℤ (inr (inr x)))) ∙
+    ( inv (left-inverse-pred-ℤ (add-ℤ (inr (inr x)) y)))
+
+  right-predecessor-law-add-ℤ :
+    (x y : ℤ) → Id (add-ℤ x (pred-ℤ y)) (pred-ℤ (add-ℤ x y))
+  right-predecessor-law-add-ℤ (inl zero-ℕ) n = refl
+  right-predecessor-law-add-ℤ (inl (succ-ℕ m)) n =
+    ap pred-ℤ (right-predecessor-law-add-ℤ (inl m) n)
+  right-predecessor-law-add-ℤ (inr (inl star)) n = refl
+  right-predecessor-law-add-ℤ (inr (inr zero-ℕ)) n =
+    (right-inverse-pred-ℤ n) ∙ (inv (left-inverse-pred-ℤ n))
+  right-predecessor-law-add-ℤ (inr (inr (succ-ℕ x))) n =
+    ( ap succ-ℤ (right-predecessor-law-add-ℤ (inr (inr x)) n)) ∙
+    ( ( right-inverse-pred-ℤ (add-ℤ (inr (inr x)) n)) ∙ 
+      ( inv (left-inverse-pred-ℤ (add-ℤ (inr (inr x)) n))))
+
+abstract
+  left-successor-law-add-ℤ :
+    (x y : ℤ) → Id (add-ℤ (succ-ℤ x) y) (succ-ℤ (add-ℤ x y))
+  left-successor-law-add-ℤ (inl zero-ℕ) y =
+    ( ap (λ t → add-ℤ t y) (right-inverse-pred-ℤ zero-ℤ)) ∙
+    ( inv (right-inverse-pred-ℤ y))
+  left-successor-law-add-ℤ (inl (succ-ℕ x)) y =
+    ( inv (right-inverse-pred-ℤ (add-ℤ (inl x) y))) ∙
+    ( ap succ-ℤ (inv (left-predecessor-law-add-ℤ (inl x) y)))
+  left-successor-law-add-ℤ (inr (inl star)) y = refl
+  left-successor-law-add-ℤ (inr (inr x)) y = refl
+
+  right-successor-law-add-ℤ :
+    (x y : ℤ) → Id (add-ℤ x (succ-ℤ y)) (succ-ℤ (add-ℤ x y))
+  right-successor-law-add-ℤ (inl zero-ℕ) y =
+    (left-inverse-pred-ℤ y) ∙ (inv (right-inverse-pred-ℤ y))
+  right-successor-law-add-ℤ (inl (succ-ℕ x)) y =
+    ( ap pred-ℤ (right-successor-law-add-ℤ (inl x) y)) ∙
+    ( ( left-inverse-pred-ℤ (add-ℤ (inl x) y)) ∙
+      ( inv (right-inverse-pred-ℤ (add-ℤ (inl x) y))))
+  right-successor-law-add-ℤ (inr (inl star)) y = refl
+  right-successor-law-add-ℤ (inr (inr zero-ℕ)) y = refl
+  right-successor-law-add-ℤ (inr (inr (succ-ℕ x))) y =
+    ap succ-ℤ (right-successor-law-add-ℤ (inr (inr x)) y)
+
+{- Exercise 6.12 (c) asks to prove associativity and commutativity. Note that 
+   we avoid an unwieldy amount of cases by only using induction on the first 
+   argument. The resulting proof term is fairly short, and we don't have to 
+   present ℤ as a certain quotient of ℕ × ℕ. -}
+
+abstract
+  associative-add-ℤ :
+    (x y z : ℤ) → Id (add-ℤ (add-ℤ x y) z) (add-ℤ x (add-ℤ y z))
+  associative-add-ℤ (inl zero-ℕ) y z =
+    ( ap (λ t → add-ℤ t z) (left-predecessor-law-add-ℤ zero-ℤ y)) ∙
+    ( ( left-predecessor-law-add-ℤ y z) ∙
+      ( inv (left-predecessor-law-add-ℤ zero-ℤ (add-ℤ y z))))
+  associative-add-ℤ (inl (succ-ℕ x)) y z =
+    ( ap (λ t → add-ℤ t z) (left-predecessor-law-add-ℤ (inl x) y)) ∙
+    ( ( left-predecessor-law-add-ℤ (add-ℤ (inl x) y) z) ∙
+      ( ( ap pred-ℤ (associative-add-ℤ (inl x) y z)) ∙ 
+        ( inv (left-predecessor-law-add-ℤ (inl x) (add-ℤ y z)))))
+  associative-add-ℤ (inr (inl star)) y z = refl
+  associative-add-ℤ (inr (inr zero-ℕ)) y z =
+    ( ap (λ t → add-ℤ t z) (left-successor-law-add-ℤ zero-ℤ y)) ∙ 
+    ( ( left-successor-law-add-ℤ y z) ∙ 
+      ( inv (left-successor-law-add-ℤ zero-ℤ (add-ℤ y z))))
+  associative-add-ℤ (inr (inr (succ-ℕ x))) y z =
+    ( ap (λ t → add-ℤ t z) (left-successor-law-add-ℤ (inr (inr x)) y)) ∙
+    ( ( left-successor-law-add-ℤ (add-ℤ (inr (inr x)) y) z) ∙
+      ( ( ap succ-ℤ (associative-add-ℤ (inr (inr x)) y z)) ∙
+        ( inv (left-successor-law-add-ℤ (inr (inr x)) (add-ℤ y z)))))
+
+abstract
+  commutative-add-ℤ :
+    (x y : ℤ) → Id (add-ℤ x y) (add-ℤ y x)
+  commutative-add-ℤ (inl zero-ℕ) y =
+    ( left-predecessor-law-add-ℤ zero-ℤ y) ∙
+    ( inv
+      ( ( right-predecessor-law-add-ℤ y zero-ℤ) ∙
+        ( ap pred-ℤ (right-unit-law-add-ℤ y))))
+  commutative-add-ℤ (inl (succ-ℕ x)) y =
+    ( ap pred-ℤ (commutative-add-ℤ (inl x) y)) ∙ 
+    ( inv (right-predecessor-law-add-ℤ y (inl x)))
+  commutative-add-ℤ (inr (inl star)) y = inv (right-unit-law-add-ℤ y)
+  commutative-add-ℤ (inr (inr zero-ℕ)) y =
+    inv
+      ( ( right-successor-law-add-ℤ y zero-ℤ) ∙
+        ( ap succ-ℤ (right-unit-law-add-ℤ y)))
+  commutative-add-ℤ (inr (inr (succ-ℕ x))) y =
+    ( ap succ-ℤ (commutative-add-ℤ (inr (inr x)) y)) ∙ 
+    ( inv (right-successor-law-add-ℤ y (inr (inr x))))
+
+{- Exercise 6.12 (d) finally asks to show the inverse laws, completing the 
+   verification of the group laws. Combined with associativity and 
+   commutativity we conclude that (add-ℤ x) and (λ x → add-ℤ x y) are 
+   equivalences, for every x : ℤ and y : ℤ, respectively. -}
+
+abstract
+  left-inverse-law-add-ℤ :
+    (x : ℤ) → Id (add-ℤ (neg-ℤ x) x) zero-ℤ
+  left-inverse-law-add-ℤ (inl zero-ℕ) = refl
+  left-inverse-law-add-ℤ (inl (succ-ℕ x)) =
+    ( ap succ-ℤ (right-predecessor-law-add-ℤ (inr (inr x)) (inl x))) ∙ 
+    ( ( right-inverse-pred-ℤ (add-ℤ (inr (inr x)) (inl x))) ∙
+      ( left-inverse-law-add-ℤ (inl x))) 
+  left-inverse-law-add-ℤ (inr (inl star)) = refl
+  left-inverse-law-add-ℤ (inr (inr x)) =
+    ( commutative-add-ℤ (inl x) (inr (inr x))) ∙ 
+    ( left-inverse-law-add-ℤ (inl x))
+  
+  right-inverse-law-add-ℤ :
+    (x : ℤ) → Id (add-ℤ x (neg-ℤ x)) zero-ℤ
+  right-inverse-law-add-ℤ x =
+    ( commutative-add-ℤ x (neg-ℤ x)) ∙ (left-inverse-law-add-ℤ x)
+
+-- Similar for multiplication on ℤ
+
+neg-neg-ℤ : (k : ℤ) → Id (neg-ℤ (neg-ℤ k)) k
+neg-neg-ℤ (inl n) = refl
+neg-neg-ℤ (inr (inl star)) = refl
+neg-neg-ℤ (inr (inr n)) = refl
+
+left-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ zero-ℤ k) zero-ℤ
+left-zero-law-mul-ℤ k = refl
+
+right-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ k zero-ℤ) zero-ℤ
+right-zero-law-mul-ℤ (inl zero-ℕ) = refl
+right-zero-law-mul-ℤ (inl (succ-ℕ n)) =
+  right-zero-law-mul-ℤ (inl n)
+right-zero-law-mul-ℤ (inr (inl star)) = refl
+right-zero-law-mul-ℤ (inr (inr zero-ℕ)) = refl
+right-zero-law-mul-ℤ (inr (inr (succ-ℕ n))) =
+  right-zero-law-mul-ℤ (inr (inr n))
+
+left-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ one-ℤ k) k
+left-unit-law-mul-ℤ k = refl
+
+right-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ k one-ℤ) k
+right-unit-law-mul-ℤ (inl zero-ℕ) = refl
+right-unit-law-mul-ℤ (inl (succ-ℕ n)) =
+  ap (add-ℤ (neg-one-ℤ)) (right-unit-law-mul-ℤ (inl n))
+right-unit-law-mul-ℤ (inr (inl star)) = refl
+right-unit-law-mul-ℤ (inr (inr zero-ℕ)) = refl
+right-unit-law-mul-ℤ (inr (inr (succ-ℕ n))) =
+  ap (add-ℤ one-ℤ) (right-unit-law-mul-ℤ (inr (inr n)))
+
+left-neg-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ neg-one-ℤ k) (neg-ℤ k)
+left-neg-unit-law-mul-ℤ k = refl
+
+right-neg-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ k neg-one-ℤ) (neg-ℤ k)
+right-neg-unit-law-mul-ℤ (inl zero-ℕ) = refl
+right-neg-unit-law-mul-ℤ (inl (succ-ℕ n)) =
+  ap (add-ℤ one-ℤ) (right-neg-unit-law-mul-ℤ (inl n))
+right-neg-unit-law-mul-ℤ (inr (inl star)) = refl
+right-neg-unit-law-mul-ℤ (inr (inr zero-ℕ)) = refl
+right-neg-unit-law-mul-ℤ (inr (inr (succ-ℕ n))) =
+  ap (add-ℤ neg-one-ℤ) (right-neg-unit-law-mul-ℤ (inr (inr n)))
+
+left-successor-law-mul-ℤ :
+  (k l : ℤ) → Id (mul-ℤ (succ-ℤ k) l) (add-ℤ l (mul-ℤ k l))
+left-successor-law-mul-ℤ (inl zero-ℕ) l =
+  inv (right-inverse-law-add-ℤ l)
+left-successor-law-mul-ℤ (inl (succ-ℕ n)) l =
+  ( ( inv (left-unit-law-add-ℤ (mul-ℤ (inl n) l))) ∙
+    ( ap
+      ( λ x → add-ℤ x (mul-ℤ (inl n) l))
+      ( inv (right-inverse-law-add-ℤ l)))) ∙
+  ( associative-add-ℤ l (neg-ℤ l) (mul-ℤ (inl n) l))
+left-successor-law-mul-ℤ (inr (inl star)) l =
+  inv (right-unit-law-add-ℤ l)
+left-successor-law-mul-ℤ (inr (inr n)) l = refl
+
+left-predecessor-law-mul-ℤ :
+  (k l : ℤ) → Id (mul-ℤ (pred-ℤ k) l) (add-ℤ (neg-ℤ l) (mul-ℤ k l))
+left-predecessor-law-mul-ℤ (inl n) l = refl
+left-predecessor-law-mul-ℤ (inr (inl star)) l =
+  ( left-neg-unit-law-mul-ℤ l) ∙
+  ( inv (right-unit-law-add-ℤ (neg-ℤ l)))
+left-predecessor-law-mul-ℤ (inr (inr zero-ℕ)) l =
+  inv (left-inverse-law-add-ℤ l)
+left-predecessor-law-mul-ℤ (inr (inr (succ-ℕ x))) l =
+   ( ap
+     ( λ t → add-ℤ t (mul-ℤ (in-pos x) l))
+     ( inv (left-inverse-law-add-ℤ l))) ∙
+   ( associative-add-ℤ (neg-ℤ l) l (mul-ℤ (in-pos x) l))
+
+neg-pred-ℤ :
+  (k : ℤ) → Id (neg-ℤ (pred-ℤ k)) (succ-ℤ (neg-ℤ k))
+neg-pred-ℤ (inl x) = refl
+neg-pred-ℤ (inr (inl star)) = refl
+neg-pred-ℤ (inr (inr zero-ℕ)) = refl
+neg-pred-ℤ (inr (inr (succ-ℕ x))) = refl
+
+pred-neg-ℤ :
+  (k : ℤ) → Id (pred-ℤ (neg-ℤ k)) (neg-ℤ (succ-ℤ k))
+pred-neg-ℤ (inl zero-ℕ) = refl
+pred-neg-ℤ (inl (succ-ℕ x)) = refl
+pred-neg-ℤ (inr (inl star)) = refl
+pred-neg-ℤ (inr (inr x)) = refl
+
+right-successor-law-mul-ℤ :
+  (k l : ℤ) → Id (mul-ℤ k (succ-ℤ l)) (add-ℤ k (mul-ℤ k l))
+right-successor-law-mul-ℤ (inl zero-ℕ) l = inv (pred-neg-ℤ l)
+right-successor-law-mul-ℤ (inl (succ-ℕ n)) l =
+  ( left-predecessor-law-mul-ℤ (inl n) (succ-ℤ l)) ∙
+  ( ( ap (add-ℤ (neg-ℤ (succ-ℤ l))) (right-successor-law-mul-ℤ (inl n) l)) ∙
+    ( ( inv (associative-add-ℤ (neg-ℤ (succ-ℤ l)) (inl n) (mul-ℤ (inl n) l))) ∙
+      ( ( ap
+          ( λ t → add-ℤ t (mul-ℤ (inl n) l))
+          { x = add-ℤ (neg-ℤ (succ-ℤ l)) (inl n)}
+          { y = add-ℤ (inl (succ-ℕ n)) (neg-ℤ l)}
+          ( ( right-successor-law-add-ℤ (neg-ℤ (succ-ℤ l)) (inl (succ-ℕ n))) ∙
+            ( ( ap succ-ℤ
+                ( commutative-add-ℤ (neg-ℤ (succ-ℤ l)) (inl (succ-ℕ n)))) ∙
+              ( ( inv
+                  ( right-successor-law-add-ℤ
+                    ( inl (succ-ℕ n))
+                    ( neg-ℤ (succ-ℤ l)))) ∙
+                ( ap
+                  ( add-ℤ (inl (succ-ℕ n)))
+                  ( ( ap succ-ℤ (inv (pred-neg-ℤ l))) ∙
+                    ( right-inverse-pred-ℤ (neg-ℤ l)))))))) ∙
+        ( associative-add-ℤ (inl (succ-ℕ n)) (neg-ℤ l) (mul-ℤ (inl n) l)))))
+right-successor-law-mul-ℤ (inr (inl star)) l = refl
+right-successor-law-mul-ℤ (inr (inr zero-ℕ)) l = refl
+right-successor-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
+  ( left-successor-law-mul-ℤ (in-pos n) (succ-ℤ l)) ∙
+  ( ( ap (add-ℤ (succ-ℤ l)) (right-successor-law-mul-ℤ (inr (inr n)) l)) ∙
+    ( ( inv (associative-add-ℤ (succ-ℤ l) (in-pos n) (mul-ℤ (in-pos n) l))) ∙
+      ( ( ap
+          ( λ t → add-ℤ t (mul-ℤ (in-pos n) l))
+          { x = add-ℤ (succ-ℤ l) (in-pos n)}
+          { y = add-ℤ (in-pos (succ-ℕ n)) l}
+          ( ( left-successor-law-add-ℤ l (in-pos n)) ∙
+            ( ( ap succ-ℤ (commutative-add-ℤ l (in-pos n))) ∙
+              ( inv (left-successor-law-add-ℤ (in-pos n) l))))) ∙
+        ( associative-add-ℤ (inr (inr (succ-ℕ n))) l (mul-ℤ (inr (inr n)) l)))))
+
+right-predecessor-law-mul-ℤ :
+  (k l : ℤ) → Id (mul-ℤ k (pred-ℤ l)) (add-ℤ (neg-ℤ k) (mul-ℤ k l))
+right-predecessor-law-mul-ℤ (inl zero-ℕ) l =
+  ( left-neg-unit-law-mul-ℤ (pred-ℤ l)) ∙
+  ( neg-pred-ℤ l)
+right-predecessor-law-mul-ℤ (inl (succ-ℕ n)) l =
+  ( left-predecessor-law-mul-ℤ (inl n) (pred-ℤ l)) ∙
+  ( ( ap (add-ℤ (neg-ℤ (pred-ℤ l))) (right-predecessor-law-mul-ℤ (inl n) l)) ∙
+    ( ( inv
+        ( associative-add-ℤ (neg-ℤ (pred-ℤ l)) (in-pos n) (mul-ℤ (inl n) l))) ∙
+      ( ( ap
+          ( λ t → add-ℤ t (mul-ℤ (inl n) l))
+          { x = add-ℤ (neg-ℤ (pred-ℤ l)) (inr (inr n))}
+          { y = add-ℤ (neg-ℤ (inl (succ-ℕ n))) (neg-ℤ l)}
+          ( ( ap (λ t → add-ℤ t (in-pos n)) (neg-pred-ℤ l)) ∙
+            ( ( left-successor-law-add-ℤ (neg-ℤ l) (in-pos n)) ∙
+              ( ( ap succ-ℤ (commutative-add-ℤ (neg-ℤ l) (in-pos n))) ∙
+                ( inv (left-successor-law-add-ℤ (in-pos n) (neg-ℤ l))))))) ∙
+        ( associative-add-ℤ (in-pos (succ-ℕ n)) (neg-ℤ l) (mul-ℤ (inl n) l)))))
+right-predecessor-law-mul-ℤ (inr (inl star)) l = refl
+right-predecessor-law-mul-ℤ (inr (inr zero-ℕ)) l = refl
+right-predecessor-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
+  ( left-successor-law-mul-ℤ (in-pos n) (pred-ℤ l)) ∙
+  ( ( ap (add-ℤ (pred-ℤ l)) (right-predecessor-law-mul-ℤ (inr (inr n)) l)) ∙
+    ( ( inv (associative-add-ℤ (pred-ℤ l) (inl n) (mul-ℤ (inr (inr n)) l))) ∙
+      ( ( ap
+          ( λ t → add-ℤ t (mul-ℤ (in-pos n) l))
+          { x = add-ℤ (pred-ℤ l) (inl n)}
+          { y = add-ℤ (neg-ℤ (in-pos (succ-ℕ n))) l}
+          ( ( left-predecessor-law-add-ℤ l (inl n)) ∙
+            ( ( ap pred-ℤ (commutative-add-ℤ l (inl n))) ∙
+              ( inv (left-predecessor-law-add-ℤ (inl n) l))))) ∙
+        ( associative-add-ℤ (inl (succ-ℕ n)) l (mul-ℤ (inr (inr n)) l)))))
+
+right-negative-law-add-ℤ :
+  (k l : ℤ) → Id (add-ℤ k (neg-ℤ l)) (neg-ℤ (add-ℤ (neg-ℤ k) l))
+right-negative-law-add-ℤ (inl zero-ℕ) l =
+  ( left-predecessor-law-add-ℤ zero-ℤ (neg-ℤ l)) ∙
+  ( pred-neg-ℤ l)
+right-negative-law-add-ℤ (inl (succ-ℕ x)) l =
+  ( left-predecessor-law-add-ℤ (inl x) (neg-ℤ l)) ∙
+  ( ( ap pred-ℤ (right-negative-law-add-ℤ (inl x) l)) ∙
+    ( pred-neg-ℤ (add-ℤ (inr (inr x)) l)))
+right-negative-law-add-ℤ (inr (inl star)) l = refl
+right-negative-law-add-ℤ (inr (inr zero-ℕ)) l = inv (neg-pred-ℤ l)
+right-negative-law-add-ℤ (inr (inr (succ-ℕ n))) l =
+  ( left-successor-law-add-ℤ (in-pos n) (neg-ℤ l)) ∙
+  ( ( ap succ-ℤ (right-negative-law-add-ℤ (inr (inr n)) l)) ∙
+    ( inv (neg-pred-ℤ (add-ℤ (inl n) l))))
+
+distributive-neg-add-ℤ :
+  (k l : ℤ) → Id (neg-ℤ (add-ℤ k l)) (add-ℤ (neg-ℤ k) (neg-ℤ l))
+distributive-neg-add-ℤ (inl zero-ℕ) l =
+  ( ap neg-ℤ (left-predecessor-law-add-ℤ zero-ℤ l)) ∙
+  ( neg-pred-ℤ l)
+distributive-neg-add-ℤ (inl (succ-ℕ n)) l =
+  ( neg-pred-ℤ (add-ℤ (inl n) l)) ∙
+  ( ( ap succ-ℤ (distributive-neg-add-ℤ (inl n) l)) ∙
+    ( ap (λ t → add-ℤ t (neg-ℤ l)) (inv (neg-pred-ℤ (inl n)))))
+distributive-neg-add-ℤ (inr (inl star)) l = refl
+distributive-neg-add-ℤ (inr (inr zero-ℕ)) l = inv (pred-neg-ℤ l)
+distributive-neg-add-ℤ (inr (inr (succ-ℕ n))) l =
+  ( inv (pred-neg-ℤ (add-ℤ (in-pos n) l))) ∙
+  ( ap pred-ℤ (distributive-neg-add-ℤ (inr (inr n)) l))
+
+left-negative-law-mul-ℤ :
+  (k l : ℤ) → Id (mul-ℤ (neg-ℤ k) l) (neg-ℤ (mul-ℤ k l))
+left-negative-law-mul-ℤ (inl zero-ℕ) l =
+  ( left-unit-law-mul-ℤ l) ∙
+  ( inv (neg-neg-ℤ l))
+left-negative-law-mul-ℤ (inl (succ-ℕ n)) l =
+  ( ap (λ t → mul-ℤ t l) (neg-pred-ℤ (inl n))) ∙
+  ( ( left-successor-law-mul-ℤ (neg-ℤ (inl n)) l) ∙
+    ( ( ap (add-ℤ l) (left-negative-law-mul-ℤ (inl n) l)) ∙
+      ( right-negative-law-add-ℤ l (mul-ℤ (inl n) l))))
+left-negative-law-mul-ℤ (inr (inl star)) l = refl
+left-negative-law-mul-ℤ (inr (inr zero-ℕ)) l = refl
+left-negative-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
+  ( left-predecessor-law-mul-ℤ (inl n) l) ∙
+  ( ( ap (add-ℤ (neg-ℤ l)) (left-negative-law-mul-ℤ (inr (inr n)) l)) ∙
+    ( inv (distributive-neg-add-ℤ l (mul-ℤ (in-pos n) l))))
+
+right-distributive-mul-add-ℤ :
+  (k l m : ℤ) → Id (mul-ℤ (add-ℤ k l) m) (add-ℤ (mul-ℤ k m) (mul-ℤ l m))
+right-distributive-mul-add-ℤ (inl zero-ℕ) l m =
+  ( left-predecessor-law-mul-ℤ l m) ∙
+  ( ap
+    ( λ t → add-ℤ t (mul-ℤ l m))
+    ( inv
+      ( ( left-predecessor-law-mul-ℤ zero-ℤ m) ∙
+        ( right-unit-law-add-ℤ (neg-ℤ m)))))
+right-distributive-mul-add-ℤ (inl (succ-ℕ x)) l m =
+  ( left-predecessor-law-mul-ℤ (add-ℤ (inl x) l) m) ∙
+  ( ( ap (add-ℤ (neg-ℤ m)) (right-distributive-mul-add-ℤ (inl x) l m)) ∙
+    ( inv (associative-add-ℤ (neg-ℤ m) (mul-ℤ (inl x) m) (mul-ℤ l m))))
+right-distributive-mul-add-ℤ (inr (inl star)) l m = refl
+right-distributive-mul-add-ℤ (inr (inr zero-ℕ)) l m =
+  left-successor-law-mul-ℤ l m
+right-distributive-mul-add-ℤ (inr (inr (succ-ℕ n))) l m =
+  ( left-successor-law-mul-ℤ (add-ℤ (in-pos n) l) m) ∙
+  ( ( ap (add-ℤ m) (right-distributive-mul-add-ℤ (inr (inr n)) l m)) ∙
+    ( inv (associative-add-ℤ m (mul-ℤ (in-pos n) m) (mul-ℤ l m))))
+
+associative-mul-ℤ :
+  (k l m : ℤ) → Id (mul-ℤ (mul-ℤ k l) m) (mul-ℤ k (mul-ℤ l m))
+associative-mul-ℤ (inl zero-ℕ) l m =
+  left-negative-law-mul-ℤ l m
+associative-mul-ℤ (inl (succ-ℕ n)) l m =
+  ( right-distributive-mul-add-ℤ (neg-ℤ l) (mul-ℤ (inl n) l) m) ∙
+  ( ( ap (add-ℤ (mul-ℤ (neg-ℤ l) m)) (associative-mul-ℤ (inl n) l m)) ∙
+    ( ap
+      ( λ t → add-ℤ t (mul-ℤ (inl n) (mul-ℤ l m)))
+      ( left-negative-law-mul-ℤ l m)))
+associative-mul-ℤ (inr (inl star)) l m = refl
+associative-mul-ℤ (inr (inr zero-ℕ)) l m = refl
+associative-mul-ℤ (inr (inr (succ-ℕ n))) l m =
+  ( right-distributive-mul-add-ℤ l (mul-ℤ (in-pos n) l) m) ∙
+  ( ap (add-ℤ (mul-ℤ l m)) (associative-mul-ℤ (inr (inr n)) l m))
+
+commutative-mul-ℤ :
+  (k l : ℤ) → Id (mul-ℤ k l) (mul-ℤ l k)
+commutative-mul-ℤ (inl zero-ℕ) l = inv (right-neg-unit-law-mul-ℤ l)
+commutative-mul-ℤ (inl (succ-ℕ n)) l =
+  ( ap (add-ℤ (neg-ℤ l)) (commutative-mul-ℤ (inl n) l)) ∙
+  ( inv (right-predecessor-law-mul-ℤ l (inl n)))
+commutative-mul-ℤ (inr (inl star)) l = inv (right-zero-law-mul-ℤ l)
+commutative-mul-ℤ (inr (inr zero-ℕ)) l = inv (right-unit-law-mul-ℤ l)
+commutative-mul-ℤ (inr (inr (succ-ℕ n))) l =
+  ( ap (add-ℤ l) (commutative-mul-ℤ (inr (inr n)) l)) ∙
+  ( inv (right-successor-law-mul-ℤ l (in-pos n)))
