@@ -466,6 +466,51 @@ neg-neg-ℤ (inl n) = refl
 neg-neg-ℤ (inr (inl star)) = refl
 neg-neg-ℤ (inr (inr n)) = refl
 
+neg-pred-ℤ :
+  (k : ℤ) → Id (neg-ℤ (pred-ℤ k)) (succ-ℤ (neg-ℤ k))
+neg-pred-ℤ (inl x) = refl
+neg-pred-ℤ (inr (inl star)) = refl
+neg-pred-ℤ (inr (inr zero-ℕ)) = refl
+neg-pred-ℤ (inr (inr (succ-ℕ x))) = refl
+
+pred-neg-ℤ :
+  (k : ℤ) → Id (pred-ℤ (neg-ℤ k)) (neg-ℤ (succ-ℤ k))
+pred-neg-ℤ (inl zero-ℕ) = refl
+pred-neg-ℤ (inl (succ-ℕ x)) = refl
+pred-neg-ℤ (inr (inl star)) = refl
+pred-neg-ℤ (inr (inr x)) = refl
+
+right-negative-law-add-ℤ :
+  (k l : ℤ) → Id (add-ℤ k (neg-ℤ l)) (neg-ℤ (add-ℤ (neg-ℤ k) l))
+right-negative-law-add-ℤ (inl zero-ℕ) l =
+  ( left-predecessor-law-add-ℤ zero-ℤ (neg-ℤ l)) ∙
+  ( pred-neg-ℤ l)
+right-negative-law-add-ℤ (inl (succ-ℕ x)) l =
+  ( left-predecessor-law-add-ℤ (inl x) (neg-ℤ l)) ∙
+  ( ( ap pred-ℤ (right-negative-law-add-ℤ (inl x) l)) ∙
+    ( pred-neg-ℤ (add-ℤ (inr (inr x)) l)))
+right-negative-law-add-ℤ (inr (inl star)) l = refl
+right-negative-law-add-ℤ (inr (inr zero-ℕ)) l = inv (neg-pred-ℤ l)
+right-negative-law-add-ℤ (inr (inr (succ-ℕ n))) l =
+  ( left-successor-law-add-ℤ (in-pos n) (neg-ℤ l)) ∙
+  ( ( ap succ-ℤ (right-negative-law-add-ℤ (inr (inr n)) l)) ∙
+    ( inv (neg-pred-ℤ (add-ℤ (inl n) l))))
+
+distributive-neg-add-ℤ :
+  (k l : ℤ) → Id (neg-ℤ (add-ℤ k l)) (add-ℤ (neg-ℤ k) (neg-ℤ l))
+distributive-neg-add-ℤ (inl zero-ℕ) l =
+  ( ap neg-ℤ (left-predecessor-law-add-ℤ zero-ℤ l)) ∙
+  ( neg-pred-ℤ l)
+distributive-neg-add-ℤ (inl (succ-ℕ n)) l =
+  ( neg-pred-ℤ (add-ℤ (inl n) l)) ∙
+  ( ( ap succ-ℤ (distributive-neg-add-ℤ (inl n) l)) ∙
+    ( ap (λ t → add-ℤ t (neg-ℤ l)) (inv (neg-pred-ℤ (inl n)))))
+distributive-neg-add-ℤ (inr (inl star)) l = refl
+distributive-neg-add-ℤ (inr (inr zero-ℕ)) l = inv (pred-neg-ℤ l)
+distributive-neg-add-ℤ (inr (inr (succ-ℕ n))) l =
+  ( inv (pred-neg-ℤ (add-ℤ (in-pos n) l))) ∙
+  ( ap pred-ℤ (distributive-neg-add-ℤ (inr (inr n)) l))
+
 left-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ zero-ℤ k) zero-ℤ
 left-zero-law-mul-ℤ k = refl
 
@@ -529,20 +574,6 @@ left-predecessor-law-mul-ℤ (inr (inr (succ-ℕ x))) l =
      ( λ t → add-ℤ t (mul-ℤ (in-pos x) l))
      ( inv (left-inverse-law-add-ℤ l))) ∙
    ( associative-add-ℤ (neg-ℤ l) l (mul-ℤ (in-pos x) l))
-
-neg-pred-ℤ :
-  (k : ℤ) → Id (neg-ℤ (pred-ℤ k)) (succ-ℤ (neg-ℤ k))
-neg-pred-ℤ (inl x) = refl
-neg-pred-ℤ (inr (inl star)) = refl
-neg-pred-ℤ (inr (inr zero-ℕ)) = refl
-neg-pred-ℤ (inr (inr (succ-ℕ x))) = refl
-
-pred-neg-ℤ :
-  (k : ℤ) → Id (pred-ℤ (neg-ℤ k)) (neg-ℤ (succ-ℤ k))
-pred-neg-ℤ (inl zero-ℕ) = refl
-pred-neg-ℤ (inl (succ-ℕ x)) = refl
-pred-neg-ℤ (inr (inl star)) = refl
-pred-neg-ℤ (inr (inr x)) = refl
 
 right-successor-law-mul-ℤ :
   (k l : ℤ) → Id (mul-ℤ k (succ-ℤ l)) (add-ℤ k (mul-ℤ k l))
@@ -616,54 +647,6 @@ right-predecessor-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
               ( inv (left-predecessor-law-add-ℤ (inl n) l))))) ∙
         ( associative-add-ℤ (inl (succ-ℕ n)) l (mul-ℤ (inr (inr n)) l)))))
 
-right-negative-law-add-ℤ :
-  (k l : ℤ) → Id (add-ℤ k (neg-ℤ l)) (neg-ℤ (add-ℤ (neg-ℤ k) l))
-right-negative-law-add-ℤ (inl zero-ℕ) l =
-  ( left-predecessor-law-add-ℤ zero-ℤ (neg-ℤ l)) ∙
-  ( pred-neg-ℤ l)
-right-negative-law-add-ℤ (inl (succ-ℕ x)) l =
-  ( left-predecessor-law-add-ℤ (inl x) (neg-ℤ l)) ∙
-  ( ( ap pred-ℤ (right-negative-law-add-ℤ (inl x) l)) ∙
-    ( pred-neg-ℤ (add-ℤ (inr (inr x)) l)))
-right-negative-law-add-ℤ (inr (inl star)) l = refl
-right-negative-law-add-ℤ (inr (inr zero-ℕ)) l = inv (neg-pred-ℤ l)
-right-negative-law-add-ℤ (inr (inr (succ-ℕ n))) l =
-  ( left-successor-law-add-ℤ (in-pos n) (neg-ℤ l)) ∙
-  ( ( ap succ-ℤ (right-negative-law-add-ℤ (inr (inr n)) l)) ∙
-    ( inv (neg-pred-ℤ (add-ℤ (inl n) l))))
-
-distributive-neg-add-ℤ :
-  (k l : ℤ) → Id (neg-ℤ (add-ℤ k l)) (add-ℤ (neg-ℤ k) (neg-ℤ l))
-distributive-neg-add-ℤ (inl zero-ℕ) l =
-  ( ap neg-ℤ (left-predecessor-law-add-ℤ zero-ℤ l)) ∙
-  ( neg-pred-ℤ l)
-distributive-neg-add-ℤ (inl (succ-ℕ n)) l =
-  ( neg-pred-ℤ (add-ℤ (inl n) l)) ∙
-  ( ( ap succ-ℤ (distributive-neg-add-ℤ (inl n) l)) ∙
-    ( ap (λ t → add-ℤ t (neg-ℤ l)) (inv (neg-pred-ℤ (inl n)))))
-distributive-neg-add-ℤ (inr (inl star)) l = refl
-distributive-neg-add-ℤ (inr (inr zero-ℕ)) l = inv (pred-neg-ℤ l)
-distributive-neg-add-ℤ (inr (inr (succ-ℕ n))) l =
-  ( inv (pred-neg-ℤ (add-ℤ (in-pos n) l))) ∙
-  ( ap pred-ℤ (distributive-neg-add-ℤ (inr (inr n)) l))
-
-left-negative-law-mul-ℤ :
-  (k l : ℤ) → Id (mul-ℤ (neg-ℤ k) l) (neg-ℤ (mul-ℤ k l))
-left-negative-law-mul-ℤ (inl zero-ℕ) l =
-  ( left-unit-law-mul-ℤ l) ∙
-  ( inv (neg-neg-ℤ l))
-left-negative-law-mul-ℤ (inl (succ-ℕ n)) l =
-  ( ap (λ t → mul-ℤ t l) (neg-pred-ℤ (inl n))) ∙
-  ( ( left-successor-law-mul-ℤ (neg-ℤ (inl n)) l) ∙
-    ( ( ap (add-ℤ l) (left-negative-law-mul-ℤ (inl n) l)) ∙
-      ( right-negative-law-add-ℤ l (mul-ℤ (inl n) l))))
-left-negative-law-mul-ℤ (inr (inl star)) l = refl
-left-negative-law-mul-ℤ (inr (inr zero-ℕ)) l = refl
-left-negative-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
-  ( left-predecessor-law-mul-ℤ (inl n) l) ∙
-  ( ( ap (add-ℤ (neg-ℤ l)) (left-negative-law-mul-ℤ (inr (inr n)) l)) ∙
-    ( inv (distributive-neg-add-ℤ l (mul-ℤ (in-pos n) l))))
-
 right-distributive-mul-add-ℤ :
   (k l m : ℤ) → Id (mul-ℤ (add-ℤ k l) m) (add-ℤ (mul-ℤ k m) (mul-ℤ l m))
 right-distributive-mul-add-ℤ (inl zero-ℕ) l m =
@@ -684,6 +667,23 @@ right-distributive-mul-add-ℤ (inr (inr (succ-ℕ n))) l m =
   ( left-successor-law-mul-ℤ (add-ℤ (in-pos n) l) m) ∙
   ( ( ap (add-ℤ m) (right-distributive-mul-add-ℤ (inr (inr n)) l m)) ∙
     ( inv (associative-add-ℤ m (mul-ℤ (in-pos n) m) (mul-ℤ l m))))
+
+left-negative-law-mul-ℤ :
+  (k l : ℤ) → Id (mul-ℤ (neg-ℤ k) l) (neg-ℤ (mul-ℤ k l))
+left-negative-law-mul-ℤ (inl zero-ℕ) l =
+  ( left-unit-law-mul-ℤ l) ∙
+  ( inv (neg-neg-ℤ l))
+left-negative-law-mul-ℤ (inl (succ-ℕ n)) l =
+  ( ap (λ t → mul-ℤ t l) (neg-pred-ℤ (inl n))) ∙
+  ( ( left-successor-law-mul-ℤ (neg-ℤ (inl n)) l) ∙
+    ( ( ap (add-ℤ l) (left-negative-law-mul-ℤ (inl n) l)) ∙
+      ( right-negative-law-add-ℤ l (mul-ℤ (inl n) l))))
+left-negative-law-mul-ℤ (inr (inl star)) l = refl
+left-negative-law-mul-ℤ (inr (inr zero-ℕ)) l = refl
+left-negative-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
+  ( left-predecessor-law-mul-ℤ (inl n) l) ∙
+  ( ( ap (add-ℤ (neg-ℤ l)) (left-negative-law-mul-ℤ (inr (inr n)) l)) ∙
+    ( inv (distributive-neg-add-ℤ l (mul-ℤ (in-pos n) l))))
 
 associative-mul-ℤ :
   (k l m : ℤ) → Id (mul-ℤ (mul-ℤ k l) m) (mul-ℤ k (mul-ℤ l m))

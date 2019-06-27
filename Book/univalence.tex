@@ -209,7 +209,7 @@ We introduce the type of groups in two stages: first we introduce the type of \e
   We write $\mathsf{is\usc{}unital}(G)$ for the type of such triples $(e_G,\mathsf{left\usc{}unit}_G,\mathsf{right\usc{}unit}_G)$. Unital semi-groups are also called \define{monoids}.
 \end{defn}
 
-We emphasize that the following lemma is a typical statement of \emph{univalent mathematics}, because we express uniqueness of a certain object satisfying some properties by asserting that the type of those objects with witnesses that the asserted properties are satisfied, is a proposition.
+The unit of a semi-group is of course unique once it exists. In univalent mathematics we express this fact by asserting that the type $\mathsf{is\usc{}unital}(G)$ is a proposition for each semi-group $G$. In other words, being unital is a \emph{property} of semi-groups rather than structure on it. This is typical for univalent mathematics: we express that a structure is a property by proving that this structure is a proposition.
 
 \begin{lem}
   For a semi-group $G$ the type $\mathsf{is\usc{}unital}(G)$ is a proposition.
@@ -256,7 +256,7 @@ We emphasize that the following lemma is a typical statement of \emph{univalent 
 \end{proof}
 
 \begin{eg}
-  An important class of examples consists of the \define{loop space}\index{loop space|textbf} $x=x$ of a $1$-type $X$, for any $x:X$. 
+  An important class of examples consists of \define{loop spaces}\index{loop space|textbf} $x=x$ of a $1$-type $X$, for any $x:X$. 
   We will write $\loopspace{X,x}$ for the loop space of $X$ at $x$. 
   Since $X$ is assumed to be a $1$-type, it follows that the type $\loopspace{X,x}$ is a set. Then we have
   \begin{align*}
@@ -274,7 +274,7 @@ We emphasize that the following lemma is a typical statement of \emph{univalent 
 \end{eg}
 
 \begin{eg}
-  Our last class of examples consists of the \define{automorphism groups} on $1$-types. Given a $1$-type $X$, we define
+  Our last class of examples consists of the \define{automorphism groups} on sets. Given a set $X$, we define
   \begin{equation*}
     \mathsf{Aut}(X)\defeq (X\simeq X).
   \end{equation*}
@@ -300,8 +300,8 @@ We emphasize that the following lemma is a typical statement of \emph{univalent 
   for the type of all semi-group homomorphisms from $G$ to $H$.
 \end{defn}
 
-\begin{rmk}
-  Since it is a property for a function to preserve the multiplication of a semi-group, it follows easily that equality of semi-group homomorphisms is equivalent to the type of homotopies between their underlying functions.
+\begin{rmk}\label{rmk:is-set-hom-semi-group}
+  Since it is a property for a function to preserve the multiplication of a semi-group, it follows easily that equality of semi-group homomorphisms is equivalent to the type of homotopies between their underlying functions. In particular, it follows that the type of homomorphisms of semi-groups is a set.
 \end{rmk}
 
 \begin{rmk}
@@ -350,77 +350,79 @@ We write $\mathcal{G}\cong\mathcal{H}$ for the type of all group isomorphisms fr
 \end{equation*}
 \end{defn}
 
-\begin{lem}\label{lem:grp_iso}
-The type of isomorphisms $\mathcal{G}\cong\mathcal{H}$ is equivalent to the type
-\begin{align*}
-e & : \eqv{G}{H} \\
-\alpha & : e(1)=1 \\
-\beta & : \prd{x:G}e(x^{-1})=e(x)^{-1} \\
-\gamma & : \prd{x,y:G} e(xy)=e(x)e(y).
-\end{align*}
+If $f$ is an isomorphism, then its inverse is unique. In other words, being an isomorphism is a property.
+
+\begin{lem}
+  For any semi-group homomorphism $h:\mathsf{hom}(G,H)$, the type
+  \begin{equation*}
+    \mathsf{is\usc{}iso}(h)
+  \end{equation*}
+  is a proposition. It follows that the type $G\cong H$ is a set for any two semi-groups $G$ and $H$.
 \end{lem}
 
 \begin{proof}
-The standard proof showing that if the underlying map $f:G\to H$ of a group homomorphism is invertible then its inverse is again a group homomorphism, also works in type theory. Since being a group homomorphism is a property, it follows that the type of group isomorphism is equivalent to the type of group homomorphisms of which the underlying map has an inverse. By \cref{ex:iso_equiv} it follows that the type 
-\begin{equation*}
-\sm{f:\mathrm{hom}(\mathcal{G},\mathcal{H})}\mathsf{is\usc{}invertible}(f)
-\end{equation*}
-of group homomorphism of which the underlying map has an inverse is equivalent to the type
-\begin{equation*}
-\sm{f:\mathsf{hom}(\mathcal{G},\mathcal{H})}\isequiv(f).
-\end{equation*}
-of group homomorphisms of which the underlying map is an equivalence.
+  Let $k$ and $k'$ be two inverses of $h$. In \cref{rmk:is-set-hom-semi-group} we have observed that the type of semi-group homomorphisms between any two semi-groups is a set. Therefore it follows that the types $h\circ k=\idfunc$ and $k\circ h=\idfunc$ are propositions, so it suffices to check that $k=k'$. In \cref{rmk:is-set-hom-semi-group} we also observed that the equality type $k=k'$ is equivalent to the type of homotopies $k\htpy k'$ between their underlying functions. We construct a homotopy $k\htpy k'$ by the usual argument:
+  \begin{equation*}
+    \begin{tikzcd}
+      k(y) \arrow[r,equals] & k(h(k'(y)) \arrow[r,equals] & k'(y).
+    \end{tikzcd}\qedhere
+  \end{equation*}
+\end{proof}
+
+\begin{lem}\label{lem:grp_iso}
+  A semi-group homomorphism $h:\mathsf{hom}(G,H)$ is an isomorphism if and only if its underlying map is an equivalence. Consequently, there is an equivalence
+  \begin{equation*}
+    (G\cong H)\simeq \sm{e:G\simeq H}\prd{x,y:G}e(\mu_G(x,y))=\mu_H(e(x),e(y))
+  \end{equation*}
+\end{lem}
+
+\begin{proof}
+  If $h:\mathsf{hom}(G,H)$ is an isomorphism, then the inverse semi-group homomorphism also provides an inverse of the underlying map of $h$. Thus we obtain that $h$ is an equivalence. The standard proof showing that if the underlying map $f:G\to H$ of a group homomorphism is invertible then its inverse is again a group homomorphism also works in type theory.
 \end{proof}
 
 \begin{defn}
-Let $\mathcal{G}:\mathsf{Grp}$ be a group. We define the map\index{iso_eq@{$\mathsf{iso\usc{}eq}$}|textbf}
+Let $\mathcal{G}$ and $\mathcal{H}$ be a semi-groups. We define the map\index{iso_eq@{$\mathsf{iso\usc{}eq}$}|textbf}
 \begin{equation*}
-\mathsf{iso\usc{}eq} : \prd{\mathcal{H}:\mathsf{Grp}}(\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
+\mathsf{iso\usc{}eq} : (\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
 \end{equation*}
-by path induction, taking $\refl{\mathcal{G}}$ to $\idfunc[\mathcal{G}]$. Indeed, $\idfunc[\mathcal{G}]$ is a group isomorphism since it is its own inverse.
+by path induction, taking $\refl{\mathcal{G}}$ to isomorphism $\idfunc[\mathcal{G}]$.
 \end{defn}
 
-\begin{thm}
-The family of maps
+\begin{thm}\label{thm:iso-eq-semi-group}
+The map
 \begin{equation*}
-\mathsf{iso\usc{}eq} : \prd{\mathcal{G}':\mathsf{Grp}}(\mathcal{G}=\mathcal{G}')\to (\mathcal{G}\cong\mathcal{G}')
+\mathsf{iso\usc{}eq} : (\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
 \end{equation*}
-is a family of equivalences, for any group $\mathcal{G}$.
+is an equivalence for any two semi-groups $\mathcal{G}$ and $\mathcal{H}$.
 \end{thm}
 
 \begin{proof}
-We will apply \cref{thm:id_fundamental}, and show that the type
+By \cref{thm:id_fundamental} it suffices to show that the total space
 \begin{equation*}
-\sm{\mathcal{G}':\mathsf{Grp}}\mathcal{G}\cong\mathcal{G}'
+\sm{\mathcal{G}':\mathsf{Semi\usc{}Grp}}\mathcal{G}\cong\mathcal{G}'
 \end{equation*}
-is contractible.
-By \cref{lem:grp_iso} it follows that the total space $\sm{\mathcal{G}':\mathsf{Grp}}(\mathcal{G}\cong\mathcal{G}')$ is equivalent to the type
-\begin{samepage}
+is contractible. Since the type of isomorphisms from $\mathcal{G}$ to $\mathcal{G}'$ is equivalent to the type of equivalences from $\mathcal{G}$ to $\mathcal{G}'$ it suffices to show that the type
+\begin{equation*}
+  \sm{\mathcal{G}':\mathsf{Semi\usc{}Grp}}\sm{e:\eqv{G}{G'}}\prd{x,y:G}e(\mu_G(x,y))=\mu_{G'}(e(x),e(y)))
+\end{equation*}
+is contractible\footnote{In order to show that a type of the form
+  \begin{equation*}
+    \sm{(x,y):\sm{x:A}B(x)}\sm{z:C(x)}D(x,y,z)
+  \end{equation*}
+  is contractible, a useful strategy is to first show that the type $\sm{x:A}C(x)$ is contractible. Once this is established, say with center of contraction $(x_0,z_0)$, it suffices to show that the type $\sm{y:B(x_0)}D(x_0,y,z_0)$ is contractible.}. Since $\mathsf{Semi\usc{}Grp}$ is the $\Sigma$-type
+\begin{equation*}
+  \sm{G':\mathsf{Set}}\mathsf{has\usc{}associative\usc{}mul}(G'),
+\end{equation*}
+it suffices to show that the types
 \begin{align*}
-& \sm{G':\UU}{p':\mathsf{is\usc{}set}(G')} \\
-& \qquad \sm{1':G}{i':G'\to G'}{\mu':G'\to (G'\to G')}{L':\mathsf{group\usc{}laws}(G',1',i',\mu')} \\
-& \qquad \qquad \sm{e:\eqv{G}{G'}} \Big(e(1)=1'\Big) \times \Big(\prd{x:G}e(x^{-1})= i'(e(x))\Big)\times\\
-& \qquad \qquad \qquad\Big(\prd{x,y:G}e(xy)=\mu'(e(x),e(y))\Big).
+  & \sm{G':\mathsf{Set}}\eqv{G}{G'} \\
+  & \sm{\mu':\mathsf{has\usc{}associative\usc{}mul}(G)}\prd{x,y:G}\mu_G(x,y)=\mu'(x,y)
 \end{align*}
-\end{samepage}%
-By the univalence axiom, the type $\sm{G':\UU}\eqv{G}{G'}$ is contractible. Thus we see that the above type is equivalent to
-\begin{samepage}
-\begin{align*}
-& \sm{q:\mathsf{is\usc{}set}(G)}{1':G}{i':G\to G}{\mu':G\to (G\to G)}{L:\mathsf{group\usc{}laws}(G,1',i',\mu')} \\
-& \qquad (1=1') \times \Big(\prd{x:G}x^{-1}= i'(x)\Big)\times\Big(\prd{x,y:G}xy=\mu'(x,y)\Big).
-\end{align*}
-\end{samepage}
-Of course, the types
-\begin{align*}
-& \sm{1':G} 1=1' \\
-& \sm{i':G\to G}\prd{x:G}x^{-1}=i'(x) \\
-& \sm{\mu':G\to (G\to G)}\Big(\prd{x,y:G}xy=\mu'(x,y)\Big)
-\end{align*}
-are all contractible. Moreover, being a set is a proposition, and since $G$ is a set the group laws are propositions too. Since $G$ is already assumed to be a set on which the group operations satisfy the group laws, it follows that the types $\mathsf{is\usc{}set}(G)$ and $\mathsf{group\usc{}laws}(G,1,i,\mu)$ are all contractible. This concludes the proof that the total space $\sm{\mathcal{G}':\mathsf{Grp}}\mathcal{G}\cong\mathcal{G}'$ is contractible. 
+is contractible. The first type is contractible by the univalence axiom. The second type is contractible by function extensionality.
 \end{proof}
 
 \begin{cor}
-The type $\mathsf{Grp}$ is a $1$-type.\index{Grp@{$\mathsf{Grp}$}!is a $1$-type|textit}
+The type $\mathsf{Semi\usc{}Grp}$ is a $1$-type.\index{Semi-Grp@{$\mathsf{Semi-Grp}$}!is a $1$-type|textit}
 \end{cor}
 
 \begin{proof}
@@ -428,6 +430,39 @@ It is straightforward to see that the type of group isomorphisms $\mathcal{G}\co
 \end{proof}
 
 \subsubsection{Isomorphic groups are equal}
+
+Analogously to the map $\mathsf{iso\usc{}eq}$ of semi-groups, we have a map $\mathsf{iso\usc{}eq}$ of groups. Note, however, that the domain of this map is now the identity type $G=H$ of the \emph{groups} $G$ and $H$, so the maps $\mathsf{iso\usc{}eq}$ of semi-groups and groups are not exactly the same maps.
+
+\begin{defn}
+  Let $G$ and $H$ be groups. We define the map
+  \begin{equation*}
+    \mathsf{iso\usc{}eq} : (G=H)\to (G\cong H)
+  \end{equation*}
+  by path induction, taking $\refl{G}$ to the identity isomorphism $\idfunc:G\cong G$.
+\end{defn}
+
+\begin{thm}
+  For any two groups $G$ and $H$, the map
+  \begin{equation*}
+    \mathsf{iso\usc{}eq}:(G=H)\to (G\cong H)
+  \end{equation*}
+  is an equivalence.
+\end{thm}
+
+\begin{proof}
+  Let $G$ and $H$ be groups, and write $UG$ and $UH$ for their underlying semi-groups, respectively. Then we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}
+      (G=H) \arrow[rr,"\apfunc{\proj 1}"] \arrow[dr,swap,"\mathsf{iso\usc{}eq}"] & & (UG=UH) \arrow[dl,"\mathsf{iso\usc{}eq}"] \\
+      & (G\cong H)
+    \end{tikzcd}
+  \end{equation*}
+  Since being a group is a property of semi-groups it follows that the projection map $\mathsf{Grp}\to\mathsf{Semi\usc{}Grp}$ forgetting the unit and inverses, is an embedding. Thus the top map in this triangle is an equivalence. The map on the right is an equivalence by \cref{thm:iso-eq-semi-group}, so the claim follows by the 3-for-2 property.
+\end{proof}
+
+\begin{cor}
+  The type of groups is a $1$-type.
+\end{cor}
 
 \subsection{Categories in univalent mathematics}
 
@@ -489,6 +524,10 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
   \end{equation*}
   is an equivalence for any two objects $x$ and $y$ of $\mathcal{C}$. Rezk-complete pre-categories are also called \define{categories}.
 \end{defn}
+
+\begin{eg}
+  The pre-category of sets is Rezk complete by the univalence axiom, so it is a category.
+\end{eg}
 
 \begin{eg}
   The pre-categories of semi-groups and groups are Rezk-complete. Therefore they form categories.

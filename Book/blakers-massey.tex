@@ -17,6 +17,421 @@ The universal property of the pullback determines a unique map $u:S\to A \times_
 The map $u:S\to A \times_{(A\sqcup^S B)} B$ of \cref{eq:BM} is $(n+m)$-connected.
 \end{thm}
 
+\subsection{Higher groups}
+\label{sec:higher-groups}
+
+Recall that types in HoTT may be viewed as $\infty$-groupoids:
+elements are objects, paths are morphisms, higher paths are higher
+morphisms, etc.
+
+It follows that \emph{pointed connected} types $B$ may be viewed as higher
+groups, with \define{carrier} $\loopspacesym B$.
+The neutral element is the identity path,
+the group operation is given by path composition,
+and higher paths witness the unit and associativity laws.
+Of course, these higher paths are themselves subject to further laws,
+etc., but the beauty of the type-theoretic definition is
+that we don't have to worry about that:
+all the (higher) laws follow from the rules of the identity types.
+Writing $G$ for the carrier $\loopspacesym B$, it is common to write $BG$ for the pointed
+connected type $B$, which comes equipped with an identification $G = \loopspacesym BG$.
+We call $BG$ the \define{delooping} of $G$.
+
+The type of pointed types is
+$\UU_\pt \defeq  \sm{A:\UU} A$. The type of $n$-truncated types is
+$\UU^{\le n} \defeq  \sm{A:\UU}\istrunc{n}{A}$ and for $n$-connected types it is
+$\UU^{>n} \defeq  \sm{A:\UU}\mathsf{is\usc{}conn}_n(A)$. We will combine these notations as needed.
+
+\begin{defn}
+We define the type of \define{higher groups}, or \define{$\infty$-groups}, to be
+\begin{equation*}
+\infty\mathsf{Grp}\defeq \sm{G:\UU}{BG:\UU_\pt^{>0}} \eqv{G}{\loopspacesym BG}.
+\end{equation*}
+When $G$ is an $\infty$-group, we also write $G$ for its first projection, called the \define{carrier} of $G$.
+\end{defn}
+
+\begin{rmk}
+Note that we have equivalences
+\begin{align*}
+  \infty\mathsf{Grp}
+  &\jdeq   \sm{G:\UU}{BG:\UU_\pt^{>0}} \eqv{G}{\loopspacesym BG} \\
+  &\eqvsym \sm{G:\UU_\pt}{BG:\UU_\pt^{>0}} G \eqvsym_\pt \loopspacesym BG \\
+  &\eqvsym \UU_\pt^{>0}
+\end{align*}
+for the type of higher groups. 
+\end{rmk}
+
+Automorphism groups form a major class of examples of $\infty$-groups.
+Given \emph{any} type $A$ and any object $a : A$, the automorphism group at $a$ is defined as
+\define{automorphism group} $\Aut a\defeq (a=a)$. 
+This is indeed an $\infty$-group, because it is the loop space of the connected component of $A$ at $a$, i.e. we define~$\BAut a \defeq  \im(a : 1 \to A) = (x : A) \times \trunc{-1}{a=x}$.
+From this definition it is immediate that $\Aut a=\loopspacesym\BAut a$, so we see that $\Aut a$ is indeed an example of an $\infty$-group. 
+
+If we take $A = \mathsf{Set}$, we get the usual symmetric groups
+$\Sym_n \defeq  \Aut(\Fin(n))$, where $\Fin(n)$ is a set with $n$
+elements. (Note that $\BS_n = \BAut(\Fin (n))$ is the type of all
+$n$-element sets.)
+
+We recover the ordinary set-level groups by requiring that $G$ is a $0$-type, or equivalently, that $BG$
+is a $1$-type. This leads us to introduce:
+
+\begin{defn}
+We define the type of \define{groupal $(n-1)$-gropuoids}, or \define{$n$-groups}, to be
+\begin{equation*}
+n\mathsf{Grp} \defeq \sm{G:\UU_\pt^{<n}}{BG :\UU_\pt^{>0}} G \eqvsym_\pt \loopspacesym BG.
+\end{equation*}
+We write $\mathsf{Grp}$ for the type of $1$-groups.
+\end{defn}
+
+The type of $n$-groups is therefore equivalent to the type of pointed connected $(n+1)$-types. Note that if $A$ is an $(n+1)$-type, then $\Aut a$ is an $(n+1)$-group because $\Aut a$ is $n$-truncated.
+
+For example, the integers $\mathbb{Z}$ as an additive group are from this
+perspective represented by their delooping $\mathop{\mathrm{B}\mathbb{Z}}=\bS^1$, i.e., the circle.
+Indeed, any set-level group $G$ is represented as its delooping $BG\defeq K(G,1)$.
+
+Moving across the homotopy hypothesis, for every pointed type $(X,x)$
+we have the \define{fundamental $\infty$-group of $X$},
+$\Pi_\infty(X,x)\defeq \Aut x$. Its $(n-1)$-truncation (an instance of
+decategorification, see \cref{sec:stabilization}) is the
+\define{fundamental $n$-group of $X$}, $\Pi_n(X,x)$,
+with corresponding delooping $\mathrm{B}\Pi_n(X,x) = \trunc{n}{\BAut x}$.
+
+Double loop spaces are more well-behaved than mere loop
+spaces. For example, they are commutative up to homotopy
+by the Eckmann-Hilton argument~\cite[Theorem~2.1.6]{hottbook}.
+Triple loop spaces are even better behaved than double loop spaces, and so on.
+
+\begin{defn}
+A type $G$ is said to be \define{$k$-tuply groupal} if it comes equipped with a \define{$k$-fold delooping}, i.e.~ a pointed $k$-connected
+$B^kG : \UU_\pt^{\ge k}$ and an equivalence $G \eqvsym \loopspacesym^kB^kG$.
+
+Mixing the two directions, we also define
+\begin{align*}
+  (n,k)\GType
+  &\defeq  \sm{G : \UU_\pt^{\le n}}{B^kG : \UU_\pt^{\ge k}}
+    G \eqvsym_\pt \loopspacesym^kB^kG \\
+  & \phantom{:}\eqvsym \UU_\pt^{\ge k,\le n+k}
+\end{align*}
+for the type of \define{$k$-tuply groupal $n$-groupoids}\footnote{This
+  is called $n\UU_k$ in \cite{BaezDolan1998}, but here we give equal
+  billing to $n$ and $k$,
+  and we add the ``G'' to indicate group-structure.}.
+We allow taking $n=\infty$, in which case the truncation requirement
+is simply dropped.
+\end{defn}
+
+Note that $n\mathsf{Grp} = (n-1,1)\GType$. This shift in indexing is slightly
+annoying, but we keep it to stay consistent with the literature.
+
+Note that for each $k\geq 0$ there is a forgetful map
+\begin{equation*}
+(n,k+1)\GType \to (n,k)\GType,
+\end{equation*}
+given by $B^{k+1}G\mapsto \loopspacesym B^{k+1}G$, defining a sequence
+\begin{equation*}
+\begin{tikzcd}
+\cdots \arrow[r] & (n,2)\GType \arrow[r] & (n,1)\GType \arrow[r] & (n,0)\GType.
+\end{tikzcd}
+\end{equation*}
+Thus we define $(n,\infty)\GType$ as the limit of this sequence:
+\begin{align*}
+(n,\infty)\GType & \defeq  \lim_k{}(n,k)\GType \\
+&\phantom{:}\eqvsym \sm{B^{\blank}G : \prd{k : \bN}\UU_\pt^{\ge k,\le n+k}}\prd{k : \bN} B^kG \eqvsym_\pt \loopspacesym B^{k+1}G.
+\end{align*}
+In \cref{sec:stabilization} we prove the stabilization theorem
+(\cref{thm:stabilization}), from which it follows that
+$(n,\infty)\GType=(n,k)\GType$ for $k\geq n+2$.
+
+The type $(\infty,\infty)\GType$ is the type of \define{stably groupal $\infty$-groups},
+also known as \define{connective spectra}. If we also relax the
+connectivity requirement, we get the type of all spectra, and we can
+think of a spectrum as a kind of $\infty$-groupoid with $k$-morphisms
+for all $k\in\mathbb{Z}$.
+
+The double hierarchy of higher groups is summarized in~\cref{tab:periodic}.
+We shall prove the correctness of the $n=0$ column in~\cref{sec:n=0}.
+\begin{table}
+  \caption{\label{tab:periodic}Periodic table of $k$-tuply groupal $n$-groupoids.}
+  \centering
+  \begin{tabular}{clllll} \toprule
+    $k\setminus n$ & $0$ & $1$ & $2$ & $\cdots$ & $\infty$ \\
+    \midrule
+    $0$ & pointed set & pointed groupoid & pointed $2$-groupoid & $\cdots$ & pointed $\infty$-groupoid \\
+    $1$ & group & $2$-group & $3$-group & $\cdots$ & $\infty$-group \\
+    $2$ & abelian group & braided $2$-group & braided $3$-group & $\cdots$ & braided $\infty$-group \\
+    $3$ & \ditto & symmetric $2$-group & sylleptic $3$-group & $\cdots$ & sylleptic $\infty$-group \\
+    $4$ & \ditto & \ditto & symmetric $3$-group & $\cdots$ & ?? $\infty$-group \\
+    $\vdots$ & \mbox{}\quad$\vdots$ & \mbox{}\quad$\vdots$ & \mbox{}\quad$\vdots$ & $\ddots$ & \mbox{}\quad$\vdots$ \\
+    $\loopspacesym$ & \ditto & \ditto & \ditto & $\cdots$ & connective spectrum \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+A homomorphism between higher groups is any
+function that can be suitably delooped.
+
+\begin{defn}
+For $G,H : (n,k)\GType$, we define
+\begin{align*}
+\hom_{(n,k)}(G,H) & \defeq  
+\sm{h: G \to_\pt H}{B^k h: B^kG \to_\pt B^kH} \loopspacesym^k(B^k h) \sim_\pt h \\
+&\phantom{:}\eqvsym (B^k h: B^kG \to_\pt B^kH).
+\end{align*}
+For (connective) spectra we need
+pointed maps between all the deloopings and pointed homotopies showing
+they cohere.
+\end{defn}
+
+Note that if $h,k : G \to H$ are homomorphisms between set-level
+groups, then $h$ and $k$ are \define{conjugate} if $Bh, Bk : BG \to_\pt BH$ are
+\define{freely} homotopic (i.e., equal as maps $BG \to BH$).
+
+Also observe that 
+\begin{align*}
+\pi_j(B^kG \to_\pt B^kH) & \eqvsym \trunc{0}{B^kG \to_\pt \loopspacesym^jB^kH} \\
+& \eqvsym \trunc{0}{\Sigma^jB^kG \to_\pt B^kH} \\
+& \eqvsym 0
+\end{align*}
+for $j>n$, which suggests that $\hom_{(n,k)}(G,H)$ is $n$-truncated. To prove this, we deviate slightly from the approach in \cite{BuchholtzDoornRijke} and use the following intermediate result.
+
+\begin{prp}
+Consider a pointed $(k+1)$-connected type $X$, and a family $Y:X\to\UU^{\le n+k}$ of $(n+k)$-truncated types over $X$. Then the map
+\begin{equation*}
+\evpt : \Big(\prd{x:X}Y(x)\Big) \to Y(\pt)
+\end{equation*}
+induced by the point inclusion $\unit\to X$, is an $(n-2)$-truncated map.
+\end{prp}
+
+\begin{proof}
+Note that we have a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=-1em]
+& \Big(\prd{x:X}Y(x)\Big) \arrow[dl,swap,"\blank\circ \mathsf{const}_\pt"] \arrow[dr,"\evpt"] & \phantom{\Big(\prd{t:\unit} Y(\pt)\Big)} \\
+\Big(\prd{t:\unit} Y(\pt)\Big) \arrow[rr,swap,"\evpt","\eqvsym"'] & & Y(\pt),
+\end{tikzcd}
+\end{equation*}
+so the map on the left is an $(n-2)$-truncated map if and only if the map on the right is. For the map on the left, the claim follows immediately from Lemma 8.6.1 of \cite{hottbook}, since the point inclusion $\mathsf{const}_\pt:\unit\to X$ is a $k$-connected map by \cref{cor:ptd_connected}.
+\end{proof}
+
+\begin{defn}
+  If $X : \UU_\pt$ and $Y : X \to \UU_\pt$, then we introduce the
+  type of \define{pointed sections},
+\begin{equation*}
+\textstyle{\prod_{(x:X)}^\ast Y(x)} \defeq \sm{s:\prd{x:X}Y(x)}s(\pt)=\pt
+\end{equation*}
+  This type is itself pointed by the trivial section $\lam{x}\pt$.
+\end{defn}
+
+\begin{cor}
+Consider a pointed $k$-connected type $X$, and a family $Y:X\to\UU_\pt^{\le n+k}$ of pointed $(n+k)$-truncated types over $X$. Then the type $\prod_{(x:X)}^\ast Y(x)$ is $(n-1)$-truncated.
+\end{cor}
+
+\begin{proof}
+Note that we have a pullback square
+\begin{equation*}
+\begin{tikzcd}
+\textstyle{\prod_{(x:X)}^\ast Y(x)} \arrow[r] \arrow[d] & \unit \arrow[d] \\
+\prd{x:X}Y(x) \arrow[r,swap,"\evpt"] & Y(\ast),
+\end{tikzcd}
+\end{equation*}
+so the claim follows from the fact that $\evpt$ is an $(n-1)$-truncated map.
+\end{proof}
+
+\begin{thm}
+  The type $\hom_{(n,k)}(G,H)$ is an $n$-type for any $G,H:(n,k)\GType$.
+\end{thm}
+
+\begin{proof}
+  If $X$ is $(k-1)$-connected, and $Y$ is $(n+k)$-truncated, then the type of pointed maps $X \to_\pt Y$ is $n$-truncated.
+\end{proof}
+
+\begin{cor}
+  The type $(n,k)\GType$ is $(n+1)$-truncated.
+\end{cor}
+\begin{proof}
+  This follows immediately from the preceding corollary, as the type
+  of equivalences $G \eqvsym H$ is a subtype of the homomorphisms from
+  $G$ to $H$.
+\end{proof}
+
+If $k\ge n+2$ (so we're in the stable range), then $\hom_{(n,k)}(G,H)$
+becomes a stably groupal $n$-groupoid. This generalizes the
+fact that the homomorphisms between abelian groups form an abelian
+group.
+
+\begin{cor}
+The automorphism group $\Aut G$ of a higher group $G:(n,k)\GType$ is a $1$-groupal $(n+1)$-group, equivalent to the automorphism group of the pointed type $B^kG$.
+\end{cor}
+
+\subsection{The stabilization theorem for higher groups}
+\label{sec:stabilization}
+
+\begin{defn}
+The \define{decategorification} $\Decat G$ of a $k$-tuply groupal $(n+1)$-group is defined to be the $k$-tuply groupal $n$-group $\trunc{n-1}{G}$, which has delooping $\trunc{n+k-1}{B^kG}$. Thus, decategorification is an operation
+\begin{equation*}
+\Decat : (n,k)\GType \to (n-1,k)\GType.
+\end{equation*}
+The functorial action of $\Decat$ is defined in the expected way. We also define the \define{$\infty$-decategorification} $\iDecat G$ of a $k$-tuply groupal $\infty$-group as the $k$-tuply groupal $n$-group $\trunc{n}{G}$, which has delooping $\trunc{n+k}{B^k G}$. 
+\end{defn}
+
+\begin{defn}
+The \define{discrete categorification} $\Disc G$ of a $k$-tuply-groupal $(n+1)$-group is defined to be the same $\infty$-group $G$, now considered as a $k$-tuply groupal $(n+2)$-group. Thus, the discrete categorification is an operation
+\begin{equation*}
+\Disc : (n,k)\GType \to (n+1,k)\GType.
+\end{equation*}
+Similarly, the \define{discrete $\infty$-decategorification} $\iDisc G$ of a $k$-tuply groupal $(n+1)$-group is defined to be the same group, now considered as a $k$-tuply groupal $\infty$-group.
+\end{defn}
+
+\begin{rmk}
+The decategorification and discrete categorification functors make the $(n+1)$-category $(n,k)\GType$ a reflective sub-$(\infty,1)$-category of $(n+1,k)\GType$. That is, there is an adjunction ${\Decat} \dashv {\Disc}$. These properties are straightforward consequences of the universal property of truncation.
+Similarly, we have ${\iDecat} \dashv {\iDisc}$ such that the counit induces an isomorphism ${\iDecat} \circ {\iDisc} = \idfunc$.
+\end{rmk}
+
+For the next constructions, we need the following properties.
+\begin{defn}
+  For $A : \UU_\pt$ we define the \define{$n$-connected cover} of $A$ to be 
+  $A{\angled n} \defeq  \fibf{A \to \trunc{n}{A}}$. We have the projection $p_1: A{\angled n} \to_\pt A$.
+\end{defn}
+
+\begin{lem} \label{lem:connected-cover-univ}
+  The universal property of the $n$-connected cover states the following. For any $n$-connected pointed type $B$, the pointed map
+  $$(B \to_\pt A{\angled n}) \to_\pt (B \to_\pt A),$$
+  given by postcomposition with $p_1$, is an equivalence.\\
+\end{lem}
+
+\begin{proof}
+  Given a map $f:B\to_\pt A$, we can form a map $\widetilde f: B \to A{\angled n}$. First note that for $b:B$ the type $\truncunit{fb}_n=_{\trunc{n}{A}}\truncunit{\pt}_n$ is $(n-1)$-truncated and inhabited for $b=\pt$. Since $B$ is $n$-connected, the universal property for connected types shows that we can construct a $qb:\truncunit{fb}_n=\truncunit{\pt}_n$ for all $b$ such that $q_0:qb_0\cdot\mathsf{ap}_{\truncunit{\blank}_n}(f_0)=1$. Then we can define the map $\widetilde f(b)\defeq (fb, qb)$. Now $\widetilde f$ is pointed, because $(f_0,q_0):(fb_0,qb_0)=(a_0,1)$.
+
+  Now we show that this is indeed an inverse to the given map. On the one hand, we need to show that if $f: B \to_\pt A$, then $\proj 1 \circ \widetilde f=f$. The underlying functions are equal because they both send $b$ to $f(b)$. They respect points in the same way, because
+  $\mathsf{ap}{p_1}(\widetilde f_0)=f_0$. The proof that the other composite is the identity follows from a computation using fibers and connectivity, which we omit here, but can be found in the formalization.
+\end{proof}
+
+The next reflective sub-$(\infty,1)$-category is formed by looping and delooping.
+\begin{description}
+\item[looping] $\loopspacesym : (n,k)\GType \to (n-1,k+1)\GType$ \\
+  $\angled{G,B^kG} \mapsto \angled{\loopspacesym G,B^kG{\angled k}}$
+\item[delooping] $\B : (n,k)\GType \to (n+1,k-1)\GType$ \\
+  $\angled{G,B^kG} \mapsto \angled{\loopspacesym^{k-1}B^kG,B^kG}$
+\end{description}
+We have ${\B} \dashv {\loopspacesym}$, which follows from Lemma \ref{lem:connected-cover-univ} %note: autoref writes "Theorem"
+and $\loopspacesym\circ{\B} = \idfunc$, which follows from the fact that $A{\angled n}=A$ if $A$ is $n$-connected.
+
+The last adjoint pair of functors is given by stabilization and forgetting. This does not form a reflective sub-$(\infty,1)$-category.
+\begin{description}
+\item[forgetting] $F : (n,k)\GType \to (n,k-1)\GType$ \\
+  $\angled{G,B^kG} \mapsto \angled{G,\loopspacesym B^kG}$
+\item[stabilization] $S : (n,k)\GType \to (n,k+1)\GType$ \\
+  $\angled{G,B^kG} \mapsto \angled{SG,\trunc{n+k+1}{\susp B^kG}}$,\\
+  where $SG = \trunc{n}{\loopspacesym^{k+1}\susp B^kG}$
+\end{description}
+We have the adjunction ${S} \dashv {F}$ which follows from the suspension-loop adjunction $\Sigma\dashv\loopspacesym$ on pointed types.
+
+The next main goal in this section is the stabilization theorem,
+stating that the ditto marks in~\cref{tab:periodic} are justified.
+
+The following corollary is almost \cite[Lemma~8.6.2]{hottbook}, but
+proving this in Book HoTT is a bit tricky. See the
+formalization for details.
+\begin{lem}[Wedge connectivity]
+  \label{lem:wedge-connectivity}
+  If $A : \UU_\pt$ is $n$-connected and $B: \UU_\pt$ is
+  $m$-connected, then the map $A \vee B \to A \times B$ is
+  $(n+m)$-connected.
+\end{lem}
+
+Let us mention that there is an alternative way to prove the wedge
+connectivity lemma: Recall that if $A$ is $n$-connected and $B$ is
+$m$-connected, then $A \ast B$ is
+$(n+m+2)$-connected~\cite[Theorem~6.8]{joinconstruction}. Hence the
+wedge connectivity lemma is also a direct consequence of the following lemma.
+\begin{lem}
+Let $A$ and $B$ be pointed types.
+The fiber of the wedge inclusion $A\vee B\to A\times B$ is equivalent to
+$\loopspacesym{A}\ast\loopspacesym{B}$. 
+\end{lem}
+\begin{proof}
+Note that the fiber of $A\to A\times B$ is $\loopspacesym B$, the fiber of $B\to A\times B$ is $\loopspacesym A$, and of course the fiber of $1\to A\times B$ is $\loopspacesym A\times \loopspacesym B$. We get a commuting cube
+\begin{equation*}
+\begin{tikzcd}
+& \loopspacesym A\times \loopspacesym B \arrow[dl] \arrow[d] \arrow[dr] \\
+\loopspacesym B \arrow[d] & 1 \arrow[dl] \arrow[dr] & \loopspacesym A \arrow[dl,crossing over] \arrow[d] \\
+A \arrow[dr] & 1 \arrow[d] \arrow[from=ul,crossing over] & B \arrow[dl] \\
+& A\times B
+\end{tikzcd}
+\end{equation*}
+in which the vertical squares are pullback squares. 
+
+By the descent theorem for pushouts it now follows that $\loopspacesym A\ast \loopspacesym B$ is the fiber of the wedge inclusion.
+\end{proof}
+
+The second main tool we need for the stabilization theorem is:
+\begin{thm}[Freudenthal]
+  If $A : \UU_\pt^{>n}$ with $n\ge 0$, then the map
+  $A \to \loopspacesym\susp A$ is $2n$-connected.
+\end{thm}
+This is \cite[Theorem~8.6.4]{hottbook}.
+
+The final building block we need is:
+\begin{lem}
+  There is a pullback square
+  \[
+    \begin{tikzcd}
+      \susp\loopspacesym A \ar[d,"\varepsilon_A"']\ar[r] & A \vee A \ar[d] \\
+      A \ar[r,"\Delta"'] & A \times A
+    \end{tikzcd}
+  \]
+  for any $A : \UU_\pt$.
+\end{lem}
+
+\begin{proof}
+Note that the pullback of $\Delta:A\to A\times A$ along either inclusion $A\to A\times A$ is contractible. So we have a cube
+\begin{equation*}
+\begin{tikzcd}
+& \loopspacesym A \arrow[dl] \arrow[d] \arrow[dr] \\
+1 \arrow[d] & 1 \arrow[dl] \arrow[dr] & 1 \arrow[dl,crossing over] \arrow[d] \\
+A \arrow[dr] & A \arrow[d,"\Delta"] \arrow[from=ul,crossing over] & A \arrow[dl] \\
+& A\times A
+\end{tikzcd}
+\end{equation*}
+in which the vertical squares are all pullback squares. Therefore, if we pull back along the wedge inclusion, we obtain by the descent theorem for pushouts that the square in the statement is indeed a pullback square.
+\end{proof}
+
+\begin{thm}[Stabilization]
+  \label{thm:stabilization}
+  If $k\ge n+2$, then $S : (n,k)\GType \to (n,k+1)\GType$ is an
+  equivalence, and any $G : (n,k)\GType$ is an infinite loop space.
+\end{thm}
+\begin{proof}
+  We show that $F\circ S=\idfunc=S\circ F : (n,k)\GType \to (n,k)\GType$
+  whenever $k\ge n+2$.
+
+  For the first, the unit map of the adjunction factors as
+  \[
+    B^kG \to \loopspacesym\susp B^kG \to \loopspacesym\trunc{n+k+1}{\susp B^kG}
+  \]
+  where the first map is $2k-2$-connected by Freudenthal, and the
+  second map is $n+k$-connected. Since the domain is $n+k$-truncated,
+  the composite is an equivalence whenever $2k-2 \ge n+k$.
+
+  For the second, the counit map of the adjunction factors as
+  \[
+    \trunc{n+k}{\susp\loopspacesym B^kG} \to \trunc{n+k}{B^kG} \to B^kG,
+  \]
+  where the second map is an equivalence. By the two lemmas above, the
+  first map is $2k-2$-connected.
+\end{proof}
+For example, for $G : (0,2)\GType$ an abelian group, we have
+$B^nG = K(G,n)$, an Eilenberg-MacLane space.
+
+The adjunction ${S} \dashv {F}$ implies that the free group on a
+pointed set $X$ is $\loopspacesym\trunc{1}{\susp X}=\pi_1(\susp X)$.  If $X$
+has decidable equality, $\susp X$ is already $1$-truncated. It is an
+open problem whether this is true in general.
+
+Also, the abelianization of a set-level group $G : 1\mathsf{Grp}$ is
+$\pi_2(\susp BG)$. If $G : (n,k)\GType$ is in the stable range ($k \ge
+n+2$), then $SFG=G$.
+
 \begin{exercises}
 \item Show that if $X$ is $m$-connected and $f:X\to Y$ is $n$-connected, then the map
 \begin{equation*}

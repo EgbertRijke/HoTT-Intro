@@ -287,9 +287,34 @@ It is straightforward to see that the statements of \cref{thm:pigeonhole,cor:pig
   If $d\neq\zeroN$, then it follows that $n\leq nd$. Therefore we obtain by the well-ordering principle of the natural numbers a minimal $m:\N$ that satisfies the decidable property $n\leq md$. Now we observe that $d\mid n$ holds if and only if $n=md$, which is decidable.
 \end{proof}
 
-\begin{lem}
-  For any decidable subtype of $\mathsf{Fin}(n)$, if it contains a number $i:\mathsf{Fin}(n)$, then it contains both a minimal and maximal element.
+\begin{defn}
+  A type family $P$ over $\N$ is said to be \define{bounded from above} by $m$ for some natural number $m$, if it comes equipped with a term of type
+  \begin{equation*}
+    \mathsf{is\usc{}bounded}_m(P) \defeq \prd{n:\N}P(n)\to (n\leq m).
+  \end{equation*}
+\end{defn}
+
+\begin{defn}
+  Let $P$ be a type family over $\N$, and consider $p:P(n)$. We say that $n$ is the maximal $P$-number if it comes equipped with a term of type
+  \begin{equation*}
+    \mathsf{is\usc{}maximal}_P(n,p) \defeq \prd{m:\N} P(m)\to m\leq n.
+  \end{equation*}
+\end{defn}
+
+In the following lemma we show that if a decidable family $P$ is bounded from above and inhabited, then it possesses a maximal element.
+
+\begin{lem}\label{lem:maximal}
+  Consider a decidable type family $P$ over $\N$ which is bounded from above by $m$. Then there is a function
+  \begin{equation*}
+    \mathsf{maximum}_P:\Big(\sm{n:\N}P(n)\Big)\to\Big(\sm{n:\N}{p:P(n)}\mathsf{is\usc{}maximal}_P(n,p)\Big).
+  \end{equation*}
 \end{lem}
+
+\begin{proof}
+  We define the asserted function by induction on $m$. In the base case, if we have $p:P(n)$, then it follows from $n\leq 0$ that $n=0$. It follows by the boundedness of $P$ that $(n,p)$ is maximal.
+
+  In the inductive step we proceed by case analysis on $P(\succN(m))$. This is allowed because $P$ is decidable. If we have $q:P(\succN(m))$, then it follows by the boundedness of $P$ that $(\succN(m),q)$ is maximal. If $\neg P(\succN(m))$, then it follows that $P$ is bounded by $m$, which allows us to proceed by recursion.
+\end{proof}
 
 \begin{defn}
   For any two natural numbers $m,n$ we define the \define{greatest common divisor} $\gcd(m,n)$, which satisfies the following two properties:
@@ -298,6 +323,10 @@ It is straightforward to see that the statements of \cref{thm:pigeonhole,cor:pig
   \item For any $d:\N$ we have $d\mid \gcd(m,n)$ if and only if both $d\mid m$ and $d\mid n$ hold.
   \end{enumerate}
 \end{defn}
+
+\begin{proof}[Construction]
+  Consider the type family $P(d)\defeq (d\mid m)\times (d\mid n)$. Then $P$ is bounded from above by $m$. Moreover, $P(1)$ holds since $1\mid n$ for any natural number $n$. Furthermore, the divisibility relation is decidable, so it follows that $P$ is a family of decidable types. Now the greatest common divisor is defined as the maximal $P$-element, which is obtained by \cref{lem:maximal}
+\end{proof}
 
 \subsection{The trial division primality test}
 
