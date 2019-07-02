@@ -1142,10 +1142,22 @@ abstract
       ( λ p → refl)
       ( λ f → eq-htpy (ind-unit refl))
 
+equiv-ev-star :
+  {l : Level} (P : unit → UU l) → ((x : unit) → P x) ≃ P star
+equiv-ev-star P = pair (ev-star P) (dependent-universal-property-unit P)
+
+ev-star' :
+  {l : Level} (Y : UU l) → (unit → Y) → Y
+ev-star' Y = ev-star (λ t → Y)
+
 abstract
   universal-property-unit :
-    {l : Level} (Y : UU l) → is-equiv (ev-star (λ t → Y))
+    {l : Level} (Y : UU l) → is-equiv (ev-star' Y)
   universal-property-unit Y = dependent-universal-property-unit (λ t → Y)
+
+equiv-ev-star' :
+  {l : Level} (Y : UU l) → (unit → Y) ≃ Y
+equiv-ev-star' Y = pair (ev-star' Y) (universal-property-unit Y)
 
 abstract
   is-equiv-ind-unit-universal-property-unit :

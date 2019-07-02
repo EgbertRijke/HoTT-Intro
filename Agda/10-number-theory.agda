@@ -5,6 +5,33 @@ module 10-number-theory where
 import 09-truncation-levels
 open 09-truncation-levels public
 
+two-ℕ : ℕ
+two-ℕ = succ-ℕ one-ℕ
+
+three-ℕ : ℕ
+three-ℕ = succ-ℕ two-ℕ
+
+four-ℕ : ℕ
+four-ℕ = succ-ℕ three-ℕ
+
+five-ℕ : ℕ
+five-ℕ = succ-ℕ four-ℕ
+
+six-ℕ : ℕ
+six-ℕ = succ-ℕ five-ℕ
+
+seven-ℕ : ℕ
+seven-ℕ = succ-ℕ six-ℕ
+
+eight-ℕ : ℕ
+eight-ℕ = succ-ℕ seven-ℕ
+
+nine-ℕ : ℕ
+nine-ℕ = succ-ℕ eight-ℕ
+
+ten-ℕ : ℕ
+ten-ℕ = succ-ℕ nine-ℕ
+
 -- Section 10.1 Decidability.
 
 {- Recall that a proposition P is decidable if P + (¬ P) holds. -}
@@ -13,29 +40,26 @@ classical-Prop :
   (l : Level) → UU (lsuc l)
 classical-Prop l = Σ (UU-Prop l) (λ P → is-decidable (pr1 P))
 
-abstract
-  is-decidable-Eq-ℕ :
-    (m n : ℕ) → is-decidable (Eq-ℕ m n)
-  is-decidable-Eq-ℕ zero-ℕ zero-ℕ = inl star
-  is-decidable-Eq-ℕ zero-ℕ (succ-ℕ n) = inr id
-  is-decidable-Eq-ℕ (succ-ℕ m) zero-ℕ = inr id
-  is-decidable-Eq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-Eq-ℕ m n
+is-decidable-Eq-ℕ :
+  (m n : ℕ) → is-decidable (Eq-ℕ m n)
+is-decidable-Eq-ℕ zero-ℕ zero-ℕ = inl star
+is-decidable-Eq-ℕ zero-ℕ (succ-ℕ n) = inr id
+is-decidable-Eq-ℕ (succ-ℕ m) zero-ℕ = inr id
+is-decidable-Eq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-Eq-ℕ m n
 
-abstract
-  is-decidable-leq-ℕ :
-    (m n : ℕ) → is-decidable (leq-ℕ m n)
-  is-decidable-leq-ℕ zero-ℕ zero-ℕ = inl star
-  is-decidable-leq-ℕ zero-ℕ (succ-ℕ n) = inl star
-  is-decidable-leq-ℕ (succ-ℕ m) zero-ℕ = inr id
-  is-decidable-leq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-leq-ℕ m n
+is-decidable-leq-ℕ :
+  (m n : ℕ) → is-decidable (leq-ℕ m n)
+is-decidable-leq-ℕ zero-ℕ zero-ℕ = inl star
+is-decidable-leq-ℕ zero-ℕ (succ-ℕ n) = inl star
+is-decidable-leq-ℕ (succ-ℕ m) zero-ℕ = inr id
+is-decidable-leq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-leq-ℕ m n
 
-abstract
-  is-decidable-le-ℕ :
-    (m n : ℕ) → is-decidable (le-ℕ m n)
-  is-decidable-le-ℕ zero-ℕ zero-ℕ = inr id
-  is-decidable-le-ℕ zero-ℕ (succ-ℕ n) = inl star
-  is-decidable-le-ℕ (succ-ℕ m) zero-ℕ = inr id
-  is-decidable-le-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-le-ℕ m n
+is-decidable-le-ℕ :
+  (m n : ℕ) → is-decidable (le-ℕ m n)
+is-decidable-le-ℕ zero-ℕ zero-ℕ = inr id
+is-decidable-le-ℕ zero-ℕ (succ-ℕ n) = inl star
+is-decidable-le-ℕ (succ-ℕ m) zero-ℕ = inr id
+is-decidable-le-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-le-ℕ m n
 
 {- We say that a type has decidable equality if we can decide whether 
    x = y holds for any x,y:A. -}
@@ -48,59 +72,56 @@ has-decidable-equality A = (x y : A) → is-decidable (Id x y)
 Eq-ℕ-eq : (x y : ℕ) → Id x y → Eq-ℕ x y
 Eq-ℕ-eq x .x refl = refl-Eq-ℕ x
 
-abstract
-  is-injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y
-  is-injective-succ-ℕ zero-ℕ zero-ℕ p = refl
-  is-injective-succ-ℕ zero-ℕ (succ-ℕ y) p =
-    ind-empty
-      { P = λ t → Id zero-ℕ (succ-ℕ y)}
-      ( Eq-ℕ-eq one-ℕ (succ-ℕ (succ-ℕ y)) p)
-  is-injective-succ-ℕ (succ-ℕ x) zero-ℕ p =
-    ind-empty
-      { P = λ t → Id (succ-ℕ x) zero-ℕ}
-      ( Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) one-ℕ p)
-  is-injective-succ-ℕ (succ-ℕ x) (succ-ℕ y) p =
-    ap succ-ℕ (eq-Eq-ℕ x y (Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) (succ-ℕ (succ-ℕ y)) p))
+is-injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y
+is-injective-succ-ℕ zero-ℕ zero-ℕ p = refl
+is-injective-succ-ℕ zero-ℕ (succ-ℕ y) p =
+  ind-empty
+    { P = λ t → Id zero-ℕ (succ-ℕ y)}
+    ( Eq-ℕ-eq one-ℕ (succ-ℕ (succ-ℕ y)) p)
+is-injective-succ-ℕ (succ-ℕ x) zero-ℕ p =
+  ind-empty
+    { P = λ t → Id (succ-ℕ x) zero-ℕ}
+    ( Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) one-ℕ p)
+is-injective-succ-ℕ (succ-ℕ x) (succ-ℕ y) p =
+  ap succ-ℕ (eq-Eq-ℕ x y (Eq-ℕ-eq (succ-ℕ (succ-ℕ x)) (succ-ℕ (succ-ℕ y)) p))
 
-abstract
-  has-decidable-equality-ℕ : has-decidable-equality ℕ
-  has-decidable-equality-ℕ zero-ℕ zero-ℕ = inl refl
-  has-decidable-equality-ℕ zero-ℕ (succ-ℕ y) = inr (Eq-ℕ-eq zero-ℕ (succ-ℕ y))
-  has-decidable-equality-ℕ (succ-ℕ x) zero-ℕ = inr (Eq-ℕ-eq (succ-ℕ x) zero-ℕ)
-  has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
-    functor-coprod
-      ( ap succ-ℕ)
-      ( λ (f : ¬ (Id x y)) p → f (is-injective-succ-ℕ x y p))
-      ( has-decidable-equality-ℕ x y)
+has-decidable-equality-ℕ : has-decidable-equality ℕ
+has-decidable-equality-ℕ zero-ℕ zero-ℕ = inl refl
+has-decidable-equality-ℕ zero-ℕ (succ-ℕ y) = inr (Eq-ℕ-eq zero-ℕ (succ-ℕ y))
+has-decidable-equality-ℕ (succ-ℕ x) zero-ℕ = inr (Eq-ℕ-eq (succ-ℕ x) zero-ℕ)
+has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
+  functor-coprod
+    ( ap succ-ℕ)
+    ( λ (f : ¬ (Id x y)) p → f (is-injective-succ-ℕ x y p))
+    ( has-decidable-equality-ℕ x y)
 
 {- Types with decidable equality are closed under coproducts. -}
 
-abstract
-  has-decidable-equality-coprod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    has-decidable-equality A → has-decidable-equality B →
-    has-decidable-equality (coprod A B)
-  has-decidable-equality-coprod dec-A dec-B (inl x) (inl y) =
-    functor-coprod
-      ( ap inl)
-      ( λ f p → f (inv-is-equiv (is-emb-inl _ _ x y) p))
-      ( dec-A x y)
-  has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inl x) (inr y) =
-    inr
-      ( λ p →
-        inv-is-equiv
-          ( is-equiv-map-raise _ empty)
-          ( Eq-coprod-eq A B (inl x) (inr y) p))
-  has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inr x) (inl y) =
-    inr
-      ( λ p →
-        inv-is-equiv
-          ( is-equiv-map-raise _ empty)
-          ( Eq-coprod-eq A B (inr x) (inl y) p))
-  has-decidable-equality-coprod dec-A dec-B (inr x) (inr y) =
-    functor-coprod
-      ( ap inr)
-      ( λ f p → f (inv-is-equiv (is-emb-inr _ _ x y) p))
-      ( dec-B x y)
+has-decidable-equality-coprod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  has-decidable-equality A → has-decidable-equality B →
+  has-decidable-equality (coprod A B)
+has-decidable-equality-coprod dec-A dec-B (inl x) (inl y) =
+  functor-coprod
+    ( ap inl)
+    ( λ f p → f (inv-is-equiv (is-emb-inl _ _ x y) p))
+    ( dec-A x y)
+has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inl x) (inr y) =
+  inr
+    ( λ p →
+      inv-is-equiv
+        ( is-equiv-map-raise _ empty)
+        ( Eq-coprod-eq A B (inl x) (inr y) p))
+has-decidable-equality-coprod {A = A} {B = B} dec-A dec-B (inr x) (inl y) =
+  inr
+    ( λ p →
+      inv-is-equiv
+        ( is-equiv-map-raise _ empty)
+        ( Eq-coprod-eq A B (inr x) (inl y) p))
+has-decidable-equality-coprod dec-A dec-B (inr x) (inr y) =
+  functor-coprod
+    ( ap inr)
+    ( λ f p → f (inv-is-equiv (is-emb-inr _ _ x y) p))
+    ( dec-B x y)
 
 {- Decidable equality of Fin n. -}
 
@@ -111,14 +132,13 @@ has-decidable-equality-unit :
   has-decidable-equality unit
 has-decidable-equality-unit star star = inl refl
 
-abstract
-  has-decidable-equality-Fin :
-    (n : ℕ) → has-decidable-equality (Fin n)
-  has-decidable-equality-Fin zero-ℕ = has-decidable-equality-empty
-  has-decidable-equality-Fin (succ-ℕ n) =
-    has-decidable-equality-coprod
-      ( has-decidable-equality-Fin n)
-      ( has-decidable-equality-unit)
+has-decidable-equality-Fin :
+  (n : ℕ) → has-decidable-equality (Fin n)
+has-decidable-equality-Fin zero-ℕ = has-decidable-equality-empty
+has-decidable-equality-Fin (succ-ℕ n) =
+  has-decidable-equality-coprod
+    ( has-decidable-equality-Fin n)
+    ( has-decidable-equality-unit)
 
 {- Decidable equality of ℤ. -}
 
@@ -141,12 +161,11 @@ splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
 splitting-decidable-equality A x y (inl p) = unit
 splitting-decidable-equality A x y (inr f) = empty
 
-abstract
-  is-prop-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
-    (t : is-decidable (Id x y)) →
-    is-prop (splitting-decidable-equality A x y t)
-  is-prop-splitting-decidable-equality A x y (inl p) = is-prop-unit
-  is-prop-splitting-decidable-equality A x y (inr f) = is-prop-empty
+is-prop-splitting-decidable-equality : {l : Level} (A : UU l) (x y : A) →
+  (t : is-decidable (Id x y)) →
+  is-prop (splitting-decidable-equality A x y t)
+is-prop-splitting-decidable-equality A x y (inl p) = is-prop-unit
+is-prop-splitting-decidable-equality A x y (inr f) = is-prop-empty
 
 reflexive-splitting-decidable-equality : {l : Level} (A : UU l) (x : A) →
   (t : is-decidable (Id x x)) → splitting-decidable-equality A x x t
@@ -161,15 +180,46 @@ eq-splitting-decidable-equality A x y (inl p) t = p
 eq-splitting-decidable-equality A x y (inr f) t =
   ind-empty {P = λ s → Id x y} t 
 
-abstract
-  is-set-has-decidable-equality : {l : Level} (A : UU l) →
-    has-decidable-equality A → is-set A
-  is-set-has-decidable-equality A d =
-    is-set-prop-in-id
-      ( λ x y → splitting-decidable-equality A x y (d x y))
-      ( λ x y → is-prop-splitting-decidable-equality A x y (d x y))
-      ( λ x → reflexive-splitting-decidable-equality A x (d x x))
-      ( λ x y → eq-splitting-decidable-equality A x y (d x y))
+is-set-has-decidable-equality : {l : Level} (A : UU l) →
+  has-decidable-equality A → is-set A
+is-set-has-decidable-equality A d =
+  is-set-prop-in-id
+    ( λ x y → splitting-decidable-equality A x y (d x y))
+    ( λ x y → is-prop-splitting-decidable-equality A x y (d x y))
+    ( λ x → reflexive-splitting-decidable-equality A x (d x x))
+    ( λ x y → eq-splitting-decidable-equality A x y (d x y))
+
+{- Closure of decidable types under retracts and equivalences. -}
+
+is-decidable-retract-of :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  A retract-of B → is-decidable B → is-decidable A
+is-decidable-retract-of (pair i (pair r H)) (inl b) = inl (r b)
+is-decidable-retract-of (pair i (pair r H)) (inr f) = inr (f ∘ i)
+
+is-decidable-is-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} {f : A → B}
+  (is-equiv-f : is-equiv f) → is-decidable B → is-decidable A
+is-decidable-is-equiv {f = f} (pair (pair g G) (pair h H)) =
+  is-decidable-retract-of (pair f (pair h H))
+
+is-decidable-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  is-decidable B → is-decidable A
+is-decidable-equiv e = is-decidable-is-equiv (is-equiv-map-equiv e)
+
+is-decidable-equiv' :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) →
+  is-decidable A → is-decidable B
+is-decidable-equiv' e = is-decidable-equiv (inv-equiv e)
+
+has-decidable-equality-retract-of :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  A retract-of B → has-decidable-equality B → has-decidable-equality A
+has-decidable-equality-retract-of (pair i (pair r H)) d x y =
+  is-decidable-retract-of
+    ( Id-retract-of-Id (pair i (pair r H)) x y)
+    ( d (i x) (i y))
 
 {- The well-ordering principle. -}
 
@@ -523,6 +573,88 @@ is-decidable-div-ℕ zero-ℕ (succ-ℕ n) =
 is-decidable-div-ℕ (succ-ℕ d) n =
   is-decidable-div-ℕ' (succ-ℕ d) n (leq-zero-ℕ d)
 
+-- Operations on decidable bounded subsets of ℕ
+
+iterated-operation-ℕ :
+  (strict-upper-bound : ℕ) (operation : ℕ → ℕ → ℕ) (base-value : ℕ) → ℕ
+iterated-operation-ℕ zero-ℕ μ e = e
+iterated-operation-ℕ (succ-ℕ b) μ e = μ (iterated-operation-ℕ b μ e) b
+
+iterated-sum-ℕ :
+  (summand : ℕ → ℕ) (b : ℕ) → ℕ
+iterated-sum-ℕ f zero-ℕ = zero-ℕ
+iterated-sum-ℕ f (succ-ℕ b) = add-ℕ (iterated-sum-ℕ f b) (f (succ-ℕ b))
+
+ranged-sum-ℕ :
+  (summand : ℕ → ℕ) (l u : ℕ) → ℕ
+ranged-sum-ℕ f zero-ℕ u = iterated-sum-ℕ f u
+ranged-sum-ℕ f (succ-ℕ l) zero-ℕ = zero-ℕ
+ranged-sum-ℕ f (succ-ℕ l) (succ-ℕ u) =
+  ranged-sum-ℕ (f ∘ succ-ℕ) l u
+
+succ-iterated-operation-fam-ℕ :
+  { l : Level}
+  ( P : ℕ → UU l) (is-decidable-P : (n : ℕ) → is-decidable (P n)) →
+  ( predecessor-strict-upper-bound : ℕ) (operation : ℕ → ℕ → ℕ) →
+  is-decidable (P predecessor-strict-upper-bound) → ℕ → ℕ
+succ-iterated-operation-fam-ℕ
+  P is-decidable-P b μ (inl p) m = μ m b
+succ-iterated-operation-fam-ℕ
+  P is-decidable-P b μ (inr f) m = m
+
+iterated-operation-fam-ℕ :
+  { l : Level} (P : ℕ → UU l) (is-decidable-P : (n : ℕ) → is-decidable (P n)) →
+  ( strict-upper-bound : ℕ) (operation : ℕ → ℕ → ℕ) (base-value : ℕ) → ℕ
+iterated-operation-fam-ℕ P d zero-ℕ μ e = e
+iterated-operation-fam-ℕ P d (succ-ℕ b) μ e =
+  succ-iterated-operation-fam-ℕ P d b μ (d b)
+    ( iterated-operation-fam-ℕ P d b μ e)
+
+Sum-fam-ℕ :
+  { l : Level} (P : ℕ → UU l) (is-decidable-P : (n : ℕ) → is-decidable (P n)) →
+  ( upper-bound : ℕ) ( summand : ℕ → ℕ) → ℕ
+Sum-fam-ℕ P d b f = iterated-operation-fam-ℕ P d (succ-ℕ b) (λ x y → add-ℕ x (f y)) zero-ℕ
+
+{-
+iterated-operation-fam-ℕ
+  P is-decidable-P zero-ℕ is-bounded-P μ base-value =
+  base-value
+iterated-operation-fam-ℕ
+  P is-decidable-P (succ-ℕ b) is-bounded-P μ base-value =
+  succ-iterated-operation-ℕ P is-decidable-P b is-bounded-P μ
+    ( is-decidable-P b)
+    ( iterated-operation-ℕ
+      ( introduce-bound-on-fam-ℕ b P)
+      ( is-decidable-introduce-bound-on-fam-ℕ b P is-decidable-P)
+      ( b)
+      ( is-bounded-introduce-bound-on-fam-ℕ b P)
+      ( μ)
+      ( base-value))
+
+product-decidable-bounded-fam-ℕ :
+  { l : Level} (P : ℕ → UU l) →
+  ( is-decidable-P : (n : ℕ) → is-decidable (P n))
+  ( b : ℕ) ( is-bounded-P : is-bounded-fam-ℕ b P) → ℕ
+product-decidable-bounded-fam-ℕ P is-decidable-P b is-bounded-P =
+  iterated-operation-ℕ P is-decidable-P b is-bounded-P mul-ℕ one-ℕ
+
+twenty-four-ℕ : ℕ
+twenty-four-ℕ =
+  product-decidable-bounded-fam-ℕ
+    ( λ x → le-ℕ x five-ℕ)
+    ( λ x → is-decidable-le-ℕ x five-ℕ)
+    ( five-ℕ)
+    ( λ x → id)
+-}
+
+{-
+test-zero-twenty-four-ℕ : Id twenty-four-ℕ zero-ℕ
+test-zero-twenty-four-ℕ = refl
+
+test-twenty-four-ℕ : Id twenty-four-ℕ (factorial four-ℕ)
+test-twenty-four-ℕ = refl
+-}
+
 -- Exercises
 
 -- Exercise 10.?
@@ -559,29 +691,8 @@ abstract
   has-decidable-equality-prod dec-A dec-B (pair x y) (pair x' y') =
     has-decidable-equality-prod' x x' y y' (dec-A x x') (dec-B y y')
 
--- Exercise 10.?
-
-is-decidable-retract-of :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  A retract-of B → is-decidable B → is-decidable A
-is-decidable-retract-of (pair i (pair r H)) (inl b) = inl (r b)
-is-decidable-retract-of (pair i (pair r H)) (inr f) = inr (f ∘ i)
-
-abstract
-  has-decidable-equality-retract-of :
-    {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-    A retract-of B → has-decidable-equality B → has-decidable-equality A
-  has-decidable-equality-retract-of (pair i (pair r H)) d x y =
-    is-decidable-retract-of
-      ( Id-retract-of-Id (pair i (pair r H)) x y)
-      ( d (i x) (i y))
-
 
 {-
-
-is-bounded-fam-ℕ :
-  {l : Level} (n : ℕ) (P : ℕ → UU l) → UU l
-is-bounded-fam-ℕ n P = (m : ℕ) → P m → leq-ℕ m n
 
 bounds-fam-ℕ :
   {l : Level} (P : ℕ → UU l) → UU l
@@ -701,8 +812,6 @@ k ≡ l mod n = div-ℤ (in-nat-ℤ n) (add-ℤ k (neg-ℤ l))
 
 -- From before
 
-two-ℕ : ℕ
-two-ℕ = succ-ℕ one-ℕ
 
 is-even-ℕ : ℕ → UU lzero
 is-even-ℕ n = div-ℕ two-ℕ n

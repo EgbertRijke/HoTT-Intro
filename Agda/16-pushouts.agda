@@ -236,6 +236,123 @@ universal-property-pushout-pullback-property-pushout
       ( λ i' → is-equiv-tot-is-fiberwise-equiv
         ( λ j' → funext (i' ∘ f) (j' ∘ g))))
 
+-- 17.2 Suspensions
+
+suspension-structure :
+  {l1 l2 : Level} (X : UU l1) (Y : UU l2) → UU (l1 ⊔ l2)
+suspension-structure X Y = Σ Y (λ N → Σ Y (λ S → (x : X) → Id N S))
+
+suspension-cocone' :
+  {l1 l2 : Level} (X : UU l1) (Y : UU l2) → UU (l1 ⊔ l2)
+suspension-cocone' X Y = cocone (const X unit star) (const X unit star) Y
+
+cocone-suspension-structure :
+  {l1 l2 : Level} (X : UU l1) (Y : UU l2) →
+  suspension-structure X Y → suspension-cocone' X Y
+cocone-suspension-structure X Y (pair N (pair S merid)) =
+  pair
+    ( const unit Y N)
+    ( pair
+      ( const unit Y S)
+      ( merid))
+
+universal-property-suspension' :
+  (l : Level) {l1 l2 : Level} (X : UU l1) (Y : UU l2)
+  (susp-str : suspension-structure X Y) → UU (lsuc l ⊔ l1 ⊔ l2)
+universal-property-suspension' l X Y susp-str-Y =
+  universal-property-pushout l
+    ( const X unit star)
+    ( const X unit star)
+    ( cocone-suspension-structure X Y susp-str-Y)
+
+is-suspension :
+  (l : Level) {l1 l2 : Level} (X : UU l1) (Y : UU l2) → UU (lsuc l ⊔ l1 ⊔ l2)
+is-suspension l X Y =
+  Σ (suspension-structure X Y) (universal-property-suspension' l X Y)
+
+{- We define the type of suspensions at universe level l, for any type X. Since
+   we would like to define type families over a suspension by the universal
+   property of the suspension, we assume that the universal property of a 
+   suspension holds for at least level (lsuc l ⊔ l1). This is the level that
+   contains both X and the suspension itself. -}
+
+UU-Suspensions :
+  (l : Level) {l1 : Level} (X : UU l1) → UU (lsuc (lsuc l) ⊔ lsuc l1)
+UU-Suspensions l {l1} X = Σ (UU l) (is-suspension (lsuc l ⊔ l1) X)
+
+{- We now work towards Lemma 17.2.2. -}
+
+suspension-cocone :
+  {l1 l2 : Level} (X : UU l1) (Z : UU l2) → UU _
+suspension-cocone X Z = Σ Z (λ z1 → Σ Z (λ z2 → (x : X) → Id z1 z2))
+
+ev-suspension :
+  {l1 l2 l3 : Level} {X : UU l1} {Y : UU l2} →
+  (susp-str-Y : suspension-structure X Y) →
+  (Z : UU l3) → (Y → Z) → suspension-cocone X Z
+ev-suspension (pair N (pair S merid)) Z h =
+  pair (h N) (pair (h S) (h ·l merid))
+
+universal-property-suspension :
+  (l : Level) {l1 l2 : Level} (X : UU l1) (Y : UU l2) →
+  suspension-structure X Y → UU (lsuc l ⊔ l1 ⊔ l2)
+universal-property-suspension l X Y susp-str-Y =
+  (Z : UU l) → is-equiv (ev-suspension susp-str-Y Z)
+
+comparison-suspension-cocone :
+  {l1 l2 : Level} (X : UU l1) (Z : UU l2) →
+  suspension-cocone' X Z ≃ suspension-cocone X Z
+comparison-suspension-cocone X Z =
+  equiv-toto
+    ( λ z1 → Σ Z (λ z2 → (x : X) → Id z1 z2))
+    ( equiv-ev-star' Z)
+    ( λ z1 →
+      equiv-toto
+        ( λ z2 → (x : X) → Id (z1 star) z2)
+        ( equiv-ev-star' Z)
+        ( λ z2 → equiv-id ((x : X) → Id (z1 star) (z2 star))))
+
+map-comparison-suspension-cocone :
+  {l1 l2 : Level} (X : UU l1) (Z : UU l2) →
+  suspension-cocone' X Z → suspension-cocone X Z
+map-comparison-suspension-cocone X Z =
+  map-equiv (comparison-suspension-cocone X Z)
+
+is-equiv-map-comparison-suspension-cocone :
+  {l1 l2 : Level} (X : UU l1) (Z : UU l2) →
+  is-equiv (map-comparison-suspension-cocone X Z)
+is-equiv-map-comparison-suspension-cocone X Z =
+  is-equiv-map-equiv (comparison-suspension-cocone X Z)
+
+triangle-ev-suspension :
+  {l1 l2 l3 : Level} {X : UU l1} {Y : UU l2} →
+  (susp-str-Y : suspension-structure X Y) →
+  (Z : UU l3) →
+  ( ( map-comparison-suspension-cocone X Z) ∘
+    ( cocone-map
+      ( const X unit star)
+      ( const X unit star)
+      ( cocone-suspension-structure X Y susp-str-Y))) ~
+  ( ev-suspension susp-str-Y Z)
+triangle-ev-suspension (pair N (pair S merid)) Z h = refl
+
+is-equiv-ev-suspension :
+  { l1 l2 l3 : Level} {X : UU l1} {Y : UU l2} →
+  ( susp-str-Y : suspension-structure X Y) →
+  ( up-Y : universal-property-suspension' l3 X Y susp-str-Y) → 
+  ( Z : UU l3) → is-equiv (ev-suspension susp-str-Y Z)
+is-equiv-ev-suspension {X = X} susp-str-Y up-Y Z =
+  is-equiv-comp
+    ( ev-suspension susp-str-Y Z)
+    ( map-comparison-suspension-cocone X Z)
+    ( cocone-map
+      ( const X unit star)
+      ( const X unit star)
+      ( cocone-suspension-structure X _ susp-str-Y))
+    ( htpy-inv (triangle-ev-suspension susp-str-Y Z))
+    ( up-Y Z)
+    ( is-equiv-map-comparison-suspension-cocone X Z)
+
 -- Exercises
 
 -- Exercise 13.1

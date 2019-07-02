@@ -201,12 +201,32 @@ A particularly important class of examples of pushouts are suspensions.
   such that the commuting square
   \begin{equation*}
     \begin{tikzcd}
-      X \arrow[r,"\mathsf{const}_\ttt"] \arrow[d,swap,"\mathsf{const}_\ttt"] & \unit \arrow[d,"{\lam{\ttt}\mathsf{S}}"] \\
-      \unit \arrow[r,swap,"\lam{\ttt}\mathsf{N} "] & \susp X
+      X \arrow[r,"\mathsf{const}_\ttt"] \arrow[d,swap,"\mathsf{const}_\ttt"] & \unit \arrow[d,"{\mathsf{const}_\south}"] \\
+      \unit \arrow[r,swap,"\mathsf{const}_\north"] & \susp X
     \end{tikzcd}
   \end{equation*}
   is a pushout square.
 \end{defn}
+
+We can use suspensions to present the spheres in type theory. The $2$-sphere is a space which, like the surface of the earth, has a north pole and a south pole. Moreover, for each point of the equator there is a meridian that connects the north pole to the south pool. Of course, the equator is a circle, so we see that the $2$-sphere is just the suspension of the circle.
+
+Similarly we can see that the $(n+1)$-sphere must be the suspension of the $n$-sphere. The $(n+1)$-sphere is the unit sphere in the vector space $\mathbb{R}^{n+2}$. This vector space has an orthogonal basis $e_1,\ldots,e_{n+2}$. Then the north and the south pole are given by $e_{n+2}$ and $-e_{n+2}$, respectively, and for each unit vector in $\mathbb{R}^{n+1}\subseteq\mathbb{R}^{n+2}$ we have a meridian connecting the north pole with the south pole. The unit sphere in $\mathbb{R}^{n+1}$ is of course the $n$-sphere, so we see that the $(n+1)$-sphere must be a suspension of the $n$-sphere.
+
+These observations suggest that we can define the spheres by recursion on $n$. Note that the spheres in type theory are defined entirely synthetically, i.e., without reference to the ambient topological space $\mathbb{R}^{n+1}$. Indeed, from a homotopical point of view each space $\mathbb{R}^{n}$ is contractible, so in type theory it is just presented as the unit type\footnote{It is an entirely different matter to define the \emph{set} $\mathbb{R}$ rather than the homotopy type of $\mathbb{R}$. See Chapter 11 of \cite{hottbook} for definitions of the Dedekind reals and the Cauchy reals.}.
+
+\begin{defn}
+We define the \define{$n$-sphere}\index{n-sphere@{$n$-sphere}|textbf} $\sphere{n}$\index{Sn@{$\sphere{n}$}|textbf} for any $n:\N$ by induction on $n$, by taking
+\begin{align*}
+\sphere{0} & \defeq \bool \\
+\sphere{n+1} & \defeq \susp{\sphere{n}}.
+\end{align*}
+\end{defn}
+
+\begin{rmk}
+  Note that this recursive definition of the spheres only goes through in type theory if we have (or assume) a universe that is closed under suspensions.
+\end{rmk}
+
+In the following lemma we give a slight simplification of the universal property of suspensions, making it just a little easier to work with them.
 
 \begin{lem}
 Let $X$ and $Y$ be types, and let $\susp X$ be a suspension of $X$. Then the map\index{universal property!of suspensions|textit}
@@ -219,7 +239,7 @@ given by $f\mapsto (f(\north),f(\south),f\cdot\merid)$ is an equivalence.
 \begin{proof}
   Note that we have a commuting triangle
   \begin{equation*}
-    \begin{tikzcd}[column sep=tiny]
+    \begin{tikzcd}[column sep=-1em]
       \phantom{\sm{y,y':Y}X\to (y=y')} & (\susp X \to Y) \arrow[dl,swap,"\mathsf{cocone\usc{}map}"] \arrow[dr,"{f\mapsto (f(\north),f(\south),f\cdot\merid)}"] &
       \phantom{\mathsf{cocone}_{\mathcal{S}}(Y)} \\
       \mathsf{cocone}_{\mathcal{S}}(Y) \arrow[rr] & & \sm{y,y':Y}X\to (y=y')
@@ -228,34 +248,34 @@ given by $f\mapsto (f(\north),f(\south),f\cdot\merid)$ is an equivalence.
   where $\mathcal{S}$ is the span $\unit \leftarrow X \rightarrow \unit$. The bottom map is given by $(i,j,H)\mapsto (i(\ttt),j(\ttt),H)$. This map is an equivalence, and the map on the left is an equivalence by the assumption that $\susp X$ is a suspension of $X$. Therefore the claim follows by the 3-for-2 property of equivalences.
 \end{proof}
 
-Spheres can be presented in type theory as suspensions.
+A slightly slicker version of the universal property of suspensions can be obtained in the case where $X$ is a pointed type. Recall that a pointed type is a pair $(X,x_0)$ consisting of a type $X$ and a point $x_0:X$. The point $x_0:X$ is called the \define{base point} of the pointed type. In the case of the suspension, we define the base point to be the north pole.
 
 \begin{defn}
-We define the \define{$n$-sphere}\index{n-sphere@{$n$-sphere}|textbf} $\sphere{n}$\index{Sn@{$\sphere{n}$}|textbf} for any $n:\N$ by induction on $n$, by taking
-\begin{align*}
-\sphere{0} & \defeq \bool \\
-\sphere{n+1} & \defeq \susp{\sphere{n}}.
-\end{align*}
-\end{defn}
-
-A slightly slicker version of the universal property of suspensions can be obtained in the case where $X$ is a pointed type. Recall that a pointed type is a pair $(X,x)$ consisting of a type $X$ and a point $x:X$. The point $x:X$ is called the \define{base point} of the pointed type, and often we don't mention it explicitly.
-
-\begin{defn}
-  Given two pointed types $X$ and $Y$, a pointed map from $X$ to $Y$ is a pair $(f,p)$ consisting of a map $f:X\to Y$ and a path $p:f(x)=y$ witnessing that $f$ preserves the base point. We write
+  Given two pointed types $X$ and $Y$, a pointed map from $X$ to $Y$ is a pair $(f,p)$ consisting of a map $f:X\to Y$ and a path $p:f(x_0)=y_0$ witnessing that $f$ preserves the base point. We write
   \begin{equation*}
     X\to_\ast Y
   \end{equation*}
-  for the type of \define{pointed maps} from $X$ to $Y$.
+  for the type of \define{pointed maps} from $X$ to $Y$. The type $X\to_\ast Y$ is itself a pointed type, with base point $(\mathsf{const}_{y_0},\refl{y_0})$. 
 \end{defn}
 
-The following theorem is also called the adjointness of the suspension and loop space functors.
+Now suppose that we have a pointed map $f:\susp X\to_\ast Y$ with $p:f(x_0)=y_0$. Then we obtain a map $X\to\loopspace{Y}$ that maps $x:X$ to the concatenation
+\begin{equation*}
+  \begin{tikzcd}[column sep=6em]
+    f(\north) \arrow[r,equals,"\ap{f}{\merid(x)}"] & f(\south) \arrow[r,equals,"\ap{f}{\merid(x_0)}^{-1}"] & f(\north).
+  \end{tikzcd}
+\end{equation*}
+Note that the function $x\mapsto\ct{\ap{f}{\merid(x)}}{\ap{f}{\merid(x_0)}^{-1}}$ is a pointed map by the right inverse law of path concatenation. Therefore we obtain a map
+\begin{equation*}
+  \tau_{X,Y} :(\susp X \to_\ast Y) \to (X \to_\ast \loopspace{Y}).
+\end{equation*}
+It is not hard to see that also $\tau_{X,Y}$ is pointed. We leave this to the reader. The following theorem is also called the adjointness of the suspension and loop space functors. This is an extremely important relation that pops up in many calculations of homotopy groups.
 
 \begin{thm}
   Let $X$ and $Y$ be pointed types. Then the pointed map
   \begin{equation*}
-    (\susp X \to_\ast Y) \to_\ast (X\to \loopspace Y)
+    \tau_{X,Y} : (\susp X \to_\ast Y) \to_\ast (X\to_\ast \loopspace Y)
   \end{equation*}
-  given by $(f,p)\mapsto (\lam{x}\ap{f}{\merid(x)},\cdots)$
+  is an equivalence. Moreover, $\tau$ is pointedly natural in $X$ and $Y$. 
 \end{thm}
 
 \subsection{The join of two types}

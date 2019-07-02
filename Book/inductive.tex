@@ -1,4 +1,4 @@
-\section{Inductive types}
+\section{More inductive types}
 
 Analogous to the type of natural numbers, many types can be specified as inductive types. In this lecture we introduce some further examples of inductive types: the unit type, the empty type, the booleans, coproducts, dependent pair types, and cartesian products. We also introduce the type of integers.
 
@@ -97,7 +97,7 @@ for any type $A$.
   \begin{align*}
     \neg\btrue & \defeq \bfalse & \neg\bfalse & \defeq \btrue.
   \end{align*}
-  The \define{boolean conjunction} operation $\blank\land\blank : \bool \to (\bool\to \bool)$is defined by
+  The \define{boolean conjunction} operation $\blank\land\blank : \bool \to (\bool\to \bool)$ is defined by
   \begin{align*}
     \btrue\land\btrue & \defeq \btrue & \bfalse\land\btrue & \defeq \bfalse \\
     \btrue\land\bfalse & \defeq \bfalse & \bfalse\land\bfalse & \defeq \bfalse.

@@ -1,21 +1,186 @@
-\chapter{The type of natural numbers}
+\section{The natural numbers}
 
-The single most important object of mathematical study is the set of natural numbers. In homotopy type theory its position of importance is only challenged by that of the identity type.
+The archetypal example of an inductive type is the type $\N$ of \emph{natural numbers}.
+The type of \define{natural numbers}\index{natural numbers|see N@{$\N$}} is defined to be a closed type $\nat$\index{N@{$\N$}} equipped with closed terms for a \define{zero term}\index{zero term} $\zeroN:\N$ and a \define{successor function}\index{successor function!of N@{of $\N$}}\index{function!successor on N@{successor on $\N$}} $\succN:\N\to\N$.
 
-The type of natural numbers comes equipped with a \define{zero element} and a \define{successor function}
+The rules we postulate for the type of natural numbers again come in four sets:
+\begin{enumerate}
+\item The formation rule, which asserts that the type $\N$ can be formed.
+\item The introduction rules, which provide the zero element and the successor function.
+\item The elimination rule. This rule is the type theoretic analogue of the induction principle for $\N$.
+\item The computation rules, which assert that any application of the elimination rule behaves as expected on the constructors $\zeroN$ and $\succN$ of $\N$.
+\end{enumerate}
+\begin{rmk}
+  We annotate the terms $\zeroN$ and $\succN$ of type $\N$ with their type in the subscript, as a reminder that $\zeroN$ and $\succN$ are declared to be terms of type $\N$, and not of any other type. In the next chapter we will introduce the type $\Z$ of the integers, on which we can also define a zero term $\zeroZ$, and a successor function $\succZ$. These should be distinguished from the terms $\zeroN$ and $\succN$. In general, we will make sure that every term is given a unique name. In libraries of mathematics formalized in a computer proof assistant it is also the case that every type must be given a unique name.
+\end{rmk}
+
+\subsection{The formal specification of the type of natural numbers}
+\subsubsection{The formation rule of $\N$}
+The type $\N$ is formed by the $\N$-formation rule
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{$\N$-form}
+  \UnaryInfC{$\vdash \N~\mathrm{type}$.}
+\end{prooftree}
+
+\subsubsection{The introduction rules of $\N$}
+The introduction rules for $\N$ introduce the zero term and the successor function
+
+\bigskip
+\begin{minipage}{.45\textwidth}
+  \begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\vdash \zeroN:\N$}
+  \end{prooftree}
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+  \begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\vdash \succN:\N\to\N$}
+  \end{prooftree}
+\end{minipage}
+
+\subsubsection{The elimination rule of $\N$}
+To prove properties about the natural numbers, we postulate an \emph{induction principle}\index{induction principle!of N@{of $\N$}} for $\N$. In dependent type theory, however, the induction principle for the natural numbers provides a way to construct \emph{dependent functions} of types depending on the natural numbers.
+
+The induction principle for $\N$ states what one has to do in order to construct a dependent function of type $\prd{n:\N}P(n)$, for any given type family $P$ over $\N$. Just like for the usual induction principle of the natural numbers, there are two things to be constructed: first one has to construct $p_0:P(\zeroN)$, and the second task is to construct a function of type $P(n)\to P(\succN(n))$ for all $n:\N$. 
+
+Therefore the induction principle for $\N$ is as follows:
+\begin{prooftree}
+  \def\fCenter{\Gamma}
+  \Axiom$\fCenter, n:\N\vdash P(n)~\mathrm{type}$
+  \noLine
+  \UnaryInf$\fCenter\ \vdash p_0:P(\zeroN)$
+  \noLine
+  \UnaryInf$\fCenter\ \vdash p_S:\prd{n:\N}P(n)\to P(\succN(n))$
+  \RightLabel{$\N{-}\mathrm{Ind}$}
+  \UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S):\prd{n:\N} P(n)$
+\end{prooftree}
+
+\begin{rmk}
+  The induction principle of $\N$ might also be formulated as an inference rule
+  \begin{prooftree}
+    \AxiomC{$\Gamma,n:\N\vdash P(n)~\mathrm{type}$}
+    \UnaryInfC{$\Gamma\vdash \mathsf{ind}_{\N} : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big)\to \prd{n:\N}P(n)\Big)$}
+  \end{prooftree}
+  To see that indeed we get such a function from the induction principle, we note that the induction principle is stated to hold in an \emph{arbitrary} context $\Gamma$. In particular, by weakening and the variable rule we have the following well-formed terms:
+  \begin{align*}
+    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) & \vdash p_0 : P(\zeroN) \\
+    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) & \vdash p_S : \prd{n:\N}P(n)\to P(\succN(n)).
+  \end{align*}
+  Therefore, the induction principle of $\N$ provides us with a term
+  \begin{equation*}
+    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) \vdash \mathsf{ind}_\N(p_0,p_S) : \prd{n:\N}P(n).
+  \end{equation*}
+  By $\lambda$-abstraction we now obtain a function
+  \begin{equation*}
+    \mathsf{ind}_\N : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big) \to \prd{n:\N}P(n)\Big)
+  \end{equation*}
+  in context $\Gamma$. Therefore we see that it does not really matter whether we present the induction principle of $\N$ in a more verbose way as an inference rule with the base case and the inductive step as hypotheses, or as a function taking variables for the base case and the inductive step as arguments.
+\end{rmk}
+
+\subsubsection{The computation rules of $\N$}
+Furthermore we require that the dependent function $\ind{\N}(P,p_0,p_S)$ behaves as expected when it is applied to $\zeroN$ or a successor, i.e., with the same hypotheses as for the induction principle we postulate the \define{computation rules}\index{computation rules!of N@{of $\N$}} for $\N$
+\begin{prooftree}
+    \def\fCenter{\Gamma}
+  \Axiom$\fCenter, n:\N\vdash P(n)~\mathrm{type}$
+  \noLine
+  \UnaryInf$\fCenter\ \vdash p_0:P(\zeroN)$
+  \noLine
+  \UnaryInf$\fCenter\ \vdash p_S:\prd{n:\N}P(n)\to P(\succN(n))$
+  \RightLabel{$\N{-}\mathrm{Ind}$}
+  \UnaryInf$\fCenter\ \vdash \ind{\N}(p_0,p_S,\zeroN)\jdeq p_0 : P(\zeroN)$
+\end{prooftree}
+and similarly, with the same hypotheses as for the computation rule for the base case,
+\begin{prooftree}
+\AxiomC{$\cdots$}
+%\RightLabel{$\N{-}\mathrm{Comp}(\succN)$}
+\UnaryInfC{$\Gamma, n:\N \vdash  \ind{\N}(p_0,p_S,\succN(n))\jdeq p_S(n,\ind{\N}(p_0,p_S,n)) : P(\succN(n))$}
+\end{prooftree}
+This completes the formal specification of $\N$.
+
+\subsection{Addition on the natural numbers}
+Using the induction principle of $\N$ we can perform many familiar constructions. 
+For instance, we can define the \define{addition operation}\index{addition!on N@{on $\N$}}\index{function!addition on N@{addition on $\N$}} by induction on $\N$.
+
+\begin{defn}
+  We define a function
+  \begin{equation*}
+    \addN:\N\to (\N\to\N)
+  \end{equation*}
+  satisfying $\addN(\zeroN,n)\jdeq n$ and $\addN(\succN(m),n)\jdeq\succN(\addN(m,n))$. Usually we will write $n+m$ for $\addN(n,m)$.
+\end{defn}
+
+\begin{proof}[Informal construction]
+Informally, the definition of addition is as follows. By induction it suffices to construct a function $\mathsf{add\usc{}}\zeroN : \N\to\N$, and a function
 \begin{align*}
-0 & : \N \\
-S & : \N\to \N.
+\mathsf{add\usc{}}\succN(n,f):\N\to\N,
 \end{align*}
-Thus we first have to introduce \emph{function types}. 
-It turns out however, that for many useful operations are of a more general nature, where the type of the outputs may depend on the input.  
-For example, if we are given a sequence $(X_n)_{n\in\N}$ of pointed spaces, then the operation that assigns to each $n$ the base point of $X_n$ is clearly of this kind.
+for every $n:\N$ and every $f:\N\to\N$.
 
-Therefore we will introduce \emph{dependent function types}, i.e.~function types of which the types of the outputs are allowed to vary over the input.
-Dependent function types will be used to formulate the induction principle for the natural numbers.
+The function $\mathsf{add\usc{}}\zeroN:\N\to\N$ is of course taken to be $\idfunc[\N]$, since the result of adding $0$ to $n$ should be $n$.
 
+Given $n:\N$ and a function $f:\N\to\N$ we define $\mathsf{add\usc{}}\succN(n,f)\defeq \succN\circ f$. The idea is that if $f$ represents adding $m$, then $\mathsf{add\usc{}}\succN(n,f)$ should be adding one more than $f$ did.
+\end{proof}
 
+\begin{proof}[Formal derivation]
+The derivation for the construction of $\mathsf{add\usc{}}\succN$ looks as follows:
+\begin{prooftree}
+  \AxiomC{}
+  \UnaryInfC{$\succN:\N^\N$}
+  \AxiomC{}
+  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \AxiomC{}
+  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \AxiomC{}
+  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \TrinaryInfC{$\vdash \mathsf{comp}:\N^\N\to (\N^\N\to \N^\N)$}
+  \UnaryInfC{$g:\N\to\N\vdash \mathsf{comp}(g):\N^\N\to\N^\N$}
+  \BinaryInfC{$\vdash \mathsf{comp}(\succN):\N^\N\to\N^\N$}
+  \UnaryInfC{$n:\N\vdash \mathsf{comp}(\succN):\N^\N\to\N^\N$}
+  \UnaryInfC{$\vdash \mathsf{add\usc{}}\succN\defeq \lam{n}\mathsf{comp}(\succN):\N\to (\N^\N \to \N^\N)$}
+%\BinaryInfC{$\vdash\addN:\ind{\N}(add_0,add_S):\N\to \N^\N$}
+\end{prooftree}
+We combine this derivation with the induction principle of $\N$ to complete the construction of addition:
+\begin{prooftree}
+  \AxiomC{$\vdots$}
+  \UnaryInfC{$n:\N\vdash \N^\N~\mathrm{type}$}
+  \AxiomC{$\vdots$}
+  \UnaryInfC{$\vdash \mathsf{add\usc{}}\zeroN\defeq \idfunc[\N]:\N^\N$}
+  \AxiomC{$\vdots$}
+  \UnaryInfC{$\vdash \mathsf{add\usc{}}\succN:\N\to (\N^\N \to \N^\N)$}
+  \TrinaryInfC{$\vdash\addN\jdeq\ind{\N}(\mathsf{add\usc{}}\zeroN,\mathsf{add\usc{}}\succN):\N\to \N^\N$}
+\end{prooftree}
+The asserted judgmental equalities then hold by the computation rules for $\N$.
+\end{proof}
+
+\begin{rmk}
+  When we define a function $f:\prd{n:\N} P(n)$, we will often do so just by indicating its definition on $\zeroN$ and its definition on $\succN(n)$, by writing
+  \begin{align*}
+    f(\zeroN) & \defeq p_0 \\
+    f(\succN(n)) & \defeq p_S(n,f(n)).
+  \end{align*}
+  For example, the definition of addition on the natural numbers could be given as
+  \begin{align*}
+    \addN(\zeroN,n) & \defeq n \\
+    \addN(\succN(m),n) & \defeq \succN(\addN(m,n)).
+  \end{align*}
+  This way of defining a function is called \emph{pattern matching}. A more formal inductive argument can be obtained from a definition by pattern matching if it is possible to obtain from the expression $p_S(n,f(n))$ a general dependent function
+  \begin{equation*}
+    p_S : \prd{n:\N} P(n)\to P(\succN(n)).
+  \end{equation*}
+  In practice this is usually the case. Computer proof assistants such as Agda have sofisticated algorithms to allow for definitions by pattern matching.
+\end{rmk}
+
+\begin{rmk}
+The rules that we provided so far are not sufficient to also conclude that $n+\zeroN\jdeq n$ and $n+ \succN(m)\jdeq \succN(n+m)$. However, once we have introduced the \emph{identity type} in \cref{chap:identity} we will nevertheless be able to \emph{identify} $n+\zeroN$ with $n$, and $n+ \succN(m)$ with $\succN(n+m)$. See \cref{ex:semi-ring-laws-N}. 
+\end{rmk}
 
 \begin{exercises}
-\item The \define{greatest common divisor} of any two natural numbers $m$ and $n$ is defined as the largest natural number $d$ such that both $d\mid m$ and $d\mid n$. Define the greatest common divisor as a function $\mathrm{gcd}:\N\to\N\to\N$ in type theory.
+  \item Define the binary \define{min} and \define{max} functions $\min_\N,\max_\N:\N\to(\N\to\N)$.\index{minimum function}\index{maximum function}\index{function!min}\index{function!max}
+  \item Define the \define{multiplication}\index{multiplication!on N@{on $\N$}}\index{function!multiplication on N@{multiplication on $\N$}} operation $\mathsf{mul}_\N :\N\to(\N\to\N)$.
+  \item Define the \define{power}\index{power function on N@{power function on $\N$}}\index{function!power function on N@{power function on $\N$}} operation $n,m\mapsto m^n$ of type $\N\to (\N\to \N)$.
+  \item Define the \define{factorial}\index{factorial function}\index{function!factorial function} function $n\mapsto n!$.
+  \item Define the \define{binomial coefficient}\index{binomial coefficients} $\binom{n}{k}$ for any $n,k:\N$, making sure that $\binom{n}{k}\jdeq 0$ when $n<k$.
+  \item Define the \define{Fibonacci sequence}\index{Fibonacci sequence} $0,1,1,2,3,5,8,13,\ldots$ as a function $F:\N\to\N$.
 \end{exercises}

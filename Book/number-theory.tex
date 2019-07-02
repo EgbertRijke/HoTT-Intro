@@ -336,11 +336,41 @@ In the following lemma we show that if a decidable family $P$ is bounded from ab
 
 It is important to note that, even when we prove that a type such as $\mathsf{is\usc{}prime}(n)$ is decidable, it is only after we \emph{evaluate} the proof term that we know whether the type under consideration has a term or not. In other words, for any given $n$ we don't know right away whether it is prime or not. Evaluating whether $n$ is prime can be computationally costly, so it may be desirable in any specific situation to give a separate mathematical \emph{argument} that decides whether or not the number is prime.
 
+\subsection{Prime decomposition}
+
+We will show now that any natural number $n>0$ can be written as a product of primes
+\begin{equation*}
+  n=p_1^{k_1}\cdots p_{m}^{k_m}
+\end{equation*}
+This prime decomposition is unique if we require that the primes $p_i<p_{i+1}$ for each $0<i<m$. In order to establish these facts in type theory, we first have to define finite products.
+
 \subsection{The infinitude of primes}
+
+Recall that Euclid's proof
 
 \begin{thm}
   There are infinitely many primes.
 \end{thm}
+
+\begin{proof}
+  We will show that for every $n:\N$ there is a prime number that is larger than $n$. In other words, we will construct a term of type
+  \begin{equation*}
+    \prd{n:\N}\sm{p:\N}\mathsf{is\usc{}prime}(p)\times (n\leq p).
+  \end{equation*}
+  To show this, let $P$ be the type family over $\N$ given by
+  \begin{equation*}
+    P(m)\defeq \mathsf{is\usc{}prime}(m)\times (m\leq n).
+  \end{equation*}
+  Since $P$ is decidable and bounded from above by $n$, we can take the product of all $m:\N$ for which $P$ holds. Write $k$ for this product. Then $k+1$ is coprime to every prime less than $n$. Therefore the primes in its prime factorization must all be larger than $n$.  
+\end{proof}
+
+\begin{cor}
+  There is a function
+  \begin{equation*}
+    \mathsf{prime} : \N \to \sm{p:\N}\mathsf{is\usc{}prime}(p)
+  \end{equation*}
+  that sends $n$ to the $n$-th prime. This function is strictly monotone, so it is an embedding.
+\end{cor}
 
 Some further ideas to include in this chapter:
 \begin{enumerate}
