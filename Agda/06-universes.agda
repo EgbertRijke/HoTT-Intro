@@ -12,8 +12,8 @@ open 05-identity-types public
    structured types. -}
 
 -- Pointed types
-U-pt : (i : Level) → UU (lsuc i)
-U-pt i = Σ (UU i) (λ X → X)
+UU-pt : (i : Level) → UU (lsuc i)
+UU-pt i = Σ (UU i) (λ X → X)
  
 -- Graphs
 Gph : (i : Level) → UU (lsuc i)

@@ -278,60 +278,6 @@ It is not hard to see that also $\tau_{X,Y}$ is pointed. We leave this to the re
   is an equivalence. Moreover, $\tau$ is pointedly natural in $X$ and $Y$. 
 \end{thm}
 
-\subsection{The join of two types}
-
-\begin{defn}
-We define the \define{join}\index{join} $\join{X}{Y}$\index{join X Y@{$\join{X}{Y}$}|textbf} of $X$ and $Y$ to be the pushout 
-\begin{equation*}
-\begin{tikzcd}
-X\times Y \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & Y \arrow[d,"\inr"] \\
-X \arrow[r,swap,"\inl"] & X \ast Y. 
-\end{tikzcd}
-\end{equation*}
-\end{defn}
-
-\begin{thm}
-  For any type $X$, the join $\join{\bool}{X}$ is a suspension of $X$.
-\end{thm}
-
-\begin{comment}
-\begin{defn}
-Let $X$ and $Y$ be types with base points $x_0$ and $y_0$, respectively.
-We define the \define{wedge} $X\lor Y$ of $X$ and $Y$ to be the pushout
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-\bool \arrow[r,"{\ind{\bool}(\inl(x_0),\inr(y_0))}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X+Y \arrow[d,"\inr"] \\
-\unit \arrow[r,swap,"\inl"] & X\lor Y
-\end{tikzcd}
-\end{equation*}
-\end{defn}
-
-\begin{defn}
-Let $X$ and $Y$ be types with base points $x_0$ and $y_0$, respectively.
-We define a map
-\begin{equation*}
-\mathsf{wedge\usc{}incl} : X \lor Y \to X\times Y.
-\end{equation*}
-as the unique map obtained from the commutative square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-\bool \arrow[r,"{\ind{\bool}(\inl(x_0),\inr(y_0))}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X+Y \arrow[d,"{\ind{X+Y}(\lam{x}\pairr{x,y_0},\lam{y}\pairr{x_0,y})}"] \\
-\unit \arrow[r,swap,"\lam{t}\pairr{x_0,y_0}"] & X\times Y.
-\end{tikzcd}
-\end{equation*}
-\end{defn}
-
-\begin{defn}
-We define the \define{smash product} $X\wedge Y$ of $X$ and $Y$ to be the pushout
-\begin{equation*}
-\begin{tikzcd}[column sep=huge]
-X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X\times Y \arrow[d,"\inr"] \\
-\unit \arrow[r,swap,"\inl"] & X\wedge Y.
-\end{tikzcd}
-\end{equation*}
-\end{defn}
-\end{comment}
-
 \subsection{The duality of pullbacks and pushouts}
 \begin{lem}\label{lem:cocone_pb}
 For any span $\mathcal{S}\jdeq (S,f,g)$ from $A$ to $B$, and any type $X$ the square\index{cocone_S(X)@{$\mathsf{cocone}_{\mathcal{S}}(X)$}!as a pullback|textit}
@@ -451,6 +397,18 @@ The cofiber of a map is sometimes also called the \define{mapping cone}\index{ma
 The suspension $\susp X$ of $X$ is the cofiber of the map $X\to \unit$.\index{suspension!as cofiber} 
 \end{eg}
 
+\subsection{Further examples of pushouts}
+
+\begin{defn}
+We define the \define{join}\index{join} $\join{X}{Y}$\index{join X Y@{$\join{X}{Y}$}|textbf} of $X$ and $Y$ to be the pushout 
+\begin{equation*}
+\begin{tikzcd}
+X\times Y \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & Y \arrow[d,"\inr"] \\
+X \arrow[r,swap,"\inl"] & X \ast Y. 
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
 \begin{defn}
 Suppose $A$ and $B$ are pointed types, with base points $a_0$ and $b_0$, respectively. The \define{(binary) wedge}\index{wedge@(binary) wedge|textbf} $A\vee B$ of $A$ and $B$ is defined as the pushout
 \begin{equation*}
@@ -467,6 +425,42 @@ Given a type $I$, and a family of pointed types $A$ over $i$, with base points $
 \begin{tikzcd}[column sep=huge]
 I \arrow[d] \arrow[r,"{\lam{i}(i,a_0(i))}"] & \sm{i:I}A_i \arrow[d] \\
 \unit \arrow[r] & \bigvee_{(i:I)} A_i.
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Let $X$ and $Y$ be types with base points $x_0$ and $y_0$, respectively.
+We define the \define{wedge} $X\lor Y$ of $X$ and $Y$ to be the pushout
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\bool \arrow[r,"{\ind{\bool}(\inl(x_0),\inr(y_0))}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X+Y \arrow[d,"\inr"] \\
+\unit \arrow[r,swap,"\inl"] & X\lor Y
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Let $X$ and $Y$ be types with base points $x_0$ and $y_0$, respectively.
+We define a map
+\begin{equation*}
+\mathsf{wedge\usc{}incl} : X \lor Y \to X\times Y.
+\end{equation*}
+as the unique map obtained from the commutative square
+\begin{equation*}
+\begin{tikzcd}[column sep=8em]
+\bool \arrow[r,"{\ind{\bool}(\inl(x_0),\inr(y_0))}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X+Y \arrow[d,"{\ind{X+Y}(\lam{x}\pairr{x,y_0},\lam{y}\pairr{x_0,y})}"] \\
+\unit \arrow[r,swap,"\lam{t}\pairr{x_0,y_0}"] & X\times Y.
+\end{tikzcd}
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+We define the \define{smash product} $X\wedge Y$ of $X$ and $Y$ to be the pushout
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"] & X\times Y \arrow[d,"\inr"] \\
+\unit \arrow[r,swap,"\inl"] & X\wedge Y.
 \end{tikzcd}
 \end{equation*}
 \end{defn}

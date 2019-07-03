@@ -86,22 +86,6 @@ eq-htpy-cocone :
   htpy-cocone f g c c' → Id c c'
 eq-htpy-cocone f g c c' = inv-is-equiv (is-equiv-htpy-cocone-eq f g c c')
 
-{-
-issec-eq-htpy-cocone :
-  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c c' : cocone f g X) →
-  ((htpy-cocone-eq f g c c') ∘ (eq-htpy-cocone f g c c')) ~ id
-issec-eq-htpy-cocone f g c c' =
-  issec-inv-is-equiv (is-equiv-htpy-cocone-eq f g c c')
--}
-
--- Section 14.2 Examples of pushouts
-
--- Section 14.3 Duality of pushouts and pullbacks
-
--- We first give several different conditions that are equivalent to the
--- universal property of pushouts.
-
 {- Given a cocone c on a span S with vertex X, and a type Y, the function 
    cocone-map sends a function X → Y to a new cocone with vertex Y. -}
 
@@ -137,106 +121,8 @@ universal-property-pushout :
   cocone f g X → UU _
 universal-property-pushout l f g c =
   (Y : UU l) → is-equiv (cocone-map f g {Y = Y} c)
-  
-{- The universal property of the pushout of a span S can also be stated as a
-   pullback-property: a cocone c = (pair i (pair j H)) with vertex X
-   satisfies the universal property of the pushout of S if and only if the
-   square
 
-     Y^X -----> Y^B
-      |          |
-      |          |
-      V          V
-     Y^A -----> Y^S
-
-   is a pullback square for every type Y. Below, we first define the cone of
-   this commuting square, and then we introduce the type 
-   pullback-property-pushout, which states that the above square is a pullback.
-   -}
-
-htpy-precomp :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
-  {f g : A → B} (H : f ~ g) (C : UU l3) →
-  (precomp f C) ~ (precomp g C)
-htpy-precomp H C h = eq-htpy (h ·l H)
-
-compute-htpy-precomp :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : UU l3) →
-  (htpy-precomp (htpy-refl' f) C) ~ htpy-refl
-compute-htpy-precomp f C h = eq-htpy-htpy-refl (h ∘ f)
-
-cone-pullback-property-pushout :
-  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (Y : UU l) →
-  cone (λ (h : A → Y) → h ∘ f) (λ (h : B → Y) → h ∘ g) (X → Y)
-cone-pullback-property-pushout f g {X} c Y =
-  pair
-    ( precomp (pr1 c) Y)
-    ( pair
-      ( precomp (pr1 (pr2 c)) Y)
-      ( htpy-precomp (pr2 (pr2 c)) Y))
-
-pullback-property-pushout :
-  {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
-  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  UU (l1 ⊔ (l2 ⊔ (l3 ⊔ (l4 ⊔ lsuc l))))
-pullback-property-pushout l {S} {A} {B} f g {X} c =
-  (Y : UU l) → is-pullback
-    ( precomp f Y)
-    ( precomp g Y)
-    ( cone-pullback-property-pushout f g c Y)
-
-{- In order to show that the universal property of pushouts is equivalent to 
-   the pullback property, we show that the maps cocone-map and the gap map fit 
-   in a commuting triangle, where the third map is an equivalence. The claim 
-   then follows from the 3-for-2 property of equivalences. -}
-   
-triangle-pullback-property-pushout-universal-property-pushout :
-  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2}
-  {B : UU l3} (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  {l : Level} (Y : UU l) →
-  ( cocone-map f g c) ~
-  ( ( tot (λ i' → tot (λ j' p → htpy-eq p))) ∘
-    ( gap (λ h → h ∘ f) (λ h → h ∘ g) (cone-pullback-property-pushout f g c Y)))
-triangle-pullback-property-pushout-universal-property-pushout
-  {S = S} {A = A} {B = B} f g (pair i (pair j H)) Y h =
-    eq-pair refl (eq-pair refl (inv (issec-eq-htpy (h ·l H))))
-
-pullback-property-pushout-universal-property-pushout :
-  {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2}
-  {B : UU l3} (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  universal-property-pushout l f g c → pullback-property-pushout l f g c
-pullback-property-pushout-universal-property-pushout
-  l f g (pair i (pair j H)) up-c Y =
-  let c = (pair i (pair j H)) in
-  is-equiv-right-factor
-    ( cocone-map f g c)
-    ( tot (λ i' → tot (λ j' p → htpy-eq p)))
-    ( gap (λ h → h ∘ f) (λ h → h ∘ g) (cone-pullback-property-pushout f g c Y))
-    ( triangle-pullback-property-pushout-universal-property-pushout f g c Y)
-    ( is-equiv-tot-is-fiberwise-equiv
-      ( λ i' → is-equiv-tot-is-fiberwise-equiv
-        ( λ j' → funext (i' ∘ f) (j' ∘ g))))
-    ( up-c Y)
-
-universal-property-pushout-pullback-property-pushout :
-  {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2}
-  {B : UU l3} (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
-  pullback-property-pushout l f g c → universal-property-pushout l f g c
-universal-property-pushout-pullback-property-pushout
-  l f g (pair i (pair j H)) pb-c Y =
-  let c = (pair i (pair j H)) in
-  is-equiv-comp
-    ( cocone-map f g c)
-    ( tot (λ i' → tot (λ j' p → htpy-eq p)))
-    ( gap (λ h → h ∘ f) (λ h → h ∘ g) (cone-pullback-property-pushout f g c Y))
-    ( triangle-pullback-property-pushout-universal-property-pushout f g c Y)
-    ( pb-c Y)
-    ( is-equiv-tot-is-fiberwise-equiv
-      ( λ i' → is-equiv-tot-is-fiberwise-equiv
-        ( λ j' → funext (i' ∘ f) (j' ∘ g))))
-
--- 17.2 Suspensions
+-- Section 14.2 Suspensions
 
 suspension-structure :
   {l1 l2 : Level} (X : UU l1) (Y : UU l2) → UU (l1 ⊔ l2)
@@ -352,6 +238,188 @@ is-equiv-ev-suspension {X = X} susp-str-Y up-Y Z =
     ( htpy-inv (triangle-ev-suspension susp-str-Y Z))
     ( up-Y Z)
     ( is-equiv-map-comparison-suspension-cocone X Z)
+
+{- Pointed maps and pointed homotopies. -}
+
+pointed-fam :
+  {l1 : Level} (l : Level) (X : UU-pt l1) → UU (lsuc l ⊔ l1)
+pointed-fam l (pair X x) = Σ (X → UU l) (λ P → P x)
+
+pointed-Π :
+  {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) → UU (l1 ⊔ l2)
+pointed-Π (pair X x) (pair P p) = Σ ((x' : X) → P x') (λ f → Id (f x) p)
+
+pointed-htpy :
+  {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) →
+  (f g : pointed-Π X P) → UU (l1 ⊔ l2)
+pointed-htpy (pair X x) (pair P p) (pair f α) g =
+  pointed-Π (pair X x) (pair (λ x' → Id (f x') (pr1 g x')) (α ∙ (inv (pr2 g))))
+
+pointed-htpy-refl :
+  {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) →
+  (f : pointed-Π X P) → pointed-htpy X P f f
+pointed-htpy-refl (pair X x) (pair P p) (pair f α) =
+  pair htpy-refl (inv (right-inv α))
+
+pointed-htpy-eq :
+  {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) →
+  (f g : pointed-Π X P) → Id f g → pointed-htpy X P f g
+pointed-htpy-eq X P f .f refl = pointed-htpy-refl X P f
+
+is-contr-total-pointed-htpy :
+  {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) (f : pointed-Π X P) →
+  is-contr (Σ (pointed-Π X P) (pointed-htpy X P f))
+is-contr-total-pointed-htpy (pair X x) (pair P p) (pair f α) =
+  is-contr-total-Eq-structure
+    ( λ g β (H : f ~ g) → Id (H x) (α ∙ (inv β)))
+    ( is-contr-total-htpy f)
+    ( pair f htpy-refl)
+    ( is-contr-equiv'
+      ( Σ (Id (f x) p) (λ β → Id β α))
+      ( equiv-tot (λ β → equiv-con-inv refl β α))
+      ( is-contr-total-path' α))
+
+is-equiv-pointed-htpy-eq :
+  {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) →
+  (f g : pointed-Π X P) → is-equiv (pointed-htpy-eq X P f g)
+is-equiv-pointed-htpy-eq X P f =
+  fundamental-theorem-id f
+    ( pointed-htpy-refl X P f)
+    ( is-contr-total-pointed-htpy X P f)
+    ( pointed-htpy-eq X P f)
+
+eq-pointed-htpy :
+  {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) →
+  (f g : pointed-Π X P) → (pointed-htpy X P f g) → Id f g
+eq-pointed-htpy X P f g = inv-is-equiv (is-equiv-pointed-htpy-eq X P f g)
+
+-- Section 14.3 Duality of pushouts and pullbacks
+  
+{- The universal property of the pushout of a span S can also be stated as a
+   pullback-property: a cocone c = (pair i (pair j H)) with vertex X
+   satisfies the universal property of the pushout of S if and only if the
+   square
+
+     Y^X -----> Y^B
+      |          |
+      |          |
+      V          V
+     Y^A -----> Y^S
+
+   is a pullback square for every type Y. Below, we first define the cone of
+   this commuting square, and then we introduce the type 
+   pullback-property-pushout, which states that the above square is a pullback.
+   -}
+
+htpy-precomp :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2}
+  {f g : A → B} (H : f ~ g) (C : UU l3) →
+  (precomp f C) ~ (precomp g C)
+htpy-precomp H C h = eq-htpy (h ·l H)
+
+compute-htpy-precomp :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : UU l3) →
+  (htpy-precomp (htpy-refl' f) C) ~ htpy-refl
+compute-htpy-precomp f C h = eq-htpy-htpy-refl (h ∘ f)
+
+cone-pullback-property-pushout :
+  {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) (Y : UU l) →
+  cone (λ (h : A → Y) → h ∘ f) (λ (h : B → Y) → h ∘ g) (X → Y)
+cone-pullback-property-pushout f g {X} c Y =
+  pair
+    ( precomp (pr1 c) Y)
+    ( pair
+      ( precomp (pr1 (pr2 c)) Y)
+      ( htpy-precomp (pr2 (pr2 c)) Y))
+
+pullback-property-pushout :
+  {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  UU (l1 ⊔ (l2 ⊔ (l3 ⊔ (l4 ⊔ lsuc l))))
+pullback-property-pushout l {S} {A} {B} f g {X} c =
+  (Y : UU l) → is-pullback
+    ( precomp f Y)
+    ( precomp g Y)
+    ( cone-pullback-property-pushout f g c Y)
+
+{- In order to show that the universal property of pushouts is equivalent to 
+   the pullback property, we show that the maps cocone-map and the gap map fit 
+   in a commuting triangle, where the third map is an equivalence. The claim 
+   then follows from the 3-for-2 property of equivalences. -}
+   
+triangle-pullback-property-pushout-universal-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2}
+  {B : UU l3} (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  {l : Level} (Y : UU l) →
+  ( cocone-map f g c) ~
+  ( ( tot (λ i' → tot (λ j' p → htpy-eq p))) ∘
+    ( gap (λ h → h ∘ f) (λ h → h ∘ g) (cone-pullback-property-pushout f g c Y)))
+triangle-pullback-property-pushout-universal-property-pushout
+  {S = S} {A = A} {B = B} f g (pair i (pair j H)) Y h =
+    eq-pair refl (eq-pair refl (inv (issec-eq-htpy (h ·l H))))
+
+pullback-property-pushout-universal-property-pushout :
+  {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2}
+  {B : UU l3} (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  universal-property-pushout l f g c → pullback-property-pushout l f g c
+pullback-property-pushout-universal-property-pushout
+  l f g (pair i (pair j H)) up-c Y =
+  let c = (pair i (pair j H)) in
+  is-equiv-right-factor
+    ( cocone-map f g c)
+    ( tot (λ i' → tot (λ j' p → htpy-eq p)))
+    ( gap (λ h → h ∘ f) (λ h → h ∘ g) (cone-pullback-property-pushout f g c Y))
+    ( triangle-pullback-property-pushout-universal-property-pushout f g c Y)
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ i' → is-equiv-tot-is-fiberwise-equiv
+        ( λ j' → funext (i' ∘ f) (j' ∘ g))))
+    ( up-c Y)
+
+universal-property-pushout-pullback-property-pushout :
+  {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2}
+  {B : UU l3} (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  pullback-property-pushout l f g c → universal-property-pushout l f g c
+universal-property-pushout-pullback-property-pushout
+  l f g (pair i (pair j H)) pb-c Y =
+  let c = (pair i (pair j H)) in
+  is-equiv-comp
+    ( cocone-map f g c)
+    ( tot (λ i' → tot (λ j' p → htpy-eq p)))
+    ( gap (λ h → h ∘ f) (λ h → h ∘ g) (cone-pullback-property-pushout f g c Y))
+    ( triangle-pullback-property-pushout-universal-property-pushout f g c Y)
+    ( pb-c Y)
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ i' → is-equiv-tot-is-fiberwise-equiv
+        ( λ j' → funext (i' ∘ f) (j' ∘ g))))
+
+cocone-compose-horizontal :
+  { l1 l2 l3 l4 l5 l6 : Level}
+  { A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  ( f : A → X) (i : A → B) (k : B → C) →
+  ( c : cocone f i Y) (d : cocone (pr1 (pr2 c)) k Z) →
+  cocone f (k ∘ i) Z
+cocone-compose-horizontal f i k (pair j (pair g H)) (pair l (pair h K)) =
+  pair
+    ( l ∘ j)
+    ( pair
+      ( h)
+      ( (l ·l H) ∙h (K ·r i)))
+
+{-
+is-pushout-rectangle-is-pushout-right-square :
+  ( l : Level) { l1 l2 l3 l4 l5 l6 : Level}
+  { A : UU l1} {B : UU l2} {C : UU l3} {X : UU l4} {Y : UU l5} {Z : UU l6}
+  ( f : A → X) (i : A → B) (k : B → C) →
+  ( c : cocone f i Y) (d : cocone (pr1 (pr2 c)) k Z) →
+  universal-property-pushout l f i c →
+  universal-property-pushout l (pr1 (pr2 c)) k d →
+  universal-property-pushout l f (k ∘ i) (cocone-compose-horizontal f i k c d)
+is-pushout-rectangle-is-pushout-right-square l f i k c d up-Y up-Z =
+  universal-property-pushout-pullback-property-pushout l f (k ∘ i)
+    ( cocone-compose-horizontal f i k c d)
+    ( λ T → is-pullback-htpy {!!} {!!} {!!} {!!} {!!} {!!} {!!})
+-}
 
 -- Exercises
 

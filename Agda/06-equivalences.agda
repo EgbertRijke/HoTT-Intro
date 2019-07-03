@@ -891,6 +891,11 @@ abstract
     (q : Id y z) (r : Id x z) → is-equiv (inv-con p q r)
   is-equiv-inv-con refl q r = is-equiv-id (Id q r)
 
+equiv-inv-con :
+  {i : Level} {A : UU i} {x y z : A} (p : Id x y) (q : Id y z) (r : Id x z) →
+  Id (p ∙ q) r ≃ Id q ((inv p) ∙ r)
+equiv-inv-con p q r = pair (inv-con p q r) (is-equiv-inv-con p q r)
+
 abstract
   is-equiv-con-inv :
     {i : Level} {A : UU i} {x y z : A} (p : Id x y)
@@ -901,6 +906,11 @@ abstract
       ( concat (inv right-unit) r)
       ( is-equiv-concat (inv right-unit) r)
       ( is-equiv-concat' p (inv right-unit))
+
+equiv-con-inv :
+  {i : Level} {A : UU i} {x y z : A} (p : Id x y) (q : Id y z) (r : Id x z) →
+  Id (p ∙ q) r ≃ Id p (r ∙ (inv q))
+equiv-con-inv p q r = pair (con-inv p q r) (is-equiv-con-inv p q r)
 
 htpy-inv-con :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
