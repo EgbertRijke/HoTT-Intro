@@ -113,18 +113,16 @@ has-inverse :
 has-inverse {i} {j} {A} {B} f =
   Σ (B → A) (λ g → ((f ∘ g) ~ id) × ((g ∘ f) ~ id))
 
-abstract
-  is-equiv-has-inverse' :
-    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-    has-inverse f → is-equiv f
-  is-equiv-has-inverse' (pair g (pair H K)) = pair (pair g H) (pair g K)
+is-equiv-has-inverse' :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  has-inverse f → is-equiv f
+is-equiv-has-inverse' (pair g (pair H K)) = pair (pair g H) (pair g K)
 
-abstract
-  is-equiv-has-inverse :
-    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-    (g : B → A) (H : (f ∘ g) ~ id) (K : (g ∘ f) ~ id) → is-equiv f
-  is-equiv-has-inverse g H K =
-    is-equiv-has-inverse' (pair g (pair H K))
+is-equiv-has-inverse :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (g : B → A) (H : (f ∘ g) ~ id) (K : (g ∘ f) ~ id) → is-equiv f
+is-equiv-has-inverse g H K =
+  is-equiv-has-inverse' (pair g (pair H K))
 
 {- We now show that if f is an equivalence, then it has an inverse. -}
 
@@ -156,24 +154,22 @@ isretr-inv-is-equiv :
   (is-equiv-f : is-equiv f) → ((inv-is-equiv is-equiv-f) ∘ f) ~ id
 isretr-inv-is-equiv is-equiv-f = pr2 (pr2 (has-inverse-is-equiv is-equiv-f))
 
-abstract
-  is-equiv-inv-is-equiv :
-    {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
-    (is-equiv-f : is-equiv f) → is-equiv (inv-is-equiv is-equiv-f)
-  is-equiv-inv-is-equiv {i} {j} {A} {B} {f} is-equiv-f =
-    is-equiv-has-inverse f
-      ( isretr-inv-is-equiv is-equiv-f)
-      ( issec-inv-is-equiv is-equiv-f)
+is-equiv-inv-is-equiv :
+  {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
+  (is-equiv-f : is-equiv f) → is-equiv (inv-is-equiv is-equiv-f)
+is-equiv-inv-is-equiv {i} {j} {A} {B} {f} is-equiv-f =
+  is-equiv-has-inverse f
+    ( isretr-inv-is-equiv is-equiv-f)
+    ( issec-inv-is-equiv is-equiv-f)
 
 inv-map-equiv :
   {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B → A)
 inv-map-equiv e = inv-is-equiv (is-equiv-map-equiv e)
 
-abstract
-  is-equiv-inv-map-equiv :
-    {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (inv-map-equiv e)
-  is-equiv-inv-map-equiv e =
-    is-equiv-inv-is-equiv (is-equiv-map-equiv e)
+is-equiv-inv-map-equiv :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (inv-map-equiv e)
+is-equiv-inv-map-equiv e =
+  is-equiv-inv-is-equiv (is-equiv-map-equiv e)
 
 inv-equiv :
   {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B ≃ A)
@@ -321,23 +317,7 @@ abstract
 
 -- Exercise 6.1
 
-element :
-  {i : Level} {A : UU i} → A → unit → A
-element a star = a
-
-htpy-element-constant :
-  {i : Level} {A : UU i} (a : A) →
-  (element a) ~ (const unit A a)
-htpy-element-constant a star = refl
-
--- Exercise 6.2
-
-ap-const :
-  {i j : Level} {A : UU i} {B : UU j} (b : B) (x y : A) →
-  (ap (const A B b) {x} {y}) ~ const (Id x y) (Id b b) refl
-ap-const b x .x refl = refl
-
--- Exercise 6.3
+{- We show that inv is an equivalence. -}
 
 inv-inv :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) → Id (inv (inv p)) p
@@ -353,6 +333,8 @@ abstract
 equiv-inv :
   {i : Level} {A : UU i} (x y : A) → (Id x y) ≃ (Id y x)
 equiv-inv x y = pair inv (is-equiv-inv x y)
+
+{- We show that concat p is an equivalence, for any path p. -}
 
 inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
@@ -383,6 +365,8 @@ equiv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) (z : A) →
   Id y z ≃ Id x z
 equiv-concat p z = pair (concat p z) (is-equiv-concat p z)
+
+{- We show that concat' q is an equivalence, for any path q. -}
 
 concat' :
   {i : Level} {A : UU i} (x : A) {y z : A} → Id y z → Id x y → Id x z
@@ -418,6 +402,9 @@ equiv-concat' :
   Id x y ≃ Id x z
 equiv-concat' x q = pair (concat' x q) (is-equiv-concat' x q)
 
+{- We show that tr B p is an equivalence, for an path p and any type family B.
+   -}
+   
 inv-tr :
   {i j : Level} {A : UU i} (B : A → UU j) {x y : A} →
   Id x y → B y → B x
@@ -447,6 +434,115 @@ equiv-tr :
   {i j : Level} {A : UU i} (B : A → UU j) {x y : A}
   (p : Id x y) → (B x) ≃ (B y)
 equiv-tr B p = pair (tr B p) (is-equiv-tr B p)
+
+-- Exercise 6.2
+
+{- We prove the left unit law for coproducts. -}
+
+inv-inr-coprod-empty :
+  {l : Level} (X : UU l) → coprod empty X → X
+inv-inr-coprod-empty X (inr x) = x
+
+issec-inv-inr-coprod-empty :
+  {l : Level} (X : UU l) → (inr ∘ (inv-inr-coprod-empty X)) ~ id
+issec-inv-inr-coprod-empty X (inr x) = refl
+
+isretr-inv-inr-coprod-empty :
+  {l : Level} (X : UU l) → ((inv-inr-coprod-empty X) ∘ inr) ~ id
+isretr-inv-inr-coprod-empty X x = refl
+
+is-equiv-inr-coprod-empty :
+  {l : Level} (X : UU l) → is-equiv (inr {A = empty} {B = X})
+is-equiv-inr-coprod-empty X =
+  is-equiv-has-inverse
+    ( inv-inr-coprod-empty X)
+    ( issec-inv-inr-coprod-empty X)
+    ( isretr-inv-inr-coprod-empty X)
+
+left-unit-law-coprod :
+  {l : Level} (X : UU l) → X ≃ (coprod empty X)
+left-unit-law-coprod X = pair inr (is-equiv-inr-coprod-empty X)
+
+{- We prove the right unit law for coproducts. -}
+
+inv-inl-coprod-empty :
+  {l : Level} (X : UU l) → (coprod X empty) → X
+inv-inl-coprod-empty X (inl x) = x
+
+issec-inv-inl-coprod-empty :
+  {l : Level} (X : UU l) → (inl ∘ (inv-inl-coprod-empty X)) ~ id
+issec-inv-inl-coprod-empty X (inl x) = refl
+
+isretr-inv-inl-coprod-empty :
+  {l : Level} (X : UU l) → ((inv-inl-coprod-empty X) ∘ inl) ~ id
+isretr-inv-inl-coprod-empty X x = refl
+
+is-equiv-inl-coprod-empty :
+  {l : Level} (X : UU l) → is-equiv (inl {A = X} {B = empty})
+is-equiv-inl-coprod-empty X =
+  is-equiv-has-inverse
+    ( inv-inl-coprod-empty X)
+    ( issec-inv-inl-coprod-empty X)
+    ( isretr-inv-inl-coprod-empty X)
+
+right-unit-law-coprod :
+  {l : Level} (X : UU l) → X ≃ (coprod X empty)
+right-unit-law-coprod X =
+  pair inl (is-equiv-inl-coprod-empty X)
+
+{- We prove a left zero law for cartesian products. -}
+
+inv-pr1-prod-empty :
+  {l : Level} (X : UU l) → empty → empty × X
+inv-pr1-prod-empty X ()
+
+issec-inv-pr1-prod-empty :
+  {l : Level} (X : UU l) → (pr1 ∘ (inv-pr1-prod-empty X)) ~ id
+issec-inv-pr1-prod-empty X ()
+
+isretr-inv-pr1-prod-empty :
+  {l : Level} (X : UU l) → ((inv-pr1-prod-empty X) ∘ pr1) ~ id
+isretr-inv-pr1-prod-empty X (pair () x)
+
+is-equiv-pr1-prod-empty :
+  {l : Level} (X : UU l) → is-equiv (pr1 {A = empty} {B = λ t → X})
+is-equiv-pr1-prod-empty X =
+  is-equiv-has-inverse
+    ( inv-pr1-prod-empty X)
+    ( issec-inv-pr1-prod-empty X)
+    ( isretr-inv-pr1-prod-empty X)
+
+left-zero-law-prod :
+  {l : Level} (X : UU l) → (empty × X) ≃ empty
+left-zero-law-prod X =
+  pair pr1 (is-equiv-pr1-prod-empty X)
+
+{- We prove the right zero law for cartesian products. -}
+
+inv-pr2-prod-empty :
+  {l : Level} (X : UU l) → empty → (X × empty)
+inv-pr2-prod-empty X ()
+
+issec-inv-pr2-prod-empty :
+  {l : Level} (X : UU l) → (pr2 ∘ (inv-pr2-prod-empty X)) ~ id
+issec-inv-pr2-prod-empty X ()
+
+isretr-inv-pr2-prod-empty :
+  {l : Level} (X : UU l) → ((inv-pr2-prod-empty X) ∘ pr2) ~ id
+isretr-inv-pr2-prod-empty X (pair x ())
+
+is-equiv-pr2-prod-empty :
+  {l : Level} (X : UU l) → is-equiv (pr2 {A = X} {B = λ x → empty})
+is-equiv-pr2-prod-empty X =
+  is-equiv-has-inverse
+    ( inv-pr2-prod-empty X)
+    ( issec-inv-pr2-prod-empty X)
+    ( isretr-inv-pr2-prod-empty X)
+
+right-zero-law-prod :
+  {l : Level} (X : UU l) → (X × empty) ≃ empty
+right-zero-law-prod X =
+  pair pr2 (is-equiv-pr2-prod-empty X)
 
 -- Exercise 6.4
 
@@ -961,3 +1057,24 @@ htpy-right-whisk-htpy-inv :
   {g g' : B → C} (H : g ~ g') (f : A → B) →
   ((htpy-inv H) ·r f) ~ (htpy-inv (H ·r f))
 htpy-right-whisk-htpy-inv H f = htpy-refl
+
+
+-- Old stuff
+
+-- Exercise 6.1
+
+element :
+  {i : Level} {A : UU i} → A → unit → A
+element a star = a
+
+htpy-element-constant :
+  {i : Level} {A : UU i} (a : A) →
+  (element a) ~ (const unit A a)
+htpy-element-constant a star = refl
+
+-- Exercise 6.2
+
+ap-const :
+  {i j : Level} {A : UU i} {B : UU j} (b : B) (x y : A) →
+  (ap (const A B b) {x} {y}) ~ const (Id x y) (Id b b) refl
+ap-const b x .x refl = refl

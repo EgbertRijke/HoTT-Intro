@@ -92,6 +92,31 @@ abstract
     is-contr (Σ (UU i) (λ X → A ≃ X))
   is-contr-total-equiv A = is-contr-total-equiv-UNIVALENCE A (univalence A)
 
+inv-inv-equiv :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) →
+  Id (inv-equiv (inv-equiv e)) e
+inv-inv-equiv (pair f (pair (pair g G) (pair h H))) = eq-htpy-equiv htpy-refl
+
+is-equiv-inv-equiv :
+  {i j : Level} {A : UU i} {B : UU j} → is-equiv (inv-equiv {A = A} {B = B})
+is-equiv-inv-equiv =
+  is-equiv-has-inverse
+    ( inv-equiv)
+    ( inv-inv-equiv)
+    ( inv-inv-equiv)
+
+equiv-inv-equiv :
+  {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) ≃ (B ≃ A)
+equiv-inv-equiv = pair inv-equiv is-equiv-inv-equiv
+
+is-contr-total-equiv' : {i : Level} (A : UU i) →
+  is-contr (Σ (UU i) (λ X → X ≃ A))
+is-contr-total-equiv' A =
+  is-contr-equiv
+    ( Σ (UU _) (λ X → A ≃ X))
+    ( equiv-tot (λ X → equiv-inv-equiv))
+    ( is-contr-total-equiv A)
+
 abstract
   Ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
     sec (ev-id P)

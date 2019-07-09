@@ -692,6 +692,25 @@ abstract
         ( pair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
         ( pair id refl))))
 
+{- The following version of the same theorem works when X and Y are in the same
+   universe. The condition of inducing equivalences by postcomposition is 
+   simplified to that universe. -}
+
+is-equiv-is-equiv-postcomp' :
+  {l : Level} {X : UU l} {Y : UU l} (f : X → Y) →
+  ((A : UU l) → is-equiv (postcomp A f)) → is-equiv f
+is-equiv-is-equiv-postcomp'
+  {l} {X} {Y} f is-equiv-postcomp-f =
+  let sec-f = center (is-contr-map-is-equiv (is-equiv-postcomp-f Y) id)
+  in
+  is-equiv-has-inverse
+    ( pr1 sec-f)
+    ( htpy-eq (pr2 sec-f))
+    ( htpy-eq (ap pr1 (is-prop-is-contr'
+      ( is-contr-map-is-equiv (is-equiv-postcomp-f X) f)
+      ( pair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
+      ( pair id refl))))
+
 abstract
   is-equiv-postcomp-is-equiv :
     {l1 l2 : Level} {X : UU l1} {Y : UU l2} (f : X → Y) → is-equiv f →

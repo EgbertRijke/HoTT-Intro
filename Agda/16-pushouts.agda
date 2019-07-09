@@ -107,7 +107,7 @@ cocone-map-comp :
   {l1 l2 l3 l4 l5 l6 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X)
   {Y : UU l5} (h : X → Y) {Z : UU l6} (k : Y → Z) →
-  Id (cocone-map f g c (k ∘ h)) ((cocone-map f g (cocone-map f g c h) k))
+  Id (cocone-map f g c (k ∘ h)) (cocone-map f g (cocone-map f g c h) k)
 cocone-map-comp f g (pair i (pair j H)) h k =
   eq-pair refl (eq-pair refl (eq-htpy (λ s → ap-comp k h (H s))))
 
@@ -121,6 +121,170 @@ universal-property-pushout :
   cocone f g X → UU _
 universal-property-pushout l f g c =
   (Y : UU l) → is-equiv (cocone-map f g {Y = Y} c)
+
+map-universal-property-pushout :
+  {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ( up-c : {l : Level} → universal-property-pushout l f g c)
+  {Y : UU l5} → cocone f g Y → (X → Y)
+map-universal-property-pushout f g c up-c {Y} = inv-is-equiv (up-c Y)
+
+htpy-cocone-map-universal-property-pushout :
+  { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  ( f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ( up-c : {l : Level} → universal-property-pushout l f g c)
+  { Y : UU l5} (d : cocone f g Y) →
+  htpy-cocone f g
+    ( cocone-map f g c
+      ( map-universal-property-pushout f g c up-c d))
+    ( d)
+htpy-cocone-map-universal-property-pushout f g c up-c {Y} d =
+  htpy-cocone-eq f g
+    ( cocone-map f g c (map-universal-property-pushout f g c up-c d))
+    ( d)
+    ( issec-inv-is-equiv (up-c Y) d)
+
+uniqueness-map-universal-property-pushout :
+  { l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  ( f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  ( up-c : {l : Level} → universal-property-pushout l f g c) →
+  { Y : UU l5} (d : cocone f g Y) →
+  is-contr ( Σ (X → Y) (λ h → htpy-cocone f g (cocone-map f g c h) d))
+uniqueness-map-universal-property-pushout f g c up-c {Y} d =
+  is-contr-is-equiv'
+    ( fib (cocone-map f g c) d)
+    ( tot (λ h → htpy-cocone-eq f g (cocone-map f g c h) d))
+    ( is-equiv-tot-is-fiberwise-equiv
+      ( λ h → is-equiv-htpy-cocone-eq f g (cocone-map f g c h) d))
+    ( is-contr-map-is-equiv (up-c Y) d)
+
+{- We derive a 3-for-2 property of pushouts, analogous to the 3-for-2 property
+   of pullbacks. -}
+
+triangle-cocone-cocone :
+  { l1 l2 l3 l4 l5 l6 : Level}
+  { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5}
+  { f : S → A} {g : S → B} (c : cocone f g X) (d : cocone f g Y)
+  ( h : X → Y) (KLM : htpy-cocone f g (cocone-map f g c h) d)
+  ( Z : UU l6) →
+  ( cocone-map f g d) ~ ((cocone-map f g c) ∘ (λ (k : Y → Z) → k ∘ h))
+triangle-cocone-cocone {Y = Y} {f = f} {g = g} c d h KLM Z k =
+  inv
+    ( ( cocone-map-comp f g c h k) ∙
+      ( ap
+        ( λ t → cocone-map f g t k)
+        ( eq-htpy-cocone f g (cocone-map f g c h) d KLM)))
+
+is-equiv-up-pushout-up-pushout :
+  { l1 l2 l3 l4 l5 : Level}
+  { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5}
+  ( f : S → A) (g : S → B) (c : cocone f g X) (d : cocone f g Y) →
+  ( h : X → Y) (KLM : htpy-cocone f g (cocone-map f g c h) d) →
+  ( up-c : {l : Level} → universal-property-pushout l f g c) →
+  ( up-d : {l : Level} → universal-property-pushout l f g d) →
+  is-equiv h
+is-equiv-up-pushout-up-pushout f g c d h KLM up-c up-d =
+  is-equiv-is-equiv-precomp h
+    ( λ l Z →
+      is-equiv-right-factor
+        ( cocone-map f g d)
+        ( cocone-map f g c)
+        ( precomp h Z)
+        ( triangle-cocone-cocone c d h KLM Z)
+        ( up-c Z)
+        ( up-d Z))
+
+up-pushout-up-pushout-is-equiv :
+  { l1 l2 l3 l4 l5 : Level}
+  { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5}
+  ( f : S → A) (g : S → B) (c : cocone f g X) (d : cocone f g Y) →
+  ( h : X → Y) (KLM : htpy-cocone f g (cocone-map f g c h) d) →
+  is-equiv h →
+  ( up-c : {l : Level} → universal-property-pushout l f g c) →
+  {l : Level} → universal-property-pushout l f g d
+up-pushout-up-pushout-is-equiv f g c d h KLM is-equiv-h up-c Z =
+  is-equiv-comp
+    ( cocone-map f g d)
+    ( cocone-map f g c)
+    ( precomp h Z)
+    ( triangle-cocone-cocone c d h KLM Z)
+    ( is-equiv-precomp-is-equiv h is-equiv-h Z)
+    ( up-c Z)
+
+up-pushout-is-equiv-up-pushout :
+  { l1 l2 l3 l4 l5 : Level}
+  { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5}
+  ( f : S → A) (g : S → B) (c : cocone f g X) (d : cocone f g Y) →
+  ( h : X → Y) (KLM : htpy-cocone f g (cocone-map f g c h) d) →
+  ( up-d : {l : Level} → universal-property-pushout l f g d) →
+  is-equiv h →
+  {l : Level} → universal-property-pushout l f g c
+up-pushout-is-equiv-up-pushout f g c d h KLM up-d is-equiv-h Z =
+  is-equiv-left-factor
+    ( cocone-map f g d)
+    ( cocone-map f g c)
+    ( precomp h Z)
+    ( triangle-cocone-cocone c d h KLM Z)
+    ( up-d Z)
+    ( is-equiv-precomp-is-equiv h is-equiv-h Z)
+
+uniquely-unique-pushout :
+  { l1 l2 l3 l4 l5 : Level}
+  { S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4} {Y : UU l5}
+  ( f : S → A) (g : S → B) (c : cocone f g X) (d : cocone f g Y) →
+  ( up-c : {l : Level} → universal-property-pushout l f g c) →
+  ( up-d : {l : Level} → universal-property-pushout l f g d) →
+  is-contr
+    ( Σ (X ≃ Y) (λ e → htpy-cocone f g (cocone-map f g c (map-equiv e)) d))
+uniquely-unique-pushout f g c d up-c up-d =
+  is-contr-total-Eq-substructure
+    ( uniqueness-map-universal-property-pushout f g c up-c d)
+    ( is-subtype-is-equiv)
+    ( map-universal-property-pushout f g c up-c d)
+    ( htpy-cocone-map-universal-property-pushout f g c up-c d)
+    ( is-equiv-up-pushout-up-pushout f g c d
+      ( map-universal-property-pushout f g c up-c d)
+      ( htpy-cocone-map-universal-property-pushout f g c up-c d)
+      ( up-c)
+      ( up-d))
+  
+{- We will assume that every span has a pushout. Moreover, we will introduce
+   some further terminology to facilitate working with these pushouts. -}
+
+postulate pushout : {l1 l2 l3 : Level} {S : UU l1} {A : UU l2} {B : UU l3} (f : S → A) (g : S → B) → UU (l1 ⊔ l2 ⊔ l3)
+
+postulate inl-pushout : {l1 l2 l3 : Level} {S : UU l1} {A : UU l2} {B : UU l3} (f : S → A) (g : S → B) → A → pushout f g
+
+postulate inr-pushout : {l1 l2 l3 : Level} {S : UU l1} {A : UU l2} {B : UU l3} (f : S → A) (g : S → B) → B → pushout f g
+
+postulate glue-pushout : {l1 l2 l3 : Level} {S : UU l1} {A : UU l2} {B : UU l3} (f : S → A) (g : S → B) → ((inl-pushout f g) ∘ f) ~ ((inr-pushout f g) ∘ g)
+
+cocone-pushout :
+  {l1 l2 l3 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  (f : S → A) (g : S → B) → cocone f g (pushout f g)
+cocone-pushout f g =
+  pair
+    ( inl-pushout f g)
+    ( pair
+      ( inr-pushout f g)
+      ( glue-pushout f g))
+
+postulate up-pushout : {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} (f : S → A) (g : S → B) → universal-property-pushout l4 f g (cocone-pushout f g)
+
+cogap :
+  { l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  ( f : S → A) (g : S → B) →
+  { X : UU l4} (c : cocone f g X) → pushout f g → X
+cogap f g =
+  map-universal-property-pushout f g
+    ( cocone-pushout f g)
+    ( up-pushout f g)
+
+is-pushout :
+  { l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
+  ( f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
+  UU (l1 ⊔ l2 ⊔ l3 ⊔ l4)
+is-pushout f g c = is-equiv (cogap f g c)
 
 -- Section 14.2 Suspensions
 
@@ -156,15 +320,33 @@ is-suspension :
 is-suspension l X Y =
   Σ (suspension-structure X Y) (universal-property-suspension' l X Y)
 
-{- We define the type of suspensions at universe level l, for any type X. Since
-   we would like to define type families over a suspension by the universal
-   property of the suspension, we assume that the universal property of a 
-   suspension holds for at least level (lsuc l ⊔ l1). This is the level that
-   contains both X and the suspension itself. -}
+suspension :
+  {l : Level} → UU l → UU l
+suspension X = pushout (const X unit star) (const X unit star)
 
-UU-Suspensions :
-  (l : Level) {l1 : Level} (X : UU l1) → UU (lsuc (lsuc l) ⊔ lsuc l1)
-UU-Suspensions l {l1} X = Σ (UU l) (is-suspension (lsuc l ⊔ l1) X)
+N-susp :
+  {l : Level} {X : UU l} → suspension X
+N-susp {X = X} = inl-pushout (const X unit star) (const X unit star) star
+
+S-susp :
+  {l : Level} {X : UU l} → suspension X
+S-susp {X = X} = inr-pushout (const X unit star) (const X unit star) star
+
+merid-susp :
+  {l : Level} {X : UU l} → X → Id (N-susp {X = X}) (S-susp {X = X})
+merid-susp {X = X} = glue-pushout (const X unit star) (const X unit star)
+
+sphere : ℕ → UU lzero
+sphere zero-ℕ = bool
+sphere (succ-ℕ n) = suspension (sphere n)
+
+N-sphere : (n : ℕ) → sphere n
+N-sphere zero-ℕ = true
+N-sphere (succ-ℕ n) = N-susp
+
+S-sphere : (n : ℕ) → sphere n
+S-sphere zero-ℕ = false
+S-sphere (succ-ℕ n) = S-susp
 
 {- We now work towards Lemma 17.2.2. -}
 
@@ -421,6 +603,103 @@ is-pushout-rectangle-is-pushout-right-square l f i k c d up-Y up-Z =
     ( λ T → is-pullback-htpy {!!} {!!} {!!} {!!} {!!} {!!} {!!})
 -}
 
+-- Examples of pushouts
+
+{- The cofiber of a map. -}
+
+cofiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} → (A → B) → UU (l1 ⊔ l2)
+cofiber {A = A} f = pushout f (const A unit star)
+
+cocone-cofiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  cocone f (const A unit star) (cofiber f)
+cocone-cofiber {A = A} f = cocone-pushout f (const A unit star)
+
+inl-cofiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) → B → cofiber f
+inl-cofiber {A = A} f = pr1 (cocone-cofiber f)
+
+inr-cofiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) → unit → cofiber f
+inr-cofiber f = pr1 (pr2 (cocone-cofiber f))
+
+pt-cofiber :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) → cofiber f
+pt-cofiber {A = A} f = inr-cofiber f star
+
+cofiber-ptd :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) → UU-pt (l1 ⊔ l2)
+cofiber-ptd f = pair (cofiber f) (pt-cofiber f)
+
+up-cofiber :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  ( {l : Level} →
+    universal-property-pushout l f (const A unit star) (cocone-cofiber f))
+up-cofiber {A = A} f = up-pushout f (const A unit star)
+
+_*_ :
+  {l1 l2 : Level} (A : UU l1) (B : UU l2) → UU (l1 ⊔ l2)
+A * B = pushout (pr1 {A = A} {B = λ x → B}) pr2
+
+cocone-join :
+  {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  cocone (pr1 {A = A} {B = λ x → B}) pr2 (A * B)
+cocone-join A B = cocone-pushout pr1 pr2
+
+up-join :
+  {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+  ( {l : Level} → universal-property-pushout l
+    ( pr1 {A = A} {B = λ x → B}) pr2 (cocone-join A B))
+up-join A B = up-pushout pr1 pr2
+
+inl-join :
+  {l1 l2 : Level} (A : UU l1) (B : UU l2) → A → A * B
+inl-join A B = pr1 (cocone-join A B)
+
+inr-join :
+  {l1 l2 : Level} (A : UU l1) (B : UU l2) → B → A * B
+inr-join A B = pr1 (pr2 (cocone-join A B))
+
+glue-join :
+  {l1 l2 : Level} (A : UU l1) (B : UU l2) (t : A × B) →
+  Id (inl-join A B (pr1 t)) (inr-join A B (pr2 t))
+glue-join A B = pr2 (pr2 (cocone-join A B))
+
+_∨_ :
+  {l1 l2 : Level} (A : UU-pt l1) (B : UU-pt l2) → UU-pt (l1 ⊔ l2)
+A ∨ B =
+  pair
+    ( pushout
+      ( const unit (pr1 A) (pr2 A))
+      ( const unit (pr1 B) (pr2 B)))
+    ( inl-pushout
+      ( const unit (pr1 A) (pr2 A))
+      ( const unit (pr1 B) (pr2 B))
+      ( pr2 A))
+
+indexed-wedge :
+  {l1 l2 : Level} (I : UU l1) (A : I → UU-pt l2) → UU-pt (l1 ⊔ l2)
+indexed-wedge I A =
+  pair
+    ( cofiber (λ i → pair i (pr2 (A i))))
+    ( pt-cofiber (λ i → pair i (pr2 (A i))))
+
+wedge-inclusion :
+  {l1 l2 : Level} (A : UU-pt l1) (B : UU-pt l2) →
+  pr1 (A ∨ B) → (pr1 A) × (pr1 B)
+wedge-inclusion {l1} {l2} (pair A a) (pair B b) =
+  inv-is-equiv
+    ( up-pushout
+      ( const unit A a)
+      ( const unit B b)
+      ( A × B))
+    ( pair
+      ( λ x → pair x b)
+      ( pair
+        ( λ y → pair a y)
+        ( htpy-refl)))
+
 -- Exercises
 
 -- Exercise 13.1
@@ -431,7 +710,7 @@ is-equiv-universal-property-pushout :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g C) →
   is-equiv f →
-  ((l : Level) → universal-property-pushout l f g c) → is-equiv (pr1 (pr2 c))
+  ({l : Level} → universal-property-pushout l f g c) → is-equiv (pr1 (pr2 c))
 is-equiv-universal-property-pushout
   {A = A} {B} f g (pair i (pair j H)) is-equiv-f up-c =
   is-equiv-is-equiv-precomp j
@@ -442,14 +721,61 @@ is-equiv-universal-property-pushout
         ( cone-pullback-property-pushout f g (pair i (pair j H)) T)
         ( is-equiv-precomp-is-equiv f is-equiv-f T)
         ( pullback-property-pushout-universal-property-pushout
-          l f g (pair i (pair j H)) (up-c l) T))
+          l f g (pair i (pair j H)) up-c T))
+
+equiv-universal-property-pushout :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
+  (e : S ≃ A) (g : S → B) (c : cocone (map-equiv e) g C) →
+  ({l : Level} → universal-property-pushout l (map-equiv e) g c) →
+  B ≃ C
+equiv-universal-property-pushout e g c up-c =
+  pair
+    ( pr1 (pr2 c))
+    ( is-equiv-universal-property-pushout
+      ( map-equiv e)
+      ( g)
+      ( c)
+      ( is-equiv-map-equiv e)
+      ( up-c))
+
+is-equiv-universal-property-pushout' :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g C) →
+  is-equiv g →
+  ({l : Level} → universal-property-pushout l f g c) →
+  is-equiv (pr1 c)
+is-equiv-universal-property-pushout' f g (pair i (pair j H)) is-equiv-g up-c =
+  is-equiv-is-equiv-precomp i
+    ( λ l T →
+      is-equiv-is-pullback
+        ( precomp f T)
+        ( precomp g T)
+        ( cone-pullback-property-pushout f g (pair i (pair j H)) T)
+        ( is-equiv-precomp-is-equiv g is-equiv-g T)
+        ( pullback-property-pushout-universal-property-pushout
+          l f g (pair i (pair j H)) up-c T))
+
+equiv-universal-property-pushout' :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
+  (f : S → A) (e : S ≃ B) (c : cocone f (map-equiv e) C) →
+  ({l : Level} → universal-property-pushout l f (map-equiv e) c) →
+  A ≃ C
+equiv-universal-property-pushout' f e c up-c =
+  pair
+    ( pr1 c)
+    ( is-equiv-universal-property-pushout'
+      ( f)
+      ( map-equiv e)
+      ( c)
+      ( is-equiv-map-equiv e)
+      ( up-c))
 
 universal-property-pushout-is-equiv :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
   (f : S → A) (g : S → B) (c : cocone f g C) →
   is-equiv f → is-equiv (pr1 (pr2 c)) →
-  ((l : Level) → universal-property-pushout l f g c)
-universal-property-pushout-is-equiv f g (pair i (pair j H)) is-equiv-f is-equiv-j l =
+  ({l : Level} → universal-property-pushout l f g c)
+universal-property-pushout-is-equiv f g (pair i (pair j H)) is-equiv-f is-equiv-j {l} =
   let c = (pair i (pair j H)) in
   universal-property-pushout-pullback-property-pushout l f g c
     ( λ T → is-pullback-is-equiv'
@@ -458,4 +784,177 @@ universal-property-pushout-is-equiv f g (pair i (pair j H)) is-equiv-f is-equiv-
       ( cone-pullback-property-pushout f g c T)
       ( is-equiv-precomp-is-equiv f is-equiv-f T)
       ( is-equiv-precomp-is-equiv j is-equiv-j T))
-  
+
+universal-property-pushout-is-equiv' :
+  {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
+  (f : S → A) (g : S → B) (c : cocone f g C) →
+  is-equiv g → is-equiv (pr1 c) →
+  ({l : Level} → universal-property-pushout l f g c)
+universal-property-pushout-is-equiv'
+  f g (pair i (pair j H)) is-equiv-g is-equiv-i {l} =
+  let c = (pair i (pair j H)) in
+  universal-property-pushout-pullback-property-pushout l f g c
+    ( λ T → is-pullback-is-equiv
+      ( precomp f T)
+      ( precomp g T)
+      ( cone-pullback-property-pushout f g c T)
+      ( is-equiv-precomp-is-equiv g is-equiv-g T)
+      ( is-equiv-precomp-is-equiv i is-equiv-i T))
+
+is-contr-suspension-is-contr :
+  {l : Level} {X : UU l} → is-contr X → is-contr (suspension X)
+is-contr-suspension-is-contr {l} {X} is-contr-X =
+  is-contr-is-equiv'
+    ( unit)
+    ( pr1 (pr2 (cocone-pushout (const X unit star) (const X unit star))))
+    ( is-equiv-universal-property-pushout
+      ( const X unit star)
+      ( const X unit star)
+      ( cocone-pushout
+        ( const X unit star)
+        ( const X unit star))
+      ( is-equiv-is-contr (const X unit star) is-contr-X is-contr-unit)
+      ( up-pushout (const X unit star) (const X unit star)))
+    ( is-contr-unit)
+
+is-contr-cofiber-is-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-equiv f → is-contr (cofiber f)
+is-contr-cofiber-is-equiv {A = A} {B} f is-equiv-f =
+  is-contr-is-equiv'
+    ( unit)
+    ( pr1 (pr2 (cocone-cofiber f)))
+    ( is-equiv-universal-property-pushout
+      ( f)
+      ( const A unit star)
+      ( cocone-cofiber f)
+      ( is-equiv-f)
+      ( up-cofiber f))
+    ( is-contr-unit)
+
+is-equiv-cofiber-point :
+  {l : Level} {B : UU l} (b : B) →
+  is-equiv (pr1 (cocone-pushout (const unit B b) (const unit unit star)))
+is-equiv-cofiber-point {l} {B} b =
+  is-equiv-universal-property-pushout'
+    ( const unit B b)
+    ( const unit unit star)
+    ( cocone-pushout (const unit B b) (const unit unit star))
+    ( is-equiv-is-contr (const unit unit star) is-contr-unit is-contr-unit)
+    ( up-pushout (const unit B b) (const unit unit star))
+
+is-equiv-inr-join-empty :
+  {l : Level} (X : UU l) → is-equiv (inr-join empty X)
+is-equiv-inr-join-empty X =
+  is-equiv-universal-property-pushout
+    ( pr1 {A = empty} {B = λ t → X})
+    ( pr2)
+    ( cocone-join empty X)
+    ( is-equiv-pr1-prod-empty X)
+    ( up-join empty X)
+
+left-unit-law-join :
+  {l : Level} (X : UU l) → X ≃ (empty * X)
+left-unit-law-join X =
+  pair (inr-join empty X) (is-equiv-inr-join-empty X)
+
+is-equiv-inl-join-empty :
+  {l : Level} (X : UU l) → is-equiv (inl-join X empty)
+is-equiv-inl-join-empty X =
+  is-equiv-universal-property-pushout'
+    ( pr1)
+    ( pr2)
+    ( cocone-join X empty)
+    ( is-equiv-pr2-prod-empty X)
+    ( up-join X empty)
+
+right-unit-law-join :
+  {l : Level} (X : UU l) → X ≃ (X * empty)
+right-unit-law-join X =
+  pair (inl-join X empty) (is-equiv-inl-join-empty X)
+
+inv-map-left-unit-law-prod :
+  {l : Level} (X : UU l) → X → (unit × X)
+inv-map-left-unit-law-prod X = pair star
+
+issec-inv-map-left-unit-law-prod :
+  {l : Level} (X : UU l) → (pr2 ∘ (inv-map-left-unit-law-prod X)) ~ id
+issec-inv-map-left-unit-law-prod X x = refl
+
+isretr-inv-map-left-unit-law-prod :
+  {l : Level} (X : UU l) → ((inv-map-left-unit-law-prod X) ∘ pr2) ~ id
+isretr-inv-map-left-unit-law-prod X (pair star x) = refl
+
+is-equiv-left-unit-law-prod :
+  {l : Level} (X : UU l) → is-equiv (pr2 {A = unit} {B = λ t → X})
+is-equiv-left-unit-law-prod X =
+  is-equiv-has-inverse
+    ( inv-map-left-unit-law-prod X)
+    ( issec-inv-map-left-unit-law-prod X)
+    ( isretr-inv-map-left-unit-law-prod X)
+
+left-unit-law-prod :
+  {l : Level} (X : UU l) → (unit × X) ≃ X
+left-unit-law-prod X =
+  pair pr2 (is-equiv-left-unit-law-prod X)
+
+is-equiv-inl-join-unit :
+  {l : Level} (X : UU l) → is-equiv (inl-join unit X)
+is-equiv-inl-join-unit X =
+  is-equiv-universal-property-pushout'
+    ( pr1)
+    ( pr2)
+    ( cocone-join unit X)
+    ( is-equiv-left-unit-law-prod X)
+    ( up-join unit X)
+
+left-zero-law-join :
+  {l : Level} (X : UU l) → is-contr (unit * X)
+left-zero-law-join X =
+  is-contr-equiv'
+    ( unit)
+    ( pair (inl-join unit X) (is-equiv-inl-join-unit X))
+    ( is-contr-unit) 
+
+inv-map-right-unit-law-prod :
+  {l : Level} (X : UU l) → X → X × unit
+inv-map-right-unit-law-prod X x = pair x star
+
+issec-inv-map-right-unit-law-prod :
+  {l : Level} (X : UU l) → (pr1 ∘ (inv-map-right-unit-law-prod X)) ~ id
+issec-inv-map-right-unit-law-prod X x = refl
+
+isretr-inv-map-right-unit-law-prod :
+  {l : Level} (X : UU l) → ((inv-map-right-unit-law-prod X) ∘ pr1) ~ id
+isretr-inv-map-right-unit-law-prod X (pair x star) = refl
+
+is-equiv-right-unit-law-prod :
+  {l : Level} (X : UU l) → is-equiv (pr1 {A = X} {B = λ t → unit})
+is-equiv-right-unit-law-prod X =
+  is-equiv-has-inverse
+    ( inv-map-right-unit-law-prod X)
+    ( issec-inv-map-right-unit-law-prod X)
+    ( isretr-inv-map-right-unit-law-prod X)
+
+right-unit-law-prod :
+  {l : Level} (X : UU l) → (X × unit) ≃ X
+right-unit-law-prod X =
+  pair pr1 (is-equiv-right-unit-law-prod X)
+
+is-equiv-inr-join-unit :
+  {l : Level} (X : UU l) → is-equiv (inr-join X unit)
+is-equiv-inr-join-unit X =
+  is-equiv-universal-property-pushout
+    ( pr1)
+    ( pr2)
+    ( cocone-join X unit)
+    ( is-equiv-right-unit-law-prod X)
+    ( up-join X unit)
+
+right-zero-law-join :
+  {l : Level} (X : UU l) → is-contr (X * unit)
+right-zero-law-join X =
+  is-contr-equiv'
+    ( unit)
+    ( pair (inr-join X unit) (is-equiv-inr-join-unit X))
+    ( is-contr-unit)

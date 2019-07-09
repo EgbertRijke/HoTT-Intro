@@ -476,51 +476,6 @@ equiv-Σ-empty-fam :
 equiv-Σ-empty-fam A =
   pair (map-Σ-empty-fam A) (is-equiv-map-Σ-empty-fam A)
 
-inv-inl-coprod-empty : {l : Level} (A : UU l) → coprod A empty → A
-inv-inl-coprod-empty A (inl x) = x
-inv-inl-coprod-empty A (inr ())
-
-issec-inv-inl-coprod-empty :
-  {l : Level} (A : UU l) → (inl ∘ (inv-inl-coprod-empty A)) ~ id
-issec-inv-inl-coprod-empty A (inl x) = refl
-issec-inv-inl-coprod-empty A (inr ())
-
-abstract
-  is-equiv-inl-coprod-empty :
-    {l : Level} (A : UU l) → is-equiv (inl {A = A} {B = empty})
-  is-equiv-inl-coprod-empty A =
-    is-equiv-has-inverse
-      ( inv-inl-coprod-empty A)
-      ( issec-inv-inl-coprod-empty A)
-      ( λ x → refl)
-
-equiv-inl :
-  {l : Level} (A : UU l) → A ≃ coprod A empty
-equiv-inl A = pair inl (is-equiv-inl-coprod-empty A)
-
-inv-inr-coprod-empty :
-  {l : Level} (B : UU l) → coprod empty B → B
-inv-inr-coprod-empty B (inl ())
-inv-inr-coprod-empty B (inr x) = x
-
-issec-inv-inr-coprod-empty :
-  {l : Level} (B : UU l) → (inr ∘ (inv-inr-coprod-empty B)) ~ id
-issec-inv-inr-coprod-empty B (inl ())
-issec-inv-inr-coprod-empty B (inr x) = refl
-
-abstract
-  is-equiv-inr-coprod-empty :
-    {l : Level} (B : UU l) → is-equiv (inr {A = empty} {B = B})
-  is-equiv-inr-coprod-empty B =
-    is-equiv-has-inverse
-      ( inv-inr-coprod-empty B)
-      ( issec-inv-inr-coprod-empty B)
-      ( λ x → refl)
-
-equiv-inr :
-  {l : Level} (B : UU l) → B ≃ coprod empty B
-equiv-inr B = pair inr (is-equiv-inr-coprod-empty B)
-
 -- The identity types of coproducts
 
 Eq-coprod :
@@ -566,7 +521,7 @@ abstract
             ( equiv-Σ-empty-fam B))
           ( is-contr-equiv'
             ( Σ A (Id x))
-            ( equiv-inl (Σ A (Id x)))
+            ( right-unit-law-coprod (Σ A (Id x)))
             ( is-contr-total-path x))))
 
 abstract
@@ -591,7 +546,7 @@ abstract
             ( equiv-id (Σ B (Id x))))
           ( is-contr-equiv'
             ( Σ B (Id x))
-            ( equiv-inr (Σ B (Id x)))
+            ( left-unit-law-coprod (Σ B (Id x)))
             ( is-contr-total-path x))))
 
 abstract

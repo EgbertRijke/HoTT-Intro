@@ -234,7 +234,7 @@ commutes. Therefore it follows from the 3-for-2 property of equivalences establi
 
 Pullbacks are not only unique in the sense that any two pullbacks of the same cospan are equivalent, they are \emph{uniquely unique}\index{uniquely uniqueness!of pullbacks} in the sense that the type of quadruples $(h,K,L,M)$ as in \cref{lem:pb_3for2} is contractible.
 
-\begin{cor}
+\begin{cor}\label{cor:uniquely-unique-pullback}
 Suppose both commuting squares
 \begin{equation*}
 \begin{tikzcd}
@@ -254,6 +254,22 @@ is contractible.
 
 \begin{proof}
 We have seen that the type of quadruples $(h,K,L,M)$ is equivalent to the fiber of $\mathsf{cone\usc{}map}(p,q,H)$ at $(p',q',H')$. By \cref{lem:pb_3for2} it follows that $h$ is an equivalence. Since $\isequiv(h)$ is a proposition by \cref{ex:isprop_isequiv}, and hence contractible as soon as it is inhabited, it follows that the type of quadruples $(e,K,L,M)$ is contractible. 
+\end{proof}
+
+\begin{cor}
+  For any two maps $f:A\to X$ and $g:B\to X$, and any universe $\UU$, the type
+  \begin{equation*}
+    \sm{C:\UU}{c:\mathsf{cone}(f,g,C)}\prd{C':\UU}\mathsf{is\usc{}equiv}(\mathsf{cone\usc{}map}_{C'}(c))
+  \end{equation*}
+  of pullbacks in $\UU$, is a proposition.
+\end{cor}
+
+\begin{proof}
+  It is straightforward to see that the type of identifications
+  \begin{equation*}
+    (C,(p,q,H),u)=(C',(p',q',H'),u')
+  \end{equation*}
+  of any two pullbacks is equivalent to the type of quadruples $(e,K,L,M)$ as in \cref{cor:uniquely-unique-pullback}. Since \cref{cor:uniquely-unique-pullback} claims that this type of quadruples is contractible, the claim follows.
 \end{proof}
 
 \subsection{Canonical pullbacks}
@@ -310,6 +326,16 @@ is an equivalence. Note that we have the commuting triangle
 \end{equation*}
 In this triangle the functions $\mathsf{choice}$ are equivalences by \cref{thm:choice}. Therefore, their composite is an equivalence.
 \end{proof}
+
+The following corollary is now a special case of \cref{cor:is-prop-UU-pullback}, where we make sure that $f:A\to X$ and $g:B\to X$ are both maps in $\UU$.
+
+\begin{cor}
+  For any two maps $f:A\to X$ and $g:B\to X$ in $\UU$, the type
+  \begin{equation*}
+    \sm{C:\UU}{c:\mathsf{cone}(f,g,C)}\prd{C':\UU}\mathsf{is\usc{}equiv}(\mathsf{cone\usc{}map}_{C'}(c))
+  \end{equation*}
+  of pullbacks in $\UU$, is contractible.
+\end{cor}
 
 \begin{defn}
 Given a commuting square
@@ -1060,18 +1086,4 @@ Show that the square
 \end{tikzcd}
 \end{equation*}
 \end{comment}
-\item \label{ex:pb_3by3}Consider a commuting diagram of the form
-\begin{equation*}
-\begin{tikzcd}
-A_0 \arrow[r] \arrow[d] & B_0 \arrow[d] & C_0 \arrow[l] \arrow[d] \\
-A_1 \arrow[r] & B_1 & C_1 \arrow[l] \\
-A_2 \arrow[u] \arrow[r] & B_2 \arrow[u] & C_2 \arrow[u] \arrow[l]
-\end{tikzcd}
-\end{equation*}
-with homotopies filling the (small) squares. Construct an equivalence
-\begin{align*}
-& (A_0\times_{B_0} C_0) \times_{(A_1\times_{B_1} C_1)} (A_2\times_{B_2} C_2) \\
-& \qquad \eqvsym (A_0\times_{A_1} A_2) \times_{(B_0\times_{B_1} B_2)} (C_0\times_{C_1} C_2).
-\end{align*}
-This is also known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pullbacks} for pullbacks.
 \end{exercises}

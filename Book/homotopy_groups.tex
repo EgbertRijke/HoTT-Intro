@@ -1,6 +1,8 @@
 \section{Homotopy groups of types}
 
-\subsection{Pointed types}
+\subsection{The suspension-loop space adjunction}
+
+We get an even better version of the universal property of $\susp{X}$ if we know in advance that the type $X$ is a pointed type: on pointed types, the suspension functor is left adjoint to the loop space functor. This property manifests itself in the setting of pointed types, so we first give some definitions regarding pointed types.
 
 \begin{defn}
 \begin{enumerate}
@@ -8,7 +10,7 @@
 \item Let $(X,\ast_X)$ be a pointed type. A \define{pointed family} over $(X,\ast_X)$ consists of a type family $P:X\to \UU$ equipped with a base point $\ast_P:P(\ast_X)$. 
 \item Let $(P,\ast_P)$ be a pointed family over $(X,\ast_X)$. A \define{pointed section} of $(P,\ast_P)$ consists of a dependent function $f:\prd{x:X}P(x)$ and an identification $p:f(\ast_X)=\ast_P$. We define the \define{pointed $\Pi$-type} to be the type of pointed sections:
 \begin{equation*}
-\Pi^\ast_{(x:X)}P(x) \defeq \sm{f:\prd{x:X}P(x)}f(\ast_X)=\ast_P
+\prdsym^\ast_{(x:X)}P(x) \defeq \sm{f:\prd{x:X}P(x)}f(\ast_X)=\ast_P
 \end{equation*}
 In the case of two pointed types $X$ and $Y$, we may also view $Y$ as a pointed family over $X$. In this case we write $X\to_\ast Y$ for the type of pointed functions.
 \item Given any two pointed sections $f$ and $g$ of a pointed family $P$ over $X$, we define the type of pointed homotopies
@@ -19,29 +21,26 @@ where the family $x\mapsto f(x)=g(x)$ is equipped with the base point $\ct{p}{q^
 \end{enumerate}
 \end{defn}
 
-\begin{eg}
-The circle $\sphere{1}$ is a pointed type with base point $\base:\sphere{1}$.
-\end{eg}
-
-\begin{eg}
-If $X$ is a pointed type, then in the suspension of $X$ we have the canonical identification $\merid(\ast_X):\north=\south$. Therefore we do not have to worry about whether to choose $\north$ or $\south$ as the base point of $\susp{X}$. 
-\end{eg} 
-
 \begin{rmk}
-Since pointed homotopies are defined as certain pointed sections, we can use the same definition of pointed homotopies again to consider pointed homotopies between pointed homotopies, and so on.
+  Since pointed homotopies are defined as certain pointed sections, we can use the same definition of pointed homotopies again to consider pointed homotopies between pointed homotopies, and so on.
 \end{rmk}
 
-\begin{defn}
-\begin{enumerate}
-\item For any pointed type $X$, we define the \define{pointed identity function} $\mathsf{id}^\ast_X\defeq (\idfunc[X],\refl{\ast})$. 
-\item For any two pointed maps $f:X\to_\ast Y$ and $g:Y\to_\ast Z$, we define the \define{pointed composite}
-\begin{equation*}
-g\mathbin{\circ_\ast} f \defeq (g\circ f,\ct{\ap{g}{p_f}}{p_g}).
-\end{equation*}
-\end{enumerate}
-\end{defn}
+\begin{comment}
+\begin{rmk}
+  Note that the type of pointed sections $\Pi^\ast_{(x:X)}P(x)$ is the fiber of the evaluation function at $\ast_X$. Thus, we have a pullback square
+  \begin{equation*}
+    \begin{tikzcd}
+      \Pi^\ast_{(x:X)}P(x) \arrow[r] \arrow[d] & \unit \arrow[d,"\ast_P"] \\
+      \prd{x:X}P(x) \arrow[r,swap,"\mathsf{ev}_{\ast_X}"] & P(\ast_X).
+    \end{tikzcd}
+  \end{equation*}
+\end{rmk}
+\end{comment}
 
-\subsection{Loop spaces}
+\begin{eg}
+  For any type $X$, the suspension $\susp{X}$ is a pointed type where the base point is taken to be the north pole $\N$.
+\end{eg}
+
 \begin{defn}
 Let $X$ be a pointed type with base point $x$. We define the \define{loop space} $\loopspace{X,x}$ of $X$ at $x$ to be the pointed type $x=x$ with base point $\refl{x}$. 
 \end{defn}
@@ -69,22 +68,78 @@ of pointed types commutes.
 \end{enumerate}
 \end{defn}
 
-\begin{thm}
-Consider two pointed types $(X,x_0)$ and $(Y,y_0)$. Then there is an equivalence
-\begin{equation*}
-\eqv{(\susp X \to_\ast Y)}{(X \to_\ast \loopspace Y)}
-\end{equation*}
-\end{thm}
+In order to introduce the suspension-loop space adjunction, we also need to construct the functorial action of suspension.
 
-\begin{proof}
-Computing with the universal property of the suspension
-\begin{align*}
-\susp X \to_\ast Y & \eqvsym \sm{y,y':Y} (X \to (y=y'))\times (y'=y_0) \\
-& \eqvsym \sm{y:Y} X\to (y=y_0) \\
-& \eqvsym \sm{f:X\to (y=y_0)}f(x_0)=\refl{y_0}.
-\end{align*}
-In the last equivalence we used \cref{ex:coh_intro}.
+\begin{defn}
+  \begin{enumerate}
+  \item Given a pointed map $f:X\to_\ast Y$, we define a map
+    \begin{equation*}
+      \susp(f):\susp{X}\to_\ast\susp{Y}
+    \end{equation*}
+  \end{enumerate}
+\end{defn}
+
+\begin{defn}
+  We define a pointed map
+  \begin{equation*}
+    \varepsilon_{X} : X \to_\ast \loopspace{\susp{X}}
+  \end{equation*}
+  for any pointed type $X$. This map is called the \define{counit} of the suspension-loop space adjunction. Moreover, $\varepsilon$ is natural in $X$ in the sense that for any pointed map $f:X\to_\ast Y$ we have a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      X \arrow[r,"\varepsilon_X"] \arrow[d,swap,"f"] & \loopspace{\susp{X}} \arrow[d,"\loopspace{\susp{f}}"] \\
+      Y \arrow[r,swap,"\varepsilon_X"] & \loopspace{\susp{Y}}
+    \end{tikzcd}
+  \end{equation*}
+\end{defn}
+
+\begin{proof}[Construction]
+  The underlying map of $\varepsilon_X$ takes $x:X$ to the concatenation
+  \begin{equation*}
+    \begin{tikzcd}
+      \north \arrow[r,equals,"\merid(x)"] & \south \arrow[r,equals,"\merid(\ast_X)^{-1}"] & \north.
+    \end{tikzcd}
+  \end{equation*}
+  This map preserves the base point, since $\ct{\merid(\ast_X)}{\merid(\ast_X)^{-1}}=\refl{\north}$. 
 \end{proof}
+
+\begin{defn}
+\begin{enumerate}
+\item For any pointed type $X$, we define the \define{pointed identity function} $\mathsf{id}^\ast_X\defeq (\idfunc[X],\refl{\ast})$. 
+\item For any two pointed maps $f:X\to_\ast Y$ and $g:Y\to_\ast Z$, we define the \define{pointed composite}
+\begin{equation*}
+g\mathbin{\circ_\ast} f \defeq (g\circ f,\ct{\ap{g}{p_f}}{p_g}).
+\end{equation*}
+\end{enumerate}
+\end{defn}
+
+\begin{defn}
+  Given two pointed types $X$ and $Y$, a pointed map from $X$ to $Y$ is a pair $(f,p)$ consisting of a map $f:X\to Y$ and a path $p:f(x_0)=y_0$ witnessing that $f$ preserves the base point. We write
+  \begin{equation*}
+    X\to_\ast Y
+  \end{equation*}
+  for the type of \define{pointed maps} from $X$ to $Y$. The type $X\to_\ast Y$ is itself a pointed type, with base point $(\mathsf{const}_{y_0},\refl{y_0})$. 
+\end{defn}
+
+Now suppose that we have a pointed map $f:\susp X\to_\ast Y$ with $p:f(x_0)=y_0$. Then the composite
+\begin{equation*}
+  \begin{tikzcd}
+    X \arrow[r,"\varepsilon_X"] & \loopspace{\susp{X}} \arrow[r,"\loopspace{f}"] & \loopspace{Y}
+  \end{tikzcd}
+\end{equation*}
+yields a pointed map $\tilde{f}:X\to\loopspace{Y}$. Therefore we obtain a map
+\begin{equation*}
+  \tau_{X,Y} :(\susp X \to_\ast Y) \to (X \to_\ast \loopspace{Y}).
+\end{equation*}
+It is not hard to see that also $\tau_{X,Y}$ is pointed. We leave this to the reader. The following theorem is also called the adjointness of the suspension and loop space functors. This is an extremely important relation that pops up in many calculations of homotopy groups.
+
+\begin{thm}
+  Let $X$ and $Y$ be pointed types. Then the pointed map
+  \begin{equation*}
+    \tau_{X,Y} : (\susp X \to_\ast Y) \to_\ast (X\to_\ast \loopspace Y)
+  \end{equation*}
+  is an equivalence. Moreover, $\tau$ is pointedly natural in $X$ and $Y$. 
+\end{thm}
 
 \subsection{Homotopy groups}
 In homotopy type theory we use $0$-types to define groups.
@@ -312,4 +367,36 @@ is a pullback square of pointed types, then so is
 \item Show that if $X$ is $(k+l)$-truncated, and for each $0< i\leq l$ the $(k+i)$-th homotopy groups $\pi_{k+i}(X)$ are trivial for each choice of base point, then $X$ is $k$-truncated.
 \end{subexenum}
 It is consistent to assume that there are types for which all homotopy groups are trivial, but which aren't contractible nonetheless. Such types are called \define{$\infty$-connected}.
+\item
+  Consider a cospan
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"f"] & X & B \arrow[l,swap,"g"]
+    \end{tikzcd}
+  \end{equation*}
+  of pointed types and pointed maps between them.
+  \begin{subexenum}
+  \item Define the type of pointed cones $\mathsf{cone}_\ast(C)$, where the vertex $C$ is a pointed type. Also characterize its identity type.
+  \item Define for any pointed cone $(p,q,H)$ with vertex $C$ the map
+    \begin{equation*}
+      \mathsf{cone\usc{}map}_\ast(p,q,H) : (C' \to_\ast C) \to \mathsf{cone}_\ast(C').
+    \end{equation*}
+    Now we can say that the cone $(p,q,H)$ satisfies the universal property of the pointed pullback of the cospan $A\rightarrow X \leftarrow A$ if this map is an equivalence for each pointed type $C'$.
+  \item Now consider a commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+        A \arrow[r,swap,"f"] & X,
+      \end{tikzcd}
+    \end{equation*}
+    where $f$ and $g$ are assumed to be pointed maps between pointed types (they come equipped with $\alpha : f(a_0)=x_0$ and $\beta : g(b_0)=x_0$, respectively). Show that if $C$ is a pullback (in the usual unpointed sense), then $C$ can be given the structure of a pointed pullback in a unique way, i.e., show that the type of
+    \begin{align*}
+      c_0 & : C \\
+      \gamma & : p(c_0)=a_0 \\
+      \delta & : q(c_0)=b_0 \\
+      \varepsilon & : \ct{\ap{f}{\gamma}}{\alpha}=\ct{H(c_0)}{(\ct{\ap{g}{\delta}}{\beta})}
+    \end{align*}
+    for which $C$ satisfies the universal property of a pointed pullback, is contractible.
+  \item Conclude that a commuting square of pointed types is a pointed pullback square if and only if the underlying square of unpointed types is an ordinary pullback square.
+  \end{subexenum}
 \end{exercises}

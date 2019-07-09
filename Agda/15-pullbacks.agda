@@ -60,10 +60,33 @@ universal-property-pullback :
 universal-property-pullback l f g c =
   (C' : UU l) → is-equiv (cone-map f g {C' = C'} c)
 
+is-prop-universal-property-pullback :
+  {l1 l2 l3 l4 : Level} (l : Level) {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  is-prop (universal-property-pullback l f g c)
+is-prop-universal-property-pullback l f g c =
+  is-prop-Π (λ C' → is-subtype-is-equiv (cone-map f g c))
+
+{-
+lower-universal-property-pullback :
+  {l1 l2 l3 l4 : Level} (l l' : Level) {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  universal-property-pullback (l ⊔ l') f g c →
+  universal-property-pullback l f g c
+lower-universal-property-pullback l l' f g c up-c C' =
+  is-equiv-right-factor
+    {!!}
+    {!!}
+    {!!}
+    {!!}
+    {!!}
+    {!!}
+-}
+
 map-universal-property-pullback :
   {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
-  ({l : Level} → universal-property-pullback l f g c) →
+  universal-property-pullback l5 f g c →
   {C' : UU l5} (c' : cone f g C') → C' → C
 map-universal-property-pullback f g c up-c {C'} c' =
   inv-is-equiv (up-c C') c'
@@ -71,7 +94,7 @@ map-universal-property-pullback f g c up-c {C'} c' =
 eq-map-universal-property-pullback :
   {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
   {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
-  (up-c : {l : Level} → universal-property-pullback l f g c) →
+  (up-c : universal-property-pullback l5 f g c) →
   {C' : UU l5} (c' : cone f g C') →
   Id (cone-map f g c (map-universal-property-pullback f g c up-c c')) c'
 eq-map-universal-property-pullback f g c up-c {C'} c' =
@@ -187,51 +210,6 @@ abstract
         (λ h → equiv-htpy-cone f g (cone-map f g c h) c'))
       ( is-contr-map-is-equiv (up C')  c')
 
--- Section 13.2
-
-{- The canonical pullback is a type which can be equipped with a cone that
-   satisfies the universal property of a pullback. -}
-
-canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) → UU ((l1 ⊔ l2) ⊔ l3)
-canonical-pullback {A = A} {B = B} f g = Σ A (λ x → Σ B (λ y → Id (f x) (g y)))
-
-{- We construct the maps and homotopies that are part of the cone structure of
-   the canonical pullback. -}
-   
-π₁ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  {f : A → X} {g : B → X} → canonical-pullback f g → A
-π₁ = pr1
-
-π₂ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  {f : A → X} {g : B → X} → canonical-pullback f g → B
-π₂ t = pr1 (pr2 t)
-
-π₃ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {f : A → X}
-  {g : B → X} → (f ∘ (π₁ {f = f} {g = g})) ~ (g ∘ (π₂ {f = f} {g = g}))
-π₃ t = pr2 (pr2 t)
-
-cone-canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (f : A → X) (g : B → X) → cone f g (canonical-pullback f g)
-cone-canonical-pullback f g = pair π₁ (pair π₂ π₃)
-
-{- We show now that the canonical pullback satisfies the universal property of
-   a pullback. -}
-
-abstract
-  universal-property-pullback-canonical-pullback : {l1 l2 l3 l4 : Level}
-    {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X) →
-    universal-property-pullback l4 f g (cone-canonical-pullback f g)
-  universal-property-pullback-canonical-pullback f g C =
-    is-equiv-comp
-      ( cone-map f g (cone-canonical-pullback f g))
-      ( tot (λ p → choice-∞))
-      ( mapping-into-Σ)
-      ( htpy-refl)
-      ( is-equiv-mapping-into-Σ)
-      ( is-equiv-tot-is-fiberwise-equiv
-        ( λ p → is-equiv-choice-∞))
-
 {- Next we establish a '3-for-2' property for pullbacks. -}
 
 triangle-cone-cone : {l1 l2 l3 l4 l5 l6 : Level}
@@ -247,7 +225,8 @@ triangle-cone-cone {C' = C'} {f = f} {g = g} c c' h KLM D k =
     ( eq-htpy-cone (cone-map f g c h) c' KLM))
 
 abstract
-  is-equiv-up-pullback-up-pullback : {l1 l2 l3 l4 l5 : Level}
+  is-equiv-up-pullback-up-pullback :
+    {l1 l2 l3 l4 l5 : Level}
     {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
     (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C')
     (h : C' → C) (KLM : htpy-cone f g (cone-map f g c h) c') →
@@ -262,6 +241,25 @@ abstract
         ( λ (k : D → C') → h ∘ k)
         ( triangle-cone-cone {C = C} {C' = C'} {f = f} {g = g} c c' h KLM D)
         ( up D) (up' D))
+
+abstract
+  is-equiv-up-pullback-up-pullback' :
+    {l1 l2 l3 l4 : Level}
+    {A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l4}
+    (f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
+    (h : C' → C) (KLM : htpy-cone f g (cone-map f g c h) c') →
+    universal-property-pullback l4 f g c →
+    universal-property-pullback l4 f g c' →
+    is-equiv h
+  is-equiv-up-pullback-up-pullback'
+    {C = C} {C' = C'} f g c c' h KLM up-c up-c' =
+    is-equiv-is-equiv-postcomp' h
+      ( λ D → is-equiv-right-factor
+        ( cone-map f g {C' = D} c')
+        ( cone-map f g c)
+        ( λ (k : D → C') → h ∘ k)
+        ( triangle-cone-cone {C = C} {C' = C'} {f = f} {g = g} c c' h KLM D)
+        (up-c D) (up-c' D))
 
 abstract
   up-pullback-up-pullback-is-equiv : {l1 l2 l3 l4 l5 : Level}
@@ -297,6 +295,188 @@ abstract
       ( is-equiv-postcomp-is-equiv h is-equiv-h D)
 
 {- This concludes the '3-for-2-property' of pullbacks. -}
+
+{- We establish the uniquely uniqueness of pullbacks. -}
+
+htpy-cone-map-universal-property-pullback :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
+  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
+  (up-c : universal-property-pullback l5 f g c) →
+  {C' : UU l5} (c' : cone f g C') →
+  htpy-cone f g
+    ( cone-map f g c (map-universal-property-pullback f g c up-c c'))
+    ( c')
+htpy-cone-map-universal-property-pullback f g c up-c c' =
+  htpy-cone-eq f g
+    ( cone-map f g c (map-universal-property-pullback f g c up-c c'))
+    ( c')
+    ( eq-map-universal-property-pullback f g c up-c c')
+
+{- We describe the type of all pullbacks in a universe UU l. -}
+
+UU-pullback :
+  {l1 l2 l3 : Level} (l : Level) {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) → UU _
+UU-pullback l f g =
+  Σ (UU l) (λ C → Σ (cone f g C) (λ c → universal-property-pullback l f g c))
+
+equiv-pullback :
+  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) →
+  UU-pullback l4 f g → UU-pullback l5 f g → UU (l1 ⊔ l2 ⊔ l3 ⊔ l4 ⊔ l5)
+equiv-pullback f g (pair C (pair c is-pb-C)) P' =
+  Σ ( (pr1 P') ≃ C)
+    ( λ e → htpy-cone f g (cone-map f g c (map-equiv e)) (pr1 (pr2 P')))
+
+reflexive-equiv-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) (P : UU-pullback l4 f g) →
+  equiv-pullback f g P P
+reflexive-equiv-pullback f g (pair C (pair c is-pb-C)) =
+  pair (equiv-id C) (reflexive-htpy-cone f g c)
+
+equiv-pullback-eq :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) (P P' : UU-pullback l4 f g) →
+  Id P P' → equiv-pullback f g P P'
+equiv-pullback-eq f g P .P refl = reflexive-equiv-pullback f g P
+
+is-contr-total-equiv-pullback :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) (P : UU-pullback l4 f g) →
+  is-contr (Σ (UU-pullback l4 f g) (equiv-pullback f g P))
+is-contr-total-equiv-pullback f g (pair C (pair c is-pb-C)) =
+  is-contr-total-Eq-structure
+    ( λ C' t e → htpy-cone f g (cone-map f g c (map-equiv e)) (pr1 t))
+    ( is-contr-total-equiv' C)
+    ( pair C (equiv-id C))
+    ( is-contr-total-Eq-substructure
+      ( is-contr-total-htpy-cone f g c)
+      ( is-prop-universal-property-pullback _ f g)
+      ( c)
+      ( reflexive-htpy-cone f g c)
+      ( is-pb-C))
+
+is-equiv-equiv-pullback-eq :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) (P Q : UU-pullback l4 f g) →
+  is-equiv (equiv-pullback-eq f g P Q)
+is-equiv-equiv-pullback-eq f g P =
+  fundamental-theorem-id P
+    ( reflexive-equiv-pullback f g P)
+    ( is-contr-total-equiv-pullback f g P)
+    ( equiv-pullback-eq f g P)
+  
+equiv-equiv-pullback-eq :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) (P P' : UU-pullback l4 f g) →
+  Id P P' ≃ equiv-pullback f g P P'
+equiv-equiv-pullback-eq f g P P' =
+  pair (equiv-pullback-eq f g P P') (is-equiv-equiv-pullback-eq f g P P')
+
+{- We show that pullbacks are uniquely unique, and indeed that the type of all
+   pullbacks in any given universe level is a proposition. -}
+
+{-
+abstract
+  uniquely-unique-pullback :
+    { l1 l2 l3 l4 l5 : Level}
+    { A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
+    ( f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
+    ( up-c' : {l : Level} → universal-property-pullback l f g c') →
+    ( up-c : {l : Level} → universal-property-pullback l f g c) →
+    is-contr
+      ( equiv-pullback f g (pair C (pair c up-c)) (pair C' (pair c' up-c')))
+  uniquely-unique-pullback {C = C} {C' = C'} f g c c' up-c' up-c =
+    is-contr-total-Eq-substructure
+      ( is-contr-universal-property-pullback f g c up-c C' c')
+      ( is-subtype-is-equiv)
+      ( map-universal-property-pullback f g c up-c c')
+      ( htpy-cone-map-universal-property-pullback f g c up-c c')
+      ( is-equiv-up-pullback-up-pullback f g c c'
+        ( map-universal-property-pullback f g c up-c c')
+        ( htpy-cone-map-universal-property-pullback f g c up-c c')
+        up-c up-c')
+-}
+
+abstract
+  uniquely-unique-pullback' :
+    { l1 l2 l3 l4 : Level}
+    { A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l4}
+    ( f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
+    ( up-c' : universal-property-pullback l4 f g c') →
+    ( up-c : universal-property-pullback l4 f g c) →
+    is-contr
+      ( equiv-pullback f g (pair C (pair c up-c)) (pair C' (pair c' up-c')))
+  uniquely-unique-pullback' {C = C} {C' = C'} f g c c' up-c' up-c =
+    is-contr-total-Eq-substructure
+      ( is-contr-universal-property-pullback f g c up-c C' c')
+      ( is-subtype-is-equiv)
+      ( map-universal-property-pullback f g c up-c c')
+      ( htpy-cone-map-universal-property-pullback f g c up-c c')
+      ( is-equiv-up-pullback-up-pullback' f g c c'
+        ( map-universal-property-pullback f g c up-c c')
+        ( htpy-cone-map-universal-property-pullback f g c up-c c')
+        up-c up-c')
+
+is-prop-UU-pullback :
+  {l1 l2 l3 : Level} (l : Level) {A : UU l1} {B : UU l2} {X : UU l3}
+  ( f : A → X) (g : B → X) →
+  is-prop (UU-pullback l f g)
+is-prop-UU-pullback l f g (pair C (pair c up-c)) (pair C' (pair c' up-c')) =
+  is-contr-equiv
+    ( equiv-pullback f g
+      ( pair C (pair c up-c))
+      ( pair C' (pair c' up-c')))
+    ( equiv-equiv-pullback-eq f g
+      ( pair C (pair c up-c))
+      ( pair C' (pair c' up-c')))
+    ( uniquely-unique-pullback' f g c c' up-c' up-c)
+
+-- Section 13.2
+
+{- The canonical pullback is a type which can be equipped with a cone that
+   satisfies the universal property of a pullback. -}
+
+canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) → UU ((l1 ⊔ l2) ⊔ l3)
+canonical-pullback {A = A} {B = B} f g = Σ A (λ x → Σ B (λ y → Id (f x) (g y)))
+
+{- We construct the maps and homotopies that are part of the cone structure of
+   the canonical pullback. -}
+   
+π₁ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  {f : A → X} {g : B → X} → canonical-pullback f g → A
+π₁ = pr1
+
+π₂ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  {f : A → X} {g : B → X} → canonical-pullback f g → B
+π₂ t = pr1 (pr2 t)
+
+π₃ : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3} {f : A → X}
+  {g : B → X} → (f ∘ (π₁ {f = f} {g = g})) ~ (g ∘ (π₂ {f = f} {g = g}))
+π₃ t = pr2 (pr2 t)
+
+cone-canonical-pullback : {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X) (g : B → X) → cone f g (canonical-pullback f g)
+cone-canonical-pullback f g = pair π₁ (pair π₂ π₃)
+
+{- We show that the canonical pullback satisfies the universal property of
+   a pullback. -}
+
+abstract
+  universal-property-pullback-canonical-pullback : {l1 l2 l3 l4 : Level}
+    {A : UU l1} {B : UU l2} {X : UU l3} (f : A → X) (g : B → X) →
+    universal-property-pullback l4 f g (cone-canonical-pullback f g)
+  universal-property-pullback-canonical-pullback f g C =
+    is-equiv-comp
+      ( cone-map f g (cone-canonical-pullback f g))
+      ( tot (λ p → choice-∞))
+      ( mapping-into-Σ)
+      ( htpy-refl)
+      ( is-equiv-mapping-into-Σ)
+      ( is-equiv-tot-is-fiberwise-equiv
+        ( λ p → is-equiv-choice-∞))
 
 {- We characterize the identity type of the canonical pullback. -}
 
@@ -369,42 +549,6 @@ eq-Eq-canonical-pullback f g {pair a (pair b p)} {pair a' (pair b' p')} α β γ
       ( pair a (pair b p))
       ( pair a' (pair b' p')))
     ( pair α (pair β γ))
-
-{- We establish the uniquely uniqueness of pullbacks. -}
-
-htpy-cone-map-universal-property-pullback :
-  {l1 l2 l3 l4 l5 : Level} {A : UU l1} {B : UU l2}
-  {X : UU l3} (f : A → X) (g : B → X) {C : UU l4} (c : cone f g C) →
-  (up-c : {l : Level} → universal-property-pullback l f g c) →
-  {C' : UU l5} (c' : cone f g C') →
-  htpy-cone f g
-    ( cone-map f g c (map-universal-property-pullback f g c up-c c'))
-    ( c')
-htpy-cone-map-universal-property-pullback f g c up-c c' =
-  htpy-cone-eq f g
-    ( cone-map f g c (map-universal-property-pullback f g c up-c c'))
-    ( c')
-    ( eq-map-universal-property-pullback f g c up-c c')
-
-abstract
-  uniquely-unique-pullback :
-    { l1 l2 l3 l4 l5 : Level}
-    { A : UU l1} {B : UU l2} {X : UU l3} {C : UU l4} {C' : UU l5}
-    ( f : A → X) (g : B → X) (c : cone f g C) (c' : cone f g C') →
-    ( {l : Level} → universal-property-pullback l f g c') →
-    ( {l : Level} → universal-property-pullback l f g c) →
-    is-contr
-      ( Σ (C' ≃ C) (λ h → htpy-cone f g (cone-map f g c (map-equiv h)) c'))
-  uniquely-unique-pullback {C = C} {C' = C'} f g c c' up-c' up-c =
-    is-contr-total-Eq-substructure
-      ( is-contr-universal-property-pullback f g c up-c C' c')
-      ( is-subtype-is-equiv)
-      ( map-universal-property-pullback f g c up-c c')
-      ( htpy-cone-map-universal-property-pullback f g c up-c c')
-      ( is-equiv-up-pullback-up-pullback f g c c'
-        ( map-universal-property-pullback f g c up-c c')
-        ( htpy-cone-map-universal-property-pullback f g c up-c c')
-        up-c up-c')
 
 {- The gap map of a square is the map fron the vertex of the cone into the
    canonical pullback. -}

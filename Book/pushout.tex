@@ -11,9 +11,18 @@ A & S \arrow[l,swap,"f"] \arrow[r,"g"] & B.
 \end{tikzcd}
 \end{equation*}
 We call such a triple $\mathcal{S}\jdeq (S,f,g)$ a \define{span}\index{span} from $A$ to $B$.
-A span from $A$ to $B$ can be thought of as a relation\index{relation} from $A$ to $B$, relating $f(s)$ to $g(s)$ for any $s:S$.
+A span from $A$ to $B$ can be thought of as a relation\index{relation} from $A$ to $B$, relating $f(s)$ to $g(s)$ for any $s:S$. The pushout of the span $\mathcal{S}$ is then a type $X$ that comes equipped with inclusion maps $i:A\to X$ and $j:B\to X$ and a homotopy $H$ witnessing that the square
+\begin{equation*}
+  \begin{tikzcd}
+    S \arrow[d,swap,"f"] \arrow[r,"g"] & B \arrow[d,"j"] \\
+    A \arrow[r,swap,"i"] & X
+  \end{tikzcd}
+\end{equation*}
+Note that this homotopy makes sure that there is a path $H(s):i(f(s))=j(g(s))$ for every $s:S$. In other words, any $x:A$ and $y:B$ that are related by in $\mathcal{S}$ become identified in the pushout. The last requirement of the pushout is that it satisfies a universal property that is dual to the universal property of pullbacks.
 
-Unlike pullbacks, however, it is not automatically the case that pushouts always exist, and there are several equivalent characterizations of pushouts. Two such characterizations are presented in this lecture, establishing the duality between pullbacks and pushouts. Other characterizations, including the induction principle of pushouts, and the \emph{dependent universal property} of pushouts, are studied in \cref{chap:descent}.
+There are several equivalent characterizations of pushouts. Two such characterizations are studied in this section, establishing the duality between pullbacks and pushouts. Other characterizations, including the induction principle of pushouts, and the \emph{dependent universal property} of pushouts, are studied in \cref{chap:descent}.
+
+Unlike pullbacks, however, it is not automatically the case that pushouts always exist. We will therefore postulate as an axiom that pushouts always exist. Moreover, we will assume that universes are closed under pushouts.
 
 \subsection{The universal property of pushouts}
 
@@ -31,7 +40,7 @@ We write $\mathsf{cocone}_{\mathcal{S}}(X)$\index{cocone_S(X)@{$\mathsf{cocone}_
 \end{defn}
 
 \begin{rmk}\label{rmk:htpy-cocone}
-  Given two cocones $(i,j,H)$ and $(i',j',H')$ with vertex $C$, the type of identifications $(i,j,H)=(i',j',H')$ in $\mathsf{cocone}_{\mathcal{S}}(C)$ is equivalent to the type of triples $(K,L,M)$ consisting of
+  Given two cocones $(i,j,H)$ and $(i',j',H')$ with vertex $X$, the type of identifications $(i,j,H)=(i',j',H')$ in $\mathsf{cocone}_{\mathcal{S}}(X)$ is equivalent to the type of triples $(K,L,M)$ consisting of
   \begin{align*}
     K : i\htpy i' \\
     L : j\htpy j',
@@ -41,7 +50,7 @@ We write $\mathsf{cocone}_{\mathcal{S}}(X)$\index{cocone_S(X)@{$\mathsf{cocone}_
     \begin{tikzcd}
       %  ((pr2 (pr2 c)) ∙h (L ·r g)) ~ ((K ·r f) ∙h (pr2 (pr2 c')))
       i\circ f \arrow[d,swap,"H"] \arrow[r,"K\cdot f"] & i' \circ f \arrow[d,"{H'}"] \\
-      j\circ g \arrow[r,swap,"K_B\cdot g"] & j'\circ g
+      j\circ g \arrow[r,swap,"L\cdot g"] & j'\circ g
     \end{tikzcd}
   \end{equation*}
   of homotopies commutes.
@@ -122,11 +131,11 @@ by $h\mapsto (h\circ i,h\circ j,h\cdot H)$.
     \begin{tikzcd}
       S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"]
       & & S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"{j'}"] \\
-      A \arrow[r,swap,"i"] & C
-      & & A \arrow[r,swap,"{i'}"] & C'
+      A \arrow[r,swap,"i"] & X
+      & & A \arrow[r,swap,"{i'}"] & X'
     \end{tikzcd}
   \end{equation*}
-  on a span $\mathcal{S}\jdeq(S,f,g)$, and let $h:C\to C'$ be a map equipped with homotopies
+  on a span $\mathcal{S}\jdeq(S,f,g)$, and let $h:X\to X'$ be a map equipped with homotopies
   \begin{align*}
     K & : h\circ i \htpy i' \\
     L & : h\circ j \htpy j'
@@ -167,11 +176,11 @@ In the following corollary we establish the fact that pushouts are \emph{uniquel
     \begin{tikzcd}
       S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"]
       & & S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"{j'}"] \\
-      A \arrow[r,swap,"i"] & C
-      & & A \arrow[r,swap,"{i'}"] & C'
+      A \arrow[r,swap,"i"] & X
+      & & A \arrow[r,swap,"{i'}"] & X'
     \end{tikzcd}
   \end{equation*}
-  of a given span $\mathcal{S}\jdeq (S,f,g)$. Then the type of equivalences $e:\eqv{C}{C'}$ equipped with homotopies
+  of a given span $\mathcal{S}\jdeq (S,f,g)$. Then the type of equivalences $e:\eqv{X}{X'}$ equipped with homotopies
   \begin{align*}
     K & : h\circ i \htpy i' \\
     L & : h\circ j \htpy j'
@@ -188,6 +197,24 @@ In the following corollary we establish the fact that pushouts are \emph{uniquel
 
 \begin{proof}
   This follows from combining \cref{lem:unique-mapping-property-pushout,thm:3-for-2-pushout}.
+\end{proof}
+
+\begin{cor}\label{cor:uniquely-unique-pushout}
+  Consider a span
+  \begin{equation*}
+    \begin{tikzcd}
+      A & S \arrow[l,swap,"f"] \arrow[r,"g"] & B
+    \end{tikzcd}
+  \end{equation*}
+  in a universe $\UU$. Then the type
+  \begin{equation*}
+    \sm{X:\UU}{c:\mathsf{cocone}(X)}\prd{Y:\UU}\mathsf{is\usc{}equiv}(\mathsf{cocone\usc{}map}_Y(c))
+  \end{equation*}
+  of is a proposition.
+\end{cor}
+
+\begin{proof}
+  It is routine to verify that the type of quadruples $(e,K,L,M)$ as in \cref{cor:uniquely-unique-pushout} is equivalent to the identity type of the type of pushouts of the span $\mathcal{S}\jdeq (S,f,g)$. The claim then follows, since \cref{cor:uniquely-unique-pushout} asserts that this type of quadruples is contractible. 
 \end{proof}
 
 \subsection{Suspensions}
@@ -247,36 +274,6 @@ given by $f\mapsto (f(\north),f(\south),f\cdot\merid)$ is an equivalence.
   \end{equation*}
   where $\mathcal{S}$ is the span $\unit \leftarrow X \rightarrow \unit$. The bottom map is given by $(i,j,H)\mapsto (i(\ttt),j(\ttt),H)$. This map is an equivalence, and the map on the left is an equivalence by the assumption that $\susp X$ is a suspension of $X$. Therefore the claim follows by the 3-for-2 property of equivalences.
 \end{proof}
-
-A slightly slicker version of the universal property of suspensions can be obtained in the case where $X$ is a pointed type. Recall that a pointed type is a pair $(X,x_0)$ consisting of a type $X$ and a point $x_0:X$. The point $x_0:X$ is called the \define{base point} of the pointed type. In the case of the suspension, we define the base point to be the north pole.
-
-\begin{defn}
-  Given two pointed types $X$ and $Y$, a pointed map from $X$ to $Y$ is a pair $(f,p)$ consisting of a map $f:X\to Y$ and a path $p:f(x_0)=y_0$ witnessing that $f$ preserves the base point. We write
-  \begin{equation*}
-    X\to_\ast Y
-  \end{equation*}
-  for the type of \define{pointed maps} from $X$ to $Y$. The type $X\to_\ast Y$ is itself a pointed type, with base point $(\mathsf{const}_{y_0},\refl{y_0})$. 
-\end{defn}
-
-Now suppose that we have a pointed map $f:\susp X\to_\ast Y$ with $p:f(x_0)=y_0$. Then we obtain a map $X\to\loopspace{Y}$ that maps $x:X$ to the concatenation
-\begin{equation*}
-  \begin{tikzcd}[column sep=6em]
-    f(\north) \arrow[r,equals,"\ap{f}{\merid(x)}"] & f(\south) \arrow[r,equals,"\ap{f}{\merid(x_0)}^{-1}"] & f(\north).
-  \end{tikzcd}
-\end{equation*}
-Note that the function $x\mapsto\ct{\ap{f}{\merid(x)}}{\ap{f}{\merid(x_0)}^{-1}}$ is a pointed map by the right inverse law of path concatenation. Therefore we obtain a map
-\begin{equation*}
-  \tau_{X,Y} :(\susp X \to_\ast Y) \to (X \to_\ast \loopspace{Y}).
-\end{equation*}
-It is not hard to see that also $\tau_{X,Y}$ is pointed. We leave this to the reader. The following theorem is also called the adjointness of the suspension and loop space functors. This is an extremely important relation that pops up in many calculations of homotopy groups.
-
-\begin{thm}
-  Let $X$ and $Y$ be pointed types. Then the pointed map
-  \begin{equation*}
-    \tau_{X,Y} : (\susp X \to_\ast Y) \to_\ast (X\to_\ast \loopspace Y)
-  \end{equation*}
-  is an equivalence. Moreover, $\tau$ is pointedly natural in $X$ and $Y$. 
-\end{thm}
 
 \subsection{The duality of pullbacks and pushouts}
 \begin{lem}\label{lem:cocone_pb}
@@ -466,11 +463,6 @@ X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"
 \end{defn}
 
 \begin{exercises}
-\item \label{ex:span_rel}Use \cref{thm:choice,thm:fam_proj,cor:times_up_out} to show that the type 
-\begin{equation*}
-\mathsf{span}(A,B)\defeq \sm{S:\UU} (S\to A)\times (S\to B)
-\end{equation*}
-of small spans from $A$ to $B$ is equivalent to the type $A\to (B\to\UU)$ of small relations from $A$ to $B$.
 \item \label{ex:pushout_equiv}Use \cref{thm:pushout_up,cor:pb_equiv,ex:equiv_precomp} to show that for any commuting square
 \begin{equation*}
 \begin{tikzcd}

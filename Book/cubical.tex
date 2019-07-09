@@ -1,6 +1,6 @@
 \section{Cubical diagrams}
 
-In this lecture we study commuting diagrams of the form
+In order to proceed with the development of pullbacks and pushouts, it is useful to study commuting diagrams of the form
 \begin{equation*}
   \begin{tikzcd}
     & C' \arrow[dl] \arrow[d] \arrow[dr] \\
@@ -122,7 +122,7 @@ In the following lemma we show that if a cube commutes, then so do its rotations
 \end{lem}
 
 \begin{proof}
-  We only show that the first cube commutes, which is obtained by a counter-clockwise rotation of the original cube around the axis through $C'$ and $X$. The other cases are similar, and they are formalized in the Agda library for this course.
+  We only show that the first cube commutes, which is obtained by a counter-clockwise rotation of the original cube around the axis through $C'$ and $X$. The other cases are similar, and they are formalized in the accompagnying Agda library.
 
   First we list the homotopies witnessing that the faces of the cube commute:
   \begin{align*}
@@ -135,32 +135,17 @@ In the following lemma we show that if a cube commutes, then so do its rotations
   \end{align*}
   Thus, to show that the cube commutes, we have to show that there is a homotopy of type
   \begin{align*}
-    & \ct{(\ct{(g \cdot \mathsf{back\usc{}right}^{-1})}{(\mathsf{bottom}^{-1}\cdot h_C)})}{(f \cdot \mathsf{back\usc{}left})} \\
-    & \qquad\qquad \htpy \ct{(\mathsf{front\usc{}right}\cdot q')}{(\ct{(h_X \cdot \mathsf{top}^{-1})}{(\mathsf{front\usc{}left}^{-1}\cdot p')})}.
+    & \ct{\Big(\ct{(g \cdot \mathsf{back\usc{}right}^{-1})}{(\mathsf{bottom}^{-1}\cdot h_C)}\Big)}{(f \cdot \mathsf{back\usc{}left})} \\
+    & \qquad\qquad \htpy \ct{(\mathsf{front\usc{}right}\cdot q')}{\Big(\ct{(h_X \cdot \mathsf{top}^{-1})}{(\mathsf{front\usc{}left}^{-1}\cdot p')}\Big)}.
   \end{align*}
-  In other words, we need to construct a path
+  Recall that $h\cdot H^{-1}\htpy (h\cdot H)^{-1}$ and $H^{-1}\cdot h\htpy (H\cdot h)^{-1}$, so it suffices to construct a homotopy
   \begin{align*}
-    & \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')^{-1}}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}} \\
-    & \qquad\qquad \htpy \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')^{-1}}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})}
+    & \ct{\Big(\ct{(g \cdot \mathsf{back\usc{}right})^{-1}}{(\mathsf{bottom}\cdot h_C)^{-1}}\Big)}{(f \cdot \mathsf{back\usc{}left})} \\
+    & \qquad\qquad \htpy \ct{(\mathsf{front\usc{}right}\cdot q')}{\Big(\ct{(h_X \cdot \mathsf{top})^{-1}}{(\mathsf{front\usc{}left}\cdot p')^{-1}}\Big)}.
   \end{align*}
-  for every $c':C'$. Recall that $\ap{g}{\mathsf{back\usc{}right}(c')^{-1}}=\ap{g}{\mathsf{back\usc{}right}(c')}^{-1}$. Using the action on paths of the concatenation function (twice), we see that
-  \begin{align*}
-    & \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')^{-1}}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}} \\
-    & \qquad\qquad \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')}^{-1}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}}.
-  \end{align*}
-  Similarly, we have an identification
-  \begin{align*}
-    & \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')}^{-1}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})} \\
-    & \qquad\qquad \htpy \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')^{-1}}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})}
-  \end{align*}
-  Therefore it suffices to construct an identification
-  \begin{align*}
-    & \ct{(\ct{\ap{g}{\mathsf{back\usc{}right}(c')}^{-1}}{\mathsf{bottom}(h_C(c'))^{-1}})}{\ap{f}{\mathsf{back\usc{}left}(c')}} \\
-    & \qquad\qquad \htpy \ct{\mathsf{front\usc{}right}(q'(c'))}{(\ct{\ap{h_X}{\mathsf{top}(c')}^{-1}}{\mathsf{front\usc{}left}(p'(c'))^{-1}})}
-  \end{align*}
-  Now we note that our goal is of the form
+  Now we note that pointwise, our goal is of the form
   \begin{equation*}
-    \ct{(\ct{\varepsilon^{-1}}{\delta^{-1}})}{\beta}=\ct{\zeta}{(\ct{\gamma^{-1}}{\beta^{-1}})}, %%% check greek alphabet
+    \ct{(\ct{\varepsilon^{-1}}{\delta^{-1}})}{\alpha}=\ct{\zeta}{(\ct{\gamma^{-1}}{\beta^{-1}})}, %%% check greek alphabet
   \end{equation*}
   whereas the assumption that the original cube commutes yields an identification of the form
   \begin{equation*}
@@ -183,11 +168,11 @@ for any $x:A_{101}$.
 \begin{lem}
 Consider a commuting cube
 \begin{equation*}
-\begin{tikzcd}
-& A_{111} \arrow[dl] \arrow[dr] \arrow[d] \\
-A_{110} \arrow[d] & A_{101} \arrow[dl] \arrow[dr] & A_{011} \arrow[dl,crossing over] \arrow[d] \\
-A_{100} \arrow[dr] & A_{010} \arrow[d] \arrow[from=ul,crossing over] & A_{001} \arrow[dl] \\
-& A_{000}.
+\begin{tikzcd}[column sep=large,row sep=large]
+& C' \arrow[dl] \arrow[dr] \arrow[d] \\
+A' \arrow[d] & C \arrow[dl] \arrow[dr] & B' \arrow[dl,crossing over] \arrow[d] \\
+A \arrow[dr] & X' \arrow[d] \arrow[from=ul,crossing over] & B \arrow[dl] \\
+& X,
 \end{tikzcd}
 \end{equation*}
 If the bottom and front right squares are pullback squares, then the back left square is a pullback if and only if the top square is.
