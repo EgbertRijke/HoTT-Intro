@@ -1,37 +1,37 @@
 \section{Groups in univalent mathematics}
 
-In this section we exhibit a typical way to use the univalence axiom, showing that isomorphic groups can be identified.
+In this section we demonstrate a typical way to use the univalence axiom\index{univalence axiom}, showing that isomorphic groups can be identified.
 This is an instance of the \emph{structure identity principle}\index{structure identity principle}, which is described in more detail in section 9.8 of \cite{hottbook}.
-We will see that in order to establish the fact that isomorphic groups can be identified, it has to be part of the definition of a group that its underlying type is a set. This is an important observation: in many branches of algebra the objects of study are \emph{set-level} structures\footnote{A notable exception is that of categories, which are objects at truncation level $1$, i.e., at the level of \emph{groupoids}. For more on this, see Chapter 9 of \cite{hottbook}.}.
+We will see that in order to establish the fact that isomorphic groups can be identified, it has to be part of the definition of a group that its underlying type is a set. This is an important observation: in many branches of algebra the objects of study are \emph{set-level} structures\index{set-level structure}\footnote{A notable exception is that of categories, which are objects at truncation level $1$, i.e., at the level of \emph{groupoids}. For more on this, see Chapter 9 of \cite{hottbook}.}.
 
 \subsection{Semi-groups and groups}
 We introduce the type of groups in two stages: first we introduce the type of \emph{semi-groups}, and then we introduce groups as semi-groups that possess further structure. It will turn out that this further structure is in fact a property, and this fact will help us to prove that isomorphic grous are equal.
 
 \begin{defn}
-  A \define{semi-group} consists of a set $G$ and an associative binary operation on $G$, i.e., a binary function
+  A \define{semi-group}\index{semi-group} consists of a set $G$ equipped with a term of type $\mathsf{has\usc{}associative\usc{}mul}(G)$, which is the type of pairs $(\mu_G,\mathsf{assoc}_G)$ consisting of a binary operation
   \begin{equation*}
     \mu_G : G \to (G \to G)
   \end{equation*}
-  equipped with a homotopy
+  and a homotopy
   \begin{equation*}
     \mathsf{assoc}_G : \prd{x,y.z:G}\mu_G(\mu_G(x,y),z)=\mu_G(x,\mu_G(y,z)).
   \end{equation*}
-  We write $\mathsf{Semi\usc{}Group}$ for the type of all semi-groups.
+  We write $\mathsf{Semi\usc{}Group}$\index{Semi-Group@{$\mathsf{Semi\usc{}Group}$}} for the type of all semi-groups in $\UU$.
 \end{defn}
 
 \begin{defn}
-  A semi-group $G$ is said to be \define{unital} if it comes equipped with a \define{unit} $e_G:G$ that satisfies the left and right unit laws
+  A semi-group $G$ is said to be \define{unital}\index{semi-group!unital}\index{unital semi-group} if it comes equipped with a \define{unit}\index{unit!of a unital semi-group} $e_G:G$ that satisfies the left and right unit laws\index{unit laws!for a unital semi-group}
   \begin{align*}
     \mathsf{left\usc{}unit}_G : \prd{y:G}\mu_G(e_G,y)=y \\
     \mathsf{right\usc{}unit}_G : \prd{x:G}\mu_G(x,e_G)=x.
   \end{align*}
-  We write $\mathsf{is\usc{}unital}(G)$ for the type of such triples $(e_G,\mathsf{left\usc{}unit}_G,\mathsf{right\usc{}unit}_G)$. Unital semi-groups are also called \define{monoids}.
+  We write $\mathsf{is\usc{}unital}(G)$\index{is-unital@{$\mathsf{is\usc{}unital}$}} for the type of such triples $(e_G,\mathsf{left\usc{}unit}_G,\mathsf{right\usc{}unit}_G)$. Unital semi-groups are also called \define{monoids}\index{monoid}.
 \end{defn}
 
 The unit of a semi-group is of course unique once it exists. In univalent mathematics we express this fact by asserting that the type $\mathsf{is\usc{}unital}(G)$ is a proposition for each semi-group $G$. In other words, being unital is a \emph{property} of semi-groups rather than structure on it. This is typical for univalent mathematics: we express that a structure is a property by proving that this structure is a proposition.
 
 \begin{lem}
-  For a semi-group $G$ the type $\mathsf{is\usc{}unital}(G)$ is a proposition.
+  For a semi-group $G$ the type $\mathsf{is\usc{}unital}(G)$ is a proposition.\index{is-unital@{$\mathsf{is\usc{}unital}$}!is a proposition}
 \end{lem}
 
 \begin{proof}
@@ -42,24 +42,24 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \end{proof}
 
 \begin{defn}
-  Let $G$ be a unital semi-group. We say that $G$ has inverses if it comes equipped with an operation $x\mapsto x^{-1}$ of type $G\to G$, satisfying the left and right inverse laws
+  Let $G$ be a unital semi-group. We say that $G$ \define{has inverses}\index{unital semi-group!has inverses}\index{semi-group!has inverses} if it comes equipped with an operation $x\mapsto x^{-1}$ of type $G\to G$, satisfying the left and right inverse laws\index{inverse laws!for a group}
   \begin{align*}
     \mathsf{left\usc{}inv}_G : \prd{x:G}\mu_G(x^{-1},x)=e_G \\
     \mathsf{right\usc{}inv}_G : \prd{x:G}\mu_G(x,x^{-1}) = e_G.
   \end{align*}
-  We write $\mathsf{is\usc{}group}'(G,e)$ for the type of such triples $((\blank)^{-1},\mathsf{left\usc{}inv}_G,\mathsf{right\usc{}inv}_G)$, and we write
+  We write $\mathsf{is\usc{}group}'(G,e)$\index{is-group'@{$\mathsf{is\usc{}group}'$}} for the type of such triples $((\blank)^{-1},\mathsf{left\usc{}inv}_G,\mathsf{right\usc{}inv}_G)$, and we write\index{is-group@{$\mathsf{is\usc{}group}$}}
   \begin{equation*}
     \mathsf{is\usc{}group}(G)\defeq\sm{e:\mathsf{is\usc{}unital}(G)}\mathsf{is\usc{}group}'(G,e)
   \end{equation*}
-  A \define{group} is a unital semi-group with inverses. We write $\mathsf{Group}$ for the type of all groups.
+  A \define{group}\index{group} is a unital semi-group with inverses. We write $\mathsf{Group}$\index{Group@{$\mathsf{Group}$}} for the type of all groups in $\UU$.
 \end{defn}
 
 \begin{lem}
-  For any semi-group $G$ the type $\mathsf{is\usc{}group}(G)$ is a proposition.
+  For any semi-group $G$ the type $\mathsf{is\usc{}group}(G)$ is a proposition.\index{is-group@{$\mathsf{is\usc{}group}$}!is a proposition}
 \end{lem}
 
 \begin{proof}
-  We have already seen that the type $\mathsf{is\usc{}unital}(G)$ is a proposition. Therefore it suffices to show that the type $\mathsf{is\usc{}group}'(G,e)$ is a proposition for any $e:\mathsf{is\usc{}unital}(G)$.
+  We have already seen that the type $\mathsf{is\usc{}unital}(G)$ is a proposition. Therefore it suffices to show that the type $\mathsf{is\usc{}group}'(G,e)$ is a proposition\index{is-group'@{$\mathsf{is\usc{}group}'$}!is a proposition} for any $e:\mathsf{is\usc{}unital}(G)$.
 
   Since a semi-group $G$ is assumed to be a set, we note that the types of the inverse laws are propositions. Therefore it suffices to show that any two inverse operations satisfying the inverse laws are homotopic.
 
@@ -75,7 +75,7 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \end{proof}
 
 \begin{eg}
-  An important class of examples consists of \define{loop spaces}\index{loop space|textbf} $x=x$ of a $1$-type $X$, for any $x:X$. 
+  An important class of examples consists of \define{loop spaces}\index{loop space!of 1-type is a group@{of $1$-type is a group}}\index{group!loop space of 1-type@{loop space of $1$-type}} $x=x$ of a $1$-type $X$, for any $x:X$. 
   We will write $\loopspace{X,x}$ for the loop space of $X$ at $x$. 
   Since $X$ is assumed to be a $1$-type, it follows that the type $\loopspace{X,x}$ is a set. Then we have
   \begin{align*}
@@ -89,17 +89,17 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \end{eg}
 
 \begin{eg}
-  The type $\Z$ of integers\index{Z@{$\Z$}!is a group} can be given the structure of a group, with the group operation being addition. The fact that $\Z$ is a set follows from \cref{thm:eq_nat,ex:set_coprod}. The group laws were shown in \cref{ex:int_group_laws}. 
+  The type $\Z$ of integers\index{Z@{$\Z$}!is a group}\index{group!Z@{$\Z$}} can be given the structure of a group, with the group operation being addition. The fact that $\Z$ is a set follows from \cref{thm:eq_nat,ex:set_coprod}. The group laws were shown in \cref{ex:int_group_laws}. 
 \end{eg}
 
 \begin{eg}
-  Our last class of examples consists of the \define{automorphism groups} on sets. Given a set $X$, we define
+  Our last class of examples consists of the \define{automorphism groups}\index{automorphism group}\index{group!automorphism group of set} on sets. Given a set $X$, we define\index{Aut@{$\mathsf{Aut}$}}
   \begin{equation*}
     \mathsf{Aut}(X)\defeq (X\simeq X).
   \end{equation*}
   The group operation of $\mathsf{Aut}(X)$ is just composition of equivalences, and the unit of the group is the identity function. Note however, that although function composition is strictly associative and satisfies the unit laws strictly, composition of equivalences only satisfies the group laws up to identification because the proof that composites are equivalences is carried along.
 
-  Important special cases of the automorphism groups are the symmetry groups
+  Important special cases of the automorphism groups are the \define{symmetric groups}\index{symmetric groups}\index{Sn@{$\mathcal{S}_n$}}\index{group!Sn@{$\mathcal{S}_n$}}
   \begin{equation*}
     \mathcal{S}_n\defeq \mathsf{Aut}(\mathsf{Fin}(n)).
   \end{equation*}
@@ -108,11 +108,11 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \subsection{Homomorphisms of semi-groups and groups}
 
 \begin{defn}
-  Let $G$ and $H$ be semi-groups. A homomorphism $f:G\to H$ of semi-groups is a pair $(f,\mu_f)$ consisting of a function $f:G\to H$ between their underlying types, and a term
+  Let $G$ and $H$ be semi-groups. A \define{homomorphism}\define{homomorphism!of semi-groups}\index{semi-group!homomorphism} of semi-groups from $G$ to $H$ is a pair $(f,\mu_f)$ consisting of a function $f:G\to H$ between their underlying types, and a term
   \begin{equation*}
     \mu_f:\prd{x,y:G} f(\mu_G(x,y))=\mu_H(f(x),f(y))
   \end{equation*}
-  witnessing that $f$ preserves the binary operation of $G$. We will write
+  witnessing that $f$ preserves the binary operation of $G$. We will write\index{hom(G,H) for semi-groups@{$\mathsf{hom}(G,H)$ for semi-groups}}
   \begin{equation*}
     \mathsf{hom}(G,H)
   \end{equation*}
@@ -124,12 +124,12 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \end{rmk}
 
 \begin{rmk}
-  The \define{identity homomorphism} on a semi-group $G$ is defined to be the pair consisting of
+  The \define{identity homomorphism}\index{identity homomorphism!of semi-groups} on a semi-group $G$ is defined to be the pair consisting of
   \begin{align*}
     \idfunc & : G \to G \\
     \lam{x}{y}\refl{xy} & : \prd{x,y:G} xy = xy.
   \end{align*}
-  Let $f:G\to H$ and $g:H\to K$ be semi-group homomorphisms. Then the composite function $g\circ f:G\to K$ is also a semi-group homomorphism, since we have the identifications
+  Let $f:G\to H$ and $g:H\to K$ be semi-group homomorphisms. Then the composite function $g\circ f:G\to K$ is also a semi-group homomorphism\index{composition!of semi-group homomorphisms}, since we have the identifications
   \begin{equation*}
     \begin{tikzcd}
       g(f(xy)) \arrow[r,equals] & g(f(x)f(y)) \arrow[r,equals] & g(f(x))g(f(y)).
@@ -145,7 +145,7 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \end{rmk}
 
 \begin{defn}
-  A homomorphism $f:G\to H$ of groups is defined to be a semi-group homomorphism between their underlying semi-groups. We will write
+  Let $G$ and $H$ be groups. A \define{homomorphism}\index{homomorphism!of groups}\index{group!homomorphism} of groups from $G$ to $H$ is defined to be a semi-group homomorphism between their underlying semi-groups. We will write\index{hom(G,H) for groups@{$\mathsf{hom}(G,H)$ for groups}}
   \begin{equation*}
     \mathsf{hom}(G,H)
   \end{equation*}
@@ -153,7 +153,7 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \end{defn}
 
 \begin{rmk}
-  Since a group homomorphism is just a semi-group homomorphism between the underlying semi-groups, we immediately obtain the identity homomorphism, composition, and the category laws are satisfied.
+  Since a group homomorphism is just a semi-group homomorphism between the underlying semi-groups, we immediately obtain the identity homomorphism\index{identity homomorphism!for groups}, composition\index{composition!of group homomorphisms}, and the category laws are satisfied.
 \end{rmk}
 
 \subsection{Isomorphic semi-groups are equal}
@@ -381,4 +381,5 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
     f(x^{-1}) & = f(x)^{-1}.
   \end{align*}
 \item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.
+\item Construct the category of posets.
 \end{exercises}
