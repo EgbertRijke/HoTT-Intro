@@ -958,3 +958,29 @@ right-zero-law-join X =
     ( unit)
     ( pair (inr-join X unit) (is-equiv-inr-join-unit X))
     ( is-contr-unit)
+
+unit-pt : UU-pt lzero
+unit-pt = pair unit star
+
+is-contr-pt :
+  {l : Level} → UU-pt l → UU l
+is-contr-pt A = is-contr (pr1 A)
+
+-- Exercise 16.2
+
+ev-disjunction :
+  {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
+  ((type-Prop P) * (type-Prop Q) → (type-Prop R)) →
+  (type-Prop P → type-Prop R) × (type-Prop Q → type-Prop R)
+ev-disjunction P Q R f =
+  pair
+    ( f ∘ (inl-join (type-Prop P) (type-Prop Q)))
+    ( f ∘ (inr-join (type-Prop P) (type-Prop Q)))
+
+comparison-ev-disjunction :
+  {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
+  cocone-join (type-Prop P) (type-Prop Q) (type-Prop R)
+
+universal-property-disjunction-join-prop :
+  {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
+  is-equiv (ev-disjunction P Q R)

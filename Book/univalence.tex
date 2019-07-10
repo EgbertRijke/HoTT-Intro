@@ -2,19 +2,19 @@
 
 \subsection{Equivalent forms of the univalence axiom}
 
-The univalence axiom characterizes the identity type of the universe. Roughly speaking, it asserts that equivalent types are equal. It is considered to be an \emph{extensionality principle}\index{extensionality principle!types} for types. In the following theorem we introduce the univalence axiom and give two more equivalent ways of stating this.
+The univalence axiom characterizes the identity type of the universe. Roughly speaking, it asserts that equivalent types are equal. It is considered to be an \emph{extensionality principle}\index{extensionality principle!for types} for types.
 
 \begin{defn}
-  The \define{univalence axiom}\index{univalence axiom|textbf} on a universe $\UU$ is the statement that for any $A:\UU$ the family of maps\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}|textbf}
+  The \define{univalence axiom}\index{univalence axiom} on a universe $\UU$ is the statement that for any $A:\UU$ the family of maps\index{equiv-eq@{$\mathsf{equiv\usc{}eq}$}}
 \begin{equation*}
-\mathsf{equiv\usc{}eq}\defeq \mathsf{path\usc{}ind}_A(\idfunc[A]) : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
+\mathsf{equiv\usc{}eq} : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
 \end{equation*}
-is a family of equivalences.\index{identity type!universe} A universe satisfying the univalence axiom is referred to as a \define{univalent universe}. If $\UU$ is a univalent universe we will write
-$\mathsf{eq\usc{}equiv}$\index{eq equiv@{$\mathsf{eq\usc{}equiv}$}|textbf}
+that sends $\refl{A}$ to the identity equivalence $\id:\eqv{A}{A}$ is a family of equivalences.\index{identity type!universe} A universe satisfying the univalence axiom is referred to as a \define{univalent universe}\index{univalent universe}. If $\UU$ is a univalent universe we will write
+$\mathsf{eq\usc{}equiv}$\index{eq-equiv@{$\mathsf{eq\usc{}equiv}$}}
 for the inverse of $\mathsf{equiv\usc{}eq}$.
 \end{defn}
 
-The following theorem is a special case of \cref{thm:id_fundamental}. Subsequently we will assume that any type is contained in a univalent universe.
+The following theorem is a special case of the fundamental theorem of identity types (\cref{thm:id_fundamental})\index{fundamental theorem of identity types}. Subsequently we will assume that any type is contained in a univalent universe.\index{axiom!univalence}
 
 \begin{thm}\label{thm:univalence}
 The following are equivalent:
@@ -25,7 +25,7 @@ The following are equivalent:
 \sm{B:\UU}\eqv{A}{B}
 \end{equation*}
 is contractible for each $A:\UU$.
-\item The principle of \define{equivalence induction}\index{equivalence induction}\index{induction principle!for equivalences}: for every $A:\UU$ and for every type family
+\item The principle of \define{equivalence induction}\index{equivalence induction}\index{induction principle!for equivalences} holds: for every $A:\UU$ and for every type family
 \begin{equation*}
 P:\prd{B:\UU} (\eqv{A}{B})\to \mathsf{Type},
 \end{equation*}
@@ -54,14 +54,13 @@ We will also make use of the following lemma. Note that this statement was also 
   The statement is obvious for the identity equivalence $\idfunc : \eqv{X}{X}$. Therefore the claim follows by equivalence induction, which is by \cref{thm:univalence} one of the equivalent forms of the univalence axiom.
 \end{proof}
 
-\begin{thm}
+\begin{thm}\label{thm:funext-univalence}\index{univalence axiom!implies function extensionality}
   For any universe $\UU$, the univalence axiom on $\UU$ implies function extensionality on $\UU$.
 \end{thm}
 
 \begin{proof}
-Note that \cref{thm:funext_wkfunext} also holds when it is restricted to small types. 
-Therefore it suffices to show that univalence implies the weak principle of function extensionality.
-
+  Note that by \cref{thm:funext_wkfunext}\index{weak function extensionality} it suffices to show that univalence implies weak function extensionality, where we note that \cref{thm:funext_wkfunext} also holds when it is restricted to small types.
+  
 Suppose that $B:A\to \UU$ is a family of contractible types. Our goal is to show that the product $\prd{x:A}B(x)$ is contractible.
 Since each $B(x)$ is contractible, the projection map $\proj 1:\big(\sm{x:A}B(x)\big)\to A$ is an equivalence by \cref{ex:proj_fiber}.
 
@@ -85,7 +84,7 @@ To see that this definition is correct, we need to know that
 \begin{equation*}
   \lam{x}\proj 1(x,f(x))\jdeq \idfunc.
 \end{equation*}
-This is indeed the case, by the $\eta$-rule for $\Pi$-types.
+This is indeed the case, by the $\eta$-rule\index{eta-rule@{$\eta$-rule}} for $\Pi$-types.
 
 Next, we define the function $r$. Let $h:A\to \sm{x:A}B(x)$, and let $p:\proj 1 \circ h = \idfunc$. Then we have the homotopy $H\defeq\mathsf{htpy\usc{}eq}(p):\proj 1 \circ h \htpy \idfunc$. Then we have $\proj 2(h(x)):B(\proj 1(h(x)))$ and we have the identification $H(x):\proj 1(h(x))=x$. Therefore we define $r$ by
 \begin{equation*}
@@ -95,15 +94,15 @@ Next, we define the function $r$. Let $h:A\to \sm{x:A}B(x)$, and let $p:\proj 1 
 We note that if $p\jdeq \refl{\idfunc}$, then $H(x)\jdeq\refl{x}$. In this case we have the judgmental equality $r((h,\refl{}),x)\jdeq\proj 2 (h(x))$. Thus we see that $r\circ i\jdeq \idfunc$ by another application of the $\eta$-rule for $\Pi$-types.
 \end{proof}
 
-\subsection{Propositional extensionality, posets, and subuniverses}
+\subsection{Propositional extensionality and posets}
 
 \begin{thm}\label{thm:propositional-extensionality}
-  Propositions satisfy \define{propositional extensionality}:
-  for any two propositions $P$ and $Q$, the canonical map
+  Propositions satisfy \define{propositional extensionality}\index{propositional extensionality}\index{extensionality principle!for propositions}:
+  for any two propositions $P$ and $Q$, the canonical map\index{bi-implication}\index{iff-eq@{$\mathsf{iff\usc{}eq}$}}
   \begin{equation*}
-    (P=Q)\to (P\leftrightarrow Q)
+    \mathsf{iff\usc{}eq}:(P=Q)\to (P\leftrightarrow Q)
   \end{equation*}
-  is an equivalence. It follows that the type $\prop$ of propositions in $\UU$ is a set.
+  that sends $\refl{P}$ to $(\idfunc,\idfunc)$ is an equivalence. It follows that the type $\prop$ of propositions in $\UU$ is a set.\index{Prop@{$\prop$}!is a set}
 \end{thm}
 
 Note that for any $P:\prop$, we usually also write $P$ for the underlying type of the proposition $P$. If we would be more formal about it we would have to write $\proj 1(P)$ for the underlying type, since $\prop$ is the $\Sigma$-type $\sm{X:\UU}\mathsf{is\usc{}prop}(X)$. In the following proof it is clearer if we use the more formal notation $\proj 1(P)$ for the underlying type of a proposition $P$.
@@ -124,11 +123,11 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
 \end{proof}
 
 \begin{defn}
-  A \define{partially ordered set (poset)} is a set $P$ equipped with a relation
+  A \define{partially ordered set (poset)}\index{partially ordered set|see poset}\index{poset} is a set $P$ equipped with a relation
   \begin{equation*}
     \blank\leq\blank : P \to (P \to \prop)
   \end{equation*}
-  that is \define{reflexive} (for every $x:P$ we have $x\leq x$), \define{transitive} (for every $x,y,z:P$ such that $x\leq y$ and $y\leq z$ we have $x\leq z$), and \define{anti-symmetric} (for every $x,y:P$ such that $x\leq y$ and $y\leq x$ we have $x=y$).
+  that is \define{reflexive}\index{reflexive!poset} (for every $x:P$ we have $x\leq x$), \define{transitive}\index{transitive!poset} (for every $x,y,z:P$ such that $x\leq y$ and $y\leq z$ we have $x\leq z$), and \define{anti-symmetric}\index{anti-symmetric!poset} (for every $x,y:P$ such that $x\leq y$ and $y\leq x$ we have $x=y$).
 \end{defn}
 
 \begin{rmk}
@@ -136,15 +135,15 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
 \end{rmk}
 
 \begin{eg}
-  The type $\prop$ is a poset, where the ordering relation is given by implication: $P$ is less than $Q$ if $P\to Q$. The fact that $P\to Q$ is a proposition is a special case of \cref{cor:funtype_trunc}. The relation $P\to Q$ is reflexive by the identity function, and transitive by function composition. Moreover, the relation $P\to Q$ is anti-symmetric by \cref{thm:propositional-extensionality}.
+  The type $\prop$ is a poset\index{Prop@{$\prop$}!is a poset}, where the ordering relation is given by implication: $P$ is less than $Q$ if $P\to Q$. The fact that $P\to Q$ is a proposition is a special case of \cref{cor:funtype_trunc}. The relation $P\to Q$ is reflexive by the identity function, and transitive by function composition. Moreover, the relation $P\to Q$ is anti-symmetric by \cref{thm:propositional-extensionality}\index{propositional extensionality}.
 \end{eg}
 
 \begin{eg}
-  The type of natural numbers comes equipped with at least two important poset structures. The first is given by the usual ordering relation $\leq$, and the second is given by the relation $d\mid n$ that $d$ divides $n$.
+  The type of natural numbers\index{N@{$\N$}!is a poset with leq@{is a poset with $\leq$}}\index{N@{$\N$}!is a poset with divisibility}\index{poset!N with leq@{$\N$ with $\leq$}}\index{poset!N with divisibility@{$\N$ with divilibility}} comes equipped with at least two important poset structures. The first is given by the usual ordering relation $\leq$, and the second is given by the relation $d\mid n$ that $d$ divides $n$.
 \end{eg}
 
 \begin{thm}
-  For any poset $P$ and any type $X$, the set $P^X$ is a poset. In particular the type of subtypes of any type is a poset.
+  For any poset $P$ and any type $X$, the set $P^X$ is a poset.\index{poset!closed under exponentials} In particular the type of subtypes of any type is a poset.\index{poset!type of subtypes}\index{subtype!poset}
 \end{thm}
 
 \begin{proof}
@@ -159,404 +158,17 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
   Therefore we obtain an identification $f=g$ by function extensionality. The last claim follows immediately from the fact that a subtype of $X$ is a map $X\to\prop$, and the fact that $\prop$ is a poset.
 \end{proof}
 
-Another important application of the univalence axiom is that any subuniverse is closed under equivalences. In this section we let $\UU$ be a univalent universe.
-
-\begin{thm}
-  Let $P:\UU\to\prop$ be a subuniverse of $\UU$. Then we have
-  \begin{equation*}
-    (X\simeq Y)\to (P(X) \to P(Y))
-  \end{equation*}
-  for any two types $X,Y:\UU$.
-\end{thm}
-
-\begin{proof}
-  We define the map $(X\simeq Y)\to (P(X)\to P(Y))$ as the composite
-  \begin{equation*}
-    \begin{tikzcd}
-      (X\simeq Y) \arrow[r,"\mathsf{eq\usc{}equiv}"] &[2em] (X=Y) \arrow[r,"\mathsf{tr}_P"] & (P(X)\to P(Y)).
-    \end{tikzcd}\qedhere
-  \end{equation*}
-\end{proof}
-
-
-\subsection{Groups in univalent mathematics}
-
-In this section we exhibit a typical way to use the univalence axiom, showing that isomorphic groups can be identified.
-This is an instance of the \emph{structure identity principle}\index{structure identity principle}, which is described in more detail in section 9.8 of \cite{hottbook}.
-We will see that in order to establish the fact that isomorphic groups can be identified, it has to be part of the definition of a group that its underlying type is a set. This is an important observation: in many branches of algebra the objects of study are \emph{set-level} structures\footnote{A notable exception is that of categories, which are objects at truncation level $1$, i.e., at the level of \emph{groupoids}. For more on this, see Chapter 9 of \cite{hottbook}.}.
-
-\subsubsection{Semi-groups and groups}
-We introduce the type of groups in two stages: first we introduce the type of \emph{semi-groups}, and then we introduce groups as semi-groups that possess further structure. It will turn out that this further structure is in fact a property, and this fact will help us to prove that isomorphic grous are equal.
-
-\begin{defn}
-  A \define{semi-group} consists of a set $G$ and an associative binary operation on $G$, i.e., a binary function
-  \begin{equation*}
-    \mu_G : G \to (G \to G)
-  \end{equation*}
-  equipped with a homotopy
-  \begin{equation*}
-    \mathsf{assoc}_G : \prd{x,y.z:G}\mu_G(\mu_G(x,y),z)=\mu_G(x,\mu_G(y,z)).
-  \end{equation*}
-  We write $\mathsf{Semi\usc{}Group}$ for the type of all semi-groups.
-\end{defn}
-
-\begin{defn}
-  A semi-group $G$ is said to be \define{unital} if it comes equipped with a \define{unit} $e_G:G$ that satisfies the left and right unit laws
-  \begin{align*}
-    \mathsf{left\usc{}unit}_G : \prd{y:G}\mu_G(e_G,y)=y \\
-    \mathsf{right\usc{}unit}_G : \prd{x:G}\mu_G(x,e_G)=x.
-  \end{align*}
-  We write $\mathsf{is\usc{}unital}(G)$ for the type of such triples $(e_G,\mathsf{left\usc{}unit}_G,\mathsf{right\usc{}unit}_G)$. Unital semi-groups are also called \define{monoids}.
-\end{defn}
-
-The unit of a semi-group is of course unique once it exists. In univalent mathematics we express this fact by asserting that the type $\mathsf{is\usc{}unital}(G)$ is a proposition for each semi-group $G$. In other words, being unital is a \emph{property} of semi-groups rather than structure on it. This is typical for univalent mathematics: we express that a structure is a property by proving that this structure is a proposition.
-
-\begin{lem}
-  For a semi-group $G$ the type $\mathsf{is\usc{}unital}(G)$ is a proposition.
-\end{lem}
-
-\begin{proof}
-  Let $G$ be a semi-group. Note that since $G$ is a set, it follows that the types of the left and right unit laws are propositions. Therefore it suffices to show that any two terms $e,e':G$ satisfying the left and right unit laws can be identified. This is easy:
-  \begin{equation*}
-    e = \mu_G(e,e') = e'.\qedhere
-  \end{equation*}
-\end{proof}
-
-\begin{defn}
-  Let $G$ be a unital semi-group. We say that $G$ has inverses if it comes equipped with an operation $x\mapsto x^{-1}$ of type $G\to G$, satisfying the left and right inverse laws
-  \begin{align*}
-    \mathsf{left\usc{}inv}_G : \prd{x:G}\mu_G(x^{-1},x)=e_G \\
-    \mathsf{right\usc{}inv}_G : \prd{x:G}\mu_G(x,x^{-1}) = e_G.
-  \end{align*}
-  We write $\mathsf{is\usc{}group}'(G,e)$ for the type of such triples $((\blank)^{-1},\mathsf{left\usc{}inv}_G,\mathsf{right\usc{}inv}_G)$, and we write
-  \begin{equation*}
-    \mathsf{is\usc{}group}(G)\defeq\sm{e:\mathsf{is\usc{}unital}(G)}\mathsf{is\usc{}group}'(G,e)
-  \end{equation*}
-  A \define{group} is a unital semi-group with inverses. We write $\mathsf{Group}$ for the type of all groups.
-\end{defn}
-
-\begin{lem}
-  For any semi-group $G$ the type $\mathsf{is\usc{}group}(G)$ is a proposition.
-\end{lem}
-
-\begin{proof}
-  We have already seen that the type $\mathsf{is\usc{}unital}(G)$ is a proposition. Therefore it suffices to show that the type $\mathsf{is\usc{}group}'(G,e)$ is a proposition for any $e:\mathsf{is\usc{}unital}(G)$.
-
-  Since a semi-group $G$ is assumed to be a set, we note that the types of the inverse laws are propositions. Therefore it suffices to show that any two inverse operations satisfying the inverse laws are homotopic.
-
-  Let $x\mapsto x^{-1}$ and $x\mapsto \bar{x}^{-1}$ be two inverse operations on a unital semi-group $G$, both satisfying the inverse laws. Then we have the following identifications
-  \begin{align*}
-    x^{-1} & = \mu_G(e_G,x^{-1}) \\
-    & = \mu_G(\mu_G(\bar{x}^{-1},x),x^{-1}) \\
-    & = \mu_G(\bar{x}^{-1},\mu_G(x,x^{-1})) \\
-    & = \mu_G(\bar{x}^{-1},e_G) \\
-    & = \bar{x}^{-1}
-  \end{align*}
-  for any $x:G$. Thus the two inverses of $x$ are the same, so the claim follows.
-\end{proof}
-
-\begin{eg}
-  An important class of examples consists of \define{loop spaces}\index{loop space|textbf} $x=x$ of a $1$-type $X$, for any $x:X$. 
-  We will write $\loopspace{X,x}$ for the loop space of $X$ at $x$. 
-  Since $X$ is assumed to be a $1$-type, it follows that the type $\loopspace{X,x}$ is a set. Then we have
-  \begin{align*}
-    \refl{x} & : \loopspace{X,x} \\
-    \mathsf{inv} & : \loopspace{X,x} \to \loopspace{X,x} \\
-    \mathsf{concat} & : \loopspace{X,x} \to (\loopspace{X,x}\to \loopspace{X,x}),
-  \end{align*}
-  and these operations satisfy the group laws, since the group laws are just a special case of the groupoid laws for identity types, constructed in \cref{sec:groupoid}.
-  
-  Using higher inductive types we will show in \cref{chap:image} that \emph{every} group is of this form.
-\end{eg}
-
-\begin{eg}
-  The type $\Z$ of integers\index{Z@{$\Z$}!is a group} can be given the structure of a group, with the group operation being addition. The fact that $\Z$ is a set follows from \cref{thm:eq_nat,ex:set_coprod}. The group laws were shown in \cref{ex:int_group_laws}. 
-\end{eg}
-
-\begin{eg}
-  Our last class of examples consists of the \define{automorphism groups} on sets. Given a set $X$, we define
-  \begin{equation*}
-    \mathsf{Aut}(X)\defeq (X\simeq X).
-  \end{equation*}
-  The group operation of $\mathsf{Aut}(X)$ is just composition of equivalences, and the unit of the group is the identity function. Note however, that although function composition is strictly associative and satisfies the unit laws strictly, composition of equivalences only satisfies the group laws up to identification because the proof that composites are equivalences is carried along.
-
-  Important special cases of the automorphism groups are the symmetry groups
-  \begin{equation*}
-    \mathcal{S}_n\defeq \mathsf{Aut}(\mathsf{Fin}(n)).
-  \end{equation*}
-\end{eg}
-
-\subsubsection{Homomorphisms of semi-groups and groups}
-
-\begin{defn}
-  Let $G$ and $H$ be semi-groups. A homomorphism $f:G\to H$ of semi-groups is a pair $(f,\mu_f)$ consisting of a function $f:G\to H$ between their underlying types, and a term
-  \begin{equation*}
-    \mu_f:\prd{x,y:G} f(\mu_G(x,y))=\mu_H(f(x),f(y))
-  \end{equation*}
-  witnessing that $f$ preserves the binary operation of $G$. We will write
-  \begin{equation*}
-    \mathsf{hom}(G,H)
-  \end{equation*}
-  for the type of all semi-group homomorphisms from $G$ to $H$.
-\end{defn}
-
-\begin{rmk}\label{rmk:is-set-hom-semi-group}
-  Since it is a property for a function to preserve the multiplication of a semi-group, it follows easily that equality of semi-group homomorphisms is equivalent to the type of homotopies between their underlying functions. In particular, it follows that the type of homomorphisms of semi-groups is a set.
-\end{rmk}
-
-\begin{rmk}
-  The \define{identity homomorphism} on a semi-group $G$ is defined to be the pair consisting of
-  \begin{align*}
-    \idfunc & : G \to G \\
-    \lam{x}{y}\refl{xy} & : \prd{x,y:G} xy = xy.
-  \end{align*}
-  Let $f:G\to H$ and $g:H\to K$ be semi-group homomorphisms. Then the composite function $g\circ f:G\to K$ is also a semi-group homomorphism, since we have the identifications
-  \begin{equation*}
-    \begin{tikzcd}
-      g(f(xy)) \arrow[r,equals] & g(f(x)f(y)) \arrow[r,equals] & g(f(x))g(f(y)).
-    \end{tikzcd}
-  \end{equation*}
-  Since the identity type of semi-group homomorphisms is equivalent to the type of homotopies between semi-group homomorphisms it is easy to see that semi-group homomorphisms satisfy the laws of a category, i.e., that we have the identifications
-  \begin{align*}
-    \idfunc\circ f & = f \\
-    g\circ \idfunc & = g \\
-    (h\circ g) \circ f & = h \circ (g \circ f)
-  \end{align*}
-  for any composable semi-group homomorphisms $f$, $g$, and $h$. Note, however that these equalities are not expected to hold judgmentally, since preservation of the semi-group operation is part of the data of a semi-group homomorphism.
-\end{rmk}
-
-\begin{defn}
-  A homomorphism $f:G\to H$ of groups is defined to be a semi-group homomorphism between their underlying semi-groups. We will write
-  \begin{equation*}
-    \mathsf{hom}(G,H)
-  \end{equation*}
-  for the type of all group homomorphisms from $G$ to $H$.
-\end{defn}
-
-\begin{rmk}
-  Since a group homomorphism is just a semi-group homomorphism between the underlying semi-groups, we immediately obtain the identity homomorphism, composition, and the category laws are satisfied.
-\end{rmk}
-
-\subsubsection{Isomorphic semi-groups are equal}
-
-\begin{defn}
-Let $h:\mathrm{hom}(\mathcal{G},\mathcal{H})$ be a group homomorphism. Then $h$ is said to be an \define{isomorphism}\index{group homomorphism!isomorphism}\index{isomorphism!of groups} if there is a group homomorphism $h^{-1}:\mathrm{hom}(\mathcal{H},\mathcal{G})$ such that
-\begin{equation*}
-h^{-1}\circ h=\idfunc[\mathcal{G}]\qquad\text{and}\qquad h\circ h^{-1}=\idfunc[\mathcal{H}].
-\end{equation*}
-We write $\mathcal{G}\cong\mathcal{H}$ for the type of all group isomorphisms from $\mathcal{G}$ to $\mathcal{H}$, i.e.,
-\begin{equation*}
-\mathcal{G}\cong\mathcal{H} \defeq \sm{h:\mathrm{hom}(\mathcal{G},\mathcal{H})}{k:\mathrm{hom}(\mathcal{H},\mathcal{G})} (k\circ h = \idfunc[\mathcal{G}])\times (h\circ k=\idfunc[\mathcal{H}]).
-\end{equation*}
-\end{defn}
-
-If $f$ is an isomorphism, then its inverse is unique. In other words, being an isomorphism is a property.
-
-\begin{lem}
-  For any semi-group homomorphism $h:\mathsf{hom}(G,H)$, the type
-  \begin{equation*}
-    \mathsf{is\usc{}iso}(h)
-  \end{equation*}
-  is a proposition. It follows that the type $G\cong H$ is a set for any two semi-groups $G$ and $H$.
-\end{lem}
-
-\begin{proof}
-  Let $k$ and $k'$ be two inverses of $h$. In \cref{rmk:is-set-hom-semi-group} we have observed that the type of semi-group homomorphisms between any two semi-groups is a set. Therefore it follows that the types $h\circ k=\idfunc$ and $k\circ h=\idfunc$ are propositions, so it suffices to check that $k=k'$. In \cref{rmk:is-set-hom-semi-group} we also observed that the equality type $k=k'$ is equivalent to the type of homotopies $k\htpy k'$ between their underlying functions. We construct a homotopy $k\htpy k'$ by the usual argument:
-  \begin{equation*}
-    \begin{tikzcd}
-      k(y) \arrow[r,equals] & k(h(k'(y)) \arrow[r,equals] & k'(y).
-    \end{tikzcd}\qedhere
-  \end{equation*}
-\end{proof}
-
-\begin{lem}\label{lem:grp_iso}
-  A semi-group homomorphism $h:\mathsf{hom}(G,H)$ is an isomorphism if and only if its underlying map is an equivalence. Consequently, there is an equivalence
-  \begin{equation*}
-    (G\cong H)\simeq \sm{e:G\simeq H}\prd{x,y:G}e(\mu_G(x,y))=\mu_H(e(x),e(y))
-  \end{equation*}
-\end{lem}
-
-\begin{proof}
-  If $h:\mathsf{hom}(G,H)$ is an isomorphism, then the inverse semi-group homomorphism also provides an inverse of the underlying map of $h$. Thus we obtain that $h$ is an equivalence. The standard proof showing that if the underlying map $f:G\to H$ of a group homomorphism is invertible then its inverse is again a group homomorphism also works in type theory.
-\end{proof}
-
-\begin{defn}
-Let $\mathcal{G}$ and $\mathcal{H}$ be a semi-groups. We define the map\index{iso_eq@{$\mathsf{iso\usc{}eq}$}|textbf}
-\begin{equation*}
-\mathsf{iso\usc{}eq} : (\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
-\end{equation*}
-by path induction, taking $\refl{\mathcal{G}}$ to isomorphism $\idfunc[\mathcal{G}]$.
-\end{defn}
-
-\begin{thm}\label{thm:iso-eq-semi-group}
-The map
-\begin{equation*}
-\mathsf{iso\usc{}eq} : (\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
-\end{equation*}
-is an equivalence for any two semi-groups $\mathcal{G}$ and $\mathcal{H}$.
-\end{thm}
-
-\begin{proof}
-By \cref{thm:id_fundamental} it suffices to show that the total space
-\begin{equation*}
-\sm{\mathcal{G}':\mathsf{Semi\usc{}Grp}}\mathcal{G}\cong\mathcal{G}'
-\end{equation*}
-is contractible. Since the type of isomorphisms from $\mathcal{G}$ to $\mathcal{G}'$ is equivalent to the type of equivalences from $\mathcal{G}$ to $\mathcal{G}'$ it suffices to show that the type
-\begin{equation*}
-  \sm{\mathcal{G}':\mathsf{Semi\usc{}Grp}}\sm{e:\eqv{G}{G'}}\prd{x,y:G}e(\mu_G(x,y))=\mu_{G'}(e(x),e(y)))
-\end{equation*}
-is contractible\footnote{In order to show that a type of the form
-  \begin{equation*}
-    \sm{(x,y):\sm{x:A}B(x)}\sm{z:C(x)}D(x,y,z)
-  \end{equation*}
-  is contractible, a useful strategy is to first show that the type $\sm{x:A}C(x)$ is contractible. Once this is established, say with center of contraction $(x_0,z_0)$, it suffices to show that the type $\sm{y:B(x_0)}D(x_0,y,z_0)$ is contractible.}. Since $\mathsf{Semi\usc{}Grp}$ is the $\Sigma$-type
-\begin{equation*}
-  \sm{G':\mathsf{Set}}\mathsf{has\usc{}associative\usc{}mul}(G'),
-\end{equation*}
-it suffices to show that the types
-\begin{align*}
-  & \sm{G':\mathsf{Set}}\eqv{G}{G'} \\
-  & \sm{\mu':\mathsf{has\usc{}associative\usc{}mul}(G)}\prd{x,y:G}\mu_G(x,y)=\mu'(x,y)
-\end{align*}
-is contractible. The first type is contractible by the univalence axiom. The second type is contractible by function extensionality.
-\end{proof}
-
-\begin{cor}
-The type $\mathsf{Semi\usc{}Grp}$ is a $1$-type.\index{Semi-Grp@{$\mathsf{Semi-Grp}$}!is a $1$-type|textit}
-\end{cor}
-
-\begin{proof}
-It is straightforward to see that the type of group isomorphisms $\mathcal{G}\cong\mathcal{H}$ is a set, for any two groups $\mathcal{G}$ and $\mathcal{H}$.
-\end{proof}
-
-\subsubsection{Isomorphic groups are equal}
-
-Analogously to the map $\mathsf{iso\usc{}eq}$ of semi-groups, we have a map $\mathsf{iso\usc{}eq}$ of groups. Note, however, that the domain of this map is now the identity type $G=H$ of the \emph{groups} $G$ and $H$, so the maps $\mathsf{iso\usc{}eq}$ of semi-groups and groups are not exactly the same maps.
-
-\begin{defn}
-  Let $G$ and $H$ be groups. We define the map
-  \begin{equation*}
-    \mathsf{iso\usc{}eq} : (G=H)\to (G\cong H)
-  \end{equation*}
-  by path induction, taking $\refl{G}$ to the identity isomorphism $\idfunc:G\cong G$.
-\end{defn}
-
-\begin{thm}
-  For any two groups $G$ and $H$, the map
-  \begin{equation*}
-    \mathsf{iso\usc{}eq}:(G=H)\to (G\cong H)
-  \end{equation*}
-  is an equivalence.
-\end{thm}
-
-\begin{proof}
-  Let $G$ and $H$ be groups, and write $UG$ and $UH$ for their underlying semi-groups, respectively. Then we have a commuting triangle
-  \begin{equation*}
-    \begin{tikzcd}
-      (G=H) \arrow[rr,"\apfunc{\proj 1}"] \arrow[dr,swap,"\mathsf{iso\usc{}eq}"] & & (UG=UH) \arrow[dl,"\mathsf{iso\usc{}eq}"] \\
-      & (G\cong H)
-    \end{tikzcd}
-  \end{equation*}
-  Since being a group is a property of semi-groups it follows that the projection map $\mathsf{Grp}\to\mathsf{Semi\usc{}Grp}$ forgetting the unit and inverses, is an embedding. Thus the top map in this triangle is an equivalence. The map on the right is an equivalence by \cref{thm:iso-eq-semi-group}, so the claim follows by the 3-for-2 property.
-\end{proof}
-
-\begin{cor}
-  The type of groups is a $1$-type.
-\end{cor}
-
-\subsection{Categories in univalent mathematics}
-
-In our proof of the fact that isomorphic groups are equal we have made extensive use of the notion of group homomorphism. What we have shown, in fact, is that there is a category of groups which is \emph{Rezk complete} in the sense that the type of isomorphisms between two objects is equivalent to the type of identifications between those objects. In this final section we briefly introduce the notion of Rezk complete category. There are many more examples of categories, such as the categories of rings, or modules over a ring.
-
-\begin{defn}
-  A \define{pre-category} $\mathcal{C}$ consists of
-  \begin{enumerate}
-  \item A type $A$ of \define{objects}.
-  \item For every two objects $x,y:A$ a set
-    \begin{equation*}
-      \mathsf{hom}(x,y)
-    \end{equation*}
-    of \define{morphisms} from $x$ to $y$.
-  \item For every object $x:A$ an \define{identity morphism}
-    \begin{equation*}
-      \idfunc : \mathsf{hom}(x,x)
-    \end{equation*}
-  \item For every two morphisms $f:\mathsf{hom}(x,y)$ and $g:\mathsf{hom}(y,z)$, a morphism
-    \begin{equation*}
-      g\circ f :\mathsf{hom}(x,z)
-    \end{equation*}
-    called the \define{composite} of $f$ and $g$.
-  \item the following terms
-    \begin{align*}
-      \mathsf{left\usc{}unit}_{\mathcal{C}} & : \idfunc \circ f = f \\
-      \mathsf{right\usc{}unit}_{\mathcal{C}} & : g \circ \idfunc = g \\
-      \mathsf{assoc}_{\mathcal{C}} & : (h \circ g) \circ f = h \circ (g \circ f)
-    \end{align*}
-    witnessing that the category laws are satisfied.
-  \end{enumerate}
-\end{defn}
-
-\begin{eg}
-  By \cref{rmk:category-semi-group,rmk:category-group} we have pre-categories of semi-groups and of groups.
-\end{eg}
-
-\begin{eg}
-  A pre-category satisfying the condition that every hom-set is a proposition is a \define{preorder}. 
-\end{eg}
-
-\begin{defn}
-  Given a pre-category $\mathcal{C}$, a morphism $f:\mathsf{hom}(x,y)$ is said to be an \define{isomorphism} if there exists a morphism $g:\mathsf{hom}(y,x)$ such that
-  \begin{align*}
-    g\circ f & = \idfunc \\
-    f \circ g & \idfunc.
-  \end{align*}
-  We will write $\mathsf{iso}(x,y)$ for the type of all isomorphisms in $\mathcal{C}$ from $x$ to $y$.
-\end{defn}
-
-\begin{rmk}
-  Just as in the case for semi-groups and groups, the condition that $f:\mathsf{hom}(x,y)$ is an isomorphism is a property of $f$.
-\end{rmk}
-
-\begin{defn}
-  A pre-category $\mathcal{C}$ is said to be \define{Rezk-complete} if the canonical map
-  \begin{equation*}
-    (x=y)\to \mathsf{iso}(x,y)
-  \end{equation*}
-  is an equivalence for any two objects $x$ and $y$ of $\mathcal{C}$. Rezk-complete pre-categories are also called \define{categories}.
-\end{defn}
-
-\begin{eg}
-  The pre-category of sets is Rezk complete by the univalence axiom, so it is a category.
-\end{eg}
-
-\begin{eg}
-  The pre-categories of semi-groups and groups are Rezk-complete. Therefore they form categories.
-\end{eg}
-
-\begin{eg}
-  A pre-order is Rezk-complete if and only if it is anti-symmetric. In other words, a poset is precisely a category for which all the hom-sets are propositions. Thus, we see that the anti-symmetry axiom can be seen as a univalence axiom for pre-orders.
-\end{eg}
-
 \begin{exercises}
-\item Let $X$ be a set. Show that the map
-  \begin{equation*}
-    \mathsf{equiv\usc{}eq} : (X=X)\to (\eqv{X}{X})
-  \end{equation*}
-  is a group isomorphism.
-%\item \label{ex:tr_ap} Show that for any $P:X\to \UU$ and any $p:x=y$ in $X$, we have\index{equiv_eq@{$\mathsf{equiv\usc{}eq}$}}\index{transport}
-%\begin{equation*}
-%\mathsf{equiv\usc{}eq}(\ap{P}{p})\htpy \mathsf{tr}_P(p).
-%\end{equation*}
 \item \label{ex:istrunc_UUtrunc}
 \begin{subexenum}
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.\index{universe!of contractible types}
 \item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.\index{equiv@{$\eqv{A}{B}$}!truncatedness}
-\item Use univalence to show that the universe of $k$-types\index{universe!of k-types@{of $k$-types}}\index{U leq k@{$\UU^{\leq k}$}|textbf}
+\item Use univalence to show that the universe of $k$-types\index{universe!of k-types@{of $k$-types}}\index{U leq k@{$\UU^{\leq k}$}}\index{k-type@{$k$-type}!universe of k-types@{universe of $k$-types}}\index{truncated!universe of k-types@{universe of $k$-types}}
 \begin{equation*}
 \UU^{\leq k}\defeq \sm{X:\UU}\mathsf{is\usc{}trunc}_k(X)
 \end{equation*}
 is a $(k+1)$-type, for any $k\geq -2$.
-\item It follows that the universe of propositions $\UU^{\leq-1}$ is a set. However, show that $\UU^{\leq-1}$ is not a proposition.\index{universe!of propositions}
+\item Show that $\UU^{\leq-1}$ is not a proposition.\index{universe!of propositions}
 \item Show that $\eqv{(\eqv{\bool}{\bool})}{\bool}$, and conclude by the univalence axiom that the universe of sets\index{universe!of sets} $\UU^{\leq 0}$ is not a set. 
 \end{subexenum}
 \item Use the univalence axiom to show that the type $\sm{P:\prop}P$ is contractible.
@@ -566,11 +178,11 @@ is a $(k+1)$-type, for any $k\geq -2$.
 \begin{equation*}
 \eqv{(A\to (B\to\UU))}{\Big(\sm{S:\UU} (S\to A)\times (S\to B)\Big)}
 \end{equation*}
-\item We say that a relation $R:A\to (B\to\UU)$ is \define{functional}\index{relation!functional} if it comes equipped with a term of type\index{is_function(R)@{$\mathsf{is\usc{}function}(R)$}|textbf}
+\item We say that a relation $R:A\to (B\to\UU)$ is \define{functional}\index{relation!functional} if it comes equipped with a term of type\index{is_function(R)@{$\mathsf{is\usc{}function}(R)$}}
 \begin{equation*}
 \mathsf{is\usc{}function}(R) \defeq \prd{x:A}\iscontr\Big(\sm{y:B}R(x,y)\Big)
 \end{equation*}
-For any function $f:A\to B$, show that the \define{graph}\index{graph!of a function|textbf} of $f$ 
+For any function $f:A\to B$, show that the \define{graph}\index{graph!of a function} of $f$ 
 \begin{equation*}
 \mathsf{graph}_f:A\to (B\to \UU)
 \end{equation*}
@@ -579,7 +191,7 @@ given by $\mathsf{graph}_f(a,b)\defeq (f(a)=b)$ is a functional relation from $A
 \begin{equation*}
 \eqv{\Big(\sm{R:A\to (B\to\UU)}\mathsf{is\usc{}function}(R)\Big)}{(A\to B)}
 \end{equation*}
-\item Given a relation $R:A\to (B\to \UU)$ we define the \define{opposite relation}\index{relation!opposite relation|textbf}\index{opposite relation|textbf}\index{op R@{$R^{\mathsf{op}}$}|textbf}
+\item Given a relation $R:A\to (B\to \UU)$ we define the \define{opposite relation}\index{relation!opposite relation}\index{opposite relation}\index{op R@{$R^{\mathsf{op}}$}}
 \begin{equation*}
 R^{\mathsf{op}} : B\to (A\to\UU)
 \end{equation*}
@@ -590,30 +202,29 @@ by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{equiv@{$\
 \end{subexenum}
 \item
   \begin{subexenum}
-  \item Show that $\mathsf{is\usc{}decidable}(P)$ is a proposition, for any proposition $P$.
-  \item Show that $\mathsf{classical\usc{}Prop}$ is equivalent to $\bool$.
+  \item Show that $\mathsf{is\usc{}decidable}(P)$ is a proposition\index{is-decidable@{$\mathsf{is\usc{}decidable}$}!is a proposition}, for any proposition $P$.
+  \item Show that $\mathsf{classical\usc{}Prop}$%
+    \index{classical-Prop@{$\mathsf{classical\usc{}Prop}$}!classical-Prop bool@{$\mathsf{classical\usc{}Prop}\eqvsym\bool$}} is equivalent to $\bool$.
   \end{subexenum}
-\item
+\item Recall that $\UU_\ast$ is the universe of pointed types\index{UU*@{$\UU_\ast$}}.
   \begin{subexenum}
-  \item Consider a group $G$. Show that the function
+  \item For any $(A,a)$ and $(B,b)$ in $\UU_\ast$, write $(A,a)\simeq_\ast(B,b)$ for the type of \define{pointed equivalences}\index{pointed equivalence}\index{equivalence!pointed equivalence} from $A$ to $B$, i.e.,
     \begin{equation*}
-      \mu_G:G\to (G\simeq G)
+      (A,a)\simeq_\ast (B,b)\defeq \sm{e:A\simeq B}e(a)=b.
     \end{equation*}
-    is an injective group homomorphism.
-  \item Consider a type $A$. Show that the concatenation function
+    Show that the canonical map\index{UU*@{$\UU_\ast$}!identity type}\index{identity type!UU*@{$\UU_\ast$}}
     \begin{equation*}
-      \mathsf{concat}:\loopspace{A}\to (\loopspace{A}\simeq\loopspace{A})
+      \big((A,a)=(B,b)\big)\to \Big((A,a)\simeq (B,b)\Big)
     \end{equation*}
-    is an embedding.
+    sending $\refl{(A,a)}$ to the pair $(\idfunc,\refl{a})$, is an equivalence.
+  \item Construct for any pointed type $(X,x_0)$ an equivalence
+    \begin{equation*}
+      \Big(\sm{P:X\to \UU}P(x_0)\Big)\simeq \sm{(A,a_0):\UU_\ast}(A,a_0)\to_\ast(X,x_0).
+    \end{equation*}
   \end{subexenum}
-\item Let $f:\mathsf{hom}(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that
-  \begin{align*}
-    f(e_G) & = e_H \\
-    f(x^{-1}) & = f(x)^{-1}.
-  \end{align*}
-\item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.
-\item Recall that $\UU_\ast$ is the universe of pointed types. Construct for any pointed type $(X,x_0)$ an equivalence
+\item Show that any subuniverse\index{subuniverse!closed under equivalences} is closed under equivalences, i.e., show that there is a map
   \begin{equation*}
-    \Big(\sm{P:X\to \UU}P(x_0)\Big)\simeq \sm{(A,a_0):\UU_\ast}(A,a_0)\to_\ast(X,x_0).
+    (X\simeq Y) \to (P(X)\to P(Y))
   \end{equation*}
+  for any subuniverse $P:\UU\to\prop$, and any $X,Y:\UU$. 
 \end{exercises}

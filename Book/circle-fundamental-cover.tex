@@ -1,0 +1,479 @@
+\section{The fundamental cover of the circle}
+
+In this lecture we show that the loop space of the circle is equivalent to $\mathbb{Z}$ by constructing the universal cover of the circle as an application of the univalence axiom. 
+
+\subsection{Families over the circle}
+
+The type of small families over $\sphere{1}$ is just the function type $\sphere{1}\to\UU$, so in fact we may use the universal property of the circle to construct small dependent types over the circle. 
+By the universal property, small type families over $\sphere{1}$ are equivalently described as pairs $(X,p)$ consisting of a type $X:\UU$ and an identification $p:X=X$.
+This is where the univalence axiom\index{univalence axiom!families over $\sphere{1}$} comes in. By the map
+\begin{equation*}
+\mathsf{eq\usc{}equiv}_{X,X}:(\eqv{X}{X})\to (X=X)
+\end{equation*}
+it suffices to provide an equivalence $\eqv{X}{X}$.
+
+\begin{defn}\label{defn:circle_descent}
+Consider a type $X$ and every equivalence $e:\eqv{X}{X}$.
+We will construct a dependent type $\mathcal{D}(X,e):\sphere{1}\to\UU$ with an equivalence $x\mapsto x_{\mathcal{D}}:\eqv{X}{\mathcal{D}(X,e,\base)}$ for which the square
+\begin{equation*}
+\begin{tikzcd}
+X \arrow[r,"\eqvsym"] \arrow[d,swap,"e"] & \mathcal{D}(X,e,\base) \arrow[d,"\mathsf{tr}_{\mathcal{D}(X,e)}(\lloop)"] \\
+X \arrow[r,swap,"\eqvsym"] & \mathcal{D}(X,e,\base)
+\end{tikzcd}
+\end{equation*}
+commutes. We also write $d\mapsto d_{X}$ for the inverse of this equivalence, so that the relations
+\begin{samepage}%
+\begin{align*}
+(x_{\mathcal{D}})_X & =x & (e(x)_{\mathcal{D}}) & = \mathsf{tr}_{\mathcal{D}(X,e)}(\lloop,x_{\mathcal{D}}) \\
+(d_X)_{\mathcal{D}} & =d & (\mathsf{tr}_{\mathcal{D}(X,e)}(d))_X & = e(d_X)
+\end{align*}
+\end{samepage}%
+hold.
+
+The type $\sm{X:\UU}\eqv{X}{X}$ is also called the type of \define{descent data}\index{descent data!for the circle|textbf} for the circle.
+\end{defn}
+
+\begin{constr}
+By \cref{ex:tr_ap} we have an identification
+\begin{equation*}
+\mathsf{equiv\usc{}eq}(\ap{P}{\lloop})=\mathsf{tr}_P(\lloop)
+\end{equation*}
+for each dependent type $P:\sphere{1}\to\UU$. Therefore we see that the triangle\index{desc_S1@{$\mathsf{desc}_{\sphere{1}}$}}
+\begin{equation*}
+\begin{tikzcd}
+& (\sphere{1}\to \UU) \arrow[dl,swap,"\mathsf{gen}_{\sphere{1}}"] \arrow[dr,"\mathsf{desc}_{\sphere{1}}"] \\
+\sm{X:\UU}X=X \arrow[rr,swap,"\total{\lam{X}\mathsf{equiv\usc{}eq}_{X,X}}"] & & \sm{X:\UU}\eqv{X}{X}
+\end{tikzcd}
+\end{equation*}
+commutes, where the map $\mathsf{desc}_{\sphere{1}}$ is given by $P\mapsto\pairr{P(\base),\mathsf{tr}_P(\lloop)}$ and the bottom map is an equivalence by the univalence axiom and \cref{thm:fib_equiv}.
+Now it follows by the 3-for-2 property that $\mathsf{desc}_{\sphere{1}}$ is an equivalence, since $\mathsf{gen}_{\sphere{1}}$ is an equivalence by \cref{thm:circle_up}.
+This means that for every type $X$ and every $e:\eqv{X}{X}$ there is a type family $\mathcal{D}(X,e):\sphere{1}\to\UU$ such that
+\begin{equation*}
+\pairr{\mathcal{D}(X,e,\base),\mathsf{tr}_{\mathcal{D}(X,e)}(\lloop)}=\pairr{X,e}.
+\end{equation*}
+Equivalently, we have $p:\id{\mathcal{D}(X,e,\base)}{X}$ and $\mathsf{tr}(p,{\mathsf{tr}_{\mathcal{D}(X,e)}(\lloop)})=e$. Thus, we obtain $\mathsf{equiv\usc{}eq}(p):\eqv{\mathcal{D}(X,e,\base)}{X}$, for which the square
+\begin{equation*}
+\begin{tikzcd}[column sep=huge]
+\mathcal{D}(X,e,\base)\arrow[r,"\mathsf{equiv\usc{}eq}(p)"] \arrow[d,swap,"\mathsf{tr}_{\mathcal{D}(X,e)}(\lloop)"] & X \arrow[d,"e"] \\
+\mathcal{D}(X,e,\base)\arrow[r,swap,"\mathsf{equiv\usc{}eq}(p)"] & X
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{constr}
+
+\begin{comment}
+\begin{defn}\label{defn:fiber_sequence}
+A \define{fiber sequence} 
+\begin{equation*}
+F \hookrightarrow E \twoheadrightarrow B
+\end{equation*}
+consists of a \define{base type} $B$ with a base point $b_0$ and a dependent type $P:B\to\type$, a type $F$ called the \define{fiber} with an equivalence $\eqv{P(b_0)}{F}$, and a type $E$ called the \define{total space} with a map $p:E\to B$ and an equivalence $e:\eqv{(\sm{b:B}P(b))}{E}$ such that the triangle
+\begin{equation*}
+\begin{tikzcd}
+\Big(\sm{b:B}P(b)\Big) \arrow[rr,"e"] \arrow[dr,swap,"\proj 1"] & & E \arrow[dl,"p"] \\
+& B
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{defn}
+\end{comment}
+
+\subsection{The fundamental cover of the circle}
+
+The \emph{fundamental cover}\index{fundamental cover!of the circle} of the circle is a family of sets over the circle with contractible total space.
+Classically, the fundamental cover is described as a map $\mathbb{R}\to\sphere{1}$ that winds the real line around the circle.
+In homotopy type theory there is no analogue of such a construction.
+
+Recall from \cref{ex:succ_equiv} that the successor function $\mathsf{succ}:\Z\to \Z$ is an equivalence. Its inverse is the predecessor function defined in \cref{ex:int_pred}. 
+
+\begin{defn}
+The \define{fundamental cover}\index{fundamental cover!of the circle|textbf} of the circle is the dependent type $\mathcal{E}_{\sphere{1}}\defeq\mathcal{D}(\Z,\mathsf{succ}):\sphere{1}\to\UU$.\index{Z@{$\Z$}!fundamental cover of S1@{fundamental cover of $\sphere{1}$}}\index{E_S1@{$\mathcal{E}_{\sphere{1}}$}|textbf}
+\end{defn}
+
+\begin{rmk}
+  The fundamental cover of the circle comes equipped with an equivalence
+  \begin{equation*}
+    e:\mathbb{Z} \simeq \mathcal{E}_{\sphere{1}}(\mathsf{base})
+  \end{equation*}
+  and a homotopy witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \mathbb{Z} \arrow[r,"e"] \arrow[d,swap,"\mathsf{succ}"] & \mathcal{E}_{\sphere{1}}(\mathsf{base}) \arrow[d,"\mathsf{tr}_{\mathcal{E}_{\sphere{1}}}(\mathsf{loop})"] \\
+      \mathbb{Z} \arrow[r,swap,"e"] & \mathcal{E}_{\sphere{1}}(\mathsf{base})
+    \end{tikzcd}
+  \end{equation*}
+  commutes.
+
+  For convenience, we write $k_{\mathcal{E}}$ for the term $e(k):\mathcal{E}_{\sphere{1}}(\mathsf{base})$, for any $k:\mathbb{Z}$. 
+\end{rmk}
+
+The picture of the fundamental cover is that of a helix\index{helix} over the circle. This picture emerges from the path liftings of $\mathsf{loop}$ in the total space. The segments of the helix connecting $k$ to $k+1$ in the total space of the helix, are constructed in the following lemma.
+
+\begin{lem}
+For any $k:\Z$, there is an identification
+\begin{equation*}
+\mathsf{segment\usc{}helix}_k:(\base,k_{\mathcal{E}})=(\base,\mathsf{succ}(k)_{\mathcal{E}})
+\end{equation*}
+in the total space $\sm{t:\sphere{1}}\mathcal{E}(t)$.
+\end{lem}
+
+\begin{proof}
+By \cref{thm:eq_sigma} it suffices to show that
+\begin{equation*}
+\prd{k:\Z} \sm{\alpha:\base=\base} \mathsf{tr}_{\mathcal{E}}(\alpha,k_{\mathcal{E}})= \mathsf{succ}(k)_{\mathcal{E}}.
+\end{equation*}
+We just take $\alpha\defeq\lloop$. Then we have $\mathsf{tr}_{\mathcal{E}}(\alpha,k_{\mathcal{E}})= \mathsf{succ}(k)_{\mathcal{E}}$ by the commuting square provided in the definition of $\mathcal{E}$.
+\end{proof}
+
+\subsection{Contractibility of general total spaces}
+Consider a type $X$, a family $P$ over $X$, and a term $c:\sm{x:X}P(x)$, and suppose our goal is to construct a contraction
+\begin{equation*}
+  \prd{t:\sm{x:X}P(x)}c=t.
+\end{equation*}
+Of course, the first step is to apply the induction principle of $\Sigma$-types, so it suffices to construct a term of type
+\begin{equation*}
+\prd{x:X}{y:P(x)} c = (x,y).
+\end{equation*}
+In the case where $P$ is the fundamental cover of the circle, we are given an equivalence $e:\eqv{\Z}{\mathcal{E}(\base)}$. Using this equivalence, we obtain an equivalence
+\begin{equation*}
+  \Big(\prd{y:\mathcal{E}(y)}c=(\mathsf{base},y)\Big)\to \Big(\prd{k:\Z}c=(\mathsf{base},k_{\mathcal{E}})\Big).
+\end{equation*}
+More generally, if we are given an equivalence $e:\eqv{F}{P(x)}$ for some $x:X$, then we have an equivalence
+\begin{equation}
+\Big(\prd{y:P(x)}c=(x,y)\Big) \to \Big(\prd{y:F}c=(x,e(y))\Big)
+\end{equation}
+by precomposing with the equivalence $e$. Therefore we can construct a term of type $\prd{y:P(x)}c=(x,y)$ by constructing a term of type $\prd{y:F}c=(x,e(y))$. 
+
+Furthermore, if we consider a path $p:x=x'$ in $X$ and a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      F \arrow[r,"e"] \arrow[d,swap,"f"] & P(x) \arrow[d,"\mathsf{tr}_P(p)"] \\
+      F' \arrow[r,"{e'}"] & P(x')
+    \end{tikzcd}
+  \end{equation*}
+  where $e$, $e'$, and $f$ are all equivalences, then we obtain a function
+  \begin{equation*}
+    \psi : \Big(\prd{y:F}c=(x,e(y))\Big)\to \Big(\prd{y':F'}c=(x,e'(y'))\Big).
+  \end{equation*}
+  The function $\psi$ is constructed as follows. Given $h:\prd{y:F}c=(x,e(y))$ and $y':F'$ we have the path $h(f^{-1}(y')):c=(x,e(f^{-1}(y')))$. Moreover, writing $G$ for the homotopy $f\circ f^{-1} \htpy\idfunc$, we have the path
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      {\mathsf{tr}_P(p,e(f^{-1}(y')))} \arrow[r,equals,"{H(f^{-1}(y'))}"] &
+      {e'(f(f^{-1}(y')))} \arrow[r,equals,"\ap{e'}{G(y')}"] &
+      {e'(y')}.
+    \end{tikzcd}
+  \end{equation*}
+  From this concatenated path we obtain the path
+  \begin{equation*}
+    \begin{tikzcd}[column sep=14em]
+      {(x,e(f^{-1}(y')))} \arrow[r,equals,"{\mathsf{eq\usc{}pair}(p,\ct{H(f^{-1}(y'))}{\ap{e'}{G(y')}})}"] & {(x',e'(y'))}.
+    \end{tikzcd}
+  \end{equation*}
+  Now we define the function $\psi$ by
+  \begin{equation*}
+    h\mapsto \lam{y'}\ct{h(f^{-1}(y'))}{\mathsf{eq\usc{}pair}(p,\ct{H(f^{-1}(y'))}{\ap{e'}{G(y')}})}.
+  \end{equation*}
+  Note that $\psi$ is an equivalence, since it is given as precomposition by the equivalence $f^{-1}$, followed by postcomposition by concatenation, which is also an equivalence. Now we state the main technical result of this section, which will help us prove the contractibility of the total space of the fundamental cover of the circle by computing transport in the family $x\mapsto \prd{y:P(x)}c=(x,y)$.
+
+  \begin{defn}
+    Consider a path $p:x=x'$ in $X$ and a commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        F \arrow[r,"e"] \arrow[d,swap,"f"] & P(x) \arrow[d,"\mathsf{tr}_P(p)"] \\
+        F' \arrow[r,"{e'}"] & P(x')
+      \end{tikzcd}
+    \end{equation*}
+    with $H:e'\circ f ~ \mathsf{tr}_P(p)\circ e$, where $e$, $e'$, and $f$ are all equivalences. Then there is for any $y:F$ an identification
+    \begin{equation*}
+      \mathsf{segment\usc{}tot}(y):(x,e(y))=(x',e'(f(y)))
+    \end{equation*}
+    defined as $\mathsf{segment\usc{}tot}(y)\defeq\mathsf{eq\usc{}pair}(p,H(y)^{-1})$.
+  \end{defn}
+
+  \begin{lem}\label{lem:compute-tr-contraction}
+    Consider a path $p:x=x'$ in $X$ and a commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        F \arrow[r,"e"] \arrow[d,swap,"f"] & P(x) \arrow[d,"\mathsf{tr}_P(p)"] \\
+        F' \arrow[r,"{e'}"] & P(x')
+      \end{tikzcd}
+    \end{equation*}
+    with $H:e'\circ f ~ \mathsf{tr}_P(p)\circ e$, where $e$, $e'$, and $f$ are all equivalences. Furthermore, let
+    \begin{align*}
+      h & : \prd{y:F}c=(x,e(y)) \\
+      h' & : \prd{y':F'}c=(x',e'(y')).
+    \end{align*}
+    Then there is an equivalence
+    \begin{equation*}
+      \Big(\prd{y:F} h'(f(y))=\ct{h(y)}{\mathsf{segment\usc{}tot}(y)}\Big)
+      \simeq \Big(\mathsf{tr}_C(p,\varphi(h))= \varphi'(h')\Big).
+    \end{equation*}
+  \end{lem}
+
+  \begin{proof}
+    We first note that we have a commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        \prd{y:B(x)}c=(x,y) \arrow[r,"\blank\circ e"] \arrow[d,swap,"\mathsf{tr}_C(p)"] & \prd{y:F}c=(x,e(y)) \\
+        \prd{y':B(x')}c=(x',y') \arrow[r,swap,"\blank\circ {e'}"] & \prd{y':F'}c=(x',e'(y')) \arrow[u,swap,"\psi"]
+      \end{tikzcd}
+    \end{equation*}
+    where $\psi(h')=\lam{y}\ct{h'(f(y))}{\mathsf{segment\usc{}tot}(y)^{-1}}$. All the maps in this square are equivalences. In particular, the inverses of the top and bottom maps are $\varphi$ and $\varphi'$, respectively. The claim follows from this observation, but we will spell out the details.
+
+    Since any equivalence is an embedding, we see immediately that the type $\mathsf{tr}_C(p)(\varphi(h))=\varphi'(h')$ is equivalent to the type
+    \begin{equation*}
+      \psi(\mathsf{tr}_C(p)(\varphi(h))\circ e')=\psi(\varphi'(h')\circ e').
+    \end{equation*}
+    By the commutativity of the square, the left hand side is $h$. The right hand side is $\psi(h')$. Therefore it follows that
+    \begin{align*}
+      \Big(\mathsf{tr}_C(p)(\varphi(h))=\varphi'(h')\Big)
+      & \simeq \Big(h= \lam{y}\ct{h'(f(y))}{\mathsf{segment\usc{}tot}(y)^{-1}}\Big) \\
+      & \simeq \Big(h'\circ f \htpy (\lam{y}\ct{h(y)}{\mathsf{segment\usc{}tot}(y)}\Big).\qedhere
+    \end{align*}
+  \end{proof}
+  
+  Applying these observations to the fundamental cover of the circle, we obtain the following lemma that we will use to prove that the total space of $\mathcal{E}$ is contractible.
+  
+  \begin{cor}\label{cor:construct-contraction-fundamental-cover}
+    In order to show that the total space of $\mathcal{E}$ is contractible, it suffices to construct a function
+    \begin{equation*}
+      h : \prd{k:\Z}(\base,0_{\mathcal{E}})=(\base,k_{\mathcal{E}})
+    \end{equation*}
+    equipped with a homotopy
+    \begin{equation*}
+      H : \prd{k:\Z}h(\mathsf{succ}(k)_{\mathcal{E}})=\ct{h(k)}{\mathsf{segment\usc{}helix}(k)}.
+    \end{equation*}
+  \end{cor}
+
+  In the next section we establish the dependent universal property of the integers, which we will use with \cref{cor:construct-contraction-fundamental-cover} to show that the total space of the fundamental cover is contractible.
+  
+
+\subsection{The dependent universal property of the integers}
+\begin{lem}\label{lem:elim-Z}
+Let $B$ be a family over $\Z$, equipped with a term $b_0:B(0)$, and an equivalence
+\begin{equation*}
+e_k : B(k)\eqvsym B(\mathsf{succ}(k))
+\end{equation*}
+for each $k:\Z$. Then there is a dependent function $f:\prd{k:\Z}B(k)$ equipped with identifications $f(0)=b_0$ and
+\begin{equation*}
+f(\mathsf{succ}(k))=e_k(f(k))
+\end{equation*}
+for any $k:\Z$.
+\end{lem}
+
+\begin{proof}
+The map is defined using the induction principle for the integers, stated in \cref{lem:Z_ind}. First we take
+\begin{align*}
+f(-1) & \defeq e^{-1}(b_0) \\
+f(0) & \defeq b_0 \\
+f(1) & \defeq e(b_0).
+\end{align*}
+For the induction step on the negative integers we use
+\begin{equation*}
+\lam{n}e_{\mathsf{neg}(S(n))}^{-1} : \prd{n:\N} B(\mathsf{neg}(n))\to B(\mathsf{neg}(S(n)))
+\end{equation*}
+For the induction step on the positive integers we use
+\begin{equation*}
+\lam{n}e(\mathsf{pos}(n)) : \prd{n:\N} B(\mathsf{pos}(n))\to B(\mathsf{pos}(S(n))).
+\end{equation*}
+The computation rules follow in a straightforward way from the computation rules of $\Z$-induction and the fact that $e^{-1}$ is an inverse of $e$. 
+\end{proof}
+
+\begin{eg}
+For any type $A$, we obtain a map $f:\Z\to A$ from any $x:A$ and any equivalence $e:\eqv{A}{A}$, such that $f(0)=x$ and the square
+\begin{equation*}
+\begin{tikzcd}
+\Z \arrow[d,swap,"\mathsf{succ}"] \arrow[r,"f"] & A \arrow[d,"e"] \\
+\Z \arrow[r,swap,"f"] & A
+\end{tikzcd}
+\end{equation*}
+commutes. In particular, if we take $A\jdeq (x=x)$ for some $x:X$, then for any $p:x=x$ we have the equivalence $\lam{q}\ct{p}{q}:(x=x)\to (x=x)$. This equivalence induces a map
+\begin{equation*}
+k\mapsto p^k : \Z \to (x=x),
+\end{equation*}
+for any $p:x=x$. This induces the \define{degree $k$ map} on the circle
+\begin{equation*}
+\mathsf{deg}(k) : \sphere{1}\to\sphere{1},
+\end{equation*}
+for any $k:\mathbb{Z}$, see \cref{ex:degk}.
+\end{eg}
+
+In the following theorem we show that the dependent function constructed in \cref{lem:elim-Z} is unique.
+
+\begin{thm}
+  Consider a type family $B:\mathbb{Z}\to\UU$ equipped with $b:B(0)$ and a family of equivalences
+  \begin{equation*}
+    e:\prd{k:\Z} \eqv{B(k)}{B(\mathsf{succ}(k))}.
+  \end{equation*}
+  Then the type
+  \begin{equation*}
+    \sm{f:\prd{k:\Z}B(k)}(f(0)=b)\times\prd{k:\Z}f(\mathsf{succ}(k))=e_k(f(k))
+  \end{equation*}
+  is contractible.
+\end{thm}
+
+\begin{proof}
+  In \cref{lem:elim-Z} we have already constructed a term of the asserted type.
+  Therefore it suffices to show that any two terms of this type can be identified.
+  Note that the type $(f,p,H)=(f',p',H')$ is equivalent to the type
+  \begin{equation*}
+    \sm{K:f\htpy f'} (K(0)= \ct{p}{(p')^{-1}})\times \prd{k:\Z}K(\mathsf{succ}(k))=\ct{(\ct{H(k)}{\ap{e_k}{K(k)}})}{H'(k)^{-1}}. 
+  \end{equation*}
+  We obtain a term of this type by applying \cref{lem:elim-Z} to the family $C$ over $\Z$ given by $C(k)\defeq f(k)=f'(k)$, which comes equipped with a base point
+  \begin{equation*}
+    \ct{p}{(p')^{-1}} : C(0),
+  \end{equation*}
+  and the family of equivalences
+  \begin{equation*}
+    \lam{\alpha:f(k)=f'(k)}\ct{(\ct{H(k)}{\ap{e_k}{\alpha}})}{H'(k)^{-1}}:\prd{k:\Z}\eqv{C(k)}{C(\mathsf{succ}(k))}.\qedhere
+  \end{equation*}
+\end{proof}
+
+One way of phrasing the following corollary, is that $\Z$ is the `initial type equipped with a point and an automorphism'.
+
+\begin{cor}
+  For any type $X$ equipped with a base point $x_0:X$ and an automorphism $e:\eqv{X}{X}$, the type
+  \begin{equation*}
+    \sm{f:\Z\to X}(f(0)=x_0)\times ((f \circ \mathsf{succ})\htpy(e\circ f))
+  \end{equation*}
+  is contractible.
+\end{cor}
+
+
+
+\subsection{The identity type of the circle}
+
+\begin{lem}\label{thm:circle_fundamental}
+The total space $\sm{t:\sphere{1}}\mathcal{E}(t)$ of the fundamental cover of $\sphere{1}$ is contractible.\index{circle!fundamental cover!total space is contractible}
+\end{lem}
+
+\begin{proof}
+  By \cref{cor:construct-contraction-fundamental-cover} it suffices to construct
+  a function
+  \begin{equation*}
+    h : \prd{k:\Z}(\base,0_{\mathcal{E}})=(\base,k_{\mathcal{E}})
+  \end{equation*}
+  equipped with a homotopy
+  \begin{equation*}
+    H : \prd{k:\Z}h(\mathsf{succ}(k)_{\mathcal{E}})=\ct{h(k)}{\mathsf{segment\usc{}helix}(k)}.
+  \end{equation*}
+  We obtain $h$ and $H$ by the elimination principle of \cref{lem:elim-Z}. Indeed, the family $P$ over the integers given by $P(k)\defeq (\base,0_{\mathcal{E}})=(\base,k_{\mathcal{E}})$ comes equipped with a term $\refl{(\base,0_{\mathcal{E}})}:P(0)$, and a family of equivalences
+  \begin{equation*}
+    \prd{k:\Z}P(k) \simeq P(\mathsf{succ}(k))
+  \end{equation*}
+  given by $k,p\mapsto \ct{p}{\mathsf{segment\usc{}helix}(k)}$. 
+\end{proof}
+
+\begin{comment}
+\begin{proof}
+We show that the total space satisfies singleton induction (i.e., we apply \cref{thm:contractible}). Let $P$ be a family over the total space of the fundamental cover, and let $p_0:P(\base,0_{\mathcal{E}})$. Our goal is to construct a term of type
+\begin{equation*}
+\prd{t:\sphere{1}}{x:\mathcal{E}(t)} P(t,x).
+\end{equation*}
+We do this by induction. For the base case we must construct a term of type
+\begin{equation*}
+\prd{k:\Z}P(\base,k_{\mathcal{E}}).
+\end{equation*}
+Since we have the identifications $s_k: (\base,k_{\mathcal{E}})=(\base,\mathsf{succ}(k)_{\mathcal{E}})$, we have the equivalences
+\begin{equation*}
+\mathsf{tr}_P(s_k) : \eqv{P(\base,k_{\mathcal{E}})}{P(\base,\mathsf{succ}(k)_{\mathcal{E}})}
+\end{equation*}
+for each $k:\Z$. Thus we obtain a dependent function $f:\prd{x:\mathcal{E}(\base)}P(\base,x)$ satisfying $f(0_{\mathcal{E}})=p_0$ and $f(\mathsf{succ}(k)_{\mathcal{E}})=\mathsf{tr}_P(s_k,f(k_{\mathcal{E}}))$, for each $k:\Z$. 
+
+For the loop case we must show that
+\begin{equation*}
+\mathsf{tr}_Q(\lloop,f)=f,
+\end{equation*}
+where $Q$ is the family over $\sphere{1}$ given by $Q(t)\defeq \prd{x:\mathcal{E}(t)} P(t,x)$. By function extensionality it suffices to construct a homotopy, and the transport along $\lloop$ in $Q$ computes as
+\begin{equation*}
+\mathsf{tr}_Q(\lloop,f)(k_{\mathcal{E}})= \mathsf{tr}_P(s_k,f(\mathsf{succ}^{-1}(k)_{\mathcal{E}})). 
+\end{equation*}
+Therefore the following computation completes the proof:
+\begin{align*}
+\mathsf{tr}_Q(\lloop,f)(k_{\mathcal{E}})
+& = \mathsf{tr}_P(s_k,f(\mathsf{succ}^{-1}(k)_{\mathcal{E}})) \\
+& = f(\mathsf{succ}(\mathsf{succ}^{-1}(k))_{\mathcal{E}}) \\
+& = f(k_{\mathcal{E}}).\qedhere
+\end{align*}
+\end{proof}
+\end{comment}
+
+\begin{thm}\label{thm:eq-circle}
+  The family of maps
+  \begin{equation*}
+    \prd{t:\sphere{1}} (\base=t)\to \mathcal{E}(t)
+  \end{equation*}
+  sending $\refl{\base}$ to $0_{\mathcal{E}}$ is a family of equivalences. In particular, the loop space of the circle is equivalent to $\Z$.
+\end{thm}
+
+\begin{proof}
+  This is a direct corollary of \cref{thm:circle_fundamental,thm:id_fundamental}. 
+\end{proof}
+
+\begin{cor}
+  The circle is a $1$-type and not a $0$-type.\index{circle!is a 1-type@{is a $1$-type}|textit}
+\end{cor}
+
+\begin{proof}
+  To see that the circle is a $1$-type we have to show that $s=t$ is a $0$-type for every $s,t:\sphere{1}$. By \cref{ex:circle-connected} it suffices to show that the loop space of the circle is a $0$-type. This is indeed the case, because $\Z$ is a $0$-type, and we have an equivalence $(\base=\base)\simeq \Z$.
+
+  Furthermore, since $\Z$ is a $0$-type and not a $(-1)$-type, it follows that the circle is a $1$-type and not a $0$-type.
+\end{proof}
+
+\begin{exercises}
+\item Show that the map
+  \begin{equation*}
+    \Z\to\loopspace{\sphere{1}}
+  \end{equation*}
+  is a group homomorphism. Conclude that the loop space $\loopspace{\sphere{1}}$ as a group is isomorphic to $\Z$.
+\item \label{ex:degk}Use the fundamental cover of the circle to show that
+\begin{equation*}
+\neg\Big(\prd{t:\sphere{1}}\base=t\Big).
+\end{equation*}
+\item \label{ex:circle_degk}
+\begin{subexenum}
+\item Show that for every $x:X$, we have an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{f:\sphere{1}\to X}f(\base)= x \Big)}{(x=x)}
+\end{equation*}
+\item Show that for every $t:\sphere{1}$, we have an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{f:\sphere{1}\to \sphere{1}}f(\base)= t \Big)}{\Z}
+\end{equation*}
+The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z$ is called the \define{degree $k$ map} on the circle, and is denoted by $\mathsf{deg}(k)$.
+\item Show that for every $t:\sphere{1}$, we have an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{e:\eqv{\sphere{1}}{\sphere{1}}}e(\base)= t \Big)}{\bool}
+\end{equation*}
+\end{subexenum}
+\item \label{ex:circle_double_cover} The \define{(twisted) double cover} of the circle is defined as the type family $\mathcal{T}\defeq\mathcal{D}(\bool,\mathsf{neg}):\sphere{1}\to\UU$, where $\mathsf{neg}:\eqv{\bool}{\bool}$ is the negation equivalence of \cref{ex:neg_equiv}.
+\begin{subexenum}
+\item Show that $\neg(\prd{t:\sphere{1}}\mathcal{T}(t))$.
+\item Construct an equivalence $e:\eqv{\sphere{1}}{\sm{t:\sphere{1}}\mathcal{T}(t)}$ for which the triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+\sphere{1} \arrow[rr,"e"] \arrow[dr,swap,"\mathsf{deg}(2)"] & & \sm{t:\sphere{1}}\mathcal{T}(t) \arrow[dl,"\proj 1"] \\
+\phantom{\sm{t:\sphere{1}}\mathcal{T}(t)} & \sphere{1}
+\end{tikzcd}
+\end{equation*}
+commutes.
+\end{subexenum}
+\item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
+\item \label{ex:is_invertible_id_S1}
+\begin{subexenum}
+\item Construct a family of equivalences
+\begin{equation*}
+\prd{t:\sphere{1}} \big(\eqv{(t=t)}{\Z}\big).
+\end{equation*}
+\item Use \cref{ex:circle_connected} to show that $\eqv{(\idfunc[\sphere{1}]\htpy\idfunc[\sphere{1}])}{\Z}$.
+\item Use \cref{ex:idfunc_autohtpy} to show that
+\begin{equation*}
+\eqv{\mathsf{has\usc{}inverse}(\idfunc[\sphere{1}])}{\Z},
+\end{equation*}
+and conclude that ${\mathsf{has\usc{}inverse}}(\idfunc[\sphere{1}])\not\simeq{\isequiv(\idfunc[\sphere{1}])}$. 
+\end{subexenum}
+\item Consider a map $i:A \to \sphere{1}$, and assume that $i$ has a retraction. Construct a term of type
+  \begin{equation*}
+    \iscontr(A)+\isequiv(i).
+  \end{equation*}
+\end{exercises}
