@@ -3,7 +3,7 @@
 \subsection{The universal property of set quotients}
 
 \begin{defn}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation|textit}, for $A:\UU$, and consider a map $q:A\to B$ where the type $B$ is a set, for which we have
+Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a map $q:A\to B$ where the type $B$ is a set, for which we have
 \begin{equation*}
 \prd{x,y:A}R(x,y)\to q(x)=q(y).
 \end{equation*}
@@ -22,11 +22,11 @@ Consider $x,y:A$ which are related by $R$. Then we have an identification $p:q(x
 \end{constr}
 
 \begin{defn}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation|textit}, for $A:\UU$, and consider a map $q:A\to B$ satisfying
+Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a map $q:A\to B$ satisfying
 \begin{equation*}
 \prd{x,y:A}R(x,y)\to q(x)=q(y),
 \end{equation*}
-where the type $B$ is a set. We say that the map $q:A\to B$ satisfies the universal property of the \define{set quotient}\index{set quotient}\index{universal property!of set quotients|textit} $A/R$ if for any set $X$ the map
+where the type $B$ is a set. We say that the map $q:A\to B$ satisfies the universal property of the \define{set quotient}\index{set quotient}\index{universal property!of set quotients} $A/R$ if for any set $X$ the map
 \begin{equation*}
 \quotientrestr : (B\to X) \to \Big(\sm{f:A\to X}\prd{x,y:A}R(x,y)\to (f(x)=f(y))\Big)
 \end{equation*}
@@ -34,7 +34,7 @@ is an equivalence.
 \end{defn}
 
 \begin{lem}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation|textit}, for $A:\UU$, and consider a commuting triangle
+Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a commuting triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]
 A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & U \arrow[dl,"m"] \\
@@ -48,7 +48,7 @@ with $H:R\htpy m\circ q$, where $m$ is an embedding. Then we have
 \end{lem}
 
 \begin{thm}\label{thm:quotient_up}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation|textit}, for $A:\UU$, and consider a commuting triangle
+Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a commuting triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]
 A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & U \arrow[dl,"m"] \\

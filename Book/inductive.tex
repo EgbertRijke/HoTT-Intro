@@ -19,7 +19,7 @@ A straightforward example of an inductive type is the \emph{unit type}, which ha
 Its induction principle is analogous to just the base case of induction on the natural numbers.
 
 \begin{defn}
-We define the \define{unit type}\index{1@{$\unit$}|see {unit type}}\index{unit type|textbf} to be a closed type $\unit$ equipped with a closed term\index{unit type!star@{$\ttt$}}
+We define the \define{unit type}\index{1@{$\unit$}|see {unit type}}\index{unit type} to be a closed type $\unit$ equipped with a closed term\index{unit type!star@{$\ttt$}}
 \begin{equation*}
 \ttt:\unit,
 \end{equation*}
@@ -44,7 +44,7 @@ In other words, by the induction principle for the unit type we obtain for every
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
 
 \begin{defn}
-We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{empty type|textbf} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type} that for any family of types $P(x)$ indexed by $x:\empty$, there is a term
+We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{empty type} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type} that for any family of types $P(x)$ indexed by $x:\empty$, there is a term
 \begin{equation*}
 \indempty : \prd{x:\emptyt}P(x).
 \end{equation*}
@@ -69,7 +69,7 @@ Since $\neg A$ is the type of functions from $A$ to $\emptyt$, a proof of $\neg 
 
 \subsection{The booleans}
 \begin{defn}
-We define the \define{booleans}\index{booleans|textbf}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with
+We define the \define{booleans}\index{booleans}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with
 \begin{align*}
 \bfalse & : \bool \\
 \btrue & : \bool
@@ -195,7 +195,7 @@ In the following lemma we derive an induction principle\index{induction principl
 As an application we define the successor function on the integers.
 
 \begin{defn}
-We define the \define{successor function}\index{successor function!on Z@{on $\Z$}|textbf} on the integers $\mathsf{succ}_\Z:\Z\to\Z$ using the induction principle of \cref{lem:Z_ind}, taking
+We define the \define{successor function}\index{successor function!on Z@{on $\Z$}} on the integers $\mathsf{succ}_\Z:\Z\to\Z$ using the induction principle of \cref{lem:Z_ind}, taking
 \begin{align*}
 \mathsf{succ}_\Z(-1_\Z) & \defeq 0_\N \\
 \mathsf{succ}_\Z(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
@@ -212,11 +212,11 @@ It is better to think of the $\Sigma$-type as the total space of a family of typ
 
 \begin{defn}
 Let $A$ be a type in context $\Gamma$, and let $\Gamma,x:A\vdash B(x)~\mathrm{type}$ be a type family over $A$.
-The \define{dependent pair type}\index{Sigma type@{$\Sigma$-type}|textbf} is defined to be the inductive type $\sm{x:A}B(x)$ in context $\Gamma$ equipped with a \define{pairing function}\index{pairing function}
+The \define{dependent pair type}\index{Sigma type@{$\Sigma$-type}} is defined to be the inductive type $\sm{x:A}B(x)$ in context $\Gamma$ equipped with a \define{pairing function}\index{pairing function}
 \begin{equation*}
 (\blank,\blank):\prd{x:A} \Big(B(x)\to \sm{y:A}B(y)\Big).
 \end{equation*}
-The induction principle\index{induction principle|of Sigma types@{of $\Sigma$-types}} for $\sm{x:A}B(x)$ asserts that for any family of types $P(p)$ indexed by $p:\sm{x:A}B(x)$, there is a function
+The induction principle\index{induction principle!of Sigma types@{of $\Sigma$-types}} for $\sm{x:A}B(x)$ asserts that for any family of types $P(p)$ indexed by $p:\sm{x:A}B(x)$, there is a function
 \begin{equation*}
 \ind{\Sigma}:\Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to\Big(\prd{p:\sm{x:A}B(x)}P(p)\Big).
 \end{equation*}
@@ -228,7 +228,7 @@ Sometimes we write $\lam{(x,y)}f(x,y)$ for $\ind{\Sigma}(\lam{x}{y}f(x,y))$.
 \end{defn}
 
 \begin{defn}
-Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map|textbf}\index{projection maps!first projection|textbf}
+Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map}\index{projection maps!first projection}
 \begin{equation*}
 \proj 1:\Big(\sm{x:A}B(x)\Big)\to A
 \end{equation*}
@@ -236,7 +236,7 @@ is defined by induction as
 \begin{equation*}
 \proj 1\defeq \lam{(x,y)}x.
 \end{equation*}
-The \define{second projection map}\index{second projection map|textbf}\index{projection map!second projection|textbf} is a dependent function
+The \define{second projection map}\index{second projection map}\index{projection map!second projection} is a dependent function
 \begin{equation*}
 \proj 2 : \prd{p:\sm{x:A}B(x)} B(\proj 1(p))
 \end{equation*}
@@ -255,7 +255,7 @@ By the computation rule we have
 A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e., $B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product} $A\times B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its specification along with the induction principle for cartesian products.
 
 \begin{defn}
-Let $A$ and $B$ be types in context $\Gamma$. The \define{(cartesian) product}\index{cartesian product|textbf}\index{product!of types|textbf} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor
+Let $A$ and $B$ be types in context $\Gamma$. The \define{(cartesian) product}\index{cartesian product}\index{product!of types} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor
 \begin{equation*}
 (\blank,\blank):A\to (B\to A\times B).
 \end{equation*}
@@ -306,7 +306,7 @@ name & type & constructors \\
     \end{tabular}
   \end{center}
   Here $p$ and $q$ range over $\bool$. 
-\item \label{ex:int_pred}\index{predecessor function|textbf}Define the predecessor function $\mathsf{pred}_\Z:\Z\to \Z$.
+\item \label{ex:int_pred}\index{predecessor function}Define the predecessor function $\mathsf{pred}_\Z:\Z\to \Z$.
 \item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define group operations
   \begin{align*}
     k,l & \mapsto k+l \\

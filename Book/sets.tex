@@ -3,13 +3,13 @@
 \subsection{Equivalence relations}
 
 \begin{defn}\label{defn:eq_rel}
-Let $R:A\to (A\to\prop)$ be a binary relation valued in the propositions. We say that $R$ is an \define{($0$-)equivalence relation}\index{equivalence relation|textbf}\index{0-equivalence relation|see {equivalence relation}} if $R$ comes equipped with
+Let $R:A\to (A\to\prop)$ be a binary relation valued in the propositions. We say that $R$ is an \define{($0$-)equivalence relation}\index{equivalence relation}\index{0-equivalence relation|see {equivalence relation}} if $R$ comes equipped with
 \begin{align*}
 \rho & : \prd{x:A}R(x,x) \\
 \sigma & : \prd{x,y:A} R(x,y)\to R(y,x) \\
 \tau & : \prd{x,y,z:A} R(x,y)\to (R(y,z)\to R(x,z)).
 \end{align*}
-Given an equivalence relation $R:A\to (A\to\prop)$, the \define{equivalence class}\index{equivalence class|textbf} $[x]_R$ of $x:A$ is defined to be
+Given an equivalence relation $R:A\to (A\to\prop)$, the \define{equivalence class}\index{equivalence class} $[x]_R$ of $x:A$ is defined to be
 \begin{equation*}
 [x]_R\defeq R(x).
 \end{equation*}
@@ -17,7 +17,7 @@ Given an equivalence relation $R:A\to (A\to\prop)$, the \define{equivalence clas
 
 \begin{defn}
 Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
-We define for any $x,y:A$ a map\index{class_eq@{$\mathsf{class\usc{}eq}$}|textbf}
+We define for any $x,y:A$ a map\index{class_eq@{$\mathsf{class\usc{}eq}$}}
 \begin{equation*}
 \mathsf{class\usc{}eq}:R(x,y)\to ([x]_R=[y]_R).
 \end{equation*}
@@ -75,7 +75,7 @@ Assuming the univalence axiom on $\UU$, the map
 \begin{equation*}
 \idtypevar{A}:A\to (A\to\UU)
 \end{equation*}
-is an embedding, for any type $A:\UU$.\index{identity type!is an embedding|textit}
+is an embedding, for any type $A:\UU$.\index{identity type!is an embedding}
 \end{thm}
 
 \begin{proof}

@@ -2,25 +2,27 @@
 
 \section{Equivalences}
 
+\index{equivalence|(}
 \subsection{Homotopies}
-In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$.
+In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$. We view the type of homotopies as the observational equality for $\Pi$-types.\index{observational equality!of Pi-types@{of $\Pi$-types}}
 
 \begin{defn}
-Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies}\index{homotopy|textbf} from $f$ to $g$ is defined as
+Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies}\index{homotopy} from $f$ to $g$ is defined as\index{f htpy g@{$f\htpy g$}|see {homotopy}}
 \begin{equation*}
 f\htpy g \defeq \prd{x:A} f(x)=g(x).
 \end{equation*}
 \end{defn}
 
-Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between}\index{homotopy!iterated} homotopies, and further homotopies between those higher homotopies. 
+Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between}\index{homotopy!iterated}\index{iterated homotopies} homotopies, and further homotopies between those higher homotopies. 
 Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just the type
 \begin{equation*}
 \prd{x:A} H(x)=K(x).
 \end{equation*}
 
-In the following definition we define the groupoid-like structure of homotopies. Note that we implement the groupoid-laws as \emph{homotopies} rather than as identifications.
+\index{groupoid laws!of homotopies|(}
+In the following definition we define the groupoidal structure of homotopies. Note that we implement the groupoid laws as \emph{homotopies} rather than as identifications.
 
-\begin{defn}\label{defn:htpy_groupoid}\index{groupoid laws!of homotopies|textbf}
+\begin{defn}\label{defn:htpy_groupoid}\index{groupoid laws!of homotopies}
 For any dependent type $B:A\to\type$ there are operations
 \begin{align*}
 & \mathsf{htpy\usc{}refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
@@ -56,12 +58,13 @@ where $H:f\htpy g$ and $K:g\htpy h$ are homotopies. Furthermore, we define
 \mathsf{htpy\usc{}right\usc{}inv}(H) & \defeq \lam{x}\mathsf{right\usc{}inv}(H(x)).\qedhere
 \end{align*}
 \end{constr}
+\index{groupoid laws!of homotopies|)}
 
 
 Apart from the groupoid operations and their laws, we will occasionally need \emph{whiskering} operations.
 
 \begin{defn}
-We define the following \define{whiskering}\index{homotopy!whiskering operations|textbf}\index{whiskering operations!of homotopies|textbf} operations on homotopies:
+We define the following \define{whiskering}\index{homotopy!whiskering operations}\index{whiskering operations!of homotopies} operations on homotopies:
 \begin{enumerate}
 \item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define
 \begin{equation*}
@@ -92,20 +95,20 @@ if it comes equipped with a homotopy $h \circ f~g\circ f'$.
 
 \subsection{Bi-invertible maps}
 \begin{defn}
-Let $f:A\to B$ be a function. We say that $f$ has a \define{section}\index{section!of a map|textbf} if there is a term of type\index{sec(f)@{$\mathsf{sec}(f)$}|textbf}
+Let $f:A\to B$ be a function. We say that $f$ has a \define{section}\index{section!of a map} if there is a term of type\index{sec(f)@{$\mathsf{sec}(f)$}}
 \begin{equation*}
 \mathsf{sec}(f) \defeq \sm{g:B\to A} f\circ g\htpy \idfunc[B].
 \end{equation*}
-Dually, we say that $f$ has a \define{retraction}\index{retraction} if there is a term of type\index{retr(f)@{$\mathsf{retr}(f)$}|textbf}
+Dually, we say that $f$ has a \define{retraction}\index{retraction} if there is a term of type\index{retr(f)@{$\mathsf{retr}(f)$}}
 \begin{equation*}
 \mathsf{retr}(f) \defeq \sm{h:B\to A} h\circ f\htpy \idfunc[A].
 \end{equation*}
 If a map $f:A \to B$ has a retraction, we also say that $A$ is a \define{retract}\index{retract!of a type} of $B$.
-We say that a function $f:A\to B$ is an \define{equivalence}\index{equivalence|textbf}\index{bi-invertible map|see {equivalence}} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}|textbf}
+We say that a function $f:A\to B$ is an \define{equivalence}\index{equivalence}\index{bi-invertible map|see {equivalence}} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}}
 \begin{equation*}
 \isequiv(f)\defeq\mathsf{sec}(f)\times\mathsf{retr}(f).
 \end{equation*}
-We will write $\eqv{A}{B}$\index{equiv@{$\eqv{A}{B}$}|textbf} for the type $\sm{f:A\to B}\isequiv(f)$.
+We will write $\eqv{A}{B}$\index{equiv@{$\eqv{A}{B}$}} for the type $\sm{f:A\to B}\isequiv(f)$.
 \end{defn}
 
 \begin{rmk}
@@ -114,7 +117,7 @@ An equivalence, as we defined it here, can be thought of as a \emph{bi-invertibl
 g & : B\to A & h & : B\to A \\
 G & : f\circ g \htpy \idfunc[B] & H & : h\circ f \htpy \idfunc[A].
 \end{align*}
-Clearly, if $f$ is \define{invertible}\index{invertible map} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence. We write\index{is_invertible@{$\mathsf{is\usc{}invertible}$}|textbf}
+Clearly, if $f$ is \define{invertible}\index{invertible map} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence. We write\index{is_invertible@{$\mathsf{is\usc{}invertible}$}}
 \begin{equation*}
 \mathsf{has\usc{}inverse}(f)\defeq\sm{g:B\to A} (f\circ g\htpy \idfunc[B])\times (g\circ f\htpy\idfunc[A]).
 \end{equation*}
@@ -149,7 +152,7 @@ Let $f:A\to B$ be an equivalence. By \cref{defn:inv_equiv} it follows that the s
 \end{proof}
 
 \begin{thm}\label{thm:id_equiv}
-For any type $A$, the identity function $\idfunc[A]$ is an equivalence.\index{identity function!is an equivalence|textit}
+For any type $A$, the identity function $\idfunc[A]$ is an equivalence.\index{identity function!is an equivalence}
 \end{thm}
 
 \begin{proof}
@@ -161,7 +164,7 @@ The identity function is trivially its own section and its own retraction.
 \begin{equation*}
 \sigma:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
 \end{equation*}
-that swaps the order of the arguments $x$ and $y$ is an equivalence by \cref{ex:swap}.\index{swap function!is an equivalence|textit}
+that swaps the order of the arguments $x$ and $y$ is an equivalence by \cref{ex:swap}.\index{swap function!is an equivalence}
 \end{eg}
 
 \subsection{The identity type of a \texorpdfstring{$\Sigma$-}{dependent pair }type}
@@ -223,7 +226,7 @@ Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is
 \end{constr}
 
 \begin{defn}
-  Consider a type family $B$ over $A$. Then for any $s,t:\sm{x:A}B(x)$ we define a map\index{pair_eq@{$\mathsf{pair\usc{}eq}$}|textbf}
+  Consider a type family $B$ over $A$. Then for any $s,t:\sm{x:A}B(x)$ we define a map\index{pair_eq@{$\mathsf{pair\usc{}eq}$}}
   \begin{equation*}
     \mathsf{pair\usc{}eq}: (s=t)\to \mathsf{Eq}_\Sigma(s,t)
   \end{equation*}
@@ -235,7 +238,7 @@ Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is
   \begin{equation*}
     \mathsf{pair\usc{}eq}: (s=t)\to \mathsf{Eq}_\Sigma(s,t)
   \end{equation*}
-  is an equivalence for every $s,t:\sm{x:A}B(x)$.\index{Sigma type@{$\Sigma$-type}!identity types of|textit}\index{identity type!of a Sigma-type@{of a $\Sigma$-type}|textit}
+  is an equivalence for every $s,t:\sm{x:A}B(x)$.\index{Sigma type@{$\Sigma$-type}!identity types of}\index{identity type!of a Sigma-type@{of a $\Sigma$-type}}
 \end{thm}
 
 \begin{proof}
@@ -306,7 +309,7 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
   are equivalences.
 \item
   \begin{subexenum}
-  \item \label{ex:htpy_equiv}\index{equivalence!homotopic maps} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
+  \item \label{ex:htpy_equiv}\index{equivalence!closed under homotopy} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
     \begin{equation*}
       \isequiv(f)\leftrightarrow\isequiv(g).
     \end{equation*}
@@ -423,3 +426,4 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
     \mathsf{Fin}(mn) & \simeq \mathsf{Fin}(m)\times\mathsf{Fin}(n).
   \end{align*}
 \end{exercises}
+\index{equivalence|)}

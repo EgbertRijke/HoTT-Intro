@@ -23,7 +23,7 @@ satisfying the judgmental equality $\Ty(\check{\Sigma}(X,P)\jdeq\sm{x:\Ty(X)}\Ty
 In the following definition we already state that universes are closed under identity types. Identity types will be introduced in \cref{chap:identity}.
 
 \begin{defn}
-  A \define{universe}\index{universe|textbf} in type theory is a closed type $\UU$\index{U@{$\UU$}|textbf} equipped with a type family $\Ty$\index{Ty@{$\Ty$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family|textbf}, equipped with the following structure:
+  A \define{universe}\index{universe} in type theory is a closed type $\UU$\index{U@{$\UU$}} equipped with a type family $\Ty$\index{Ty@{$\Ty$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family}, equipped with the following structure:
   \begin{enumerate}
   \item $\UU$ is closed under $\Pi$, in the sense that it comes equipped with a function
     \begin{equation*}
@@ -65,7 +65,7 @@ In the following definition we already state that universes are closed under ide
       \Ty(\check{\N}) & \jdeq \N.
     \end{align*}
   \end{enumerate}
-  Given a universe $\UU$, we say that a type $A$ in context $\Gamma$ is \define{small}\index{small type|textbf} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
+  Given a universe $\UU$, we say that a type $A$ in context $\Gamma$ is \define{small}\index{small type} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
   \begin{equation*}
     \Gamma\vdash\Ty\big(\check{A}\big)\jdeq A~\mathrm{type}
   \end{equation*}
@@ -189,7 +189,7 @@ We can even go further and define the \emph{iterated loop space} of a pointed ty
 \subsection{Relations on the natural numbers}
 
 \begin{defn}\label{defn:obs_nat}
-We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathsf{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathsf{Eq}_\N$}|textbf} satisfying
+We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathsf{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathsf{Eq}_\N$}} satisfying
 \begin{align*}
 \mathsf{Eq}_\N(\zeroN,\zeroN) & \jdeq \unit & \mathsf{Eq}_\N(\succN(n),\zeroN) & \jdeq \emptyt \\
 \mathsf{Eq}_\N(\zeroN,\succN(n)) & \jdeq \emptyt & \mathsf{Eq}_\N(\succN(n),\succN(m)) & \jdeq \mathsf{Eq}_\N(n,m).
@@ -255,7 +255,7 @@ We can also define observational equality for many other kinds of types, such as
 \subsection{The finite types}
 
 \begin{defn}\label{defn:fin}
-We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}|textbf}\index{finite types|textbf} by induction on $\N$\index{family!of finite types}, taking
+We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}}\index{finite types} by induction on $\N$\index{family!of finite types}, taking
 \begin{align*}
 \mathsf{Fin}(\zeroN) & \defeq \emptyt \\
 \mathsf{Fin}(\succN(n)) & \defeq \mathsf{Fin}(n)+\unit
@@ -318,7 +318,7 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
   \end{subexenum}
 \item \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
   \begin{subexenum}
-  \item Define observational equality $\mathsf{Eq}_\bool$\index{Eq_bool@{$\mathsf{Eq}_\bool$}|textbf} on the booleans.
+  \item Define observational equality $\mathsf{Eq}_\bool$\index{Eq_bool@{$\mathsf{Eq}_\bool$}} on the booleans.
   \item Show that $\mathsf{Eq}_\bool$ is reflexive.\index{observational equality!on 2@{on $\bool$}!is reflexive}
   \item Show that for any reflexive relation $R:\bool\to(\bool\to \UU)$ one has\index{observational equality!on 2@{on $\bool$}!is least reflexive relation}
     \begin{equation*}

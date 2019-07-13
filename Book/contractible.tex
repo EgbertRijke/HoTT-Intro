@@ -18,11 +18,11 @@ and finally we use these observations in \cref{thm:contr_equiv} to conclude that
 \subsection{Contractible types}
 
 \begin{defn}
-  We say that a type $A$ is \define{contractible}\index{contractible!type|textbf} if it comes equipped with a term of type
+  We say that a type $A$ is \define{contractible}\index{contractible!type} if it comes equipped with a term of type
   \begin{equation*}
     \iscontr(A) \defeq \sm{c:A}\prd{x:A}c=x.
   \end{equation*}
-  Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction}\index{center of contraction|textbf} of $A$, and we call $C:\prd{x:A}c=x$ the \define{contraction}\index{contraction} of $A$.
+  Given a term $(c,C):\iscontr(A)$, we call $c:A$ the \define{center of contraction}\index{center of contraction} of $A$, and we call $C:\prd{x:A}c=x$ the \define{contraction}\index{contraction} of $A$.
 \end{defn}
 
 \begin{rmk}
@@ -46,7 +46,7 @@ In other words, the contraction $C$ is a \emph{homotopy} from the constant funct
 \end{defn}
 
 \begin{defn}
-  Suppose $A$ comes equipped with a term $a:A$. Then we say that $A$ satisfies \define{singleton induction}\index{singleton induction|textbf} if for every type family $B$ over $A$, the map
+  Suppose $A$ comes equipped with a term $a:A$. Then we say that $A$ satisfies \define{singleton induction}\index{singleton induction} if for every type family $B$ over $A$, the map
   \begin{equation*}
     \mathsf{ev\usc{}pt}:\Big(\prd{x:A}B(x)\Big)\to B(a)
   \end{equation*}
@@ -111,7 +111,7 @@ For any $a:A$, the type
 \begin{equation*}
 \sm{x:A}a=x
 \end{equation*}
-is contractible.\index{identity type!contractibility of total space|textit}
+is contractible.\index{identity type!contractibility of total space}
 \end{thm}
 
 \begin{proof}
@@ -134,7 +134,7 @@ is contractible.\index{identity type!contractibility of total space|textit}
 
 \subsection{Contractible maps}
 \begin{defn}
-Let $f:A\to B$ be a function, and let $b:B$. The \define{fiber}\index{fiber|textbf}\index{homotopy fiber|see {fiber}} of $f$ at $b$ is defined to be the type
+Let $f:A\to B$ be a function, and let $b:B$. The \define{fiber}\index{fiber}\index{homotopy fiber|see {fiber}} of $f$ at $b$ is defined to be the type
 \begin{equation*}
 \fib{f}{b}\defeq\sm{a:A}f(a)=b.
 \end{equation*}
@@ -176,14 +176,14 @@ It will be useful to have a characterization of the identity type of a fiber, so
   Now we arrive at the notion of contractible map.
 
 \begin{defn}
-We say that a function $f:A\to B$ is \define{contractible}\index{contractible!map|textbf} if there is a term of type
+We say that a function $f:A\to B$ is \define{contractible}\index{contractible!map} if there is a term of type
 \begin{equation*}
 \iscontr(f)\defeq\prd{b:B}\iscontr(\fib{f}{b}).
 \end{equation*}
 \end{defn}
 
 \begin{thm}\label{thm:equiv_contr}
-Any contractible map is an equivalence.\index{contractible!map!is an equivalence|textit}
+Any contractible map is an equivalence.\index{contractible!map!is an equivalence}
 \end{thm}
 
 \begin{proof}
@@ -269,7 +269,7 @@ First we introduce a new notion of \emph{coherently invertible map}, for which w
   \end{equation*}
   Note that this situation is analogous to the situation in the proof of \cref{thm:contractible}, where we improved the contraction $C$ so that it satisfied $C(c)=\refl{}$. The extra coherence $f\cdot H\htpy G'\cdot f$ is then used in the proof that the fibers of an equivalence are contractible.
 
-\begin{defn}\label{defn:htpy_nat}\index{homotopy!naturality|textbf}
+\begin{defn}\label{defn:htpy_nat}\index{homotopy!naturality}
 Let $f,g:A\to B$ be functions, and consider $H:f\htpy g$ and $p:x=y$ in $A$. We define identification
 \begin{equation*}
 \mathsf{htpy\usc{}nat}(H,p) \defeq  :\ct{\ap{f}{p}}{H(y)}=\ct{H(x)}{\ap{g}{p}}
@@ -343,7 +343,7 @@ commutes. This gives the desired identification $H(f(x))=\ap{f}{H(x)}$.
 Now we put the pieces together to conclude that any equivalence has contractible fibers.
 
 \begin{thm}\label{thm:contr_equiv}
-Any equivalence is a contractible map.\index{equivalence!is a contractible map|textit}
+Any equivalence is a contractible map.\index{equivalence!is a contractible map}
 \end{thm}
 
 \begin{proof}

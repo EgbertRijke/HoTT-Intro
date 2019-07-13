@@ -279,7 +279,7 @@ S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
 A \arrow[r,swap,"i"] & X.
 \end{tikzcd}
 \end{equation*}
-with $H:i\circ f\htpy j\circ g$, where all types involved are in $\UU$. The type $\mathsf{Desc}(\mathcal{S})$\index{Desc@{$\mathsf{Desc}(\mathcal{S})$}|textbf} of \define{descent data}\index{descent data|textbf} for $X$, is defined defined to be the type of triples $(P_A,P_B,P_S)$ consisting of
+with $H:i\circ f\htpy j\circ g$, where all types involved are in $\UU$. The type $\mathsf{Desc}(\mathcal{S})$\index{Desc@{$\mathsf{Desc}(\mathcal{S})$}} of \define{descent data}\index{descent data} for $X$, is defined defined to be the type of triples $(P_A,P_B,P_S)$ consisting of
 \begin{align*}
 P_A & : A \to \UU \\
 P_B & : B \to \UU \\
@@ -295,7 +295,7 @@ S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\
 A \arrow[r,swap,"i"] & X.
 \end{tikzcd}
 \end{equation*}
-with $H:i\circ f\htpy j\circ g$, we define the map\index{desc_fam@{$\mathsf{desc\usc{}fam}_{\mathcal{S}}$}|textbf}
+with $H:i\circ f\htpy j\circ g$, we define the map\index{desc_fam@{$\mathsf{desc\usc{}fam}_{\mathcal{S}}$}}
 \begin{equation*}
 \mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H) : (X\to \UU)\to \mathsf{Desc}(\mathcal{S})
 \end{equation*}
@@ -316,7 +316,7 @@ P_A & : A \to \UU \\
 P_B & : B \to \UU \\
 P_S & : \prd{x:S} \eqv{P_A(f(x))}{P_B(g(x))}.
 \end{align*}
-Then the function\index{desc_fam@{$\mathsf{desc\usc{}fam}_{\mathcal{S}}$}!is an equivalence|textit}
+Then the function\index{desc_fam@{$\mathsf{desc\usc{}fam}_{\mathcal{S}}$}!is an equivalence}
 \begin{equation*}
 \mathsf{desc\usc{}fam}_{\mathcal{S}}(i,j,H) : (X\to \UU)\to \mathsf{Desc}(\mathcal{S})
 \end{equation*}
@@ -436,7 +436,7 @@ of this type.
 \end{constr}
 
 \begin{lem}[The flattening lemma]\label{lem:flattening}
-The commuting square\index{flattening lemma!for pushouts|textit}
+The commuting square\index{flattening lemma!for pushouts}
 \begin{equation*}
 \begin{tikzcd}
 \sm{x:S}P_A(f(x)) \arrow[d,swap,"{f'}"] \arrow[r,"{g'}"] & \sm{b:B}P_B(b) \arrow[d,"{j'}"] \\
@@ -497,7 +497,7 @@ is a pushout square.
 In the previous section there was a significant role for families of equivalences, and we know by \cref{thm:pb_fibequiv,cor:pb_fibequiv}: families of equivalences indicate the presence of pullbacks. In this section we reformulate the results of the previous section using pullbacks where we used families of equivalences before, to obtain new and useful results. We begin by considering the type of descent data from the perspective of pullback squares.
 
 \begin{defn}
-Consider a span $\mathcal{S}$ from $A$ to $B$, and a span $\mathcal{S}'$ from $A'$ to $B'$. A \define{cartesian transformation} of spans\index{cartesian transformation!of spans|textbf} from $\mathcal{S}'$ to $\mathcal{S}$ is a diagram of the form
+Consider a span $\mathcal{S}$ from $A$ to $B$, and a span $\mathcal{S}'$ from $A'$ to $B'$. A \define{cartesian transformation} of spans\index{cartesian transformation!of spans} from $\mathcal{S}'$ to $\mathcal{S}$ is a diagram of the form
 \begin{equation*}
 \begin{tikzcd}
 A' \arrow[d,swap,"h_A"]  & S' \arrow[l,swap,"{f'}"] \arrow[r,"{g'}"] \arrow[d,swap,"h_S"] & B' \arrow[d,"h_B"] \\
@@ -506,7 +506,7 @@ A & S \arrow[l,"f"] \arrow[r,swap,"g"] & B
 \end{equation*}
 with $F:f\circ h_S\htpy h_A\circ f'$ and $G:g\circ h_S\htpy h_B\circ g'$, where both squares are pullback squares. 
 
-The type $\mathsf{cart}(\mathcal{S}',\mathcal{S})$\index{cart(S,S')@{$\mathsf{cart}(\mathcal{S},\mathcal{S}')$}|textbf} of cartesian transformation is the type of tuples
+The type $\mathsf{cart}(\mathcal{S}',\mathcal{S})$\index{cart(S,S')@{$\mathsf{cart}(\mathcal{S},\mathcal{S}')$}} of cartesian transformation is the type of tuples
 \begin{equation*}
 (h_A,h_S,h_B,F,G,p_f,p_g)
 \end{equation*}
@@ -517,7 +517,7 @@ where $p_f:\mathsf{is\usc{}pullback}(h_S,h_A,F)$ and $p_g:\mathsf{is\usc{}pullba
 \end{defn}
 
 \begin{lem}\label{lem:cart_desc}
-There is an equivalence\index{cart_desc@{$\mathsf{cart\usc{}desc}_{\mathcal{S}}$}|textit}
+There is an equivalence\index{cart_desc@{$\mathsf{cart\usc{}desc}_{\mathcal{S}}$}}
 \begin{equation*}
 \mathsf{cart\usc{}desc}_{\mathcal{S}}:\mathsf{Desc}(\mathcal{S})\to \mathsf{Cart}(\mathcal{S}).
 \end{equation*}
@@ -541,7 +541,7 @@ However, the type of $\varphi$ is equivalent to the type $P_A\circ f=Q$. Thus we
 \end{proof}
 
 \begin{defn}
-We define an operation\index{cart map!{$\mathsf{cart\usc{}map}_{\mathcal{S}}$}|textbf}
+We define an operation\index{cart map!{$\mathsf{cart\usc{}map}_{\mathcal{S}}$}}
 \begin{equation*}
 \mathsf{cart\usc{}map}_{\mathcal{S}}:{\Big(\sm{X':\UU}X'\to X\Big)}\to \mathsf{Cart}(\mathcal{S}).
 \end{equation*}
@@ -580,8 +580,8 @@ Moreover, these squares are pullback squares by \cref{thm:pb_pasting}.
 
 The following theorem is analogous to \cref{thm:desc_fam}.
 
-\begin{thm}[The descent theorem for pushouts]\label{thm:cart_map}\index{descent theorem!for pushouts|textit}
-The operation $\mathsf{cart\usc{}map}_{\mathcal{S}}$\index{cart map!{$\mathsf{cart\usc{}map}_{\mathcal{S}}$}!is an equivalence|textit} is an equivalence
+\begin{thm}[The descent theorem for pushouts]\label{thm:cart_map}\index{descent theorem!for pushouts}
+The operation $\mathsf{cart\usc{}map}_{\mathcal{S}}$\index{cart map!{$\mathsf{cart\usc{}map}_{\mathcal{S}}$}!is an equivalence} is an equivalence
 \begin{equation*}
 \eqv{\Big(\sm{X':\UU}X'\to X\Big)}{\mathsf{Cart}(\mathcal{S})}
 \end{equation*}

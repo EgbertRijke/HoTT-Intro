@@ -1,6 +1,8 @@
 \section{Dependent function types}
 \label{ch:pi}
 
+\index{Pi-type@{$\Pi$-type}|see {dependent function type}}
+\index{dependent function type|(}
 A fundamental concept in dependent type theory is that of a dependent function. A dependent function is a function of which the type of the output may depend on the input. They are a generalization of ordinary functions, because an ordinary function $f:A\to B$ is a function of which the output $f(x)$ has type $B$ regardless of the value of $x$.
 
 \subsection{Dependent function types}
@@ -8,7 +10,7 @@ Consider a section $b$ of a family $B$ over $A$ in context $\Gamma$, i.e.,
 \begin{equation*}
   \Gamma,x:A\vdash b(x):B(x).
 \end{equation*}
-From one point of view, such a section $b$ is an operation, or a program, that takes as input $x:A$ and produces a term $b(x):B(x)$. From a more mathematical point of view we see $b$ as a choice of an element of each $B(x)$. In other words, we may see $b$ as a function that takes $x:A$ to $b(x):B(x)$. Note that the type $B(x)$ of the output is dependent on $x:A$. In this section we postulate rules for the \emph{type} of all such dependent functions: whenever $B$ is a family over $A$ in context $\Gamma$, there is a type
+From one point of view, such a section $b$ is an operation, or a program\index{program}, that takes as input $x:A$ and produces a term $b(x):B(x)$. From a more mathematical point of view we see $b$ as a choice of an element of each $B(x)$. In other words, we may see $b$ as a function that takes $x:A$ to $b(x):B(x)$. Note that the type $B(x)$ of the output is dependent on $x:A$. In this section we postulate rules for the \emph{type} of all such dependent functions: whenever $B$ is a family over $A$ in context $\Gamma$, there is a type
 \begin{equation*}
   \prd{x:A}B(x)
 \end{equation*}
@@ -22,13 +24,16 @@ in context $\Gamma$, consisting of all the dependent functions of which the outp
 In the cases of the formation rule, the introduction rule, and the elimination rule, we will also provide conversion rules that ensure that all the constructions respect judgmental equality.
 
 \subsubsection{The $\Pi$-formation rule}
-\define{Dependent function types}\index{dependent function type}\index{pi-type@{$\Pi$-type}} are formed by the following \define{$\Pi$-formation rule}\index{rule!pi-formation@{$\Pi$-formation}}:
+\index{dependent function type!formation rule}
+\define{Dependent function types} are formed by the following \define{$\Pi$-formation rule}\index{rules!for dependent function types!formation}:
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
 \RightLabel{$\Pi$.}
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)~\mathrm{type}$}
 \end{prooftree}
-With the following conversion rule we postulate that formation of dependent function types respects judgmental equality:
+With the following conversion rule we postulate that formation of dependent function types respects judgmental equality of types:
+\index{rules!for dependent function types!conversion}
+\index{dependent function type!conversion rule}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A\jdeq A'~\mathrm{type}$}
 \AxiomC{$\Gamma,x:A\vdash B(x)\jdeq B'(x)~\textrm{type}$}
@@ -36,6 +41,8 @@ With the following conversion rule we postulate that formation of dependent func
 \BinaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq\prd{x:A'}B'(x)~\mathrm{type}$}
 \end{prooftree}
 Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the context $\Gamma,x:A$, we also postulate that
+\index{rules!for dependent function types!change of bound variable}
+\index{dependent function type!change of bound variable}
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
 \RightLabel{$\Pi$-$x'/x$.}
@@ -43,14 +50,25 @@ Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the co
 \end{prooftree}
 
 \subsubsection{The $\Pi$-introduction rule}
-The introduction rule for dependent function types is also called the $\lambda$-abstraction rule. Recall that dependent functions are formed from terms $b(x)$ of type $B(x)$ in context $\Gamma,x:A$. Therefore \define{$\lambda$-abstraction rule}\index{lambda-abstraction@{$\lambda$-abstraction}}\index{rule!lambda-abstraction@{$\lambda$-abstraction}} is as follows:
+The introduction rule%
+\index{dependent function type!introduction rule|see {$\lambda$-abstraction}}
+for dependent function types is also called the $\lambda$-abstraction rule. Recall that dependent functions are formed from terms $b(x)$ of type $B(x)$ in context $\Gamma,x:A$.
+Therefore the \define{$\lambda$-abstraction rule}
+\index{lambda-abstraction@{$\lambda$-abstraction}}
+\index{rules!for dependent function types!lambda-abstraction@{$\lambda$-abstraction}}
+\index{dependent function type!lambda-abstraction@{$\lambda$-abstraction}}
+is as follows:
 \begin{prooftree}
   \AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
   \RightLabel{$\lambda$}
   \UnaryInfC{$\Gamma\vdash \lam{x}b(x) : \prd{x:A}B(x)$}
 \end{prooftree}
 
-Just like ordinary mathematicians, we will sometimes write $x\mapsto f(x)$ for a function $f$. The map $n\mapsto n^2$ is an example. The $\lambda$-abstraction is also required to respect judgmental equality. Therefore we postulate that
+Just like ordinary mathematicians, we will sometimes write $x\mapsto f(x)$ for a function $f$. The map $n\mapsto n^2$ is an example. The $\lambda$-abstraction is also required to respect judgmental equality. Therefore we postulate the \define{$\lambda$-conversion rule},
+\index{rules!for dependent function types!lambda-conversion@{$\lambda$-conversion}}
+\index{lambda-conversion@{$\lambda$-conversion}}
+\index{dependent function type!lambda-conversion@{$\lambda$-conversion}}
+which asserts that
 \begin{prooftree}
   \AxiomC{$\Gamma,x:A \vdash b(x)\jdeq b'(x) : B(x)$}
   \RightLabel{$\lambda$-eq.}
@@ -59,7 +77,8 @@ Just like ordinary mathematicians, we will sometimes write $x\mapsto f(x)$ for a
 
 \subsubsection{The $\Pi$-elimination rule}
 
-The elimination rule for dependent function types provides us with a way to \emph{use} dependent functions. The way to use a dependent function is to apply it to an argument of the domain type. The $\Pi$-elimination rule is therefore also called the \define{evaluation rule}\index{evaluation}\index{rule!evaluation}. It asserts that given a dependent function $f:\prd{x:A}B(x)$ in context $\Gamma$ we obtain a term $f(x)$ of type $B(x)$ in context $\Gamma,x:A$. More formally:
+\index{dependent function type!elimination rule|see {evaluation}}
+The elimination rule for dependent function types provides us with a way to \emph{use} dependent functions. The way to use a dependent function is to apply it to an argument of the domain type. The $\Pi$-elimination rule is therefore also called the \define{evaluation rule}\index{evaluation}\index{rules!for dependent function types!evaluation}\index{dependent function type!evaluation}. It asserts that given a dependent function $f:\prd{x:A}B(x)$ in context $\Gamma$ we obtain a term $f(x)$ of type $B(x)$ in context $\Gamma,x:A$. More formally:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
 \RightLabel{$ev$}
@@ -72,15 +91,17 @@ Again we require that evaluation respects judgmental equality:
 \end{prooftree}
 
 \subsubsection{The $\Pi$-computation rules}
+
+\index{dependent function type!computation rules|see {$\beta$- and $\eta$-rules}}
 The computation rules for dependent function types postulate that $\lambda$-abstraction rule and the evaluation rule are mutual inverses. Thus we have two computation rules.
 
-First we postulate the \define{$\beta$-rule}\index{beta-rule@{$\beta$-rule}}\index{rule!beta-rule@{$\beta$-rule}}
+First we postulate the \define{$\beta$-rule}\index{beta-rule@{$\beta$-rule}!for Pi-types@{for $\Pi$-types}}\index{rules!for dependent function types!beta-rule@{$\beta$-rule}}\index{dependent function type!beta-rule@{$\beta$-rule}}
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
 \RightLabel{$\beta$.}
 \UnaryInfC{$\Gamma,x:A \vdash (\lambda y.b(y))(x)\jdeq b(x) : B(x)$}
 \end{prooftree}
-Second, we postulate the \define{$\eta$-rule}\index{eta-rule@{$\eta$-rule}}\index{rule!eta-rule@{$\eta$-rule}}
+Second, we postulate the \define{$\eta$-rule}\index{eta-rule@{$\eta$-rule}!for Pi-types@{for $\Pi$-types}}\index{rules!for dependent function types!eta-rule@{$\eta$-rule}}\index{dependent function type!eta-rule@{$\eta$-rule}}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
 \RightLabel{$\eta$.}
@@ -96,13 +117,13 @@ In the case where both $A$ and $B$ are types in context $\Gamma$, we may first w
 \BinaryInfC{$\Gamma,x:A\vdash B~\textrm{type}$}
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B~\textrm{type}$}
 \end{prooftree}
-The result is the type of functions that take an argument of type $A$, and return a term of type $B$. In other words, terms of the type $\prd{x:A}B$ are \emph{ordinary} functions from $A$ to $B$. We write $A\to B$ for the \define{type of functions}\index{function type} from $A$ to $B$. Sometimes we will also write $B^A$ for the type $A\to B$.
+The result is the type of functions that take an argument of type $A$, and return a term of type $B$. In other words, terms of the type $\prd{x:A}B$ are \emph{ordinary} functions from $A$ to $B$. We write $A\to B$\index{A arrow B@{$A\to B$}|see {function type}} for the \define{type of functions}\index{function type} from $A$ to $B$. Sometimes we will also write $B^A$\index{B^A@{$B^A$}|see {function type}} for the type $A\to B$.
 
-We give a brief summary of the rules specifying ordinary function types, omitting the rules that the asserted operations respect judgmental equality. All of these rules can be derived from the corresponding rules for $\Pi$-types.
+We give a brief summary of the rules specifying ordinary function types, omitting the conversion rules. All of these rules can be derived easily from the corresponding rules for $\Pi$-types.\index{rules!for function types}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
-\RightLabel{$\to$\index{arrow-formation@{$\to$-formation}}\index{rule!arrow-formation@{$\to$-formation}}}
+\RightLabel{$\to$}
 \BinaryInfC{$\Gamma\vdash A\to B~\textrm{type}$}
 \end{prooftree}%
 \begin{center}
@@ -110,14 +131,14 @@ We give a brief summary of the rules specifying ordinary function types, omittin
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \AxiomC{$\Gamma,x:A\vdash b(x):B$}
-\RightLabel{$\lambda$\index{lambda-abstraction@{$\lambda$-abstraction}}\index{rule!lambda-abstraction@{$\lambda$-abstraction}}}
+\RightLabel{$\lambda$}
 \BinaryInfC{$\Gamma\vdash \lam{x}b(x):A\to B$}
 \end{prooftree}%
 \end{minipage}
 \begin{minipage}{.45\textwidth}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
-\RightLabel{$ev$\index{rule!evaluation}\index{evaluation}}
+\RightLabel{$ev$}
 \UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
 \end{prooftree}%
 \end{minipage}
@@ -127,33 +148,22 @@ We give a brief summary of the rules specifying ordinary function types, omittin
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \AxiomC{$\Gamma,x:A\vdash b(x):B$}
-\RightLabel{$\beta$\index{rule!beta-rule@{$\beta$-rule}}\index{beta-rule@{$\beta$-rule}}}
+\RightLabel{$\beta$}
 \BinaryInfC{$\Gamma,x:A\vdash(\lam{y}b(y))(x)\jdeq b(x):B$}
 \end{prooftree}%
 \end{minipage}
 \begin{minipage}{.45\textwidth}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
-\RightLabel{$\eta$\index{rule!eta-rule@{$\eta$-rule}}\index{eta-rule@{$\eta$-rule}}}
+\RightLabel{$\eta$}
 \UnaryInfC{$\Gamma\vdash\lam{x} f(x)\jdeq f:A\to B$}
 \end{prooftree}
 \end{minipage}
 \end{center}
 
-\begin{comment}
-\begin{rmk}
-Similar to \cref{rmk:ev_var}, we can derive
-\begin{prooftree}
-\AxiomC{$\Gamma\vdash A~\mathrm{type}$}
-\AxiomC{$\Gamma\vdash B~\mathrm{type}$}
-\BinaryInfC{$\Gamma,f:B^A,x:A\vdash f(x):B$}
-\end{prooftree}
-\end{rmk}
-\end{comment}
-
 \subsection{The identity function, composition, and their laws}
 \begin{defn}
-For any type $A$ in context $\Gamma$, we define the \define{identity function}\index{identity function|textbf} $\idfunc[A]:A\to A$ using the variable rule\index{variable rule}\index{rule!variable rule}:
+For any type $A$ in context $\Gamma$, we define the \define{identity function}\index{identity function}\index{function type!identity function} $\idfunc[A]:A\to A$\index{id A@{$\idfunc[A]$}} using the variable rule:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \UnaryInfC{$\Gamma,x:A\vdash x:A$}
@@ -161,10 +171,10 @@ For any type $A$ in context $\Gamma$, we define the \define{identity function}\i
 \end{prooftree}
 \end{defn}
 
-A judgment of the form $\Gamma\vdash a\defeq b:A$ should be read as "$b$ is a well-defined term of type $A$ in context $\Gamma$, and we will refer to it as $a$".
+Note that we have used the symbol $\jdeq$ in the conclusion to define the identity function. A judgment of the form $\Gamma\vdash a\defeq b:A$ should be read as "$b$ is a well-defined term of type $A$ in context $\Gamma$, and we will refer to it as $a$".
 
 \begin{defn}
-For any three types $A$, $B$, and $C$ in context $\Gamma$, there is a \define{composition}\index{composition!of functions|textbf} operation
+For any three types $A$, $B$, and $C$ in context $\Gamma$, there is a \define{composition}\index{function type!composition}\index{composition!of functions} operation
 \begin{equation*}
 \mathsf{comp}:(B\to C)\to ((A\to B)\to (A\to C)),
 \end{equation*}
@@ -175,7 +185,7 @@ i.e., we can derive
 \AxiomC{$\Gamma\vdash C~\textrm{type}$}
 \TrinaryInfC{$\Gamma\vdash\mathsf{comp}:(B\to C)\to ((A\to B)\to (A\to C))$}
 \end{prooftree}
-We will write $g\circ f$ for $\mathsf{comp}(g,f)$.
+We will write $g\circ f$\index{g composed with f@{$g\circ f$}} for $\mathsf{comp}(g,f)$\index{comp(g,f)@{$\mathsf{comp}(g,f)$}}.
 \end{defn}
 
 \begin{constr}
@@ -196,6 +206,8 @@ We will write $g\circ f$ for $\mathsf{comp}(g,f)$.
     \UnaryInfC{$\Gamma\vdash\mathsf{comp}\defeq \lam{g}{f}{x}g(f(x)):C^B\to (B^A\to C^A)$}
   \end{prooftree}
 \end{constr}
+
+The rules of function types can be used to derive the laws of a category\index{category laws!for functions} for functions, i.e., we can derive that function composition is associative and that the identity function satisfies the unit laws. In the remainder of this section we will give these derivations.
 
 \begin{lem}
 Composition of functions is associative\index{associativity!of function composition}\index{composition!of functions!associativity}, i.e., we can derive
@@ -228,7 +240,7 @@ Composition of functions is associative\index{associativity!of function composit
 \end{proof}
 
 \begin{lem}\label{lem:fun_unit}
-Composition of functions satisfies the left and right unit laws\index{left unit law|see {unit laws}}\index{right unit law|see {unit laws}}\index{unit laws!of function composition}, i.e., we can derive
+Composition of functions satisfies the left and right unit laws\index{left unit law|see {unit laws}}\index{right unit law|see {unit laws}}\index{unit laws!of function composition}\index{composition!of functions!unit laws}, i.e., we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:A\to B$}
@@ -304,7 +316,7 @@ and show that this operation agrees with ordinary composition when it is special
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
 \UnaryInfC{$\Gamma\vdash (\lam{x}f)\circ'\idfunc[A]\jdeq f :\prd{x:A}B(x)$}
 \end{prooftree}
-\item Show that composition of dependent functions satisfies the left unit law\index{unit laws!dependent function composition}:
+\item Show that composition of dependent functions satisfies the left unit law\index{unit laws!dependent function composition}\index{composition!of dependent functions!unit laws}:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
 \UnaryInfC{$\Gamma\vdash (\lam{x}\idfunc[B(x)])\circ' f\jdeq f:\prd{x:A}B(x)$}
@@ -323,3 +335,4 @@ that swaps the order of the arguments.
 \end{equation*}
 \end{subexenum}
 \end{exercises}
+\index{dependent function type|)}

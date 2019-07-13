@@ -5,17 +5,17 @@ It is a trivial observation, but nevertheless of fundamental importance, that by
 
 \begin{defn}\label{defn:ess_small}
 \begin{enumerate}
-\item A type $A$ is said to be \define{essentially small}\index{essentially small!type|textbf} if there is a type $X:\UU$ and an equivalence $\eqv{A}{X}$. We write\index{ess_small(A)@{$\mathsf{ess\usc{}small}(A)$}|textbf}
+\item A type $A$ is said to be \define{essentially small}\index{essentially small!type} if there is a type $X:\UU$ and an equivalence $\eqv{A}{X}$. We write\index{ess_small(A)@{$\mathsf{ess\usc{}small}(A)$}}
 \begin{equation*}
 \mathsf{ess\usc{}small}(A)\defeq\sm{X:\UU}\eqv{A}{X}.
 \end{equation*}
-\item A map $f:A\to B$ is said to be \define{essentially small}\index{essentially small!map|textbf} if for each $b:B$ the fiber $\fib{f}{b}$ is essentially small.
-We write\index{ess_small(f)@{$\mathsf{ess\usc{}small}(f)$}|textbf}
+\item A map $f:A\to B$ is said to be \define{essentially small}\index{essentially small!map} if for each $b:B$ the fiber $\fib{f}{b}$ is essentially small.
+We write\index{ess_small(f)@{$\mathsf{ess\usc{}small}(f)$}}
 \begin{equation*}
 \mathsf{ess\usc{}small}(f)\defeq\prd{b:B}\mathsf{ess\usc{}small}(\fib{f}{b}).
 \end{equation*}
 \item A type $A$ is said to be \define{locally small}\index{locally small!type} if for every $x,y:A$ the identity type $x=y$ is essentially small.
-We write\index{loc_small(A)@{$\mathsf{loc\usc{}small}(A)$}|textbf}
+We write\index{loc_small(A)@{$\mathsf{loc\usc{}small}(A)$}}
 \begin{equation*}
 \mathsf{loc\usc{}small}(A)\defeq \prd{x,y:A}\mathsf{ess\usc{}small}(x=y).
 \end{equation*}
@@ -23,7 +23,7 @@ We write\index{loc_small(A)@{$\mathsf{loc\usc{}small}(A)$}|textbf}
 \end{defn}
 
 \begin{lem}\label{lem:isprop_ess_small}
-The type $\mathsf{ess\usc{}small}(A)$ is a proposition for any type $A$.\index{essentially small!is a proposition|textit}
+The type $\mathsf{ess\usc{}small}(A)$ is a proposition for any type $A$.\index{essentially small!is a proposition}
 \end{lem}
 
 \begin{proof}
@@ -90,7 +90,7 @@ Let $f:A\to B$ be a map. Then there is an equivalence
 \begin{equation*}
 \eqv{\mathsf{ess\usc{}small}(f)}{\mathsf{is\usc{}classified}(f)},
 \end{equation*}
-where $\mathsf{is\usc{}classified}(f)$\index{is_classified(f)@{$\mathsf{is\usc{}classified}(f)$}|textbf} is the type of quadruples $(F,\tilde{F},H,p)$ consisting of maps
+where $\mathsf{is\usc{}classified}(f)$\index{is_classified(f)@{$\mathsf{is\usc{}classified}(f)$}} is the type of quadruples $(F,\tilde{F},H,p)$ consisting of maps
 $F:B\to \UU$ and $\tilde{F}:A\to \sm{X:\UU}X$, a homotopy $H:F\circ f\htpy \proj 1\circ \tilde{F}$,  such that the commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -98,7 +98,7 @@ A \arrow[r,"\tilde{F}"] \arrow[d,swap,"f"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
 B \arrow[r,swap,"F"] & \UU
 \end{tikzcd}
 \end{equation*}
-is a pullback square, as witnessed by $p$\footnote{The universal property of the pullback is not expressible by a type. However, we may take the type of $p:\isequiv(h)$, where $h:A\to B\times_\UU\big(\sm{X:\UU}X\big)$ is the map obtained by the universal property of the canonical pullback.}. If $f$ comes equipped with a term of type $\mathsf{is\usc{}classified}(f)$, we also say that $f$ is \define{classified}\index{classified by the universal family|textbf} by the universal family. 
+is a pullback square, as witnessed by $p$\footnote{The universal property of the pullback is not expressible by a type. However, we may take the type of $p:\isequiv(h)$, where $h:A\to B\times_\UU\big(\sm{X:\UU}X\big)$ is the map obtained by the universal property of the canonical pullback.}. If $f$ comes equipped with a term of type $\mathsf{is\usc{}classified}(f)$, we also say that $f$ is \define{classified}\index{classified by the universal family} by the universal family. 
 \end{thm}
 
 \begin{proof}
@@ -114,7 +114,7 @@ is a fiberwise equivalence. Thus the data $(F,\tilde{F},H,pb)$ is equivalent to 
 \end{proof}
 
 \begin{rmk}
-For any type $A$ (not necessarily small), and any $B:A\to \UU$, the square\index{Sigma-type@{$\Sigma$-type}!as pullback of universal family|textit}
+For any type $A$ (not necessarily small), and any $B:A\to \UU$, the square\index{Sigma-type@{$\Sigma$-type}!as pullback of universal family}
 \begin{equation*}
 \begin{tikzcd}[column sep=6em]
 \sm{x:A}B(x) \arrow[d,swap,"\proj 1"] \arrow[r,"{\lam{(x,y)}(B(x),y)}"] & \sm{X:\UU}X \arrow[d,"\proj 1"] \\
@@ -137,7 +137,7 @@ In the following theorem we show that a type is small if and only if its diagona
 \begin{thm}
 Let $A$ be a type. The following are equivalent:
 \begin{enumerate}
-\item $A$ is locally small.\index{locally small|textit}
+\item $A$ is locally small.\index{locally small}
 \item There are maps $I:A\times A\to\UU$ and $\tilde{I}:A\to\sm{X:\UU}X$, and a homotopy $H:I\circ \delta_A\htpy \proj 1\circ\tilde{I}$
 such that the commuting square
 \begin{equation*}
@@ -146,7 +146,7 @@ A \arrow[r,"\tilde{I}"] \arrow[d,swap,"\delta_A"] & \sm{X:\UU}X \arrow[d,"\proj 
 A\times A \arrow[r,swap,"{I}"] & \UU
 \end{tikzcd}
 \end{equation*}
-is a pullback square.\index{diagonal!of a type|textit}
+is a pullback square.\index{diagonal!of a type}
 \end{enumerate}
 \end{thm}
 
@@ -166,7 +166,7 @@ Now the result follows from \cref{thm:classifier}.
 \end{subexenum}
 \item Let $f:A\to B$ be a map. Show that the following are equivalent:
 \begin{enumerate}
-\item The map $f$ is \define{locally small}\index{locally small!map|textbf} in the sense that for every $x,y:A$, the action on paths of $f$
+\item The map $f$ is \define{locally small}\index{locally small!map} in the sense that for every $x,y:A$, the action on paths of $f$
 \begin{equation*}
 \apfunc{f}:(x=y)\to (f(x)=f(y))
 \end{equation*}

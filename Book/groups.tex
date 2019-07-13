@@ -159,13 +159,13 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \subsection{Isomorphic semi-groups are equal}
 
 \begin{defn}
-Let $h:\mathrm{hom}(\mathcal{G},\mathcal{H})$ be a group homomorphism. Then $h$ is said to be an \define{isomorphism}\index{group homomorphism!isomorphism}\index{isomorphism!of groups} if there is a group homomorphism $h^{-1}:\mathrm{hom}(\mathcal{H},\mathcal{G})$ such that
+Let $h:\mathrm{hom}(G,H)$ be a homomorphism of semi-groups. Then $h$ is said to be an \define{isomorphism}\index{group homomorphism!isomorphism}\index{isomorphism!of groups} if it comes equipped with a term of type $\mathsf{is\usc{}iso}(h)$\index{is-iso for semi-groups@{$\mathsf{is\usc{}iso}$ for semi-groups}}, consisting of triples $(h^{-1},p,q)$ consisting of a homomorphism $h^{-1}:\mathrm{hom}(H,G)$ of semi-groups and identifications
 \begin{equation*}
-h^{-1}\circ h=\idfunc[\mathcal{G}]\qquad\text{and}\qquad h\circ h^{-1}=\idfunc[\mathcal{H}].
+p:h^{-1}\circ h=\idfunc[G]\qquad\text{and}\qquad q:h\circ h^{-1}=\idfunc[H]
 \end{equation*}
-We write $\mathcal{G}\cong\mathcal{H}$ for the type of all group isomorphisms from $\mathcal{G}$ to $\mathcal{H}$, i.e.,
+witnessing that $h^{-1}$ satisfies the inverse laws\index{inverse laws!for semi-group isomorphisms}We write $G\cong H$ for the type of all isomorphisms of semi-groups from $G$ to $H$, i.e.,
 \begin{equation*}
-\mathcal{G}\cong\mathcal{H} \defeq \sm{h:\mathrm{hom}(\mathcal{G},\mathcal{H})}{k:\mathrm{hom}(\mathcal{H},\mathcal{G})} (k\circ h = \idfunc[\mathcal{G}])\times (h\circ k=\idfunc[\mathcal{H}]).
+G\cong H \defeq \sm{h:\mathrm{hom}(G,H)}{k:\mathrm{hom}(H,G)} (k\circ h = \idfunc[G])\times (h\circ k=\idfunc[H]).
 \end{equation*}
 \end{defn}
 
@@ -176,7 +176,7 @@ If $f$ is an isomorphism, then its inverse is unique. In other words, being an i
   \begin{equation*}
     \mathsf{is\usc{}iso}(h)
   \end{equation*}
-  is a proposition. It follows that the type $G\cong H$ is a set for any two semi-groups $G$ and $H$.
+  is a proposition.\index{is-iso for semi-groups@{$\mathsf{is\usc{}iso}$ for semi-groups}!is a proposition} It follows that the type $G\cong H$ is a set for any two semi-groups $G$ and $H$.
 \end{lem}
 
 \begin{proof}
@@ -200,29 +200,29 @@ If $f$ is an isomorphism, then its inverse is unique. In other words, being an i
 \end{proof}
 
 \begin{defn}
-Let $\mathcal{G}$ and $\mathcal{H}$ be a semi-groups. We define the map\index{iso_eq@{$\mathsf{iso\usc{}eq}$}|textbf}
+Let $G$ and $H$ be a semi-groups. We define the map\index{iso-eq for semi-groups@{$\mathsf{iso\usc{}eq}$ for semi-groups}}
 \begin{equation*}
-\mathsf{iso\usc{}eq} : (\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
+\mathsf{iso\usc{}eq} : (G=H)\to (G\cong H)
 \end{equation*}
-by path induction, taking $\refl{\mathcal{G}}$ to isomorphism $\idfunc[\mathcal{G}]$.
+by path induction, taking $\refl{G}$ to isomorphism $\idfunc[G]$.
 \end{defn}
 
 \begin{thm}\label{thm:iso-eq-semi-group}
-The map
+The map\index{identity type!of Semi-Group@{of $\mathsf{Semi\usc{}Group}$}}\index{Semi-Group@{$\mathsf{Semi\usc{}Group}$}!identity type}
 \begin{equation*}
-\mathsf{iso\usc{}eq} : (\mathcal{G}=\mathcal{H})\to (\mathcal{G}\cong\mathcal{H})
+\mathsf{iso\usc{}eq} : (G=H)\to (G\cong H)
 \end{equation*}
-is an equivalence for any two semi-groups $\mathcal{G}$ and $\mathcal{H}$.
+is an equivalence for any two semi-groups $G$ and $H$.
 \end{thm}
 
 \begin{proof}
-By \cref{thm:id_fundamental} it suffices to show that the total space
+By the fundamental theorem of identity types \cref{thm:id_fundamental}\index{fundamental theorem of identity types} it suffices to show that the total space
 \begin{equation*}
-\sm{\mathcal{G}':\mathsf{Semi\usc{}Grp}}\mathcal{G}\cong\mathcal{G}'
+\sm{G':\mathsf{Semi\usc{}Grp}}G\cong G'
 \end{equation*}
-is contractible. Since the type of isomorphisms from $\mathcal{G}$ to $\mathcal{G}'$ is equivalent to the type of equivalences from $\mathcal{G}$ to $\mathcal{G}'$ it suffices to show that the type
+is contractible. Since the type of isomorphisms from $G$ to $G'$ is equivalent to the type of equivalences from $G$ to $G'$ it suffices to show that the type
 \begin{equation*}
-  \sm{\mathcal{G}':\mathsf{Semi\usc{}Grp}}\sm{e:\eqv{G}{G'}}\prd{x,y:G}e(\mu_G(x,y))=\mu_{G'}(e(x),e(y)))
+  \sm{G':\mathsf{Semi\usc{}Grp}}\sm{e:\eqv{G}{G'}}\prd{x,y:G}e(\mu_G(x,y))=\mu_{G'}(e(x),e(y)))
 \end{equation*}
 is contractible\footnote{In order to show that a type of the form
   \begin{equation*}
@@ -241,11 +241,11 @@ is contractible. The first type is contractible by the univalence axiom. The sec
 \end{proof}
 
 \begin{cor}
-The type $\mathsf{Semi\usc{}Grp}$ is a $1$-type.\index{Semi-Grp@{$\mathsf{Semi-Grp}$}!is a $1$-type|textit}
+The type $\mathsf{Semi\usc{}Grp}$ is a $1$-type.\index{Semi-Group@{$\mathsf{Semi\usc{}Group}$}!is a 1-type@{is a $1$-type}}
 \end{cor}
 
 \begin{proof}
-It is straightforward to see that the type of group isomorphisms $\mathcal{G}\cong\mathcal{H}$ is a set, for any two groups $\mathcal{G}$ and $\mathcal{H}$.
+It is straightforward to see that the type of group isomorphisms $G\cong H$ is a set, for any two groups $G$ and $H$.
 \end{proof}
 
 \subsection{Isomorphic groups are equal}
@@ -253,7 +253,7 @@ It is straightforward to see that the type of group isomorphisms $\mathcal{G}\co
 Analogously to the map $\mathsf{iso\usc{}eq}$ of semi-groups, we have a map $\mathsf{iso\usc{}eq}$ of groups. Note, however, that the domain of this map is now the identity type $G=H$ of the \emph{groups} $G$ and $H$, so the maps $\mathsf{iso\usc{}eq}$ of semi-groups and groups are not exactly the same maps.
 
 \begin{defn}
-  Let $G$ and $H$ be groups. We define the map
+  Let $G$ and $H$ be groups. We define the map\index{iso-eq for groups@{$\mathsf{iso\usc{}eq}$ for groups}}
   \begin{equation*}
     \mathsf{iso\usc{}eq} : (G=H)\to (G\cong H)
   \end{equation*}
@@ -261,7 +261,7 @@ Analogously to the map $\mathsf{iso\usc{}eq}$ of semi-groups, we have a map $\ma
 \end{defn}
 
 \begin{thm}
-  For any two groups $G$ and $H$, the map
+  For any two groups $G$ and $H$, the map\index{identity type!of Group@{of $\mathsf{Group}$}}\index{Group@{$\mathsf{Group}$}!identity type}
   \begin{equation*}
     \mathsf{iso\usc{}eq}:(G=H)\to (G\cong H)
   \end{equation*}
@@ -280,7 +280,7 @@ Analogously to the map $\mathsf{iso\usc{}eq}$ of semi-groups, we have a map $\ma
 \end{proof}
 
 \begin{cor}
-  The type of groups is a $1$-type.
+  The type of groups is a $1$-type.\index{Group@{$\mathsf{Group}$}!is a 1-type@{is a $1$-type}}
 \end{cor}
 
 \subsection{Categories in univalent mathematics}
@@ -288,15 +288,15 @@ Analogously to the map $\mathsf{iso\usc{}eq}$ of semi-groups, we have a map $\ma
 In our proof of the fact that isomorphic groups are equal we have made extensive use of the notion of group homomorphism. What we have shown, in fact, is that there is a category of groups which is \emph{Rezk complete} in the sense that the type of isomorphisms between two objects is equivalent to the type of identifications between those objects. In this final section we briefly introduce the notion of Rezk complete category. There are many more examples of categories, such as the categories of rings, or modules over a ring.
 
 \begin{defn}
-  A \define{pre-category} $\mathcal{C}$ consists of
+  A \define{pre-category}\index{pre-category} $\mathcal{C}$ consists of
   \begin{enumerate}
-  \item A type $A$ of \define{objects}.
+  \item A type $A$ of \define{objects}.\index{pre-category!objects}\index{objects}
   \item For every two objects $x,y:A$ a set
     \begin{equation*}
       \mathsf{hom}(x,y)
     \end{equation*}
-    of \define{morphisms} from $x$ to $y$.
-  \item For every object $x:A$ an \define{identity morphism}
+    of \define{morphisms}\index{pre-category!morphisms}\index{morphism} from $x$ to $y$.
+  \item For every object $x:A$ an \define{identity morphism}\index{identity morphism}\index{pre-category!identity morphism}
     \begin{equation*}
       \idfunc : \mathsf{hom}(x,x)
     \end{equation*}
@@ -304,32 +304,36 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
     \begin{equation*}
       g\circ f :\mathsf{hom}(x,z)
     \end{equation*}
-    called the \define{composite} of $f$ and $g$.
+    called the \define{composition}\index{composition!of morphisms} of $f$ and $g$.
   \item the following terms
     \begin{align*}
       \mathsf{left\usc{}unit}_{\mathcal{C}} & : \idfunc \circ f = f \\
       \mathsf{right\usc{}unit}_{\mathcal{C}} & : g \circ \idfunc = g \\
       \mathsf{assoc}_{\mathcal{C}} & : (h \circ g) \circ f = h \circ (g \circ f)
     \end{align*}
-    witnessing that the category laws are satisfied.
+    witnessing that the category laws\index{category laws}\index{laws!of a category} are satisfied.
   \end{enumerate}
 \end{defn}
 
 \begin{eg}
-  By \cref{rmk:category-semi-group,rmk:category-group} we have pre-categories of semi-groups and of groups.
+  Since the type $X\to Y$ of functions between sets is again a set, we have a pre-category of sets.\index{pre-category!of sets}
 \end{eg}
 
 \begin{eg}
-  A pre-category satisfying the condition that every hom-set is a proposition is a \define{preorder}. 
+  By \cref{rmk:category-semi-group,rmk:category-group} we have pre-categories of semi-groups and of groups.\index{semi-group!is a pre-category}\index{pre-category!of semi-groups}\index{group!is a category}\index{pre-category!of groups}
+\end{eg}
+
+\begin{eg}
+  A pre-category satisfying the condition that every hom-set is a proposition is a \define{preorder}.\index{preorder}\index{pre-category!preorder} 
 \end{eg}
 
 \begin{defn}
-  Given a pre-category $\mathcal{C}$, a morphism $f:\mathsf{hom}(x,y)$ is said to be an \define{isomorphism} if there exists a morphism $g:\mathsf{hom}(y,x)$ such that
+  Given a pre-category $\mathcal{C}$, a morphism $f:\mathsf{hom}(x,y)$ is said to be an \define{isomorphism}\index{isomorphism!in a pre-category} if there exists a morphism $g:\mathsf{hom}(y,x)$ such that
   \begin{align*}
     g\circ f & = \idfunc \\
     f \circ g & \idfunc.
   \end{align*}
-  We will write $\mathsf{iso}(x,y)$ for the type of all isomorphisms in $\mathcal{C}$ from $x$ to $y$.
+  We will write $\mathsf{iso}(x,y)$\index{iso(x,y)@{$\mathsf{iso}(x,y)$}} for the type of all isomorphisms in $\mathcal{C}$ from $x$ to $y$.
 \end{defn}
 
 \begin{rmk}
@@ -337,27 +341,27 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
 \end{rmk}
 
 \begin{defn}
-  A pre-category $\mathcal{C}$ is said to be \define{Rezk-complete} if the canonical map
+  A pre-category $\mathcal{C}$ is said to be \define{Rezk-complete}\index{Rezk-complete}\index{pre-category!Rezk complete} if the canonical map
   \begin{equation*}
     (x=y)\to \mathsf{iso}(x,y)
   \end{equation*}
-  is an equivalence for any two objects $x$ and $y$ of $\mathcal{C}$. Rezk-complete pre-categories are also called \define{categories}.
+  is an equivalence for any two objects $x$ and $y$ of $\mathcal{C}$. Rezk-complete pre-categories are also called \define{categories}.\index{category}
 \end{defn}
 
 \begin{eg}
-  The pre-category of sets is Rezk complete by the univalence axiom, so it is a category.
+  The pre-category of sets is Rezk complete by the univalence axiom, so it is a category.\index{sets!form a category}\index{category!of sets}
 \end{eg}
 
 \begin{eg}
-  The pre-categories of semi-groups and groups are Rezk-complete. Therefore they form categories.
+  The pre-categories of semi-groups and groups are Rezk-complete. Therefore they form categories.\index{Semi-Group@{$\mathsf{Semi\usc{}Group}$}!is a category}\index{Group@{$\mathsf{Group}$}!is a category}\index{category!of groups}\index{category!of semi-groups}
 \end{eg}
 
 \begin{eg}
-  A pre-order is Rezk-complete if and only if it is anti-symmetric. In other words, a poset is precisely a category for which all the hom-sets are propositions. Thus, we see that the anti-symmetry axiom can be seen as a univalence axiom for pre-orders.
+  A pre-order is Rezk-complete if and only if it is anti-symmetric. In other words, a poset is precisely a category for which all the hom-sets are propositions. Thus, we see that the anti-symmetry axiom can be seen as a univalence axiom for pre-orders.\index{category!poset}\index{poset!is a category}
 \end{eg}
 
 \begin{exercises}
-\item Let $X$ be a set. Show that the map
+\item Let $X$ be a set. Show that the map\index{equiv-eq@{$\mathsf{equiv\usc{}eq}$}!is a group isomorphism}
   \begin{equation*}
     \mathsf{equiv\usc{}eq} : (X=X)\to (\eqv{X}{X})
   \end{equation*}
@@ -373,13 +377,13 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
     \begin{equation*}
       \mathsf{concat}:\loopspace{A}\to (\loopspace{A}\simeq\loopspace{A})
     \end{equation*}
-    is an embedding.
+    is an embedding.\index{concat@{$\mathsf{concat}$}!is an embedding}
   \end{subexenum}
-\item Let $f:\mathsf{hom}(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that
+\item Let $f:\mathsf{hom}(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that\index{group homomorphism!preserves units and inverses}
   \begin{align*}
     f(e_G) & = e_H \\
     f(x^{-1}) & = f(x)^{-1}.
   \end{align*}
-\item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.
-\item Construct the category of posets.
+\item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.\index{isomorphism!of semi-groups!preserves unit}
+\item Construct the category of posets.\index{category!of posets}
 \end{exercises}

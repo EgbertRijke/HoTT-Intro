@@ -34,7 +34,7 @@ A second reason for studying pullback squares is that the dual notion of \emph{p
 \subsection{The universal property of pullbacks}
 
 \begin{defn}\label{defn:cospan}
-  A \define{cospan}\index{cospan|textbf} consists of three types $A$, $X$, and $B$, and maps $f:A\to X$ and $g:B\to X$.
+  A \define{cospan}\index{cospan} consists of three types $A$, $X$, and $B$, and maps $f:A\to X$ and $g:B\to X$.
 \end{defn}
 
 \begin{defn}
@@ -44,14 +44,14 @@ A second reason for studying pullback squares is that the dual notion of \emph{p
       A \arrow[r,"f"] & X & B \arrow[l,swap,"g"] 
     \end{tikzcd}
   \end{equation*}
-  and a type $C$. A \define{cone}\index{cone!on a cospan|textbf} on the cospan $A \rightarrow X \leftarrow B$ with \define{vertex} $C$\index{vertex!of a cone|textbf} consists of maps $p:C\to A$, $q:C\to B$ and a homotopy $H:f\circ p\htpy g\circ q$ witnessing that the square
+  and a type $C$. A \define{cone}\index{cone!on a cospan} on the cospan $A \rightarrow X \leftarrow B$ with \define{vertex} $C$\index{vertex!of a cone} consists of maps $p:C\to A$, $q:C\to B$ and a homotopy $H:f\circ p\htpy g\circ q$ witnessing that the square
   \begin{equation*}
     \begin{tikzcd}
       C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
       A \arrow[r,swap,"f"] & X
     \end{tikzcd}
   \end{equation*}
-  commutes. We write\index{cone(C)@{$\mathsf{cone}(\blank)$}|textbf}
+  commutes. We write\index{cone(C)@{$\mathsf{cone}(\blank)$}}
 \begin{equation*}
 \mathsf{cone}(C)\defeq \sm{p:C\to A}{q:C\to B}f\circ p\htpy g\circ q
 \end{equation*}
@@ -61,7 +61,7 @@ for the type of cones with vertex $C$.
 It is good practice to characterize the identity type of any type of importance. In the following lemma we give a characterization of the identity type of the type $\mathsf{cone}(C)$ of cones on $A\rightarrow X\leftarrow B$ with vertex $C$. Such characterizations are entirely routine in homotopy type theory.
 
 \begin{lem}\label{lem:id_cone}%
-\index{identity type!of cone@{of $\mathsf{cone}(C)$}|textit}%
+\index{identity type!of cone@{of $\mathsf{cone}(C)$}}%
 Let $(p,q,H)$ and $(p',q',H')$ be cones on a cospan $f:A\rightarrow X \leftarrow B:g$, both with vertex $C$. Then the type $(p,q,H)=(p',q',H')$ is equivalent to the type of triples $(K,L,M)$ consisting of
 \begin{align*}
 K & : p \htpy p' \\
@@ -116,7 +116,7 @@ Of course, the type $\ct{H}{\mathsf{htpy\usc{}refl}_{g\circ q}}\htpy \ct{\mathsf
 Given a cone with vertex $C$ on a span $A\stackrel{f}{\rightarrow} X \stackrel{g}{\leftarrow} B$ and a map $h:C'\to C$, we construct a new cone with vertex $C'$ in the following definition.
 
 \begin{defn}
-For any cone $(p,q,H)$ with vertex $C$ and any type $C'$, we define a map\index{cone map@{$\mathsf{cone\usc{}map}$}|textbf}
+For any cone $(p,q,H)$ with vertex $C$ and any type $C'$, we define a map\index{cone map@{$\mathsf{cone\usc{}map}$}}
 \begin{equation*}
 \mathsf{cone\usc{}map}(p,q,H):(C'\to C)\to\mathsf{cone}(C')
 \end{equation*}
@@ -131,7 +131,7 @@ C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
 A \arrow[r,swap,"f"] & X
 \end{tikzcd}
 \end{equation*}
-with $H:f\circ p\htpy g\circ q$ is a \define{pullback square}\index{pullback square|textbf}, or that it is \define{cartesian}\index{cartesian square|textbf}, if it satisfies the \define{universal property} of pullbacks\index{universal property!of pullbacks}, which asserts that the map
+with $H:f\circ p\htpy g\circ q$ is a \define{pullback square}\index{pullback square}, or that it is \define{cartesian}\index{cartesian square}, if it satisfies the \define{universal property} of pullbacks\index{universal property!of pullbacks}, which asserts that the map
 \begin{equation*}
 \mathsf{cone\usc{}map}(p,q,H):(C'\to C)\to\mathsf{cone}(C')
 \end{equation*}
@@ -159,7 +159,7 @@ A \arrow[r,swap,"f"] & X
 \end{tikzcd}
 \end{equation*}
 with $H:f\circ p\htpy g\circ q$
-Then the following are equivalent:\index{universal property!of pullbacks (characterization)|textit}
+Then the following are equivalent:\index{universal property!of pullbacks (characterization)}
 \begin{enumerate}
 \item The square is a pullback square.
 \item For every type $C'$ and every cone $(p',q',H')$ with vertex $C'$, the type of quadruples $(h,K,L,M)$ consisting of a map $h:C'\to C$, homotopies
@@ -184,7 +184,7 @@ The map $\mathsf{cone\usc{}map}(p,q,H)$ is an equivalence if and only if its fib
 
 In the following lemma we establish the uniqueness of pullbacks up to equivalence via a \emph{3-for-2 property} for pullbacks.
 
-\begin{lem}\label{lem:pb_3for2}\index{pullback!3-for-2 property|textit}\index{3-for-2 property!of pullbacks|textit}%
+\begin{lem}\label{lem:pb_3for2}\index{pullback!3-for-2 property}\index{3-for-2 property!of pullbacks}%
 Consider the squares
 \begin{equation*}
 \begin{tikzcd}
@@ -284,7 +284,7 @@ A\times_X B & \defeq \sm{x:A}{y:B}f(x)=g(y) \\
 \pi_2 & \defeq \proj 1\circ\proj 2 & & : A\times_X B\to B\\
 \pi_3 & \defeq \proj 2\circ\proj 2 & & : f\circ \pi_1 \htpy g\circ\pi_2.
 \end{align*}
-The type $A\times_X B$ is called the \define{canonical pullback}\index{canonical pullback|textbf} of $f$ and $g$.
+The type $A\times_X B$ is called the \define{canonical pullback}\index{canonical pullback} of $f$ and $g$.
 \end{defn}
 
 Note that $A\times_X B$ depends on $f$ and $g$, although this dependency is not visible in the notation.
@@ -301,7 +301,7 @@ Note that $A\times_X B$ depends on $f$ and $g$, although this dependency is not 
 \end{rmk}
 
 \begin{thm}\label{thm:canonical-pullback}
-Given maps $f:A\to X$ and $g:B\to X$, the commuting square\index{canonical pullback|textit}
+Given maps $f:A\to X$ and $g:B\to X$, the commuting square\index{canonical pullback}
 \begin{equation*}
 \begin{tikzcd}
 A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"g"] \\
@@ -345,7 +345,7 @@ C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
 A \arrow[r,swap,"f"] & X
 \end{tikzcd}
 \end{equation*}
-with $H:f\circ p \htpy g \circ q$, we define the \define{gap map}\index{gap map|textbf}\index{pullback!gap map|textbf}
+with $H:f\circ p \htpy g \circ q$, we define the \define{gap map}\index{gap map}\index{pullback!gap map}
 \begin{equation*}
 \mathsf{gap}(p,q,H):C \to A\times_X B
 \end{equation*}
@@ -418,7 +418,7 @@ By \cref{thm:is_pullback} it suffices to show that
 is an equivalence. Its inverse is the map $\lam{(a,b,p)}(a,b)$.
 \end{proof}
 
-The following generalization of \cref{lem:prod_pb} is the reason why pullbacks are sometimes called \define{fiber products}\index{fiber product|textbf}.
+The following generalization of \cref{lem:prod_pb} is the reason why pullbacks are sometimes called \define{fiber products}\index{fiber product}.
 
 \begin{thm}
 Let $P$ and $Q$ be families over a type $X$. Then the square
@@ -468,7 +468,7 @@ For any function $f:A\to B$, and any $b:B$, consider the square
 A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
-which commutes by $\proj 2 : \prd{t:\fib{f}{b}} f(\proj 1(t))=b$. This is a pullback square.\index{fiber!as pullback|textit}
+which commutes by $\proj 2 : \prd{t:\fib{f}{b}} f(\proj 1(t))=b$. This is a pullback square.\index{fiber!as pullback}
 \end{lem}
 
 \begin{proof}
@@ -511,7 +511,7 @@ Let $f:A\to B$, and let $Q$ be a type family over $B$. Then the square
 A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
-commutes by $H\defeq \lam{(x,q)}\refl{f(x)}$. This is a pullback square.\index{substitution!as pullback|textit}
+commutes by $H\defeq \lam{(x,q)}\refl{f(x)}$. This is a pullback square.\index{substitution!as pullback}
 \end{lem}
 
 \begin{proof}
@@ -523,7 +523,7 @@ The inverse of this map is given by $\lam{(x,((y,q),p))}(x,\mathsf{tr}_Q(p^{-1},
 \end{proof}
 
 \begin{thm}\label{thm:pb_fibequiv}
-Let $f:A\to B$, and let $g:\prd{a:A}P(a)\to Q(f(a))$ be a family of maps\index{family of maps|textit}. The following are equivalent:
+Let $f:A\to B$, and let $g:\prd{a:A}P(a)\to Q(f(a))$ be a family of maps\index{family of maps}. The following are equivalent:
 \begin{enumerate}
 \item The commuting square
 \begin{equation*}
@@ -533,7 +533,7 @@ A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
-\item $g$ is a family of equivalences.\index{family of equivalences|textit}
+\item $g$ is a family of equivalences.\index{family of equivalences}
 \end{enumerate}
 \end{thm}
 
@@ -575,7 +575,7 @@ X \arrow[r,swap,"i"] & Y
 \end{equation*}
 with $H: i\circ f ~ g \circ h$. The following are equivalent:
 \begin{enumerate}
-\item The square is a pullback square.\index{pullback square!characterized by families of equivalences|textit}
+\item The square is a pullback square.\index{pullback square!characterized by families of equivalences}
 \item The induced map on fibers
 \begin{equation*}
 \mathsf{fib\usc{}sq} : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
@@ -614,7 +614,7 @@ C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
 A \arrow[r,swap,"f"] & X.
 \end{tikzcd}
 \end{equation*}
-If $g$ is a $k$-truncated map, then so is $p$. In particular, if $g$ is an embedding then so is $p$.\index{truncated!map!pullbacks of truncated maps|textit}\index{embedding!pullbacks of embeddings|textit}
+If $g$ is a $k$-truncated map, then so is $p$. In particular, if $g$ is an embedding then so is $p$.\index{truncated!map!pullbacks of truncated maps}\index{embedding!pullbacks of embeddings}
 \end{cor}
 
 \begin{proof}
@@ -632,7 +632,7 @@ A \arrow[r,swap,"f"] & X.
 and suppose that $g$ is an equivalence. Then the following are equivalent:
 \begin{enumerate}
 \item The square is a pullback square.
-\item The map $p:C\to A$ is an equivalence.\index{equivalence!pullback of|textit}
+\item The map $p:C\to A$ is an equivalence.\index{equivalence!pullback of}
 \end{enumerate}
 \end{cor}
 
@@ -682,7 +682,7 @@ is a pullback square, is equivalent to the type of families of equivalences
 \end{equation*}
 \end{cor}
 
-One useful application of the connection between pullbacks and families of equivalences is the following theorem, which is also called the \define{pasting property} of pullbacks.\index{pasting property!of pullbacks|textit}
+One useful application of the connection between pullbacks and families of equivalences is the following theorem, which is also called the \define{pasting property} of pullbacks.\index{pasting property!of pullbacks}
 
 \begin{thm}\label{thm:pb_pasting}
 Consider a commuting diagram of the form
