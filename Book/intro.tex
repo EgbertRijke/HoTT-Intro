@@ -5,15 +5,7 @@
 \bigskip
 \noindent Homotopy Type Theory (HoTT) is an emerging field of mathematics and computer science that extends Martin-Löf's dependent type theory by the addition of the univalence axiom and higher inductive types. In HoTT we think of types as spaces, dependent types as fibrations, and of the identity types as path spaces.
 
-\begin{figure}
-\input{mindmap}
-\end{figure}
 
-In the present lecture we do not commit to either point of view, and simply present a deductive system of dependent type theory. It must be noted that \emph{types} and \emph{terms} are primitive notions in this system. Therefore, we will only learn what a type is by learning in what ways types may be used. The semantics of type theory is currently an active field of research (part of homotopy type theory), and could be the topic of an entire other course.
-
-We start at the very beginning, describing the deductive system of dependent type theory is in \cref{ch:dtt} without any type forming operations. Then we gradually introduce the standard type forming operations until we give Martin-L\"of's inductive definition of identity types. 
-
-We cover the basics --- including equivalences, the univalence axiom, and higher inductive types --- and we introduce the student to the subfield of homotopy type theory that is sometimes called \emph{synthetic homotopy theory}. Early on, students will get acquainted with the basic techniques that are used in homotopy type theory to characterize the identity types of various classes of types, and once higher inductive types are introduced students will get acquainted with the descent property that can be used to construct type families over higher inductive types in order to prove properties about them.
 
 \section{The Curry-Howard correspondence}
 %Dependent type theory is designed to reflect closely on actual mathematical practice and is compatible with classical logic. The foundational issue that isomorphic objects may have wildly different encodings in set-theoretic language, complicating the verification of mathematics, is addressed in type theory, where objects can only ever be defined up to equivalence. Despite the fact that dependent type theory is of constructive nature, it is important to note that type theory is not anti-classical: at the loss of certain properties of constructive type theory constructivists may care about, the axiom of choice may be assumed in type theory and it is in fact consistent with the univalence axiom. This may be helpful to obtain some classical results in type theory.

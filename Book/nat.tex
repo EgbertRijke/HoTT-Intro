@@ -1,5 +1,6 @@
 \section{The natural numbers}
 
+\index{inductive type|(}
 \index{natural numbers|(}
 
 The set of natural numbers is the most important object in mathematics. We quote Bishop\index{Bishop on the positive integers}, from his Constructivist Manifesto, the first chapter in Foundations of Constructive Analysis \cite{Bishop1967}, where he gives a colorful illustration of its importance to mathematics.
@@ -15,7 +16,7 @@ A bit later in the same chapter, he continues:
 \end{quote}
 
 \subsection{The formal specification of the type of natural numbers}
-The type $\N$\index{N@{$\N$}|see {natural numbers}} of \define{natural numbers} is the archetypal example of an inductive type. The rules we postulate for the type of natural numbers come in four sets, just as the rules for $\Pi$-types:
+The type $\N$\index{N@{$\N$}|see {natural numbers}} of \define{natural numbers} is the archetypal example of an inductive type\index{inductive type!natural numbers}. The rules we postulate for the type of natural numbers come in four sets, just as the rules for $\Pi$-types:
 \begin{enumerate}
 \item The formation rule, which asserts that the type $\N$ can be formed.
 \item The introduction rules, which provide the zero element and the successor function.
@@ -39,10 +40,10 @@ In other words, $\N$ is postulated to be a closed type.
 Unlike the set of positive integers in Bishop's remarks, Peano's first axiom postulates that $0$ is a natural number. The introduction rules for $\N$ equip it with the \define{zero term} and the \define{successor function}.
 \index{natural numbers!rules for N@{rules for $\N$}!introduction rules}
 \index{rules!for N@{for $\N$}!introduction rules}
-\index{natural numbers!operations on N@{operations on $\N$}!0N@{$\zeroN$}}
-\index{0N@{$\zeroN$}}
+\index{natural numbers!operations on N@{operations on $\N$}!0 N@{$\zeroN$}}
+\index{0 N@{$\zeroN$}}
 \index{successor function!of N@{of $\N$}}
-\index{function!successor on N@{successor on $\N$}}
+\index{function!succN@{$\succN$}}
 \index{natural numbers!operations on N@{operations on $\N$}!succN@{$\succN$}}
 \index{succN@{$\succN$}}
 
@@ -69,7 +70,7 @@ Unlike the set of positive integers in Bishop's remarks, Peano's first axiom pos
 
 \index{natural numbers!rules for N@{rules for $\N$}!elimination|see {induction}}
 \index{natural numbers!rules for N@{rules for $\N$}!induction principle|(}
-\index{induction principle!for N@{for $\N$}|(}
+\index{induction principle!of N@{for $\N$}|(}
 To prove properties about the natural numbers, we postulate an \emph{induction principle} for $\N$. For a typical example, it is easy to show by induction that
 \begin{equation*}
   1+\dots+n=\frac{n(n+1)}{2}.
@@ -85,7 +86,7 @@ In dependent type theory we may think of a type family $P$ over $\N$ as a \emph{
   \prd{n:\N}P(n).
 \end{equation*}
 
-The induction principle for the natural numbers in type theory exactly states what one has to do in order to construct such a dependent function, via the following inference rule:\index{indN@{$\ind{\N}$}}\index{rules!for N@{for $\N$}!induction principle}
+The induction principle for the natural numbers in type theory exactly states what one has to do in order to construct such a dependent function, via the following inference rule:\index{indN@{$\ind{\N}$}}\index{rules!for N@{for $\N$}!induction principle}\index{natural numbers!indN@{$\indN$}}
 \begin{prooftree}
   \def\fCenter{\Gamma}
   \Axiom$\fCenter, n:\N\vdash P(n)~\mathrm{type}$

@@ -15,19 +15,21 @@ The induction principle and computation rules can be generated automatically onc
 
 
 \subsection{The unit type}
+\index{unit type|(}
+\index{inductive type!unit type|(}
 A straightforward example of an inductive type is the \emph{unit type}, which has just one constructor. 
 Its induction principle is analogous to just the base case of induction on the natural numbers.
 
 \begin{defn}
-We define the \define{unit type}\index{1@{$\unit$}|see {unit type}}\index{unit type} to be a closed type $\unit$ equipped with a closed term\index{unit type!star@{$\ttt$}}
+We define the \define{unit type}\index{1 @{$\unit$}|see {unit type}}\index{unit type} to be a closed type $\unit$\index{unit type!is a closed type} equipped with a closed term\index{unit type!star@{$\ttt$}}
 \begin{equation*}
 \ttt:\unit,
 \end{equation*}
-satisfying the induction principle\index{induction principle!of unit type} that for any type family of types $P(x)$ indexed by $x:\unit$, there is a term
+satisfying the induction principle\index{induction principle!of unit type}\index{unit type!induction principle} that for any type family of types $P(x)$ indexed by $x:\unit$, there is a term\index{indunit@{$\indunit$}}\index{unit type!indunit@{$\indunit$}}
 \begin{equation*}
 \indunit : P(\ttt)\to\prd{x:\unit}P(x)
 \end{equation*}
-for which the computation rule\index{computation rules!of unit type}
+for which the computation rule\index{computation rules!of unit type}\index{unit type!computation rules}
 \begin{equation*}
 \indunit(p,\ttt) \jdeq p
 \end{equation*}
@@ -38,13 +40,17 @@ The induction principle can also be used to define ordinary functions out of the
 \begin{equation*}
   \indunit : A \to (\unit\to A).
 \end{equation*}
-In other words, by the induction principle for the unit type we obtain for every $x:A$ a function $\mathsf{pt}_x\defeq\indunit(x):\unit\to A$.
+In other words, by the induction principle for the unit type we obtain for every $x:A$ a function $\mathsf{pt}_x\defeq\indunit(x):\unit\to A$.\index{ptx@{$\mathsf{pt}_x$}}
+\index{unit type|)}
+\index{inductive type!unit type|)}
 
 \subsection{The empty type}
+\index{empty type|(}
+\index{inductive type!empty type|(}
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
 
 \begin{defn}
-We define the \define{empty type}\index{0@{$\emptyt$}|see {empty type}}\index{empty type} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type} that for any family of types $P(x)$ indexed by $x:\empty$, there is a term
+We define the \define{empty type}\index{0 @{$\emptyt$}|see {empty type}} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type}\index{empty type!induction principle} that for any family of types $P(x)$ indexed by $x:\empty$, there is a term\index{indempty@{$\indempty$}}\index{empty type!indempty@{$\indempty$}}
 \begin{equation*}
 \indempty : \prd{x:\emptyt}P(x).
 \end{equation*}
@@ -59,26 +65,31 @@ for any type $A$. Indeed, to obtain this function one first weakens $A$ to obtai
 Thus we see that from the empty type anything follows. Therefore, we we see that anything follows from $A$, if we have a function from $A$ to the empty type. This motivates the following definition.
 
 \begin{defn}
-  For any type $A$ we define \define{negation} of $A$ by
+  For any type $A$ we define \define{negation}\index{negation!of types}\index{neg A@{$\neg A$}|see {negation}} of $A$ by
   \begin{equation*}
     \neg A\defeq A\to\emptyt.
   \end{equation*}
 \end{defn}
 
-Since $\neg A$ is the type of functions from $A$ to $\emptyt$, a proof of $\neg A$ is given by assuming that $A$ holds, and then deriving a contradiction. This proof technique is called \define{proof of negation}. Proofs of negation are not to be confused with \emph{proofs by contradiction}. In type theory there is no way of obtaining a term of type $A$ from a term of type $(A\to \emptyt)\to\emptyt$.
+Since $\neg A$ is the type of functions from $A$ to $\emptyt$, a proof of $\neg A$ is given by assuming that $A$ holds, and then deriving a contradiction. This proof technique is called \define{proof of negation}\index{proof of negation}. Proofs of negation are not to be confused with \emph{proofs by contradiction}\index{proof by contradiction}. In type theory there is no way of obtaining a term of type $A$ from a term of type $(A\to \emptyt)\to\emptyt$.
+\index{empty type|)}
+\index{inductive type!empty type|)}
 
 \subsection{The booleans}
+\index{booleans}
+\index{inductive type!booleans}
+
 \begin{defn}
-We define the \define{booleans}\index{booleans}\index{2@{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with
+We define the \define{booleans}\index{2 @{$\bool$}|see {booleans}} to be a type $\bool$ that comes equipped with\index{booleans!btrue@{$\btrue$}}\index{booleans!bfalse@{$\bfalse$}}\index{0 2@{$\bfalse$}}\index{1 2@{$\btrue$}}
 \begin{align*}
 \bfalse & : \bool \\
 \btrue & : \bool
 \end{align*}
-satisfying the induction principle\index{induction principle!of booleans} that for any family of types $P(x)$ indexed by $x:\bool$, there is a term
+satisfying the induction principle\index{induction principle!of booleans}\index{booleans!induction principle} that for any family of types $P(x)$ indexed by $x:\bool$, there is a term\index{indbool@{$\indbool$}}
 \begin{equation*}
 \indbool : P(\bfalse)\to \Big(P(\btrue)\to \prd{x:\bool}P(x)\Big)
 \end{equation*}
-for which the computation rules\index{computation rules!of booleans}
+for which the computation rules\index{computation rules!of booleans}\index{booleans!computation rules}
 \begin{align*}
 \indbool(p_0,p_1,\bfalse) & \jdeq p_0 \\
 \indbool(p_0,p_1,\btrue) & \jdeq p_1
@@ -93,37 +104,42 @@ Just as in the cases for the unit type and the empty type, the induction princip
 for any type $A$.
 
 \begin{eg}
-  Using the induction principle of $\bool$ we can define all the operations of Boolean algebra. For example, the \define{boolean negation} operation $\neg : \bool \to \bool$ is defined by
+  \index{boolean operations|(}\index{boolean logic|(}
+  Using the induction principle of $\bool$ we can define all the operations of Boolean algebra\index{boolean algebra}. For example, the \define{boolean negation}\index{booleans!negation} operation $\neg : \bool \to \bool$\index{negation!of booleans} is defined by
   \begin{align*}
     \neg\btrue & \defeq \bfalse & \neg\bfalse & \defeq \btrue.
   \end{align*}
-  The \define{boolean conjunction} operation $\blank\land\blank : \bool \to (\bool\to \bool)$ is defined by
+  The \define{boolean conjunction}\index{booleans!conjunction} operation $\blank\land\blank : \bool \to (\bool\to \bool)$ is defined by
   \begin{align*}
     \btrue\land\btrue & \defeq \btrue & \bfalse\land\btrue & \defeq \bfalse \\
     \btrue\land\bfalse & \defeq \bfalse & \bfalse\land\bfalse & \defeq \bfalse.
   \end{align*}
-  The \define{boolean disjunction} operation $\blank\lor\blank : \bool \to (\bool\to \bool)$ is defined by
+  The \define{boolean disjunction}\index{booleans!disjunction} operation $\blank\lor\blank : \bool \to (\bool\to \bool)$ is defined by
   \begin{align*}
     \btrue\lor\btrue & \defeq \btrue & \bfalse\lor\btrue & \defeq \btrue \\
     \btrue\lor\bfalse & \defeq \btrue & \bfalse\lor\bfalse & \defeq \bfalse.
   \end{align*}  
-  We leave the definitions of some of the other boolean operations as \cref{ex:boolean-operation}. Note that the method of defing the boolean operations by the induction principle of $\bool$ is not that different from defining them by truth tables.
+  We leave the definitions of some of the other boolean operations as \cref{ex:boolean-operation}. Note that the method of defing the boolean operations by the induction principle of $\bool$ is not that different from defining them by truth tables\index{truth tables}.
 
-  Boolean logic is important, but it won't be very prominent in this course. The reason is simple: in type theory it is more natural to use the `logic' of types that is provided by the inference rules.
+  Boolean logic is important, but it won't be very prominent in this course. The reason is simple: in type theory it is more natural to use the `logic' of types that is provided by the inference rules.\index{boolean operations|)}\index{boolean logic|)}
 \end{eg}
+\index{booleans|)}
+\index{inductive type!booleans|)}
 
 \subsection{Coproducts and the type of integers}
+\index{coproduct|(}
+\index{inductive type!coproduct|(}
 \begin{defn}
-Let $A$ and $B$ be types. We define the \define{coproduct}\index{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with
+Let $A$ and $B$ be types. We define the \define{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with\index{inl@{$\inl$}}\index{coproduct!inl@{$\inl$}}\index{inr@{$\inr$}}\index{coproduct!inr@{$\inr$}}
 \begin{align*}
 \inl & : A \to A+B \\
 \inr & : B \to A+B
 \end{align*}
-satisfying the induction principle\index{induction principle!of coproduct} that for any family of types $P(x)$ indexed by $x:A+B$, there is a term
+satisfying the induction principle\index{induction principle!of coproduct}\index{coproduct!induction principle} that for any family of types $P(x)$ indexed by $x:A+B$, there is a term\index{ind+@{$\ind{+}$}}\index{coproduct!ind+@{$\ind{+}$}}
 \begin{equation*}
 \ind{+} : \Big(\prd{x:A}P(\inl(x))\Big)\to\Big(\prd{y:B}P(\inr(y))\Big)\to\prd{z:A+B}P(z)
 \end{equation*}
-for which the computation rules\index{computation rules!of coproduct}
+for which the computation rules\index{computation rules!of coproduct}\index{coproduct!computation rules}
 \begin{align*}
 \ind{+}(f,g,\inl(x)) & \jdeq f(x) \\
 \inr{+}(f,g,\inr(y)) & \jdeq g(y)
@@ -141,15 +157,16 @@ for any type $X$. Note that this special case of the induction principle of copr
 \end{equation*}
 Indeed, we can think of \emph{propositions as types} and of terms as their constructive proofs. Under this interpretation of type theory the coproduct is indeed the disjunction.
 
-An important example of a type that can be defined using coproducts is the type $\Z$ of integers.
+\index{integers|(}
+An important example of a type that can be defined using coproducts is the type $\Z$ of integers.\index{coproduct!Z@{$\Z$}}
 
 \begin{defn}
-  We define the \define{integers}\index{integers|see Z@{$\Z$}} to be the type $\Z\defeq\nat+(\unit+\nat)$. The type of integers comes equipped with inclusion functions of the positive and negative integers
+  We define the \define{integers}\index{Z@{$\Z$}|see {integers}} to be the type $\Z\defeq\nat+(\unit+\nat)$. The type of integers comes equipped with inclusion functions of the positive and negative integers\index{integers!in-pos@{$\mathsf{in\usc{}pos}$}}\index{integers!in-neg@{$\mathsf{in\usc{}neg}$}}
   \begin{align*}
     \mathsf{in\usc{}pos} & \defeq \inr\circ\inr \\
     \mathsf{in\usc{}neg} & \defeq \inl,
   \end{align*}
-  which are both of type $\N\to\Z$, and the constants
+  which are both of type $\N\to\Z$, and the constants\index{integers!-1 Z@{$-1_\Z$}}\index{integers!0 Z@{$0_\Z$}}\index{integers!1 Z@{$1_\Z$}}\index{-1 Z@{$-1_\Z$}}\index{0 Z@{$0_\Z$}}\index{1 Z@{$1_{\Z}$}}
   \begin{align*}
     -1_\Z & \defeq \mathsf{in\usc{}neg}(0)\\
     0_\Z & \defeq \inr(\inl(\ttt))\\
@@ -157,7 +174,7 @@ An important example of a type that can be defined using coproducts is the type 
   \end{align*}
 \end{defn}
 
-In the following lemma we derive an induction principle\index{induction principle!of Z@{of $\Z$}} for $\Z$, which can be used in many familiar constructions on $\Z$, such as in the definitions of addition and multiplication.
+In the following lemma we derive an induction principle\index{induction principle!of Z@{of $\Z$}}\index{integers!induction principle} for $\Z$, which can be used in many familiar constructions on $\Z$, such as in the definitions of addition and multiplication.
 
 \begin{lem}\label{lem:Z_ind}
   Consider a type family $P$ over $\Z$. If we are given
@@ -168,7 +185,7 @@ In the following lemma we derive an induction principle\index{induction principl
     P_{1} & : P(1_\Z) \\
     P_{S} & : \prd{n:\N}P(\mathsf{in\usc{}pos}(n))\to P(\mathsf{in\usc{}pos}(\succN(n))),
   \end{align*}
-  then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:
+  then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:\index{integers!computation rules}\index{computation rules!of Z@{of $\Z$}}
   \begin{align*}
     f(-1_\Z) & \jdeq p_{-1} \\
     f(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\mathsf{in\usc{}neg}(n))) \\
@@ -195,32 +212,40 @@ In the following lemma we derive an induction principle\index{induction principl
 As an application we define the successor function on the integers.
 
 \begin{defn}
-We define the \define{successor function}\index{successor function!on Z@{on $\Z$}} on the integers $\mathsf{succ}_\Z:\Z\to\Z$ using the induction principle of \cref{lem:Z_ind}, taking
+We define the \define{successor function}\index{successor function!on Z@{on $\Z$}}\index{function!succZ@{$\succZ$}} on the integers $\succZ:\Z\to\Z$\index{succZ@{$\succZ$}}\index{integers!succZ@{$\succZ$}} using the induction principle of \cref{lem:Z_ind}, taking
 \begin{align*}
-\mathsf{succ}_\Z(-1_\Z) & \defeq 0_\N \\
-\mathsf{succ}_\Z(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
-\mathsf{succ}_\Z(0_\Z) & \defeq 1_\N \\
-\mathsf{succ}_\Z(1_\Z) & \defeq \mathsf{in\usc{}pos}(1_\N) \\
-\mathsf{succ}_\Z(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \defeq \mathsf{in\usc{}pos}(\mathsf{succ}_\N(\mathsf{succ}_\N(n))).
+\succZ(-1_\Z) & \defeq 0_\N \\
+\succZ(\mathsf{in\usc{}neg}(\succN(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
+\succZ(0_\Z) & \defeq 1_\N \\
+\succZ(1_\Z) & \defeq \mathsf{in\usc{}pos}(1_\N) \\
+\succZ(\mathsf{in\usc{}pos}(\succN(n))) & \defeq \mathsf{in\usc{}pos}(\succN(\succN(n))).
 \end{align*}
 \end{defn}
+\index{integers|)}
+\index{coproduct|)}
+\index{inductive type!coproduct|)}
 
 \subsection{Dependent pair types}
-The \emph{dependent pair type}\index{dependent pair type|see {$\Sigma$-type}} (or $\Sigma$-type) can be thought of as a `type indexed' disjoint sum.
-However, this intuition for the dependent pair type can be counterproductive once we start to do homotopy theory in type theory.
-It is better to think of the $\Sigma$-type as the total space of a family of types depending continuously on a base type, just like one can have a family of spaces depending continuously on a base space (i.e., a fibration).
+
+\index{dependent pair type|(}
+\index{inductive type!dependent pair type|(}
+
+Given a type family $B$ over $A$, we may consider pairs $(a,b)$ of terms, where $a:A$ and $b:B(a)$. Note that the type of $b$ depends on the first term in the pair, so we call such a pair a \define{dependent pair}\index{dependent pair}.
+
+The \emph{dependent pair type} is an inductive type that is generated by the dependent pairs.
+
 
 \begin{defn}
-Let $A$ be a type in context $\Gamma$, and let $\Gamma,x:A\vdash B(x)~\mathrm{type}$ be a type family over $A$.
-The \define{dependent pair type}\index{Sigma type@{$\Sigma$-type}} is defined to be the inductive type $\sm{x:A}B(x)$ in context $\Gamma$ equipped with a \define{pairing function}\index{pairing function}
+  Consider a type family $B$ over $A$.
+  The \define{dependent pair type} (or $\Sigma$-type) \index{Sigma-type@{$\Sigma$-type}|see {dependent pair type}}is defined to be the inductive type $\sm{x:A}B(x)$ equipped with a \define{pairing function}\index{pairing function}\index{(-,-)@{$(\blank,\blank)$}}\index{dependent pair type!(-,-)@{$(\blank,\blank)$}}
 \begin{equation*}
 (\blank,\blank):\prd{x:A} \Big(B(x)\to \sm{y:A}B(y)\Big).
 \end{equation*}
-The induction principle\index{induction principle!of Sigma types@{of $\Sigma$-types}} for $\sm{x:A}B(x)$ asserts that for any family of types $P(p)$ indexed by $p:\sm{x:A}B(x)$, there is a function
+The induction principle\index{induction principle!of Sigma types@{of $\Sigma$-types}}\index{dependent pair type!induction principle} for $\sm{x:A}B(x)$ asserts that for any family of types $P(p)$ indexed by $p:\sm{x:A}B(x)$, there is a function\index{dependent pair type!indSigma@{$\ind{\Sigma}$}}\index{indSigma@{$\ind{\Sigma}$}}
 \begin{equation*}
 \ind{\Sigma}:\Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to\Big(\prd{p:\sm{x:A}B(x)}P(p)\Big).
 \end{equation*}
-satisfying the computation rule\index{computation rules!of Sigma types@{of $\Sigma$-types}}
+satisfying the computation rule\index{computation rules!of Sigma types@{of $\Sigma$-types}}\index{dependent pair type!computation rule}
 \begin{equation*}
 \ind{\Sigma}(f,(x,y))\jdeq f(x,y).
 \end{equation*}
@@ -228,7 +253,7 @@ Sometimes we write $\lam{(x,y)}f(x,y)$ for $\ind{\Sigma}(\lam{x}{y}f(x,y))$.
 \end{defn}
 
 \begin{defn}
-Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map}\index{projection maps!first projection}
+Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map}\index{projection maps!first projection}\index{dependent pair type!pr1@{$\proj 1$}}\index{pr1@{$\proj 1$}}\index{function!pr1@{$\proj 1$}}
 \begin{equation*}
 \proj 1:\Big(\sm{x:A}B(x)\Big)\to A
 \end{equation*}
@@ -236,7 +261,7 @@ is defined by induction as
 \begin{equation*}
 \proj 1\defeq \lam{(x,y)}x.
 \end{equation*}
-The \define{second projection map}\index{second projection map}\index{projection map!second projection} is a dependent function
+The \define{second projection map}\index{second projection map}\index{projection map!second projection}\index{dependent pair type!pr2@{$\proj 2$}}\index{pr2@{$\proj 2$}}\index{function!pr2@{$\proj 2$}} is a dependent function
 \begin{equation*}
 \proj 2 : \prd{p:\sm{x:A}B(x)} B(\proj 1(p))
 \end{equation*}
@@ -250,52 +275,45 @@ By the computation rule we have
 \proj 2 (x,y) & \jdeq y.
 \end{align*}
 \end{defn}
+\index{dependent pair type|)}
+\index{inductive type!dependent pair type|)}
 
 \subsection{Cartesian products}
-A special case of the $\Sigma$-type occurs when the $B$ is a type in context $\Gamma$ weakened by $A$ (i.e., $B$ is not actually depending on $A$). In this case, a term of $\sm{x:A}B$ is given as a pair consisting of a term of $A$ and a term of $B$. Thus, $\sm{x:A}B$ is the \emph{(cartesian) product} $A\times B$. Since the cartesian product is so common (just like $A\to B$ is a common special case of the dependent product), we provide its specification along with the induction principle for cartesian products.
+
+\index{cartesian product|(}
+\index{inductive type!cartesian product|(}
+A special case of the $\Sigma$-type occurs when the $B$ is a constant family over $A$, i.e., when $B$ is just a type.
+In this case, the inductive type $\sm{x:A}B(x)$ is generated by \emph{ordinary} pairs $(x,y)$ where $x:A$ and $y:B$. In other words, if $B$ does not depend on $A$, then the type $\sm{x:A}B$ is the \emph{(cartesian) product} $A\times B$.
+The cartesian product is a very common special case of the dependent pair type, just as the type $A\to B$ of ordinary functions from $A\to B$ is a common special case of the dependent product. Therefore we provide its specification along with the induction principle for cartesian products.
 
 \begin{defn}
-Let $A$ and $B$ be types in context $\Gamma$. The \define{(cartesian) product}\index{cartesian product}\index{product!of types} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor
+Consider two types $A$ and $B$. The \define{(cartesian) product}\index{product of types}\index{A x B@{$A\times B$}} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor
 \begin{equation*}
 (\blank,\blank):A\to (B\to A\times B).
 \end{equation*}
-The induction principle\index{induction principle!of cartesian products} for $A\times B$ asserts that for any type family $P$ over $A\times B$, one has
+The induction principle\index{induction principle!of cartesian products}\index{cartesian product!induction principle} for $A\times B$ asserts that for any type family $P$ over $A\times B$, one has\index{indtimes@{$\ind{\times}$}}\index{cartesian product!indtimes@{$\ind{\times}$}}
 \begin{equation*}
 \ind{\times} : \Big(\prd{x:A}{y:B}P(a,b)\Big)\to\Big(\prd{p:A\times B} P(p)\Big)
 \end{equation*}
-satisfying the computation rule\index{computation rules!of cartesian product} that
+satisfying the computation rule\index{computation rules!of cartesian product}\index{cartesian product!computation rule} that
 \begin{align*}
 \ind{\times}(f,(x,y)) & \jdeq f(x,y).
 \end{align*}
 \end{defn}
 
 The projection maps are defined similarly to the projection maps of $\Sigma$-types. When one thinks of types as propositions\index{propositions as types!conjunction}, then $A\times B$ is interpreted as the conjunction of $A$ and $B$.
-
-\begin{comment}
-\subsection{Overview of the inductive types}
-The following table gives an overview of the 'primitive' inductive types that we have introduced so far. Many types of interest can be defined in terms of these inductive types, along with the identity type which we will introduce in \cref{chap:identity}.
-\begin{center}
-\begin{tabular}{llll}
-\toprule
-name & type & constructors \\
-\midrule
-\define{natural numbers} & $\N$ & $\zeroN:\N$ \\
-& & $\succN:\N\to \N$ & \\
-\define{empty type} & $\emptyt$ & {\color{black!20}(no constructors)}\\
-\define{unit type} & $\unit$ & $\ttt:\unit$ \\
-\define{booleans} & $\bool$ & $\bfalse:\bool$ \\
-& & $\btrue : \bool$ \\
-\define{coproduct} & $A+B$ & $\inl : A \to A+B$ \\
-& & $\inr : B\to A+B$ & \\
-\define{product} & $A\times B$ & $(\blank,\blank):A\to (B\to A\times B)$ \\
-\define{$\Sigma$-type} & $\sm{x:A}B(x)$ & $(\blank,\blank):\prd{y:A} \big(B(y)\to \sm{x:A}B(x)\big)$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-\end{comment}
+\index{cartesian product|)}
+\index{inductive type!cartesian product|)}
 
 \begin{exercises}
-\item \label{ex:boolean-operation}Define the following operations of Boolean algebra:
+\item Write the rules for $\unit$, $\emptyt$, $\bool$, $A+B$, $\sm{x:A}B(x)$, and $A\times B$. As usual, present the rules in four sets:
+  \begin{enumerate}
+  \item A formation rule.
+  \item Introduction rules.
+  \item An elimination rule.
+  \item Computation rules.
+  \end{enumerate}
+\item \label{ex:boolean-operation}Define the following operations of Boolean algebra:\index{boolean algebra}\index{booleans!exclusive disjunction}\index{booleans!implication}\index{booleans!if and only if}\index{booleans!Peirce's arrow}\index{booleans!Sheffer stroke}
   \begin{center}
     \begin{tabular}{ll}
       exclusive disjunction & $p \oplus q$ \\
@@ -306,7 +324,7 @@ name & type & constructors \\
     \end{tabular}
   \end{center}
   Here $p$ and $q$ range over $\bool$. 
-\item \label{ex:int_pred}\index{predecessor function}Define the predecessor function $\mathsf{pred}_\Z:\Z\to \Z$.
+\item \label{ex:int_pred}\index{predecessor function}\index{function!predZ@{$\predZ$}}\index{integers!predZ@{$\predZ$}}\index{predZ@{$\predZ$}}Define the predecessor function $\mathsf{pred}_\Z:\Z\to \Z$.
 \item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define group operations
   \begin{align*}
     k,l & \mapsto k+l \\

@@ -238,7 +238,7 @@ Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is
   \begin{equation*}
     \mathsf{pair\usc{}eq}: (s=t)\to \mathsf{Eq}_\Sigma(s,t)
   \end{equation*}
-  is an equivalence for every $s,t:\sm{x:A}B(x)$.\index{Sigma type@{$\Sigma$-type}!identity types of}\index{identity type!of a Sigma-type@{of a $\Sigma$-type}}
+  is an equivalence for every $s,t:\sm{x:A}B(x)$.\index{Sigma-type@{$\Sigma$-type}!identity types of}\index{identity type!of a Sigma-type@{of a $\Sigma$-type}}
 \end{thm}
 
 \begin{proof}
@@ -362,7 +362,7 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
     \end{tikzcd}
   \end{equation*}
   with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
-\item \label{ex:sigma_assoc}\index{Sigma type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence
+\item \label{ex:sigma_assoc}\index{Sigma-type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence
   \begin{equation*}
     \Sigma\mathsf{\usc{}assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
   \end{equation*}
