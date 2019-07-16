@@ -65,7 +65,7 @@ for any type $A$. Indeed, to obtain this function one first weakens $A$ to obtai
 Thus we see that from the empty type anything follows. Therefore, we we see that anything follows from $A$, if we have a function from $A$ to the empty type. This motivates the following definition.
 
 \begin{defn}
-  For any type $A$ we define \define{negation}\index{negation!of types}\index{neg A@{$\neg A$}|see {negation}} of $A$ by
+  For any type $A$ we define \define{negation}\index{negation!of types}\index{neg (A)@{$\neg A$}|see {negation}} of $A$ by
   \begin{equation*}
     \neg A\defeq A\to\emptyt.
   \end{equation*}
@@ -212,7 +212,7 @@ In the following lemma we derive an induction principle\index{induction principl
 As an application we define the successor function on the integers.
 
 \begin{defn}
-We define the \define{successor function}\index{successor function!on Z@{on $\Z$}}\index{function!succZ@{$\succZ$}} on the integers $\succZ:\Z\to\Z$\index{succZ@{$\succZ$}}\index{integers!succZ@{$\succZ$}} using the induction principle of \cref{lem:Z_ind}, taking
+We define the \define{successor function}\index{successor function!on Z@{on $\Z$}}\index{function!succ Z@{$\succZ$}} on the integers $\succZ:\Z\to\Z$\index{succ Z@{$\succZ$}}\index{integers!succ Z@{$\succZ$}} using the induction principle of \cref{lem:Z_ind}, taking
 \begin{align*}
 \succZ(-1_\Z) & \defeq 0_\N \\
 \succZ(\inneg(\succN(n))) & \defeq \inneg(n) \\
@@ -253,7 +253,7 @@ Sometimes we write $\lam{(x,y)}f(x,y)$ for $\ind{\Sigma}(\lam{x}{y}f(x,y))$.
 \end{defn}
 
 \begin{defn}
-Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map}\index{projection maps!first projection}\index{dependent pair type!pr1@{$\proj 1$}}\index{pr1@{$\proj 1$}}\index{function!pr1@{$\proj 1$}}
+Given a type $A$ and a type family $B$ over $A$, the \define{first projection map}\index{first projection map}\index{projection maps!first projection}\index{dependent pair type!pr 1@{$\proj 1$}}\index{pr 1@{$\proj 1$}}\index{function!pr 1@{$\proj 1$}}
 \begin{equation*}
 \proj 1:\Big(\sm{x:A}B(x)\Big)\to A
 \end{equation*}
@@ -261,7 +261,7 @@ is defined by induction as
 \begin{equation*}
 \proj 1\defeq \lam{(x,y)}x.
 \end{equation*}
-The \define{second projection map}\index{second projection map}\index{projection map!second projection}\index{dependent pair type!pr2@{$\proj 2$}}\index{pr2@{$\proj 2$}}\index{function!pr2@{$\proj 2$}} is a dependent function
+The \define{second projection map}\index{second projection map}\index{projection map!second projection}\index{dependent pair type!pr 2@{$\proj 2$}}\index{pr 2@{$\proj 2$}}\index{function!pr 2@{$\proj 2$}} is a dependent function
 \begin{equation*}
 \proj 2 : \prd{p:\sm{x:A}B(x)} B(\proj 1(p))
 \end{equation*}
@@ -331,8 +331,8 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
     \end{tabular}
   \end{center}
   Here $p$ and $q$ range over $\bool$. 
-\item \label{ex:int_pred}\index{integers|(}\index{predecessor function}\index{function!predZ@{$\predZ$}}\index{integers!predZ@{$\predZ$}}\index{predZ@{$\predZ$}}Define the predecessor function $\predZ:\Z\to \Z$.
-\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define the group operations\index{addZ@{$\addZ$}}\index{integers!addZ@{$\addZ$}}\index{negZ@{$\negZ$}}\index{integers!negZ@{$\negZ$}}\index{mulZ@{$\mulZ$}}\index{integers!mulZ@{$\mulZ$}}
+\item \label{ex:int_pred}\index{integers|(}\index{predecessor function}\index{function!pred Z@{$\predZ$}}\index{integers!pred Z@{$\predZ$}}\index{pred Z@{$\predZ$}}Define the predecessor function $\predZ:\Z\to \Z$.
+\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define the group operations\index{add Z@{$\addZ$}}\index{integers!add Z@{$\addZ$}}\index{neg Z@{$\negZ$}}\index{integers!neg Z@{$\negZ$}}\index{mul Z@{$\mulZ$}}\index{integers!mul Z@{$\mulZ$}}
   \begin{align*}
     \addZ & : \Z \to (\Z \to \Z) \\
     \negZ & : \Z \to \Z,

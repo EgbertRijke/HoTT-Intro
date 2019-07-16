@@ -218,7 +218,7 @@ Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is
 \end{defn}
 
 \begin{lem}
-  The relation $\EqSigma$ is reflexive, i.e., there is a term\index{Eq Sigma@{$\EqSigma$}!reflexive-Eq-Sigma@{$\reflexiveEqSigma$}}
+  The relation $\EqSigma$ is reflexive, i.e., there is a term
   \begin{equation*}
     \reflexiveEqSigma:\prd{s:\sm{x:A}B(x)}\EqSigma(s,s).
   \end{equation*}
@@ -233,7 +233,7 @@ Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is
 \end{constr}
 
 \begin{defn}
-  Consider a type family $B$ over $A$. Then for any $s,t:\sm{x:A}B(x)$ we define a map\index{pair-eq@{$\paireq$}}\index{Eq Sigma@{$\EqSigma$}!pair-eq@{$\paireq$}}
+  Consider a type family $B$ over $A$. Then for any $s,t:\sm{x:A}B(x)$ we define a map\index{pair-eq@{$\paireq$}}
   \begin{equation*}
     \paireq: (s=t)\to \EqSigma(s,t)
   \end{equation*}
@@ -352,7 +352,7 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
   \item Use the observational equality on the booleans\index{observational equality!on booleans!0 2 neq 1 2@{$\bfalse\neq\btrue$}}, defined in \cref{ex:obs_bool}, to show that $\bfalse\neq\btrue$.\index{0 2 neq 1 2@{$\bfalse\neq\btrue$}}
   \item Show that for any $b:\bool$, the constant function $\const_b$ is not an equivalence.\index{booleans!const b is not an equivalence@{$\const_b$ is not an equivalence}}
   \end{subexenum}
-\item \label{ex:succ_equiv}Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}\index{succZ@{$\succZ$}!is an equivalence}\index{is an equivalence!succZ@{$\succZ$}}
+\item \label{ex:succ_equiv}Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}\index{succ Z@{$\succZ$}!is an equivalence}\index{is an equivalence!succ Z@{$\succZ$}}
 \item \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is commutative}\index{commutativity!of coproducts}
 \item \label{ex:retr_id} Consider a section-retraction pair
   \begin{equation*}
