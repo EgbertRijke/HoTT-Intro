@@ -32,7 +32,7 @@ The type $\N$ is formed by the \define{$\N$-formation} rule
 \begin{prooftree}
   \AxiomC{}
   \RightLabel{$\N$-form}
-  \UnaryInfC{$\vdash \N~\mathrm{type}$.}
+  \UnaryInfC{$\vdash \N~\type$.}
 \end{prooftree}
 In other words, $\N$ is postulated to be a closed type.
 
@@ -86,10 +86,10 @@ In dependent type theory we may think of a type family $P$ over $\N$ as a \emph{
   \prd{n:\N}P(n).
 \end{equation*}
 
-The induction principle for the natural numbers in type theory exactly states what one has to do in order to construct such a dependent function, via the following inference rule:\index{indN@{$\ind{\N}$}}\index{rules!for N@{for $\N$}!induction principle}\index{natural numbers!indN@{$\indN$}}
+The induction principle for the natural numbers in type theory exactly states what one has to do in order to construct such a dependent function, via the following inference rule:\index{ind N@{$\ind{\N}$}}\index{rules!for N@{for $\N$}!induction principle}\index{natural numbers!indN@{$\indN$}}
 \begin{prooftree}
   \def\fCenter{\Gamma}
-  \Axiom$\fCenter, n:\N\vdash P(n)~\mathrm{type}$
+  \Axiom$\fCenter, n:\N\vdash P(n)~\type$
   \noLine
   \UnaryInf$\fCenter\ \vdash p_0:P(\zeroN)$
   \noLine
@@ -102,8 +102,8 @@ Just like for the usual induction principle of the natural numbers, there are tw
 \begin{rmk}
   We might alternatively present the induction principle of $\N$ as the following inference rule
   \begin{prooftree}
-    \AxiomC{$\Gamma,n:\N\vdash P(n)~\mathrm{type}$}
-    \UnaryInfC{$\Gamma\vdash \mathsf{ind}_{\N} : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big)\to \prd{n:\N}P(n)\Big)$}
+    \AxiomC{$\Gamma,n:\N\vdash P(n)~\type$}
+    \UnaryInfC{$\Gamma\vdash \indN : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big)\to \prd{n:\N}P(n)\Big)$}
   \end{prooftree}
   In other words, for any type family $P$ over $\N$ there is a \emph{function} $\ind{\N}$ that takes two arguments, one for the base case and one for the inductive step, and returns a section of $P$. Now it is justified to wonder: is this slightly different presentation of induction equivalent to the previous presentation?
   
@@ -114,11 +114,11 @@ Just like for the usual induction principle of the natural numbers, there are tw
   \end{align*}
   Therefore, the induction principle of $\N$ provides us with a term
   \begin{equation*}
-    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) \vdash \mathsf{ind}_\N(p_0,p_S) : \prd{n:\N}P(n).
+    \Gamma,~p_0:P(\zeroN),~p_S:\prd{n:\N}P(n)\to P(\succN(n)) \vdash \indN(p_0,p_S) : \prd{n:\N}P(n).
   \end{equation*}
   By $\lambda$-abstraction we now obtain a function
   \begin{equation*}
-    \mathsf{ind}_\N : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big) \to \prd{n:\N}P(n)\Big)
+    \indN : P(\zeroN)\to \Big(\Big(\prd{n:\N}P(n)\to P(\succN(n))\Big) \to \prd{n:\N}P(n)\Big)
   \end{equation*}
   in context $\Gamma$. Therefore we see that it does not really matter whether we present the induction principle of $\N$ in a more verbose way as an inference rule with the base case and the inductive step as hypotheses, or as a function taking variables for the base case and the inductive step as arguments.
 \end{rmk}
@@ -134,7 +134,7 @@ The \define{computation rules} for $\N$ postulate that the dependent function $\
 The computation rule for the base case is\index{rules!for N@{for $\N$}!computation rules|(}
 \begin{prooftree}
     \def\fCenter{\Gamma}
-  \Axiom$\fCenter, n:\N\vdash P(n)~\mathrm{type}$
+  \Axiom$\fCenter, n:\N\vdash P(n)~\type$
   \noLine
   \UnaryInf$\fCenter\ \vdash p_0:P(\zeroN)$
   \noLine
@@ -144,7 +144,6 @@ The computation rule for the base case is\index{rules!for N@{for $\N$}!computati
 Similarly, with the same hypotheses as for the computation rule for the base case, the computation rule for the inductive step is
 \begin{prooftree}
 \AxiomC{$\cdots$}
-%\RightLabel{$\N{-}\mathrm{Comp}(\succN)$}
 \UnaryInfC{$\Gamma, n:\N \vdash  \ind{\N}(p_0,p_S,\succN(n))\jdeq p_S(n,\ind{\N}(p_0,p_S,n)) : P(\succN(n))$}
 \end{prooftree}\index{rules!for N@{for $\N$}!computation rules|)}
 
@@ -186,22 +185,22 @@ The derivation for the construction of $\mathsf{add\usc{}}\succN$ looks as follo
   \AxiomC{}
   \UnaryInfC{$\succN:\N^\N$}
   \AxiomC{}
-  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \UnaryInfC{$\vdash\N~\type$}
   \AxiomC{}
-  \UnaryInfC{$\vdash\N~\mathrm{type}$}
+  \UnaryInfC{$\vdash\N~\type$}
   \AxiomC{}
-  \UnaryInfC{$\vdash\N~\mathrm{type}$}
-  \TrinaryInfC{$\vdash \mathsf{comp}:\N^\N\to (\N^\N\to \N^\N)$}
-  \UnaryInfC{$g:\N\to\N\vdash \mathsf{comp}(g):\N^\N\to\N^\N$}
-  \BinaryInfC{$\vdash \mathsf{comp}(\succN):\N^\N\to\N^\N$}
-  \UnaryInfC{$n:\N\vdash \mathsf{comp}(\succN):\N^\N\to\N^\N$}
-  \UnaryInfC{$\vdash \mathsf{add\usc{}}\succN\defeq \lam{n}\mathsf{comp}(\succN):\N\to (\N^\N \to \N^\N)$}
+  \UnaryInfC{$\vdash\N~\type$}
+  \TrinaryInfC{$\vdash \comp:\N^\N\to (\N^\N\to \N^\N)$}
+  \UnaryInfC{$g:\N\to\N\vdash \comp(g):\N^\N\to\N^\N$}
+  \BinaryInfC{$\vdash \comp(\succN):\N^\N\to\N^\N$}
+  \UnaryInfC{$n:\N\vdash \comp(\succN):\N^\N\to\N^\N$}
+  \UnaryInfC{$\vdash \mathsf{add\usc{}}\succN\defeq \lam{n}\comp(\succN):\N\to (\N^\N \to \N^\N)$}
 %\BinaryInfC{$\vdash\addN:\ind{\N}(add_0,add_S):\N\to \N^\N$}
 \end{prooftree}
 We combine this derivation with the induction principle of $\N$ to complete the construction of addition:
 \begin{prooftree}
   \AxiomC{$\vdots$}
-  \UnaryInfC{$n:\N\vdash \N^\N~\mathrm{type}$}
+  \UnaryInfC{$n:\N\vdash \N^\N~\type$}
   \AxiomC{$\vdots$}
   \UnaryInfC{$\vdash \mathsf{add\usc{}}\zeroN\defeq \idfunc[\N]:\N^\N$}
   \AxiomC{$\vdots$}
@@ -248,7 +247,7 @@ The asserted judgmental equalities then hold by the computation rules for $\N$.
   \index{function!maxN@{$\maxN$}}
   \index{natural numbers!operations on N@{operations on $\N$}!minN@{$\minN$}}
   \index{natural numbers!operations on N@{operations on $\N$}!maxN@{$\maxN$}}
-\item Define the \define{multiplication} operation $\mathsf{mul}_\N :\N\to(\N\to\N)$.
+\item Define the \define{multiplication} operation $\mulN :\N\to(\N\to\N)$.
   \index{multiplication!on N@{on $\N$}}
   \index{function!mulN@{$\mulN$}}
   \index{natural numbers!operations on N@{operations on $\N$}!mulN@{$\mulN$}}

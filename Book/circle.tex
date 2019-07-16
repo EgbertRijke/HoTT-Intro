@@ -114,17 +114,17 @@ Moreover, for any $f:A\to B$, and any $p:x=y$ there is an identification $\ct{\m
 \end{equation*}
 commutes, and the map $\total{\varphi}$ is a fiberwise equivalence by \cref{thm:fib_equiv}. Since the triangle commutes and $\ind{\sphere{1}}$ is a section of $\mathsf{dgen}_{\sphere{1}}$, it follows that the composite
 \begin{equation*}
-\rec{\sphere{1}}\defeq \ind{\sphere{1}}\circ \total{\varphi}
+\ind{\sphere{1}}\defeq \ind{\sphere{1}}\circ \total{\varphi}
 \end{equation*}
-is a section of $\mathsf{gen}_{\sphere{1}}$. Therefore it remains to show that $\rec{\sphere{1}}$ is also a retraction of $\mathsf{gen}_{\sphere{1}}$, i.e., we have to show that for every $f:\sphere{1}\to X$ there is an identification
+is a section of $\mathsf{gen}_{\sphere{1}}$. Therefore it remains to show that $\ind{\sphere{1}}$ is also a retraction of $\mathsf{gen}_{\sphere{1}}$, i.e., we have to show that for every $f:\sphere{1}\to X$ there is an identification
 \begin{equation*}
-\rec{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))=f.
+\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))=f.
 \end{equation*}
 In \cref{lem:circle_up_htpy} below we establish that
 \begin{equation*}
-(\mathsf{gen}_{\sphere{1}}(\rec{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f)))=\mathsf{gen}_{\sphere{1}}(f))\to (\rec{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))=f).
+(\mathsf{gen}_{\sphere{1}}(\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f)))=\mathsf{gen}_{\sphere{1}}(f))\to (\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))=f).
 \end{equation*}
-We get an identification $\mathsf{gen}_{\sphere{1}}(\rec{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f)))=\mathsf{gen}_{\sphere{1}}(f)$ from the fact that $\rec{\sphere{1}}$ is a section of $\mathsf{gen}_{\sphere{1}}$.
+We get an identification $\mathsf{gen}_{\sphere{1}}(\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f)))=\mathsf{gen}_{\sphere{1}}(f)$ from the fact that $\ind{\sphere{1}}$ is a section of $\mathsf{gen}_{\sphere{1}}$.
 \end{proof}
 
 \begin{lem}\label{lem:circle_up_htpy}
@@ -279,7 +279,7 @@ In this sense the circle is \emph{connected}.
 \item \label{ex:circle_constant}
 Show that for any type $X$ and any $x:X$, the map
 \begin{equation*}
-\rec{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
+\ind{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
 \end{equation*}
 is homotopic to the constant map $\mathsf{const}_x$.
 \item \label{ex:circle_connected}

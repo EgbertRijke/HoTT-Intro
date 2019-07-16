@@ -3,7 +3,7 @@
 
 \subsection{Equivalent forms of function extensionality}
 \begin{defn}
-  The \define{axiom of function extensionality}\index{function extensionality}\index{identity type!Pi-type@{$\Pi$-type}}\index{extensionality principle!for functions} asserts that for any type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map\index{htpy-eq@{$\mathsf{htpy\usc{}eq}$}}
+  The \define{axiom of function extensionality}\index{function extensionality}\index{identity type!of a Pi-type@{of a $\Pi$-type}}\index{extensionality principle!for functions} asserts that for any type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map\index{htpy-eq@{$\htpyeq$}}\index{htpy-eq@{$\htpyeq$}!is an equivalence}\index{is an equivalence!htpy-eq@{$\htpyeq$}}
   \begin{equation*}
     \mathsf{htpy\usc{}eq}:(f=g)\to (f\htpy g)
   \end{equation*}
@@ -91,7 +91,7 @@ Suppose $B$ is a $k$-type. Then $A\to B$ is also a $k$-type, for any type $A$.
 
 \subsection{The type theoretic principle of choice}
 
-The type theoretic principle of choice\index{type theoretic choice} asserts that $\Pi$ distributes over $\Sigma$\index{distributivity!Pi over Sigma@{$\Pi$ over $\Sigma$}}. More precisely, it asserts that the canonical map\index{choice@{$\mathsf{choice}$}}
+The type theoretic principle of choice\index{type theoretic choice} asserts that $\Pi$ distributes over $\Sigma$\index{distributivity!of Pi over Sigma@{of $\Pi$ over $\Sigma$}}. More precisely, it asserts that the canonical map\index{choice@{$\mathsf{choice}$}}
 \begin{equation*}
   \mathsf{choice}:\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)\to \Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)
 \end{equation*}
@@ -336,13 +336,13 @@ Now we conclude by the contractibility of the fiber that $(\idfunc[B],\refl{f})=
 \end{proof}
 
 \begin{exercises}
-\item Show that the functions\index{htpy-inv@{$\mathsf{htpy\usc{}inv}$}}\index{htpy-concat@{$\mathsf{htpy\usc{}concat}$}}\index{htpy-concat'@{$\mathsf{htpy\usc{}concat}'$}}
+\item Show that the functions\index{htpy-inv@{$\htpyinv$}!is an equivalence}\index{htpy-concat@{$\htpyconcat$}!is a family of equivalences}\index{htpy-concat'@{$\htpyconcat'$}!is a family of equivalences}\index{is an equivalence!htpy-inv@{$\htpyinv$}}\index{is an equivalence!htpy-concat(H)@{$\htpyconcat(H)$}}\index{is an equivalence!htpy-concat'(K)@{$\htpyconcat'(K)$}}
 \begin{align*}
-\mathsf{htpy\usc{}inv} & : (f \htpy g) \to (g \htpy f) \\
-\mathsf{htpy\usc{}concat}(H) & : (g \htpy h) \to (f \htpy h) \\
-\mathsf{htpy\usc{}concat}'(K) & : (f \htpy g) \to (f \htpy h)
+\htpyinv & : (f \htpy g) \to (g \htpy f) \\
+\htpyconcat(H) & : (g \htpy h) \to (f \htpy h) \\
+\htpyconcat'(K) & : (f \htpy g) \to (f \htpy h)
 \end{align*}
-are equivalences for every $f,g,h : \prd{x:A}B(x)$. Here, $\mathsf{htpy\usc{}concat}'(K)$ is the function defined by $H\mapsto \ct{H}{K}$.
+are equivalences for every $f,g,h : \prd{x:A}B(x)$. Here, $\htpyconcat'(K)$ is the function defined by $H\mapsto \ct{H}{K}$.
 \item \label{ex:isprop_istrunc}
 \begin{subexenum}
 \item Show that for any type $A$ the type $\iscontr(A)$ is a proposition\index{iscontr@{$\iscontr$}!is a proposition}. %There's an easy proof using double singleton induction. This is a nice application of weak funext.

@@ -25,7 +25,7 @@ We define the \define{unit type}\index{1 @{$\unit$}|see {unit type}}\index{unit 
 \begin{equation*}
 \ttt:\unit,
 \end{equation*}
-satisfying the induction principle\index{induction principle!of unit type}\index{unit type!induction principle} that for any type family of types $P(x)$ indexed by $x:\unit$, there is a term\index{indunit@{$\indunit$}}\index{unit type!indunit@{$\indunit$}}
+satisfying the induction principle\index{induction principle!of unit type}\index{unit type!induction principle} that for any type family of types $P(x)$ indexed by $x:\unit$, there is a term\index{ind 1@{$\indunit$}}\index{unit type!indunit@{$\indunit$}}
 \begin{equation*}
 \indunit : P(\ttt)\to\prd{x:\unit}P(x)
 \end{equation*}
@@ -40,7 +40,7 @@ The induction principle can also be used to define ordinary functions out of the
 \begin{equation*}
   \indunit : A \to (\unit\to A).
 \end{equation*}
-In other words, by the induction principle for the unit type we obtain for every $x:A$ a function $\mathsf{pt}_x\defeq\indunit(x):\unit\to A$.\index{ptx@{$\mathsf{pt}_x$}}
+In other words, by the induction principle for the unit type we obtain for every $x:A$ a function $\pt_x\defeq\indunit(x):\unit\to A$.\index{ptx@{$\pt_x$}}
 \index{unit type|)}
 \index{inductive type!unit type|)}
 
@@ -50,7 +50,7 @@ In other words, by the induction principle for the unit type we obtain for every
 The empty type is a degenerate example of an inductive type. It does \emph{not} come equipped with any constructors, and therefore there are also no computation rules. The induction principle merely asserts that any type family has a section. In other words: if we assume the empty type has a term, then we can prove anything.
 
 \begin{defn}
-We define the \define{empty type}\index{0 @{$\emptyt$}|see {empty type}} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type}\index{empty type!induction principle} that for any family of types $P(x)$ indexed by $x:\empty$, there is a term\index{indempty@{$\indempty$}}\index{empty type!indempty@{$\indempty$}}
+We define the \define{empty type}\index{0 @{$\emptyt$}|see {empty type}} to be a type $\emptyt$ satisfying the induction principle\index{induction principle!of empty type}\index{empty type!induction principle} that for any family of types $P(x)$ indexed by $x:\empty$, there is a term\index{ind 0@{$\indempty$}}\index{empty type!indempty@{$\indempty$}}
 \begin{equation*}
 \indempty : \prd{x:\emptyt}P(x).
 \end{equation*}
@@ -85,7 +85,7 @@ We define the \define{booleans}\index{2 @{$\bool$}|see {booleans}} to be a type 
 \bfalse & : \bool \\
 \btrue & : \bool
 \end{align*}
-satisfying the induction principle\index{induction principle!of booleans}\index{booleans!induction principle} that for any family of types $P(x)$ indexed by $x:\bool$, there is a term\index{indbool@{$\indbool$}}
+satisfying the induction principle\index{induction principle!of booleans}\index{booleans!induction principle} that for any family of types $P(x)$ indexed by $x:\bool$, there is a term\index{ind 2@{$\indbool$}}
 \begin{equation*}
 \indbool : P(\bfalse)\to \Big(P(\btrue)\to \prd{x:\bool}P(x)\Big)
 \end{equation*}
@@ -103,11 +103,11 @@ Just as in the cases for the unit type and the empty type, the induction princip
 \end{equation*}
 for any type $A$.
 
-\begin{eg}
+\begin{eg}\label{eg:boolean-ops}
   \index{boolean operations|(}\index{boolean logic|(}
-  Using the induction principle of $\bool$ we can define all the operations of Boolean algebra\index{boolean algebra}. For example, the \define{boolean negation}\index{booleans!negation} operation $\neg : \bool \to \bool$\index{negation!of booleans} is defined by
+  Using the induction principle of $\bool$ we can define all the operations of Boolean algebra\index{boolean algebra}. For example, the \define{boolean negation}\index{booleans!negation} operation $\negbool : \bool \to \bool$\index{negation function!on booleans}\index{neg 2@{$\negbool$}}\index{booleans!neg 2@{$\negbool$}} is defined by
   \begin{align*}
-    \neg\btrue & \defeq \bfalse & \neg\bfalse & \defeq \btrue.
+    \negbool(\btrue) & \defeq \bfalse & \negbool(\bfalse) & \defeq \btrue.
   \end{align*}
   The \define{boolean conjunction}\index{booleans!conjunction} operation $\blank\land\blank : \bool \to (\bool\to \bool)$ is defined by
   \begin{align*}
@@ -130,12 +130,12 @@ for any type $A$.
 \index{coproduct|(}
 \index{inductive type!coproduct|(}
 \begin{defn}
-Let $A$ and $B$ be types. We define the \define{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{plus ($+$)|see {coproduct}} to be a type that comes equipped with\index{inl@{$\inl$}}\index{coproduct!inl@{$\inl$}}\index{inr@{$\inr$}}\index{coproduct!inr@{$\inr$}}
+Let $A$ and $B$ be types. We define the \define{coproduct}\index{disjoint sum|see {coproduct}} $A+B$\index{A + B@{$A+B$}|see {coproduct}} to be a type that comes equipped with\index{inl@{$\inl$}}\index{coproduct!inl@{$\inl$}}\index{inr@{$\inr$}}\index{coproduct!inr@{$\inr$}}
 \begin{align*}
 \inl & : A \to A+B \\
 \inr & : B \to A+B
 \end{align*}
-satisfying the induction principle\index{induction principle!of coproduct}\index{coproduct!induction principle} that for any family of types $P(x)$ indexed by $x:A+B$, there is a term\index{ind+@{$\ind{+}$}}\index{coproduct!ind+@{$\ind{+}$}}
+satisfying the induction principle\index{induction principle!of coproduct}\index{coproduct!induction principle} that for any family of types $P(x)$ indexed by $x:A+B$, there is a term\index{ind +@{$\ind{+}$}}\index{coproduct!ind+@{$\ind{+}$}}
 \begin{equation*}
 \ind{+} : \Big(\prd{x:A}P(\inl(x))\Big)\to\Big(\prd{y:B}P(\inr(y))\Big)\to\prd{z:A+B}P(z)
 \end{equation*}
@@ -161,16 +161,16 @@ Indeed, we can think of \emph{propositions as types} and of terms as their const
 An important example of a type that can be defined using coproducts is the type $\Z$ of integers.\index{coproduct!Z@{$\Z$}}
 
 \begin{defn}
-  We define the \define{integers}\index{Z@{$\Z$}|see {integers}} to be the type $\Z\defeq\nat+(\unit+\nat)$. The type of integers comes equipped with inclusion functions of the positive and negative integers\index{integers!in-pos@{$\mathsf{in\usc{}pos}$}}\index{integers!in-neg@{$\mathsf{in\usc{}neg}$}}
+  We define the \define{integers}\index{Z@{$\Z$}|see {integers}} to be the type $\Z\defeq\N+(\unit+\N)$. The type of integers comes equipped with inclusion functions of the positive and negative integers\index{integers!in-pos@{$\inpos$}}\index{integers!in-neg@{$\inneg$}}
   \begin{align*}
-    \mathsf{in\usc{}pos} & \defeq \inr\circ\inr \\
-    \mathsf{in\usc{}neg} & \defeq \inl,
+    \inpos & \defeq \inr\circ\inr \\
+    \inneg & \defeq \inl,
   \end{align*}
   which are both of type $\N\to\Z$, and the constants\index{integers!-1 Z@{$-1_\Z$}}\index{integers!0 Z@{$0_\Z$}}\index{integers!1 Z@{$1_\Z$}}\index{-1 Z@{$-1_\Z$}}\index{0 Z@{$0_\Z$}}\index{1 Z@{$1_{\Z}$}}
   \begin{align*}
-    -1_\Z & \defeq \mathsf{in\usc{}neg}(0)\\
+    -1_\Z & \defeq \inneg(0)\\
     0_\Z & \defeq \inr(\inl(\ttt))\\
-    1_\Z & \defeq \mathsf{in\usc{}pos}(0).
+    1_\Z & \defeq \inpos(0).
   \end{align*}
 \end{defn}
 
@@ -180,18 +180,18 @@ In the following lemma we derive an induction principle\index{induction principl
   Consider a type family $P$ over $\Z$. If we are given
   \begin{align*}
     p_{-1} & :P(-1_\Z) \\
-    p_{-S} & : \prd{n:\N}P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n)))\\
+    p_{-S} & : \prd{n:\N}P(\inneg(n))\to P(\inneg(\succN(n)))\\
     p_{0} & : P(0_\Z) \\
     P_{1} & : P(1_\Z) \\
-    P_{S} & : \prd{n:\N}P(\mathsf{in\usc{}pos}(n))\to P(\mathsf{in\usc{}pos}(\succN(n))),
+    P_{S} & : \prd{n:\N}P(\inpos(n))\to P(\inpos(\succN(n))),
   \end{align*}
   then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:\index{integers!computation rules}\index{computation rules!of Z@{of $\Z$}}
   \begin{align*}
     f(-1_\Z) & \jdeq p_{-1} \\
-    f(\mathsf{in\usc{}neg}(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\mathsf{in\usc{}neg}(n))) \\
+    f(\inneg(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\inneg(n))) \\
     f(0_\Z) & \jdeq p_{0} \\
     f(1_\Z) & \jdeq p_{1} \\
-    f(\mathsf{in\usc{}pos}(\mathsf{succ}_\N(n))) & \jdeq p_S(n,f(\mathsf{in\usc{}pos}(n))).
+    f(\inpos(\mathsf{succ}_\N(n))) & \jdeq p_S(n,f(\inpos(n))).
   \end{align*}
 \end{lem}
 
@@ -201,10 +201,10 @@ In the following lemma we derive an induction principle\index{induction principl
     p_{inl} & : \prd{n:\N}P(\inl(n)) \\
     p_{inr} & : \prd{t:\unit+\N}P(\inr(t)).
   \end{align*}
-  Note that $\mathsf{in\usc{}neg}\jdeq\inl$ and $-1_\Z\jdeq \mathsf{in\usc{}neg}(\zeroN)$. In order to define $p_{inl}$ we use induction on the natural numbers, so it suffices to define
+  Note that $\inneg\jdeq\inl$ and $-1_\Z\jdeq \inneg(\zeroN)$. In order to define $p_{inl}$ we use induction on the natural numbers, so it suffices to define
   \begin{align*}
     p_{-1} & : P(-1) \\
-    p_{-S} & : \prd{n:\N} P(\mathsf{in\usc{}neg}(n))\to P(\mathsf{in\usc{}neg}(\succN(n))).
+    p_{-S} & : \prd{n:\N} P(\inneg(n))\to P(\inneg(\succN(n))).
   \end{align*}
   Similarly, we proceed by coproduct induction, followed by induction on $\unit$ in the left case and induction on $\N$ on the right case, in order to define $p_{inr}$. 
 \end{proof}
@@ -215,10 +215,10 @@ As an application we define the successor function on the integers.
 We define the \define{successor function}\index{successor function!on Z@{on $\Z$}}\index{function!succZ@{$\succZ$}} on the integers $\succZ:\Z\to\Z$\index{succZ@{$\succZ$}}\index{integers!succZ@{$\succZ$}} using the induction principle of \cref{lem:Z_ind}, taking
 \begin{align*}
 \succZ(-1_\Z) & \defeq 0_\N \\
-\succZ(\mathsf{in\usc{}neg}(\succN(n))) & \defeq \mathsf{in\usc{}neg}(n) \\
+\succZ(\inneg(\succN(n))) & \defeq \inneg(n) \\
 \succZ(0_\Z) & \defeq 1_\N \\
-\succZ(1_\Z) & \defeq \mathsf{in\usc{}pos}(1_\N) \\
-\succZ(\mathsf{in\usc{}pos}(\succN(n))) & \defeq \mathsf{in\usc{}pos}(\succN(\succN(n))).
+\succZ(1_\Z) & \defeq \inpos(1_\N) \\
+\succZ(\inpos(\succN(n))) & \defeq \inpos(\succN(\succN(n))).
 \end{align*}
 \end{defn}
 \index{integers|)}
@@ -241,7 +241,7 @@ The \emph{dependent pair type} is an inductive type that is generated by the dep
 \begin{equation*}
 (\blank,\blank):\prd{x:A} \Big(B(x)\to \sm{y:A}B(y)\Big).
 \end{equation*}
-The induction principle\index{induction principle!of Sigma types@{of $\Sigma$-types}}\index{dependent pair type!induction principle} for $\sm{x:A}B(x)$ asserts that for any family of types $P(p)$ indexed by $p:\sm{x:A}B(x)$, there is a function\index{dependent pair type!indSigma@{$\ind{\Sigma}$}}\index{indSigma@{$\ind{\Sigma}$}}
+The induction principle\index{induction principle!of Sigma types@{of $\Sigma$-types}}\index{dependent pair type!induction principle} for $\sm{x:A}B(x)$ asserts that for any family of types $P(p)$ indexed by $p:\sm{x:A}B(x)$, there is a function\index{dependent pair type!indSigma@{$\ind{\Sigma}$}}\index{ind Sigma@{$\ind{\Sigma}$}}
 \begin{equation*}
 \ind{\Sigma}:\Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to\Big(\prd{p:\sm{x:A}B(x)}P(p)\Big).
 \end{equation*}
@@ -287,11 +287,11 @@ In this case, the inductive type $\sm{x:A}B(x)$ is generated by \emph{ordinary} 
 The cartesian product is a very common special case of the dependent pair type, just as the type $A\to B$ of ordinary functions from $A\to B$ is a common special case of the dependent product. Therefore we provide its specification along with the induction principle for cartesian products.
 
 \begin{defn}
-Consider two types $A$ and $B$. The \define{(cartesian) product}\index{product of types}\index{A x B@{$A\times B$}} of $A$ and $B$ is defined as the inductive type $A\times B$\index{times ($\times$)|see {cartesian product}} with constructor
+Consider two types $A$ and $B$. The \define{(cartesian) product}\index{product of types}\index{A x B@{$A\times B$}|see {cartesian product}} of $A$ and $B$ is defined as the inductive type $A\times B$ with constructor
 \begin{equation*}
 (\blank,\blank):A\to (B\to A\times B).
 \end{equation*}
-The induction principle\index{induction principle!of cartesian products}\index{cartesian product!induction principle} for $A\times B$ asserts that for any type family $P$ over $A\times B$, one has\index{indtimes@{$\ind{\times}$}}\index{cartesian product!indtimes@{$\ind{\times}$}}
+The induction principle\index{induction principle!of cartesian products}\index{cartesian product!induction principle} for $A\times B$ asserts that for any type family $P$ over $A\times B$, one has\index{ind times@{$\ind{\times}$}}\index{cartesian product!indtimes@{$\ind{\times}$}}
 \begin{equation*}
 \ind{\times} : \Big(\prd{x:A}{y:B}P(a,b)\Big)\to\Big(\prd{p:A\times B} P(p)\Big)
 \end{equation*}
@@ -306,7 +306,14 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
 \index{inductive type!cartesian product|)}
 
 \begin{exercises}
-\item Write the rules for $\unit$, $\emptyt$, $\bool$, $A+B$, $\sm{x:A}B(x)$, and $A\times B$. As usual, present the rules in four sets:
+\item
+  \index{rules!for unit type}\index{unit type!rules}
+  \index{rules!for empty type}\index{empty type!rules}
+  \index{rules!for booleans}\index{booleans!rules}
+  \index{rules!for coproduct}\index{coproduct!rules}
+  \index{rules!for dependent pair type}\index{dependent pair type!rules}
+  \index{rules!for cartesian product}\index{cartesian product!rules}
+  Write the rules for $\unit$, $\emptyt$, $\bool$, $A+B$, $\sm{x:A}B(x)$, and $A\times B$. As usual, present the rules in four sets:
   \begin{enumerate}
   \item A formation rule.
   \item Introduction rules.
@@ -324,19 +331,19 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
     \end{tabular}
   \end{center}
   Here $p$ and $q$ range over $\bool$. 
-\item \label{ex:int_pred}\index{predecessor function}\index{function!predZ@{$\predZ$}}\index{integers!predZ@{$\predZ$}}\index{predZ@{$\predZ$}}Define the predecessor function $\mathsf{pred}_\Z:\Z\to \Z$.
-\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define group operations
+\item \label{ex:int_pred}\index{integers|(}\index{predecessor function}\index{function!predZ@{$\predZ$}}\index{integers!predZ@{$\predZ$}}\index{predZ@{$\predZ$}}Define the predecessor function $\predZ:\Z\to \Z$.
+\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define the group operations\index{addZ@{$\addZ$}}\index{integers!addZ@{$\addZ$}}\index{negZ@{$\negZ$}}\index{integers!negZ@{$\negZ$}}\index{mulZ@{$\mulZ$}}\index{integers!mulZ@{$\mulZ$}}
   \begin{align*}
-    k,l & \mapsto k+l \\
-    k & \mapsto -k
+    \addZ & : \Z \to (\Z \to \Z) \\
+    \negZ & : \Z \to \Z,
+    \intertext{and define the multiplication}
+    \mulZ & : \Z \to (\Z \to \Z).
   \end{align*}
-  on $\Z$.
-\item Define multiplication on $\Z$.
-\item Construct a function $F:\Z\to\Z$ that extends the Fibonacci sequence to the left
+\item Construct a function $F:\Z\to\Z$ that extends the Fibonacci sequence\index{Fibonacci sequence}\index{integers!Fibonacci sequence} to the negative integers
   \begin{equation*}
     \ldots,5,-3,2,-1,1,0,1,1,2,3,5,8,13,\ldots
   \end{equation*}
-  in the expected way.
+  in the expected way.\index{integers|)}
 \item \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e., define
   \begin{align*}
     t_0 & : \unit + \unit \\
@@ -352,24 +359,34 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
     \ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
   \end{align*}
   In other words, \emph{type theory cannot distinguish between the types $\bool$ and $\unit+\unit$.}
-\item For any type $A$ we can define the type $\mathsf{list}_A$ of \define{lists} elements of $A$ as the inductive type with constructors
+\item For any type $A$ we can define the type $\lst(A)$\index{list A@{$\lst(A)$}|see {lists in $A$}} of \define{lists}\index{lists in A @{lists in $A$}}\index{inductive type!list A@{$\lst(A)$}} elements of $A$ as the inductive type with constructors\index{lists in A@{lists in $A$}!nil@{$\nil$}}\index{nil@{$\nil$}}\index{cons(a,l)@{$\cons(a,l)$}}\index{lists in A@{lists in $A$}!cons@{$\cons$}}
   \begin{align*}
-    \mathsf{empty\usc{}list} & : \mathsf{list}_A \\
-    \mathsf{append\usc{}list} & : A \to (\mathsf{list}_A \to \mathsf{list}_A).
+    \nil & : \lst(A) \\
+    \cons & : A \to (\lst(A) \to \lst(A)).
   \end{align*}
   \begin{subexenum}
-  \item Write down the induction principle and the computation rules for $\mathsf{list}_A$.
-  \item Define a function $\mathsf{length}:\mathsf{list}_A\to\N$.
-  \item Define a function $\mathsf{reverse} : \mathsf{list}_A \to \mathsf{list}_A$ that reverses the order of the elements in any list.
-  \item Define a function
+  \item Write down the induction principle and the computation rules for $\lst(A)$.\index{induction principle!list A@{$\lst(A)$}}\index{lists in A@{lists in $A$}!induction principle}
+  \item Let $A$ and $B$ be types, suppose that $b:B$, and consider a binary operation $\mu:A\to (B \to B)$. Define a function\index{fold-list@{$\foldlist$}}\index{lists in A@{lists in $A$}!fold-list@{$\foldlist$}}
     \begin{equation*}
-      \mathsf{concat\usc{}list} : \mathsf{list}_A \to (\mathsf{list}_A \to \mathsf{list}_A)
+      \foldlist(\mu) : \lst(A)\to B
     \end{equation*}
-    that concatenates any two lists of elements in $A$.
-  \item Define a function
+    that iterates the operation $\mu$, starting with $\foldlist(\mu,\nil)\defeq b$.
+  \item Define a function $\lengthlist:\lst(A)\to\N$.\index{length-list@{$\lengthlist$}}\index{lists in A@{lists in $A$}!length-list@{$\lengthlist$}}
+  \item Define a function\index{sum-list@{$\sumlist$}}\index{lists in A@{lists in $A$}!sum-list@{$\sumlist$}}
     \begin{equation*}
-      \mathsf{sum} : \mathsf{list}_\N \to \N
+      \sumlist : \lst(\N) \to \N
     \end{equation*}
     that adds all the elements in a list of natural numbers.
+  \item Define a function\index{concat-list@{$\concatlist$}}\index{lists in A@{lists in $A$}!concat-list@{$\concatlist$}}\index{concatenation!of lists}
+    \begin{equation*}
+      \concatlist : \lst(A) \to (\lst(A) \to \lst(A))
+    \end{equation*}
+    that concatenates any two lists of elements in $A$.
+  \item Define a function\index{flatten-list@{$\flattenlist$}}\index{lists in A@{lists in $A$}!flatten-list@{$\flattenlist$}}
+    \begin{equation*}
+      \flattenlist : \lst(\lst(A)) \to \lst(A)
+    \end{equation*}
+    that concatenates all the lists in a lists of lists in $A$.
+  \item Define a function $\reverselist : \lst(A) \to \lst(A)$ that reverses the order of the elements in any list.\index{reverse-list@{$\reverselist$}}\index{lists in A@{lists in $A$}!reverse-list@{$\reverselist$}}
   \end{subexenum}
 \end{exercises}

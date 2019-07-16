@@ -9,7 +9,7 @@ The univalence axiom characterizes the identity type of the universe. Roughly sp
 \begin{equation*}
 \mathsf{equiv\usc{}eq} : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
 \end{equation*}
-that sends $\refl{A}$ to the identity equivalence $\id:\eqv{A}{A}$ is a family of equivalences.\index{identity type!universe} A universe satisfying the univalence axiom is referred to as a \define{univalent universe}\index{univalent universe}. If $\UU$ is a univalent universe we will write
+that sends $\refl{A}$ to the identity equivalence $\id:\eqv{A}{A}$ is a family of equivalences.\index{identity type!of a universe} A universe satisfying the univalence axiom is referred to as a \define{univalent universe}\index{univalent universe}. If $\UU$ is a univalent universe we will write
 $\mathsf{eq\usc{}equiv}$\index{eq-equiv@{$\mathsf{eq\usc{}equiv}$}}
 for the inverse of $\mathsf{equiv\usc{}eq}$.
 \end{defn}
@@ -162,7 +162,7 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
 \item \label{ex:istrunc_UUtrunc}
 \begin{subexenum}
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.\index{universe!of contractible types}
-\item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.\index{equiv@{$\eqv{A}{B}$}!truncatedness}
+\item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.\index{A simeq B@{$\eqv{A}{B}$}!truncatedness}
 \item Use univalence to show that the universe of $k$-types\index{universe!of k-types@{of $k$-types}}\index{U leq k@{$\UU^{\leq k}$}}\index{k-type@{$k$-type}!universe of k-types@{universe of $k$-types}}\index{truncated!universe of k-types@{universe of $k$-types}}
 \begin{equation*}
 \UU^{\leq k}\defeq \sm{X:\UU}\mathsf{is\usc{}trunc}_k(X)
@@ -195,7 +195,7 @@ given by $\mathsf{graph}_f(a,b)\defeq (f(a)=b)$ is a functional relation from $A
 \begin{equation*}
 R^{\mathsf{op}} : B\to (A\to\UU)
 \end{equation*}
-by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{equiv@{$\eqv{A}{B}$}!as relation}
+by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{A simeq B@{$\eqv{A}{B}$}!as relation}
 \begin{equation*}
 \eqv{\Big(\sm{R:A\to (B\to \UU)}\mathsf{is\usc{}function}(R)\times\mathsf{is\usc{}function}(R^{\mathsf{op}})\Big)}{(\eqv{A}{B})}.
 \end{equation*}
@@ -212,7 +212,7 @@ by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{equiv@{$\
     \begin{equation*}
       (A,a)\simeq_\ast (B,b)\defeq \sm{e:A\simeq B}e(a)=b.
     \end{equation*}
-    Show that the canonical map\index{UU*@{$\UU_\ast$}!identity type}\index{identity type!UU*@{$\UU_\ast$}}
+    Show that the canonical map\index{UU*@{$\UU_\ast$}!identity type}\index{identity type!of UU*@{of $\UU_\ast$}}
     \begin{equation*}
       \big((A,a)=(B,b)\big)\to \Big((A,a)\simeq (B,b)\Big)
     \end{equation*}

@@ -29,16 +29,16 @@ In the cases of the formation rule, the introduction rule, and the elimination r
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
 \RightLabel{$\Pi$.}
-\UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)~\mathrm{type}$}
+\UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)~\type$}
 \end{prooftree}
 With the following conversion rule we postulate that formation of dependent function types respects judgmental equality of types:
 \index{rules!for dependent function types!conversion}
 \index{dependent function type!conversion rule}
 \begin{prooftree}
-\AxiomC{$\Gamma\vdash A\jdeq A'~\mathrm{type}$}
+\AxiomC{$\Gamma\vdash A\jdeq A'~\type$}
 \AxiomC{$\Gamma,x:A\vdash B(x)\jdeq B'(x)~\textrm{type}$}
 \RightLabel{$\Pi$-eq.}
-\BinaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq\prd{x:A'}B'(x)~\mathrm{type}$}
+\BinaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq\prd{x:A'}B'(x)~\type$}
 \end{prooftree}
 Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the context $\Gamma,x:A$, we also postulate that
 \index{rules!for dependent function types!change of bound variable}
@@ -46,7 +46,7 @@ Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the co
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A\vdash B(x)~\textrm{type}$}
 \RightLabel{$\Pi$-$x'/x$.}
-\UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq \prd{x':A}B(x')~\mathrm{type}$}
+\UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq \prd{x':A}B(x')~\type$}
 \end{prooftree}
 
 \subsubsection{The $\Pi$-introduction rule}
@@ -176,34 +176,34 @@ Note that we have used the symbol $\jdeq$ in the conclusion to define the identi
 \begin{defn}
 For any three types $A$, $B$, and $C$ in context $\Gamma$, there is a \define{composition}\index{function type!composition}\index{composition!of functions} operation
 \begin{equation*}
-\mathsf{comp}:(B\to C)\to ((A\to B)\to (A\to C)),
+\comp:(B\to C)\to ((A\to B)\to (A\to C)),
 \end{equation*}
 i.e., we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
 \AxiomC{$\Gamma\vdash C~\textrm{type}$}
-\TrinaryInfC{$\Gamma\vdash\mathsf{comp}:(B\to C)\to ((A\to B)\to (A\to C))$}
+\TrinaryInfC{$\Gamma\vdash\comp:(B\to C)\to ((A\to B)\to (A\to C))$}
 \end{prooftree}
-We will write $g\circ f$\index{g composed with f@{$g\circ f$}} for $\mathsf{comp}(g,f)$\index{comp(g,f)@{$\mathsf{comp}(g,f)$}}.
+We will write $g\circ f$\index{g composed with f@{$g\circ f$}} for $\comp(g,f)$\index{comp(g,f)@{$\comp(g,f)$}}.
 \end{defn}
 
 \begin{constr}
-  The idea of the definition is to define $\mathsf{comp}(g,f)$ to be the function $\lam{x}g(f(x))$. The derivation we use to construct $\mathsf{comp}$ is as follows:
+  The idea of the definition is to define $\comp(g,f)$ to be the function $\lam{x}g(f(x))$. The derivation we use to construct $\comp$ is as follows:
   \begin{prooftree}
-    \AxiomC{$\Gamma\vdash A~\mathrm{type}$}
-    \AxiomC{$\Gamma\vdash B~\mathrm{type}$}
+    \AxiomC{$\Gamma\vdash A~\type$}
+    \AxiomC{$\Gamma\vdash B~\type$}
     \BinaryInfC{$\Gamma,f:B^A,x:A\vdash f(x):B$}
     \UnaryInfC{$\Gamma,g:C^B,f:B^A,x:A\vdash f(x):B$}
-    \AxiomC{$\Gamma\vdash B~\mathrm{type}$}
-    \AxiomC{$\Gamma\vdash C~\mathrm{type}$}
+    \AxiomC{$\Gamma\vdash B~\type$}
+    \AxiomC{$\Gamma\vdash C~\type$}
     \BinaryInfC{$\Gamma,g:C^B,y:B\vdash g(y):C$}
     \UnaryInfC{$\Gamma,g:C^B,f:B^A,y:B\vdash g(y):C$}
     \UnaryInfC{$\Gamma,g:C^B,f:B^A,x:A,y:B\vdash g(y):C$}
     \BinaryInfC{$\Gamma,g:C^B,f:B^A,x:A\vdash g(f(x)) : C$}
     \UnaryInfC{$\Gamma,g:C^B,f:B^A\vdash \lam{x}g(f(x)):C^A$}
     \UnaryInfC{$\Gamma,g:B\to C\vdash \lam{f}{x}g(f(x)):B^A\to C^A$}
-    \UnaryInfC{$\Gamma\vdash\mathsf{comp}\defeq \lam{g}{f}{x}g(f(x)):C^B\to (B^A\to C^A)$}
+    \UnaryInfC{$\Gamma\vdash\comp\defeq \lam{g}{f}{x}g(f(x)):C^B\to (B^A\to C^A)$}
   \end{prooftree}
 \end{constr}
 
@@ -240,7 +240,7 @@ Composition of functions is associative\index{associativity!of function composit
 \end{proof}
 
 \begin{lem}\label{lem:fun_unit}
-Composition of functions satisfies the left and right unit laws\index{left unit law|see {unit laws}}\index{right unit law|see {unit laws}}\index{unit laws!of function composition}\index{composition!of functions!unit laws}, i.e., we can derive
+Composition of functions satisfies the left and right unit laws\index{left unit law|see {unit laws}}\index{right unit law|see {unit laws}}\index{unit laws!for function composition}\index{composition!of functions!unit laws}, i.e., we can derive
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:A\to B$}
@@ -257,7 +257,7 @@ The derivation for the left unit law is
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:A\to B$}
 \UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
-\AxiomC{$\Gamma\vdash B~\mathrm{type}$}
+\AxiomC{$\Gamma\vdash B~\type$}
 \UnaryInfC{$\Gamma,y:B\vdash \idfunc[B](y)\jdeq y:B$}
 \UnaryInfC{$\Gamma,x:A,y:B\vdash \idfunc[B](y)\jdeq y:B$}
 \BinaryInfC{$\Gamma,x:A\vdash \idfunc[B](f(x))\jdeq f(x):B$}
@@ -278,21 +278,21 @@ The right unit law is left as \cref{ex:fun_right_unit}.
 is admissible for any variable $x'$ that does not occur in the context $\Gamma,x:A$.
 \item 
   \begin{subexenum}
-  \item Construct the \define{constant function}\index{constant function}\index{function!constant function}
+  \item Construct the \define{constant function}\index{constant function}\index{function!constant function}\index{const x@{$\const_x$}}\index{function!const@{$\const$}}
     \begin{prooftree}
       \AxiomC{$\Gamma\vdash A~\textrm{type}$}
-      \UnaryInfC{$\Gamma,y:B\vdash \mathsf{const}_y:A\to B$}
+      \UnaryInfC{$\Gamma,y:B\vdash \const_y:A\to B$}
     \end{prooftree}
   \item Show that
     \begin{prooftree}
       \AxiomC{$\Gamma\vdash f:A\to B$}
-      \UnaryInfC{$\Gamma,z:C\vdash \mathsf{const}_z\circ f\jdeq\mathsf{const}_z : A\to C$}
+      \UnaryInfC{$\Gamma,z:C\vdash \const_z\circ f\jdeq\const_z : A\to C$}
     \end{prooftree}
   \item Show that
     \begin{prooftree}
       \AxiomC{$\Gamma\vdash A~\textrm{type}$}
       \AxiomC{$\Gamma\vdash g:B\to C$}
-      \BinaryInfC{$\Gamma,y:B\vdash g\circ\mathsf{const}_y\jdeq \mathsf{const}_{g(y)}:A\to C$}
+      \BinaryInfC{$\Gamma,y:B\vdash g\circ\const_y\jdeq \const_{g(y)}:A\to C$}
     \end{prooftree}
   \end{subexenum}
 \item In this exercise we generalize the composition operation of non-dependent function types\index{composition!of dependent functions}:

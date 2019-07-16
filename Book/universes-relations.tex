@@ -1,6 +1,8 @@
 \section{Type theoretic universes}
 
-To complete our specification of dependent type theory, we introduce type theoretic \emph{universes}. Universes are types that consist of types. In other words, a universe is a type $\UU$ that comes equipped with a type family $\Ty$ over $\UU$, and for any $X:\UU$ we think of $X$ as an \emph{encoding} of the type $\Ty(X)$. We call this type family the \emph{universal type family}.
+\index{universe|(}
+\index{universal family|(}
+To complete our specification of dependent type theory, we introduce type theoretic \emph{universes}. Universes are types that consist of types. In other words, a universe is a type $\UU$ that comes equipped with a type family $\Ty$ over $\UU$, and for any $X:\UU$ we think of $X$ as an \emph{encoding}\index{encoding of a type in a universe} of the type $\Ty(X)$. We call this type family the \emph{universal type family}.
 
 There are several reasons to equip type theory with universes. One reason is that it enables us to define new type families over inductive types, using their induction principle. For example, since the universe is itself a type, we can use the induction principle of $\bool$ to obtain a map $P:\bool\to\UU$ from any two terms $X_0,X_1:\UU$. Then we obtain a type family over $\bool$ by substituting $P$ into the universal type family:
 \begin{equation*}
@@ -10,7 +12,7 @@ satisfying $\Ty(P(0_\bool))\jdeq \Ty(X_0)$ and $\Ty(P(1_\bool))\jdeq \Ty(X_1)$.
 
 We use this way of defining type families to define many familiar relations over $\N$, such as $\leq$ and $<$. We also introduce a relation called \emph{observational equality} $\mathsf{Eq}_\N$ on $\N$, which we can think of as equality of $\N$. This relation is reflexive, symmetric, and transitive, and moreover it is the least reflexive relation. Furthermore, one of the most important aspects of observational equality $\mathsf{Eq}_\N$ on $\N$ is that $\mathsf{Eq}_\N(m,n)$ is a type for every $m,n:\N$, unlike judgmental equality. Therefore we can use type theory to reason about observational equality on $\N$. Indeed, in the exercises we show that some very elementary mathematics can already be done at this early stage in our development of type theory.
 
-A second reason to introduce universes is that it allows us to define many types of types equipped with structure. One of the most important examples is the type of groups, which is the type of types equipped with the group operations satisfying the group laws, and for which the underlying type is a set. We won't discuss the condition for a type to be a set until \cref{chap:hierarchy}, so the definition of groups in type theory will be given much later. Therefore we illustrate this use of the universe by giving simpler examples: pointed types, graphs, and reflexive graphs.
+A second reason to introduce universes is that it allows us to define many types of types equipped with structure. One of the most important examples is the type of groups\index{group}, which is the type of types equipped with the group operations satisfying the group laws, and for which the underlying type is a set\index{set}. We won't discuss the condition for a type to be a set until \cref{chap:hierarchy}, so the definition of groups in type theory will be given much later. Therefore we illustrate this use of the universe by giving simpler examples: pointed types, graphs, and reflexive graphs.
 
 One of the aspects that make universes useful is that they are postulated to be closed under all the type constructors. For example, if we are given $X:\UU$ and $P:\Ty(X)\to \UU$, then the universe is equipped with a term
 \begin{equation*}
@@ -23,7 +25,7 @@ satisfying the judgmental equality $\Ty(\check{\Sigma}(X,P)\jdeq\sm{x:\Ty(X)}\Ty
 In the following definition we already state that universes are closed under identity types. Identity types will be introduced in \cref{chap:identity}.
 
 \begin{defn}
-  A \define{universe}\index{universe} in type theory is a closed type $\UU$\index{U@{$\UU$}} equipped with a type family $\Ty$\index{Ty@{$\Ty$}} over $\UU$ called the \define{universal family}\index{universal family}\index{family!universal family}, equipped with the following structure:
+  A \define{universe} in type theory is a closed type $\UU$\index{U, V, W@{$\UU$, $\mathcal{V}$, $\mathcal{W}$}|see {universe}} equipped with a type family $\Ty$\index{T@{$\Ty$}|see {universal family}} over $\UU$ called the \define{universal family}\index{family!universal family}, equipped with the following structure:
   \begin{enumerate}
   \item $\UU$ is closed under $\Pi$, in the sense that it comes equipped with a function
     \begin{equation*}
@@ -65,7 +67,7 @@ In the following definition we already state that universes are closed under ide
       \Ty(\check{\N}) & \jdeq \N.
     \end{align*}
   \end{enumerate}
-  Given a universe $\UU$, we say that a type $A$ in context $\Gamma$ is \define{small}\index{small type} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
+  Given a universe $\UU$, we say that a type $A$ in context $\Gamma$ is \define{small}\index{small type}\index{universe!small types} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
   \begin{equation*}
     \Gamma\vdash\Ty\big(\check{A}\big)\jdeq A~\mathrm{type}
   \end{equation*}
@@ -73,10 +75,13 @@ In the following definition we already state that universes are closed under ide
 \end{defn}
 
 \begin{rmk}
-  Since ordinar function types are defined as a special case of dependent function types, we don't have to assume that universes are closed under ordinary function types. Similarly, it follows from the assumption that universes are closed under dependent pair types that universes are closed under cartesian product types.
+  Since ordinary function types are defined as a special case of dependent function types, we don't have to assume that universes are closed under ordinary function types. Similarly, it follows from the assumption that universes are closed under dependent pair types that universes are closed under cartesian product types.
 \end{rmk}
 
 \subsection{Assuming enough universes}
+
+\index{enough universes|(}
+\index{universe!enough universes|(}
   Most of the time we will get by with assuming one universe $\UU$, and indeed we recommend on a first reading of this text to simply assume that there is one universe $\UU$. However, sometimes we might need a second universe $\mathcal{V}$ that contains $\UU$ as well as all the types in $\UU$. In such situations we cannot get by with a single universe, because the assumption that $\UU$ is a term of itself would lead to inconsistencies like the Russel's paradox.
 
   Russel's paradox is the famous argument that there cannot be a set of all sets. If there were such a set $S$, then we could consider Russel's subset
@@ -149,6 +154,8 @@ holds. With this assumption it will rarely be necessary to work with more than o
   \end{prooftree}
   Similarly, there are functions $\UU\to \UU\sqcup\mathcal{V}$ and $\mathcal{V}\to \UU\sqcup\mathcal{V}$ for any two universes $\UU$ and $\mathcal{V}$.
 \end{rmk}
+\index{enough universes|)}
+\index{universe!enough universes|)}
 
 \subsection{Pointed types}
 
@@ -189,15 +196,15 @@ We can even go further and define the \emph{iterated loop space} of a pointed ty
 \subsection{Relations on the natural numbers}
 
 \begin{defn}\label{defn:obs_nat}
-We define the \define{observational equality}\index{observational equality!on N@{on $\N$}} on $\N$ as binary relation $\mathsf{Eq}_\N:\N\to(\N\to\UU)$\index{Eq_N@{$\mathsf{Eq}_\N$}} satisfying
+We define the \define{observational equality}\index{observational equality!on N@{on $\N$}}\index{natural numbers!observational equality} on $\N$ as binary relation $\EqN:\N\to(\N\to\UU)$\index{Eq N@{$\EqN$}} satisfying
 \begin{align*}
-\mathsf{Eq}_\N(\zeroN,\zeroN) & \jdeq \unit & \mathsf{Eq}_\N(\succN(n),\zeroN) & \jdeq \emptyt \\
-\mathsf{Eq}_\N(\zeroN,\succN(n)) & \jdeq \emptyt & \mathsf{Eq}_\N(\succN(n),\succN(m)) & \jdeq \mathsf{Eq}_\N(n,m).
+\EqN(\zeroN,\zeroN) & \jdeq \unit & \EqN(\succN(n),\zeroN) & \jdeq \emptyt \\
+\EqN(\zeroN,\succN(n)) & \jdeq \emptyt & \EqN(\succN(n),\succN(m)) & \jdeq \EqN(n,m).
 \end{align*}
 \end{defn}
 
 \begin{constr}
-We define $\mathsf{Eq}_\N$ by double induction on $\N$. By the first application of induction it suffices to provide
+We define $\EqN$ by double induction on $\N$. By the first application of induction it suffices to provide
 \begin{align*}
 E_0 & : \N\to\UU \\
 E_S & : \N\to (\N\to\UU)\to(\N\to\UU)
@@ -214,8 +221,8 @@ E_S(n,X,\succN(m)) & \jdeq X(m)
 \end{align*}
 Therefore we have by the computation rule for the first induction that the judgmental equality
 \begin{align*}
-\mathsf{Eq}_\N(\zeroN,m) & \jdeq E_0(m) \\
-\mathsf{Eq}_\N(\succN(n),m) & \jdeq E_S(n,\mathsf{Eq}_\N(n),m)
+\EqN(\zeroN,m) & \jdeq E_0(m) \\
+\EqN(\succN(n),m) & \jdeq E_S(n,\EqN(n),m)
 \end{align*}
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
@@ -318,11 +325,11 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
   \end{subexenum}
 \item \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
   \begin{subexenum}
-  \item Define observational equality $\mathsf{Eq}_\bool$\index{Eq_bool@{$\mathsf{Eq}_\bool$}} on the booleans.
-  \item Show that $\mathsf{Eq}_\bool$ is reflexive.\index{observational equality!on 2@{on $\bool$}!is reflexive}
+  \item Define observational equality $\EqBool$\index{Eq 2@{$\EqBool$}} on the booleans.
+  \item Show that $\EqBool$ is reflexive.\index{observational equality!on 2@{on $\bool$}!is reflexive}
   \item Show that for any reflexive relation $R:\bool\to(\bool\to \UU)$ one has\index{observational equality!on 2@{on $\bool$}!is least reflexive relation}
     \begin{equation*}
-      \prd{x,y:\bool} \mathsf{Eq}_\bool(x,y)\to R(x,y).
+      \prd{x,y:\bool} \EqBool(x,y)\to R(x,y).
     \end{equation*}
   \end{subexenum}
 \item \label{ex:int_order}
@@ -363,3 +370,5 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
     that projects $\mathsf{Fin}(\succN(n))$ onto $\mathsf{Fin}(n)$ by doubling at $i$. 
   \end{subexenum}
 \end{exercises}
+\index{universe|)}
+\index{universal family|)}

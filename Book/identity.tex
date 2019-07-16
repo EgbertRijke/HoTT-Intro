@@ -1,4 +1,7 @@
 \section{Identity types}\label{chap:identity}
+
+\index{identity type|(}
+\index{inductive type!identity type|(}
 From the perspective of types as proof-relevant propositions, how should we think of \emph{equality} in type theory? Given a type $A$, and two terms $x,y:A$, the equality $\id{x}{y}$ should again be a type. Indeed, we want to \emph{use} type theory to prove equalities. \emph{Dependent} type theory provides us with a convenient setting for this: the equality type $\id{x}{y}$ is dependent on $x,y:A$. 
 
 Then, if $\id{x}{y}$ is to be a type, how should we think of the terms of $\id{x}{y}$. A term $p:\id{x}{y}$ witnesses that $x$ and $y$ are equal terms of type $A$. In other words $p:\id{x}{y}$ is an \emph{identification} of $x$ and $y$. In a proof-relevant world, there might be many terms of type $\id{x}{y}$. I.e., there might be many identifications of $x$ and $y$. And, since $\id{x}{y}$ is itself a type, we can form the type $\id{p}{q}$ for any two identifications $p,q:\id{x}{y}$. That is, since $\id{x}{y}$ is a type, we may also use the type theory to prove things \emph{about} identifications (for instance, that two given such identifications can themselves be identified), and we may use the type theory to perform constructions with them. As we will see shortly, we can give every type a groupoidal structure.
@@ -27,18 +30,18 @@ Identity type & Path fibration\\
 \subsection{The inductive definition of identity types}
 
 \begin{defn}
-  Consider a type $A$ and let $a:A$. Then we define the \define{identity type}\index{identity type} of $A$ at $a$ as an inductive family of types $a =_A x$ indexed by $x:A$, of which the constructor is
+  Consider a type $A$ and let $a:A$. Then we define the \define{identity type} of $A$ at $a$ as an inductive family of types $a =_A x$\index{a = x@{$a = x$}|see {identity type}} indexed by $x:A$, of which the constructor is\index{refl@{$\refl{}$}}\index{identity type!refl@{$\refl{}$}}
   \begin{equation*}
     \refl{a}:a=_Aa.
   \end{equation*}
-  The induction principle of the identity type postulates that for any family of types $P(x,p)$ indexed by $x:A$ and $p:a=_A x$, there is a function
+  The induction principle of the identity type\index{identity type!induction principle}\index{induction principle!of the identity type} postulates that for any family of types $P(x,p)$ indexed by $x:A$ and $p:a=_A x$, there is a function\index{path-ind@{$\pathind$}}\index{identity type!path-ind@{$\pathind$}}
   \begin{equation*}
-    \mathsf{path\usc{}ind}_a:P(a,\refl{a}) \to \prd{x:A}{p:a=_A x} P(x,p)
+    \pathind_a:P(a,\refl{a}) \to \prd{x:A}{p:a=_A x} P(x,p)
   \end{equation*}
-  that satisfies $\mathsf{path\usc{}ind}_a(p,a,\refl{a})\jdeq p$.
+  that satisfies $\pathind_a(p,a,\refl{a})\jdeq p$.
 
-  A term of type $a=_A x$ is also called an \define{identification}\index{identification} of $a$ with $x$, and sometimes it is called a \define{path}\index{path} from $a$ to $x$.
-The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination} or \define{path induction}\index{path induction}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}} for the identity type on $A$, and often we write $a=x$ for the type of identifications of $a$ with $x$, omitting reference to the ambient type $A$.
+  A term of type $a=_A x$ is also called an \define{identification}\index{identification}\index{identity type!identification} of $a$ with $x$, and sometimes it is called a \define{path}\index{path}\index{identity type!path} from $a$ to $x$.
+The induction principle for identity types is sometimes called \define{identification elimination}\index{identification elimination}\index{induction principle!identification elimination}\index{identity type!identification elimination} or \define{path induction}\index{path induction}\index{identity type!path induction}\index{induction principle!path induction}. We also write $\idtypevar{A}$\index{Id A@{$\idtypevar{A}$}|see {identity type}} for the identity type on $A$, and often we write $a=x$ for the type of identifications of $a$ with $x$, omitting reference to the ambient type $A$.
 \end{defn}
 
 \begin{rmk}
@@ -46,11 +49,12 @@ The induction principle for identity types is sometimes called \define{identific
 \end{rmk}
 
 \begin{rmk}
+  \index{rules!identity type|(}\index{identity type!rules|(}
   Since the identity types require getting used to, we provide the formal rules
   for identity types. The identity type is formed by the formation rule:
   \begin{prooftree}
     \AxiomC{$\Gamma\vdash a:A$}
-    \UnaryInfC{$\Gamma,x:A\vdash a=_A x~\mathrm{type}$}
+    \UnaryInfC{$\Gamma,x:A\vdash a=_A x~\type$}
   \end{prooftree}
   The constructor of the identity type is then given by the introduction rule:
   \begin{prooftree}
@@ -60,30 +64,23 @@ The induction principle for identity types is sometimes called \define{identific
   The induction principle is now given by the elimination rule:
   \begin{prooftree}
     \AxiomC{$\Gamma\vdash a:A$}
-    \AxiomC{$\Gamma,x:A,p:a=_A x\vdash P(x,p)~\mathrm{type}$}
-    \BinaryInfC{$\Gamma\vdash \mathsf{path\usc{}ind}_a:P(a,\refl{a})\to\prd{x:A}{p:a=_A x}P(x,p)$}
+    \AxiomC{$\Gamma,x:A,p:a=_A x\vdash P(x,p)~\type$}
+    \BinaryInfC{$\Gamma\vdash \pathind_a:P(a,\refl{a})\to\prd{x:A}{p:a=_A x}P(x,p)$}
   \end{prooftree}
   And finally the computation rule is:
   \begin{prooftree}
     \AxiomC{$\Gamma\vdash a:A$}
-    \AxiomC{$\Gamma,x:A,p:a=_A x\vdash P(x,p)~\mathrm{type}$}
-    \BinaryInfC{$\Gamma\vdash \mathsf{path\usc{}ind}_a(p,a,\refl{a})\jdeq p : P(a,\refl{a})$}
+    \AxiomC{$\Gamma,x:A,p:a=_A x\vdash P(x,p)~\type$}
+    \BinaryInfC{$\Gamma\vdash \pathind_a(p,a,\refl{a})\jdeq p : P(a,\refl{a})$}
   \end{prooftree}
-  Furthermore we postulate that any universe is closed under identity types, i.e., that there is a function
-  \begin{equation*}
-    \check{\mathsf{Id}}:\prd{A:\UU}\mathsf{Ty}(A)\to\mathsf{Ty}(A)\to\UU
-  \end{equation*}
-  satisfying
-  \begin{equation*}
-    \mathsf{Ty}(\check{\mathsf{Id}}(A,a,x))\jdeq a=_{\mathsf{Ty}(A)} x.
-  \end{equation*}
+  \index{rules!identity type|)}\index{identity type!rules|)}
 \end{rmk}
 
 \begin{rmk}
   One might wonder whether it is also possible to form the identity type at a \emph{variable} of type $A$, rather than at a term. This is certainly possible: since we can form the identity type in \emph{any} context, we can form the identity type at a variable $x:A$ as follows:
   \begin{prooftree}
     \AxiomC{$\Gamma,x:A\vdash x:A$}
-    \UnaryInfC{$\Gamma,x:A,y:A\vdash x=_A y~\mathrm{type}$}
+    \UnaryInfC{$\Gamma,x:A,y:A\vdash x=_A y~\type$}
   \end{prooftree}
   In this way we obtain the `binary' identity type. Its constructor is then also indexed by $x:A$. We have the following introduction rule
   \begin{prooftree}
@@ -92,106 +89,94 @@ The induction principle for identity types is sometimes called \define{identific
   \end{prooftree}
   and similarly we have elimination and computation rules.
 \end{rmk}
- 
-
-\begin{comment}
-In the following lemma we show that the identity type on $A$ is contained in any reflexive relation on $A$.
-
-\begin{lem}
-Let $\Gamma,x:A,y:A\vdash R(x,y)~\mathrm{type}$\index{reflexive relation}\index{relation!reflexive}, and suppose that $R$ is reflexive in the sense that there is a term
-\begin{equation*}
-\rho:\prd{x:A}R(x,x)
-\end{equation*}
-Then there is a term of type
-\begin{equation*}
-\prd{y:A} (x=_A y)\to R(x,y)
-\end{equation*}
-in context $\Gamma,x:A$.
-\end{lem}
-
-\begin{constr}
-By weakening the reflexive relation $R$ we obtain
-\begin{equation*}
-\Gamma,x:A,y:A,\alpha:x=_A y\vdash R(x,y)~\mathrm{type},
-\end{equation*}
-on which the induction principle is applicable.
-Thus we see that by the induction principle for identity types we have a term
-\begin{equation*}
-\mathsf{path\usc{}ind}_x : R(x,x)\to \prd{y:A}(x=_A y)\to R(x,y)
-\end{equation*}
-so it suffices to construct a term of type $R(x,x)$, which we have by reflexivity of $R$.
-\end{constr}
-\end{comment}
 
 \subsection{The groupoidal structure of types}\label{sec:groupoid}
 \index{groupoid laws!of identifications|(}
-We show that identifications can be \emph{concatenated} and \emph{inverted}, which corresponds to the transitivity and symmetry of the identity type. 
-
-Furthermore, we observe that we can iteratively take identity types, i.e., we can take identity types of identity types, 
-\begin{equation*}
-p =_{(x=_Ay)} q,
-\end{equation*}
-and so on. In other words, for any two identifications $p,q:x=_A y$, there is a type of identifications of $p$ with $y$. One way to think about this is that the identifications $p,q:x=_A y$ are paths in the type (space) $A$, and an identification of $p$ with $q$ is a \emph{higher path} from $p$ to $q$, i.e., a \emph{homotopy}.
-
-Using the observation that identity types can be iterated we show that concatenation is \emph{associative}, satisfies the left and right \emph{unit laws}, and satisfies the left and right \emph{inverse laws}. These are the \define{groupoid operations} on the identity type.
+We show that identifications can be \emph{concatenated} and \emph{inverted}, which corresponds to the transitivity and symmetry of the identity type.
 
 \begin{defn}\label{defn:id_concat}
-Let $A$ be a type. We define the \define{concatenation}\index{concatenation!for identifications}\index{concat@{$\mathsf{concat}$}} operation
+Let $A$ be a type. We define the \define{concatenation}\index{concatenation!for identifications}\index{concat@{$\concat$}} operation
 \begin{equation*}
-\mathsf{concat} : \prd{x,y,z:A} (\id{x}{y})\to(\id{y}{z})\to (\id{x}{z}).
+\concat : \prd{x,y,z:A} (\id{x}{y})\to(\id{y}{z})\to (\id{x}{z}).
 \end{equation*}
-We will write $\ct{p}{q}$ for $\mathsf{concat}(p,q)$.
+We will write $\ct{p}{q}$ for $\concat(p,q)$.
 \end{defn}
 
 \begin{constr}
 We construct the concatenation operation by path induction. It suffices to construct
 \begin{equation*}
-\mathsf{concat}(\refl{x}):\prd{z:A} (x=z)\to(x=z).
+\concat(\refl{x}):\prd{z:A} (x=z)\to(x=z).
 \end{equation*}
-Here we take $\mathsf{concat}(\refl{x})_z \jdeq \idfunc[(x=z)]$. 
+Here we take $\concat(\refl{x})_z \jdeq \idfunc[(x=z)]$. 
 Explicitly, the term we have constructed is
 \begin{equation*}
-\lam{x}\mathsf{path\usc{}ind}_x(\lam{z}\idfunc[(\id{x}{z})]):\prd{x,y:A} (x=y)\to \prd{z:A} (y=z)\to (x=z).
+\lam{x}\pathind_x(\lam{z}\idfunc[(\id{x}{z})]):\prd{x,y:A} (x=y)\to \prd{z:A} (y=z)\to (x=z).
 \end{equation*}
 To obtain a term of the asserted type we need to swap the order of the arguments $p:x=y$ and $z:A$, using \cref{ex:swap}.
 \end{constr}
 
 \begin{defn}\label{defn:id_inv}
-Let $A$ be a type. We define the \define{inverse operation}\index{inverse operation!for identifications}\index{inv@{$\mathsf{inv}$}}
+Let $A$ be a type. We define the \define{inverse operation}\index{inverse operation!for identifications}\index{inv@{$\invfunc$}}
 \begin{equation*}
-\mathsf{inv}:\prd{x,y:A} (x=y)\to (y=x).
+\invfunc:\prd{x,y:A} (x=y)\to (y=x).
 \end{equation*}
-Most of the time we will write $p^{-1}$ for $\mathsf{inv}(p)$.
+Most of the time we will write $p^{-1}$ for $\invfunc(p)$.
 \end{defn}
 
 \begin{constr}
 We construct the inverse operation by path induction. It suffices to construct
 \begin{equation*}
-\mathsf{inv}(\refl{x}): x=x,
+\invfunc(\refl{x}): x=x,
 \end{equation*}
-for any $x:A$. Here we take $\mathsf{inv}(\refl{x})\defeq \refl{x}$.
+for any $x:A$. Here we take $\invfunc(\refl{x})\defeq \refl{x}$.
 \end{constr}
 
-\begin{defn}\label{defn:id_assoc}
-Let $A$ be a type. We define the \define{associativity operation}\index{associativity operation!for identifications}, which assigns to each $p:x=y$, $q:y=z$, and $r:z=w$ the \define{associator}
+The next question is whether the concatenation and inverting operations on paths behave as expected. More concretely, is path concatenation associative, does it satisfy the unit laws, and is the inverse of a path indeed a two-sided inverse?
+
+For example, in the case of associativity we are asking to compare the paths
 \begin{equation*}
-\mathsf{assoc}(p,q,r) : \ct{(\ct{p}{q})}{r}=\ct{p}{(\ct{q}{r})}.
+  \ct{(\ct{p}{q})}{r}\qquad\text{and}\qquad\ct{p}{(\ct{q}{r})}
 \end{equation*}
+for any $p:x=y$, $q:y=z$, and $r:z=w$ in a type $A$. The computation rules of path induction are not strong enough to conclude that $\ct{(\ct{p}{q})}{r}$ and $\ct{p}{(\ct{q}{r})}$ are judgmentally equal. However, both $\ct{(\ct{p}{q})}{r}$ and $\ct{p}{(\ct{q}{r})}$ are terms of the same type: they are identifications of type $x=w$. Since the identity type is a type like any other, we can ask whether there is an \emph{identification}
+\begin{equation*}
+\ct{(\ct{p}{q})}{r}=\ct{p}{(\ct{q}{r})}.
+\end{equation*}
+This is a very useful idea: while it is often impossible to show that two terms of the same type are judgmentally equal, it may be the case that those two terms can be \emph{identified}. Indeed, we identify two terms by constructing a term of the identity type, and we can use all the type theory at our disposal in order to construct such a term. In this way we can show, for example, that addition on the natural numbers or on the integers is associative and satisfies the unit laws. And indeed, here we will show that path concatenation is associative and satisfies the unit laws.
+
+\begin{defn}\label{defn:id_assoc}
+  Let $A$ be a type and consider three consecutive paths
+  \begin{equation*}
+    \begin{tikzcd}
+      x \arrow[r,equals,"p"] & y \arrow[r,equals,"q"] & z \arrow[r,equals,"r"] & w
+    \end{tikzcd}
+  \end{equation*}
+  in $A$. We define the \define{associator}\index{associativity!of path concatenation}
+  \begin{equation*}
+    \assoc(p,q,r) : \ct{(\ct{p}{q})}{r}=\ct{p}{(\ct{q}{r})}.
+  \end{equation*}
 \end{defn}
 
 \begin{constr}
-By identification elimination it suffices to show that
+By path induction it suffices to show that
 \begin{equation*}
-\prd{z:A}{q:x=z}{z':A}{r:z=w} \ct{(\ct{\refl{x}}{q})}{r}= \ct{\refl{x}}{(\ct{q}{r})}.
+\prd{z:A}{q:x=z}{w:A}{r:z=w} \ct{(\ct{\refl{x}}{q})}{r}= \ct{\refl{x}}{(\ct{q}{r})}.
 \end{equation*}
-Let $q:x=z$ and $r:z=w$. Note that by the computation rule $\ct{\refl{x}}{q}\jdeq q$, so $\ct{(\ct{\refl{x}}{q})}{r}\jdeq \ct{q}{r}$. Similarly we have $\ct{\refl{x}}{(\ct{q}{r})}\jdeq \ct{q}{r}$. Therefore we can simply take $\refl{\ct{q}{r}}$.
+Let $q:x=z$ and $r:z=w$. Note that by the computation rule of the path induction principle we have a judgmental equality $\ct{\refl{x}}{q}\jdeq q$. Therefore we conclude that
+\begin{equation*}
+  \ct{(\ct{\refl{x}}{q})}{r}\jdeq \ct{q}{r}.
+\end{equation*}
+Similarly we have a judgmental equality $\ct{\refl{x}}{(\ct{q}{r})}\jdeq \ct{q}{r}$. Thus we see that the left-hand side and the right-hand side in
+\begin{equation*}
+  \ct{(\ct{\refl{x}}{q})}{r}=\ct{\refl{x}}{(\ct{q}{r})}
+\end{equation*}
+are judgmentally equal, so we can simply define $\assoc(\refl{x},q,r)\defeq\refl{\ct{q}{r}}$.
 \end{constr}
 
 \begin{defn}\label{defn:id_unit}
-Let $A$ be a type. We define the left and right \define{unit law operations}\index{unit law operations!for identifications}, which assigns to each $p:x=y$ the terms\index{left unit@{$\mathsf{left\usc{}unit}$}}\index{right unit@{$\mathsf{right\usc{}unit}$}}
+Let $A$ be a type. We define the left and right \define{unit law operations}\index{unit law operations!for identifications}, which assigns to each $p:x=y$ the terms\index{left unit@{$\leftunit$}}\index{right unit@{$\rightunit$}}
 \begin{align*}
-\mathsf{left\usc{}unit}(p) & : \ct{\refl{x}}{p}=p \\
-\mathsf{right\usc{}unit}(p) & : \ct{p}{\refl{y}}=p,
+\leftunit(p) & : \ct{\refl{x}}{p}=p \\
+\rightunit(p) & : \ct{p}{\refl{y}}=p,
 \end{align*}
 respectively.
 \end{defn}
@@ -199,53 +184,61 @@ respectively.
 \begin{constr}
 By identification elimination it suffices to construct
 \begin{align*}
-\mathsf{left\usc{}unit}(\refl{x}) & : \ct{\refl{x}}{\refl{x}} = \refl{x} \\
-\mathsf{right\usc{}unit}(\refl{x}) & : \ct{\refl{x}}{\refl{x}} = \refl{x}.
+\leftunit(\refl{x}) & : \ct{\refl{x}}{\refl{x}} = \refl{x} \\
+\rightunit(\refl{x}) & : \ct{\refl{x}}{\refl{x}} = \refl{x}.
 \end{align*}
 In both cases we take $\refl{\refl{x}}$.
 \end{constr}
 
 \begin{defn}\label{defn:id_invlaw}
-Let $A$ be a type. We define left and right \define{inverse law operations}\index{inverse law operations!for identifications}\index{left inv@{$\mathsf{left\usc{}inv}$}}\index{right inv@{$\mathsf{right\usc{}inv}$}}
+Let $A$ be a type. We define left and right \define{inverse law operations}\index{inverse law operations!for identifications}\index{left inv@{$\leftinv$}}\index{right inv@{$\rightinv$}}
 \begin{align*}
-\mathsf{left\usc{}inv}(p) & : \ct{p^{-1}}{p} = \refl{y} \\
-\mathsf{right\usc{}inv}(p) & : \ct{p}{p^{-1}} = \refl{x}.
+\leftinv(p) & : \ct{p^{-1}}{p} = \refl{y} \\
+\rightinv(p) & : \ct{p}{p^{-1}} = \refl{x}.
 \end{align*}
 \end{defn}
 
 \begin{constr}
 By identification elimination it suffices to construct
 \begin{align*}
-\mathsf{left\usc{}inv}(\refl{x}) & : \ct{\refl{x}^{-1}}{\refl{x}} = \refl{x} \\
-\mathsf{right\usc{}inv}(\refl{x}) & : \ct{\refl{x}}{\refl{x}^{-1}} = \refl{x}.
+\leftinv(\refl{x}) & : \ct{\refl{x}^{-1}}{\refl{x}} = \refl{x} \\
+\rightinv(\refl{x}) & : \ct{\refl{x}}{\refl{x}^{-1}} = \refl{x}.
 \end{align*}
 Using the computation rules we see that
 \begin{equation*}
 \ct{\refl{x}^{-1}}{\refl{x}}\jdeq \ct{\refl{x}}{\refl{x}}\jdeq\refl{x},
 \end{equation*}
-so we define $\mathsf{left\usc{}inv}(\refl{x})\defeq \refl{\refl{x}}$. Similarly it follows from the computation rules that
+so we define $\leftinv(\refl{x})\defeq \refl{\refl{x}}$. Similarly it follows from the computation rules that
 \begin{equation*}
 \ct{\refl{x}}{\refl{x}^{-1}} \jdeq \refl{x}^{-1}\jdeq \refl{x}
 \end{equation*}
-so we again define $\mathsf{right\usc{}inv}(\refl{x})\defeq\refl{\refl{x}}$. 
+so we again define $\rightinv(\refl{x})\defeq\refl{\refl{x}}$. 
 \end{constr}
+
+\begin{rmk}
+  We have seen that the associator, the unit laws, and the inverse laws, are all proven by constructing an identification of identifications. And indeed, there is nothing that would stop us from considering identifications of those identifications of identifications. We can go up as far as we like in the \emph{tower of identity types}\index{tower of identity types}\index{identity type!tower of identity types}, which is obtained by iteratively taking identity types.
+
+  The iterated identity types give types in homotopy type theory a very intricate structure. One important way of studying this structure is via the homotopy groups of types, a subject that we will gradually be working towards.
+\end{rmk}
 \index{groupoid laws!of identifications|)}
 
 \subsection{The action on paths of functions}
 
+\index{action on paths|(}
+\index{identity type!action on paths|(}
 Using the induction principle of the identity type we can show that every function preserves identifications.
 In other words, every function sends identified terms to identified terms.
 Note that this is a form of continuity for functions in type theory: if there is a path that identifies two points $x$ and $y$ of a type $A$, then there also is a path that identifies the values $f(x)$ and $f(y)$ in the codomain of $f$. 
 
 \begin{defn}\label{defn:ap}
-Let $f:A\to B$ be a map. We define the \define{action on paths}\index{action on paths}\index{function!action on paths} of $f$ as an operation\index{ap f@{$\apfunc{f}$}}
+Let $f:A\to B$ be a map. We define the \define{action on paths}\index{function!action on paths} of $f$ as an operation\index{ap f@{$\apfunc{f}$}|see {action on paths}}
 \begin{equation*}
 \apfunc{f} : \prd*{x,y:A} (\id{x}{y})\to(\id{f(x)}{f(y)}).
 \end{equation*}
-Moreover, there are operations\index{ap idfun@{$\mathsf{ap\usc{}idfun}$}}\index{ap comp@{$\mathsf{ap\usc{}comp}$}}
+Moreover, there are operations\index{ap-id@{$\apid$}}\index{action on paths!ap-id@{$\apid$}}\index{ap-comp@{$\apcomp$}}\index{action on paths!ap-comp@{$\apcomp$}}
 \begin{align*}
-\mathsf{ap\usc{}idfun}_A & : \prd*{x,y:A}{p:\id{x}{y}} \id{p}{\ap{\idfunc[A]}{p}} \\
-\mathsf{ap\usc{}comp}(f,g) & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{g}{\ap{f}{p}}}{\ap{g\circ f}{p}}.
+\apid_A & : \prd*{x,y:A}{p:\id{x}{y}} \id{p}{\ap{\idfunc[A]}{p}} \\
+\apcomp(f,g) & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{g}{\ap{f}{p}}}{\ap{g\circ f}{p}}.
 \end{align*}
 \end{defn}
 
@@ -254,40 +247,42 @@ First we define $\apfunc{f}$ by identity elimination, taking
 \begin{equation*}
 \apfunc{f}(\refl{x})\defeq \refl{f(x)}.
 \end{equation*}
-Next, we construct $\mathsf{ap\usc{}idfun}_A$ by identity elimination, taking
+Next, we construct $\apid_A$ by identity elimination, taking
 \begin{equation*}
-\mathsf{ap\usc{}idfun}_A(\refl{x}) \defeq \refl{\refl{x}}.
+\apid_A(\refl{x}) \defeq \refl{\refl{x}}.
 \end{equation*}
-Finally, we construct $\mathsf{ap\usc{}comp}(f,g)$ by identity elimination, taking
+Finally, we construct $\apcomp(f,g)$ by identity elimination, taking
 \begin{equation*}
-\mathsf{ap\usc{}comp}(f,g,\refl{x}) \defeq \refl{g(f(x))}.\qedhere
+\apcomp(f,g,\refl{x}) \defeq \refl{g(f(x))}.\qedhere
 \end{equation*}
 \end{constr}
 
 \begin{defn}\label{defn:ap-preserve}
-Let $f:A\to B$ be a map. Then there are identifications
+Let $f:A\to B$ be a map. Then there are identifications\index{ap-refl@{$\aprefl$}}\index{ap-inv@{$\apinv$}}\index{ap-concat@{$\apconcat$}}\index{action on paths!ap-refl@{$\aprefl$}}\index{action on paths!ap-inv@{$\apinv$}}\index{action on paths!ap-concat@{$\apconcat$}}
 \begin{align*}
-\mathsf{ap\usc{}refl}(f,x) & : \id{\ap{f}{\refl{x}}}{\refl{f}(x)} \\
-\mathsf{ap\usc{}inv}(f,p) & : \id{\ap{f}{p^{-1}}}{\ap{f}{p}^{-1}} \\
-\mathsf{ap\usc{}concat}(f,p,q) & : \id{\ap{f}{\ct{p}{q}}}{\ct{\ap{f}{p}}{\ap{f}{q}}}
+\aprefl(f,x) & : \id{\ap{f}{\refl{x}}}{\refl{f}(x)} \\
+\apinv(f,p) & : \id{\ap{f}{p^{-1}}}{\ap{f}{p}^{-1}} \\
+\apconcat(f,p,q) & : \id{\ap{f}{\ct{p}{q}}}{\ct{\ap{f}{p}}{\ap{f}{q}}}
 \end{align*}
 for every $p:\id{x}{y}$ and $q:\id{x}{y}$.
 \end{defn}
 
 \begin{constr}
-To construct $\mathsf{ap\usc{}refl}(f,x)$ we simply observe that ${\ap{f}{\refl{x}}}\jdeq {\refl{f}(x)}$, so we take
+To construct $\aprefl(f,x)$ we simply observe that ${\ap{f}{\refl{x}}}\jdeq {\refl{f}(x)}$, so we take
 \begin{equation*}
-\mathsf{ap\usc{}refl}(f,x)\defeq\refl{\refl{f(x)}}.
+\aprefl(f,x)\defeq\refl{\refl{f(x)}}.
 \end{equation*}
-We construct $\mathsf{ap\usc{}inv}(f,p)$ by identification elimination on $p$, taking
+We construct $\apinv(f,p)$ by identification elimination on $p$, taking
 \begin{equation*}
-\mathsf{ap\usc{}inv}(f,\refl{x}) \defeq \refl{\ap{f}{\refl{x}}}.
+\apinv(f,\refl{x}) \defeq \refl{\ap{f}{\refl{x}}}.
 \end{equation*}
-Finally we construct $\mathsf{ap\usc{}concat}(f,p,q)$ by identification elimination on $p$, taking
+Finally we construct $\apconcat(f,p,q)$ by identification elimination on $p$, taking
 \begin{equation*}
-\mathsf{ap\usc{}concat}(f,\refl{x},q)  \defeq \refl{\ap{f}{q}}.\qedhere
+\apconcat(f,\refl{x},q)  \defeq \refl{\ap{f}{q}}.\qedhere
 \end{equation*}
 \end{constr}
+\index{action on paths|)}
+\index{identity type!action on paths|)}
 
 \subsection{Transport}
 
@@ -297,75 +292,83 @@ The transport functions have many applications, which we will encounter througho
 
 \begin{defn}
 Let $A$ be a type, and let $B$ be a type family over $A$.
-We will construct a \define{transport}\index{transport} operation\index{tr B@{$\mathsf{tr}_B$}}
+We will construct a \define{transport}\index{transport}\index{family!transport}\index{identity type!transport} operation\index{tr B@{$\tr_B$}}
 \begin{equation*}
-\mathsf{tr}_B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
+\tr_B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
 \end{equation*}
 \end{defn}
 
 \begin{constr}
-We construct $\mathsf{tr}_B(p)$ by induction on $p:x=_A y$, taking
+We construct $\tr_B(p)$ by induction on $p:x=_A y$, taking
 \begin{equation*}
-\mathsf{tr}_B(\refl{x}) \defeq \idfunc[B(x)].\qedhere
+\tr_B(\refl{x}) \defeq \idfunc[B(x)].\qedhere
 \end{equation*}
 \end{constr}
 
 Thus we see that type theory cannot distinguish between identified terms $x$ and $y$, because for any type family $B$ over $A$ one gets a term of $B(y)$ as soon as $B(x)$ has a term.
 
-As an application of the transport function we construct the \emph{dependent} action on paths\index{dependent action on paths}\index{function!dependent action on paths} of a dependent function $f:\prd{x:A}B(x)$. Note that for such a dependent function $f$, and an identification $p:\id[A]{x}{y}$, it does not make sense to directly compare $f(x)$ and $f(y)$, since the type of $f(x)$ is $B(x)$ whereas the type of $f(y)$ is $B(y)$, which might not be exactly the same type. However, we can first \emph{transport} $f(x)$ along $p$, so that we obtain the term $\mathsf{tr}_B(p,f(x))$ which is of type $B(y)$. Now we can ask whether it is the case that $\mathsf{tr}_B(p,f(x))=f(y)$. The dependent action on paths of $f$ establishes this identification.
+As an application of the transport function we construct the \emph{dependent} action on paths\index{dependent action on paths}\index{dependent function!dependent action on paths} of a dependent function $f:\prd{x:A}B(x)$. Note that for such a dependent function $f$, and an identification $p:\id[A]{x}{y}$, it does not make sense to directly compare $f(x)$ and $f(y)$, since the type of $f(x)$ is $B(x)$ whereas the type of $f(y)$ is $B(y)$, which might not be exactly the same type. However, we can first \emph{transport} $f(x)$ along $p$, so that we obtain the term $\tr_B(p,f(x))$ which is of type $B(y)$. Now we can ask whether it is the case that $\tr_B(p,f(x))=f(y)$. The dependent action on paths of $f$ establishes this identification.
 
 \begin{defn}\label{defn:apd}
 Given a dependent function $f:\prd{a:A}B(a)$ and a path $p:\id{x}{y}$ in $A$, we construct a path\index{apd f@{$\apdfunc{f}$}}
 \begin{equation*}
-\apd{f}{p} : \id{\mathsf{tr}_B(p,f(x))}{f(y)}.
+\apd{f}{p} : \id{\tr_B(p,f(x))}{f(y)}.
 \end{equation*}
 \end{defn}
 
 \begin{constr}
 The path $\apd{f}{p}$ is constructed by path induction on $p$. Thus, it suffices to construct a path
 \begin{equation*}
-\apd{f}{\refl{x}}:\id{\mathsf{tr}_B(\refl{x},f(x))}{f(x)}.
+\apd{f}{\refl{x}}:\id{\tr_B(\refl{x},f(x))}{f(x)}.
 \end{equation*}
 Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simply take $\apd{f}{\refl{x}}\defeq\refl{f(x)}$. 
 \end{constr}
 
-%\begin{defn}\label{defn:path_lifting}
-%Let $A$ be a type, and let $B:A\to\type$ be a type family over $A$.
-%We will construct a \define{path lifting} operation
-%\begin{equation*}
-%\mathsf{lift}^B : \prd*{x,y:A}{p:\id{x}{y}}{b:B(x)} \id{\pairr{x,b}}{\pairr{y,\trans{p}{b}}}.
-%\end{equation*}
-%\end{defn}
-%
-%\cref{defn:path_lifting} gives a way to lift a path $p:x=y$ in the base type of a type family, to a path in the $\Sigma$-type. This, along with the basic groupoid operations developed in \cref{sec:groupoid}, inspired the \emph{homotopy interpretation} of type theory.
-
 \begin{exercises}
 \item
   \begin{subexenum}
-  \item State Goldbach's Conjecture in type theory.
-  \item State the Twin Prime Conjecture in type theory.
+  \item State Goldbach's Conjecture\index{Goldbach's Conjecture} in type theory.
+  \item State the Twin Prime Conjecture\index{Twin Prime Conjecture} in type theory.
   \end{subexenum}
 \item \label{ex:inv_assoc}Show that the operation inverting paths distributes over the concatenation operation, i.e., construct an identification
+  \index{distributivity!of inv over concat@{of $\invfunc$ over $\concat$}}
+  \index{identitytype!distributive-inv-concat@{$\distributiveinvconcat$}}
   \begin{align*}
-    \mathsf{distributive\usc{}inv\usc{}concat}(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
+    \distributiveinvconcat(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
   \end{align*}
   for any $p:\id{x}{y}$ and $q:\id{y}{z}$.
 \item \label{ex:inv_con}For any $p:x=y$, $q:y=z$, and $r:x=z$, construct maps
+  \index{identity type!inv-con@{$\invcon$}}
+  \index{inv-con@{$\invcon$}}
+  \index{identity type!con-inv@{$\coninv$}}
+  \index{con-inv@{$\coninv$}}
   \begin{align*}
-    \mathsf{inv\usc{}con}(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
-    \mathsf{con\usc{}inv}(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
+    \invcon(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
+    \coninv(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
   \end{align*}
-\item Let $B$ be a type family over $A$, and consider a path $p:\id{x}{x'}$ in $A$. Construct for any $y:B(x)$ a path
+\item Let $B$ be a type family over $A$, and consider a path $p:\id{x}{x'}$ in $A$. Construct for any $y:B(x)$ a path\index{lift@{$\lift$}}\index{identity type!lift@{$\lift$}}
   \begin{equation*}
-    \mathsf{lift}_B(p,y) : \id{\pairr{x,y}}{\pairr{x',\mathsf{tr}_B(p,y)}}.
+    \lift_B(p,y) : \id{(x,y)}{(x',\tr_B(p,y))}.
   \end{equation*}
   In other words, a path in the \emph{base type} $A$ \emph{lifts} to a path in the total space $\sm{x:A}B(x)$ for every term over the domain, analogous to the path lifting property for fibrations in homotopy theory.
-\item \label{ex:semi-ring-laws-N}Show that the operations of addition and multiplication on the natural numbers satisfy the following laws:
+\item \label{ex:semi-ring-laws-N}Show that the operations of addition and multiplication on the natural numbers satisfy the laws of a commutative
+  \define{semi-ring}:%
+  \index{semi-ring laws!for N@{for $\N$}}%
+  \index{natural numbers!semi-ring laws}%
+  \index{associativity!of addition on N@{of addition on $\N$}}%
+  \index{unit laws!for addition on N@{for addition on $\N$}}%
+  \index{commutativity!of addition on N@{of addition on $\N$}}%
+  \index{associativity!of multiplication on N@{of multiplication on $\N$}}%
+  \index{unit laws!for multiplication on N@{for multiplication on $\N$}}%
+  \index{commutativity!of multiplication on N@{of multiplication on $\N$}}%
+  \index{distributivity!of mulN over addN@{of $\mulN$ over $\addN$}}%
   \begin{align*}
     m+(n+k) & =(m+n)+k & m\cdot (n\cdot k) & = (m\cdot n)\cdot k \\
     m+0 & = m & m\cdot 1 & = m \\
     0+m & = m & 1\cdot m & = m \\
-    m+n & = n+m & m\cdot n & = n\cdot m\\
+    m+n & = n+m & m\cdot 0 & = 0 \\
+    & & 0 \cdot m & = 0 \\
+    & & m\cdot n & = n\cdot m\\
     & & m\cdot (n+k) & = m\cdot n + m\cdot k.
   \end{align*}
 \item Consider four consecutive identifications
@@ -374,7 +377,7 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
       a \arrow[r,equals,"p"] & b \arrow[r,equals,"q"] & c \arrow[r,equals,"r"] & d \arrow[r,equals,"s"] & e
     \end{tikzcd}
   \end{equation*}
-  in a type $A$. In this exercise we will show that the \define{Mac Lane pentagon}\index{Mac Lane pentagon} for identifications commutes.
+  in a type $A$. In this exercise we will show that the \define{Mac Lane pentagon}\index{Mac Lane pentagon}\index{identity type!Mac Lane pentagon} for identifications commutes.
   \begin{subexenum}
   \item Construct the five identifications $\alpha_1,\ldots,\alpha_5$ in the pentagon
     \begin{equation*}
@@ -401,47 +404,15 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
 %witnessing that the diagram
 %\begin{equation*}
 %\begin{tikzcd}[column sep=large]
-%\ap{f}{\ct{(\ct{p}{q})}{r}} \arrow[r,equals,"\ap{\apfunc{f}}{\mathsf{assoc}(p,q,r)}"] \arrow[d,swap,equals,"{\mathsf{ap.ct}(f,%\ct{p}{q},r)}"] & \ap{f}{\ct{p}{(\ct{q}{r})}} \arrow[d,equals,"{\mathsf{ap.ct}(f,p,\ct{q}{r})}"] \\ 
+%\ap{f}{\ct{(\ct{p}{q})}{r}} \arrow[r,equals,"\ap{\apfunc{f}}{\assoc(p,q,r)}"] \arrow[d,swap,equals,"{\mathsf{ap.ct}(f,%\ct{p}{q},r)}"] & \ap{f}{\ct{p}{(\ct{q}{r})}} \arrow[d,equals,"{\mathsf{ap.ct}(f,p,\ct{q}{r})}"] \\ 
 %\ct{\ap{f}{\ct{p}{q}}}{\ap{f}{r}} \arrow[dd,equals,near start,"{\mathsf{whisk\usc{}r}(\mathsf{ap.ct}(f,p,q),\ap{f}{r})}"]   & %\ct{\ap{f}{p}}{\ap{f}{\ct{q}{r}}} \arrow[dd,equals,swap,near end,"{\mathsf{whisk\usc{}l}(\ap{f}{p},\mathsf{ap.ct}(f,q,r))}"]  %\\
 %\\
-%\ct{(\ct{\ap{f}{p}}{\ap{f}{q}})}{\ap{f}{r}} \arrow[r,equals,swap,"{\mathsf{assoc}(\ap{f}{p},\ap{f}{q},\ap{f}{r})}"yshift=-1em] & \ct{\ap{f}{p}}{(\ct{\ap{f}{q}}{\ap{f}{r}})}
+%\ct{(\ct{\ap{f}{p}}{\ap{f}{q}})}{\ap{f}{r}} \arrow[r,equals,swap,"{\assoc(\ap{f}{p},\ap{f}{q},\ap{f}{r})}"yshift=-1em] & \ct{\ap{f}{p}}{(\ct{\ap{f}{q}}{\ap{f}{r}})}
 %\end{tikzcd}
 %\end{equation*}
 %commutes.
 %\end{subexenum}
 
-\begin{comment}
-\item \label{ex:trans_triv}Consider two types $A$ and $B$, and let $p:x=y$ in $A$, and $b:B$. 
-  \begin{subexenum}
-  \item Construct an identification
-    \begin{align*}
-      \mathsf{tr\usc{}triv}(p,b):\mathsf{tr}_{W_A(B)}(p,b)=b
-    \end{align*}
-    where $W_A(B)$ is the family $B$ weakened by $A$.
-  \item Construct for any $f:A\to B$, an identification 
-    \begin{equation*}
-      \apd{f}{p}=\ct{\mathsf{tr\usc{}triv}(p,f(x))}{\mathsf{ap}_f(p)},
-    \end{equation*}
-    witnessing that the triangle
-    \begin{equation*}
-      \begin{tikzcd}[trim right=(a),column sep=0em]
-        \mathsf{tr}_{W_A(B)}(p,f(x)) \arrow[dr,equals,swap,"\apd{f}{p}"] \arrow[rr,equals,"{\mathsf{tr\usc{}triv}(p,f(x))}"] & & |[alias=a,right]|f(x) \arrow[dl,equals,"\ap{f}{p}"] \\
-        & f(y) & \phantom{\mathsf{tr}_{W_A(B)}(p,f(x))}
-      \end{tikzcd}
-    \end{equation*}
-    commutes.
-  \end{subexenum}
-\item \label{ex:trans_ap}Let $f:A\to B$ be a map, and consider $p:x=y$ in $A$. 
-  \begin{subexenum}
-  \item Construct for any $q:f(x)=b$ in $B$ an identification
-    \begin{equation*}
-      \mathsf{tr\usc{}id\usc{}left\usc{}subst}(p,q):\id{\mathsf{tr}_{f(\blank)=b}(p,q)}{\ct{\ap{f}{p}^{-1}}{q}}.
-    \end{equation*}
-  \item Similarly, construct for any $q':b=f(x)$ in $B$ an identification
-    \begin{equation*}
-      \mathsf{tr\usc{}id\usc{}right\usc{}subst}(p,q'):\id{\mathsf{tr}_{b=f(\blank)}(p,q)}{\ct{q}{\ap{f}{p}}}.
-    \end{equation*}
-  \end{subexenum}
-\end{comment}
-
+\index{identity type|)}
+\index{inductive type!identity type|)}
 \index{inductive type|)}

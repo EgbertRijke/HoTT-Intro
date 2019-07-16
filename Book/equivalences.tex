@@ -4,6 +4,7 @@
 
 \index{equivalence|(}
 \subsection{Homotopies}
+\index{homotopy|(}
 In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$. We view the type of homotopies as the observational equality for $\Pi$-types.\index{observational equality!of Pi-types@{of $\Pi$-types}}
 
 \begin{defn}
@@ -13,31 +14,31 @@ f\htpy g \defeq \prd{x:A} f(x)=g(x).
 \end{equation*}
 \end{defn}
 
-Since we formulated homotopies using dependent functions, we may also consider homotopies \emph{between}\index{homotopy!iterated}\index{iterated homotopies} homotopies, and further homotopies between those higher homotopies. 
-Explicitly, if $H,K:f\htpy g$, then the type $H\htpy K$ of homotopies is just the type
+Note that the type of homotopies $f\htpy g$ is a special case of a dependent function type. Therefore the definition of homotopies is set up in such a way that we may also consider homotopies \emph{between}\index{homotopy!iterated}\index{iterated homotopies} homotopies, and even further homotopies between those higher homotopies. More concretely, if $H,K:f\htpy g$ are two homotopies, then the type of homotopies $H\htpy K$ between them is just the type
 \begin{equation*}
 \prd{x:A} H(x)=K(x).
 \end{equation*}
 
 \index{groupoid laws!of homotopies|(}
+\index{homtopy!groupoid laws|(}
 In the following definition we define the groupoidal structure of homotopies. Note that we implement the groupoid laws as \emph{homotopies} rather than as identifications.
 
 \begin{defn}\label{defn:htpy_groupoid}\index{groupoid laws!of homotopies}
-For any dependent type $B:A\to\type$ there are operations
+For any type family $B$ over $A$ there are operations\index{homotopy!htpy-refl@{$\htpyrefl$}}\index{htpy-refl@{$\htpyrefl$}}\index{homotopy!htpy-inv@{$\htpyinv$}}\index{htpy-inv@{$\htpyinv$}}\index{homotopy!htpy-concat@{$\htpyconcat$}}\index{htpy-concat@{$\htpyconcat$}}
 \begin{align*}
-& \mathsf{htpy\usc{}refl} & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
-& \mathsf{htpy\usc{}inv} & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
-& \mathsf{htpy\usc{}concat} & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to ((g\htpy h)\to (f\htpy h)).
+& \htpyrefl & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
+& \htpyinv & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
+& \htpyconcat & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to ((g\htpy h)\to (f\htpy h)).
 \end{align*}
-We will write $H^{-1}$ for $\mathsf{htpy\usc{}inv}(H)$, and $\ct{H}{K}$ for $\mathsf{htpy\usc{}concat}(H,K)$. 
+We will write $H^{-1}$ for $\htpyinv(H)$, and $\ct{H}{K}$ for $\htpyconcat(H,K)$. 
 
 Furthermore, we define
 \begin{align*}
-& \mathsf{htpy\usc{}assoc}(H,K,L) & & : \ct{(\ct{H}{K})}{L}\htpy\ct{H}{(\ct{K}{L})} \\
-& \mathsf{htpy\usc{}left\usc{}unit}(H) & & : \ct{\mathsf{htpy\usc{}refl}_f}{H}\htpy H \\
-& \mathsf{htpy\usc{}right\usc{}unit}(H) & & : \ct{H}{\mathsf{htpy\usc{}refl}_g}\htpy H \\
-& \mathsf{htpy\usc{}left\usc{}inv}(H) & & : \ct{H^{-1}}{H} \htpy \mathsf{htpy\usc{}refl}_g \\
-& \mathsf{htpy\usc{}right\usc{}inv}(H) & & : \ct{H}{H^{-1}} \htpy \mathsf{htpy\usc{}refl}_f
+& \htpyassoc(H,K,L) & & : \ct{(\ct{H}{K})}{L}\htpy\ct{H}{(\ct{K}{L})} \\
+& \htpyleftunit(H) & & : \ct{\htpyrefl_f}{H}\htpy H \\
+& \htpyrightunit(H) & & : \ct{H}{\htpyrefl_g}\htpy H \\
+& \htpyleftinv(H) & & : \ct{H^{-1}}{H} \htpy \htpyrefl_g \\
+& \htpyrightinv(H) & & : \ct{H}{H^{-1}} \htpy \htpyrefl_f
 \end{align*}
 for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x)$.
 \end{defn}
@@ -45,20 +46,21 @@ for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x
 \begin{constr}
 We define
 \begin{align*}
-\mathsf{htpy\usc{}refl}(f) & \defeq \lam{x} \refl{f(x)} \\
-\mathsf{htpy\usc{}inv}(H) & \defeq \lam{x} H(x)^{-1} \\
-\mathsf{htpy\usc{}concat}(H,K) & \defeq \lam{x}\ct{H(x)}{K(x)},
+\htpyrefl(f) & \defeq \lam{x} \refl{f(x)} \\
+\htpyinv(H) & \defeq \lam{x} H(x)^{-1} \\
+\htpyconcat(H,K) & \defeq \lam{x}\ct{H(x)}{K(x)},
 \end{align*}
 where $H:f\htpy g$ and $K:g\htpy h$ are homotopies. Furthermore, we define
 \begin{align*}
-\mathsf{htpy\usc{}assoc}(H,K,L) & \defeq \lam{x}\mathsf{assoc}(H(x),K(x),L(x)) \\
-\mathsf{htpy\usc{}left\usc{}unit}(H) & \defeq \lam{x}\mathsf{left\usc{}unit}(H(x)) \\
-\mathsf{htpy\usc{}right\usc{}unit}(H) & \defeq \lam{x}\mathsf{right\usc{}unit}(H(x)) \\
-\mathsf{htpy\usc{}left\usc{}inv}(H) & \defeq \lam{x}\mathsf{left\usc{}inv}(H(x)) \\
-\mathsf{htpy\usc{}right\usc{}inv}(H) & \defeq \lam{x}\mathsf{right\usc{}inv}(H(x)).\qedhere
+\htpyassoc(H,K,L) & \defeq \lam{x}\assoc(H(x),K(x),L(x)) \\
+\htpyleftunit(H) & \defeq \lam{x}\leftunit(H(x)) \\
+\htpyrightunit(H) & \defeq \lam{x}\rightunit(H(x)) \\
+\htpyleftinv(H) & \defeq \lam{x}\leftinv(H(x)) \\
+\htpyrightinv(h) & \defeq \lam{x}\rightinv(H(x)).\qedhere
 \end{align*}
 \end{constr}
 \index{groupoid laws!of homotopies|)}
+\index{homotopy!groupoid laws|)}
 
 
 Apart from the groupoid operations and their laws, we will occasionally need \emph{whiskering} operations.
@@ -66,18 +68,18 @@ Apart from the groupoid operations and their laws, we will occasionally need \em
 \begin{defn}
 We define the following \define{whiskering}\index{homotopy!whiskering operations}\index{whiskering operations!of homotopies} operations on homotopies:
 \begin{enumerate}
-\item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define
+\item Suppose $H:f\htpy g$ for two functions $f,g:A\to B$, and let $h:B\to C$. We define\index{h . H@{$h\cdot H$}|see {homotopy, whiskering operations}}
 \begin{equation*}
 h\cdot H\defeq \lam{x}\ap{h}{H(x)}:h\circ f\htpy h\circ g.
 \end{equation*}
-\item Suppose $f:A\to B$ and $H:g\htpy h$ for two functions $g,h:B\to C$. We define
+\item Suppose $f:A\to B$ and $H:g\htpy h$ for two functions $g,h:B\to C$. We define\index{H . f@{$H\cdot f$}|see {homotopy, whiskering operations}}
 \begin{equation*}
 H\cdot f\defeq\lam{x}H(f(x)):h\circ f\htpy g\circ f.
 \end{equation*}
 \end{enumerate}
 \end{defn}
 
-We also use homotopies to express the commutativity of diagrams. For example, we say that a triangle
+We also use homotopies to express the commutativity of diagrams. For example, we say that a triangle\index{homotopy!commutative diagram}
 \begin{equation*}
   \begin{tikzcd}[column sep=tiny]
     A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
@@ -92,39 +94,41 @@ commutes if it comes equipped with a homotopy $H:f\htpy g\circ h$, and we say th
   \end{tikzcd}
 \end{equation*}
 if it comes equipped with a homotopy $h \circ f~g\circ f'$.
+\index{homotopy|)}
 
 \subsection{Bi-invertible maps}
+
 \begin{defn}
-Let $f:A\to B$ be a function. We say that $f$ has a \define{section}\index{section!of a map} if there is a term of type\index{sec(f)@{$\mathsf{sec}(f)$}}
+Let $f:A\to B$ be a function. We say that $f$ has a \define{section}\index{section!of a map}\index{function!has a section} if there is a term of type\index{sec(f)@{$\sections(f)$}}
 \begin{equation*}
-\mathsf{sec}(f) \defeq \sm{g:B\to A} f\circ g\htpy \idfunc[B].
+\sections(f) \defeq \sm{g:B\to A} f\circ g\htpy \idfunc[B].
 \end{equation*}
-Dually, we say that $f$ has a \define{retraction}\index{retraction} if there is a term of type\index{retr(f)@{$\mathsf{retr}(f)$}}
+Dually, we say that $f$ has a \define{retraction}\index{retraction}\index{function!has a retraction} if there is a term of type\index{retr(f)@{$\retractions(f)$}}
 \begin{equation*}
-\mathsf{retr}(f) \defeq \sm{h:B\to A} h\circ f\htpy \idfunc[A].
+\retractions(f) \defeq \sm{h:B\to A} h\circ f\htpy \idfunc[A].
 \end{equation*}
 If a map $f:A \to B$ has a retraction, we also say that $A$ is a \define{retract}\index{retract!of a type} of $B$.
-We say that a function $f:A\to B$ is an \define{equivalence}\index{equivalence}\index{bi-invertible map|see {equivalence}} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}}
+We say that a function $f:A\to B$ is an \define{equivalence}\index{is an equivalence}\index{function!is an equivalence} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}}
 \begin{equation*}
-\isequiv(f)\defeq\mathsf{sec}(f)\times\mathsf{retr}(f).
+\isequiv(f)\defeq\sections(f)\times\retractions(f).
 \end{equation*}
-We will write $\eqv{A}{B}$\index{equiv@{$\eqv{A}{B}$}} for the type $\sm{f:A\to B}\isequiv(f)$.
+We will write $\eqv{A}{B}$\index{A simeq B@{$\eqv{A}{B}$}|see {equivalence}} for the type $\sm{f:A\to B}\isequiv(f)$.
 \end{defn}
 
 \begin{rmk}
-An equivalence, as we defined it here, can be thought of as a \emph{bi-invertible} map, since it comes equipped with a separate left and right inverse. Explicitly, if $f$ is an equivalence, then there are
+An equivalence, as we defined it here, can be thought of as a \emph{bi-invertible map}\index{bi-invertible map|see {equivalence}}, since it comes equipped with a separate left and right inverse. Explicitly, if $f$ is an equivalence, then there are
 \begin{align*}
 g & : B\to A & h & : B\to A \\
 G & : f\circ g \htpy \idfunc[B] & H & : h\circ f \htpy \idfunc[A].
 \end{align*}
-Clearly, if $f$ is \define{invertible}\index{invertible map} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence. We write\index{is_invertible@{$\mathsf{is\usc{}invertible}$}}
+Clearly, if $f$ has an inverse\index{has an inverse}\index{function!has an inverse} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence. We write\index{has-inverse@{$\hasinverse$}}
 \begin{equation*}
-\mathsf{has\usc{}inverse}(f)\defeq\sm{g:B\to A} (f\circ g\htpy \idfunc[B])\times (g\circ f\htpy\idfunc[A]).
+\hasinverse(f)\defeq\sm{g:B\to A} (f\circ g\htpy \idfunc[B])\times (g\circ f\htpy\idfunc[A]).
 \end{equation*}
 \end{rmk}
 
 \begin{defn}\label{defn:inv_equiv}
-Any equivalence can be given the structure of an invertible map.\index{equivalence!invertibility of}
+Any equivalence $e:A\simeq B$ can be given the structure of an invertible map.\index{equivalence!has an inverse} We define $e^{-1}$ to be the section $g:B\to A$ of $e$.\index{equivalence!inverse}\index{inverse!of an equivalence}
 \end{defn}
 
 \begin{constr}
@@ -144,7 +148,7 @@ gf(x) \arrow[r,equals,"K(f(x))"] & hf(x) \arrow[r,equals,"H(x)"] & x.
 \end{constr}
 
 \begin{cor}
-The inverse of an equivalence is again an equivalence.
+The inverse of an equivalence is again an equivalence.\index{inverse!of an equivalence!is an equivalence}\index{is an equivalence!inverse of an equivalence}
 \end{cor}
 
 \begin{proof}
@@ -152,7 +156,7 @@ Let $f:A\to B$ be an equivalence. By \cref{defn:inv_equiv} it follows that the s
 \end{proof}
 
 \begin{thm}\label{thm:id_equiv}
-For any type $A$, the identity function $\idfunc[A]$ is an equivalence.\index{identity function!is an equivalence}
+For any type $A$, the identity function $\idfunc[A]$ is an equivalence.\index{identity function!is an equivalence}\index{is an equivalence!identity function}
 \end{thm}
 
 \begin{proof}
@@ -160,7 +164,7 @@ The identity function is trivially its own section and its own retraction.
 \end{proof}
 
 \begin{eg}
-  For any type $C(x,y)$ indexed by $x:A$ and $y:B$, the function
+  For any type $C(x,y)$ indexed by $x:A$ and $y:B$, the swap function\index{function!swap!is an equivalence}\index{is an equivalence!swap function}
 \begin{equation*}
 \sigma:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
 \end{equation*}
@@ -169,6 +173,9 @@ that swaps the order of the arguments $x$ and $y$ is an equivalence by \cref{ex:
 
 \subsection{The identity type of a \texorpdfstring{$\Sigma$-}{dependent pair }type}
 
+\index{identity type!of a Sigma-type@{of a $\Sigma$-type}|(}
+\index{dependent pair type!identity type|(}
+\index{characterization of identity type!Sigma-type@{$\Sigma$-type}|(}
 In this section we characterize the identity type of a $\Sigma$-type as a $\Sigma$-type of identity types. In this course we will be characterizing the identity types of many types, so we will follow the general outline of how such a characterization goes:
 \begin{enumerate}
 \item First we define a binary relation $R:A\to A\to \UU$ on the type $A$ that we are interested in. This binary relation is intended to be equivalent to its identity type.
@@ -187,7 +194,7 @@ In this section we characterize the identity type of a $\Sigma$-type as a $\Sigm
   \end{equation*}
   is an equivalence for each $x,y:A$. 
 \end{enumerate}
-The last step is usually the most difficult, and we will refine our methods for this step in \cref{chap:fundamental}, where we establish the Fundamental Theorem of Identity Types.
+The last step is usually the most difficult, and we will refine our methods for this step in \cref{chap:fundamental}, where we establish the Fundamental Theorem of Identity Types.\index{Fundamental Theorem of Identity Types}
 
 In this section we consider a type family $B$ over $A$. Given two pairs
 \begin{equation*}
@@ -195,113 +202,105 @@ In this section we consider a type family $B$ over $A$. Given two pairs
 \end{equation*}
 if we have a path $\alpha:x=x'$ then we can compare $y:B(x)$ to $y':B(x')$ by first transporting $y$ along $\alpha$, i.e., we consider the identity type
 \begin{equation*}
-  \mathsf{tr}_B(\alpha,y)=y'.
+  \tr_B(\alpha,y)=y'.
 \end{equation*}
-Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is an identification $\alpha:x=x'$ and an identification $\beta:\mathsf{tr}_B(\alpha,y)=y'$. In the following definition we turn this idea into a binary relation on the $\Sigma$-type.
+Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is an identification $\alpha:x=x'$ and an identification $\beta:\tr_B(\alpha,y)=y'$. In the following definition we turn this idea into a binary relation on the $\Sigma$-type.
 
 \begin{defn}
-  We will define a relation
+  We will define a relation\index{Eq Sigma@{$\EqSigma$}}\index{dependent pair type!Eq Sigma@{$\EqSigma$}}\index{observational equality!Eq Sigma@{$\EqSigma$}}
   \begin{equation*}
-    \mathsf{Eq}_{\Sigma} : \Big(\sm{x:A}B(x)\Big)\to\Big(\sm{x:A}B(x)\Big)\to\UU
+    \EqSigma : \Big(\sm{x:A}B(x)\Big)\to\Big(\sm{x:A}B(x)\Big)\to\UU
   \end{equation*}
   by defining
   \begin{equation*}
-    \mathsf{Eq}_{\Sigma}(s,t)\defeq\sm{\alpha:\proj 1(s)=\proj 1(t)}\mathsf{tr}_B(\alpha,\proj 2(s))=\proj 2 (t).
+    \EqSigma(s,t)\defeq\sm{\alpha:\proj 1(s)=\proj 1(t)}\tr_B(\alpha,\proj 2(s))=\proj 2 (t).
   \end{equation*}
 \end{defn}
 
 \begin{lem}
-  The relation $\mathsf{Eq}_{\Sigma}$ is reflexive, i.e., there is a term
+  The relation $\EqSigma$ is reflexive, i.e., there is a term\index{Eq Sigma@{$\EqSigma$}!reflexive-Eq-Sigma@{$\reflexiveEqSigma$}}
   \begin{equation*}
-    \mathsf{reflexive\usc{}Eq}_{\Sigma}:\prd{s:\sm{x:A}B(x)}\mathsf{Eq}_{\Sigma}(s,s).
+    \reflexiveEqSigma:\prd{s:\sm{x:A}B(x)}\EqSigma(s,s).
   \end{equation*}
 \end{lem}
 
 \begin{constr}
   This term is constructed by $\Sigma$-induction on $s:\sm{x:A}B(x)$. Thus, it suffices to construct a term of type
   \begin{equation*}
-    \prd{x:A}{y:B(x)}\sm{\alpha:x=x}\mathsf{tr}_B(\alpha,y)=y.
+    \prd{x:A}{y:B(x)}\sm{\alpha:x=x}\tr_B(\alpha,y)=y.
   \end{equation*}
   Here we take $\lam{x}{y}(\refl{x},\refl{y})$.
 \end{constr}
 
 \begin{defn}
-  Consider a type family $B$ over $A$. Then for any $s,t:\sm{x:A}B(x)$ we define a map\index{pair_eq@{$\mathsf{pair\usc{}eq}$}}
+  Consider a type family $B$ over $A$. Then for any $s,t:\sm{x:A}B(x)$ we define a map\index{pair-eq@{$\paireq$}}\index{Eq Sigma@{$\EqSigma$}!pair-eq@{$\paireq$}}
   \begin{equation*}
-    \mathsf{pair\usc{}eq}: (s=t)\to \mathsf{Eq}_\Sigma(s,t)
+    \paireq: (s=t)\to \EqSigma(s,t)
   \end{equation*}
-  by path induction, taking $\mathsf{pair\usc{}eq}(\refl{s})\defeq\mathsf{reflexive\usc{}Eq}_\Sigma(s)$.
+  by path induction, taking $\paireq(\refl{s})\defeq\reflexiveEqSigma(s)$.
 \end{defn}
 
 \begin{thm}\label{thm:eq_sigma}
-  Let $B$ be a type family over $A$. Then the map
+  Let $B$ be a type family over $A$. Then the map\index{pair-eq@{$\paireq$}!is an equivalence}\index{is an equivalence!pair-eq@{$\paireq$}}
   \begin{equation*}
-    \mathsf{pair\usc{}eq}: (s=t)\to \mathsf{Eq}_\Sigma(s,t)
+    \paireq: (s=t)\to \EqSigma(s,t)
   \end{equation*}
-  is an equivalence for every $s,t:\sm{x:A}B(x)$.\index{Sigma-type@{$\Sigma$-type}!identity types of}\index{identity type!of a Sigma-type@{of a $\Sigma$-type}}
+  is an equivalence for every $s,t:\sm{x:A}B(x)$.
 \end{thm}
 
 \begin{proof}
-The maps in the converse direction\index{eq_pair@{$\mathsf{eq\usc{}pair}$}}
+The maps in the converse direction\index{eq-pair@{$\eqpair$}}
 \begin{equation*}
-\mathsf{eq\usc{}pair} : \mathsf{Eq}_\Sigma(s,t)\to(\id{s}{t})
+\eqpair : \EqSigma(s,t)\to(\id{s}{t})
 \end{equation*}
 are defined by repeated $\Sigma$-induction. By $\Sigma$-induction on $s$ and $t$  we see that it suffices to define a map
 \begin{equation*}
-\mathsf{eq\usc{}pair} : \Big(\sm{p:x=x'}\id{\mathsf{tr}_B(p,y)}{y'}\Big)\to(\id{(x,y)}{(x',y')}).
+\eqpair : \Big(\sm{p:x=x'}\id{\tr_B(p,y)}{y'}\Big)\to(\id{(x,y)}{(x',y')}).
 \end{equation*}
 A map of this type is again defined by $\Sigma$-induction. Thus it suffices to define a dependent function of type
 \begin{equation*}
-\prd{p:x=x'} (\id{\mathsf{tr}_B(p,y)}{y'}) \to (\id{(x,y)}{(x',y')}).
+\prd{p:x=x'} (\id{\tr_B(p,y)}{y'}) \to (\id{(x,y)}{(x',y')}).
 \end{equation*}
-Such a dependent function is defined by double path induction by sending $\pairr{\refl{x},\refl{y}}$ to $\refl{\pairr{x,y}}$. This completes the definition of the function $\mathsf{eq\usc{}pair}$.
+Such a dependent function is defined by double path induction by sending $\pairr{\refl{x},\refl{y}}$ to $\refl{\pairr{x,y}}$. This completes the definition of the function $\eqpair$.
 
-Next, we must show that $\mathsf{eq\usc{}pair}$ is a section of $\mathsf{pair\usc{}eq}$. In other words, we must construct an identification
+Next, we must show that $\eqpair$ is a section of $\paireq$. In other words, we must construct an identification
 \begin{equation*}
-\mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}(\alpha,\beta))=\pairr{\alpha,\beta}
+\paireq(\eqpair(\alpha,\beta))=\pairr{\alpha,\beta}
 \end{equation*}
-for each $\pairr{\alpha,\beta}:\sm{\alpha:x=x'}\id{\mathsf{tr}_B(\alpha,y)}{y'}$. We proceed by path induction on $\alpha$, followed by path induction on $\beta$. Then our goal becomes to construct a term of type
+for each $\pairr{\alpha,\beta}:\sm{\alpha:x=x'}\id{\tr_B(\alpha,y)}{y'}$. We proceed by path induction on $\alpha$, followed by path induction on $\beta$. Then our goal becomes to construct a term of type
 \begin{equation*}
-\mathsf{pair\usc{}eq}(\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}})=\pairr{\refl{x},\refl{y}}
+\paireq(\eqpair\pairr{\refl{x},\refl{y}})=\pairr{\refl{x},\refl{y}}
 \end{equation*}
-By the definition of $\mathsf{eq\usc{}pair}$ we have $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}\jdeq \refl{\pairr{x,y}}$, and by the definition of $\mathsf{pair\usc{}eq}$ we have $\mathsf{pair\usc{}eq}(\refl{\pairr{x,y}})\jdeq\pairr{\refl{x},\refl{y}}$. Thus we may take $\refl{\pairr{\refl{x},\refl{y}}}$ to complete the construction of the homotopy $\mathsf{pair\usc{}eq}\circ\mathsf{eq\usc{}pair}\htpy\idfunc$.
+By the definition of $\eqpair$ we have $\eqpair\pairr{\refl{x},\refl{y}}\jdeq \refl{\pairr{x,y}}$, and by the definition of $\paireq$ we have $\paireq(\refl{\pairr{x,y}})\jdeq\pairr{\refl{x},\refl{y}}$. Thus we may take $\refl{\pairr{\refl{x},\refl{y}}}$ to complete the construction of the homotopy $\paireq\circ\eqpair\htpy\idfunc$.
 
-To complete the proof, we must show that $\mathsf{eq\usc{}pair}$ is a retraction of $\mathsf{pair\usc{}eq}$. In other words, we must construct an identification
+To complete the proof, we must show that $\eqpair$ is a retraction of $\paireq$. In other words, we must construct an identification
 \begin{equation*}
-\mathsf{eq\usc{}pair}(\mathsf{pair\usc{}eq}(p))=p
+\eqpair(\paireq(p))=p
 \end{equation*}
 for each $p:s=t$. We proceed by path induction on $p:s=t$, so it suffices to construct an identification 
 \begin{equation*}
-\mathsf{eq\usc{}pair}\pairr{\refl{\proj 1(s)},\refl{\proj 2(s)}}=\refl{s}.
+\eqpair\pairr{\refl{\proj 1(s)},\refl{\proj 2(s)}}=\refl{s}.
 \end{equation*}
 Now we proceed by $\Sigma$-induction on $s:\sm{x:A}B(x)$, so it suffices to construct an identification
 \begin{equation*}
-\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}=\refl{(x,y)}.
+\eqpair\pairr{\refl{x},\refl{y}}=\refl{(x,y)}.
 \end{equation*}
-Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simply take $\refl{\refl{(x,y)}}$.
+Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simply take $\refl{\refl{(x,y)}}$.
 \end{proof}
+\index{identity type!of a Sigma-type@{of a $\Sigma$-type}|)}
+\index{dependent pair type!identity type|)}
+\index{characterization of identity type!Sigma-type@{$\Sigma$-type}|)}
 
 \begin{exercises}
-%  \item Show that for any term $a:A$ the functions
-%    \begin{align*}
-%      \ind{\unit}(a) & : \unit \to A \\
-%      \mathsf{const}_a & : \unit \to A
-%    \end{align*}
-%    are homotopic.
-%  \item Let $A$ and $B$ be types, and consider the constant map $\mathsf{const}_b:A\to B$ for some $b:B$. Construct a homotopy
-%    \begin{equation*}
-%      \mathsf{ap}_{\mathsf{const}_b}(x,y)\htpy \mathsf{const}_{\refl{b}}
-%    \end{equation*}
-%    for any $x,y:A$.
-\item \label{ex:equiv_grpd_ops}Show that the functions
+\item \label{ex:equiv_grpd_ops}Show that the functions\index{inv@{$\invfunc$}!is an equivalence}\index{is an equivalence!inv@{$\invfunc$}}\index{concat@{$\concat$}!is a family of equivalences}\index{is an equivalence!concat(p)@{$\concat(p)$}}\index{concat'@{$\concat'$}!is a family of equivalences}\index{is an equivalence!concat'@{$\concat'(q)$}}\index{tr B@{$\tr_B$}!is a family of equivalences}\index{is an equivalence!tr B(p)@{$\tr_B(p)$}}
   \begin{align*}
-    \mathsf{inv} & :(\id{x}{y})\to(\id{y}{x}) \\
-    \mathsf{concat}(p) & : (\id{y}{z})\to(\id{x}{z}) \\
-    \mathsf{concat'}(q) & : (\id{x}{y}) \to (\id{x}{z}) \\
-    \mathsf{tr}_B(p) & :B(x)\to B(y)
+    \invfunc & :(\id{x}{y})\to(\id{y}{x}) \\
+    \concat(p) & : (\id{y}{z})\to(\id{x}{z}) \\
+    \concat'(q) & : (\id{x}{y}) \to (\id{x}{z}) \\
+    \tr_B(p) & :B(x)\to B(y)
   \end{align*}
-  are equivalences, where $\mathsf{concat'}(q,p)\defeq \ct{p}{q}$\index{concat'@{$\mathsf{concat'}$}}. Give their inverses explicitly.
-\item Show that the maps
+  are equivalences, where $\concat'(q,p)\defeq \ct{p}{q}$\index{concat'@{$\concat'$}}. Give their inverses explicitly.
+\item Show that the maps\index{unit laws!coproduct}\index{coproduct!unit laws}\index{annihilation laws!cartesian product}\index{cartesian product!annihilation laws}
   \begin{align*}
     \inl & : X \to X+\emptyt &     \proj 1 & : \emptyt \times X \to \emptyt \\
     \inr & : X \to \emptyt+X &    \proj 2 & : X \times \emptyt \to \emptyt
@@ -309,13 +308,13 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
   are equivalences.
 \item
   \begin{subexenum}
-  \item \label{ex:htpy_equiv}\index{equivalence!closed under homotopy} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
+  \item \label{ex:htpy_equiv}\index{equivalence!closed under homotopies} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
     \begin{equation*}
       \isequiv(f)\leftrightarrow\isequiv(g).
     \end{equation*}
   \item Show that for any two homotopic equivalences $e,e':\eqv{A}{B}$, their inverses are also homotopic.
   \end{subexenum}
-\item \label{ex:3_for_2}\index{equivalence!three@{3-for-2 property}}\index{3-for-2 property!of equivalences}
+\item \label{ex:3_for_2}
   Consider a commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=tiny]
@@ -341,7 +340,7 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
       \end{tikzcd}
     \end{equation*}
     commutes, and that $f$ has a retraction if and only if $h$ has a retraction.
-  \item (The \define{3-for-2 property} for equivalences.) Show that if any two of the functions
+  \item (The \define{3-for-2 property} for equivalences.)\index{equivalence!3-for-2 property}\index{3-for-2 property!of equivalences}\index{composition!of equivalences}\index{equivalence!composition} Show that if any two of the functions
     \begin{equation*}
       f,\qquad g,\qquad h
     \end{equation*}
@@ -349,63 +348,63 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
   \end{subexenum}
 \item \label{ex:neg_equiv} 
   \begin{subexenum}
-  \item Define the negation function on the booleans, and show that it is an equivalence.\index{negation function!is an equivalence}
-  \item Use the observational equality on the booleans, defined in \cref{ex:obs_bool}, to show that $\btrue\neq\bfalse$.
-  \item Show that for any $b:\bool$, the constant function $\mathsf{const}_b$ is not an equivalence.
+  \item Show that the negatio function on the booleans $\negbool:\bool\to\bool$ defined in \cref{eg:boolean-ops} is an equivalence.\index{neg 2@{$\negbool$}!is an equivalence}\index{is an equivalence!neg bool@{$\negbool$}}
+  \item Use the observational equality on the booleans\index{observational equality!on booleans!0 2 neq 1 2@{$\bfalse\neq\btrue$}}, defined in \cref{ex:obs_bool}, to show that $\bfalse\neq\btrue$.\index{0 2 neq 1 2@{$\bfalse\neq\btrue$}}
+  \item Show that for any $b:\bool$, the constant function $\const_b$ is not an equivalence.\index{booleans!const b is not an equivalence@{$\const_b$ is not an equivalence}}
   \end{subexenum}
-\item \label{ex:succ_equiv} Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}
-\item \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is symmetric}
+\item \label{ex:succ_equiv}Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}\index{succZ@{$\succZ$}!is an equivalence}\index{is an equivalence!succZ@{$\succZ$}}
+\item \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is commutative}\index{commutativity!of coproducts}
 \item \label{ex:retr_id} Consider a section-retraction pair
   \begin{equation*}
     \begin{tikzcd}
       A \arrow[r,"i"] & B \arrow[r,"r"] & A,
     \end{tikzcd}
   \end{equation*}
-  with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity types of}
-\item \label{ex:sigma_assoc}\index{Sigma-type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence
+  with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity type}\index{identity type!of retract is retract}
+\item \label{ex:sigma_assoc}\index{Sigma-type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence\index{associativity!of Sigma-types@{of $\Sigma$-types}}
   \begin{equation*}
-    \Sigma\mathsf{\usc{}assoc}:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
+    \assocSigma:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
   \end{equation*}
 \item \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
   \begin{equation*}
-    \Sigma\mathsf{\usc{}swap}:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
+    \swapSigma:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
   \end{equation*}
   %\item \label{ex:sigma_base_equiv}Consider an equivalence $e:A'\eqv A$ and a type family $B$ over $A$. Show that the map
   %\begin{equation*}
   %\lam{(x',y)}(e(x'),y) : \Big(\sm{x':A'}B(e(x'))\Big)\to\Big(\sm{x:A}B(x)\Big)
   %\end{equation*}
   %is an equivalence.
-\item \label{ex:int_group_laws}\index{Z@{$\Z$}!group laws} In this exercise we will show that the laws for abelian groups hold for addition on the integers. Note: these are obvious facts, but the proof terms that show \emph{how} the group laws hold are nevertheless fairly involved. This exercise is perfect for a formalization project. 
+\item \label{ex:int_group_laws}\index{integers!group laws} In this exercise we will show that the laws for abelian groups hold for addition on the integers. Note: these are obvious facts, but the proof terms that show \emph{how} the group laws hold are nevertheless fairly involved. This exercise is perfect for a formalization project. 
   \begin{subexenum}
-  \item Show that addition satisfies the left and right unit laws, i.e., construct terms
+  \item Show that addition satisfies the left and right unit laws, i.e., construct terms\index{unit laws!for addition on Z@{for addition on $\Z$}}
     \begin{align*}
-      \mathsf{left\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x:\Z} 0 + x = x \\
-      \mathsf{right\usc{}unit\usc{}law\usc{}add\usc{}}\Z  & : \prd{x : \Z} x + 0 = x.
+      \leftunitlawaddZ  & : \prd{x:\Z} 0 + x = x \\
+      \rightunitlawaddZ  & : \prd{x : \Z} x + 0 = x.
     \end{align*}
   \item Show that addition respects predecessors and successor on both sides, i.e., construct terms
     \begin{align*}
-      \mathsf{left\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} \mathsf{pred}_{\mathbb{Z}}(x)+y = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
-      \mathsf{right\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{pred}_{\mathbb{Z}}(y) = \mathsf{pred}_{\mathbb{Z}}(x+y) \\
-      \mathsf{left\usc{}successor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} \mathsf{succ}_{\mathbb{Z}}(x)+y = \mathsf{succ}_{\mathbb{Z}}(x+y) \\
-      \mathsf{right\usc{}successor\usc{}law\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+\mathsf{succ}_{\mathbb{Z}}(y) = \mathsf{succ}_{\mathbb{Z}}(x+y).
+      \leftpredecessorlawaddZ & : \prd{x,y:\Z} \predZ(x)+y = \predZ(x+y) \\
+      \rightpredecessorlawaddZ & : \prd{x,y:\Z} x+\predZ(y) = \predZ(x+y) \\
+      \leftsuccessorlawaddZ & : \prd{x,y:\Z} \succZ(x)+y = \succZ(x+y) \\
+      \rightsuccessorlawaddZ & : \prd{x,y:\Z} x+\succZ(y) = \succZ(x+y).
     \end{align*}
-    Hint: to avoid an excessive number of cases, use induction on $x$ but not on $y$. You may need to use the homotopies $\mathsf{succ}_{\mathbb{Z}}\circ \mathsf{pred}_{\mathbb{Z}}\htpy \idfunc$ and $\mathsf{pred}_{\mathbb{Z}}\circ\mathsf{succ}_{\mathbb{Z}}$ constructed in exercise \cref{ex:succ_equiv}.
-  \item Use part (b) to show that addition on the integers is associative and commutative, i.e., construct terms
+    Hint: to avoid an excessive number of cases, use induction on $x$ but not on $y$. You may need to use the homotopies $\succZ\circ \predZ\htpy \idfunc$ and $\predZ\circ\succZ$ constructed in exercise \cref{ex:succ_equiv}.
+  \item Use part (b) to show that addition on the integers is associative and commutative, i.e., construct terms\index{associativity!of addition on Z@{of addition on $\Z$}}\index{commutativity!of addition on Z@{of addition on $\Z$}}
     \begin{align*}
-      \mathsf{assoc\usc{}add\usc{}}\Z & : \prd{x,y,z:\Z} (x+y)+z = x + (y+z) \\
-      \mathsf{comm\usc{}add\usc{}}\Z & : \prd{x,y:\Z} x+y = y+x.
+      \assocaddZ & : \prd{x,y,z:\Z} (x+y)+z = x + (y+z) \\
+      \commaddZ & : \prd{x,y:\Z} x+y = y+x.
     \end{align*}
     Hint: Especially in the construction of the associator there is a risk of running into an unwieldy amount of cases if you use $\Z$-induction on all arguments. Avoid induction on $y$ and $z$.
-  \item Show that addition satisfies the left and right inverse laws:
+  \item Show that addition satisfies the left and right inverse laws:\index{inverse laws!for addition on Z@{for addition on $\Z$}}
     \begin{align*}
-      \mathsf{left\usc{}inverse\usc{}law\usc{}add\usc{}}\Z & : \prd{x : \Z} (-x)+x=0 \\
-      \mathsf{right\usc{}inverse\usc{}law\usc{}add\usc{}}\Z & : \prd{x : \Z} x + (-x)=0.
+      \leftinverselawaddZ & : \prd{x : \Z} (-x)+x=0 \\
+      \rightinverselawaddZ & : \prd{x : \Z} x + (-x)=0.
     \end{align*}
     Conclude that the functions $y \mapsto x + y$ and $x\mapsto x + y$ are equivalences for any $x:\Z$ and $y:\Z$, respectively.
   \end{subexenum}
-\item \label{ex:coproduct_functor}In this exercise we will construct the \define{functorial action} of coproducts.
+\item \label{ex:coproduct_functor}In this exercise we will construct the \define{functorial action}\index{functorial action!of coproducts}\index{coproduct!functorial action} of coproducts.
   \begin{subexenum}
-  \item Construct for any two maps $f:A \to A'$ and $g:B \to B'$, a map
+  \item Construct for any two maps $f:A \to A'$ and $g:B \to B'$, a map\index{f + g@{$f+g$}|see {functorial action, of coproducts}}
     \begin{equation*}
       f+g:A+B \to A'+B'.
     \end{equation*}
@@ -422,8 +421,8 @@ Since $\mathsf{eq\usc{}pair}\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}
   \end{subexenum}
 \item Construct equivalences
   \begin{align*}
-    \mathsf{Fin}(m+n) & \simeq \mathsf{Fin}(m)+\mathsf{Fin}(n) \\
-    \mathsf{Fin}(mn) & \simeq \mathsf{Fin}(m)\times\mathsf{Fin}(n).
+    \Fin(m+n) & \simeq \Fin(m)+\Fin(n) \\
+    \Fin(mn) & \simeq \Fin(m)\times\Fin(n).
   \end{align*}
 \end{exercises}
 \index{equivalence|)}

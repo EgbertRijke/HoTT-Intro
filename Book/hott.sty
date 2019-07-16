@@ -354,127 +354,81 @@
 \def\dwtypeh#1{\@dwtypeh{#1}\@ifnextchar\bgroup{\dwtypeh}{}}
 \def\@dwtypeh#1{\wtypesym^h_{(#1)}\,}
 
-\newcommand{\ac}{\ensuremath{\mathsf{ac}}\xspace} % not needed in symbol index
-\newcommand{\un}{\ensuremath{\mathsf{upun}}\xspace} % not needed in symbol index, uniqueness principle for unit type
-
 \mathchardef\usc="2D
 %\newcommand{\usc}{\underline{\ }}
 
+% Macros for dependent type theory
+\newcommand{\type}{\mathrm{type}}
+\newcommand{\Coq}{\textsc{Coq}\xspace}
+\newcommand{\Agda}{\textsc{Agda}\xspace}
+\newcommand{\NuPRL}{\textsc{NuPRL}\xspace}
+
+% Macros for dependent function types
 \newcommand{\idfunc}[1][]{\mathsf{id}_{#1}}
 \newcommand{\const}{\mathsf{const}}
+\newcommand{\comp}{\mathsf{comp}}
+\newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
+
+% Macros for natural numbers
+\newcommand{\N}{{\mathbb{N}}}
 \newcommand{\zeroN}{0_{\N}}
 \newcommand{\succN}{\mathsf{succ}_{\N}}
-\newcommand{\EqN}{\mathsf{Eq}_{\N}}
 \newcommand{\addN}{\mathsf{add_{\N}}}
 \newcommand{\mulN}{\mathsf{mul}_{\N}}
 \newcommand{\minN}{\mathsf{min}_{\N}}
 \newcommand{\maxN}{\mathsf{max}_{\N}}
-\newcommand{\evpair}{\mathsf{ev\usc{}pair}}
-\newcommand{\evpt}{\mathsf{ev\usc{}pt}}
-\newcommand{\evtruefalse}{\mathsf{ev\usc{}true\usc{}false}}
-\newcommand{\evrefl}{\mathsf{ev\usc{}refl}}
-\newcommand{\evunit}{\mathsf{ev\usc{}unit}}
-\newcommand{\suc}{\mathsf{succ}}
+\newcommand{\indN}{\ind{\N}}
+
+% Macros for inductive types
 \newcommand{\ind}[1]{\mathsf{ind}_{#1}}
-\newcommand{\rec}{\ind}
+
+\newcommand{\unit}{\ensuremath{\mathbf{1}}\xspace}
+\newcommand{\ttt}{\ensuremath{\star}\xspace}
 \newcommand{\indunit}{\mathsf{ind}_{\unit}}
+\newcommand{\pt}{\mathsf{pt}}
+
+\newcommand{\emptyt}{\emptyset}
 \newcommand{\indempty}{\mathsf{ind}_{\emptyt}}
+
+\newcommand{\bool}{\ensuremath{\mathbf{2}}\xspace}
+\newcommand{\btrue}{{1_{\bool}}}
+\newcommand{\bfalse}{{0_{\bool}}}
+\newcommand{\bneg}{\mathsf{neg}}
 \newcommand{\indbool}{\mathsf{ind}_{\bool}}
+\newcommand{\negbool}{\mathsf{neg}_{\bool}}
+
+\newcommand{\inlsym}{{\mathsf{inl}}}
+\newcommand{\inrsym}{{\mathsf{inr}}}
+\newcommand{\inl}{\ensuremath\inlsym\xspace}
+\newcommand{\inr}{\ensuremath\inrsym\xspace}
 \newcommand{\indcoprod}{\mathsf{ind}_{+}}
+
 \newcommand{\indSigma}{\mathsf{ind}_{\Sigma}}
+
 \newcommand{\indprod}{\mathsf{ind}_{\times}}
-\newcommand{\indN}{\mathsf{ind}_{\mathbb{N}}}
+
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\inpos}{\mathsf{in\usc{}pos}}
+\newcommand{\inneg}{\mathsf{in\usc{}neg}}
 \newcommand{\indZ}{\mathsf{ind}_{\mathbb{Z}}}
 \newcommand{\zeroZ}{0_{\Z}}
 \newcommand{\succZ}{\mathsf{succ}_{\Z}}
 \newcommand{\predZ}{\mathsf{pred}_{\Z}}
 \newcommand{\addZ}{\mathsf{add}_{\Z}}
-\newcommand{\indid}[1]{\ind{=_{#1}}} % (Martin-Lof) path induction principle for identity types
-\newcommand{\indidb}[1]{\ind{=_{#1}}'} % (Paulin-Mohring) based path induction principle for identity types 
-\newcommand{\singind}{\mathsf{sing\usc{}ind}}
-\newcommand{\singcomp}{\mathsf{sing\usc{}comp}}
-\newcommand{\refl}[1]{\mathsf{refl}_{#1}}
-\newcommand{\concat}{\mathsf{concat}}
-\newcommand{\leftunit}{\mathsf{left\usc{}unit}}
-\newcommand{\rightunit}{\mathsf{right\usc{}unit}}
-\newcommand{\cohunit}{\mathsf{coh\usc{}unit}}
-\newcommand{\invfunc}{\mathsf{inv}}
-\newcommand{\leftinv}{\mathsf{left\usc{}inv}}
-\newcommand{\rightinv}{\mathsf{right\usc{}inv}}
-\newcommand{\cohinv}{\mathsf{coh\usc{}inv}}
-\newcommand{\assoc}{\mathsf{assoc}}
-\newcommand{\apid}{\mathsf{ap\usc{}id}}
-\newcommand{\apcomp}{\mathsf{ap\usc{}comp}}
-\newcommand{\aprefl}{\mathsf{ap\usc{}refl}}
-\newcommand{\apinv}{\mathsf{ap\usc{}inv}}
-\newcommand{\apconcat}{\mathsf{ap\usc{}concat}}
-\newcommand{\tr}{\mathsf{tr}}
-\newcommand{\htpy}{\sim}
-\newcommand{\htpyrefl}{\mathsf{htpy\usc{}refl}}
-\newcommand{\htpyinv}{\mathsf{htpy\usc{}inv}}
-\newcommand{\htpyconcat}{\mathsf{htpy\usc{}concat}}
-\newcommand{\sections}{\mathsf{sec}}
-\newcommand{\retractions}{\mathsf{retr}}
-\newcommand{\isequiv}{\typefont{is\usc{}equiv}}
-\newcommand{\eqvsym}{\simeq}    % infix symbol
-\newcommand{\eqv}[2]{\@ifnextchar\bgroup{#1 \eqvsym \eqv{#2}}{#1 \eqvsym #2}}
-\newcommand{\hasinverse}{\mathsf{has\usc{}inverse}}
-\newcommand{\paireq}{\mathsf{pair\usc{}eq}}
-\newcommand{\eqpair}{\mathsf{eq\usc{}pair}}
-\newcommand{\iscontr}{\ensuremath{\mathsf{is\usc{}contr}}}
-\newcommand{\fibf}[1]{\mathsf{fib}_{#1}}
-\newcommand{\fib}[2]{\mathsf{fib}_{#1}(#2)}
-\newcommand{\Fib}[2]{\mathsf{fib}_{#1}\left(#2\right)}
-\newcommand{\isset}{\ensuremath{\mathsf{is\usc{}set}}}
-\newcommand{\isprop}{\ensuremath{\mathsf{is\usc{}prop}}}
-\newcommand{\istrunc}[1]{\mathsf{is\usc{}trunc}_{#1}}
-\newcommand{\isemb}{\typefont{is\usc{}emb}}
-\newcommand{\eqequiv}{\mathsf{eq\usc{}equiv}}
-\newcommand{\equiveq}{\mathsf{equiv\usc{}eq}}
-\newcommand{\eqhtpy}{\mathsf{eq\usc{}htpy}}
-\newcommand{\htpyeq}{\mathsf{htpy\usc{}eq}}
-\newcommand{\esssmall}{\mathsf{ess\usc{}small}}
-\newcommand{\locsmall}{\mathsf{loc\usc{}small}}
-\newcommand{\isclassified}{\mathsf{is\usc{}classified}}
-\newcommand{\universalfam}{\mathrm{El}}
-\newcommand{\ispullback}{\mathsf{is\usc{}pullback}}
-\newcommand{\precomp}[1]{{#1}^\ast}
-\newcommand{\pathsplit}{\mathsf{path\usc{}split}}
-\newcommand{\halfadj}{\mathsf{half\usc{}adj}}
-\newcommand{\tottriangle}{\mathsf{tot\usc{}triangle}}
-\newcommand{\fibtriangle}{\mathsf{fib\usc{}triangle}}
-\newcommand{\cone}{\mathsf{cone}}
-\newcommand{\conemap}{\typefont{cone\usc{}map}}
-\newcommand{\gap}{\mathsf{gap}}
-\newcommand{\idp}{\mathsf{id}^\ast}
-\newcommand{\FibSeq}{\mathsf{Fib\usc{}Seq}}
-\newcommand{\equivpt}{\mathsf{equiv\usc{}pt}}
-\newcommand{\ptequiv}{\mathsf{pt\usc{}equiv}}
-\newcommand{\prop}{\mathsf{Prop}}
+\newcommand{\mulZ}{\mathsf{mul}_{\Z}}
+\newcommand{\negZ}{\mathsf{neg}_{\Z}}
 
-\newcommand{\cocone}{\mathsf{cocone}}
-\newcommand{\coconemap}{\typefont{cocone\usc{}map}}
+\newcommand{\lst}{\mathsf{list}}
+\newcommand{\nil}{\mathsf{nil}}
+\newcommand{\cons}{\mathsf{cons}}
+\newcommand{\foldlist}{\mathsf{fold\usc{}list}}
+\newcommand{\lengthlist}{\mathsf{length\usc{}list}}
+\newcommand{\sumlist}{\mathsf{sum\usc{}list}}
+\newcommand{\reverselist}{\mathsf{reverse\usc{}list}}
+\newcommand{\concatlist}{\mathsf{concat\usc{}list}}
+\newcommand{\flattenlist}{\mathsf{flatten\usc{}list}}
 
-\newcommand{\truncunit}[1]{|#1|}
-
-%%% the uniqueness principle for product types, formerly called surjective pairing and named \spr:
-\newcommand{\uppt}{\ensuremath{\mathsf{uppt}}\xspace}
-
-% Paths in pairs
-\newcommand{\pairpath}{\ensuremath{\mathsf{pair}^{\mathord{=}}}\xspace}
-% \newcommand{\projpath}[1]{\proj{#1}^{\mathord{=}}}
-\newcommand{\projpath}[1]{\ensuremath{\apfunc{\proj{#1}}}\xspace}
-
-% \newcommand{\type}{\ensuremath{\mathsf{Type}}} % this command is overridden below, so it's commented out
-\DeclareMathOperator{\im}{im} % the image
-
-%%% 2D path operations
-\newcommand{\leftwhisker}{\mathbin{{\ct}_{\ell}}}
-\newcommand{\rightwhisker}{\mathbin{{\ct}_{r}}}
-\newcommand{\hct}{\star}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Identity types %%%
+% Macros for identity types
 \newcommand{\idsymbin}{=}
 \newcommand{\idsym}{{\idsymbin}}
 \newcommand{\id}[3][]{
@@ -484,15 +438,10 @@
   }
 \newcommand{\idtype}[3][]{\ensuremath{\mathsf{Id}_{#1}(#2,#3)}\xspace}
 \newcommand{\idtypevar}[1]{\ensuremath{\mathsf{Id}_{#1}}\xspace}
-% A propositional equality currently being defined
-\newcommand{\defid}{\coloneqq}
+\newcommand{\refl}[1]{\mathsf{refl}_{#1}}
+\newcommand{\pathind}{\mathsf{path\usc{}ind}}
 
-\newcommand{\totalpath}[1]{P_{#1}}
-
-%%% Dependent paths
-\newcommand{\dpath}[4]{#3 =^{#1}_{#2} #4}
-
-%%% Path concatenation (used infix, in diagrammatic order) %%%
+\newcommand{\concat}{\mathsf{concat}}
 \newcommand{\ctsym}{%
   \mathchoice{\mathbin{\raisebox{0.5ex}{$\displaystyle\centerdot$}}}%
              {\mathbin{\raisebox{0.5ex}{$\centerdot$}}}%
@@ -503,246 +452,98 @@
   \@ifnextchar\bgroup
     {#2 \mathbin{\ctsym_{#1}} \ct[#1]{#3}}
     {#2 \mathbin{\ctsym_{#1}} #3}
-  }
+}
 
-%%% Path reversal %%%
-\newcommand{\opp}[1]{\mathord{{#1}^{-1}}}
-\let\rev\opp
+\newcommand{\leftunit}{\mathsf{left\usc{}unit}}
+\newcommand{\rightunit}{\mathsf{right\usc{}unit}}
+\newcommand{\cohunit}{\mathsf{coh\usc{}unit}}
+\newcommand{\invfunc}{\mathsf{inv}}
+\newcommand{\leftinv}{\mathsf{left\usc{}inv}}
+\newcommand{\rightinv}{\mathsf{right\usc{}inv}}
+\newcommand{\cohinv}{\mathsf{coh\usc{}inv}}
+\newcommand{\assoc}{\mathsf{assoc}}
 
-%%% Transport (covariant) %%%
-\newcommand{\trans}[2]{\ensuremath{{#1}_{*}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
-\let\Trans\trans
-%\newcommand{\Trans}[2]{\ensuremath{{#1}_{*}\left({#2}\right)}\xspace}
-\newcommand{\transf}[1]{\ensuremath{{#1}_{*}}\xspace} % Without argument
-%\newcommand{\transport}[2]{\ensuremath{\mathsf{transport}_{*} \: {#2}\xspace}}
-\newcommand{\transfib}[3]{\ensuremath{\mathsf{transport}^{#1}(#2,#3)\xspace}}
-\newcommand{\Transfib}[3]{\ensuremath{\mathsf{transport}^{#1}\Big(#2,\, #3\Big)\xspace}}
-\newcommand{\transfibf}[1]{\ensuremath{\mathsf{transport}^{#1}\xspace}}
+\newcommand{\apid}{\mathsf{ap\usc{}id}}
+\newcommand{\apcomp}{\mathsf{ap\usc{}comp}}
+\newcommand{\aprefl}{\mathsf{ap\usc{}refl}}
+\newcommand{\apinv}{\mathsf{ap\usc{}inv}}
+\newcommand{\apconcat}{\mathsf{ap\usc{}concat}}
 
-%%% 2D transport
-\newcommand{\transtwo}[2]{\ensuremath{\mathsf{transport}^2\mathopen{}\left({#1},{#2}\right)\mathclose{}}\xspace}
-
-%%% Constant transport
-\newcommand{\transconst}[3]{\ensuremath{\mathsf{transportconst}}^{#1}_{#2}(#3)\xspace}
-\newcommand{\transconstf}{\ensuremath{\mathsf{transportconst}}\xspace}
-
-%%% Map on paths %%%
-\newcommand{\mapfunc}[1]{\ensuremath{\mathsf{ap}_{#1}}\xspace} % Without argument
+\newcommand{\tr}{\mathsf{tr}}
+\newcommand{\mapfunc}[1]{\ensuremath{\mathsf{ap}_{#1}}\xspace}
 \newcommand{\map}[2]{\mapfunc{#1}({#2})\xspace}
 \let\Ap\map
-%\newcommand{\Ap}[2]{\ensuremath{{#1}\left({#2}\right)}\xspace}
-\newcommand{\mapdepfunc}[1]{\ensuremath{\mathsf{apd}_{#1}}\xspace} % Without argument
-% \newcommand{\mapdep}[2]{\ensuremath{{#1}\llparenthesis{#2}\rrparenthesis}\xspace}
+\newcommand{\mapdepfunc}[1]{\ensuremath{\mathsf{apd}_{#1}}\xspace}
 \newcommand{\mapdep}[2]{\ensuremath{\mapdepfunc{#1}\mathopen{}\left(#2\right)\mathclose{}}\xspace}
 \let\apfunc\mapfunc
 \let\ap\map
 \let\apdfunc\mapdepfunc
 \let\apd\mapdep
 
-%%% 2D map on paths
-\newcommand{\aptwofunc}[1]{\ensuremath{\mathsf{ap}^2_{#1}}\xspace}
-\newcommand{\aptwo}[2]{\ensuremath{\aptwofunc{#1}\mathopen{}\left({#2}\right)\mathclose{}}\xspace}
-\newcommand{\apdtwofunc}[1]{\ensuremath{\mathsf{apd}^2_{#1}}\xspace}
-\newcommand{\apdtwo}[2]{\ensuremath{\apdtwofunc{#1}\mathopen{}\left(#2\right)\mathclose{}}\xspace}
+\newcommand{\distributiveinvconcat}{\mathsf{distributive\usc{}inv\usc{}concat}}
+\newcommand{\invcon}{\mathsf{inv\usc{}con}}
+\newcommand{\coninv}{\mathsf{con\usc{}inv}}
+\newcommand{\lift}{\mathsf{lift}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Basic types
-
-%%% The empty type
-\newcommand{\emptyt}{\emptyset}
-
-%%% The unit type
-\newcommand{\unit}{\ensuremath{\mathbf{1}}\xspace}
-\newcommand{\ttt}{\ensuremath{\star}\xspace}
-
-%%% The two-element type
-\newcommand{\bool}{\ensuremath{\mathbf{2}}\xspace}
-\newcommand{\btrue}{{1_{\bool}}}
-\newcommand{\bfalse}{{0_{\bool}}}
-\newcommand{\bneg}{\mathsf{neg}}
-
-%%% Injections into binary sums and pushouts
-\newcommand{\inlsym}{{\mathsf{inl}}}
-\newcommand{\inrsym}{{\mathsf{inr}}}
-\newcommand{\inl}{\ensuremath\inlsym\xspace}
-\newcommand{\inr}{\ensuremath\inrsym\xspace}
-
-\newcommand{\seqin}{\mathsf{seq\usc{}in}}
-\newcommand{\quotientrestr}{\mathsf{quotient\usc{}restr}}
-
-%%% The interval
-\newcommand{\interval}{\ensuremath{I}\xspace}
-\newcommand{\izero}{\ensuremath{0_{\interval}}\xspace}
-\newcommand{\ione}{\ensuremath{1_{\interval}}\xspace}
-\newcommand{\seg}{\ensuremath{\mathsf{seg}}\xspace}
-
-%%% Free groups
-\newcommand{\freegroup}[1]{F(#1)}
-\newcommand{\freegroupx}[1]{F'(#1)} % the "other" free group
-
-%%% Glue of a pushout
-\newcommand{\gluesym}{{\mathsf{glue}}}
-\newcommand{\jglue}{\ensuremath\gluesym\xspace}
-\newcommand{\glue}{\mathsf{glue}}
-
-%%% Circles and spheres
-\newcommand{\sphere}[1]{\mathbf{S}^{#1}}
-\newcommand{\Sn}{\mathbf{S}}
-\newcommand{\base}{\ensuremath{\mathsf{base}}\xspace}
-\newcommand{\lloop}{\ensuremath{\mathsf{loop}}\xspace}
-\newcommand{\surf}{\ensuremath{\mathsf{surf}}\xspace}
-\newcommand{\Thom}{\mathrm{Th}}
-
-%%% Suspension
-\newcommand{\susp}{\Sigma}
-\newcommand{\suspspec}{\susp^\infty}
-\newcommand{\north}{\mathsf{N}}
-\newcommand{\south}{\mathsf{S}}
-\newcommand{\merid}{\mathsf{merid}}
-\newcommand{\spectrify}{L_{\mathrm{Spec}}}
-\newcommand{\spshift}[1]{\typefont{\Sigma}^{#1}}
-\newcommand{\mapsp}{\typefont{Map}_\ast}
-
-\newcommand{\sequence}[3][n]{({#2}_{#1},{#3}_{#1})_{#1}}
-
-%%% Natural numbers
-\newcommand{\N}{{\mathbb{N}}}
-%\newcommand{\N}{\textbf{N}}
-\let\nat\N
-\newcommand{\natp}{\ensuremath{\nat'}\xspace} % alternative nat in induction chapter
-\newcommand{\R}{\mathbb{R}}
-
-\newcommand{\zerop}{\ensuremath{0'}\xspace}   % alternative zero in induction chapter
-\newcommand{\sucp}{\ensuremath{\suc'}\xspace} % alternative suc in induction chapter
-\newcommand{\add}{\mathsf{add}}
-\newcommand{\ack}{\mathsf{ack}}
-\newcommand{\ite}{\mathsf{iter}}
-\newcommand{\dbl}{\ensuremath{\mathsf{double}}}
-\newcommand{\dblp}{\ensuremath{\dbl'}\xspace} % alternative double in induction chapter
-
-
-%%% Lists
-\newcommand{\lst}[1]{\mathsf{List}(#1)}
-\newcommand{\nil}{\mathsf{nil}}
-\newcommand{\cons}{\mathsf{cons}}
-
-%%% Vectors of given length, used in induction chapter
-\newcommand{\vect}[2]{\ensuremath{\mathsf{Vec}_{#1}(#2)}\xspace}
-
-%%% Integers
-\newcommand{\Z}{{\mathbb{Z}}}
-\newcommand{\Zmodtwo}{\Z_2}
-
-
-%%% Rationals
-\newcommand{\Q}{\ensuremath{\mathbb{Q}}\xspace}
-
-%%% Macros for real numbers
-\newcommand{\RC}{\ensuremath{\mathbb{R}_\mathsf{c}}\xspace} % Cauchy
-\newcommand{\RD}{\ensuremath{\mathbb{R}_\mathsf{d}}\xspace} % Dedekind
-\newcommand{\bbR}{\ensuremath{\mathbb{R}}\xspace}  
-\newcommand{\bbC}{\ensuremath{\mathbb{C}}\xspace}
-\newcommand{\bbH}{\ensuremath{\mathbb{H}}\xspace}
-\newcommand{\barRD}{\ensuremath{\bar{\mathbb{R}}_\mathsf{d}}\xspace} % Dedekind completion of Dedekind
-
-\newcommand{\close}[1]{\sim_{#1}} % Relation of closeness
-\newcommand{\closesym}{\mathord\sim}
-\newcommand{\rclim}{\mathsf{lim}} % HIT constructor for Cauchy reals
-\newcommand{\rcrat}{\mathsf{rat}} % Embedding of rationals into Cauchy reals
-\newcommand{\rceq}{\mathsf{eq}_{\RC}} % HIT path constructor
-\newcommand{\CAP}{\mathcal{C}}    % The type of Cauchy approximations
-\newcommand{\Qp}{\Q_{+}}
-\newcommand{\apart}{\mathrel{\#}}  % apartness
-\newcommand{\dcut}{\mathsf{isCut}}  % Dedekind cut
-\newcommand{\cover}{\triangleleft} % inductive cover
-\newcommand{\intfam}[3]{(#2, \lam{#1} #3)} % family of rational intervals
-
-% Macros for the Cauchy reals construction
-\newcommand{\bsim}{\frown}
-\newcommand{\bbsim}{\smile}
-
-\newcommand{\hapx}{\diamondsuit\approx}
-\newcommand{\hapname}{\diamondsuit}
-\newcommand{\hapxb}{\heartsuit\approx}
-\newcommand{\hapbname}{\heartsuit}
-\newcommand{\tap}[1]{\bullet\approx_{#1}\triangle}
-\newcommand{\tapname}{\triangle}
-\newcommand{\tapb}[1]{\bullet\approx_{#1}\square}
-\newcommand{\tapbname}{\square}
-
-%%% Macros for surreals
-\newcommand{\NO}{\ensuremath{\mathsf{No}}\xspace}
-\newcommand{\surr}[2]{\{\,#1\,\big|\,#2\,\}}
-\newcommand{\LL}{\mathcal{L}}
-\newcommand{\RR}{\mathcal{R}}
-\newcommand{\noeq}{\mathsf{eq}_{\NO}} % HIT path constructor
-
-\newcommand{\ble}{\trianglelefteqslant}
-\newcommand{\blt}{\vartriangleleft}
-\newcommand{\bble}{\sqsubseteq}
-\newcommand{\bblt}{\sqsubset}
-
-\newcommand{\hle}{\diamondsuit\preceq}
-\newcommand{\hlt}{\diamondsuit\prec}
-\newcommand{\hlname}{\diamondsuit}
-\newcommand{\hleb}{\heartsuit\preceq}
-\newcommand{\hltb}{\heartsuit\prec}
-\newcommand{\hlbname}{\heartsuit}
-% \newcommand{\tle}{(\bullet\preceq\triangle)}
-% \newcommand{\tlt}{(\bullet\prec\triangle)}
-\newcommand{\tle}{\triangle\preceq}
-\newcommand{\tlt}{\triangle\prec}
-\newcommand{\tlname}{\triangle}
-% \newcommand{\tleb}{(\bullet\preceq\square)}
-% \newcommand{\tltb}{(\bullet\prec\square)}
-\newcommand{\tleb}{\square\preceq}
-\newcommand{\tltb}{\square\prec}
-\newcommand{\tlbname}{\square}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Functions
-
-%%% Map on total spaces %%%
-\newcommand{\total}[2][]{\ensuremath{\mathsf{tot}_{#1}(#2)}}
-
-\DeclareMathOperator{\lcm}{lcm}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Binary relations
-
-%%% Other meanings of \sim
-\newcommand{\bisim}{\sim}       % bisimulation
-\newcommand{\eqr}{\sim}         % an equivalence relation
-
-\newcommand{\eqvspaced}[2]{\ensuremath{#1 \;\simeq\; #2}\xspace}
-\newcommand{\texteqv}[2]{\ensuremath{\mathsf{Equiv}(#1,#2)}\xspace}
-\newcommand{\ptdeqvsym}{\simeq_\ast}    % infix symbol
-\newcommand{\ptdeqv}[2]{
-  \@ifnextchar\bgroup
-    {#1 \ptdeqvsym \ptdeqv{#2}}
-    {#1 \ptdeqvsym #2}
-  }
-
-%%% Isomorphism of set-level structures
-\newcommand{\isomsym}{\cong}
-\newcommand{\isom}[2]{
-  \@ifnextchar\bgroup
-    {#1 \isomsym \eqv{#2}}
-    {#1 \isomsym #2}
-  }
-
-%%% Sets
-\newcommand{\bin}{\ensuremath{\mathrel{\widetilde{\in}}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Universes, subuniverses and modal operators
-
-%%% Universe types %%%
+% Macros for universes
 \newcommand{\UU}{\mathcal{U}}
-\newcommand{\type}{\mathrm{type}}
 \newcommand{\Ty}{\mathcal{T}}
+\newcommand{\EqN}{\mathsf{Eq}_{\N}}
+\newcommand{\EqBool}{\mathsf{Eq}_\bool}
+\newcommand{\universalfam}{\Ty}
+\newcommand{\Fin}{\ensuremath{\mathsf{Fin}}}
 
-% Universes of truncated types
+% Macros for equivalences
+\newcommand{\htpy}{\sim}
+\newcommand{\htpyrefl}{\mathsf{htpy\usc{}refl}}
+\newcommand{\htpyinv}{\mathsf{htpy\usc{}inv}}
+\newcommand{\htpyconcat}{\mathsf{htpy\usc{}concat}}
+\newcommand{\htpyleftunit}{\mathsf{htpy\usc{}left\usc{}unit}}
+\newcommand{\htpyrightunit}{\mathsf{htpy\usc{}right\usc{}unit}}
+\newcommand{\htpyleftinv}{\mathsf{htpy\usc{}left\usc{}inv}}
+\newcommand{\htpyrightinv}{\mathsf{htpy\usc{}right\usc{}inv}}
+\newcommand{\htpyassoc}{\mathsf{htpy\usc{}assoc}}
+\newcommand{\sections}{\mathsf{sec}}
+\newcommand{\retractions}{\mathsf{retr}}
+\newcommand{\isequiv}{\mathsf{is\usc{}equiv}}
+\newcommand{\eqvsym}{\simeq}    % infix symbol
+\newcommand{\eqv}[2]{\@ifnextchar\bgroup{#1 \eqvsym \eqv{#2}}{#1 \eqvsym #2}}
+\newcommand{\hasinverse}{\mathsf{has\usc{}inverse}}
+\newcommand{\EqSigma}{\mathsf{Eq}_{\Sigma}}
+\newcommand{\reflexiveEqSigma}{\mathsf{reflexive\usc{}Eq}_{\Sigma}}
+\newcommand{\paireq}{\mathsf{pair\usc{}eq}}
+\newcommand{\eqpair}{\mathsf{eq\usc{}pair}}
+\newcommand{\assocSigma}{\mathsf{assoc\usc{}}\Sigma}
+\newcommand{\swapSigma}{\mathsf{swap\usc{}}\Sigma}
+\newcommand{\leftunitlawaddZ}{\mathsf{left\usc{}unit\usc{}law\usc{}add\usc{}}\Z}
+\newcommand{\rightunitlawaddZ}{\mathsf{right\usc{}unit\usc{}law\usc{}add\usc{}}\Z}
+\newcommand{\leftpredecessorlawaddZ}{\mathsf{left\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z}
+\newcommand{\rightpredecessorlawaddZ}{\mathsf{right\usc{}predecessor\usc{}law\usc{}add\usc{}}\Z}
+\newcommand{\leftsuccessorlawaddZ}{\mathsf{left\usc{}successor\usc{}law\usc{}add\usc{}}\Z}
+\newcommand{\rightsuccessorlawaddZ}{\mathsf{right\usc{}successor\usc{}law\usc{}add\usc{}}\Z}
+\newcommand{\assocaddZ}{\mathsf{assoc\usc{}add\usc{}}\Z}
+\newcommand{\commaddZ}{\mathsf{comm\usc{}add\usc{}}\Z}
+\newcommand{\leftinverselawaddZ}{\mathsf{left\usc{}inverse\usc{}law\usc{}add\usc{}}\Z}
+\newcommand{\rightinverselawaddZ}{\mathsf{right\usc{}inverse\usc{}law\usc{}add\usc{}}\Z}
+
+% Macros for contractible types
+\newcommand{\singind}{\mathsf{sing\usc{}ind}}
+\newcommand{\singcomp}{\mathsf{sing\usc{}comp}}
+\newcommand{\iscontr}{\ensuremath{\mathsf{is\usc{}contr}}}
+\newcommand{\fibf}[1]{\mathsf{fib}_{#1}}
+\newcommand{\fib}[2]{\mathsf{fib}_{#1}(#2)}
+\newcommand{\Fib}[2]{\mathsf{fib}_{#1}\left(#2\right)}
+\newcommand{\halfadj}{\mathsf{half\usc{}adj}}
+
+% Macros for fundamental theorem of identity types
+\newcommand{\total}[2][]{\ensuremath{\mathsf{tot}_{#1}(#2)}}
+\newcommand{\isemb}{\mathsf{is\usc{}emb}}
+
+% Macros for hierarchy of homotopical complexity
+\newcommand{\isprop}{\ensuremath{\mathsf{is\usc{}prop}}}
+\newcommand{\prop}{\mathsf{Prop}}
+\newcommand{\isset}{\ensuremath{\mathsf{is\usc{}set}}}
+\newcommand{\istrunc}[1]{\mathsf{is\usc{}trunc}_{#1}}
 \newcommand{\typele}[1]{\ensuremath{{#1}\text-\mathsf{Type}}\xspace}
 \newcommand{\typeleU}[1]{\ensuremath{{#1}\text-\mathsf{Type}_\UU}\xspace}
 \newcommand{\typelep}[1]{\ensuremath{{(#1)}\text-\mathsf{Type}}\xspace}
@@ -755,15 +556,93 @@
 \newcommand{\setU}{\ensuremath{\mathsf{Set}_\UU}\xspace}
 \newcommand{\propU}{\ensuremath{\mathsf{Prop}_\UU}\xspace}
 
+% Macros for elementaty number theory
+\DeclareMathOperator{\lcm}{lcm}
+
+% Macros for function extensionality
+\newcommand{\eqhtpy}{\mathsf{eq\usc{}htpy}}
+\newcommand{\htpyeq}{\mathsf{htpy\usc{}eq}}
+\newcommand{\funext}{\mathsf{funext}}
+\newcommand{\evpair}{\mathsf{ev\usc{}pair}}
+\newcommand{\evpt}{\mathsf{ev\usc{}pt}}
+\newcommand{\evtruefalse}{\mathsf{ev\usc{}true\usc{}false}}
+\newcommand{\evrefl}{\mathsf{ev\usc{}refl}}
+\newcommand{\evunit}{\mathsf{ev\usc{}unit}}
+\newcommand{\precomp}[1]{{#1}^\ast}
+\newcommand{\pathsplit}{\mathsf{path\usc{}split}}
+
+% Macros for univalence
+\newcommand{\eqequiv}{\mathsf{eq\usc{}equiv}}
+\newcommand{\equiveq}{\mathsf{equiv\usc{}eq}}
+\newcommand{\univalence}{\ensuremath{\mathsf{univalence}}\xspace} % the full axiom
+\newcommand{\ptdeqvsym}{\simeq_\ast}    % infix symbol
+\newcommand{\ptdeqv}[2]{
+  \@ifnextchar\bgroup
+    {#1 \ptdeqvsym \ptdeqv{#2}}
+    {#1 \ptdeqvsym #2}
+  }
+
+% Macros for groups in univalent mathematics
+\DeclareMathOperator{\Aut}{Aut}
+
+% Macros for the circle
+
+% Macros for the fundamental cover of the circle
+
+% Macros for pullbacks
+\newcommand{\ispullback}{\mathsf{is\usc{}pullback}}
+\newcommand{\cone}{\mathsf{cone}}
+\newcommand{\conemap}{\mathsf{cone\usc{}map}}
+\newcommand{\gap}{\mathsf{gap}}
+
+% Macros for pushouts
+\newcommand{\cocone}{\mathsf{cocone}}
+\newcommand{\coconemap}{\mathsf{cocone\usc{}map}}
+\newcommand{\gluesym}{{\mathsf{glue}}}
+\newcommand{\jglue}{\ensuremath\gluesym\xspace}
+\newcommand{\glue}{\mathsf{glue}}
+\newcommand{\susp}{\Sigma}
+\newcommand{\suspspec}{\susp^\infty}
+\newcommand{\north}{\mathsf{N}}
+\newcommand{\south}{\mathsf{S}}
+\newcommand{\merid}{\mathsf{merid}}
+\newcommand{\sphere}[1]{\mathbf{S}^{#1}}
+\newcommand{\Sn}{\mathbf{S}}
+\newcommand{\base}{\ensuremath{\mathsf{base}}\xspace}
+\newcommand{\lloop}{\ensuremath{\mathsf{loop}}\xspace}
+\newcommand{\smashpr}[2]{#1 \wedge #2}
+\newcommand{\wedgepr}[2]{#1 \vee #2}
+\newcommand{\cuppr}[2]{#1 \mathbin{\cupsym} #2}
+\newcommand{\cupsym}{\smallsmile}
+
+% Macros for later parts of the book
+
+\newcommand{\esssmall}{\mathsf{ess\usc{}small}}
+\newcommand{\locsmall}{\mathsf{loc\usc{}small}}
+\newcommand{\isclassified}{\mathsf{is\usc{}classified}}
+\newcommand{\tottriangle}{\mathsf{tot\usc{}triangle}}
+\newcommand{\fibtriangle}{\mathsf{fib\usc{}triangle}}
+\newcommand{\idp}{\mathsf{id}^\ast}
+\newcommand{\FibSeq}{\mathsf{Fib\usc{}Seq}}
+\newcommand{\equivpt}{\mathsf{equiv\usc{}pt}}
+\newcommand{\ptequiv}{\mathsf{pt\usc{}equiv}}
+\newcommand{\truncunit}[1]{|#1|}
+\DeclareMathOperator{\im}{im} % the image
+\newcommand{\leftwhisker}{\mathbin{{\ct}_{\ell}}}
+\newcommand{\rightwhisker}{\mathbin{{\ct}_{r}}}
+\newcommand{\hct}{\star}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Basic types
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Universes, subuniverses and modal operators
+
+
 %Pointed types
 \newcommand{\pointed}[1]{\ensuremath{#1_\bullet}}
 %%% (pointed) mapping spaces
 \newcommand{\Map}{\mathsf{Map}}
-
-%%% Univalence
-\newcommand{\ua}{\ensuremath{\mathsf{ua}}\xspace} % the inverse of idtoeqv
-\newcommand{\idtoeqv}{\ensuremath{\mathsf{idtoeqv}}\xspace}
-\newcommand{\univalence}{\ensuremath{\mathsf{univalence}}\xspace} % the full axiom
 
 
 \newcommand{\trunc}[2]{\Vert #2\Vert_{#1}}
@@ -773,13 +652,6 @@
 \newcommand{\tproj}[3][]{\mathopen{}\left|#3\right|_{#2}^{#1}\mathclose{}}
 \newcommand{\tprojf}[2][]{|\blank|_{#2}^{#1}}
 \def\pizero{\trunc0}
-
-%%% Macros for n-types
-\newcommand{\istype}[1]{\mathsf{is\usc{}}{#1}\mbox{-}\mathsf{type}}
-\newcommand{\nplusone}{\ensuremath{(n+1)}}
-\newcommand{\nminusone}{\ensuremath{(n-1)}}
-\newcommand{\fact}{\mathsf{fact}}
-
 \newcommand{\brck}[1]{\trunc{}{#1}}
 \newcommand{\bbrck}[1]{\ttrunc{}{#1}}
 \newcommand{\Brck}[1]{\Trunc{}{#1}}
@@ -837,68 +709,11 @@
 \newcommand{\fibration}{\twoheadrightarrow}
 \newcommand{\Sq}[1]{\mathrm{Sq}^{#1}}
 
-%%% Function extensionality
-\newcommand{\funext}{\typefont{funExt}}
-\newcommand{\happly}{\typefont{hApply}}
-
-%%% A naturality lemma
-\newcommand{\com}[3]{\mathsf{swap}_{#1,#2}(#3)}
 
 % Function definition with domain and codomain
 \newcommand{\function}[4]{\left\{\begin{array}{rcl}#1 &
       \longrightarrow & #2 \\ #3 & \longmapsto & #4 \end{array}\right.}
 
-% Apply a function to a cocone
-\newcommand{\composecocone}[2]{#1\circ#2}
-\newcommand{\composecone}[2]{#2\circ#1}
-%%% Diagrams
-\newcommand{\Ddiag}{\mathscr{D}}
-
-\newcommand{\qinv}{\ensuremath{\mathsf{qinv}}}
-\newcommand{\ishae}{\ensuremath{\mathsf{ishae}}}
-\newcommand{\linv}{\ensuremath{\mathsf{linv}}}
-\newcommand{\rinv}{\ensuremath{\mathsf{rinv}}}
-\newcommand{\biinv}{\ensuremath{\mathsf{biinv}}}
-\newcommand{\lcoh}[3]{\mathsf{lcoh}_{#1}(#2,#3)}
-\newcommand{\rcoh}[3]{\mathsf{rcoh}_{#1}(#2,#3)}
-
-%%% Macros for the formal type theory
-\newcommand{\emptyctx}{\ensuremath{\cdot}}
-\newcommand{\production}{\vcentcolon\vcentcolon=}
-\newcommand{\conv}{\downarrow}
-\newcommand{\wfctx}[1]{#1\ \ctx}
-\newcommand{\oftp}[3]{#1 \vdash #2 : #3}
-\newcommand{\jdeqtp}[4]{#1 \vdash #2 \jdeq #3 : #4}
-\newcommand{\judg}[2]{#1 \vdash #2}
-\newcommand{\tmtp}[2]{#1 \mathord{:} #2}
-
-% rule names
-\newcommand{\form}{\textsc{form}}
-\newcommand{\intro}{\textsc{intro}}
-\newcommand{\elim}{\textsc{elim}}
-\newcommand{\comp}{\textsc{comp}}
-\newcommand{\uniq}{\textsc{uniq}}
-\newcommand{\Weak}{\mathsf{Wkg}}
-\newcommand{\Vble}{\mathsf{Vble}}
-\newcommand{\Exch}{\mathsf{Exch}}
-\newcommand{\Subst}{\mathsf{Subst}}
-
-%%% Macros for induction
-\newcommand{\natw}{\ensuremath{\mathbf{N^w}}\xspace}
-\newcommand{\zerow}{\ensuremath{0^\mathbf{w}}\xspace}
-\newcommand{\sucw}{\ensuremath{\mathbf{s^w}}\xspace}
-\newcommand{\nalg}{\nat\mathsf{Alg}}
-\newcommand{\nhom}{\nat\mathsf{Hom}}
-\newcommand{\ishinitw}{\mathsf{is\usc{}hinit}_{\wtypesym}}
-\newcommand{\ishinitn}{\mathsf{is\usc{}hinit}_\nat}
-\newcommand{\w}{\wtypesym}
-\newcommand{\walg}{\w\mathsf{Alg}}
-\newcommand{\whom}{\w\mathsf{Hom}}
-
-\newcommand{\Vect}{\ensuremath{\mathsf{Vec}}}
-\newcommand{\Fin}{\ensuremath{\mathsf{Fin}}}
-\newcommand{\fmax}{\ensuremath{\mathsf{fmax}}}
-\newcommand{\seq}[1]{\langle #1\rangle}
 
 \newcommand{\Hq}{\mathbb{H}}
 \newcommand{\Oc}{\mathbb{O}}
@@ -907,101 +722,71 @@
 \newcommand{\hprojective}[1]{\mathbb{H}\mathsf{P}^{#1}}
 \newcommand{\oprojective}[1]{\mathbb{O}\mathsf{P}^{#1}}
 \newcommand{\antipodal}[1]{\mathsf{antipodal}_{#1}}
-\DeclareMathOperator{\Aut}{Aut}
-\DeclareMathOperator{\BAut}{Baut}
 
-\newcommand{\tautfam}[2][]{\gamma_{#1}^{#2}}
-\newcommand{\orthcomp}[2][]{\beta_{#1}^{#2}}
-
-\newcommand{\dirsum}[2]{#1\oplus #2}
-\newcommand{\tensor}[2]{#1\otimes #2}
-
-% Big parentheses
-\newcommand{\Parens}[1]{\Bigl(#1\Bigr)}
-
-%%% Blanks (shorthand for lambda abstractions)
-\newcommand{\blank}{\mathord{\hspace{1pt}\text{--}\hspace{1pt}}}
 
 %%% Nameless objects
 \newcommand{\nameless}{\mathord{\hspace{1pt}\underline{\hspace{1ex}}\hspace{1pt}}}
 
 \newcommand{\mentalpause}{\medskip} % Use for "mental" pause, instead of \smallskip or \medskip
 
-\newcommand{\Coq}{\textsc{Coq}\xspace}
-\newcommand{\Agda}{\textsc{Agda}\xspace}
-\newcommand{\NuPRL}{\textsc{NuPRL}\xspace}
-
-%%%% Standard phrasing or spelling of common phrases %%%%
-
-\newcommand{\ZF}{Zermelo--Fraenkel}
-\newcommand{\CZF}{Constructive \ZF{} Set Theory}
-
-\newcommand{\LEM}[1]{\ensuremath{\mathsf{LEM}_{#1}}\xspace}
-\newcommand{\choice}[1]{\ensuremath{\mathsf{AC}_{#1}}\xspace}
-
-\newcommand{\spectrum}{\mathbf}
-\newcommand{\smashpr}[2]{#1 \wedge #2}
-\newcommand{\wedgepr}[2]{#1 \vee #2}
-\newcommand{\cuppr}[2]{#1 \mathbin{\cupsym} #2}
-\newcommand{\cupsym}{\smallsmile}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% The following is a big unorganized list of new macros that we use in the
 %%%% notes. 
 
-\newcommand{\tfW}{\typefont{W}}
-\newcommand{\tfM}{\typefont{M}}
+\newcommand{\tfW}{\mathsf{W}}
+\newcommand{\tfM}{\mathsf{M}}
 \newcommand{\mfM}{\modelfont{M}}
 \newcommand{\mfN}{\modelfont{N}}
-\newcommand{\tfctx}{\typefont{ctx}}
+\newcommand{\tfctx}{\mathsf{ctx}}
 \newcommand{\mftypfunc}[1]{{\modelfont{typ}^{#1}}}
 \newcommand{\mftyp}[2]{{\mftypfunc{#1}(#2)}}
-\newcommand{\tftypfunc}[1]{{\typefont{typ}^{#1}}}
+\newcommand{\tftypfunc}[1]{{\mathsf{typ}^{#1}}}
 \newcommand{\tftyp}[2]{{\tftypfunc{#1}(#2)}}
-\newcommand{\hfibfunc}[1]{\typefont{fib}_{#1}}
+\newcommand{\hfibfunc}[1]{\mathsf{fib}_{#1}}
 \newcommand{\mappingcone}[1]{\mathcal{C}_{#1}}
-\newcommand{\equifib}{\typefont{equiFib}}
-\newcommand{\eqfop}{\typefont{EqF}}
+\newcommand{\equifib}{\mathsf{equiFib}}
+\newcommand{\eqfop}{\mathsf{EqF}}
 \newcommand{\eqf}[1]{\eqfop(#1)}
-\newcommand{\tfcolim}{\typefont{colim}}
-\newcommand{\colim}{\typefont{colim}}
-\renewcommand{\lim}{\typefont{lim}}
-\newcommand{\tflim}{\typefont{lim}}
-\newcommand{\tfdiag}{\typefont{diag}}
-\newcommand{\tfGraph}{\typefont{Graph}}
+\newcommand{\tfcolim}{\mathsf{colim}}
+\newcommand{\colim}{\mathsf{colim}}
+\renewcommand{\lim}{\mathsf{lim}}
+\newcommand{\tflim}{\mathsf{lim}}
+\newcommand{\tfdiag}{\mathsf{diag}}
+\newcommand{\tfGraph}{\mathsf{Graph}}
 \newcommand{\mfGraph}{\modelfont{Graph}}
 \newcommand{\unitGraph}{\unit^\mfGraph}
 \newcommand{\UUGraph}{\UU^\mfGraph}
-\newcommand{\tfrGraph}{\typefont{rGraph}}
+\newcommand{\tfrGraph}{\mathsf{rGraph}}
 \newcommand{\mfrGraph}{\modelfont{rGraph}}
-\newcommand{\isfunction}{\typefont{is\usc{}function}}
-\newcommand{\tflimits}{\typefont{limits}}
-\newcommand{\tfcolimits}{\typefont{colimits}}
-\newcommand{\islimiting}{\typefont{is\usc{}limiting}}
-\newcommand{\iscolimiting}{\typefont{is\usc{}colimiting}}
-\newcommand{\islimit}{\typefont{is\usc{}limit}}
-\newcommand{\iscolimit}{\typefont{is\usc{}colimit}}
-\newcommand{\pbcone}{\typefont{cone_{pb}}}
-\newcommand{\tfinj}{\typefont{inj}}
-\newcommand{\tfsurj}{\typefont{surj}}
+\newcommand{\isfunction}{\mathsf{is\usc{}function}}
+\newcommand{\tflimits}{\mathsf{limits}}
+\newcommand{\tfcolimits}{\mathsf{colimits}}
+\newcommand{\islimiting}{\mathsf{is\usc{}limiting}}
+\newcommand{\iscolimiting}{\mathsf{is\usc{}colimiting}}
+\newcommand{\islimit}{\mathsf{is\usc{}limit}}
+\newcommand{\iscolimit}{\mathsf{is\usc{}colimit}}
+\newcommand{\pbcone}{\mathsf{cone_{pb}}}
+\newcommand{\tfinj}{\mathsf{inj}}
+\newcommand{\tfsurj}{\mathsf{surj}}
 \newcommand{\issurj}{\mathsf{is\usc{}surj}}
-\newcommand{\tfepi}{\typefont{epi}}
-\newcommand{\tftop}{\typefont{top}}
+\newcommand{\tfepi}{\mathsf{epi}}
+\newcommand{\tftop}{\mathsf{top}}
 %\newcommand{\sbrck}[1]{\Vert #1\Vert}
 %\newcommand{\strunc}[2]{\Vert #2\Vert_{#1}}
-\newcommand{\gobjclass}{{\typefont{U}^\mfGraph}}
-\newcommand{\gcharmap}{\typefont{fib}}
-\newcommand{\diagclass}{\typefont{T}}
+\newcommand{\gobjclass}{{\mathsf{U}^\mfGraph}}
+\newcommand{\gcharmap}{\mathsf{fib}}
+\newcommand{\diagclass}{\mathsf{T}}
 \newcommand{\opdiagclass}{\op{\diagclass}}
 \newcommand{\equifibclass}{\diagclass^{\eqv{}{}}}
-\newcommand{\universe}{\typefont{U}}
+\newcommand{\universe}{\mathsf{U}}
 \newcommand{\catid}[1]{{\catfont{id}_{#1}}}
-\newcommand{\isleftfib}{\typefont{is\usc{}left\usc{}fib}}
-\newcommand{\isrightfib}{\typefont{is\usc{}right\usc{}fib}}
-\newcommand{\leftLiftings}{\typefont{leftLiftings}}
-\newcommand{\rightLiftings}{\typefont{rightLiftings}}
-\newcommand{\psh}{\typefont{Psh}}
-\newcommand{\rgclass}{\typefont{\Omega^{RG}}}
+\newcommand{\isleftfib}{\mathsf{is\usc{}left\usc{}fib}}
+\newcommand{\isrightfib}{\mathsf{is\usc{}right\usc{}fib}}
+\newcommand{\leftLiftings}{\mathsf{leftLiftings}}
+\newcommand{\rightLiftings}{\mathsf{rightLiftings}}
+\newcommand{\psh}{\mathsf{Psh}}
+\newcommand{\rgclass}{\mathsf{\Omega^{RG}}}
 \newcommand{\terms}[2][]{| #2 |^{#1}}
 \newcommand{\grconstr}[2]
              {\mathchoice % max size is textstyle size.
@@ -1009,28 +794,28 @@
              {\int_{#1}#2}%
              {\int_{#1}#2}%
              {\int_{#1}#2}}
-\newcommand{\ctxhom}[3][]{\typefont{hom}_{#1}(#2,#3)}
+\newcommand{\ctxhom}[3][]{\mathsf{hom}_{#1}(#2,#3)}
 \newcommand{\graphcharmapfunc}[1]{\gcharmap_{#1}}
 \newcommand{\graphcharmap}[2][]{\graphcharmapfunc{#1}(#2)}
-\newcommand{\tfexp}[1]{\typefont{exp}_{#1}}
-\newcommand{\tffamfunc}{\typefont{fam}}
+\newcommand{\tfexp}[1]{\mathsf{exp}_{#1}}
+\newcommand{\tffamfunc}{\mathsf{fam}}
 \newcommand{\tffam}[1]{\tffamfunc(#1)}
-\newcommand{\tfev}{\typefont{ev}}
-\newcommand{\tfcomp}{\typefont{comp}}
-\newcommand{\isDec}[1]{\typefont{is\usc{}decidable}(#1)}
+\newcommand{\tfev}{\mathsf{ev}}
+\newcommand{\tfcomp}{\mathsf{comp}}
+\newcommand{\isDec}[1]{\mathsf{is\usc{}decidable}(#1)}
 \newcommand{\smal}{\mathcal{S}}
 \renewcommand{\modal}{{\ensuremath{\ocircle}}}
-\newcommand{\eqrel}{\typefont{EqRel}}
-\newcommand{\piw}{\ensuremath{\Pi\typefont{W}}} %% to be used in conjunction with -pretopos.
+\newcommand{\eqrel}{\mathsf{EqRel}}
+\newcommand{\piw}{\ensuremath{\Pi\mathsf{W}}} %% to be used in conjunction with -pretopos.
 %\renewcommand{\sslash}{/\!\!/}
 \newcommand{\mprd}[3][]{\Pi^{#1}(#2,#3)}
 \newcommand{\msmsym}{\Sigma}
 \newcommand{\msm}[2]{\msmsym(#1,#2)}
 \newcommand{\mw}[2]{\wtypesym(#1,#2)}
 \newcommand{\midt}[1]{\idvartype_#1}
-\newcommand{\reflf}[1]{\typefont{refl}^{#1}}
-\newcommand{\tfJ}{\typefont{J}}
-\newcommand{\tftrans}{\typefont{trans}}
+\newcommand{\reflf}[1]{\mathsf{refl}^{#1}}
+\newcommand{\tfJ}{\mathsf{J}}
+\newcommand{\tftrans}{\mathsf{trans}}
 \newcommand{\shapem}{\mathop{\textesh}}
 
 \newcommand{\@gcomp}{\underline}
@@ -1042,25 +827,25 @@
 \def\reflf##1{\@gcomp{\mathsf{refl}}^{##1}}
 #1}}
 
-\newcommand{\tfT}{\typefont{T}}
+\newcommand{\tfT}{\mathsf{T}}
 \newcommand{\reflsym}{{\mathsf{refl}}}
 \newcommand{\strans}[2]{\ensuremath{{#1}_{*}({#2})}}
-\newcommand{\eqtype}[1]{\typefont{Eq}_{#1}}
-\newcommand{\eqtoid}[1]{\typefont{eqtoid}(#1)}
+\newcommand{\eqtype}[1]{\mathsf{Eq}_{#1}}
+\newcommand{\eqtoid}[1]{\mathsf{eqtoid}(#1)}
 \newcommand{\greek}{\mathrm}
 \newcommand{\product}[2]{{#1}\times{#2}}
 \newcommand{\pairp}[1]{(#1)}
 \newcommand{\jequalizer}[3]{\{#1|#2\jdeq #3\}}
 \newcommand{\jequalizerin}[2]{\iota_{#1,#2}}
 \newcommand{\tounit}[1]{{!_{#1}}}
-\newcommand{\trwk}{\typefont{trwk}}
-\newcommand{\trext}{\typefont{trext}}
-\newcommand{\tfindf}[2][]{\typefont{ind}_{#2}^{#1}}
+\newcommand{\trwk}{\mathsf{trwk}}
+\newcommand{\trext}{\mathsf{trext}}
+\newcommand{\tfindf}[2][]{\mathsf{ind}_{#2}^{#1}}
 \newcommand{\thom}[2]{\mathrm{thom}(#1,#2)}
 \newcommand{\thomd}[3]{\mathrm{thom}_{#1}(#2,#3)}
 
 \newcommand{\tfind}[3][]{\tfindf[#1]{#2}(\default@ctxext #3)}
-\newcommand{\famtoequifib}{\typefont{famToEquifib}}
+\newcommand{\famtoequifib}{\mathsf{famToEquifib}}
 \newcommand{\struct}[1]{\mathop{#1\textnormal{-Struct}}}
 \newcommand{\loopspacesym}{\Omega}
 \newcommand{\loopspace}[2][]{\loopspacesym^{#1}(#2)}
@@ -1080,7 +865,7 @@
 \newcommand{\inv}[1]{{#1}^{-1}}
 \newcommand{\idtoiso}{\ensuremath{\mathsf{idtoiso}}\xspace}
 \newcommand{\isotoid}{\ensuremath{\mathsf{isotoid}}\xspace}
-\newcommand{\op}[1]{{{#1}^\typefont{op}}}
+\newcommand{\op}[1]{{{#1}^\mathsf{op}}}
 \newcommand{\y}{\ensuremath{\mathbf{y}}\xspace}
 \newcommand{\dgr}[1]{{#1}^{\dagger}}
 \newcommand{\unitaryiso}{\mathrel{\cong^\dagger}}
@@ -1118,7 +903,7 @@
 
 \newcommand{\ucomp}[1]{\hat{#1}}
 \newcommand{\fin}{\mathsf{Fin}}
-\newcommand{\finsetf}{\typefont{Fin}}
+\newcommand{\finsetf}{\mathsf{Fin}}
 \newcommand{\finset}[1]{\finsetf(#1)}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1130,13 +915,11 @@
 
 %%%% Introducing logical usage of fonts.
 \newcommand{\modelfont}{\mathit} % use 'mf' in command to indicate model font
-\newcommand{\typefont}{\mathsf} % use 'tf' in command to indicate type font
 \newcommand{\catfont}{\mathrm} % use 'cf' in command to indicate cat font
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% When investigation pointed structures we use the \pt macro.
 
-\newcommand*{\pt}{\ast}
 \newcommand*{\bN}{{\mathbb{N}}}
 \newcommand*{\bF}{{\mathbb{F}}}
 \newcommand*{\bZ}{{\mathbb{Z}}}
@@ -1170,46 +953,7 @@
 \mathchardef\hyph="2D
 \newcommand{\kshiftequiv}{\mathsf{kshift\underline{~}equiv}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% OPERATIONS ON GRAPHS
-%%%%
-%%%% First of all, each graph has a type of vertices and a type of edges. The
-%%%% type of vertices of a graph $\Gamma$ is denoted by $\pts{\Gamma}$;
-%%%% and likewise for the type of edges.
 
-\makeatletter
-\newcommand{\pts}[1]{{\@graphop@nested{#1}}_{0}}
-\newcommand{\edg}[1]{{\@graphop@nested{#1}}_{1}}
-\newcommand{\rfx}[1]{\mathsf{rfx}_{\@graphop@nested{#1}}}
-\newcommand{\@graphop@nested}[1]
-  {\@ifnextchar\ctxext{\@ctxext@nested}
-      {\@ifnextchar\undergraph{\@undergraph@nested}
-         {\@ifnextchar\underovergraph{\@underovergraph@nested}{}}}
-    #1}
-\makeatother
-
-%%%% The following operations of \undergraph and \underovergraph are used to
-%%%% define the free category and the free groupoid of a graph, respectively
-
-\makeatletter
-\newcommand{\@undergraphtest}[2]{\@ifnextchar({#1}{#2}}
-\newcommand{\undergraph}[2]{\@undergraphtest{\@undergraph@parens{#1}{#2}}{\@undergraph{#1}{#2}}}
-\newcommand{\@undergraph}[2]{{#2/#1}}
-\newcommand{\@undergraph@nested}[3]{\@undergraph@parens{#2}{#3}}
-\newcommand{\@undergraph@parens}[2]{(\@undergraph{#1}{#2})}
-\makeatother
-
-\makeatletter
-\newcommand{\underovergraph}[2]{\@underovergraphtest{\@underovergraph@parens{#1}{#2}}{\@underovergraph{#1}{#2}}}
-\newcommand{\@underovergraph}[2]{{#2}\,{\parallel}\,{#1}}
-\newcommand{\@underovergraphtest}{\@undergraphtest}
-\newcommand{\@underovergraph@parens}[2]{(\@underovergraph{#1}{#2})}
-\newcommand{\@underovergraph@nested}[3]{\@underovergraph@parens{#2}{#3}}
-\makeatother
-
-\newcommand{\graphid}[1]{\mathrm{id}_{#1}}
-\newcommand{\freecat}[1]{\mathcal{C}(#1)}
-\newcommand{\freegrpd}[1]{\mathcal{G}(#1)}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\prekersym}{k}
@@ -1243,7 +987,7 @@
 
 \newcommand{\rcoeq}{\mathsf{rcoeq}}
 
-\newcommand{\tftmfunc}{\typefont{tm}}
+\newcommand{\tftmfunc}{\mathsf{tm}}
 \newcommand{\tftm}[1]{\tftmfunc(#1)}
 
 \DeclarePairedDelimiter\norm{\lVert}{\rVert}
