@@ -385,5 +385,17 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
     f(x^{-1}) & = f(x)^{-1}.
   \end{align*}
 \item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.\index{isomorphism!of semi-groups!preserves unit}
+\item Consider a monoid $M$ with multiplication $\mu:M\to (M\to M)$ and unit $e$. Write
+  \begin{equation*}
+    \bar{\mu}\defeq\foldlist(e,\mu):\lst(M)\to M
+  \end{equation*}
+  for the iterated multiplication operation (see \cref{ex:lists}). Show that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=6em]
+      \lst(\lst(M)) \arrow[r,"\flattenlist(M)"] \arrow[d,swap,"\lst(\bar{\mu})"] & \lst(M) \arrow[d,"\bar{\mu}"] \\
+        \lst(M) \arrow[r,swap,"\bar{\mu}"] & M
+    \end{tikzcd}
+  \end{equation*}
+  commutes. 
 \item Construct the category of posets.\index{category!of posets}
 \end{exercises}

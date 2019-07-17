@@ -364,7 +364,7 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
     \ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
   \end{align*}
   In other words, \emph{type theory cannot distinguish between the types $\bool$ and $\unit+\unit$.}
-\item For any type $A$ we can define the type $\lst(A)$\index{list A@{$\lst(A)$}|see {lists in $A$}} of \define{lists}\index{lists in A @{lists in $A$}}\index{inductive type!list A@{$\lst(A)$}} elements of $A$ as the inductive type with constructors\index{lists in A@{lists in $A$}!nil@{$\nil$}}\index{nil@{$\nil$}}\index{cons(a,l)@{$\cons(a,l)$}}\index{lists in A@{lists in $A$}!cons@{$\cons$}}
+\item \label{ex:lists}For any type $A$ we can define the type $\lst(A)$\index{list A@{$\lst(A)$}|see {lists in $A$}} of \define{lists}\index{lists in A @{lists in $A$}}\index{inductive type!list A@{$\lst(A)$}} elements of $A$ as the inductive type with constructors\index{lists in A@{lists in $A$}!nil@{$\nil$}}\index{nil@{$\nil$}}\index{cons(a,l)@{$\cons(a,l)$}}\index{lists in A@{lists in $A$}!cons@{$\cons$}}
   \begin{align*}
     \nil & : \lst(A) \\
     \cons & : A \to (\lst(A) \to \lst(A)).
