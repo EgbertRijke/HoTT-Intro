@@ -358,8 +358,8 @@ Let $f:X\to Y$ be a map. Show that the following are equivalent:
 \begin{subexenum}
 \item Show that if $f$ is an equivalence, then the type $\sm{g:B\to A}f\circ g\htpy \idfunc$ of sections of $f$ is contractible.
 \item Show that if $f$ is an equivalence, then the type $\sm{h:B\to A}h\circ f\htpy \idfunc$ of retractions of $f$ is contractible.
-\item Show that $\isequiv(f)$ is a proposition.\index{isequiv@{$\isequiv$}!is a proposition}
-\item Use \cref{ex:prop_equiv,ex:isprop_istrunc} to show that $\isequiv(f)\eqvsym \iscontr(f)$.\index{isequiv@{$\isequiv$}!isequiv iscontr@{$\isequiv(f)\eqvsym\iscontr(f)$}}
+\item Show that $\isequiv(f)$ is a proposition.\index{is-equiv(f)@{$\isequiv(f)$}!is a proposition}
+\item Use \cref{ex:prop_equiv,ex:isprop_istrunc} to show that $\isequiv(f)\eqvsym \iscontr(f)$.\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) is-contr(f)@{$\isequiv(f)\eqvsym\iscontr(f)$}}
 \end{subexenum}
 Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the map $\proj 1 : (\eqv{A}{B})\to (A\to B)$ is an embedding.
 \item \label{ex:prop_equiv}
@@ -370,7 +370,7 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 \end{equation*}
 \item Show that $P$ is a proposition if and only if $P\to P$ is contractible.
 \end{subexenum}
-\item Show that $\mathsf{path\usc{}split}(f)$\index{path-split!is a proposition} and $\mathsf{is\usc{}coh\usc{}invertible}(f)$\index{coherently invertible!is a proposition} are propositions for any map $f:A\to B$. Conclude that we have equivalences\index{isequiv@{$\isequiv$}!isequiv path-split@{$\isequiv(f)\eqvsym\mathsf{path\usc{}split}(f)$}}\index{isequiv@{$\isequiv$}!isequiv iscohinvertible@{$\isequiv(f)\eqvsym\mathsf{is\usc{}coh\usc{}invertible}(f)$}}
+\item Show that $\mathsf{path\usc{}split}(f)$\index{path-split!is a proposition} and $\mathsf{is\usc{}coh\usc{}invertible}(f)$\index{coherently invertible!is a proposition} are propositions for any map $f:A\to B$. Conclude that we have equivalences\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) path-split(f)@{$\isequiv(f)\eqvsym\mathsf{path\usc{}split}(f)$}}\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) is-coh-invertible(f)@{$\isequiv(f)\eqvsym\mathsf{is\usc{}coh\usc{}invertible}(f)$}}
   \begin{equation*}
     \isequiv(f) \eqvsym \mathsf{path\usc{}split}(f) \eqvsym \mathsf{is\usc{}coh\usc{}invertible}(f).
   \end{equation*}
@@ -389,9 +389,9 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 %\end{equation*}
 %\item Show that this map is an equivalence.
 %\end{subexenum}
-\item \label{ex:idfunc_autohtpy}Construct for any type $A$ an equivalence\index{isinvertible@{$\mathsf{is\usc{}invertible}$}}
+\item \label{ex:idfunc_autohtpy}Construct for any type $A$ an equivalence\index{has-inverse(f)@{$\hasinverse(f)$}!has-inverse(id) id htpy id@{$\hasinverse(\idfunc)\simeq (\idfunc\htpy\idfunc)$}}
 \begin{equation*}
-\eqv{\mathsf{is\usc{}invertible}(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
+\eqv{\hasinverse(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
 \end{equation*}
 Note: We will use this fact in \cref{ex:is_invertible_id_S1} to show that there
 are types for which $\mathsf{is\usc{}invertible}(\idfunc[A])\not\eqvsym\isequiv(\idfunc[A])$.
@@ -428,7 +428,7 @@ given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
 \end{subexenum}
 \item 
 \begin{subexenum}
-\item Show that the map\index{universal property!unit type}\index{unit type!universal property}\index{ev-pt@{$\mathsf{ev\usc{}pt}$}}
+\item Show that the map\index{universal property!unit type}\index{unit type!universal property}\index{ev-pt@{$\evpt$}}
 \begin{equation*}
 \Big(\prd{t:\unit}P(t)\Big)\to P(\ttt)
 \end{equation*}

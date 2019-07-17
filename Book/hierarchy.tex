@@ -2,25 +2,29 @@
 
 \section{The hierarchy of homotopical complexity}
 \sectionmark{Homotopical complexity}\label{chap:hierarchy}
+
+\index{truncated type|(}
+\index{truncation level|(}
 %Not all types have interesting higher groupoid structure. For example, we will see below that two natural numbers can only be equal in at most one way. Voevodsky articulated a useful notion to detect the homotopical complexity of types, which allows us to distinguish between contractible types (also called \emph{$(-2)$-types}), \emph{propositions} (also called \emph{$(-1)$-types}), \emph{sets} (\emph{$0$-types}), and \emph{$k$-types} for higher $k$.
 
 %We will see [later] that there are types that are not $k$-types for any $k$.
 
 \subsection{Propositions and subtypes}
 
+\index{proposition|(}
 \begin{defn}
-A type $A$ is said to be a \define{proposition} if there is a term of type
+A type $A$ is said to be a \define{proposition} if there is a term of type\index{is-prop(A)@{$\isprop(A)$}}
 \begin{equation*}
 \isprop(A)\defeq\prd{x,y:A}\iscontr(x=y).
 \end{equation*}
-We define $\prop$ to be the type of all small propositions, i.e.,
+Given a universe $\UU$, we define $\prop_\UU$\index{Prop@{$\prop$}} to be the type of all small propositions, i.e.,
 \begin{equation*}
-  \prop\defeq\sm{X:\UU}\isprop(A).
+  \prop_\UU\defeq\sm{X:\UU}\isprop(A).
 \end{equation*}
 \end{defn}
 
 \begin{eg}\label{eg:prop_contr}
-Any contractible type is a proposition by \cref{ex:prop_contr}. However, propositions do not need to be inhabited: the empty type is also a proposition, since
+Any contractible type is a proposition by \cref{ex:prop_contr}\index{contractible type!is a proposition}\index{is a proposition!contractible type}. However, propositions do not need to be inhabited: the empty type is also a proposition, since\index{empty type!is a proposition}\index{is a proposition!empty type}
 \begin{equation*}
 \prd{x,y:\emptyt}\iscontr(x=y)
 \end{equation*}
@@ -33,15 +37,15 @@ In the following lemma we prove that in order to show that a type $A$ is a propo
   Let $A$ be a type. Then the following are equivalent:
   \begin{enumerate}
   \item The type $A$ is a proposition.
-  \item Any two terms of type $A$ can be identified, i.e., there is a dependent function
+  \item Any two terms of type $A$ can be identified, i.e., there is a dependent function\index{is-prop'(A)@{$\isprop'(A)$}}\index{is-prop(A)@{$\isprop(A)$}!is-prop(A) iff is-prop'(A)@{$\isprop(A)\leftrightarrow\isprop'(A)$}}
     \begin{equation*}
-      \prd{x,y:A}\id{x}{y}.
+      \isprop'(A)\defeq\prd{x,y:A}\id{x}{y}.
     \end{equation*}
-  \item The type $A$ is contractible as soon as it is inhabited, i.e., there is a function
+  \item The type $A$ is contractible as soon as it is inhabited, i.e., there is a function\index{is-prop(A)@{$\isprop(A)$}!is-prop(A) iff A to is-contr(A)@{$\isprop(A)\leftrightarrow(A\to\iscontr(A))$}}
     \begin{equation*}
       A \to \iscontr(A).
     \end{equation*}
-  \item The map $\mathsf{const}_\ttt : A\to\unit$ is an embedding. 
+  \item The map $\mathsf{const}_\ttt : A\to\unit$ is an embedding.\index{is-prop(A)@{$\isprop(A)$}!is-prop(A) iff is-emb(const star)@{$\isprop(A)\leftrightarrow\isemb(\const_\ttt)$}}
   \end{enumerate}
 \end{thm}
 
@@ -65,7 +69,7 @@ In the following lemma we prove that in order to show that a type $A$ is a propo
 In the following lemma we show that propositions are closed under equivalences.
 
 \begin{lem}\label{lem:prop_equiv}
-Let $A$ and $B$ be types, and let $e:\eqv{A}{B}$. Then we have
+Let $A$ and $B$ be types, and let $e:\eqv{A}{B}$. Then we have\index{proposition!closed under equivalences}
 \begin{equation*}
 \isprop(A)\leftrightarrow\isprop(B).
 \end{equation*}
@@ -81,7 +85,7 @@ Since $e$ is assumed to be an equivalence, it follows by \cref{cor:emb_equiv} th
 is an equivalence for any $x,y:A$. If $B$ is a proposition, then in particular the type $e(x)=e(y)$ is contractible for any $x,y:A$, so the claim follows from \cref{thm:contr_equiv}.
 \end{proof}
 
-  In set theory, a set $y$ is said to be a subset of a set $x$, if any element of $y$ is an element of $x$, i.e., if the condition
+  In set theory, a set $y$ is said to be a subset\index{subset} of a set $x$, if any element of $y$ is an element of $x$, i.e., if the condition
   \begin{equation*}
     \forall_z (z\in y)\to (z\in x)
   \end{equation*}
@@ -94,101 +98,28 @@ is an equivalence for any $x,y:A$. If $B$ is a proposition, then in particular t
   of $x$. Now we have the right idea of subtypes in type theory: they are families of propositions.
 
 \begin{defn}
-A type family $B$ over $A$ is said to be a \define{subtype} of $A$ if for each $x:A$ the type $B(x)$ is a proposition.
+A type family $B$ over $A$ is said to be a \define{subtype}\index{subtype} of $A$ if for each $x:A$ the type $B(x)$ is a proposition. When $B$ is a subtype of $A$, we also say that $B(x)$ is a \define{property}\index{property} of $x:A$.
 \end{defn}
 
 We will show in \cref{thm:subtype} that a type family $B$ over $A$ is a subtype of $A$ if and only if the projection map $\proj 1:\big(\sm{x:A}B(x)\big)\to A$ is an embedding.
 
-\begin{comment}
-\begin{samepage}
-\begin{thm}\label{thm:subtype}
-Let $B$ be a type family over $A$. The following are equivalent:
-\begin{enumerate}
-\item The family $B$ over $A$ is a \define{subtype} of $A$, in the sense that for each $x:A$ the type $B(x)$ is a proposition.
-\item The projection map
-\begin{equation*}
-\proj 1 : \Big(\sm{x:A}B(x)\Big)\to A
-\end{equation*}
-is an embedding. 
-\end{enumerate}
-\end{thm}
-\end{samepage}
-
-\begin{proof}
-First assume that $B(x)$ is a proposition for each $x:A$. Our goal is to show that
-\begin{equation*}
-\apfunc{\proj 1} : (\id{s}{t})\to (\id{\proj 1(s)}{\proj 1(t)})
-\end{equation*}
-is an equivalence for every $s,t:\sm{x:A}B(x)$. By $\Sigma$-induction on $s$ and \cref{thm:id_fundamental} it suffices to show that the type
-\begin{equation*}
-\sm{t:\sm{x:A}B(x)} \id{a}{\proj 1(t)}
-\end{equation*}
-is contractible, for any $a:A$ and $b:B(a)$. 
-For the center of contraction we take $\pairr{\pairr{a,b},\refl{a}}$. 
-The contraction is constructed by applying $\Sigma$-induction twice, by which it suffices to construct a term of type
-\begin{equation*}
-\prd{x:A}{y:B(x)}{p:\id{a}{x}} \pairr{\pairr{a,b},\refl{a}}=\pairr{\pairr{x,y},p}.
-\end{equation*}
-This term is constructed by path induction on $p$, so it suffices to construct a term of type
-\begin{equation*}
-\prd{y:B(a)} \pairr{\pairr{a,b},\refl{a}}=\pairr{\pairr{a,y},\refl{a}}
-\end{equation*}
-However, the proposition $B(a)$ is contractible by \cref{cor:contr_prop}, since we have $b:B(a)$. Therefore we may proceed by singleton induction, so it suffices to construct an identification of type
-\begin{equation*}
-\pairr{\pairr{a,b},\refl{a}}=\pairr{\pairr{a,b},\refl{a}},
-\end{equation*}
-which we have by reflexivity. This completes the proof that if each $B(x)$ is a proposition, then the projection map $\proj 1 : \big(\sm{x:A}B(x)\big)\to A$ is an embedding.
-
-For the converse, assume that the projection map is an embedding, and let $x:A$. Our goal is to show that $B(x)$ is a proposition. By \cref{lem:isprop_eq} it suffices to show that
-\begin{equation*}
-\prd{x:A}{y,z:B(x)} \id{y}{z}
-\end{equation*}
-Let $y,z:B(x)$. By our assumption that the projection map is an embedding we have an equivalence
-\begin{equation*}
-\eqv{(\id{\pairr{x,y}}{\pairr{x,z}})}{(\id{x}{x})}
-\end{equation*}
-In particular, we obtain an identification $p:\id{\pairr{x,y}}{\pairr{x,z}}$ which comes equipped with an identification $q:\ap{\proj 1}{p}=\refl{x}$. Now it follows that
-\begin{equation*}
-\begin{tikzcd}[column sep=huge]
-y \arrow[r,equals,"\apfunc{\mathsf{tr}_B(\blank,y)}(q)"] & \mathsf{tr}_B(p,y) \arrow[r,equals,"\apd{\proj 2}{p}"] & z,
-\end{tikzcd}
-\end{equation*}
-where $\apdfunc{\proj 2}$ is the \emph{dependent} action on paths of the dependent function $\proj 2:\prd{t:\sm{x:A}B(x)} B(\proj 1(t))$, constructed in \cref{defn:apd}.
-\end{proof}
-
-\begin{cor}
-Let $f:A\to B$ be a map. The following are equivalent:
-\begin{enumerate}
-\item For each $y:B$, the fiber $\fib{f}{y}$ is a proposition. 
-\item $f$ is an embedding.
-\end{enumerate}
-\end{cor}
-
-\begin{proof}
-By \cref{ex:fib_replacement} there is a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-A \arrow[rr,"\lam{a}\pairr{f(a),\pairr{a,\refl{f(a)}}}"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"] \\
-& B
-\end{tikzcd}
-\end{equation*}
-in which the top map is an equivalence. Thus it follows from \cref{ex:emb_triangle} that $f$ is an embedding if and only if $\proj 1:\big(\sm{y:B}\fib{f}{y}\big)\to B$ is an embedding. Now the claim follows from \cref{thm:subtype}.
-\end{proof}
-\end{comment}
+\index{proposition|)}
 
 \subsection{Sets}
 
+\index{set|(}
 \begin{defn}
-A type $A$ is said to be a \define{set} if there is a term of type
+  A type $A$ is said to be a \define{set} if it comes equipped with a term of type
+  \index{is-set(A)@{$\isset(A)$}}\index{is a set}
 \begin{equation*}
 \isset(A)\defeq \prd{x,y:A}\isprop(\id{x}{y}).
 \end{equation*}
 \end{defn}
 
 \begin{lem}
-A type $A$ is a set if and only if it satisfies \define{axiom K}, which asserts that
+A type $A$ is a set if and only if it satisfies \define{axiom K}\index{axiom K}, which asserts that\index{is-set(A)@{$\isset(A)$}!is-set(A) iff axiom-K(A)@{$\isset(A)\leftrightarrow\axiomK(A)$}}
 \begin{equation*}
-\prd{x:A}{p:\id{x}{x}}\id{\refl{x}}{p}.
+\axiomK(A)\defeq\prd{x:A}{p:\id{x}{x}}\id{\refl{x}}{p}.
 \end{equation*}
 \end{lem}
 
@@ -233,14 +164,14 @@ Now it also follows that $A$ is a set, since its identity types are equivalent t
 \end{proof}
 
 \begin{defn}
-  A map $f:A\to B$ is said to be \define{injective} if for any $x,y:A$ there is a map
+  A map $f:A\to B$ is said to be \define{injective}\index{injective function} if for any $x,y:A$ there is a map
   \begin{equation*}
     (f(x)=f(y))\to (x=y).
   \end{equation*}
 \end{defn}
 
 \begin{cor}
-  Any injective map into a set is an embedding.
+  Any injective map into a set is an embedding.\index{is an embedding!injective map into a set}
 \end{cor}
 
 \begin{proof}
@@ -256,7 +187,7 @@ Now it also follows that $A$ is a set, since its identity types are equivalent t
 \end{proof}
 
 \begin{thm}\label{thm:eq_nat}
-The type of natural numbers is a set.
+The type of natural numbers is a set.\index{is a set!natural numbers}\index{natural numbers!is a set}
 \end{thm}
 
 \begin{proof}
@@ -297,21 +228,23 @@ By induction of disjoint sums, it suffices to construct terms of types
 In the first case, we take $\lam{x}{y}{p}{t}p$, and the second case is by induction on the empty type.
 \end{proof}
 \end{comment}
+\index{set|)}
 
 \subsection{General truncation levels}
+
 \begin{defn}
-We define $\istrunc{} : \Z_{\geq-2}\to\UU\to\UU$ by induction on $k:\Z_{\geq -2}$, taking
+We define $\istrunc{} : \Z_{\geq-2}\to\UU\to\UU$ by induction on $k:\Z_{\geq -2}$, taking\index{is-trunc k(A)@{$\istrunc{k}(A)$}}
 \begin{align*}
 \istrunc{-2}(A) & \defeq \iscontr(A) \\
 \istrunc{k+1}(A) & \defeq \prd{x,y:A}\istrunc{k}(\id{x}{y}).\qedhere
 \end{align*}
-For any type $A$, we say that $A$ is \define{$k$-truncated}, or a \define{$k$-type}, if there is a term of type $\istrunc{k}(A)$. We say that a map $f:A\to B$ is $k$-truncated if its fibers are $k$-truncated.
+For any type $A$, we say that $A$ is \define{$k$-truncated}\index{k-truncated type@{$k$-truncated type}|see {truncated type}}, or a \define{$k$-type}\index{k-type@{$k$-type}}, if there is a term of type $\istrunc{k}(A)$. We say that a map $f:A\to B$ is $k$-truncated if its fibers are $k$-truncated.\index{k-truncated map@{$k$-truncated map}|see {truncated map}}\index{truncated map}
 \end{defn}
 
 %For the rest of this section, let $k:\Z_{\geq-2}$.
 
 \begin{thm}\label{thm:istrunc_next}
-If $A$ is a $k$-type, then $A$ is also a $(k+1)$-type.
+If $A$ is a $k$-type, then $A$ is also a $(k+1)$-type.\index{is-trunc k(A)@{$\istrunc{k}(A)$}!is-trunc k(A) to is-trunc k+1(A)@{$\istrunc{k}(A)\to\istrunc{k+1}(A)$}}
 \end{thm}
 
 \begin{proof}
@@ -320,7 +253,7 @@ For the inductive step, note that if any $k$-type is also a $(k+1)$-type, then a
 \end{proof}
 
 \begin{thm}\label{thm:ktype_eqv}
-If $e:\eqv{A}{B}$ is an equivalence, and $B$ is a $k$-type, then so is $A$.
+If $e:\eqv{A}{B}$ is an equivalence, and $B$ is a $k$-type, then so is $A$.\index{truncated type!closed under equivalences}
 \end{thm}
 
 \begin{proof}
@@ -334,7 +267,7 @@ is an equivalence for any $x,y$. Note that $\id{e(x)}{e(y)}$ is a $k$-type, so b
 \end{proof}
 
 \begin{cor}\label{cor:emb_into_ktype}
-If $f:A\to B$ is an embedding, and $B$ is a $(k+1)$-type, then so is $A$.
+If $f:A\to B$ is an embedding, and $B$ is a $(k+1)$-type, then so is $A$.\index{truncated type!closed under embeddings}
 \end{cor}
 
 \begin{proof}
@@ -345,16 +278,10 @@ By the assumption that $f$ is an embedding, the action on paths
 is an equivalence for every $x,y:A$. Since $B$ is assumed to be a $(k+1)$-type, it follows that $f(x)=f(y)$ is a $k$-type for every $x,y:A$. Therefore we conclude by \cref{thm:ktype_eqv} that $\id{x}{y}$ is a $k$-type for every $x,y:A$. In other words, $A$ is a $(k+1)$-type.
 \end{proof}
 
-In the following definition we generalize the notion of contractible map.
-
-\begin{defn}
-We say that a map $f:A\to B$ is \define{$k$-truncated} if for each $y:B$ the fiber $\fib{f}{y}$ is $k$-truncated.
-\end{defn}
-
 \begin{thm}
-Let $B$ be a type family over $A$. Then the following are equivalent:
+Let $B$ be a type family over $A$. Then the following are equivalent:\index{truncated family of types}
 \begin{enumerate}
-\item For each $x:A$ the type $B(x)$ is $k$-truncated.
+\item For each $x:A$ the type $B(x)$ is $k$-truncated. In this case we say that the family $B$ is \define{$k$-truncated}.
 \item The projection map
 \begin{equation*}
 \proj 1 : \Big(\sm{x:A}B(x)\Big)\to A
@@ -388,11 +315,12 @@ First we show that for any $s,t:\fib{f}{b}$ there is an equivalence
 \begin{equation*}
 \eqv{(s=t)}{\fib{\apfunc{f}}{\ct{\proj 2(s)}{\proj 2(t)^{-1}}}}
 \end{equation*}
-We do this by $\Sigma$-induction on $s$ and $t$, and then we calculate using \cref{ex:trans_ap} and basic manipulations of identifications that
+We do this by $\Sigma$-induction on $s$ and $t$, and then we calculate
 \begin{align*}
-(\pairr{x,p}=\pairr{y,q}) & \eqvsym \sm{r:x=y} \mathsf{tr}_{f(\blank)=b}(r,p)=q \\
-& \eqvsym \sm{r:x=y} \ct{\ap{f}{r}^{-1}}{p}=q \\
-& \eqvsym \sm{r:x=y} \ap{f}{r}=\ct{p}{q^{-1}} \\
+(\pairr{x,p}=\pairr{y,q}) & \eqvsym \Eqfib_f((x,p),(y,q)) \\
+  & \jdeq \sm{\alpha:x=y} p=\ct{\ap{f}{\alpha}}{q} \\
+  & \eqvsym \sm{\alpha:x=y} \ct{\ap{f}{\alpha}}{q}=p \\
+& \eqvsym \sm{\alpha:x=y} \ap{f}{\alpha}=\ct{p}{q^{-1}} \\
 & \jdeq \fib{\apfunc{f}}{\ct{p}{q^{-1}}}.
 \end{align*}
 By these equivalences, it follows that if $\apfunc{f}$ is $k$-truncated, then for each $s,t:\fib{f}{b}$ the identity type $s=t$ is equivalent to a $k$-truncated type, and therefore we obtain by \cref{thm:ktype_eqv} that $f$ is $(k+1)$-truncated.
@@ -405,7 +333,7 @@ It follows that if $f$ is $(k+1)$-truncated, then the identity type $(x,p)=(y,\r
 \end{proof}
 
 \begin{cor}\label{cor:prop_emb}
-A map is an embedding if and only if its fibers are propositions.
+A map is an embedding if and only if its fibers are propositions.\index{is an embedding!-1-truncated map@{$(-1)$-truncated map}}
 \end{cor}
 
 \begin{cor}\label{thm:subtype}
@@ -432,41 +360,15 @@ is $k$-truncated.
 This follows directly from \cref{lem:fib_total,thm:ktype_eqv}.
 \end{proof}
 
-\begin{comment}
-\begin{proof}
-By \cref{ex:contr_retr} it follows that if $A$ is a retract of a contractible type, then $A$ is contractible.
-For the inductive step, suppose that the $k$-types are closed under retracts, and consider a section-retraction pair
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[r,"i"] & B \arrow[r,"r"] & A,
-\end{tikzcd}
-\end{equation*}
-with $H:r\circ i\htpy \idfunc$, where $B$ is a $(k+1)$-type.
-By the induction hypothesis it suffices to show that for any $x,y:A$, the function $\apfunc{i}:(\id{x}{y})\to (\id{i(x)}{i(y)})$ has a retraction.
-The retraction $\varphi:(\id{i(x)}{i(y)})\to(\id{x}{y})$ is defined as
-\begin{equation*}
-\varphi \defeq \lam{q} \ct{H(x)^{-1}}{\ap{r}{q}}{H(y)}
-\end{equation*}
-To see that $\varphi(\ap{i}{p})=p$, we have to show that the square
-\begin{equation*}
-\begin{tikzcd}
-r(i(x)) \arrow[d,equals,swap,"\ap{r}{q}"] \arrow[r,equals,"H(x)"] & x \arrow[d,equals,"p"] \\
-r(i(y)) \arrow[r,equals,swap,"H(y)"] & y
-\end{tikzcd}
-\end{equation*}
-commutes. This square commutes by the naturality of homotopies, proven in \cref{ex:htpy_nat}.
-\end{proof}
-\end{comment}
-
 \begin{exercises}
 \item
   \begin{subexenum}
-  \item Show that $\succN:\N\to\N$ is an embedding.
-  \item Show that $n\mapsto m+n$ is an embedding, for each $m:\N$. Moreover, conclude that there is an equivalence
+  \item Show that $\succN:\N\to\N$ is an embedding.\index{succ N@{$\succN$}!is an embedding}\index{is an embedding!succ N@{$\succN$}}
+  \item Show that $n\mapsto m+n$ is an embedding, for each $m:\N$.\index{add N@{$\addN$}!add N(m) is an embedding@{$\addN(m)$ is an embedding}}\index{is an embedding!add N(m)@{$\addN(m)$}} Moreover, conclude that there is an equivalence
     \begin{equation*}
       \fib{\mathsf{add}_\N(m)}{n}\simeq (m\leq n).
     \end{equation*}
-  \item Show that $n\mapsto mn$ is an embedding, for each $m>0$ in $\N$. Conclude that the divisibility relation
+  \item Show that $n\mapsto mn$ is an embedding\index{mul N@{$\mulN$}!mul N(m) is an embedding if m>0@{$\mulN(m)$ is an embedding if $m>0$}}\index{is an embedding!mul N(m) for m > 0@{$\mulN(m)$ for $m>0$}}, for each $m>0$ in $\N$. Conclude that the divisibility relation\index{d {"| n}@{$d\mid n$}!is a proposition if d>0@{is a proposition if $d>0$}}\index{is a proposition!d {"| n} for d>0@{$d\mid n$ for $d>0$}}
     \begin{equation*}
       d\mid n
     \end{equation*}
@@ -503,3 +405,5 @@ A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 with $H: f \htpy g \circ h$, and suppose that $g$ is $k$-truncated. Show that $f$ is $k$-truncated if and only if $h$ is $k$-truncated.
 % Suppose that $h$ is $k$-truncated and surjective. Show that $f$ is $(k+1)$-truncated if and only if $g$ is $(k+1)$-truncated.
 \end{exercises}
+\index{truncated type|)}
+\index{truncation level|)}

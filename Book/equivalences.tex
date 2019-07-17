@@ -108,7 +108,7 @@ Dually, we say that $f$ has a \define{retraction}\index{retraction}\index{functi
 \retractions(f) \defeq \sm{h:B\to A} h\circ f\htpy \idfunc[A].
 \end{equation*}
 If a map $f:A \to B$ has a retraction, we also say that $A$ is a \define{retract}\index{retract!of a type} of $B$.
-We say that a function $f:A\to B$ is an \define{equivalence}\index{is an equivalence}\index{function!is an equivalence} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is_equiv@{$\isequiv$}}
+We say that a function $f:A\to B$ is an \define{equivalence}\index{is an equivalence}\index{function!is an equivalence} if it has both a section and a retraction, i.e., if it comes equipped with a term of type\index{is-equiv(f)@{$\isequiv(f)$}}
 \begin{equation*}
 \isequiv(f)\defeq\sections(f)\times\retractions(f).
 \end{equation*}
@@ -121,7 +121,7 @@ An equivalence, as we defined it here, can be thought of as a \emph{bi-invertibl
 g & : B\to A & h & : B\to A \\
 G & : f\circ g \htpy \idfunc[B] & H & : h\circ f \htpy \idfunc[A].
 \end{align*}
-Clearly, if $f$ has an inverse\index{has an inverse}\index{function!has an inverse} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence. We write\index{has-inverse@{$\hasinverse$}}
+Clearly, if $f$ has an inverse\index{has an inverse}\index{function!has an inverse} in the sense that it comes equipped with a function $g:B\to A$ such that $f\circ g\htpy\idfunc[B]$ and $g\circ f\htpy\idfunc[A]$, then $f$ is an equivalence. We write\index{has-inverse(f)@{$\hasinverse(f)$}}
 \begin{equation*}
 \hasinverse(f)\defeq\sm{g:B\to A} (f\circ g\htpy \idfunc[B])\times (g\circ f\htpy\idfunc[A]).
 \end{equation*}
@@ -194,7 +194,7 @@ In this section we characterize the identity type of a $\Sigma$-type as a $\Sigm
   \end{equation*}
   is an equivalence for each $x,y:A$. 
 \end{enumerate}
-The last step is usually the most difficult, and we will refine our methods for this step in \cref{chap:fundamental}, where we establish the Fundamental Theorem of Identity Types.\index{Fundamental Theorem of Identity Types}
+The last step is usually the most difficult, and we will refine our methods for this step in \cref{chap:fundamental}, where we establish the fundamental theorem of identity types.\index{fundamental theorem of identity types}
 
 In this section we consider a type family $B$ over $A$. Given two pairs
 \begin{equation*}

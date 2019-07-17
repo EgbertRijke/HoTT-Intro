@@ -39,7 +39,7 @@ In other words, the contraction $C$ is a \emph{homotopy} from the constant funct
 \end{eg}
 
 \begin{defn}
-  Suppose $A$ comes equipped with a term $a:A$. Then we say that $A$ satisfies \define{singleton induction}\index{singleton induction}\index{induction principle!singleton induction} if for every type family $B$ over $A$, the map\index{evpt@{$\evpt$}}
+  Suppose $A$ comes equipped with a term $a:A$. Then we say that $A$ satisfies \define{singleton induction}\index{singleton induction}\index{induction principle!singleton induction} if for every type family $B$ over $A$, the map\index{ev-pt@{$\evpt$}}
   \begin{equation*}
     \evpt:\Big(\prd{x:A}B(x)\Big)\to B(a)
   \end{equation*}
@@ -139,6 +139,8 @@ In other words, the fiber of $f$ at $b$ is the type of $a:A$ that get mapped by 
 One may think of the fiber as a type theoretic version of the pre-image\index{pre-image|see {fiber}} of a point.
 
 \index{fiber!characterization of identity type|(}
+\index{characterization of identity type!fiber|(}
+\index{identity type!of a fiber|(}
 It will be useful to have a characterization of the identity type of a fiber, so we will make such a characterization immediately.
 
 \begin{defn}
@@ -170,6 +172,8 @@ It will be useful to have a characterization of the identity type of a fiber, so
 \end{proof}
 
 \index{fiber!characterization of identity type|)}
+\index{characterization of identity type!fiber|)}
+\index{identity type!of a fiber|)}
 
 Now we arrive at the notion of contractible map.
 
@@ -196,7 +200,7 @@ It remains to construct a retraction of $f$. Taking $g$ as our retraction, we ha
 
 \subsection{Equivalences are contractible maps}
 
-In \cref{thm:contr_equiv} we will show the converse to \cref{thm:equiv_contr}, i.i., we will show that any equivalence is a contractible map. We will do this in two steps.
+In \cref{thm:contr_equiv} we will show the converse to \cref{thm:equiv_contr}, i.e., we will show that any equivalence is a contractible map. We will do this in two steps.
 
 First we introduce a new notion of \emph{coherently invertible map}, for which we can easily show that such maps have contractible fibers. Then we show that any equivalence is a coherently invertible map.
 
@@ -362,7 +366,7 @@ By \cref{thm:id_equiv}, the identity function is an equivalence. Therefore, the 
 \index{contractible map|)}
 
 \begin{exercises}
-\item \label{ex:prop_contr}Show that if $A$ is contractible, then for any $x,y:A$ the identity type $x=y$ is also contractible.\index{contractible type!identity types of}\index{is contractible!identity type of contractible type}\index{identity type!of contractible type}
+\item \label{ex:prop_contr}Show that if $A$ is contractible, then for any $x,y:A$ the identity type $x=y$ is also contractible.\index{contractible type!identity types of}\index{is contractible!identity type of contractible type}\index{identity type!of contractible type}\index{characterization of identity type!contractible type}
 \item \label{ex:contr_retr}Suppose that $A$ is a retract of $B$. Show that\index{contractible type!closed under retracts}
   \begin{equation*}
     \iscontr(B)\to\iscontr(A).

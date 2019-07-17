@@ -159,15 +159,16 @@ holds. With this assumption it will rarely be necessary to work with more than o
 
 \subsection{Pointed types}
 
+\index{pointed type|(}
 \begin{defn}
-  A \define{pointed type} is a pair $(A,a)$ consisting of a type $A$ and a term $a:A$. The type of all pointed types in a universe $\UU$ is defined to be
+  A \define{pointed type} is a pair $(A,a)$ consisting of a type $A$ and a term $a:A$. The type of all pointed types in a universe $\UU$ is defined to be\index{UU*@{$\UU_\ast$}}
   \begin{equation*}
     \UU_\ast \defeq \sm{X:\UU}X.
   \end{equation*}
 \end{defn}
 
 \begin{defn}
-  Consider two pointed types $(A,a)$ and $(B,b)$. A \define{pointed map} from $(A,a)$ to $(B,b)$ is a pair $(f,p)$ consisting of a function $f:A\to B$ and an identification $p:f(a)=b$. We write
+  Consider two pointed types $(A,a)$ and $(B,b)$. A \define{pointed map}\index{pointed map} from $(A,a)$ to $(B,b)$ is a pair $(f,p)$ consisting of a function $f:A\to B$ and an identification $p:f(a)=b$. We write
   \begin{equation*}
     A\to_\ast B \defeq \sm{f:A\to B}f(a)=b
   \end{equation*}
@@ -177,7 +178,7 @@ holds. With this assumption it will rarely be necessary to work with more than o
 Since we have a type $\UU_\ast$ of \emph{all} pointed types in a universe $\UU$, we can start defining operations on $\UU_\ast$. An important example of such an operation is to take the loop space of a pointed type.
 
 \begin{defn}
-  We define the \define{loop space} operation $\Omega : \UU_\ast \to \UU_\ast$
+  We define the \define{loop space}\index{loop space}\index{Omega@{$\Omega$}|see {loop space}} operation $\Omega : \UU_\ast \to \UU_\ast$
   \begin{equation*}
     \Omega(A,a)\defeq \big((a=a),\refl{a}\big).
   \end{equation*}
@@ -186,14 +187,27 @@ Since we have a type $\UU_\ast$ of \emph{all} pointed types in a universe $\UU$,
 We can even go further and define the \emph{iterated loop space} of a pointed type. Note that this definition could not be given in type theory if we didn't have universes.
 
 \begin{defn}
-  Given a pointed type $(A,a)$ and a natural number $n$, we define the $n$-th loop space $\Omega^n(A,a)$ by induction on $n:\N$, taking
+  Given a pointed type $(A,a)$ and a natural number $n$, we define the $n$-th loop space $\Omega^n(A,a)$ by induction on $n:\N$, taking\index{iterated loop space}\index{Omega^n@{$\Omega^n$}|see {iterated loop space}}
   \begin{align*}
     \Omega^0(A,a) & \defeq (A,a) \\
     \Omega^{n+1}(A,a) & \defeq \Omega(\Omega^n(A,a)).
   \end{align*}
 \end{defn}
+\index{pointed type|)}
 
-\subsection{Relations on the natural numbers}
+\subsection{Families and relations on the natural numbers}
+
+As we have already seen in the case of the iterated loop space, we can use the universe to define a type family over $\N$ by induction on $\N$. For example, we can define the finite types in this way.
+
+\begin{defn}\label{defn:fin}
+We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}}\index{finite types} by induction on $\N$\index{family!of finite types}, taking
+\begin{align*}
+\mathsf{Fin}(\zeroN) & \defeq \emptyt \\
+\mathsf{Fin}(\succN(n)) & \defeq \mathsf{Fin}(n)+\unit
+\end{align*}
+\end{defn}
+
+Similarly, we can define many relations on the natural numbers using a universe. We give here the example of \emph{observational equality} on $\N$. This inductively defined equivalence relation is very important, as it can be used to show that equality on the natural numbers is \emph{decidable}, i.e., there is a program that decides for any two natural numbers $m$ and $n$ whether they are equal or not.
 
 \begin{defn}\label{defn:obs_nat}
 We define the \define{observational equality}\index{observational equality!on N@{on $\N$}}\index{natural numbers!observational equality} on $\N$ as binary relation $\EqN:\N\to(\N\to\UU)$\index{Eq N@{$\EqN$}} satisfying
@@ -259,44 +273,7 @@ holds, from which the judgmental equalities in the statement of the definition f
 
 We can also define observational equality for many other kinds of types, such as $\bool$ or $\Z$. In each of these cases, what sets the observational equality apart from other relations is that it is the \emph{least} reflexive relation. 
 
-\subsection{The finite types}
-
-\begin{defn}\label{defn:fin}
-We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}}\index{finite types} by induction on $\N$\index{family!of finite types}, taking
-\begin{align*}
-\mathsf{Fin}(\zeroN) & \defeq \emptyt \\
-\mathsf{Fin}(\succN(n)) & \defeq \mathsf{Fin}(n)+\unit
-\end{align*}
-\end{defn}
-
-\begin{defn}
-  For each $n:\N$, we define a map
-  \begin{equation*}
-    \prd{m:\N} \big((m<n)\to \mathsf{Fin}(n)\big)
-  \end{equation*}
-\end{defn}
-
-\begin{proof}
-  We construct this map by induction on $n,m:\N$. In the base case for $n$, the map is constructed by induction on the empty type, since the relation $m<\zeroN$ never holds. For the inductive step
-\end{proof}
-
 \begin{exercises}
-\item Let $A$ be a type.
-  \begin{subexenum}
-  \item Show that $(A+\neg A)\to(\neg\neg A\to A)$.
-  \item Show that $\neg\neg\neg A \to \neg A$.
-  \end{subexenum}
-\item Construct a function
-  \begin{equation*}
-    \check{\Pi}:\prd{A:\UU} (\Ty(A)\to\UU)\to \UU
-  \end{equation*}
-  such that
-  \begin{equation*}
-    \Ty(\check{\Pi}(A,B))\jdeq \prd{x:\Ty(A)}\Ty(B(x))
-  \end{equation*}
-  holds for every $A:\UU$ and $B:\Ty(A)\to\UU$. 
-  
-  \emph{A similar exercise can be posed for $\Sigma$ and $+$ (and for $\to$ and $\times$ as special cases of $\Pi$ and $\Sigma$).}
 \item \label{ex:obs_nat_eqrel}Show that observational equality on $\N$\index{observational equality!on N@{on $\N$}!is an equivalence relation} is an equivalence relation\index{equivalence relation!observational equality on N@{observational equality on $\N$}}, i.e., construct terms of the following types:
   \begin{align*}
     & \prd{n:\N} \EqN(n,n) \\
@@ -335,15 +312,8 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
 \item \label{ex:int_order}
   \begin{subexenum}
   \item Define the order relations\index{relation!order}\index{order relation} $\leq$ and $<$ on and $\Z$.
-  \item For $k:\Z$, consider the type $\Z_{\geq k}\defeq \sm{n:\Z}n\geq k$. Construct
-    \begin{align*}
-      b_k & : \Z_{\geq k} \\
-      s_k & : \Z_{\geq k}\to\Z_{\geq k},
-    \end{align*}
-    and show that $\Z_{\geq k}$ satisfies the induction principle of the natural numbers\index{induction principle!of N@{of $\N$}}:
-    \begin{equation*}
-      \ind{\Z_{\geq k}} : P(b_k)\to \Big(\prd{n:\Z_{\geq k}} P(n)\to P(s_k(n))\Big)\to \Big(\prd{n:\Z_{\geq k}} P(n)\Big)
-    \end{equation*}
+  \item Show that $\leq$ is reflexive, transitive, and anti-symmtetric.
+  \item Show that $<$ is anti-reflexive and transitive.
   \end{subexenum}
 \item
   \begin{subexenum}
@@ -356,6 +326,7 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
       \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
     \end{equation*}
   \end{subexenum}
+\begin{comment}
 \item
   \begin{subexenum}
   \item For each $i:\mathsf{Fin}(\succN(n))$, define a function
@@ -369,6 +340,8 @@ We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\m
     \end{equation*}
     that projects $\mathsf{Fin}(\succN(n))$ onto $\mathsf{Fin}(n)$ by doubling at $i$. 
   \end{subexenum}
+\end{comment}
 \end{exercises}
 \index{universe|)}
 \index{universal family|)}
+

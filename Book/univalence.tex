@@ -163,7 +163,7 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
 \begin{subexenum}
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.\index{universe!of contractible types}
 \item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.\index{A simeq B@{$\eqv{A}{B}$}!truncatedness}
-\item Use univalence to show that the universe of $k$-types\index{universe!of k-types@{of $k$-types}}\index{U leq k@{$\UU^{\leq k}$}}\index{k-type@{$k$-type}!universe of k-types@{universe of $k$-types}}\index{truncated!universe of k-types@{universe of $k$-types}}
+\item Use univalence to show that the universe of $k$-types\index{universe!of k-types@{of $k$-types}}\index{U leq k@{$\UU^{\leq k}$}}\index{k-type@{$k$-type}!universe of k-types@{universe of $k$-types}}\index{truncated type!universe of k-types@{universe of $k$-types}}
 \begin{equation*}
 \UU^{\leq k}\defeq \sm{X:\UU}\mathsf{is\usc{}trunc}_k(X)
 \end{equation*}
@@ -178,9 +178,9 @@ is a $(k+1)$-type, for any $k\geq -2$.
 \begin{equation*}
 \eqv{(A\to (B\to\UU))}{\Big(\sm{S:\UU} (S\to A)\times (S\to B)\Big)}
 \end{equation*}
-\item We say that a relation $R:A\to (B\to\UU)$ is \define{functional}\index{relation!functional} if it comes equipped with a term of type\index{is_function(R)@{$\mathsf{is\usc{}function}(R)$}}
+\item We say that a relation $R:A\to (B\to\UU)$ is \define{functional}\index{relation!functional} if it comes equipped with a term of type\index{is-function(R)@{$\isfunction(R)$}}
 \begin{equation*}
-\mathsf{is\usc{}function}(R) \defeq \prd{x:A}\iscontr\Big(\sm{y:B}R(x,y)\Big)
+\isfunction(R) \defeq \prd{x:A}\iscontr\Big(\sm{y:B}R(x,y)\Big)
 \end{equation*}
 For any function $f:A\to B$, show that the \define{graph}\index{graph!of a function} of $f$ 
 \begin{equation*}
@@ -189,7 +189,7 @@ For any function $f:A\to B$, show that the \define{graph}\index{graph!of a funct
 given by $\mathsf{graph}_f(a,b)\defeq (f(a)=b)$ is a functional relation from $A$ to $B$.
 \item Construct an equivalence
 \begin{equation*}
-\eqv{\Big(\sm{R:A\to (B\to\UU)}\mathsf{is\usc{}function}(R)\Big)}{(A\to B)}
+\eqv{\Big(\sm{R:A\to (B\to\UU)}\isfunction(R)\Big)}{(A\to B)}
 \end{equation*}
 \item Given a relation $R:A\to (B\to \UU)$ we define the \define{opposite relation}\index{relation!opposite relation}\index{opposite relation}\index{op R@{$R^{\mathsf{op}}$}}
 \begin{equation*}
@@ -197,7 +197,7 @@ R^{\mathsf{op}} : B\to (A\to\UU)
 \end{equation*}
 by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{A simeq B@{$\eqv{A}{B}$}!as relation}
 \begin{equation*}
-\eqv{\Big(\sm{R:A\to (B\to \UU)}\mathsf{is\usc{}function}(R)\times\mathsf{is\usc{}function}(R^{\mathsf{op}})\Big)}{(\eqv{A}{B})}.
+\eqv{\Big(\sm{R:A\to (B\to \UU)}\isfunction(R)\times\isfunction(R^{\mathsf{op}})\Big)}{(\eqv{A}{B})}.
 \end{equation*}
 \end{subexenum}
 \item

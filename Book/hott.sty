@@ -542,11 +542,16 @@
 % Macros for fundamental theorem of identity types
 \newcommand{\total}[2][]{\ensuremath{\mathsf{tot}_{#1}(#2)}}
 \newcommand{\isemb}{\mathsf{is\usc{}emb}}
+\newcommand{\Eqcoprod}{\mathsf{Eq\usc{}coprod}}
+\newcommand{\Eqcoprodeq}{\mathsf{Eq\usc{}coprod\usc{}eq}}
+\newcommand{\cohreduction}{\mathsf{coh\usc{}reduction}}
+\newcommand{\fibtriangle}{\mathsf{fib\usc{}triangle}}
 
 % Macros for hierarchy of homotopical complexity
 \newcommand{\isprop}{\ensuremath{\mathsf{is\usc{}prop}}}
 \newcommand{\prop}{\mathsf{Prop}}
 \newcommand{\isset}{\ensuremath{\mathsf{is\usc{}set}}}
+\newcommand{\axiomK}{\mathsf{axiom\usc{}K}}
 \newcommand{\istrunc}[1]{\mathsf{is\usc{}trunc}_{#1}}
 \newcommand{\typele}[1]{\ensuremath{{#1}\text-\mathsf{Type}}\xspace}
 \newcommand{\typeleU}[1]{\ensuremath{{#1}\text-\mathsf{Type}_\UU}\xspace}
@@ -582,7 +587,8 @@
   \@ifnextchar\bgroup
     {#1 \ptdeqvsym \ptdeqv{#2}}
     {#1 \ptdeqvsym #2}
-  }
+}
+\newcommand{\isfunction}{\mathsf{is\usc{}function}}
 
 % Macros for groups in univalent mathematics
 \DeclareMathOperator{\Aut}{Aut}
@@ -623,7 +629,6 @@
 \newcommand{\locsmall}{\mathsf{loc\usc{}small}}
 \newcommand{\isclassified}{\mathsf{is\usc{}classified}}
 \newcommand{\tottriangle}{\mathsf{tot\usc{}triangle}}
-\newcommand{\fibtriangle}{\mathsf{fib\usc{}triangle}}
 \newcommand{\idp}{\mathsf{id}^\ast}
 \newcommand{\FibSeq}{\mathsf{Fib\usc{}Seq}}
 \newcommand{\equivpt}{\mathsf{equiv\usc{}pt}}
@@ -761,7 +766,6 @@
 \newcommand{\UUGraph}{\UU^\mfGraph}
 \newcommand{\tfrGraph}{\mathsf{rGraph}}
 \newcommand{\mfrGraph}{\modelfont{rGraph}}
-\newcommand{\isfunction}{\mathsf{is\usc{}function}}
 \newcommand{\tflimits}{\mathsf{limits}}
 \newcommand{\tfcolimits}{\mathsf{colimits}}
 \newcommand{\islimiting}{\mathsf{is\usc{}limiting}}
