@@ -27,8 +27,8 @@ In the following definition we define the groupoidal structure of homotopies. No
 For any type family $B$ over $A$ there are operations\index{homotopy!htpy-refl@{$\htpyrefl$}}\index{htpy-refl@{$\htpyrefl$}}\index{homotopy!htpy-inv@{$\htpyinv$}}\index{htpy-inv@{$\htpyinv$}}\index{homotopy!htpy-concat@{$\htpyconcat$}}\index{htpy-concat@{$\htpyconcat$}}
 \begin{align*}
 & \htpyrefl & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
-& \htpyinv & & : \prd*{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
-& \htpyconcat & & : \prd*{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to ((g\htpy h)\to (f\htpy h)).
+& \htpyinv & & : \prd{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
+& \htpyconcat & & : \prd{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to ((g\htpy h)\to (f\htpy h)).
 \end{align*}
 We will write $H^{-1}$ for $\htpyinv(H)$, and $\ct{H}{K}$ for $\htpyconcat(H,K)$. 
 
@@ -166,7 +166,7 @@ The identity function is trivially its own section and its own retraction.
 \begin{eg}
   For any type $C(x,y)$ indexed by $x:A$ and $y:B$, the swap function\index{function!swap!is an equivalence}\index{is an equivalence!swap function}
 \begin{equation*}
-\sigma:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
+\sigma:\Big(\prd{x:A}\prd{y:B}C(x,y)\Big)\to\Big(\prd{y:B}\prd{x:A}C(x,y)\Big)
 \end{equation*}
 that swaps the order of the arguments $x$ and $y$ is an equivalence by \cref{ex:swap}.\index{swap function!is an equivalence}
 \end{eg}
@@ -227,9 +227,9 @@ Thus it makes sense to think of $(x,y)$ to be identical to $(x',y')$ if there is
 \begin{constr}
   This term is constructed by $\Sigma$-induction on $s:\sm{x:A}B(x)$. Thus, it suffices to construct a term of type
   \begin{equation*}
-    \prd{x:A}{y:B(x)}\sm{\alpha:x=x}\tr_B(\alpha,y)=y.
+    \prd{x:A}\prd{y:B(x)}\sm{\alpha:x=x}\tr_B(\alpha,y)=y.
   \end{equation*}
-  Here we take $\lam{x}{y}(\refl{x},\refl{y})$.
+  Here we take $\lam{x}\lam{y}(\refl{x},\refl{y})$.
 \end{constr}
 
 \begin{defn}
@@ -367,7 +367,7 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
   \end{equation*}
 \item \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
   \begin{equation*}
-    \swapSigma:\eqv{\Big(\sm{x:A}{y:B}C(x,y)\Big)}{\Big(\sm{y:B}{x:A}C(x,y)\Big)}.
+    \swapSigma:\eqv{\Big(\sm{x:A}\sm{y:B}C(x,y)\Big)}{\Big(\sm{y:B}\sm{x:A}C(x,y)\Big)}.
   \end{equation*}
   %\item \label{ex:sigma_base_equiv}Consider an equivalence $e:A'\eqv A$ and a type family $B$ over $A$. Show that the map
   %\begin{equation*}
@@ -413,7 +413,14 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
       H+K:(f+g)\htpy (f'+g').
     \end{equation*}
   \item Show that $\idfunc[A]+\idfunc[B]\htpy \idfunc[A+B]$.
-  \item Show that for any $f:A\to A'$, $f':A'\to A''$, $g:B\to B'$, and $g':B'\to B''$ there is a homotopy
+  \item Show that for any
+    \begin{equation*}
+      \begin{tikzcd}[row sep=small]
+        A \arrow[r,"f"] & {A'} \arrow[r,"{f'}"] & {A''} \\
+        B \arrow[r,"g"] & {B'} \arrow[r,"{g'}"] & {B''}
+      \end{tikzcd}
+    \end{equation*}
+    there is a homotopy
     \begin{equation*}
       (f'\circ f)+(g'\circ g) \htpy (f'+g')\circ (f\circ g).
     \end{equation*}

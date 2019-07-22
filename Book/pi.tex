@@ -202,8 +202,8 @@ We will write $g\circ f$\index{g composed with f@{$g\circ f$}} for $\comp(g,f)$\
     \UnaryInfC{$\Gamma,g:C^B,f:B^A,x:A,y:B\vdash g(y):C$}
     \BinaryInfC{$\Gamma,g:C^B,f:B^A,x:A\vdash g(f(x)) : C$}
     \UnaryInfC{$\Gamma,g:C^B,f:B^A\vdash \lam{x}g(f(x)):C^A$}
-    \UnaryInfC{$\Gamma,g:B\to C\vdash \lam{f}{x}g(f(x)):B^A\to C^A$}
-    \UnaryInfC{$\Gamma\vdash\comp\defeq \lam{g}{f}{x}g(f(x)):C^B\to (B^A\to C^A)$}
+    \UnaryInfC{$\Gamma,g:B\to C\vdash \lam{f}\lam{x}g(f(x)):B^A\to C^A$}
+    \UnaryInfC{$\Gamma\vdash\comp\defeq \lam{g}\lam{f}\lam{x}g(f(x)):C^B\to (B^A\to C^A)$}
   \end{prooftree}
 \end{constr}
 
@@ -300,7 +300,7 @@ is admissible for any variable $x'$ that does not occur in the context $\Gamma,x
 \item Define a composition operation for dependent function types
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
-\AxiomC{$\Gamma\vdash g:\prd{x:A}{y:B(x)} C(x,y)$}
+\AxiomC{$\Gamma\vdash g:\prd{x:A}\prd{y:B(x)} C(x,y)$}
 \BinaryInfC{$\Gamma\vdash g\circ' f:\prd{x:A} C(x,f(x))$}
 \end{prooftree}
 and show that this operation agrees with ordinary composition when it is specialized to non-dependent function types.
@@ -326,12 +326,12 @@ and show that this operation agrees with ordinary composition when it is special
 \begin{subexenum}
 \item Given two types $A$ and $B$ in context $\Gamma$, and a type $C$ in context $\Gamma,x:A,y:B$, define the \define{swap function}\index{function!swap}\index{swap function}
 \begin{equation*}
-\Gamma\vdash \sigma:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to\Big(\prd{y:B}{x:A}C(x,y)\Big)
+\Gamma\vdash \sigma:\Big(\prd{x:A}\prd{y:B}C(x,y)\Big)\to\Big(\prd{y:B}\prd{x:A}C(x,y)\Big)
 \end{equation*}
 that swaps the order of the arguments.
 \item Show that
 \begin{equation*}
-\Gamma\vdash \sigma\circ\sigma\jdeq\idfunc:\Big(\prd{x:A}{y:B}C(x,y)\Big)\to \Big(\prd{x:A}{y:B}C(x,y)\Big).
+\Gamma\vdash \sigma\circ\sigma\jdeq\idfunc:\Big(\prd{x:A}\prd{y:B}C(x,y)\Big)\to \Big(\prd{x:A}\prd{y:B}C(x,y)\Big).
 \end{equation*}
 \end{subexenum}
 \end{exercises}

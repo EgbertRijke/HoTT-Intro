@@ -113,13 +113,13 @@ is contractible.\index{identity type!total space is contractible}\index{is contr
   Now let $P$ be a type family over $\sm{x:A}a=x$. Note that we have a commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=0]
-      \prd{t:\sm{x:A}a=x}P(t) \arrow[dr,swap,"\evpt"] \arrow[rr,"\evpair"] & & \prd{x:A}{p:a=x}P(x,p) \arrow[dl,"\mathsf{ev\usc{}refl}"] \\
-      \phantom{\prd{x:A}{p:a=x}P(x,p)} & P(a,\refl{a})
+      \prd{t:\sm{x:A}a=x}P(t) \arrow[dr,swap,"\evpt"] \arrow[rr,"\evpair"] & & \prd{x:A}\prd{p:a=x}P(x,p) \arrow[dl,"\mathsf{ev\usc{}refl}"] \\
+      \phantom{\prd{x:A}\prd{p:a=x}P(x,p)} & P(a,\refl{a})
     \end{tikzcd}
   \end{equation*}
   where the maps $\evpair$ and $\mathsf{ev\usc{}refl}$ are defined as
   \begin{align*}
-    f & \mapsto \lam{x}{p}f(x,p) \\
+    f & \mapsto \lam{x}\lam{p}f(x,p) \\
     g & \mapsto g(a,\refl{a}),
   \end{align*}
   respectively. By the induction principle for $\Sigma$-types it follows that $\evpair$ has a section, and by path induction it follows that $\mathsf{ev\usc{}refl}$ has a section. Therefore it follows from \cref{ex:3_for_2} that the composite $\evpt$ has a section.
@@ -241,7 +241,7 @@ First we introduce a new notion of \emph{coherently invertible map}, for which w
     \end{align*}
     and let $y:B$. Our goal is to show that $\fib{f}{y}$ is contractible. For the center of contraction we take $(g(y),G(y))$. In order to construct a contraction, it suffices to construct a term of type
     \begin{equation*}
-      \prd{x:A}{p:f(x)=y}\Eqfib_f((g(y),G(y)),(x,p)).
+      \prd{x:A}\prd{p:f(x)=y}\Eqfib_f((g(y),G(y)),(x,p)).
     \end{equation*}
     By path induction on $p:f(x)=y$ it suffices to construct a term of type
     \begin{equation*}

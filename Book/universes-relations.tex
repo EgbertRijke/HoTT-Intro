@@ -255,14 +255,14 @@ holds, from which the judgmental equalities in the statement of the definition f
 \begin{proof}
   We will prove by induction on $m,n:\N$ that there is a term of type
   \begin{equation*}
-    f_{m,n}:\prd{e:\EqN(m,n)}{R:\N\to(\N\to\UU)}\Big(\prd{x:\N}R(x,x)\Big)\to R(m,n)
+    f_{m,n}:\prd{e:\EqN(m,n)}\prd{R:\N\to(\N\to\UU)}\Big(\prd{x:\N}R(x,x)\Big)\to R(m,n)
   \end{equation*}
   The dependent function $f_{m,n}$ is defined by
   \begin{align*}
-    f_{\zeroN,\zeroN} & \defeq \lam{\ttt}{r}{\rho}\rho(\zeroN) \\
+    f_{\zeroN,\zeroN} & \defeq \lam{\ttt}\lam{r}\lam{\rho}\rho(\zeroN) \\
     f_{\zeroN,\succN(n)} & \defeq \indempty \\
     f_{\succN(m),\zeroN} & \defeq \indempty \\
-    f_{\succN(m),\succN(n)} & \defeq \lam{e}{R}{\rho}f_{m,n}(e,R',\rho'),
+    f_{\succN(m),\succN(n)} & \defeq \lam{e}\lam{R}\lam{\rho}f_{m,n}(e,R',\rho'),
   \end{align*}
   where $R'$ and $\rho'$ are given by
   \begin{align*}
@@ -290,7 +290,7 @@ We can also define observational equality for many other kinds of types, such as
   \end{equation*}
   \emph{Hint: to get the inductive step going the induction hypothesis has to be strong enough. Construct by double induction a term of type}
   \begin{equation*}
-    \prd{n,m:\N}{f:\N\to\N} \EqN(n,m)\to \EqN(f(n),f(m)),
+    \prd{n,m:\N}\prd{f:\N\to\N} \EqN(n,m)\to \EqN(f(n),f(m)),
   \end{equation*}
   \emph{and pull out the universal quantification over $f:\N\to\N$ by \cref{ex:swap}.}
 \item 

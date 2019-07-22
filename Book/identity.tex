@@ -36,7 +36,7 @@ Identity type & Path fibration\\
   \end{equation*}
   The induction principle of the identity type\index{identity type!induction principle}\index{induction principle!of the identity type} postulates that for any family of types $P(x,p)$ indexed by $x:A$ and $p:a=_A x$, there is a function\index{path-ind@{$\pathind$}}\index{identity type!path-ind@{$\pathind$}}
   \begin{equation*}
-    \pathind_a:P(a,\refl{a}) \to \prd{x:A}{p:a=_A x} P(x,p)
+    \pathind_a:P(a,\refl{a}) \to \prd{x:A}\prd{p:a=_A x} P(x,p)
   \end{equation*}
   that satisfies $\pathind_a(p,a,\refl{a})\jdeq p$.
 
@@ -65,7 +65,7 @@ The induction principle for identity types is sometimes called \define{identific
   \begin{prooftree}
     \AxiomC{$\Gamma\vdash a:A$}
     \AxiomC{$\Gamma,x:A,p:a=_A x\vdash P(x,p)~\type$}
-    \BinaryInfC{$\Gamma\vdash \pathind_a:P(a,\refl{a})\to\prd{x:A}{p:a=_A x}P(x,p)$}
+    \BinaryInfC{$\Gamma\vdash \pathind_a:P(a,\refl{a})\to\prd{x:A}\prd{p:a=_A x}P(x,p)$}
   \end{prooftree}
   And finally the computation rule is:
   \begin{prooftree}
@@ -159,7 +159,7 @@ This is a very useful idea: while it is often impossible to show that two terms 
 \begin{constr}
 By path induction it suffices to show that
 \begin{equation*}
-\prd{z:A}{q:x=z}{w:A}{r:z=w} \ct{(\ct{\refl{x}}{q})}{r}= \ct{\refl{x}}{(\ct{q}{r})}.
+\prd{z:A}\prd{q:x=z}\prd{w:A}\prd{r:z=w} \ct{(\ct{\refl{x}}{q})}{r}= \ct{\refl{x}}{(\ct{q}{r})}.
 \end{equation*}
 Let $q:x=z$ and $r:z=w$. Note that by the computation rule of the path induction principle we have a judgmental equality $\ct{\refl{x}}{q}\jdeq q$. Therefore we conclude that
 \begin{equation*}
@@ -233,12 +233,12 @@ Note that this is a form of continuity for functions in type theory: if there is
 \begin{defn}\label{defn:ap}
 Let $f:A\to B$ be a map. We define the \define{action on paths}\index{function!action on paths} of $f$ as an operation\index{ap f@{$\apfunc{f}$}|see {action on paths}}
 \begin{equation*}
-\apfunc{f} : \prd*{x,y:A} (\id{x}{y})\to(\id{f(x)}{f(y)}).
+\apfunc{f} : \prd{x,y:A} (\id{x}{y})\to(\id{f(x)}{f(y)}).
 \end{equation*}
 Moreover, there are operations\index{ap-id@{$\apid$}}\index{action on paths!ap-id@{$\apid$}}\index{ap-comp@{$\apcomp$}}\index{action on paths!ap-comp@{$\apcomp$}}
 \begin{align*}
-\apid_A & : \prd*{x,y:A}{p:\id{x}{y}} \id{p}{\ap{\idfunc[A]}{p}} \\
-\apcomp(f,g) & : \prd*{x,y:A}{p:\id{x}{y}} \id{\ap{g}{\ap{f}{p}}}{\ap{g\circ f}{p}}.
+\apid_A & : \prd{x,y:A}\prd{p:\id{x}{y}} \id{p}{\ap{\idfunc[A]}{p}} \\
+\apcomp(f,g) & : \prd{x,y:A}\prd{p:\id{x}{y}} \id{\ap{g}{\ap{f}{p}}}{\ap{g\circ f}{p}}.
 \end{align*}
 \end{defn}
 
@@ -294,7 +294,7 @@ The transport functions have many applications, which we will encounter througho
 Let $A$ be a type, and let $B$ be a type family over $A$.
 We will construct a \define{transport}\index{transport}\index{family!transport}\index{identity type!transport} operation\index{tr B@{$\tr_B$}}
 \begin{equation*}
-\tr_B:\prd*{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
+\tr_B:\prd{x,y:A} (\id{x}{y})\to (B(x)\to B(y)).
 \end{equation*}
 \end{defn}
 

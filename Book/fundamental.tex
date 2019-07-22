@@ -159,7 +159,7 @@ Before we state the fundamental theorem of identity types we introduce the notio
   Let $A$ be a type equipped with a term $a:A$. A \define{(unary) identity system} on $A$ at $a$ consists of a type family $B$ over $A$ equipped with $b:B(a)$, such that for any family of types $P(x,y)$ indexed by $x:A$ and $y:B(x)$,
   the function
   \begin{equation*}
-    h\mapsto h(a,b):\Big(\prd{x:A}{y:B(x)}P(x,y)\Big)\to P(a,b)
+    h\mapsto h(a,b):\Big(\prd{x:A}\prd{y:B(x)}P(x,y)\Big)\to P(a,b)
   \end{equation*}
   has a section.
 \end{defn}
@@ -206,8 +206,8 @@ is a family of equivalences if and only if $\sm{x:A}B(x)$ is contractible.
   Now we show that (ii) and (iii) are equivalent. Note that we have the following commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=0]
-      \prd{t:\sm{x:A}B(x)}P(t) \arrow[rr,"\evpair"] \arrow[dr,swap,"{\evpt(a,b)}"] & & \prd{x:A}{y:B(x)}P(x,y) \arrow[dl,"{\lam{h}h(a,b)}"] \\
-      \phantom{\prd{x:A}{y:B(x)}P(x,y)} & P(a,b)
+      \prd{t:\sm{x:A}B(x)}P(t) \arrow[rr,"\evpair"] \arrow[dr,swap,"{\evpt(a,b)}"] & & \prd{x:A}\prd{y:B(x)}P(x,y) \arrow[dl,"{\lam{h}h(a,b)}"] \\
+      \phantom{\prd{x:A}\prd{y:B(x)}P(x,y)} & P(a,b)
     \end{tikzcd}
   \end{equation*}
   In this diagram the top map has a section. Therefore it follows by \cref{ex:3_for_2} that the left map has a section if and only if the right map has a section. Notice that the left map has a section for all $P$ if and only if $\sm{x:A}B(x)$ satisfies singleton induction, which is by \cref{thm:contractible} equivalent to $\sm{x:A}B(x)$ being contractible.

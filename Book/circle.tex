@@ -46,46 +46,125 @@ and satisfies the \define{induction principle of the circle}\index{induction pri
 \end{equation*}
 and a homotopy witnessing that $\ind{\sphere{1}}$ is a section of $\mathsf{dgen}_{\sphere{1}}$
 \begin{equation*}
-\mathsf{dgen}_{\sphere{1}}\circ \ind{\sphere{1}}\htpy \idfunc
+\comphtpy{\sphere{1}}:\mathsf{dgen}_{\sphere{1}}\circ \ind{\sphere{1}}\htpy \idfunc
 \end{equation*}
 for the computation rule\index{computation rules!of the circle}.
 \end{defn}
 
-\begin{rmk}
-The induction principle of the circle provides us with a dependent function $f:\prd{t:\sphere{1}}P(t)$ equipped with an identification
-\begin{equation*}
-(f(\base),\apd{f}{\lloop})=(x,p),
-\end{equation*}
-for any $x : P(\base)$ and $p : \mathsf{tr}_P(\lloop,x)=x$. By \cref{thm:eq_sigma} the identification
-$(f(\base),\apd{f}{\lloop})=(x,p)$ is equivalently described as a pair of identifications
-\begin{samepage}
-\begin{align*}
-\alpha & : f(\base)= x \\
-\beta & : \mathsf{tr}(\alpha,\apd{f}{\lloop}) = p.
-\end{align*}\end{samepage}%
-Here, the transport is taken with respect to the family $x\mapsto \mathsf{tr}_P(\lloop,x)=x$. 
-
-The identity type $\mathsf{tr}(\alpha,\apd{f}{\lloop}) = p$ is equivalent to the type
-\begin{equation*}
-\ct{\apd{f}{\lloop}}{\alpha}=\ct{\mathsf{ap}_{\mathsf{tr}_P(\lloop)}(\alpha)}{p}.
-\end{equation*}
-Indeed, such an equivalence can be constructed by path induction, because types reduce to the type $\apd{f}{\lloop}=p$ when $\alpha\jdeq\refl{f(x)}$. Therefore we obtain from the computation rule of the circle an identification $\alpha:f(\base)=x$, and an identification
-\begin{equation*}
-\beta':\ct{\apd{f}{\lloop}}{\alpha}=\ct{\mathsf{ap}_{\mathsf{tr}_P(\lloop)}(\alpha)}{p}
-\end{equation*}
-witnessing that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=huge]
-\mathsf{tr}_P(\lloop,f(\base)) \arrow[d,equals,swap,"\apd{f}{\lloop}"] \arrow[r,equals,"\ap{\mathsf{tr}_P(\lloop)}{\alpha}"] & \mathsf{tr}_P(\lloop,x) \arrow[d,equals,"p"] \\
-f(\base) \arrow[r,equals,swap,"\alpha"] & x
-\end{tikzcd}
-\end{equation*}
-commutes.
+\begin{rmk}\label{rmk:circle-induction}
+  The type of identifications $(y,p)=(y',p')$ in the type
+  \begin{equation*}
+    \sm{y:P(\base)}\tr_P(\lloop,y)=y
+  \end{equation*}
+  is equivalent to the type of pairs $(\alpha,\beta)$ consisting of an identification $\alpha:y=y'$, and an identification $\beta$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=6em]
+      \tr_P(\lloop,y) \arrow[d,equals,swap,"p"] \arrow[r,equals,"\ap{\tr_P(\lloop)}{\alpha}"] & \tr_P(\lloop,y') \arrow[d,equals,"{p'}"] \\
+      y \arrow[r,equals,swap,"\alpha"] & y'
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Therefore it follows from the induction principle of the circle that for any $(y,p):\sm{y:P(\base)}\tr_P(\lloop,y)=y$, there is a dependent function $f:\prd{x:\sphere{1}}P(x)$ equipped with an identification
+  \begin{equation*}
+    \alpha : f(\base)=y,
+  \end{equation*}
+  and an identification $\beta$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=6em]
+      \tr_P(\lloop,f(\base)) \arrow[d,equals,swap,"{\apd{f}{\lloop}}"] \arrow[r,equals,"\ap{\tr_P(\lloop)}{\alpha}"] & \tr_P(\lloop,y) \arrow[d,equals,"{p}"] \\
+      f(\base) \arrow[r,equals,swap,"\alpha"] & y
+    \end{tikzcd}
+  \end{equation*}
+  commutes.  
 \end{rmk}
 
-\subsection{The universal property of the circle}
+\subsection{The (dependent) universal property of the circle}
+\subsectionmark{The universal property of the circle}
 
-In the following theorem we establish the \define{universal property}\index{universal property!of the circle} of the circle. The proof requires \cref{lem:circle_up_htpy,lem:circle_up_tr_compute}, which we state after we encounter their application.
+Our goal is now to use the induction principle of the circle to derive the \define{universal property}\index{universal property!of the circle} of the circle. This universal property states that, for any type $X$ the canonical map
+\begin{equation*}
+  \Big(\sphere{1}\to X\Big)\to\Big(\sm{x:X}x=x\Big)
+\end{equation*}
+given by $f\mapsto(f(\base),\ap{f}{\lloop})$ is an equivalence. It turns out that it is easier to prove the \define{dependent universal property}\index{dependent universal property!of the circle} first. The dependent universal property states that for any type family $P$ over the circle, the canonical map
+\begin{equation*}
+  \Big(\prd{t:\sphere{1}}P(t)\Big)\to\Big(\sm{p_0:P(\base)}\tr_P(\lloop,p_0)=p_0\Big)
+\end{equation*}
+given by $f\mapsto(f(\base),\apd{f}{\lloop})$ is an equivalence.
+
+\begin{thm}\label{thm:circle-dependent-universal-property}
+  For any type family $P$ over the circle, the map
+  \begin{equation*}
+    \Big(\prd{t:\sphere{1}}P(t)\Big)
+    \to
+    \Big(\sm{p_0:P(\base)}\tr_P(\lloop,p_0)=p_0\Big)
+  \end{equation*}
+  given by $f\mapsto(f(\base),\apd{f}{\lloop})$ is an equivalence.
+\end{thm}
+
+\begin{proof}
+  By the induction principle of the circle we know that the map has a section, i.e., we have
+  \begin{align*}
+    \ind{\sphere{1}} & : \Big(\sm{p_0:P(\base)}\tr_P(\lloop,p_0)=p_0\Big) \to \Big(\prd{t:\sphere{1}}P(t)\Big) \\
+    \comphtpy{\sphere{1}} & : \dgen_{\sphere{1}}\circ\ind{\sphere{1}}\htpy\idfunc
+  \end{align*}
+  Therefore it remains to construct a homotopy
+  \begin{equation*}
+    \ind{\sphere{1}}\circ\dgen_{\sphere{1}}\htpy\idfunc.
+  \end{equation*}
+  Thus, for any $f:\prd{x:\sphere{1}}P(x)$ our task is to construct an identification
+  \begin{equation*}
+    \ind{\sphere{1}}(\dgen_{\sphere{1}}(f))=f.
+  \end{equation*}
+  By function extensionality it suffices to construct a homotopy
+  \begin{equation*}
+    \prd{x:\sphere{1}} \ind{\sphere{1}}(\dgen_{\sphere{1}}(f))(x)= f(x).
+  \end{equation*}
+  We proceed by the induction principle of the circle using the family of types $E_{g,f}(x)\defeq g(x)=f(x)$ indexed by $x:\sphere{1}$, where $g$ is the function
+  \begin{equation*}
+    g\defeq\ind{\sphere{1}}(\dgen_{\sphere{1}}(f)).
+  \end{equation*}
+  Thus, it suffices to construct
+  \begin{align*}
+    \alpha & : g(\base)=f(\base)\\
+    \beta  & : \tr_{E_{g,f}}(\lloop,\alpha)=\alpha. 
+  \end{align*}
+  An argument by path induction on $p$ yields that
+  \begin{equation*}
+    \Big(\ct{\apd{g}{p}}{r}=\ct{\ap{\tr_P(p)}{q}}{\apd{f}{p}}\Big)\to\Big(\tr_{E_{g,f}}(p,q)=r\Big),
+  \end{equation*}
+  for any $f,g:\prd{x:X}P(x)$ and any $p:x=x'$, $q:g(x)=f(x)$ and $r:g(x')=f(x')$.
+  Therefore it suffices to construct an identification $\alpha:g(\base)=f(\base)$ equipped with an identification $\beta$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=6em]
+      \tr_P(\lloop,g(\base)) \arrow[d,equals,swap,"\apd{g}{\lloop}"] \arrow[r,equals,"\ap{\tr_P(\lloop)}{\alpha}"] & \tr_P(\lloop,f(\base)) \arrow[d,equals,"\apd{f}{\lloop}"] \\
+      g(\base) \arrow[r,equals,swap,"\alpha"] & f(\base)"
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Notice that we get exactly such a pair $(\alpha,\beta)$ from the computation rule of the circle, by \cref{rmk:circle-induction}.
+\end{proof}
+
+As a corollary we obtain the following uniqueness principle for dependent functions defined by the induction principle of the circle.
+
+\begin{cor}
+  Consider a type family $P$ over the circle, and let
+  \begin{align*}
+    y & : P(\base) \\
+    p & : \tr_{P}(\lloop,y)=y.
+  \end{align*}
+  Then the type of functions $f:\prd{x:\sphere{1}}P(x)$ equipped with an identification
+  \begin{equation*}
+    \alpha: f(\base)=y
+  \end{equation*}
+  and an identification $\beta$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=6em]
+      \tr_P(\lloop,f(\base)) \arrow[d,equals,swap,"{\apd{f}{\lloop}}"] \arrow[r,equals,"\ap{\tr_P(\lloop)}{\alpha}"] & \tr_P(\lloop,y) \arrow[d,equals,"{p}"] \\
+      f(\base) \arrow[r,equals,swap,"\alpha"] & y
+    \end{tikzcd}
+  \end{equation*}
+  commutes, is contractible.
+\end{cor}
+
+Now we use the dependent universal property to derive the ordinary universal property of the circle. It would be tempting to say that it is a direct corollary, but we need to address the transport that occurs in the dependent universal property.
 
 \begin{thm}\label{thm:circle_up} 
 For each type $X$, the \define{action on generators}\index{action on generators!for the circle}\index{gen_S1@{$\mathsf{gen}_{\sphere{1}}$}}
@@ -96,131 +175,56 @@ given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
 \end{thm}
 
 \begin{proof}
-Let $x:X$ and let $p:x=x$. By \cref{ex:trans_triv} we have an identification 
-\begin{equation*}
-\mathsf{tr\usc{}triv}(\lloop,x):\mathsf{tr}_{W_{\sphere{1}}X}(\lloop,x)=x,
-\end{equation*}
-from which we obtain a fiberwise equivalence
-\begin{equation*}
-\varphi : \prd{x:X} (x=x) \to (\mathsf{tr}_{W_{\sphere{1}}X}(\lloop,x)=x)
-\end{equation*}
-given by $p\mapsto \ct{\mathsf{tr\usc{}triv}(\lloop,x)}{p}$.
-Moreover, for any $f:A\to B$, and any $p:x=y$ there is an identification $\ct{\mathsf{tr\usc{}triv}(p,f(x))}{\mathsf{ap}_f(p)}=\apd{f}{p}$, so it follows that the triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=0]
-& (\sphere{1}\to X) \arrow[dl,swap,"\mathsf{gen}_{\sphere{1}}"] \arrow[dr,swap,"\mathsf{dgen}_{\sphere{1}}" near start] \\
-\sm{x:X}x=x \arrow[rr,"\total{\varphi}"',"\eqvsym"] & & \sm{x:X} \mathsf{tr}_{W_{\sphere{1}}X}(\lloop,x)=x \arrow[ul,densely dotted,bend right=15,swap,"\ind{\sphere{1}}"]
-\end{tikzcd}
-\end{equation*}
-commutes, and the map $\total{\varphi}$ is a fiberwise equivalence by \cref{thm:fib_equiv}. Since the triangle commutes and $\ind{\sphere{1}}$ is a section of $\mathsf{dgen}_{\sphere{1}}$, it follows that the composite
-\begin{equation*}
-\ind{\sphere{1}}\defeq \ind{\sphere{1}}\circ \total{\varphi}
-\end{equation*}
-is a section of $\mathsf{gen}_{\sphere{1}}$. Therefore it remains to show that $\ind{\sphere{1}}$ is also a retraction of $\mathsf{gen}_{\sphere{1}}$, i.e., we have to show that for every $f:\sphere{1}\to X$ there is an identification
-\begin{equation*}
-\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))=f.
-\end{equation*}
-In \cref{lem:circle_up_htpy} below we establish that
-\begin{equation*}
-(\mathsf{gen}_{\sphere{1}}(\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f)))=\mathsf{gen}_{\sphere{1}}(f))\to (\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f))=f).
-\end{equation*}
-We get an identification $\mathsf{gen}_{\sphere{1}}(\ind{\sphere{1}}(\mathsf{gen}_{\sphere{1}}(f)))=\mathsf{gen}_{\sphere{1}}(f)$ from the fact that $\ind{\sphere{1}}$ is a section of $\mathsf{gen}_{\sphere{1}}$.
+  We prove the claim by constructing a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-2em]
+      \phantom{\Big(\sm{x:X}\tr_{\const(X)}(\lloop,x)=x\Big)} & (\sphere{1}\to X) \arrow[dl,swap,"\gen_{\sphere{1}}"] \arrow[dr,"\dgen_{\sphere{1}}"] \\
+      \Big(\sm{x:X}x=x\Big) \arrow[rr,swap,"\simeq"] & & \Big(\sm{x:X}\tr_{\const(X)}(\lloop,x)=x\Big)
+    \end{tikzcd}
+  \end{equation*}
+  in which the bottom map is an equivalence. Indeed, once we have such a triangle, we use the fact from \cref{thm:circle-dependent-universal-property} that $\dgen_{\sphere{1}}$ is an equivalence to conclude that $\gen_{\sphere{1}}$ is an equivalence.
+
+  To construct the bottom map, we first observe that for any constant type family $\const(B)$ over a type $A$, any $p:a=a'$ in $A$, and any $b:B$, there is an identification
+  \begin{equation*}
+    \mathsf{tr\usc{}const}_B(p,b)=b.
+  \end{equation*}
+  This identification is easily constructed by path induction on $p$. Now we construct the bottom map as the induced map on total spaces of the family of maps
+  \begin{equation*}
+    l\mapsto \ct{\mathsf{tr\usc{}const}_X(\lloop,x)}{l},
+  \end{equation*}
+  indexed by $x:X$. Since concatenating by a path is an equivalence, it follows by \cref{thm:fib_equiv} that the induced map on total spaces is indeed an equivalence.
+
+  To show that the triangle commutes, it suffices to construct for any $f:\sphere{1}\to X$ an identification witnessing that the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=1em]
+      \tr_{\const(X)}(\lloop,f(\base)) \arrow[dr,equals,swap,"\apd{f}{\lloop}"] \arrow[rr,equals,"{\mathsf{tr\usc{}const}_X(\lloop,f(\base))}"] & & f(\base) \arrow[dl,equals,"\ap{f}{\lloop}"] \\
+      & f(\base) & \phantom{\tr_{\const(X)}(\lloop,f(\base))}
+    \end{tikzcd}
+  \end{equation*}
+  commutes. This again follows from general considerations: for any $f:A\to B$ and any $p:a=a'$ in $A$, the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=1em]
+      \tr_{\const(B)}(p,f(a)) \arrow[dr,equals,swap,"\apd{f}{p}"] \arrow[rr,equals,"{\mathsf{tr\usc{}const}_B(p,f(a))}"] & & f(a) \arrow[dl,equals,"\ap{f}{p}"] \\
+      & f(a') & \phantom{\tr_{\const(B)}(p,f(a))}
+    \end{tikzcd}
+  \end{equation*}
+  commutes by path induction on $p$.
 \end{proof}
 
-\begin{lem}\label{lem:circle_up_htpy}
-Let $f,g:\sphere{1}\to X$ be two dependent functions. Then there is a map
-\begin{equation*}
-(\mathsf{gen}_{\sphere{1}}(f)=\mathsf{gen}_{\sphere{1}}(g))\to (f=g)
-\end{equation*}
-\end{lem}
-
-\begin{proof}
-Let $p:\mathsf{gen}_{\sphere{1}}(f)=\mathsf{gen}_{\sphere{1}}(g)$. By function extensionality, it suffices to show that $f\htpy g$. However, since $f\htpy g$ is just the type $\prd{t:\sphere{1}}f(t)=g(t)$, we can construct such a homotopy by $\sphere{1}$-induction. Thus, it suffices to construct a term of type
-\begin{equation*}
-\sm{p:f(\base)=g(\base)} \mathsf{tr}_{E_{f,g}}(\lloop,p)=p, 
-\end{equation*}
-where $E_{f,g}$ is the family over $\sphere{1}$ given by $t\mapsto f(t)=g(t)$.
-
-We claim that it suffices to construct for each $p:f(\base)=g(\base)$ an equivalence
-\begin{equation*}
-\Big(\mathsf{tr}_{E_{f,g}}(\lloop,p)=p\Big)\eqvsym\Big(\mathsf{tr}_{L}(p,\ap{f}{\lloop})=\ap{g}{\lloop}\Big),
-\end{equation*}
-where $L$ is the family over $X$ given by $x\mapsto x=x$. 
-To see that this suffices, we note that such a fiberwise equivalence induces an equivalence on total spaces, and the total space
-\begin{align*}
-\sm{p:f(\base)=g(\base)} \mathsf{tr}_{L}(p,\ap{f}{\lloop})=\ap{g}{\lloop},
-\end{align*}
-and is equivalent to $\mathsf{gen}(f)=\mathsf{gen}(g)$, of which we have assumed a term.
-
-The asserted fiberwise equivalence that we need for this proof to go through requires a sufficient generalization so that it can be constructed by path induction, so it is established separately in \cref{lem:circle_up_tr_compute} below.
-\end{proof}
-
-\begin{comment}
-Consider $f,g:\sphere{1}\to X$ with a homotopy $H:f\htpy g$. Then we have $H(\base):f(\base)=g(\base)$, and the square
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-f(\base) \arrow[r,equals,"H(\base)"] \arrow[d,swap,equals,"\ap{f}{\lloop}"] & g(\base) \arrow[d,equals,"\ap{g}{\lloop}"] \\
-f(\base) \arrow[r,equals,swap,"H(\base)"] & g(\base)
-\end{tikzcd}
-\end{equation*}
-commutes by the naturality of homotopies, established in \cref{defn:htpy_nat}\index{naturality!of homotopies}. In the following lemma we will relate such squares in two ways to a transport, by generalizing the above situation sufficiently so that path induction becomes applicable. We will use these computations of transports to establish the universal property of the circle. 
-\end{comment}
-
-With the following lemma we complete the proof of the universal property of the circle. 
-
-\begin{samepage}%
-\begin{lem}\label{lem:circle_up_tr_compute} ~
-\begin{enumerate}
-\item Let $f,g:A \to B$, and let $E_{f,g}$ be the family over $A$ given by 
-\begin{equation*}
-E_{f,g}(x)\defeq f(x)=g(x).
-\end{equation*}
-Then for any $p:x=x'$ in $A$ there is an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q')}{(\ct{\ap{f}{p}}{q'}=\ct{q}{\ap{g}{p}})}.
-\end{equation*}
-for any $q:f(x)=g(x)$ and $q':f(x')=g(x')$. In other words, there is an identification $\mathsf{tr}_{E_{f,g}}(p,q)=q'$ if and only if the square
-\begin{equation*}
-\begin{tikzcd}
-f(x) \arrow[r,equals,"q"] \arrow[d,equals,swap,"\ap{f}{p}"] & g(x) \arrow[d,equals,"\ap{g}{p}"] \\
-f(x') \arrow[r,equals,swap,"{q'}"] & g(x') 
-\end{tikzcd}
-\end{equation*}
-commutes.
-\item Let $L$ be the family over $B$ given by $L(y)\defeq y=y$, and let $q:y=y'$ be an identification in $B$. Then there is an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_L(q,p)=p')}{(\ct{q}{p'}=\ct{p}{q})}. 
-\end{equation*}
-for any $p:y=y$ and $p':y'=y'$. In other words, there is an identification $\mathsf{tr}_L(q,p)=p'$ if and only if the square
-\begin{equation*}
-\begin{tikzcd}
-y \arrow[r,equals,"p"] \arrow[d,swap,equals,"q"] & y \arrow[d,equals,"q"] \\
-y' \arrow[r,equals,swap,"{p'}"] & y'
-\end{tikzcd}
-\end{equation*}
-commutes.
-\item Let $f,g:A \to B$, let $p:x=x$ be a loop in $A$, and let $q:f(x)=g(x)$. Then there is an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q)}{(\mathsf{tr}_L(q,\ap{f}{p})=\ap{g}{p}).}
-\end{equation*}
-\end{enumerate}
-\end{lem}
-\end{samepage}%
-
-\begin{proof}
-The first claim follows by path induction on $p$, and the second claim follows by path induction on $q$. The third claim follows by combining the first two, since the types on both sides are equivalent to the type
-\begin{equation*}
-\ct{\ap{f}{p}}{q}=\ct{q}{\ap{g}{p}}
-\end{equation*}
-of witnesses that the square
-\begin{equation*}
-\begin{tikzcd}[column sep=large]
-f(x) \arrow[r,equals,"q"] \arrow[d,swap,equals,"\ap{f}{p}"] & g(x) \arrow[d,equals,"\ap{g}{p}"] \\
-f(x) \arrow[r,equals,swap,"q"] & g(x)
-\end{tikzcd}
-\end{equation*}
-commutes.
-\end{proof}
+\begin{cor}
+  For any loop $l:x=x$ in a type $X$, the type of maps $f:\sphere{1}\to X$ equipped with an identification
+  \begin{equation*}
+    \alpha : f(\base)=x 
+  \end{equation*}
+  and an identification $\beta$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      f(\base) \arrow[r,equals,"\alpha"] \arrow[d,equals,swap,"\ap{f}{\lloop}"] & x \arrow[d,equals,"l"] \\
+      f(\base) \arrow[r,equals,swap,"\alpha"] & x
+    \end{tikzcd}
+  \end{equation*}
+  commutes, is contractible.
+\end{cor}
 
 \begin{exercises}
 \item \label{ex:circle_up_pushout}Show that
@@ -231,42 +235,6 @@ X^\unit \arrow[r,swap,"\blank\circ\mathsf{const}_{\ttt}"] & X^\bool
 \end{tikzcd}
 \end{equation*}
 is a pullback square for each type $X$.
-\item \label{ex:circle_dup}In this exercise we establish the \emph{dependent universal property} of the circle, analogous to the proof of \cref{thm:circle_up}.
-\begin{subexenum}
-\item Let $f,g:\prd{x:A}B(x)$, and let $E_{f,g}$ be the family over $A$ given by 
-\begin{equation*}
-E_{f,g}(x)\defeq f(x)=g(x).
-\end{equation*}
-Construct for any $p:x=x'$ in $A$ an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q')}{(\ct{\apd{f}{p}}{q'}=\ct{\ap{\mathsf{tr}_B(p)}{q}}{\apd{g}{p}})}.
-\end{equation*}
-for any $q:f(x)=g(x)$ and $q':f(x')=g(x')$.
-\item Let $B$ be a family over $A$, and for $l:x=_A x$ let $L_x$ be the family over $B(x)$ given by 
-\begin{equation*}
-L_x(y)\defeq \mathsf{tr}_B(l,y)=y.
-\end{equation*}
-Furthermore, let $q:y=y'$ be an identification in $B(x)$. 
-Construct an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{L_x}(q,p)=p')}{(\ct{\ap{\mathsf{tr}_B(l)}{q}}{p'}=\ct{p}{q})}. 
-\end{equation*}
-for any $p:\mathsf{tr}_B(l,y)=y$ and $p':\mathsf{tr}_B(l,y')=y'$.
-\item Let $f,g:\prd{x:A}B(x)$, let $p:x=x$ be a loop in $A$, and let $q:f(x)=g(x)$. 
-Construct an equivalence
-\begin{equation*}
-\eqv{(\mathsf{tr}_{E_{f,g}}(p,q)=q)}{(\mathsf{tr}_{L_x}(q,\apd{f}{p})=\apd{g}{p}).}
-\end{equation*}
-\item Show that for any $f,g:\prd{t:\sphere{1}}P(t)$ there is a function
-\begin{equation*}
-\Big(\mathsf{dgen}_{\sphere{1}}(f)=\mathsf{dgen}_{\sphere{1}}(g)\Big)\to (f=g).
-\end{equation*}
-\item Show that for any type family $P$ over $\sphere{1}$, the \emph{dependent action on generators}
-\begin{equation*}
-\Big(\prd{t:\sphere{1}}P(t)\Big)\to \sm{u:P(\base)}\mathsf{tr}_P(\lloop,u)=u
-\end{equation*}
-is an equivalence.
-\end{subexenum}
 \item \label{ex:circle-connected}Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
 \begin{equation*}
 P(\base)\to\prd{t:\sphere{1}}P(t).

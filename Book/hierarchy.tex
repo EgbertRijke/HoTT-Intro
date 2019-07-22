@@ -119,7 +119,7 @@ We will show in \cref{thm:subtype} that a type family $B$ over $A$ is a subtype 
 \begin{lem}
 A type $A$ is a set if and only if it satisfies \define{axiom K}\index{axiom K}, i.e., if and only if it comes equipped with a term of type\index{is-set(A)@{$\isset(A)$}!is-set(A) iff axiom-K(A)@{$\isset(A)\leftrightarrow\axiomK(A)$}}
 \begin{equation*}
-\axiomK(A)\defeq\prd{x:A}{p:\id{x}{x}}\id{\refl{x}}{p}.
+\axiomK(A)\defeq\prd{x:A}\prd{p:\id{x}{x}}\id{\refl{x}}{p}.
 \end{equation*}
 \end{lem}
 
@@ -218,14 +218,14 @@ Therefore it remains to show that $E$ implies identity.
 
 Since $E$ is defined as an instance of $E'$, it suffices to construct a term of type
 \begin{equation*}
-\prd{x,y:A}{q:(\id{x}{y})+\neg(\id{x}{y})} E'(q)\to (\id{x}{y}). 
+\prd{x,y:A}\prd{q:(\id{x}{y})+\neg(\id{x}{y})} E'(q)\to (\id{x}{y}). 
 \end{equation*}
 By induction of disjoint sums, it suffices to construct terms of types
 \begin{align*}
-& \prd{x,y:A}{p:\id{x}{y}} \unit\to (\id{x}{y}) \\
-& \prd{x,y:A}{p:\neg(\id{x}{y})} \emptyt\to (\id{x}{y}).
+& \prd{x,y:A}\prd{p:\id{x}{y}} \unit\to (\id{x}{y}) \\
+& \prd{x,y:A}\prd{p:\neg(\id{x}{y})} \emptyt\to (\id{x}{y}).
 \end{align*}
-In the first case, we take $\lam{x}{y}{p}{t}p$, and the second case is by induction on the empty type.
+In the first case, we take $\lam{x}\lam{y}\lam{p}{t}p$, and the second case is by induction on the empty type.
 \end{proof}
 \end{comment}
 \index{set|)}
