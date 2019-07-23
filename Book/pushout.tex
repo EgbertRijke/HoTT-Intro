@@ -340,14 +340,21 @@ commutes. Since the bottom map is an equivalence by \cref{lem:cocone_pb}, it fol
 \end{proof}
 
 \begin{eg}\label{eg:circle_pushout}
-By \cref{ex:circle_up_pushout} and the second characterization of pushouts in \cref{thm:pushout_up} it follows that the circle is a pushout\index{circle!S1 equiv susp 2@{$\eqv{\sphere{1}}{\susp\bool}$}}
-\begin{equation*}
-\begin{tikzcd}
-\bool \arrow[r] \arrow[d] & \unit \arrow[d] \\
-\unit \arrow[r] & \sphere{1}.
-\end{tikzcd}
-\end{equation*}
-In other words, $\eqv{\sphere{1}}{\susp{\bool}}$. 
+  The square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      X^{\sphere{1}} \arrow[r,"\blank\circ\mathsf{const}_{\base}"] \arrow[d,swap,"\blank\circ\mathsf{const}_{\base}"] & X^\unit \arrow[d,"\blank\circ\mathsf{const}_{\ttt}"] \\
+      X^\unit \arrow[r,swap,"\blank\circ\mathsf{const}_{\ttt}"] & X^\bool
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square for each type $X$. Therefore it follows by the second characterization of pushouts in \cref{thm:pushout_up} that the circle is a pushout\index{circle!S1 equiv susp 2@{$\eqv{\sphere{1}}{\susp\bool}$}}
+  \begin{equation*}
+    \begin{tikzcd}
+      \bool \arrow[r] \arrow[d] & \unit \arrow[d] \\
+      \unit \arrow[r] & \sphere{1}.
+    \end{tikzcd}
+  \end{equation*}
+  In other words, $\eqv{\sphere{1}}{\susp{\bool}}$. 
 \end{eg}
 
 \begin{thm}\label{thm:pushout_pasting}
