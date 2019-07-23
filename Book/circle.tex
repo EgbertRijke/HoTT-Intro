@@ -314,7 +314,7 @@ For the right unit law, however, we need to give a separate argument that is sur
   \end{equation*}
   Now we observe that there is a function
   \begin{equation*}
-    \Big(\ct{\ap{\mulcircle(\blank,\base)}{p}}{r}=\ct{q}{p}\Big)\to\Big(\tr_{P}(p,q)=r\Big),
+    \Big(\ct{\htpyeq(\ap{\mulcircle}{p})(\base)}{r}=\ct{q}{p}\Big)\to\Big(\tr_{P}(p,q)=r\Big),
   \end{equation*}
   for any
   \begin{align*}
@@ -329,15 +329,11 @@ For the right unit law, however, we need to give a separate argument that is sur
   it suffices to show that the square
   \begin{equation*}
     \begin{tikzcd}[column sep=8em]
-      \mulcircle(\base,\base) \arrow[d,equals,swap,"\ap{\mulcircle(\blank,\base)}{\lloop}"] \arrow[r,equals,"\leftunit_{\sphere{1}}(\base)"] & \base \arrow[d,equals,"\lloop"] \\
+      \mulcircle(\base,\base) \arrow[d,equals,swap,"\htpyeq(\ap{\mulcircle}{\lloop})(\base)"] \arrow[r,equals,"\leftunit_{\sphere{1}}(\base)"] & \base \arrow[d,equals,"\lloop"] \\
       \mulcircle(\base,\base) \arrow[r,equals,swap,"\leftunit_{\sphere{1}}(\base)"] & \base
     \end{tikzcd}
   \end{equation*}
-  commutes. We note that
-  \begin{equation*}
-    \ap{\mulcircle(\blank,\base)}{\lloop} = \htpyeq(\ap{\mulcircle}{\lloop})(\base),
-  \end{equation*}
-  and moreover we have an identification $H(\base)=\lloop$. It is indeed at this point, where it is important that $H$ is not the trivial homotopy, because now we can proceed by observing that the above square commutes if and only if the square
+  commutes. Now we note that we have an identification $H(\base)=\lloop$. It is indeed at this point, where it is important that $H$ is not the trivial homotopy, because now we can proceed by observing that the above square commutes if and only if the square
   \begin{equation*}
     \begin{tikzcd}[column sep=12em]
       \mulcircle(\base,\base) \arrow[d,equals,swap,"\htpyeq(\ap{\mulcircle}{\lloop})(\base)"] \arrow[r,equals,"\htpyeq(\mulcirclebase)(\base)"] & \base \arrow[d,equals,"H(\base)"] \\
