@@ -568,6 +568,15 @@
 
 % Macros for elementaty number theory
 \DeclareMathOperator{\lcm}{lcm}
+\newcommand{\isdecidable}{\mathsf{is\usc{}decidable}}
+\newcommand{\classicalprop}{\mathsf{classical\usc{}Prop}}
+\newcommand{\isminimal}{\mathsf{is\usc{}minimal}}
+\newcommand{\ismaximal}{\mathsf{is\usc{}maximal}}
+\newcommand{\skipfun}{\mathsf{skip}}
+\newcommand{\isbounded}{\mathsf{is\usc{}bounded}}
+\newcommand{\maximum}{\mathsf{maximum}}
+\newcommand{\isprime}{\mathsf{is\usc{}prime}}
+\newcommand{\primetype}{\mathsf{prime}}
 
 % Macros for function extensionality
 \newcommand{\eqhtpy}{\mathsf{eq\usc{}htpy}}
@@ -578,6 +587,9 @@
 \newcommand{\evunit}{\mathsf{ev\usc{}unit}}
 \newcommand{\precomp}[1]{{#1}^\ast}
 \newcommand{\pathsplit}{\mathsf{path\usc{}split}}
+\newcommand{\choice}{\mathsf{choice}}
+\newcommand{\isinvertible}{\mathsf{is\usc{}invertible}}
+\newcommand{\evinlinr}{\mathsf{ev\usc{}inl\usc{}inr}}
 
 % Macros for univalence
 \newcommand{\eqequiv}{\mathsf{eq\usc{}equiv}}
@@ -590,16 +602,32 @@
     {#1 \ptdeqvsym #2}
 }
 \newcommand{\isfunction}{\mathsf{is\usc{}function}}
+\newcommand{\iffeq}{\mathsf{iff\usc{}eq}}
+\newcommand{\opp}[1]{#1^{\mathsf{op}}}
+\newcommand{\graph}{\mathsf{graph}}
 
 % Macros for groups in univalent mathematics
 \DeclareMathOperator{\Aut}{Aut}
+\newcommand{\hasassociativemul}{\mathsf{has\usc{}associative\usc{}mul}}
+\newcommand{\semigroup}{\mathsf{Semi\usc{}Group}}
+\newcommand{\group}{\mathsf{Group}}
+\newcommand{\isunital}{\mathsf{is\usc{}unital}}
+\newcommand{\isgroup}{\mathsf{is\usc{}group}}
+\renewcommand{\hom}{\mathsf{hom}}
+\newcommand{\isiso}{\mathsf{is\usc{}iso}}
+\newcommand{\isoeq}{\mathsf{iso\usc{}eq}}
+\newcommand{\iso}{\mathsf{iso}}
+\newcommand{\Set}{\mathsf{Set}}
 
 % Macros for the circle
 \newcommand{\gen}{\mathsf{gen}}
 \newcommand{\dgen}{\mathsf{dgen}}
 \newcommand{\mulcircle}{\mathsf{mul}_{\sphere{1}}}
-\newcommand{\mulcirclebase}{\mathsf{mul\usc{}base}_{\sphere{1}}}
-\newcommand{\mulcircleloop}{\mathsf{mul\usc{}loop}_{\sphere{1}}}
+\newcommand{\basemulcircle}{\mathsf{base\usc{}mul}_{\sphere{1}}}
+\newcommand{\loopmulcircle}{\mathsf{loop\usc{}mul}_{\sphere{1}}}
+\newcommand{\htpyidcircle}{H}
+\newcommand{\basehtpyidcircle}{\alpha}
+\newcommand{\loophtpyidcircle}{\beta}
 
 % Macros for the fundamental cover of the circle
 
@@ -814,7 +842,6 @@
 \newcommand{\tffam}[1]{\tffamfunc(#1)}
 \newcommand{\tfev}{\mathsf{ev}}
 \newcommand{\tfcomp}{\mathsf{comp}}
-\newcommand{\isDec}[1]{\mathsf{is\usc{}decidable}(#1)}
 \newcommand{\smal}{\mathcal{S}}
 \renewcommand{\modal}{{\ensuremath{\ocircle}}}
 \newcommand{\eqrel}{\mathsf{EqRel}}
@@ -888,11 +915,6 @@
 \newcommand{\epi}{\ensuremath{\twoheadrightarrow}}
 \newcommand{\mono}{\ensuremath{\rightarrowtail}}
 
-%%% Semigroup structure
-\newcommand{\semigroupstrsym}{\ensuremath{\mathsf{SemigroupStr}}}
-\newcommand{\semigroupstr}[1]{\ensuremath{\mathsf{SemigroupStr}}(#1)}
-\newcommand{\semigroup}[0]{\ensuremath{\mathsf{Semigroup}}}
-
 %%% Macros for HITs
 \newcommand{\cc}{\mathsf{c}}
 \newcommand{\pp}{\mathsf{p}}
@@ -944,7 +966,7 @@
 \newcommand*{\HP}{{\mathbb{H}\mathrm{P}}}
 \newcommand*{\GType}{\mathrm{GType}} % (k-tuply groupal) n-types
 \newcommand*{\Grp}{\mathrm{\texthyphen Group}} % higher groups
-\newcommand*{\Group}{\mathrm{Group}}
+\newcommand*{\Group}{\group}
 \newcommand*{\AbGroup}{\mathrm{AbGroup}}
 \newcommand*{\iDecat}{\mathrm{\infty\text{-}\mathrm{Decat}}}
 \newcommand*{\iDisc}{\mathrm{\infty\text{-}\mathrm{Disc}}}
@@ -978,7 +1000,6 @@
 \newcommand{\RRR}{\mathcal{R}}
 \newcommand{\sto}{\!\to\!}
 \newcommand{\degg}{\mathsf{deg}}
-\newcommand{\Hom}{\mathsf{Hom}}
 \newcommand{\llra}[1]   {\stackrel{#1}{\lra}}  % labelled long right arrow
 \newcommand{\longhookrightarrow}{\lhook\joinrel\lra}
 \newcommand{\open}[1]{\mathsf{Op}_{#1}}

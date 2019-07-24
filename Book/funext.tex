@@ -5,9 +5,9 @@
 \begin{defn}
   The \define{axiom of function extensionality}\index{function extensionality}\index{identity type!of a Pi-type@{of a $\Pi$-type}}\index{extensionality principle!for functions} asserts that for any type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map\index{htpy-eq@{$\htpyeq$}}\index{htpy-eq@{$\htpyeq$}!is an equivalence}\index{is an equivalence!htpy-eq@{$\htpyeq$}}
   \begin{equation*}
-    \mathsf{htpy\usc{}eq}:(f=g)\to (f\htpy g)
+    \htpyeq:(f=g)\to (f\htpy g)
   \end{equation*}
-  that sends $\refl{f}$ to $\mathsf{htpy\usc{}refl}_{f}$ is an equivalence. We will write $\mathsf{eq\usc{}htpy}$\index{eq-htpy@{$\mathsf{eq\usc{}htpy}$}} for its inverse, if it is assumed to exist.
+  that sends $\refl{f}$ to $\htpyrefl_{f}$ is an equivalence. We will write $\eqhtpy$\index{eq-htpy@{$\eqhtpy$}} for its inverse, if it is assumed to exist.
 \end{defn}
 
 In other words, the axiom of function extensionality asserts that for any two dependent functions $f,g:\prd{x:A}B(x)$, the type of identifications $f=g$ is equivalent to the type of homotopies $f\htpy g$ from $f$ to $g$. By the fundamental theorem of identity types (\cref{thm:id_fundamental})\index{fundamental theorem of identity types} there are three equivalent ways of asserting function extensionality. In the following theorem we state one further equivalent condition.
@@ -25,9 +25,9 @@ The following are equivalent:\index{function extensionality}
   The principle of \define{homotopy induction}\index{homotopy induction}\index{induction principle!for homotopies}:
   for any type family $B$ over $A$, any dependent function $f:\prd{x:A}B(x)$, and any family of types $P(g,H)$ indexed by $g:\prd{x:A}B(x)$ and $H:f\htpy g$, the evaluation function
 \begin{equation*}
-\Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\mathsf{htpy\usc{}refl}_f)
+\Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\htpyrefl_f)
 \end{equation*}
-given by $s\mapsto s(f,\mathsf{htpy\usc{}refl}_f)$ has a section.
+given by $s\mapsto s(f,\htpyrefl_f)$ has a section.
 \item The \define{weak function extensionality principle}\index{weak function extensionality} holds: For every type family $B$ over $A$ one has\index{contractible!weak function extensionality}
 \begin{equation*}
 \Big(\prd{x:A}\iscontr(B(x))\Big)\to\iscontr\Big(\prd{x:A}B(x)\Big).
@@ -91,63 +91,63 @@ Suppose $B$ is a $k$-type. Then $A\to B$ is also a $k$-type, for any type $A$.
 
 \subsection{The type theoretic principle of choice}
 
-The type theoretic principle of choice\index{type theoretic choice} asserts that $\Pi$ distributes over $\Sigma$\index{distributivity!of Pi over Sigma@{of $\Pi$ over $\Sigma$}}. More precisely, it asserts that the canonical map\index{choice@{$\mathsf{choice}$}}
+The type theoretic principle of choice\index{type theoretic choice} asserts that $\Pi$ distributes over $\Sigma$\index{distributivity!of Pi over Sigma@{of $\Pi$ over $\Sigma$}}. More precisely, it asserts that the canonical map\index{choice@{$\choice$}}
 \begin{equation*}
-  \mathsf{choice}:\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)\to \Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)
+  \choice:\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)\to \Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)
 \end{equation*}
-given by $\lam{h}(\proj 1(h(x)),\proj 2(h(x)))$, is an equivalence. In order to see this as a principle of choice, one can view the left hand side as the type of functions $h$ that pick for every $x:A$ a term $y:B(x)$ equipped with a term of type $C(x,y)$. The function $\mathsf{choice}$ then constructs a dependent function $f:\prd{x:A}B(x)$ equipped with a term of type $\prd{x:A}C(x,f(x))$. In this section we show that the map $\mathsf{choice}$ is an equivalence, and we use this to characterize the identity of any dependent function type $\prd{x:A}B(x)$ in terms of any characterization of the identity types of the individual types $B(x)$.
+given by $\lam{h}(\proj 1(h(x)),\proj 2(h(x)))$, is an equivalence. In order to see this as a principle of choice, one can view the left hand side as the type of functions $h$ that pick for every $x:A$ a term $y:B(x)$ equipped with a term of type $C(x,y)$. The function $\choice$ then constructs a dependent function $f:\prd{x:A}B(x)$ equipped with a term of type $\prd{x:A}C(x,f(x))$. In this section we show that the map $\choice$ is an equivalence, and we use this to characterize the identity of any dependent function type $\prd{x:A}B(x)$ in terms of any characterization of the identity types of the individual types $B(x)$.
 
 \begin{thm}\label{thm:choice}
 Consider a family of types $C(x,y)$ indexed by $x:A$ and $y:B(x)$. Then the map
 \begin{equation*}
-  \mathsf{choice}:\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)\to \Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)
+  \choice:\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)\to \Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)
 \end{equation*}
 given by $\lam{h}(\proj 1(h(x)),\proj 2(h(x)))$ is an equivalence.
 \end{thm}
 
 \begin{proof}
-  We define the map\index{choice-1@{$\mathsf{choice}^{-1}$}}
+  We define the map\index{choice-1@{$\choice^{-1}$}}
   \begin{equation*}
-    \mathsf{choice}^{-1}:\Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)\to\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)
+    \choice^{-1}:\Big(\sm{f:\prd{x:A}B(x)}\prd{x:A}C(x,f(x))\Big)\to\Big(\prd{x:A}\sm{y:B(x)}C(x,y)\Big)
   \end{equation*}
   by $\lam{(f,g)}{x}(f(x),g(x))$. Then we have to construct homotopies
   \begin{equation*}
-    \mathsf{choice}\circ\mathsf{choice}^{-1}\htpy\idfunc,\qquad\text{and}\qquad
-    \mathsf{choice}^{-1}\circ\mathsf{choice}\htpy\idfunc.
+    \choice\circ\choice^{-1}\htpy\idfunc,\qquad\text{and}\qquad
+    \choice^{-1}\circ\choice\htpy\idfunc.
   \end{equation*}
   For the first homotopy it suffices to construct an identification
   \begin{equation*}
-    \mathsf{choice}(\mathsf{choice}^{-1}(f,g))=(f,g)
+    \choice(\choice^{-1}(f,g))=(f,g)
   \end{equation*}
   for any $f:\prd{x:A}B(x)$ and any $g:\prd{x:A}C(x,f(x))$. We compute the left-hand side as follows:
   \begin{align*}
-    \mathsf{choice}(\mathsf{choice}^{-1}(f,g))
-    & \jdeq \mathsf{choice}(\lam{x}(f(x),g(x))) \\
+    \choice(\choice^{-1}(f,g))
+    & \jdeq \choice(\lam{x}(f(x),g(x))) \\
     & \jdeq (\lam{x}f(x),\lam{x}g(x)).
   \end{align*}
   By the $\eta$-rule it follows that $f\jdeq \lam{x}f(x)$ and $g\jdeq\lam{x}g(x)$. Therefore we have the identification
   \begin{equation*}
-    \refl{(f,g)}:\mathsf{choice}(\mathsf{choice}^{-1}(f,g))=(f,g).
+    \refl{(f,g)}:\choice(\choice^{-1}(f,g))=(f,g).
   \end{equation*}
   This completes the construction of the first homotopy.
 
   For the second homotopy we have to construct an identification
   \begin{equation*}
-    \mathsf{choice}^{-1}(\mathsf{choice}(h))=h
+    \choice^{-1}(\choice(h))=h
   \end{equation*}
   for any $h:\prd{x:A}\sm{y:B(x)}C(x,y)$. We compute the left-hand side as follows:
   \begin{align*}
-    \mathsf{choice}^{-1}(\mathsf{choice}(h))
-    & \jdeq \mathsf{choice}^{-1}(\lam{x}\proj 1(h(x)),(\lam{x}\proj 2(h(x)))) \\
+    \choice^{-1}(\choice(h))
+    & \jdeq \choice^{-1}(\lam{x}\proj 1(h(x)),(\lam{x}\proj 2(h(x)))) \\
     & \jdeq \lam{x}(\proj 1(h(x)),\proj 2(h(x)))
   \end{align*}
   However, it is \emph{not} the case that $(\proj 1(h(x)),\proj 2(h(x)))\jdeq h(x)$ for any $h:\prd{x:A}\sm{y:B(x)}C(x,y)$. Nevertheless, we have the identification
   \begin{equation*}
-    \mathsf{eq\usc{}pair}(\refl{},\refl{}):(\proj 1(h(x)),\proj 2(h(x)))= h(x).
+    \eqpair(\refl{},\refl{}):(\proj 1(h(x)),\proj 2(h(x)))= h(x).
   \end{equation*}
   Therefore we obtain the required homotopy by function extensionality:
   \begin{equation*}
-    \lam{h}\mathsf{eq\usc{}htpy}(\lam{x}\mathsf{eq\usc{}pair}(\refl{\proj 1(h(x))},\refl{\proj 2(h(x))})):\mathsf{choice}^{-1}\circ\mathsf{choice}\htpy\idfunc.\qedhere
+    \lam{h}\eqhtpy(\lam{x}\eqpair(\refl{\proj 1(h(x))},\refl{\proj 2(h(x))})):\choice^{-1}\circ\choice\htpy\idfunc.\qedhere
   \end{equation*}
 \end{proof}
 
@@ -166,7 +166,7 @@ given by $\lam{(f,g)}{x}(f(x),g(x))$ is an equivalence.
   \end{equation*}
   for any three natural numbers $k,m,n$.
 
-  Consider the types $A\defeq\mathsf{Fin}(k)$\index{Fin@{$\mathsf{Fin}$}}, $B\defeq\mathsf{Fin}(n)$ and $C\defeq\mathsf{Fin}(m)$. Then we can define the type family $P:\bool\to\UU$ given by
+  Consider the types $A\defeq\Fin(k)$\index{Fin@{$\Fin$}}, $B\defeq\Fin(n)$ and $C\defeq\Fin(m)$. Then we can define the type family $P:\bool\to\UU$ given by
   \begin{align*}
     P(\btrue) & \defeq B \\
     P(\bfalse) & \defeq C.
@@ -192,9 +192,9 @@ given by $\lam{(f,g)}{x}(f(x),g(x))$ is an equivalence.
 The function extensionality principle allows us to prove \emph{universal properties}. Universal properties are characterizations of all maps out of or into a given type, so they are very important. Among other applications, universal properties characterize a type up to equivalence. In the following theorem we prove the universal property of dependent pair types.
 
 \begin{thm}\index{universal property!Sigma-types@{$\Sigma$-types}}\index{Sigma-type@{$\Sigma$-type}!universal property}
-Let $B$ be a type family over $A$, and let $X$ be a type. Then the map\index{ev-pair@{$\mathsf{ev\usc{}pair}$}}
+Let $B$ be a type family over $A$, and let $X$ be a type. Then the map\index{ev-pair@{$\evpair$}}
 \begin{equation*}
-\mathsf{ev\usc{}pair}:\Big(\Big(\sm{x:A}B(x)\Big)\to X\Big)\to \Big(\prd{x:A}(B(x)\to X)\Big)
+\evpair:\Big(\Big(\sm{x:A}B(x)\Big)\to X\Big)\to \Big(\prd{x:A}(B(x)\to X)\Big)
 \end{equation*}
 given by $f\mapsto\lam{a}{b}f(a,b)$ is an equivalence.
 \end{thm}
@@ -206,10 +206,10 @@ The map in the converse direction is simply
 \end{equation*}
 By the computation rules for $\Sigma$-types we have
 \begin{equation*}
-\lam{f}\refl{f}:\mathsf{ev\usc{}pair}\circ\ind{\Sigma}\htpy\idfunc
+\lam{f}\refl{f}:\evpair\circ\ind{\Sigma}\htpy\idfunc
 \end{equation*}
 
-To show that $\ind{\Sigma}\circ\mathsf{ev\usc{}pair}\htpy\idfunc$ we will also apply function extensionality. Thus, it suffices to show that $\ind{\Sigma}(\lam{x}{y}f((x,y)))=f$. We apply function extensionality again, so it suffices to show that
+To show that $\ind{\Sigma}\circ\evpair\htpy\idfunc$ we will also apply function extensionality. Thus, it suffices to show that $\ind{\Sigma}(\lam{x}{y}f((x,y)))=f$. We apply function extensionality again, so it suffices to show that
 \begin{equation*}
 \prd{t:\sm{x:A}B(x)}\ind{\Sigma}\big(\lam{x}{y}f((x,y))\big)(t)=f(t).
 \end{equation*}
@@ -217,9 +217,9 @@ We obtain this homotopy by another application of $\Sigma$-induction.
 \end{proof}
 
 \begin{cor}\label{cor:times_up_out}\index{universal property!cartesian product}\index{cartesian product!universal property}
-Let $A$, $B$, and $X$ be types. Then the map\index{ev-pair@{$\mathsf{ev\usc{}pair}$}}
+Let $A$, $B$, and $X$ be types. Then the map\index{ev-pair@{$\evpair$}}
 \begin{equation*}
-\mathsf{ev\usc{}pair}: (A\times B \to X)\to (A\to (B\to X))
+\evpair: (A\times B \to X)\to (A\to (B\to X))
 \end{equation*}
 given by $f\mapsto\lam{a}{b}f((a,b))$ is an equivalence.
 \end{cor}
@@ -227,17 +227,17 @@ given by $f\mapsto\lam{a}{b}f((a,b))$ is an equivalence.
 The universal property of identity types is sometimes called the \emph{type theoretical Yoneda lemma}\index{Yoneda lemma (type theoretical)}: families of maps out of the identity type are uniquely determined by their action on the reflexivity identification.
 
 \begin{thm}\label{thm:yoneda}\index{universal property!identity type}\index{identity type!universal property}
-Let $B$ be a type family over $A$, and let $a:A$. Then the map\index{ev-refl@{$\mathsf{ev\usc{}refl}$}}
+Let $B$ be a type family over $A$, and let $a:A$. Then the map\index{ev-refl@{$\evrefl$}}
 \begin{equation*}
-\mathsf{ev\usc{}refl}:\Big(\prd{x:A} (a=x)\to B(x)\Big)\to B(a)
+\evrefl:\Big(\prd{x:A} (a=x)\to B(x)\Big)\to B(a)
 \end{equation*}
 given by $\lam{f} f(a,\refl{a})$ is an equivalence. 
 \end{thm}
 
 \begin{proof}
-The inverse $\varphi$ is defined by path induction, taking $b:B(a)$ to the function $f$ satisfying $f(a,\refl{a})\jdeq b$. It is immediate that $\mathsf{ev\usc{}refl}\circ\varphi\htpy \idfunc$.
+The inverse $\varphi$ is defined by path induction, taking $b:B(a)$ to the function $f$ satisfying $f(a,\refl{a})\jdeq b$. It is immediate that $\evrefl\circ\varphi\htpy \idfunc$.
 
-To see that $\varphi\circ \mathsf{ev\usc{}refl}\htpy\idfunc$, let $f:\prd{x:A}(a=x)\to B(x)$. To show that $\varphi(f(a,\refl{a}))=f$ we use function extensionality (twice), so it suffices to show that
+To see that $\varphi\circ \evrefl\htpy\idfunc$, let $f:\prd{x:A}(a=x)\to B(x)$. To show that $\varphi(f(a,\refl{a}))=f$ we use function extensionality (twice), so it suffices to show that
 \begin{equation*}
 \prd{x:A}{p:a=x} \varphi(f(a,\refl{a}),x,p)=f(x,p).
 \end{equation*}
@@ -285,29 +285,29 @@ Then we define the inverse of $\blank\circ f$ to be the map
 \begin{equation*}
 \varphi:\Big(\prd{x:A}P(f(x))\Big)\to\Big(\prd{y:B}P(y)\Big)
 \end{equation*}
-given by $h\mapsto \lam{y}\mathsf{tr}_P(G(y),h(g(y)))$. 
+given by $h\mapsto \lam{y}\tr_P(G(y),h(g(y)))$. 
 
 To see that $\varphi$ is a section of $\blank\circ f$, let $h:\prd{x:A}P(f(x))$. By function extensionality it suffices to construct a homotopy $\varphi(h)\circ f\htpy h$. In other words, we have to show that
 \begin{equation*}
-\mathsf{tr}_P(G(f(x)),h(g(f(x)))=h(x)
+\tr_P(G(f(x)),h(g(f(x)))=h(x)
 \end{equation*}
 for any $x:A$. Now we use the additional homotopy $K$ from our assumption that $f$ is coherently invertible. Since we have $K(x):G(f(x))=\ap{f}{H(x)}$ it suffices to show that
 \begin{equation*}
-\mathsf{tr}_P(\ap{f}{H(x)},hgf(x))=h(x).
+\tr_P(\ap{f}{H(x)},hgf(x))=h(x).
 \end{equation*}
 A simple path-induction argument yields that
 \begin{equation*}
-\mathsf{tr}_P(\ap{f}{p})\htpy \mathsf{tr}_{P\circ f}(p)
+\tr_P(\ap{f}{p})\htpy \tr_{P\circ f}(p)
 \end{equation*}
 for any path $p:x=y$ in $A$, so it suffices to construct an identification
 \begin{equation*}
-\mathsf{tr}_{P\circ f}(H(x),hgf(x))=h(x).
+\tr_{P\circ f}(H(x),hgf(x))=h(x).
 \end{equation*}
 We have such an identification by $\apd{h}{H(x)}$.
 
 To see that $\varphi$ is a retraction of $\blank\circ f$, let $h:\prd{y:B}P(y)$. By function extensionality it suffices to construct a homotopy $\varphi(h\circ f)\htpy h$. In other words, we have to show that
 \begin{equation*}
-\mathsf{tr}_P(G(y),hfg(y))=h(y)
+\tr_P(G(y),hfg(y))=h(y)
 \end{equation*}
 for any $y:B$. We have such an identification by $\apd{h}{G(y)}$. This completes the proof that (i) implies (ii).
 
@@ -370,22 +370,22 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 \end{equation*}
 \item Show that $P$ is a proposition if and only if $P\to P$ is contractible.
 \end{subexenum}
-\item Show that $\mathsf{path\usc{}split}(f)$\index{path-split!is a proposition} and $\mathsf{is\usc{}coh\usc{}invertible}(f)$\index{coherently invertible!is a proposition} are propositions for any map $f:A\to B$. Conclude that we have equivalences\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) path-split(f)@{$\isequiv(f)\eqvsym\mathsf{path\usc{}split}(f)$}}\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) is-coh-invertible(f)@{$\isequiv(f)\eqvsym\mathsf{is\usc{}coh\usc{}invertible}(f)$}}
+\item Show that $\pathsplit(f)$\index{path-split!is a proposition} and $\iscohinvertible(f)$\index{coherently invertible!is a proposition} are propositions for any map $f:A\to B$. Conclude that we have equivalences\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) path-split(f)@{$\isequiv(f)\eqvsym\pathsplit(f)$}}\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) is-coh-invertible(f)@{$\isequiv(f)\eqvsym\iscohinvertible(f)$}}
   \begin{equation*}
-    \isequiv(f) \eqvsym \mathsf{path\usc{}split}(f) \eqvsym \mathsf{is\usc{}coh\usc{}invertible}(f).
+    \isequiv(f) \eqvsym \pathsplit(f) \eqvsym \iscohinvertible(f).
   \end{equation*}
 %\item Let $B$ and $C$ be type families over $A$, suppose that $p:\id{a}{a'}$ in $A$, and consider two functions $f:B(a)\to C(a)$ and $g:B(a')\to C(a')$.
 %\begin{subexenum}
 %\item Show that the square
 %\begin{equation*}
 %\begin{tikzcd}
-%B(a) \arrow[r,"f"] \arrow[d,swap,"\mathsf{tr}_B(p)"] & C(a) \arrow[d,"\mathsf{tr}_C(p)"] \\
+%B(a) \arrow[r,"f"] \arrow[d,swap,"\tr_B(p)"] & C(a) \arrow[d,"\tr_C(p)"] \\
 %B(a') \arrow[r,swap,"g"] & C(a')
 %\end{tikzcd}
 %\end{equation*}
-%commutes for every homotopy $H:\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g$. In other words, construct a function of type
+%commutes for every homotopy $H:\tr_{B(x)\to C(x)}(p,f)\htpy g$. In other words, construct a function of type
 %\begin{equation*} 
-%\Big(\mathsf{tr}_{B(x)\to C(x)}(p,f)\htpy g\Big)\to \Big(\mathsf{tr}_C(p)\circ f\htpy g\circ \mathsf{tr}_B(p)\Big)
+%\Big(\tr_{B(x)\to C(x)}(p,f)\htpy g\Big)\to \Big(\tr_C(p)\circ f\htpy g\circ \tr_B(p)\Big)
 %\end{equation*}
 %\item Show that this map is an equivalence.
 %\end{subexenum}
@@ -394,7 +394,7 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 \eqv{\hasinverse(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
 \end{equation*}
 Note: We will use this fact in \cref{ex:is_invertible_id_S1} to show that there
-are types for which $\mathsf{is\usc{}invertible}(\idfunc[A])\not\eqvsym\isequiv(\idfunc[A])$.
+are types for which $\isinvertible(\idfunc[A])\not\eqvsym\isequiv(\idfunc[A])$.
 \item 
 \begin{subexenum}
 \item Show that the type\index{universal property!empty type}\index{empty type!universal property}
@@ -410,15 +410,15 @@ is contractible for any $P:\emptyt\to \UU$.
 \end{subexenum}
 \item Consider two types $A$ and $B$.\index{universal property!coproduct}\index{coproduct!universal property}
 \begin{subexenum}
-\item Show that the map\index{ev-inl-inr@{$\mathsf{ev\usc{}inl\usc{}inr}$}}
+\item Show that the map\index{ev-inl-inr@{$\evinlinr$}}
 \begin{equation*}
-  \mathsf{ev\usc{}inl\usc{}inr}: \Big(\prd{t:A+B}P(t)\Big) \to
+  \evinlinr: \Big(\prd{t:A+B}P(t)\Big) \to
   \Big(\prd{x:A}P(\inl(x))\Big)\times\Big(\prd{y:B}P(\inr(y))\Big)
 \end{equation*}
 given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
 \item Show that the following are equivalent for any type $X$ equipped with maps $i:A\to X$ and $j:B\to X$:
   \begin{enumerate}
-  \item The map $\mathsf{ind\usc{}coprod}(i,j) :A+B\to X$ is an equivalence.
+  \item The map $\indcoprod(i,j) :A+B\to X$ is an equivalence.
   \item For any type $Y$, the map
     \begin{equation*}
       \lam{f}(f\circ i,f\circ j):(X\to Y)\to (A\to Y)\times (B \to Y)
@@ -435,7 +435,7 @@ given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
 given by $\lam{f}f(\ttt)$ is an equivalence. 
 \item Consider a type $X$ equipped with a point $x:X$. Show that the following are equivalent: 
 \begin{enumerate}
-\item The map $\mathsf{ind\usc{}unit}(x):\unit\to X$ is an equivalence (i.e., $X$ is contractible).
+\item The map $\indunit(x):\unit\to X$ is an equivalence (i.e., $X$ is contractible).
 \item For any type $Y$ the map
 \begin{equation*}
 \lam{f}f(x) : (X\to Y)\to Y
@@ -452,8 +452,8 @@ A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 \end{equation*}
 with $H:f\htpy g\circ h$.
 \begin{subexenum}
-\item Show that if $h$ has a section, then $\mathsf{sec}(g)$ is a retract of $\mathsf{sec}(f)$.
-\item Show that if $g$ has a retraction, then $\mathsf{retr}(h)$ is a retract of $\mathsf{sec}(f)$.
+\item Show that if $h$ has a section, then $\sections(g)$ is a retract of $\sections(f)$.
+\item Show that if $g$ has a retraction, then $\retractions(h)$ is a retract of $\sections(f)$.
 \end{subexenum}
 \item \label{ex:equiv_pi}Let $e_i:\eqv{A_i}{B_i}$ be an equivalence for every $i:I$. Show that the map
 \begin{equation*}
@@ -507,7 +507,7 @@ K & : g\circ f = \idfunc[A].
   \end{align*}
   Construct equivalences
   \begin{equation*}
-    \Big(\prd{x:A}B(x)\Big) \eqvsym \mathsf{sec}(\proj 1) \eqvsym \fib{\proj 1 \circ\blank}{\idfunc[A]}.
+    \Big(\prd{x:A}B(x)\Big) \eqvsym \sections(\proj 1) \eqvsym \fib{\proj 1 \circ\blank}{\idfunc[A]}.
   \end{equation*}
 \item Suppose that $A:I\to \UU$ is a type family over a set $I$ with decidable equality. Show that
   \begin{equation*}
@@ -515,7 +515,7 @@ K & : g\circ f = \idfunc[A].
   \end{equation*}
 \item Construct equivalences
   \begin{align*}
-    \mathsf{Fin}(n^m) & \simeq (\mathsf{Fin}(m)\to\mathsf{Fin}(n)) \\
-    \mathsf{Fin}(n!) & \simeq (\mathsf{Fin}(n)\simeq\mathsf{Fin}(n)).
+    \Fin(n^m) & \simeq (\Fin(m)\to\Fin(n)) \\
+    \Fin(n!) & \simeq (\Fin(n)\simeq\Fin(n)).
   \end{align*}
 \end{exercises}

@@ -5,13 +5,13 @@
 The univalence axiom characterizes the identity type of the universe. Roughly speaking, it asserts that equivalent types are equal. It is considered to be an \emph{extensionality principle}\index{extensionality principle!for types} for types.
 
 \begin{defn}
-  The \define{univalence axiom}\index{univalence axiom} on a universe $\UU$ is the statement that for any $A:\UU$ the family of maps\index{equiv-eq@{$\mathsf{equiv\usc{}eq}$}}
+  The \define{univalence axiom}\index{univalence axiom} on a universe $\UU$ is the statement that for any $A:\UU$ the family of maps\index{equiv-eq@{$\equiveq$}}
 \begin{equation*}
-\mathsf{equiv\usc{}eq} : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
+\equiveq : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
 \end{equation*}
 that sends $\refl{A}$ to the identity equivalence $\idfunc:\eqv{A}{A}$ is a family of equivalences.\index{identity type!of a universe} A universe satisfying the univalence axiom is referred to as a \define{univalent universe}\index{univalent universe}. If $\UU$ is a univalent universe we will write
-$\mathsf{eq\usc{}equiv}$\index{eq-equiv@{$\mathsf{eq\usc{}equiv}$}}
-for the inverse of $\mathsf{equiv\usc{}eq}$.
+$\eqequiv$\index{eq-equiv@{$\eqequiv$}}
+for the inverse of $\equiveq$.
 \end{defn}
 
 The following theorem is a special case of the fundamental theorem of identity types (\cref{thm:id_fundamental})\index{fundamental theorem of identity types}. Subsequently we will assume that any type is contained in a univalent universe.\index{axiom!univalence}
@@ -27,7 +27,7 @@ The following are equivalent:
 is contractible for each $A:\UU$.
 \item The principle of \define{equivalence induction}\index{equivalence induction}\index{induction principle!for equivalences} holds: for every $A:\UU$ and for every type family
 \begin{equation*}
-P:\prd{B:\UU} (\eqv{A}{B})\to \mathsf{Type},
+P:\prd{B:\UU} (\eqv{A}{B})\to \UU,
 \end{equation*}
 the map
 \begin{equation*}
@@ -86,9 +86,9 @@ To see that this definition is correct, we need to know that
 \end{equation*}
 This is indeed the case, by the $\eta$-rule\index{eta-rule@{$\eta$-rule}} for $\Pi$-types.
 
-Next, we define the function $r$. Let $h:A\to \sm{x:A}B(x)$, and let $p:\proj 1 \circ h = \idfunc$. Then we have the homotopy $H\defeq\mathsf{htpy\usc{}eq}(p):\proj 1 \circ h \htpy \idfunc$. Then we have $\proj 2(h(x)):B(\proj 1(h(x)))$ and we have the identification $H(x):\proj 1(h(x))=x$. Therefore we define $r$ by
+Next, we define the function $r$. Let $h:A\to \sm{x:A}B(x)$, and let $p:\proj 1 \circ h = \idfunc$. Then we have the homotopy $H\defeq\htpyeq(p):\proj 1 \circ h \htpy \idfunc$. Then we have $\proj 2(h(x)):B(\proj 1(h(x)))$ and we have the identification $H(x):\proj 1(h(x))=x$. Therefore we define $r$ by
 \begin{equation*}
-  r((h,p),x)\defeq \mathsf{tr}_B(H(x),\proj 2(h(x))).
+  r((h,p),x)\defeq \tr_B(H(x),\proj 2(h(x))).
 \end{equation*}
 
 We note that if $p\jdeq \refl{\idfunc}$, then $H(x)\jdeq\refl{x}$. In this case we have the judgmental equality $r((h,\refl{}),x)\jdeq\proj 2 (h(x))$. Thus we see that $r\circ i\jdeq \idfunc$ by another application of the $\eta$-rule for $\Pi$-types.
@@ -98,17 +98,17 @@ We note that if $p\jdeq \refl{\idfunc}$, then $H(x)\jdeq\refl{x}$. In this case 
 
 \begin{thm}\label{thm:propositional-extensionality}
   Propositions satisfy \define{propositional extensionality}\index{propositional extensionality}\index{extensionality principle!for propositions}:
-  for any two propositions $P$ and $Q$, the canonical map\index{bi-implication}\index{iff-eq@{$\mathsf{iff\usc{}eq}$}}
+  for any two propositions $P$ and $Q$, the canonical map\index{bi-implication}\index{iff-eq@{$\iffeq$}}
   \begin{equation*}
-    \mathsf{iff\usc{}eq}:(P=Q)\to (P\leftrightarrow Q)
+    \iffeq:(P=Q)\to (P\leftrightarrow Q)
   \end{equation*}
   that sends $\refl{P}$ to $(\idfunc,\idfunc)$ is an equivalence. It follows that the type $\prop$ of propositions in $\UU$ is a set.\index{Prop@{$\prop$}!is a set}
 \end{thm}
 
-Note that for any $P:\prop$, we usually also write $P$ for the underlying type of the proposition $P$. If we would be more formal about it we would have to write $\proj 1(P)$ for the underlying type, since $\prop$ is the $\Sigma$-type $\sm{X:\UU}\mathsf{is\usc{}prop}(X)$. In the following proof it is clearer if we use the more formal notation $\proj 1(P)$ for the underlying type of a proposition $P$.
+Note that for any $P:\prop$, we usually also write $P$ for the underlying type of the proposition $P$. If we would be more formal about it we would have to write $\proj 1(P)$ for the underlying type, since $\prop$ is the $\Sigma$-type $\sm{X:\UU}\isprop(X)$. In the following proof it is clearer if we use the more formal notation $\proj 1(P)$ for the underlying type of a proposition $P$.
 
 \begin{proof}
-  We note that the identity type $P=Q$ is an identity type in $\prop$. However, since $\mathsf{is\usc{}prop}(X)$ is a proposition for any type $X$, it follows that the map
+  We note that the identity type $P=Q$ is an identity type in $\prop$. However, since $\isprop(X)$ is a proposition for any type $X$, it follows that the map
   \begin{equation*}
     \apfunc{\proj 1} : (P = Q) \to (\proj 1(P) = \proj 1(Q))
   \end{equation*}
@@ -116,7 +116,7 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
   \begin{equation*}
     \begin{tikzcd}[column sep=huge]
       (P=Q) \arrow[d,swap,"\apfunc{\proj 1}"] \arrow[r] & (P\leftrightarrow Q) \\
-      (\proj 1(P)=\proj 1(Q)) \arrow[r,swap,"\mathsf{equiv\usc{}eq}"] & (\proj 1(P)\simeq\proj 1(Q)) \arrow[u,swap,"\simeq"]
+      (\proj 1(P)=\proj 1(Q)) \arrow[r,swap,"\equiveq"] & (\proj 1(P)\simeq\proj 1(Q)) \arrow[u,swap,"\simeq"]
     \end{tikzcd}
   \end{equation*}
   Since the left, bottom, and right map are equivalences, it follows that the top map is an equivalence.
@@ -165,7 +165,7 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
 \item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.\index{A simeq B@{$\eqv{A}{B}$}!truncatedness}
 \item Use univalence to show that the universe of $k$-types\index{universe!of k-types@{of $k$-types}}\index{U leq k@{$\UU^{\leq k}$}}\index{k-type@{$k$-type}!universe of k-types@{universe of $k$-types}}\index{truncated type!universe of k-types@{universe of $k$-types}}
 \begin{equation*}
-\UU^{\leq k}\defeq \sm{X:\UU}\mathsf{is\usc{}trunc}_k(X)
+\UU^{\leq k}\defeq \sm{X:\UU}\istrunc{k}(X)
 \end{equation*}
 is a $(k+1)$-type, for any $k\geq -2$.
 \item Show that $\UU^{\leq-1}$ is not a proposition.\index{universe!of propositions}
@@ -184,27 +184,27 @@ is a $(k+1)$-type, for any $k\geq -2$.
 \end{equation*}
 For any function $f:A\to B$, show that the \define{graph}\index{graph!of a function} of $f$ 
 \begin{equation*}
-\mathsf{graph}_f:A\to (B\to \UU)
+\graph_f:A\to (B\to \UU)
 \end{equation*}
-given by $\mathsf{graph}_f(a,b)\defeq (f(a)=b)$ is a functional relation from $A$ to $B$.
+given by $\graph_f(a,b)\defeq (f(a)=b)$ is a functional relation from $A$ to $B$.
 \item Construct an equivalence
 \begin{equation*}
 \eqv{\Big(\sm{R:A\to (B\to\UU)}\isfunction(R)\Big)}{(A\to B)}
 \end{equation*}
-\item Given a relation $R:A\to (B\to \UU)$ we define the \define{opposite relation}\index{relation!opposite relation}\index{opposite relation}\index{op R@{$R^{\mathsf{op}}$}}
+\item Given a relation $R:A\to (B\to \UU)$ we define the \define{opposite relation}\index{relation!opposite relation}\index{opposite relation}\index{op R@{$\opp{R}$}}
 \begin{equation*}
-R^{\mathsf{op}} : B\to (A\to\UU)
+\opp{R} : B\to (A\to\UU)
 \end{equation*}
-by $R^{\mathsf{op}}(y,x)\defeq R(x,y)$. Construct an equivalence\index{A simeq B@{$\eqv{A}{B}$}!as relation}
+by $\opp{R}(y,x)\defeq R(x,y)$. Construct an equivalence\index{A simeq B@{$\eqv{A}{B}$}!as relation}
 \begin{equation*}
-\eqv{\Big(\sm{R:A\to (B\to \UU)}\isfunction(R)\times\isfunction(R^{\mathsf{op}})\Big)}{(\eqv{A}{B})}.
+\eqv{\Big(\sm{R:A\to (B\to \UU)}\isfunction(R)\times\isfunction(\opp{R})\Big)}{(\eqv{A}{B})}.
 \end{equation*}
 \end{subexenum}
 \item
   \begin{subexenum}
-  \item Show that $\mathsf{is\usc{}decidable}(P)$ is a proposition\index{is-decidable@{$\mathsf{is\usc{}decidable}$}!is a proposition}, for any proposition $P$.
-  \item Show that $\mathsf{classical\usc{}Prop}$%
-    \index{classical-Prop@{$\mathsf{classical\usc{}Prop}$}!classical-Prop bool@{$\mathsf{classical\usc{}Prop}\eqvsym\bool$}} is equivalent to $\bool$.
+  \item Show that $\isdecidable(P)$ is a proposition\index{is-decidable@{$\isdecidable$}!is a proposition}, for any proposition $P$.
+  \item Show that $\classicalprop$%
+    \index{classical-Prop@{$\classicalprop$}!classical-Prop bool@{$\classicalprop\eqvsym\bool$}} is equivalent to $\bool$.
   \end{subexenum}
 \item Recall that $\UU_\ast$ is the universe of pointed types\index{UU*@{$\UU_\ast$}}.
   \begin{subexenum}

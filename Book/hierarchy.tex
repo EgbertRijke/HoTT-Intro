@@ -45,7 +45,7 @@ In the following lemma we prove that in order to show that a type $A$ is a propo
     \begin{equation*}
       A \to \iscontr(A).
     \end{equation*}
-  \item The map $\mathsf{const}_\ttt : A\to\unit$ is an embedding.\index{is-prop(A)@{$\isprop(A)$}!is-prop(A) iff is-emb(const star)@{$\isprop(A)\leftrightarrow\isemb(\const_\ttt)$}}
+  \item The map $\const_\ttt : A\to\unit$ is an embedding.\index{is-prop(A)@{$\isprop(A)$}!is-prop(A) iff is-emb(const star)@{$\isprop(A)\leftrightarrow\isemb(\const_\ttt)$}}
   \end{enumerate}
 \end{thm}
 
@@ -59,9 +59,9 @@ In the following lemma we prove that in order to show that a type $A$ is a propo
 
   To show that (iii) implies (iv), suppose that $A\to\iscontr(A)$ and let $x,y:A$. We have to show that
   \begin{equation*}
-    \apfunc{\mathsf{const}_\ttt}:(x=y)\to (\ttt=\ttt)
+    \apfunc{\const_\ttt}:(x=y)\to (\ttt=\ttt)
   \end{equation*}
-  is an equivalence. Since we have $x:A$ it follows that $A$ is contractible. Since the unit type is contractible it follows that $\mathsf{const}_\ttt$ is an equivalence. Therefore we conclude by \cref{cor:emb_equiv} that it is an embedding.
+  is an equivalence. Since we have $x:A$ it follows that $A$ is contractible. Since the unit type is contractible it follows that $\const_\ttt$ is an equivalence. Therefore we conclude by \cref{cor:emb_equiv} that it is an embedding.
 
   To show that (iv) implies (i), note that if $A\to\unit$ is an embedding, then the identity types of $A$ are equivalent to contractible types and therefore they must be contractible.
 \end{proof}
@@ -152,7 +152,7 @@ is a family of equivalences. Consequently, the type $A$ is a set.
 Let $f:\prd{x,y:A}R(x,y)\to(\id{x}{y})$. 
 Since $R$ is assumed to be reflexive, we also have a family of maps
 \begin{equation*}
-\mathsf{path\usc{}ind}_x(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
+\pathind_x(\rho(x)):\prd{y:A}(\id{x}{y})\to R(x,y).
 \end{equation*}
 Since each $R(x,y)$ is assumed to be a proposition, it therefore follows that each $R(x,y)$ is a retract of $\id{x}{y}$. Therefore it follows that $\sm{y:A}R(x,y)$ is a retract of $\sm{y:A}x=y$, which is contractible. We conclude that $\sm{y:A}R(x,y)$ is contractible, and therefore that any family of maps
 \begin{equation*}
@@ -191,10 +191,10 @@ The type of natural numbers is a set.\index{is a set!natural numbers}\index{natu
 \end{thm}
 
 \begin{proof}
-We will apply \cref{lem:prop_to_id}. Note that the observational equality $\mathsf{Eq}_\N:\N\to(\N\to\UU)$ on $\N$ (\cref{defn:obs_nat}) is a reflexive relation by \cref{ex:obs_nat_eqrel}, and moreover that $\mathsf{Eq}_\N(n,m)$ is a proposition for every $n,m:\N$ (proof by double induction).
+We will apply \cref{lem:prop_to_id}. Note that the observational equality $\EqN:\N\to(\N\to\UU)$ on $\N$ (\cref{defn:obs_nat}) is a reflexive relation by \cref{ex:obs_nat_eqrel}, and moreover that $\EqN(n,m)$ is a proposition for every $n,m:\N$ (proof by double induction).
 Therefore it suffices to show that
 \begin{equation*}
-\prd{m,n:\N}\mathsf{Eq}_\N(m,n)\to (\id{m}{n}).
+\prd{m,n:\N}\EqN(m,n)\to (\id{m}{n}).
 \end{equation*}
 This follows from the fact that observational equality is the \emph{least} reflexive relation, which was shown in \cref{ex:obs_nat_least}.
 \end{proof}
@@ -366,7 +366,7 @@ This follows directly from \cref{lem:fib_total,thm:ktype_eqv}.
   \item Show that $\succN:\N\to\N$ is an embedding.\index{succ N@{$\succN$}!is an embedding}\index{is an embedding!succ N@{$\succN$}}
   \item Show that $n\mapsto m+n$ is an embedding, for each $m:\N$.\index{add N@{$\addN$}!add N(m) is an embedding@{$\addN(m)$ is an embedding}}\index{is an embedding!add N(m)@{$\addN(m)$}} Moreover, conclude that there is an equivalence
     \begin{equation*}
-      \fib{\mathsf{add}_\N(m)}{n}\simeq (m\leq n).
+      \fib{\addN(m)}{n}\simeq (m\leq n).
     \end{equation*}
   \item Show that $n\mapsto mn$ is an embedding\index{mul N@{$\mulN$}!mul N(m) is an embedding if m>0@{$\mulN(m)$ is an embedding if $m>0$}}\index{is an embedding!mul N(m) for m > 0@{$\mulN(m)$ for $m>0$}}, for each $m>0$ in $\N$. Conclude that the divisibility relation\index{d {"| n}@{$d\mid n$}!is a proposition if d>0@{is a proposition if $d>0$}}\index{is a proposition!d {"| n} for d>0@{$d\mid n$ for $d>0$}}
     \begin{equation*}
@@ -394,7 +394,7 @@ is a $k$-truncated map.
 \item \label{ex:eq_bool}Show that $\bool$ is a set by applying \cref{lem:prop_to_id} with the observational equality on $\bool$ defined in \cref{ex:obs_bool}.
 \item \label{ex:set_coprod}Show that for any two $(k+2)$-types $A$ and $B$, the disjoint sum $A+B$ is again a $(k+2)$-type. Conclude that $\mathbb{Z}$ is a set.
 \item Use \cref{ex:contr_retr,ex:retr_id} to show that if $A$ is a retract of a $k$-type $B$, then $A$ is also a $k$-type.
-\item Show that a type $A$ is a $(k+1)$-type if and only if the map $\mathsf{const}_x:\unit\to A$ is $k$-truncated for every $x:A$.
+\item Show that a type $A$ is a $(k+1)$-type if and only if the map $\const_x:\unit\to A$ is $k$-truncated for every $x:A$.
 \item Consider a commuting triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]

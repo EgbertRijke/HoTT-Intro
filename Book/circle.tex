@@ -228,7 +228,7 @@ given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
   commutes, is contractible.
 \end{cor}
 
-\subsection{The multiplication operation on the circle}
+\subsection{Multiplication on the circle}
 
 One way the circle arises classically, is as the set of complex numbers at distance $1$ from the origin. It is an elementary fact that $|xy|=|x||y|$ for any two complex numbers $x,y\in\mathbb{C}$, so it follows that when we multiply two complex numbers that both lie on the unit circle, then the result lies again on the unit circle. Thus, using complex multiplication we see that there is a multiplication operation on the circle. And there is a shadow of this operation in type theory, even though our circle arises in a very different way!
 
@@ -242,28 +242,28 @@ One way the circle arises classically, is as the set of complex numbers at dista
 \begin{proof}[Construction]
   Using the universal property of the circle, we define $\mulcircle$ as the unique map $\sphere{1}\to(\sphere{1}\to\sphere{1})$ equipped with an identification
   \begin{equation*}
-    \mulcirclebase :\mulcircle(\base)=\idfunc
+    \basemulcircle :\mulcircle(\base)=\idfunc
   \end{equation*}
-  and an identification $\mulcircleloop$ witnessing that the square
+  and an identification $\loopmulcircle$ witnessing that the square
   \begin{equation*}
     \begin{tikzcd}[column sep=huge]
-      \mulcircle(\base) \arrow[r,equals,"\mulcirclebase"] \arrow[d,equals,swap,"\ap{\mulcircle}{\lloop}"] & \idfunc \arrow[d,equals,"\eqhtpy(H)"] \\
-      \mulcircle(\base) \arrow[r,equals,swap,"\mulcirclebase"] & \idfunc
+      \mulcircle(\base) \arrow[r,equals,"\basemulcircle"] \arrow[d,equals,swap,"\ap{\mulcircle}{\lloop}"] & \idfunc \arrow[d,equals,"\eqhtpy(\htpyidcircle)"] \\
+      \mulcircle(\base) \arrow[r,equals,swap,"\basemulcircle"] & \idfunc
   \end{tikzcd}
   \end{equation*}
-  commutes. Note that in this square we have a homotopy $H:\idfunc\htpy\idfunc$, which is not yet defined. We  use the dependent universal property of the circle with respect to the family $E_{\idfunc,\idfunc}$ given by
+  commutes. Note that in this square we have a homotopy $\htpyidcircle:\idfunc\htpy\idfunc$, which is not yet defined. We  use the dependent universal property of the circle with respect to the family $E_{\idfunc,\idfunc}$ given by
   \begin{equation*}
     E_{\idfunc,\idfunc}(x) \defeq (x=x),
   \end{equation*}
-  to define $H$ as the unique homotopy equipped with an identification
+  to define $\htpyidcircle$ as the unique homotopy equipped with an identification
   \begin{equation*}
-    \alpha : H(\base)=\lloop
+    \basehtpyidcircle : \htpyidcircle(\base)=\lloop
   \end{equation*}
-  and an identification $\beta$ witnessing that the square
+  and an identification $\loophtpyidcircle$ witnessing that the square
   \begin{equation*}
-    \begin{tikzcd}
-      \tr_{E_{\idfunc,\idfunc}}(\lloop,H(\base)) \arrow[r,equals,"\alpha"] \arrow[d,equals,swap,"\apd{H}{\lloop}"] & \tr_{E_{\idfunc,\idfunc}}(\lloop,\lloop) \arrow[d,equals,"\gamma"] \\
-      H(\base) \arrow[r,equals,swap,"\alpha"] & \lloop
+    \begin{tikzcd}[column sep=8em]
+      \tr_{E_{\idfunc,\idfunc}}(\lloop,\htpyidcircle(\base)) \arrow[r,equals,"\ap{\tr_{E_{\idfunc,\idfunc}}(\lloop)}{\basehtpyidcircle}"] \arrow[d,equals,swap,"\apd{\htpyidcircle}{\lloop}"] & \tr_{E_{\idfunc,\idfunc}}(\lloop,\lloop) \arrow[d,equals,"\gamma"] \\
+      \htpyidcircle(\base) \arrow[r,equals,swap,"\basehtpyidcircle"] & \lloop
     \end{tikzcd}
   \end{equation*}
   commutes. Now it remains to define the path $\gamma:\tr_{E_{\idfunc,\idfunc}}(\lloop,\lloop)=\lloop$ in the above square. To proceed, we first observe that a simple path induction argument yields a function
@@ -287,7 +287,7 @@ One way the circle arises classically, is as the set of complex numbers at dista
 
 The left unit law $\mulcircle(\base,x)=x$ holds by the computation rule of the universal property. More precisely, we define
 \begin{equation*}
-  \leftunit_{\sphere{1}}\defeq \htpyeq(\mulcirclebase).
+  \leftunit_{\sphere{1}}\defeq \htpyeq(\basemulcircle).
 \end{equation*}
 For the right unit law, however, we need to give a separate argument that is surprisingly involved, because all the aspects of the definition of $\mulcircle$ will come out and play their part.
 
@@ -336,11 +336,11 @@ For the right unit law, however, we need to give a separate argument that is sur
   commutes. Now we note that we have an identification $H(\base)=\lloop$. It is indeed at this point, where it is important that $H$ is not the trivial homotopy, because now we can proceed by observing that the above square commutes if and only if the square
   \begin{equation*}
     \begin{tikzcd}[column sep=12em]
-      \mulcircle(\base,\base) \arrow[d,equals,swap,"\htpyeq(\ap{\mulcircle}{\lloop})(\base)"] \arrow[r,equals,"\htpyeq(\mulcirclebase)(\base)"] & \base \arrow[d,equals,"H(\base)"] \\
-      \mulcircle(\base,\base) \arrow[r,equals,swap,"\htpyeq(\mulcirclebase)(\base)"] & \base
+      \mulcircle(\base,\base) \arrow[d,equals,swap,"\htpyeq(\ap{\mulcircle}{\lloop})(\base)"] \arrow[r,equals,"\htpyeq(\basemulcircle)(\base)"] & \base \arrow[d,equals,"H(\base)"] \\
+      \mulcircle(\base,\base) \arrow[r,equals,swap,"\htpyeq(\basemulcircle)(\base)"] & \base
     \end{tikzcd}
   \end{equation*}
-  commutes. The commutativity of this square easily follows from the identification $\mulcircleloop$ constructed in \cref{defn:mul-circle}.
+  commutes. The commutativity of this square easily follows from the identification $\loopmulcircle$ constructed in \cref{defn:mul-circle}.
 \end{proof}
 
 \begin{exercises}
