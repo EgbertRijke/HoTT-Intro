@@ -127,11 +127,11 @@ Clearly, if $f$ has an inverse\index{has an inverse}\index{function!has an inver
 \end{equation*}
 \end{rmk}
 
-\begin{defn}\label{defn:inv_equiv}
+\begin{lem}\label{lem:inv_equiv}
 Any equivalence $e:A\simeq B$ can be given the structure of an invertible map.\index{equivalence!has an inverse} We define $e^{-1}$ to be the section $g:B\to A$ of $e$.\index{equivalence!inverse}\index{inverse!of an equivalence}
-\end{defn}
+\end{lem}
 
-\begin{constr}
+\begin{proof}
 First we construct for any equivalence $f$ with right inverse $g$ and left inverse $h$ a homotopy $K:g\htpy h$. For any $y:B$, we have 
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
@@ -145,23 +145,19 @@ Using the homotopy $K$ we are able to show that $g$ is also a left inverse of $f
 gf(x) \arrow[r,equals,"K(f(x))"] & hf(x) \arrow[r,equals,"H(x)"] & x.
 \end{tikzcd}\qedhere
 \end{equation*}
-\end{constr}
+\end{proof}
 
 \begin{cor}
 The inverse of an equivalence is again an equivalence.\index{inverse!of an equivalence!is an equivalence}\index{is an equivalence!inverse of an equivalence}
 \end{cor}
 
 \begin{proof}
-Let $f:A\to B$ be an equivalence. By \cref{defn:inv_equiv} it follows that the section of $f$ is also a retraction. Therefore it follows that the section is itself an invertible map, with inverse $f$. Hence it is an equivalence.
+Let $f:A\to B$ be an equivalence. By \cref{lem:inv_equiv} it follows that the section of $f$ is also a retraction. Therefore it follows that the section is itself an invertible map, with inverse $f$. Hence it is an equivalence.
 \end{proof}
 
-\begin{thm}\label{thm:id_equiv}
-For any type $A$, the identity function $\idfunc[A]$ is an equivalence.\index{identity function!is an equivalence}\index{is an equivalence!identity function}
-\end{thm}
-
-\begin{proof}
-The identity function is trivially its own section and its own retraction.
-\end{proof}
+\begin{rmk}\label{thm:id_equiv}
+For any type $A$, the identity function $\idfunc[A]$ is an equivalence, since it is its own section and its own retraction\index{identity function!is an equivalence}\index{is an equivalence!identity function}
+\end{rmk}
 
 \begin{eg}
   For any type $C(x,y)$ indexed by $x:A$ and $y:B$, the swap function\index{function!swap!is an equivalence}\index{is an equivalence!swap function}

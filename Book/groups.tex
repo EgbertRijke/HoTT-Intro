@@ -84,8 +84,6 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
     \concat & : \loopspace{X,x} \to (\loopspace{X,x}\to \loopspace{X,x}),
   \end{align*}
   and these operations satisfy the group laws, since the group laws are just a special case of the groupoid laws for identity types, constructed in \cref{sec:groupoid}.
-  
-  Using higher inductive types we will show in \cref{chap:image} that \emph{every} group is of this form.
 \end{eg}
 
 \begin{eg}
@@ -123,7 +121,7 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
   Since it is a property for a function to preserve the multiplication of a semi-group, it follows easily that equality of semi-group homomorphisms is equivalent to the type of homotopies between their underlying functions. In particular, it follows that the type of homomorphisms of semi-groups is a set.
 \end{rmk}
 
-\begin{rmk}
+\begin{rmk}\label{rmk:category-semi-group}
   The \define{identity homomorphism}\index{identity homomorphism!of semi-groups} on a semi-group $G$ is defined to be the pair consisting of
   \begin{align*}
     \idfunc & : G \to G \\
@@ -152,7 +150,7 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
   for the type of all group homomorphisms from $G$ to $H$.
 \end{defn}
 
-\begin{rmk}
+\begin{rmk}\label{rmk:category-group}
   Since a group homomorphism is just a semi-group homomorphism between the underlying semi-groups, we immediately obtain the identity homomorphism\index{identity homomorphism!for groups}, composition\index{composition!of group homomorphisms}, and the category laws are satisfied.
 \end{rmk}
 
@@ -284,6 +282,7 @@ Analogously to the map $\isoeq$ of semi-groups, we have a map $\isoeq$ of groups
 \end{cor}
 
 \subsection{Categories in univalent mathematics}
+\label{sec:categories}
 
 In our proof of the fact that isomorphic groups are equal we have made extensive use of the notion of group homomorphism. What we have shown, in fact, is that there is a category of groups which is \emph{Rezk complete} in the sense that the type of isomorphisms between two objects is equivalent to the type of identifications between those objects. In this final section we briefly introduce the notion of Rezk complete category. There are many more examples of categories, such as the categories of rings, or modules over a ring.
 
