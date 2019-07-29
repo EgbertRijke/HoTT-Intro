@@ -61,7 +61,10 @@ abstract
       ( reflexive-Eq-free-loops l)
       ( is-contr-total-Eq-free-loops l)
       ( Eq-free-loops-eq l) 
-  
+
+{- We introduce dependent free loops, which are used in the induction principle
+   of the circle. -}
+   
 dependent-free-loops :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (P : X → UU l2) → UU l2
 dependent-free-loops l P =
@@ -122,6 +125,8 @@ eq-Eq-dependent-free-loops :
   Eq-dependent-free-loops l P p p' → Id p p'
 eq-Eq-dependent-free-loops l P p p' =
   inv-is-equiv (is-equiv-Eq-dependent-free-loops-eq l P p p')
+
+{- We now define the induction principle of the circle. -}
 
 ev-free-loop' :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (P : X → UU l2) →
@@ -212,21 +217,21 @@ abstract
    so by constructing a commuting triangle relating ev-free-loop to 
    ev-free-loop' via a comparison equivalence. -}
 
-tr-triv :
+tr-const :
   {i j : Level} {A : UU i} {B : UU j} {x y : A} (p : Id x y) (b : B) →
   Id (tr (λ (a : A) → B) p b) b
-tr-triv refl b = refl
+tr-const refl b = refl
 
-apd-triv :
+apd-const :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) {x y : A}
-  (p : Id x y) → Id (apd f p) ((tr-triv p (f x)) ∙ (ap f p))
-apd-triv f refl = refl
+  (p : Id x y) → Id (apd f p) ((tr-const p (f x)) ∙ (ap f p))
+apd-const f refl = refl
 
 comparison-free-loops :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (Y : UU l2) →
   free-loops Y → dependent-free-loops l (λ x → Y)
 comparison-free-loops l Y =
-  tot (λ y l' → (tr-triv (pr2 l) y) ∙ l')
+  tot (λ y l' → (tr-const (pr2 l) y) ∙ l')
 
 abstract
   is-equiv-comparison-free-loops :
@@ -234,7 +239,7 @@ abstract
     is-equiv (comparison-free-loops l Y)
   is-equiv-comparison-free-loops l Y =
     is-equiv-tot-is-fiberwise-equiv
-      ( λ y → is-equiv-concat (tr-triv (pr2 l) y) y)
+      ( λ y → is-equiv-concat (tr-const (pr2 l) y) y)
 
 triangle-comparison-free-loops :
   { l1 l2 : Level} {X : UU l1} (l : free-loops X) (Y : UU l2) →
@@ -246,7 +251,7 @@ triangle-comparison-free-loops (pair x l) Y f =
     ( λ x → Y)
     ( comparison-free-loops (pair x l) Y (ev-free-loop (pair x l) Y f))
     ( ev-free-loop' (pair x l) (λ x → Y) f)
-    ( pair refl (right-unit ∙ (inv (apd-triv f l))))
+    ( pair refl (right-unit ∙ (inv (apd-const f l))))
 
 abstract
   universal-property-dependent-universal-property-circle :
@@ -293,107 +298,43 @@ abstract
         ( λ f → is-equiv-Eq-free-loops-eq (ev-free-loop l Y f) l'))
       ( is-contr-map-is-equiv (up-circle Y) l')
 
-{- We show that if a type with a free loop satisfies the induction principle
-   of the circle with respect to any universe level, then it satisfies the
-   induction principle with respect to the zeroth universe level. -}
+{- We assume that we have a circle. -}
 
-naturality-tr-fiberwise-transformation :
-  { l1 l2 l3 : Level} {X : UU l1} {P : X → UU l2} {Q : X → UU l3}
-  ( f : (x : X) → P x → Q x) {x y : X} (α : Id x y) (p : P x) →
-  Id (tr Q α (f x p)) (f y (tr P α p))
-naturality-tr-fiberwise-transformation f refl p = refl
+postulate 𝕊¹ : UU lzero
 
-functor-dependent-free-loops :
-  { l1 l2 l3 : Level} {X : UU l1} (l : free-loops X)
-  { P : X → UU l2} {Q : X → UU l3} (f : (x : X) → P x → Q x) →
-  dependent-free-loops l P → dependent-free-loops l Q
-functor-dependent-free-loops l {P} {Q} f =
-  toto
-    ( λ q₀ → Id (tr Q (loop-free-loop l) q₀) q₀)
-    ( f (base-free-loop l))
-    ( λ p₀ α →
-      ( naturality-tr-fiberwise-transformation f (loop-free-loop l) p₀) ∙
-      ( ap (f (base-free-loop l)) α))
+postulate base-𝕊¹ : 𝕊¹
 
-coherence-square-functor-dependent-free-loops :
-  { l1 l2 l3 : Level} {X : UU l1} {P : X → UU l2} {Q : X → UU l3}
-  ( f : (x : X) → P x → Q x) {x y : X} (α : Id x y)
-  ( h : (x : X) → P x) →
-  Id ( ( naturality-tr-fiberwise-transformation f α (h x)) ∙
-       ( ap (f y) (apd h α)))
-     ( apd (postcomp-Π f h) α)
-coherence-square-functor-dependent-free-loops f refl h = refl
-  
-square-functor-dependent-free-loops :
-  { l1 l2 l3 : Level} {X : UU l1} (l : free-loops X)
-  { P : X → UU l2} {Q : X → UU l3} (f : (x : X) → P x → Q x) →
-  ( (functor-dependent-free-loops l f) ∘ (ev-free-loop' l P)) ~
-  ( (ev-free-loop' l Q) ∘ (postcomp-Π f))
-square-functor-dependent-free-loops (pair x l) {P} {Q} f h =
-  eq-Eq-dependent-free-loops (pair x l) Q
-    ( functor-dependent-free-loops (pair x l) f
-      ( ev-free-loop' (pair x l) P h))
-    ( ev-free-loop' (pair x l) Q (postcomp-Π f h))
-    ( pair refl
-      ( right-unit ∙ (coherence-square-functor-dependent-free-loops f l h)))
+postulate loop-𝕊¹ : Id base-𝕊¹ base-𝕊¹
 
-abstract
-  is-equiv-functor-dependent-free-loops-is-fiberwise-equiv :
-    { l1 l2 l3 : Level} {X : UU l1} (l : free-loops X)
-    { P : X → UU l2} {Q : X → UU l3} {f : (x : X) → P x → Q x}
-    ( is-equiv-f : (x : X) → is-equiv (f x)) →
-    is-equiv (functor-dependent-free-loops l f)
-  is-equiv-functor-dependent-free-loops-is-fiberwise-equiv
-    (pair x l) {P} {Q} {f} is-equiv-f =
-    is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
-      ( λ q₀ → Id (tr Q l q₀) q₀)
-      ( _)
-      ( _)
-      ( is-equiv-f x)
-      ( λ p₀ →
-        is-equiv-comp'
-          ( concat
-            ( naturality-tr-fiberwise-transformation f l p₀)
-            ( f x p₀))
-          ( ap (f x))
-          ( is-emb-is-equiv (f x) (is-equiv-f x) (tr P l p₀) p₀)
-          ( is-equiv-concat
-            ( naturality-tr-fiberwise-transformation f l p₀)
-            ( f x p₀)))
+free-loop-𝕊¹ : free-loops 𝕊¹
+free-loop-𝕊¹ = pair base-𝕊¹ loop-𝕊¹
 
-abstract
-  lower-dependent-universal-property-circle :
-    { l1 l2 : Level} (l3 : Level) {X : UU l1} (l : free-loops X) →
-    dependent-universal-property-circle (l2 ⊔ l3) l →
-    dependent-universal-property-circle l3 l
-  lower-dependent-universal-property-circle {l1} {l2} l3 l dup-circle P =
-    is-equiv-left-is-equiv-right-square
-      ( ev-free-loop' l P)
-      ( ev-free-loop' l (λ x → raise l2 (P x)))
-      ( postcomp-Π (λ x → map-raise l2 (P x)))
-      ( functor-dependent-free-loops l (λ x → map-raise l2 (P x)))
-      ( square-functor-dependent-free-loops l (λ x → map-raise l2 (P x)))
-      ( is-equiv-postcomp-Π _ (λ x → is-equiv-map-raise l2 (P x)))
-      ( is-equiv-functor-dependent-free-loops-is-fiberwise-equiv l
-        ( λ x → is-equiv-map-raise l2 (P x)))
-      ( dup-circle (λ x → raise l2 (P x)))
+postulate ind-𝕊¹ : {l : Level} → induction-principle-circle l free-loop-𝕊¹
 
-abstract
-  lower-lzero-dependent-universal-property-circle :
-    { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
-    dependent-universal-property-circle l2 l →
-    dependent-universal-property-circle lzero l
-  lower-lzero-dependent-universal-property-circle =
-    lower-dependent-universal-property-circle lzero
+dependent-universal-property-𝕊¹ :
+  {l : Level} → dependent-universal-property-circle l free-loop-𝕊¹
+dependent-universal-property-𝕊¹ =
+  dependent-universal-property-induction-principle-circle free-loop-𝕊¹ ind-𝕊¹
+
+universal-property-𝕊¹ :
+  {l : Level} → universal-property-circle l free-loop-𝕊¹
+universal-property-𝕊¹ =
+  universal-property-dependent-universal-property-circle
+    free-loop-𝕊¹
+    dependent-universal-property-𝕊¹
+
+-- Section 14.3 Multiplication on the circle
+
+
+
+{- Exercises -}
+
+-- Exercise 11.1
 
 {- The dependent universal property of the circle (and hence also the induction
    principle of the circle, implies that the circle is connected in the sense
    that for any family of propositions parametrized by the circle, if the
    proposition at the base holds, then it holds for any x : circle. -}
-
-{- Exercises -}
-
--- Exercise 11.1
 
 abstract
   is-connected-circle' :

@@ -148,6 +148,99 @@ section-fam-circle l dup-circle Q P (pair e H) (pair p α) =
 
 {- Section 12.2 The fundamental cover of the circle -}
 
+{- We show that if a type with a free loop satisfies the induction principle
+   of the circle with respect to any universe level, then it satisfies the
+   induction principle with respect to the zeroth universe level. -}
+
+naturality-tr-fiberwise-transformation :
+  { l1 l2 l3 : Level} {X : UU l1} {P : X → UU l2} {Q : X → UU l3}
+  ( f : (x : X) → P x → Q x) {x y : X} (α : Id x y) (p : P x) →
+  Id (tr Q α (f x p)) (f y (tr P α p))
+naturality-tr-fiberwise-transformation f refl p = refl
+
+functor-dependent-free-loops :
+  { l1 l2 l3 : Level} {X : UU l1} (l : free-loops X)
+  { P : X → UU l2} {Q : X → UU l3} (f : (x : X) → P x → Q x) →
+  dependent-free-loops l P → dependent-free-loops l Q
+functor-dependent-free-loops l {P} {Q} f =
+  toto
+    ( λ q₀ → Id (tr Q (loop-free-loop l) q₀) q₀)
+    ( f (base-free-loop l))
+    ( λ p₀ α →
+      ( naturality-tr-fiberwise-transformation f (loop-free-loop l) p₀) ∙
+      ( ap (f (base-free-loop l)) α))
+
+coherence-square-functor-dependent-free-loops :
+  { l1 l2 l3 : Level} {X : UU l1} {P : X → UU l2} {Q : X → UU l3}
+  ( f : (x : X) → P x → Q x) {x y : X} (α : Id x y)
+  ( h : (x : X) → P x) →
+  Id ( ( naturality-tr-fiberwise-transformation f α (h x)) ∙
+       ( ap (f y) (apd h α)))
+     ( apd (postcomp-Π f h) α)
+coherence-square-functor-dependent-free-loops f refl h = refl
+  
+square-functor-dependent-free-loops :
+  { l1 l2 l3 : Level} {X : UU l1} (l : free-loops X)
+  { P : X → UU l2} {Q : X → UU l3} (f : (x : X) → P x → Q x) →
+  ( (functor-dependent-free-loops l f) ∘ (ev-free-loop' l P)) ~
+  ( (ev-free-loop' l Q) ∘ (postcomp-Π f))
+square-functor-dependent-free-loops (pair x l) {P} {Q} f h =
+  eq-Eq-dependent-free-loops (pair x l) Q
+    ( functor-dependent-free-loops (pair x l) f
+      ( ev-free-loop' (pair x l) P h))
+    ( ev-free-loop' (pair x l) Q (postcomp-Π f h))
+    ( pair refl
+      ( right-unit ∙ (coherence-square-functor-dependent-free-loops f l h)))
+
+abstract
+  is-equiv-functor-dependent-free-loops-is-fiberwise-equiv :
+    { l1 l2 l3 : Level} {X : UU l1} (l : free-loops X)
+    { P : X → UU l2} {Q : X → UU l3} {f : (x : X) → P x → Q x}
+    ( is-equiv-f : (x : X) → is-equiv (f x)) →
+    is-equiv (functor-dependent-free-loops l f)
+  is-equiv-functor-dependent-free-loops-is-fiberwise-equiv
+    (pair x l) {P} {Q} {f} is-equiv-f =
+    is-equiv-toto-is-fiberwise-equiv-is-equiv-base-map
+      ( λ q₀ → Id (tr Q l q₀) q₀)
+      ( _)
+      ( _)
+      ( is-equiv-f x)
+      ( λ p₀ →
+        is-equiv-comp'
+          ( concat
+            ( naturality-tr-fiberwise-transformation f l p₀)
+            ( f x p₀))
+          ( ap (f x))
+          ( is-emb-is-equiv (f x) (is-equiv-f x) (tr P l p₀) p₀)
+          ( is-equiv-concat
+            ( naturality-tr-fiberwise-transformation f l p₀)
+            ( f x p₀)))
+
+abstract
+  lower-dependent-universal-property-circle :
+    { l1 l2 : Level} (l3 : Level) {X : UU l1} (l : free-loops X) →
+    dependent-universal-property-circle (l2 ⊔ l3) l →
+    dependent-universal-property-circle l3 l
+  lower-dependent-universal-property-circle {l1} {l2} l3 l dup-circle P =
+    is-equiv-left-is-equiv-right-square
+      ( ev-free-loop' l P)
+      ( ev-free-loop' l (λ x → raise l2 (P x)))
+      ( postcomp-Π (λ x → map-raise l2 (P x)))
+      ( functor-dependent-free-loops l (λ x → map-raise l2 (P x)))
+      ( square-functor-dependent-free-loops l (λ x → map-raise l2 (P x)))
+      ( is-equiv-postcomp-Π _ (λ x → is-equiv-map-raise l2 (P x)))
+      ( is-equiv-functor-dependent-free-loops-is-fiberwise-equiv l
+        ( λ x → is-equiv-map-raise l2 (P x)))
+      ( dup-circle (λ x → raise l2 (P x)))
+
+abstract
+  lower-lzero-dependent-universal-property-circle :
+    { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
+    dependent-universal-property-circle l2 l →
+    dependent-universal-property-circle lzero l
+  lower-lzero-dependent-universal-property-circle =
+    lower-dependent-universal-property-circle lzero
+
 {- The definition of the fundamental cover -}
 
 {- The fundamental cover -}
