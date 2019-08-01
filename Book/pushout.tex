@@ -470,7 +470,7 @@ X\lor Y \arrow[r,"\mathsf{wedge\usc{}incl}"] \arrow[d,swap,"\mathsf{const}_\ttt"
 \end{defn}
 
 \begin{exercises}
-\item \label{ex:pushout_equiv}Use \cref{thm:pushout_up,cor:pb_equiv,ex:equiv_precomp} to show that for any commuting square
+\exercise \label{ex:pushout_equiv}Use \cref{thm:pushout_up,cor:pb_equiv,ex:equiv_precomp} to show that for any commuting square
 \begin{equation*}
 \begin{tikzcd}
 S \arrow[r,"g"] \arrow[d,swap,"f","{\eqvsym}"'] & B \arrow[d,"j"] \\
@@ -487,7 +487,7 @@ Use this observation to conclude the following:
 \item If $X$ is contractible, then $\join{X}{Y}$ is contractible. 
 \item If $A$ is contractible, then there is an equivalence $\eqv{A\vee B}{B}$ for any pointed type $B$.
 \end{enumerate}
-\item \label{ex:join_propositions}Let $P$ and $Q$ be propositions.
+\exercise \label{ex:join_propositions}Let $P$ and $Q$ be propositions.
 \begin{subexenum}
 \item Show that $\join{P}{Q}$ satisfies the \emph{universal property of disjunction}, i.e., that for any proposition $R$, the map
 \begin{equation*}
@@ -496,19 +496,19 @@ Use this observation to conclude the following:
 given by $f\mapsto (f\circ \inl,f\circ \inr)$, is an equivalence.
 \item Use the proposition $R\defeq\iscontr(\join{P}{Q})$ to show that $\join{P}{Q}$ is again a proposition.
 \end{subexenum}
-\item Let $Q$ be a proposition, and let $A$ be a type. Show that the following are equivalent:
-\begin{subexenum}
+\exercise Let $Q$ be a proposition, and let $A$ be a type. Show that the following are equivalent:
+\begin{enumerate}
 \item The map $(Q\to A)\to(\emptyt\to A)$ is an equivalence.
 \item The type $A^Q$ is contractible.
 \item There is a term of type $Q\to\iscontr(A)$.
 \item The map $\inr:A\to \join{Q}{A}$ is an equivalence.
-\end{subexenum}
-\item Let $P$ be a proposition. Show that $\susp P$ is a set, with an equivalence
+\end{enumerate}
+\exercise Let $P$ be a proposition. Show that $\susp P$ is a set, with an equivalence
 \begin{equation*}
 \eqv{\Big(\inl(\ttt)=\inr(\ttt)\Big)}{P}.
 \end{equation*}
-\item Show that $\eqv{A\sqcup^{\mathcal{S}} B}{B\sqcup^{\mathcal{S}^{\mathsf{op}}} A}$, where $\mathcal{S^{\mathsf{op}}}\defeq (S,g,f)$ is the \define{opposite span} of $\mathcal{S}$. 
-\item Use \cref{ex:pb_pi} to show that if
+\exercise Show that \({A\sqcup^{\mathcal{S}} B} \simeq {B\sqcup^{\mathcal{S}^{\mathsf{op}}} A}\), where $\mathcal{S^{\mathsf{op}}}\defeq (S,g,f)$ is the \define{opposite span} of $\mathcal{S}$. 
+\exercise Use \cref{ex:pb_pi} to show that if
 \begin{equation*}
 \begin{tikzcd}
 S \arrow[r] \arrow[d] & Y \arrow[d] \\
@@ -523,7 +523,7 @@ A\times X \arrow[r] & A\times Z
 \end{tikzcd}
 \end{equation*}
 for any type $A$.
-\item Use \cref{ex:pb_prod} to show that if
+\exercise Use \cref{ex:pb_prod} to show that if
 \begin{equation*}
 \begin{tikzcd}
 S_1 \arrow[r] \arrow[d] & Y_1 \arrow[d] & S_2 \arrow[r] \arrow[d] & Y_2 \arrow[d] \\
@@ -537,7 +537,7 @@ S_1+S_2 \arrow[r] \arrow[d] & Y_1+ Y_2 \arrow[d] \\
 X_1 +X_2 \arrow[r] & Z_1+Z_2. 
 \end{tikzcd}
 \end{equation*}
-\item 
+\exercise 
 \begin{subexenum}
 \item Consider a span $(S,f,g)$ from $A$ to $B$. Use \cref{ex:pb_diagonal} to show that the square
 \begin{equation*}
@@ -549,7 +549,7 @@ A+B \arrow[r,swap,"{[\inl,\inr]}"] & A\sqcup^\mathcal{S} B
 is again a pushout square.
 \item Show that $\eqv{\susp X}{\join{\bool}{X}}$.
 \end{subexenum}
-\item Consider a commuting triangle
+\exercise Consider a commuting triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]
 A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
@@ -561,12 +561,12 @@ with $H:f\htpy g\circ h$.
 \item Construct a map $\mathsf{cofib}_{(h,H)}: \mathsf{cofib}_{g}\to \mathsf{cofib}_f$.
 \item Use \cref{ex:pb_fib} to show that $\eqv{\mathsf{cofib}_{\mathsf{cofib}(h,H)}}{\mathsf{cofib}_h}$.
 \end{subexenum}
-\item \label{ex:sphere_null}Use \cref{ex:circle_connected} to show that for $n\geq 0$, $X$ is an $n$-type if and only if the map
+\exercise \label{ex:sphere_null}Use \cref{ex:circle_connected} to show that for $n\geq 0$, $X$ is an $n$-type if and only if the map
 \begin{equation*}
 \lam{x}\mathsf{const}_x : X \to (\sphere{n+1}\to X)
 \end{equation*}
 is an equivalence.
-\item 
+\exercise 
 \begin{subexenum}
 \item Construct for every $f:X\to Y$ a function
 \begin{equation*}
@@ -580,7 +580,7 @@ is an equivalence.
 \end{equation*}
 for any $f:X\to Y$ and $g:Y\to Z$.
 \end{subexenum}
-\item Consider a commuting diagram of the form
+\exercise Consider a commuting diagram of the form
 \begin{equation*}
 \begin{tikzcd}
 A_0 & B_0 \arrow[l] \arrow[r] & C_0 \\
@@ -594,7 +594,7 @@ with homotopies filling the (small) squares. Use \cref{ex:pb_3by3} to construct 
 & \qquad \eqvsym (A_0 \sqcup^{A_1} A_2) \sqcup^{(B_0\sqcup^{B_1} B_2)} (C_0\sqcup^{C_1} C_2).
 \end{align*}
 This is known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pushouts} for pushouts.
-\item 
+\exercise 
 \begin{subexenum}
 \item Let $I$ be a type, and let $A$ be a family over $I$. Construct an equivalence
 \begin{equation*}
@@ -609,8 +609,8 @@ This is known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pushouts} for 
 \eqv{\susp(\mathsf{Fin}(n+1))}{\bigvee\nolimits_{(i:\mathsf{Fin}(n))}\sphere{1}}.
 \end{equation*}
 \end{subexenum}
-\item Show that $\eqv{\join{\mathsf{Fin}(n+1)}{\mathsf{Fin}(m+1)}}{\bigvee\nolimits_{(i:\mathsf{Fin}(n\cdot m))}\sphere{1}}$, for any $n,m:\N$.
-\item For any pointed set $X$, show that the squares
+\exercise Show that $\eqv{\join{\mathsf{Fin}(n+1)}{\mathsf{Fin}(m+1)}}{\bigvee\nolimits_{(i:\mathsf{Fin}(n\cdot m))}\sphere{1}}$, for any $n,m:\N$.
+\exercise For any pointed set $X$, show that the squares
   \begin{equation*}
     \begin{tikzcd}
       \sphere{1} \arrow[r] \arrow[d] & \unit \arrow[d] \\
@@ -623,7 +623,7 @@ This is known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pushouts} for 
     \end{tikzcd}
   \end{equation*}
   are pushout squares.
-\item Show that the square
+\exercise Show that the square
   \begin{equation*}
     \begin{tikzcd}
       \sphere{1} \arrow[r] \arrow[d] & \unit \arrow[d] \\
@@ -631,7 +631,7 @@ This is known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pushouts} for 
     \end{tikzcd}
   \end{equation*}
   is a pushout square.
-\item For any type $X$, show that the mapping cone of the fold map $X+X\to X$ is the suspension of $X+\unit$, i.e.~show that the following square
+\exercise For any type $X$, show that the mapping cone of the fold map $X+X\to X$ is the suspension of $X+\unit$, i.e.~show that the following square
   \begin{equation*}
     \begin{tikzcd}
       X+X \arrow[d] \arrow[r] & \unit \arrow[d] \\

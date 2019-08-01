@@ -171,7 +171,7 @@ For any type $A$ in context $\Gamma$, we define the \define{identity function}\i
 \end{prooftree}
 \end{defn}
 
-Note that we have used the symbol $\jdeq$ in the conclusion to define the identity function. A judgment of the form $\Gamma\vdash a\defeq b:A$ should be read as "$b$ is a well-defined term of type $A$ in context $\Gamma$, and we will refer to it as $a$".
+Note that we have used the symbol $\defeq$ in the conclusion to define the identity function. A judgment of the form $\Gamma\vdash a\defeq b:A$ should be read as "$b$ is a well-defined term of type $A$ in context $\Gamma$, and we will refer to it as $a$".
 
 \begin{defn}
 For any three types $A$, $B$, and $C$ in context $\Gamma$, there is a \define{composition}\index{function type!composition}\index{composition!of functions} operation
@@ -268,15 +268,15 @@ The right unit law is left as \cref{ex:fun_right_unit}.
 \end{proof}
 
 \begin{exercises}
-\item \label{ex:fun_right_unit}Give a derivation for the right unit law of \cref{lem:fun_unit}.\index{unit laws!for function composition}
-\item Show that the rule
+\exercise \label{ex:fun_right_unit}Give a derivation for the right unit law of \cref{lem:fun_unit}.\index{unit laws!for function composition}
+\exercise Show that the rule
 \begin{prooftree}
 \AxiomC{$\Gamma,x:A \vdash b(x) : B(x)$}
 \RightLabel{$\lambda$-$x'/x$}
 \UnaryInfC{$\Gamma\vdash \lam{x}b(x)\jdeq \lam{x'}b(x') : \prd{x:A}B(x)$}
 \end{prooftree}
 is admissible for any variable $x'$ that does not occur in the context $\Gamma,x:A$.
-\item 
+\exercise 
   \begin{subexenum}
   \item Construct the \define{constant function}\index{constant function}\index{function!constant function}\index{const x@{$\const_x$}}\index{function!const@{$\const$}}
     \begin{prooftree}
@@ -295,10 +295,10 @@ is admissible for any variable $x'$ that does not occur in the context $\Gamma,x
       \BinaryInfC{$\Gamma,y:B\vdash g\circ\const_y\jdeq \const_{g(y)}:A\to C$}
     \end{prooftree}
   \end{subexenum}
-\item In this exercise we generalize the composition operation of non-dependent function types\index{composition!of dependent functions}:
+\exercise In this exercise we generalize the composition operation of non-dependent function types\index{composition!of dependent functions}:
 \begin{subexenum}
 \item Define a composition operation for dependent function types
-\begin{prooftree}
+  \begin{prooftree}
 \AxiomC{$\Gamma\vdash f:\prd{x:A}B(x)$}
 \AxiomC{$\Gamma\vdash g:\prd{x:A}\prd{y:B(x)} C(x,y)$}
 \BinaryInfC{$\Gamma\vdash g\circ' f:\prd{x:A} C(x,f(x))$}
@@ -322,7 +322,7 @@ and show that this operation agrees with ordinary composition when it is special
 \UnaryInfC{$\Gamma\vdash (\lam{x}\idfunc[B(x)])\circ' f\jdeq f:\prd{x:A}B(x)$}
 \end{prooftree}
 \end{subexenum}
-\item \label{ex:swap}
+\exercise \label{ex:swap}
 \begin{subexenum}
 \item Given two types $A$ and $B$ in context $\Gamma$, and a type $C$ in context $\Gamma,x:A,y:B$, define the \define{swap function}\index{function!swap}\index{swap function}
 \begin{equation*}

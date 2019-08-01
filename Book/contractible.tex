@@ -366,12 +366,12 @@ By \cref{thm:id_equiv}, the identity function is an equivalence. Therefore, the 
 \index{contractible map|)}
 
 \begin{exercises}
-\item \label{ex:prop_contr}Show that if $A$ is contractible, then for any $x,y:A$ the identity type $x=y$ is also contractible.\index{contractible type!identity types of}\index{is contractible!identity type of contractible type}\index{identity type!of contractible type}\index{characterization of identity type!contractible type}
-\item \label{ex:contr_retr}Suppose that $A$ is a retract of $B$. Show that\index{contractible type!closed under retracts}
+\exercise \label{ex:prop_contr}Show that if $A$ is contractible, then for any $x,y:A$ the identity type $x=y$ is also contractible.\index{contractible type!identity types of}\index{is contractible!identity type of contractible type}\index{identity type!of contractible type}\index{characterization of identity type!contractible type}
+\exercise \label{ex:contr_retr}Suppose that $A$ is a retract of $B$. Show that\index{contractible type!closed under retracts}
   \begin{equation*}
     \iscontr(B)\to\iscontr(A).
   \end{equation*}
-\item \label{ex:contr_equiv}
+\exercise \label{ex:contr_equiv}
   \begin{subexenum}
   \item Show that for any type $A$, the map $\const_\ttt : A\to \unit$ is an equivalence if and only if $A$ is contractible.\index{contractible type!is equivalent to 1@{is equivalent to $\unit$}}
   \item Apply \cref{ex:3_for_2} to show that for any map $f:A\to B$, if any two of the three assertions\index{contractible type!3-for-2 property}\index{3-for-2 property!of contractible types}
@@ -382,15 +382,15 @@ By \cref{thm:id_equiv}, the identity function is an equivalence. Therefore, the 
     \end{enumerate}
     hold, then so does the third.
   \end{subexenum}
-\item Show that for any two types $A$ and $B$, the following are equivalent:
+\exercise Show that for any two types $A$ and $B$, the following are equivalent:
   \index{contractible type!closed under cartesian product}
   \index{is contractible!factor of contractible cartesian product}
   \begin{enumerate}
   \item Both $A$ and $B$ are contractible.
   \item The type $A\times B$ is contractible.
   \end{enumerate}
-\item \label{ex:contr_in_sigma} Let $A$ be a contractible type with center of contraction $a:A$. Furthermore, let $B$ be a type family over $A$. Show that the map $y\mapsto\pairr{a,y}:B(a)\to\sm{x:A}B(x)$ is an equivalence.\index{left unit law!of Sigma-types@{of $\Sigma$-types}}\index{dependent pair type!left unit law}
-\item \label{ex:proj_fiber}Let $B$ be a family of types over $A$, and consider the projection map 
+\exercise \label{ex:contr_in_sigma} Let $A$ be a contractible type with center of contraction $a:A$. Furthermore, let $B$ be a type family over $A$. Show that the map $y\mapsto\pairr{a,y}:B(a)\to\sm{x:A}B(x)$ is an equivalence.\index{left unit law!of Sigma-types@{of $\Sigma$-types}}\index{dependent pair type!left unit law}
+\exercise \label{ex:proj_fiber}Let $B$ be a family of types over $A$, and consider the projection map 
   \begin{equation*}
     \proj 1 : \big(\sm{x:A}B(x)\big)\to A.
   \end{equation*}
@@ -402,7 +402,7 @@ By \cref{thm:id_equiv}, the identity function is an equivalence. Therefore, the 
   \index{family!fibers of projection map}
   \index{pr 1@{$\proj 1$}!of contractible family is an equivalence}
   \index{is an equivalence!pr 1 of contractible family@{$\proj 1$ of contractible family}}
-\item \label{ex:fib_replacement}Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
+\exercise \label{ex:fib_replacement}Construct for any map $f:A\to B$ an equivalence $e:\eqv{A}{\sm{y:B}\fib{f}{y}}$ and a homotopy $H:f\htpy \proj 1\circ e$ witnessing that the triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=0em]
       A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & \sm{y:B}\fib{f}{y} \arrow[dl,"\proj 1"] \\

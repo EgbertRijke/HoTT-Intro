@@ -377,16 +377,16 @@ Let $f:A\to B$ be a map. The following are equivalent:
 \end{thm}
 
 \begin{exercises}
-\item Show that
+\exercise Show that
 \begin{equation*}
 \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
 \end{equation*}
 for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
-\item For any $B:A\to\UU$, construct an equivalence
+\exercise For any $B:A\to\UU$, construct an equivalence
 \begin{equation*}
 \eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
 \end{equation*}
-%\item \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
+%\exercise \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
 %\begin{equation*}
 %P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
 %\end{equation*}
@@ -394,7 +394,7 @@ for any type $A:\UU$. This is called the \define{impredicative encoding} of the 
 %\item Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$.
 %\end{subexenum}
 %\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
-\item Let
+\exercise Let
 \begin{tikzcd}
 P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
 \end{tikzcd}
@@ -402,13 +402,13 @@ be a sequence of propositions. Show that
 \begin{equation*}
 \eqv{\colim_n(P_n)}{\exists_{(n:\N)} P_n}.
 \end{equation*}
-\item Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
-\item Let $f:A\to X$ be a map. Construct an equivalence
+\exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
+\exercise Let $f:A\to X$ be a map. Construct an equivalence
 \begin{equation*}
 \eqv{\Big(\sm{y:\mathsf{join\usc{}power}_X(n,A)}f(x)=f^{\ast n}(y)\Big)}{\Big(\sm{y:A}f(x)=f(y)\Big)^{\ast n}}
 \end{equation*}
 for any $x:A$.
-\item Let $f:A\to B$ be a map. Show that the following are equivalent:
+\exercise Let $f:A\to B$ be a map. Show that the following are equivalent:
 \begin{enumerate}
 \item The commuting square
 \begin{equation*}
@@ -428,7 +428,7 @@ A \arrow[r,swap,"f"] & B
 \end{equation*}
 is a pullback square. 
 \end{enumerate}
-\item Consider a pullback square
+\exercise Consider a pullback square
 \begin{equation*}
 \begin{tikzcd}
 A' \arrow[d,swap,"{f'}"] \arrow[r,"p"] & A \arrow[d,"f"] \\
@@ -436,9 +436,9 @@ B' \arrow[r,swap,"q"] & B,
 \end{tikzcd}
 \end{equation*}
 in which $q:B'\to B$ is surjective. Show that if $f':A'\to B'$ is an embedding, then so is $f:A\to B$.
-\item Show that a type $A$ is a proposition if and only if the map $\inl:A\to \join{A}{A}$ is an equivalence.
-\item Show that $\inl:\brck{A}\to \join{\brck{A}}{A}$ is an equivalence for any type $A$.
-\item Consider a family of diagrams of the form
+\exercise Show that a type $A$ is a proposition if and only if the map $\inl:A\to \join{A}{A}$ is an equivalence.
+\exercise Show that $\inl:\brck{A}\to \join{\brck{A}}{A}$ is an equivalence for any type $A$.
+\exercise Consider a family of diagrams of the form
   \begin{equation*}
     \begin{tikzcd}
       A_i \arrow[r] \arrow[d,swap,"{f_i}"] &

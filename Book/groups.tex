@@ -360,12 +360,12 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
 \end{eg}
 
 \begin{exercises}
-\item Let $X$ be a set. Show that the map\index{equiv-eq@{$\equiveq$}!is a group isomorphism}
+  \exercise Let $X$ be a set. Show that the map\index{equiv-eq@{$\equiveq$}!is a group isomorphism}
   \begin{equation*}
     \equiveq : (X=X)\to (\eqv{X}{X})
   \end{equation*}
   is a group isomorphism.
-\item \label{ex:groupop-embedding}
+  \exercise \label{ex:groupop-embedding}
   \begin{subexenum}
   \item Consider a group $G$. Show that the function
     \begin{equation*}
@@ -378,13 +378,13 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
     \end{equation*}
     is an embedding.\index{concat@{$\concat$}!is an embedding}
   \end{subexenum}
-\item Let $f:\hom(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that\index{group homomorphism!preserves units and inverses}
+  \exercise Let $f:\hom(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that\index{group homomorphism!preserves units and inverses}
   \begin{align*}
     f(e_G) & = e_H \\
     f(x^{-1}) & = f(x)^{-1}.
   \end{align*}
-\item Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.\index{isomorphism!of semi-groups!preserves unit}
-\item Consider a monoid $M$ with multiplication $\mu:M\to (M\to M)$ and unit $e$. Write
+  \exercise Give a direct proof and a proof using the univalence axiom of the fact that all semi-group isomorphisms between unital semi-groups preserve the unit. Conclude that isomorphic monoids are equal.\index{isomorphism!of semi-groups!preserves unit}
+  \exercise Consider a monoid $M$ with multiplication $\mu:M\to (M\to M)$ and unit $e$. Write
   \begin{equation*}
     \bar{\mu}\defeq\foldlist(e,\mu):\lst(M)\to M
   \end{equation*}
@@ -392,9 +392,9 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
   \begin{equation*}
     \begin{tikzcd}[column sep=6em]
       \lst(\lst(M)) \arrow[r,"\flattenlist(M)"] \arrow[d,swap,"\lst(\bar{\mu})"] & \lst(M) \arrow[d,"\bar{\mu}"] \\
-        \lst(M) \arrow[r,swap,"\bar{\mu}"] & M
+      \lst(M) \arrow[r,swap,"\bar{\mu}"] & M
     \end{tikzcd}
   \end{equation*}
   commutes. 
-\item Construct the category of posets.\index{category!of posets}
+  \exercise Construct the category of posets.\index{category!of posets}
 \end{exercises}

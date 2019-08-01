@@ -1,150 +1,3 @@
-\section{Set quotients}
-
-\subsection{The universal property of set quotients}
-
-\begin{defn}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a map $q:A\to B$ where the type $B$ is a set, for which we have
-\begin{equation*}
-\prd{x,y:A}R(x,y)\to q(x)=q(y).
-\end{equation*}
-We will define a map
-\begin{equation*}
-\quotientrestr:(B\to X) \to \Big(\sm{f:A\to X}\prd{x,y:A}R(x,y)\to (f(x)=f(y))\Big).
-\end{equation*}
-\end{defn}
-
-\begin{constr}
-Let $h:B\to X$. Then we have $h\circ q : A\to X$, so it remains to show that
-\begin{equation*}
-\prd{x,y:A}R(x,y)\to (h(q(x))=h(q(y)))
-\end{equation*}
-Consider $x,y:A$ which are related by $R$. Then we have an identification $p:q(x)=q(y)$, so it follows that $\ap{h}{p}:h(q(x))=h(q(y))$.  
-\end{constr}
-
-\begin{defn}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a map $q:A\to B$ satisfying
-\begin{equation*}
-\prd{x,y:A}R(x,y)\to q(x)=q(y),
-\end{equation*}
-where the type $B$ is a set. We say that the map $q:A\to B$ satisfies the universal property of the \define{set quotient}\index{set quotient}\index{universal property!of set quotients} $A/R$ if for any set $X$ the map
-\begin{equation*}
-\quotientrestr : (B\to X) \to \Big(\sm{f:A\to X}\prd{x,y:A}R(x,y)\to (f(x)=f(y))\Big)
-\end{equation*}
-is an equivalence.
-\end{defn}
-
-\begin{lem}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & U \arrow[dl,"m"] \\
-& \prop^A
-\end{tikzcd}
-\end{equation*}
-with $H:R\htpy m\circ q$, where $m$ is an embedding. Then we have
-\begin{equation*}
-\prd{x,y:A}R(x,y)\to (q(x)=q(y)).
-\end{equation*}
-\end{lem}
-
-\begin{thm}\label{thm:quotient_up}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & U \arrow[dl,"m"] \\
-& \prop^A
-\end{tikzcd}
-\end{equation*}
-with $H:R\htpy m\circ q$, where $m$ is an embedding. Then the following are equivalent:
-\begin{enumerate}
-\item The embedding $m:U\to \prop^A$ satisfies the universal property of the image of $R$.
-\item The map $q:A\to U$ satisfies the universal property of the set quotient $A/R$.
-\end{enumerate}
-\end{thm}
-
-\begin{proof}
-Suppose $m:U\to \prop^A$ satisfies the universal property of the image of $R$. Then it follows by \cref{thm:surjective} that the map $q:A\to U$ is surjective. Our goal is to prove that $U$ satisfies the universal property of the set quotient $A/R$. 
-\end{proof}
-
-\begin{rmk}
-\cref{thm:quotient_up} suggests that we can define the quotient of an equivalence relation $R$ on a type $A$ as the image of a map. However, the type $\prop^A$ of which the quotient is a subtype is not a small type, even if $A$ is a small type.
-Therefore it is not clear that the quotient $A/R$ is essentially small\index{essentially small}, as it should be. Luckily, our construction of the image of a map allows us to show that the image is indeed essentially small, using the fact that $\prop^A$ is locally small\index{locally small}.
-\end{rmk}
-
-\subsection{The construction of set quotients}
-\begin{lem}
-Consider a commuting square
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[r] \arrow[d] & B \arrow[d] \\
-C \arrow[r] & D.
-\end{tikzcd}
-\end{equation*}
-\begin{enumerate}
-\item If the square is cartesian, $B$ and $C$ are essentially small, and $D$ is locally small, then $A$ is essentially small.
-\item If the square is cocartesian, and $A$, $B$, and $C$ are essentially small, then $D$ is essentially small. 
-\end{enumerate}
-\end{lem}
-
-\begin{cor}
-Suppose $f:A\to X$ and $g:B\to X$ are maps from essentially small types $A$ and $B$, respectively, to a locally small type $X$. Then $A\times_X B$ is again essentially small. 
-\end{cor}
-
-\begin{lem}
-Consider a type sequence
-\begin{equation*}
-\begin{tikzcd}
-A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
-\end{tikzcd}
-\end{equation*}
-where each $A_n$ is essentially small. Then its sequential colimit is again essentially small. 
-\end{lem}
-
-\begin{thm}
-For any map $f:A\to X$ from a small type $A$ into a locally small type $X$, the image $\im(f)$ is an essentially small type.
-\end{thm}
-
-Recall that in set theory, the replacement axiom asserts that for any family of sets $\{X_i\}_{i\in I}$ indexed by a set $I$, there is a set $X[I]$ consisting of precisely those sets $x$ for which there exists an $i\in I$ such that $x\in X_i$. In other words: the image of a set-indexed family of sets is again a set. Without the replacement axiom, $X[I]$ would be a class. In the following corollary we establish a type-theoretic analogue of the replacement axiom: the image of a family of small types indexed by a small type is again (essentially) small.
-
-\begin{cor}\label{cor:im_small}
-For any small type family $B:A\to\UU$, where $A$ is small, the image $\im(B)$ is essentially small. We call $\im(B)$ the \define{univalent completion} of $B$. 
-\end{cor}
-
-\subsection{Connected components of types}
-
-\subsection{Set truncation}
-
-\begin{lem}
-For each type $A$, the relation $I_{(-1)}:A\to (A\to\prop)$ given by
-\begin{equation*}
-I_{(-1)}(x,y)\defeq\brck{x=y}
-\end{equation*}
-is an equivalence relation.
-\end{lem}
-
-\begin{proof}
-For every $x:A$ we have $\bproj{\refl{x}}:\brck{x=x}$, so the relation is reflexive. To see that the relation is symmetric note that by the universal property of propositional truncation there is a unique map $\brck{\invfunc}:\brck{x=y}\to\brck{y=x}$ for which the square
-\begin{equation*}
-\begin{tikzcd}
-(x=y) \arrow[r,"\invfunc"] \arrow[d,swap,"\bproj{\blank}"] & (y=x) \arrow[d,"\bproj{\blank}"] \\
-\brck{x=y} \arrow[r,densely dotted,swap,"\brck{\invfunc}"] & \brck{y=x}
-\end{tikzcd}
-\end{equation*}
-commutes. This shows that the relation is symmetric. Similarly, we show by the universal property of propositional truncation that the relation is transitive.
-\end{proof}
-
-\begin{defn}
-For each type $A$ we define the \define{set truncation}
-\begin{equation*}
-\trunc{0}{A}\defeq A/I_{(-1)},
-\end{equation*}
-and the unit of the set truncation is defined to be the quotient map.
-\end{defn}
-
-\begin{thm}
-For each type $A$, the set truncation satisfies the universal property of the set truncation.
-\end{thm}
-
 \begin{comment}
 \subsection{The universal property of the truncations}
 
@@ -629,20 +482,20 @@ This follows by path induction.
 \end{comment}
 
 \begin{exercises}
-\item Consider an equivalence relation $R:A\to (A\to\prop)$. Show that the map $\tproj{0}{\blank}\circ \inl:A\to \trunc{0}{A\sqcup^{R} A}$ satisfies the universal property of the quotient $A/R$, where $A\sqcup^{R} A$ is the canonical pushout
+\exercise Consider an equivalence relation $R:A\to (A\to\prop)$. Show that the map $\tproj{0}{\blank}\circ \inl:A\to \trunc{0}{A\sqcup^{R} A}$ satisfies the universal property of the quotient $A/R$, where $A\sqcup^{R} A$ is the canonical pushout
 \begin{equation*}
 \begin{tikzcd}
 \sm{x,y:A}R(x,y) \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & A \arrow[d,"\inr"] \\
 A \arrow[r,swap,"\inl"] & A\sqcup^{R} A.
 \end{tikzcd}
 \end{equation*}
-\item Consider the trivial relation $\unit\defeq\lam{x}{y}\unit:A\to (A\to\prop)$. Show that the set quotient $A/\unit$ is a proposition satisfying the universal property of the propositional truncation.
-\item Show that the type of pointed $2$-element sets
+\exercise Consider the trivial relation $\unit\defeq\lam{x}{y}\unit:A\to (A\to\prop)$. Show that the set quotient $A/\unit$ is a proposition satisfying the universal property of the propositional truncation.
+\exercise Show that the type of pointed $2$-element sets
 \begin{equation*}
 \sm{X:\UU_{\bool}}X
 \end{equation*}
 is contractible.
-\item Define the type $\mathbb{F}$ of finite sets by
+\exercise Define the type $\mathbb{F}$ of finite sets by
 \begin{equation*}
 \mathbb{F}\defeq \im(\fin),
 \end{equation*}

@@ -6,7 +6,7 @@
 
 \title{Introduction to homotopy type theory}
 \author{Egbert Rijke}
-\date{Lecture Notes\\[\baselineskip]for the\\[\baselineskip]Summer School on Homotopy Type Theory\\[\baselineskip]Carnegie Mellon University\\Pittsburgh PA\\[\baselineskip]August 2019}%\\Version: \today}
+\date{2019}%\\Version: \today}
 %\address{Carnegie Mellon University}
 %\email{erijke@andrew.cmu.edu}
 
@@ -15,8 +15,7 @@
 \preauthor{\begin{center}\textsc\bgroup\Large}\postauthor{\egroup\end{center}\vfill}
 \predate{\begin{center}\textsc\bgroup}{\postdate{\egroup\end{center}}
 
-
-  % The following is to avoid overfull hboxes in the table of contents.
+% The following is to avoid overfull hboxes in the table of contents.
 % https://tex.stackexchange.com/questions/49887/overfull-hbox-warning-for-toc-entries-when-using-memoir-documentclass
 %\renewcommand*{\cftdotsep}{1}
 \setpnumwidth{2em}
@@ -36,6 +35,9 @@
 % We set up the exercise environment, which produces list environment in a new
 % unnumbered subsection that also gets mentioned in the table of contents.
 
+\newtotcounter{exercisecounter}
+\newcommand{\exercise}{\item\stepcounter{exercisecounter}}
+
 \newlist{exenum}{enumerate}{1}
 \setlist[exenum]{noitemsep,label=\thesection.\arabic*}
   %,ref=\thechapter.\arabic*}
@@ -53,7 +55,15 @@
 \sectionmark{Exercises}%
 \begin{exenum}}
 {%
+%\addtocounter{exercisecounter}{\theexenumi}%
 \end{exenum}}
+
+
+%\makeatletter
+%\AtEndDocument{\write\@auxout{\protect\total@exercises{\arabic{exercisecounter}}}}
+%\def\total@exercises#1{\global\def\totalexercises{#1}}
+%\total@exercises{0}
+%\makeatother
       
 \addbibresource{bibliography.bib}
 
@@ -67,6 +77,9 @@
 
 \mbox{}
 \vfill
+Total number of exercises: \total{exercisecounter}
+
+\bigskip
 The author gratefully acknowledges the support of the Air Force Office of Scientific Research through MURI grant FA9550-15-1-0053.
 
 \bigskip
@@ -113,7 +126,7 @@ To include introduction:
 \input{inductive}
 \input{identity}
 \input{universes-relations}
-%\input{number-theory}
+\input{number-theory}
 %\input{finite-types}
 
 \chapter{Basic concepts of type theory}
@@ -129,7 +142,6 @@ To include introduction:
 \input{circle}
 \input{circle-fundamental-cover}
 
-\begin{comment}
 \chapter{Homotopy pullbacks and pushouts}
 \input{pullback}
 \input{pushout}
@@ -152,7 +164,6 @@ To include introduction:
 \input{connected}
 \input{smash}
 \input{blakers-massey}
-\end{comment}
 
 %\include{open-problems}
 

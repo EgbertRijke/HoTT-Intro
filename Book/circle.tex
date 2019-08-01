@@ -344,22 +344,22 @@ For the right unit law, however, we need to give a separate argument that is sur
 \end{proof}
 
 \begin{exercises}
-\item \label{ex:circle-connected}Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
-\begin{equation*}
-P(\base)\to\prd{x:\sphere{1}}P(x).
-\end{equation*}
-In this sense the circle is \emph{connected}.
-\item Show that
-\begin{equation*}
-\prd{x,y:\sphere{1}}\neg\neg(x=y).
-\end{equation*}
-\item \label{ex:circle-constant}
-Show that for any type $X$ and any $x:X$, the map
-\begin{equation*}
-\ind{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
-\end{equation*}
-is homotopic to the constant map $\mathsf{const}_x$.
-\item
+  \exercise \label{ex:circle-connected}Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
+  \begin{equation*}
+    P(\base)\to\prd{x:\sphere{1}}P(x).
+  \end{equation*}
+  In this sense the circle is \emph{connected}.
+  \exercise Show that
+  \begin{equation*}
+    \prd{x,y:\sphere{1}}\neg\neg(x=y).
+  \end{equation*}
+  \exercise \label{ex:circle-constant}
+  Show that for any type $X$ and any $x:X$, the map
+  \begin{equation*}
+    \ind{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
+  \end{equation*}
+  is homotopic to the constant map $\mathsf{const}_x$.
+  \exercise
   \begin{subexenum}
   \item Show that for any $x:\sphere{1}$, both functions
     \begin{equation*}
@@ -373,17 +373,17 @@ is homotopic to the constant map $\mathsf{const}_x$.
     is an embedding. Compare this fact with \cref{ex:groupop-embedding}.
   \item Show that multiplication on the circle is associative and commutative.
   \end{subexenum}
-\item \label{ex:circle_connected}
-\begin{subexenum}
-\item Show that a type $X$ is a set if and only if the map
-\begin{equation*}
-\lam{x}{t} x : X \to (\sphere{1}\to X)
-\end{equation*}
+  \exercise \label{ex:circle_connected}
+  \begin{subexenum}
+  \item Show that a type $X$ is a set if and only if the map
+    \begin{equation*}
+      \lam{x}{t} x : X \to (\sphere{1}\to X)
+    \end{equation*}
 is an equivalence.
 \item Show that a type $X$ is a set if and only if the map
-\begin{equation*}
-\lam{f}f(\base) : (\sphere{1}\to X)\to X
-\end{equation*}
-is an equivalence.
-\end{subexenum}
+  \begin{equation*}
+    \lam{f}f(\base) : (\sphere{1}\to X)\to X
+  \end{equation*}
+  is an equivalence.
+  \end{subexenum}
 \end{exercises}

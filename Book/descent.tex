@@ -419,10 +419,10 @@ with a homotopy $H':i'\circ f'\htpy j'\circ g'$. We will write $\mathcal{S'}$ fo
 \begin{constr}
 We define
 \begin{align*}
-f' & \defeq \total[f]{\lam{x}\idfunc[P_A(f(x))]} \\
-g' & \defeq \total[g]{e_S} \\
-i' & \defeq \total[i]{e_A} \\
-j' & \defeq \total[j]{e_B}.
+f' & \defeq \tot[f]{\lam{x}\idfunc[P_A(f(x))]} \\
+g' & \defeq \tot[g]{e_S} \\
+i' & \defeq \tot[i]{e_A} \\
+j' & \defeq \tot[j]{e_B}.
 \end{align*}
 Then it remains to construct a homotopy $H':i'\circ f'\htpy j'\circ g'$. In order to construct this homotopy, we have to construct an identification
 \begin{equation*}
@@ -815,7 +815,7 @@ are pullback squares by \cref{thm:pb_pasting}.
 \end{thm}
 
 \begin{exercises}
-\item Use the characterization of the circle\index{circle} as a pushout given in \cref{eg:circle_pushout} to show that the square
+\exercise Use the characterization of the circle\index{circle} as a pushout given in \cref{eg:circle_pushout} to show that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
 \sphere{1}+\sphere{1} \arrow[r,"{[\idfunc,\idfunc]}"] \arrow[d,swap,"{[\idfunc,\idfunc]}"] & \sphere{1} \arrow[d,"{\lam{t}(t,\base)}"] \\
@@ -823,7 +823,7 @@ are pullback squares by \cref{thm:pb_pasting}.
 \end{tikzcd}
 \end{equation*}
 is a pushout square.
-\item Let $f:A\to B$ be a map. The \define{codiagonal}\index{codiagonal}\index{nabla@{$\nabla_f$}} $\nabla_f$ of $f$ is the map obtained from the universal property of the pushout, as indicated in the diagram
+\exercise Let $f:A\to B$ be a map. The \define{codiagonal}\index{codiagonal}\index{nabla@{$\nabla_f$}} $\nabla_f$ of $f$ is the map obtained from the universal property of the pushout, as indicated in the diagram
 \begin{equation*}
 \begin{tikzcd}
 A \arrow[d,swap,"f"] \arrow[r,"f"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\idfunc[B]}"] \\
@@ -832,7 +832,7 @@ A \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\idfunc[B]}"] & B\sqcup^{A} B
 \end{tikzcd}
 \end{equation*}
 Show that $\fib{\nabla_f}{b}\eqvsym \susp(\fib{f}{b})$ for any $b:B$.
-\item \label{ex:fib_join}Consider two maps $f:A\to X$ and $g:B\to X$. The \define{fiberwise join}\index{fiberwise join} $\join{f}{g}$ is defined by the universal property of the pushout as the unique map rendering the diagram
+\exercise \label{ex:fib_join}Consider two maps $f:A\to X$ and $g:B\to X$. The \define{fiberwise join}\index{fiberwise join} $\join{f}{g}$ is defined by the universal property of the pushout as the unique map rendering the diagram
 \begin{equation*}
 \begin{tikzcd}
 A\times_X B \arrow[d,"\pi_1"] \arrow[r,"\pi_2"] \arrow[dr, phantom, "\ulcorner", very near end] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"g"] \\
@@ -846,7 +846,7 @@ Construct an equivalence
 \eqv{\fib{\join{f}{g}}{x}}{\join{\fib{f}{x}}{\fib{g}{x}}}
 \end{equation*}
 for any $x:X$. 
-\item Consider two maps $f:A\to B$ and $g:C\to D$.
+\exercise Consider two maps $f:A\to B$ and $g:C\to D$.
 The \define{pushout-product}\index{pushout-product}
 \begin{equation*}
 f\square g : (A\times D)\sqcup^{A\times C} (B\times C)\to B\times D
@@ -864,7 +864,7 @@ commutative. Construct an equivalence
 \eqv{\fib{f\square g}{b,d}}{\join{\fib{f}{b}}{\fib{g}{d}}}
 \end{equation*}
 for all $b:B$ and $d:D$.
-\item Let $A$ and $B$ be pointed types with base points $a_0:A$ and $b_0:B$. The \define{wedge inclusion}\index{wedge inclusion} is defined as follows by the universal property of the wedge:
+\exercise Let $A$ and $B$ be pointed types with base points $a_0:A$ and $b_0:B$. The \define{wedge inclusion}\index{wedge inclusion} is defined as follows by the universal property of the wedge:
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
 \unit \arrow[r] \arrow[d] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\lam{b}(a_0,b)}"] \\
@@ -873,7 +873,7 @@ A \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\lam{a}(a,b_0)}"] & A\vee B \
 \end{tikzcd}
 \end{equation*}
 Show that the fiber of the wedge inclusion $A\vee B\to A\times B$ is equivalent to $\join{\loopspace{B}}{\loopspace{A}}$.
-\item Let $f:X\vee X\to X$ be the map defined by the universal property of the wedge as indicated in the diagram
+\exercise Let $f:X\vee X\to X$ be the map defined by the universal property of the wedge as indicated in the diagram
 \begin{equation*}
 \begin{tikzcd}
 \unit \arrow[d,swap,"x_0"] \arrow[r,"x_0"] \arrow[dr, phantom, "\ulcorner", very near end] & X \arrow[d,"\inr"] \arrow[ddr,bend left=15,"{\idfunc[X]}"] \\
@@ -885,7 +885,7 @@ X \arrow[r,"\inl"] \arrow[drr,bend right=15,swap,"{\idfunc[X]}"] & X\vee X \arro
 \item Show that $\eqv{\fib{f}{x_0}}{\susp\loopspace{X}}$. 
 \item Show that $\eqv{\mathsf{cof}_f}{\susp X}$.
 \end{subexenum}
-\item Consider a pushout square
+\exercise Consider a pushout square
 \begin{equation*}
 \begin{tikzcd}
 S \arrow[r,"g"] \arrow[d,swap,"f"] & B \arrow[d,"j"] \\

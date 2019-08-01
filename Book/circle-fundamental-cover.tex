@@ -44,7 +44,7 @@ for each dependent type $P:\sphere{1}\to\UU$. Therefore we see that the triangle
 \begin{equation*}
 \begin{tikzcd}
 & (\sphere{1}\to \UU) \arrow[dl,swap,"\mathsf{gen}_{\sphere{1}}"] \arrow[dr,"\mathsf{desc}_{\sphere{1}}"] \\
-\sm{X:\UU}X=X \arrow[rr,swap,"\total{\lam{X}\mathsf{equiv\usc{}eq}_{X,X}}"] & & \sm{X:\UU}\eqv{X}{X}
+\sm{X:\UU}X=X \arrow[rr,swap,"\tot{\lam{X}\mathsf{equiv\usc{}eq}_{X,X}}"] & & \sm{X:\UU}\eqv{X}{X}
 \end{tikzcd}
 \end{equation*}
 commutes, where the map $\mathsf{desc}_{\sphere{1}}$ is given by $P\mapsto\pairr{P(\base),\mathsf{tr}_P(\lloop)}$ and the bottom map is an equivalence by the univalence axiom and \cref{thm:fib_equiv}.
@@ -423,16 +423,16 @@ Therefore the following computation completes the proof:
 \end{proof}
 
 \begin{exercises}
-\item Show that the map
+\exercise Show that the map
   \begin{equation*}
     \Z\to\loopspace{\sphere{1}}
   \end{equation*}
   is a group homomorphism. Conclude that the loop space $\loopspace{\sphere{1}}$ as a group is isomorphic to $\Z$.
-\item \label{ex:degk}Use the fundamental cover of the circle to show that
+\exercise \label{ex:degk}Use the fundamental cover of the circle to show that
 \begin{equation*}
 \neg\Big(\prd{t:\sphere{1}}\base=t\Big).
 \end{equation*}
-\item \label{ex:circle_degk}
+\exercise \label{ex:circle_degk}
 \begin{subexenum}
 \item Show that for every $x:X$, we have an equivalence
 \begin{equation*}
@@ -448,7 +448,7 @@ The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z
 \eqv{\Big(\sm{e:\eqv{\sphere{1}}{\sphere{1}}}e(\base)= t \Big)}{\bool}
 \end{equation*}
 \end{subexenum}
-\item \label{ex:circle_double_cover} The \define{(twisted) double cover} of the circle is defined as the type family $\mathcal{T}\defeq\mathcal{D}(\bool,\mathsf{neg}):\sphere{1}\to\UU$, where $\mathsf{neg}:\eqv{\bool}{\bool}$ is the negation equivalence of \cref{ex:neg_equiv}.
+\exercise \label{ex:circle_double_cover} The \define{(twisted) double cover} of the circle is defined as the type family $\mathcal{T}\defeq\mathcal{D}(\bool,\mathsf{neg}):\sphere{1}\to\UU$, where $\mathsf{neg}:\eqv{\bool}{\bool}$ is the negation equivalence of \cref{ex:neg_equiv}.
 \begin{subexenum}
 \item Show that $\neg(\prd{t:\sphere{1}}\mathcal{T}(t))$.
 \item Construct an equivalence $e:\eqv{\sphere{1}}{\sm{t:\sphere{1}}\mathcal{T}(t)}$ for which the triangle
@@ -460,8 +460,8 @@ The base point preserving map $f:\sphere{1}\to\sphere{1}$ corresponding to $k:\Z
 \end{equation*}
 commutes.
 \end{subexenum}
-\item Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
-\item \label{ex:is_invertible_id_S1}
+\exercise Show that $\eqv{(\eqv{\sphere{1}}{\sphere{1}})}{\sphere{1}+\sphere{1}}$. Conclude that a univalent universe containing a circle is not a $1$-type.
+\exercise \label{ex:is_invertible_id_S1}
 \begin{subexenum}
 \item Construct a family of equivalences
 \begin{equation*}
@@ -474,7 +474,7 @@ commutes.
 \end{equation*}
 and conclude that ${\mathsf{has\usc{}inverse}}(\idfunc[\sphere{1}])\not\simeq{\isequiv(\idfunc[\sphere{1}])}$. 
 \end{subexenum}
-\item Consider a map $i:A \to \sphere{1}$, and assume that $i$ has a retraction. Construct a term of type
+\exercise Consider a map $i:A \to \sphere{1}$, and assume that $i$ has a retraction. Construct a term of type
   \begin{equation*}
     \iscontr(A)+\isequiv(i).
   \end{equation*}

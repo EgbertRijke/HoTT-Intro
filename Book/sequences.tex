@@ -196,7 +196,7 @@ P(\mathsf{seq\usc{}in}(n,x)) \arrow[r,swap,"{\mathsf{tr}_P(\mathsf{seq\usc{}glue
 commutes. Then $\sm{t:A_\infty}P(t)$ satisfies the universal property of the sequential colimit of the type sequence
 \begin{equation*}
 \begin{tikzcd}
-\sm{x:A_0}B_0(x) \arrow[r,"{\total[f_0]{g_0}}"] & \sm{x:A_1}B_1(x) \arrow[r,"{\total[f_1]{g_1}}"] & \sm{x:A_2}B_2(x) \arrow[r,"{\total[f_2]{g_2}}"] & \cdots.
+\sm{x:A_0}B_0(x) \arrow[r,"{\tot[f_0]{g_0}}"] & \sm{x:A_1}B_1(x) \arrow[r,"{\tot[f_1]{g_1}}"] & \sm{x:A_2}B_2(x) \arrow[r,"{\tot[f_2]{g_2}}"] & \cdots.
 \end{tikzcd}
 \end{equation*}
 \end{lem}
@@ -237,7 +237,7 @@ is a pullback square.
 \end{cor}
 
 \begin{exercises}
-\item \label{ex:seqcolim_shift}
+\exercise \label{ex:seqcolim_shift}
 Show that the sequential colimit of a type sequence
 \begin{equation*}
 \begin{tikzcd}
@@ -250,21 +250,21 @@ is equivalent to the sequential colimit of its shifted type sequence
 A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & A_3 \arrow[r,"f_3"] & \cdots.
 \end{tikzcd}
 \end{equation*}
-\item \label{ex:seqcolim_contr}Consider a type sequence
+\exercise \label{ex:seqcolim_contr}Consider a type sequence
 \begin{equation*}
 \begin{tikzcd}
 A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
 \end{tikzcd}
 \end{equation*}
 and suppose that $f_n\htpy \mathsf{const}_{a_{n+1}}$ for some $a_n:\prd{n:\N}A_n$. Show that the sequential colimit is contractible.
-\item Define the $\infty$-sphere $\sphere{\infty}$ as the sequential colimit of
+\exercise Define the $\infty$-sphere $\sphere{\infty}$ as the sequential colimit of
 \begin{equation*}
 \begin{tikzcd}
 \sphere{0} \arrow[r,"f_0"] & \sphere{1} \arrow[r,"f_1"] & \sphere{2} \arrow[r,"f_2"] & \cdots
 \end{tikzcd}
 \end{equation*}
 where $f_0:\sphere{0}\to\sphere{1}$ is defined by $f_0(\bfalse)\jdeq \inl(\ttt)$ and $f_0(\btrue)\jdeq \inr(\ttt)$, and $f_{n+1}:\sphere{n+1}\to\sphere{n+2}$ is defined as $\susp(f_n)$. Use \cref{ex:seqcolim_contr} to show that $\sphere{\infty}$ is contractible.
-\item Consider a type sequence
+\exercise Consider a type sequence
 \begin{equation*}
 \begin{tikzcd}
 A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots

@@ -33,6 +33,7 @@
 \RequirePackage{microtype}
 \RequirePackage{booktabs}
 \RequirePackage{enumitem}
+\RequirePackage{totcount}
 \RequirePackage{comment}
 \RequirePackage{xspace}
 \RequirePackage{ifthen}
@@ -541,7 +542,7 @@
 \newcommand{\htpynat}{\mathsf{htpy\usc{}nat}}
 
 % Macros for fundamental theorem of identity types
-\newcommand{\total}[2][]{\ensuremath{\mathsf{tot}_{#1}(#2)}}
+\newcommand{\tot}[2][]{\ensuremath{\mathsf{tot}_{#1}(#2)}}
 \newcommand{\isemb}{\mathsf{is\usc{}emb}}
 \newcommand{\Eqcoprod}{\mathsf{Eq\usc{}coprod}}
 \newcommand{\Eqcoprodeq}{\mathsf{Eq\usc{}coprod\usc{}eq}}
@@ -657,6 +658,9 @@
 \newcommand{\cuppr}[2]{#1 \mathbin{\cupsym} #2}
 \newcommand{\cupsym}{\smallsmile}
 
+% Macros for sequential colimits
+\newcommand{\seqin}{\mathsf{in\usc{}seq}}
+
 % Macros for later parts of the book
 
 \newcommand{\esssmall}{\mathsf{ess\usc{}small}}
@@ -672,6 +676,8 @@
 \newcommand{\leftwhisker}{\mathbin{{\ct}_{\ell}}}
 \newcommand{\rightwhisker}{\mathbin{{\ct}_{r}}}
 \newcommand{\hct}{\star}
+\newcommand{\quotientrestr}{\mathsf{quotient\usc{}restriction}}
+\newcommand{\BAut}{\mathsf{BAut}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Basic types

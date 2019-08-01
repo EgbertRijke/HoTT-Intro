@@ -290,13 +290,13 @@ Now we can substitute $y$ for $y'$ to obtain the desired judgment $\Gamma,y:B,x:
 \index{derivation|)}
 
 \begin{exercises}
-\item \label{ex:term_conversion}Give a derivation for the following \define{term conversion rule}\index{term conversion rule}\index{rules!for type dependency!term conversion}\index{term conversion rule}\index{conversion rule!term}:
+\exercise \label{ex:term_conversion}Give a derivation for the following \define{term conversion rule}\index{term conversion rule}\index{rules!for type dependency!term conversion}\index{term conversion rule}\index{conversion rule!term}:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A\jdeq A'~\textrm{type}$}
 \AxiomC{$\Gamma\vdash a:A$}
 \BinaryInfC{$\Gamma\vdash a:A'$}
 \end{prooftree}
-\item Consider a type $A$ in context $\Gamma$. In this exercise we establish a correspondence between types in context $\Gamma,x:A$, and uniform choices of types $B_a$, where $a$ ranges over terms of $A$ in a uniform way. A similar connection is made for terms.
+\exercise Consider a type $A$ in context $\Gamma$. In this exercise we establish a correspondence between types in context $\Gamma,x:A$, and uniform choices of types $B_a$, where $a$ ranges over terms of $A$ in a uniform way. A similar connection is made for terms.
   \begin{subexenum}
   \item We define a \define{uniform family}\index{uniform family} over $A$ to consist of a type
     \begin{equation*}

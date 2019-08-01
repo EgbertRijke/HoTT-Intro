@@ -288,7 +288,7 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
 \index{characterization of identity type!Sigma-type@{$\Sigma$-type}|)}
 
 \begin{exercises}
-\item \label{ex:equiv_grpd_ops}Show that the functions\index{inv@{$\invfunc$}!is an equivalence}\index{is an equivalence!inv@{$\invfunc$}}\index{concat@{$\concat$}!is a family of equivalences}\index{is an equivalence!concat(p)@{$\concat(p)$}}\index{concat'@{$\concat'$}!is a family of equivalences}\index{is an equivalence!concat'@{$\concat'(q)$}}\index{tr B@{$\tr_B$}!is a family of equivalences}\index{is an equivalence!tr B(p)@{$\tr_B(p)$}}
+\exercise \label{ex:equiv_grpd_ops}Show that the functions\index{inv@{$\invfunc$}!is an equivalence}\index{is an equivalence!inv@{$\invfunc$}}\index{concat@{$\concat$}!is a family of equivalences}\index{is an equivalence!concat(p)@{$\concat(p)$}}\index{concat'@{$\concat'$}!is a family of equivalences}\index{is an equivalence!concat'@{$\concat'(q)$}}\index{tr B@{$\tr_B$}!is a family of equivalences}\index{is an equivalence!tr B(p)@{$\tr_B(p)$}}
   \begin{align*}
     \invfunc & :(\id{x}{y})\to(\id{y}{x}) \\
     \concat(p) & : (\id{y}{z})\to(\id{x}{z}) \\
@@ -296,13 +296,13 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
     \tr_B(p) & :B(x)\to B(y)
   \end{align*}
   are equivalences, where $\concat'(q,p)\defeq \ct{p}{q}$\index{concat'@{$\concat'$}}. Give their inverses explicitly.
-\item Show that the maps\index{unit laws!coproduct}\index{coproduct!unit laws}\index{annihilation laws!cartesian product}\index{cartesian product!annihilation laws}
+\exercise Show that the maps\index{unit laws!coproduct}\index{coproduct!unit laws}\index{annihilation laws!cartesian product}\index{cartesian product!annihilation laws}
   \begin{align*}
     \inl & : X \to X+\emptyt &     \proj 1 & : \emptyt \times X \to \emptyt \\
     \inr & : X \to \emptyt+X &    \proj 2 & : X \times \emptyt \to \emptyt
   \end{align*}
   are equivalences.
-\item
+\exercise
   \begin{subexenum}
   \item \label{ex:htpy_equiv}\index{equivalence!closed under homotopies} Consider two functions $f,g:A\to B$ and a homotopy $H:f\htpy g$. Then
     \begin{equation*}
@@ -310,7 +310,7 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
     \end{equation*}
   \item Show that for any two homotopic equivalences $e,e':\eqv{A}{B}$, their inverses are also homotopic.
   \end{subexenum}
-\item \label{ex:3_for_2}
+\exercise \label{ex:3_for_2}
   Consider a commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=tiny]
@@ -342,26 +342,26 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
     \end{equation*}
     are equivalences, then so is the third.
   \end{subexenum}
-\item \label{ex:neg_equiv} 
+\exercise \label{ex:neg_equiv} 
   \begin{subexenum}
   \item Show that the negation function on the booleans $\negbool:\bool\to\bool$ defined in \cref{eg:boolean-ops} is an equivalence.\index{neg 2@{$\negbool$}!is an equivalence}\index{is an equivalence!neg bool@{$\negbool$}}
   \item Use the observational equality on the booleans\index{observational equality!on booleans!0 2 neq 1 2@{$\bfalse\neq\btrue$}}, defined in \cref{ex:obs_bool}, to show that $\bfalse\neq\btrue$.\index{0 2 neq 1 2@{$\bfalse\neq\btrue$}}
   \item Show that for any $b:\bool$, the constant function $\const_b$ is not an equivalence.\index{booleans!const b is not an equivalence@{$\const_b$ is not an equivalence}}
   \end{subexenum}
-\item \label{ex:succ_equiv}Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}\index{succ Z@{$\succZ$}!is an equivalence}\index{is an equivalence!succ Z@{$\succZ$}}
-\item \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is commutative}\index{commutativity!of coproducts}
-\item \label{ex:retr_id} Consider a section-retraction pair
+\exercise \label{ex:succ_equiv}Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}\index{succ Z@{$\succZ$}!is an equivalence}\index{is an equivalence!succ Z@{$\succZ$}}
+\exercise \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is commutative}\index{commutativity!of coproducts}
+\exercise \label{ex:retr_id} Consider a section-retraction pair
   \begin{equation*}
     \begin{tikzcd}
       A \arrow[r,"i"] & B \arrow[r,"r"] & A,
     \end{tikzcd}
   \end{equation*}
   with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity type}\index{identity type!of retract is retract}
-\item \label{ex:sigma_assoc}\index{Sigma-type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence\index{associativity!of Sigma-types@{of $\Sigma$-types}}
+\exercise \label{ex:sigma_assoc}\index{Sigma-type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence\index{associativity!of Sigma-types@{of $\Sigma$-types}}
   \begin{equation*}
     \assocSigma:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
   \end{equation*}
-\item \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
+\exercise \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
   \begin{equation*}
     \swapSigma:\eqv{\Big(\sm{x:A}\sm{y:B}C(x,y)\Big)}{\Big(\sm{y:B}\sm{x:A}C(x,y)\Big)}.
   \end{equation*}
@@ -370,7 +370,7 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
   %\lam{(x',y)}(e(x'),y) : \Big(\sm{x':A'}B(e(x'))\Big)\to\Big(\sm{x:A}B(x)\Big)
   %\end{equation*}
   %is an equivalence.
-\item \label{ex:int_group_laws}\index{integers!group laws} In this exercise we will show that the laws for abelian groups hold for addition on the integers. Note: these are obvious facts, but the proof terms that show \emph{how} the group laws hold are nevertheless fairly involved. This exercise is perfect for a formalization project. 
+\exercise \label{ex:int_group_laws}\index{integers!group laws} In this exercise we will show that the laws for abelian groups hold for addition on the integers. Note: these are obvious facts, but the proof terms that show \emph{how} the group laws hold are nevertheless fairly involved. This exercise is perfect for a formalization project. 
   \begin{subexenum}
   \item Show that addition satisfies the left and right unit laws, i.e., construct terms\index{unit laws!for addition on Z@{for addition on $\Z$}}
     \begin{align*}
@@ -398,7 +398,7 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
     \end{align*}
     Conclude that the functions $y \mapsto x + y$ and $x\mapsto x + y$ are equivalences for any $x:\Z$ and $y:\Z$, respectively.
   \end{subexenum}
-\item \label{ex:coproduct_functor}In this exercise we will construct the \define{functorial action}\index{functorial action!of coproducts}\index{coproduct!functorial action} of coproducts.
+\exercise \label{ex:coproduct_functor}In this exercise we will construct the \define{functorial action}\index{functorial action!of coproducts}\index{coproduct!functorial action} of coproducts.
   \begin{subexenum}
   \item Construct for any two maps $f:A \to A'$ and $g:B \to B'$, a map\index{f + g@{$f+g$}|see {functorial action, of coproducts}}
     \begin{equation*}
@@ -422,7 +422,7 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
     \end{equation*}
   \item \label{ex:coproduct_functor_equivalence}Show that if $f$ and $g$ are equivalences, then so is $f+g$. (The converse of this statement also holds, see \cref{ex:is-equiv-is-equiv-functor-coprod}.)
   \end{subexenum}
-\item Construct equivalences
+\exercise Construct equivalences
   \begin{align*}
     \Fin(m+n) & \simeq \Fin(m)+\Fin(n) \\
     \Fin(mn) & \simeq \Fin(m)\times\Fin(n).

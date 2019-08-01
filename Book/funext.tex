@@ -336,25 +336,25 @@ Now we conclude by the contractibility of the fiber that $(\idfunc[B],\refl{f})=
 \end{proof}
 
 \begin{exercises}
-\item Show that the functions\index{htpy-inv@{$\htpyinv$}!is an equivalence}\index{htpy-concat@{$\htpyconcat$}!is a family of equivalences}\index{htpy-concat'@{$\htpyconcat'$}!is a family of equivalences}\index{is an equivalence!htpy-inv@{$\htpyinv$}}\index{is an equivalence!htpy-concat(H)@{$\htpyconcat(H)$}}\index{is an equivalence!htpy-concat'(K)@{$\htpyconcat'(K)$}}
+\exercise Show that the functions\index{htpy-inv@{$\htpyinv$}!is an equivalence}\index{htpy-concat@{$\htpyconcat$}!is a family of equivalences}\index{htpy-concat'@{$\htpyconcat'$}!is a family of equivalences}\index{is an equivalence!htpy-inv@{$\htpyinv$}}\index{is an equivalence!htpy-concat(H)@{$\htpyconcat(H)$}}\index{is an equivalence!htpy-concat'(K)@{$\htpyconcat'(K)$}}
 \begin{align*}
 \htpyinv & : (f \htpy g) \to (g \htpy f) \\
 \htpyconcat(H) & : (g \htpy h) \to (f \htpy h) \\
 \htpyconcat'(K) & : (f \htpy g) \to (f \htpy h)
 \end{align*}
 are equivalences for every $f,g,h : \prd{x:A}B(x)$. Here, $\htpyconcat'(K)$ is the function defined by $H\mapsto \ct{H}{K}$.
-\item \label{ex:isprop_istrunc}
+\exercise \label{ex:isprop_istrunc}
 \begin{subexenum}
 \item Show that for any type $A$ the type $\iscontr(A)$ is a proposition\index{is-cont(A)r@{$\iscontr(A)$}!is a proposition}\index{is contractible!is a property}. %There's an easy proof using double singleton induction. This is a nice application of weak funext.
 \item Show that for any type $A$ and any $k\geq-2$, the type $\istrunc{k}(A)$ is a proposition.\index{istrunc@{$\istrunc{k}$}!is a proposition}
 \end{subexenum}
-\item \label{lem:postcomp_equiv}
+\exercise \label{lem:postcomp_equiv}
 Let $f:X\to Y$ be a map. Show that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.\index{equivalence!postcomposition}
 \item The map $f\circ\blank : X^A\to Y^A$ is an equivalence for every type $A$.
 \end{enumerate}
-\item \label{ex:isprop_isequiv}Let $f:A\to B$ be a function.
+\exercise \label{ex:isprop_isequiv}Let $f:A\to B$ be a function.
 \begin{subexenum}
 \item Show that if $f$ is an equivalence, then the type $\sm{g:B\to A}f\circ g\htpy \idfunc$ of sections of $f$ is contractible.
 \item Show that if $f$ is an equivalence, then the type $\sm{h:B\to A}h\circ f\htpy \idfunc$ of retractions of $f$ is contractible.
@@ -362,7 +362,7 @@ Let $f:X\to Y$ be a map. Show that the following are equivalent:
 \item Use \cref{ex:prop_equiv,ex:isprop_istrunc} to show that $\isequiv(f)\eqvsym \iscontr(f)$.\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) is-contr(f)@{$\isequiv(f)\eqvsym\iscontr(f)$}}
 \end{subexenum}
 Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the map $\proj 1 : (\eqv{A}{B})\to (A\to B)$ is an embedding.
-\item \label{ex:prop_equiv}
+\exercise \label{ex:prop_equiv}
 \begin{subexenum}
 \item \label{ex:equiv-bi-implication}Let $P$ and $Q$ be propositions. Show that\index{bi-implication}
 \begin{equation*}
@@ -370,7 +370,7 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 \end{equation*}
 \item Show that $P$ is a proposition if and only if $P\to P$ is contractible.
 \end{subexenum}
-\item Show that $\pathsplit(f)$\index{path-split!is a proposition} and $\iscohinvertible(f)$\index{coherently invertible!is a proposition} are propositions for any map $f:A\to B$. Conclude that we have equivalences\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) path-split(f)@{$\isequiv(f)\eqvsym\pathsplit(f)$}}\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) is-coh-invertible(f)@{$\isequiv(f)\eqvsym\iscohinvertible(f)$}}
+\exercise Show that $\pathsplit(f)$\index{path-split!is a proposition} and $\iscohinvertible(f)$\index{coherently invertible!is a proposition} are propositions for any map $f:A\to B$. Conclude that we have equivalences\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) path-split(f)@{$\isequiv(f)\eqvsym\pathsplit(f)$}}\index{is-equiv(f)@{$\isequiv(f)$}!is-equiv(f) is-coh-invertible(f)@{$\isequiv(f)\eqvsym\iscohinvertible(f)$}}
   \begin{equation*}
     \isequiv(f) \eqvsym \pathsplit(f) \eqvsym \iscohinvertible(f).
   \end{equation*}
@@ -389,13 +389,13 @@ Conclude that $\eqv{A}{B}$ is a subtype of $A\to B$, and in particular that the 
 %\end{equation*}
 %\item Show that this map is an equivalence.
 %\end{subexenum}
-\item \label{ex:idfunc_autohtpy}Construct for any type $A$ an equivalence\index{has-inverse(f)@{$\hasinverse(f)$}!has-inverse(id) id htpy id@{$\hasinverse(\idfunc)\simeq (\idfunc\htpy\idfunc)$}}
+\exercise \label{ex:idfunc_autohtpy}Construct for any type $A$ an equivalence\index{has-inverse(f)@{$\hasinverse(f)$}!has-inverse(id) id htpy id@{$\hasinverse(\idfunc)\simeq (\idfunc\htpy\idfunc)$}}
 \begin{equation*}
 \eqv{\hasinverse(\idfunc[A])}{\Big(\idfunc[A]\htpy\idfunc[A]\Big)}.
 \end{equation*}
 Note: We will use this fact in \cref{ex:is_invertible_id_S1} to show that there
 are types for which $\isinvertible(\idfunc[A])\not\eqvsym\isequiv(\idfunc[A])$.
-\item 
+\exercise
 \begin{subexenum}
 \item Show that the type\index{universal property!empty type}\index{empty type!universal property}
 \begin{equation*}
@@ -408,7 +408,7 @@ is contractible for any $P:\emptyt\to \UU$.
   \item The type $Y^X$ is contractible for any type $Y$.
   \end{enumerate}
 \end{subexenum}
-\item Consider two types $A$ and $B$.\index{universal property!coproduct}\index{coproduct!universal property}
+\exercise Consider two types $A$ and $B$.\index{universal property!coproduct}\index{coproduct!universal property}
 \begin{subexenum}
 \item Show that the map\index{ev-inl-inr@{$\evinlinr$}}
 \begin{equation*}
@@ -426,7 +426,7 @@ given by $f\mapsto (f\circ\inl,f\circ\inr)$ is an equivalence.
     is an equivalence.
   \end{enumerate}
 \end{subexenum}
-\item 
+\exercise 
 \begin{subexenum}
 \item Show that the map\index{universal property!unit type}\index{unit type!universal property}\index{ev-pt@{$\evpt$}}
 \begin{equation*}
@@ -443,7 +443,7 @@ given by $\lam{f}f(\ttt)$ is an equivalence.
 is an equivalence.
 \end{enumerate}
 \end{subexenum}
-\item \label{ex:sec_retr}Consider a commuting triangle 
+\exercise \label{ex:sec_retr}Consider a commuting triangle 
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]
 A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
@@ -455,12 +455,12 @@ with $H:f\htpy g\circ h$.
 \item Show that if $h$ has a section, then $\sections(g)$ is a retract of $\sections(f)$.
 \item Show that if $g$ has a retraction, then $\retractions(h)$ is a retract of $\sections(f)$.
 \end{subexenum}
-\item \label{ex:equiv_pi}Let $e_i:\eqv{A_i}{B_i}$ be an equivalence for every $i:I$. Show that the map
+\exercise \label{ex:equiv_pi}Let $e_i:\eqv{A_i}{B_i}$ be an equivalence for every $i:I$. Show that the map
 \begin{equation*}
 \lam{f}{i}e_i\circ f:\Big(\prd{i:I}A_i\Big)\to\Big(\prd{i:I}B_i\Big)
 \end{equation*}
 is an equivalence.
-\item \label{ex:triangle_fib}Consider a diagram of the form
+\exercise \label{ex:triangle_fib}Consider a diagram of the form
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]
 A \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
@@ -477,7 +477,7 @@ A \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 \prd{x:X}\fib{f}{x}\eqvsym\fib{g}{x}.
 \end{equation*}
 \end{subexenum}
-\item \label{ex:sq_fib}Consider a diagram of the form
+\exercise \label{ex:sq_fib}Consider a diagram of the form
 \begin{equation*}
 \begin{tikzcd}
 A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
@@ -493,14 +493,14 @@ Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the ty
 %\begin{equation*}
 %\prd{x:X}\fib{f}{x}\eqvsym\fib{g}{h(x)}.
 %\end{equation*}
-\item \label{ex:iso_equiv}Let $A$ and $B$ be sets. Show that type type $\eqv{A}{B}$ of equivalences from $A$ to $B$ is equivalent to the type $A\cong B$ of \define{isomorphisms}\index{isomorphism}\index{set!isomorphism} from $A$ to $B$, i.e., the type of quadruples $(f,g,H,K)$ consisting of
+\exercise \label{ex:iso_equiv}Let $A$ and $B$ be sets. Show that type type $\eqv{A}{B}$ of equivalences from $A$ to $B$ is equivalent to the type $A\cong B$ of \define{isomorphisms}\index{isomorphism}\index{set!isomorphism} from $A$ to $B$, i.e., the type of quadruples $(f,g,H,K)$ consisting of
 \begin{align*}
 f & : A\to B \\
 g & : B\to A \\
 H & : f\circ g = \idfunc[B] \\
 K & : g\circ f = \idfunc[A].
 \end{align*}
-\item \label{ex:pi_sec}Let $B$ be a type family over $A$, and consider the maps
+\exercise \label{ex:pi_sec}Let $B$ be a type family over $A$, and consider the maps
   \begin{align*}
     \proj 1 & : \sm{x:A} B(x)\to A \\
     \proj1 \circ \blank & : \Big(\sm{x:A} B(x)\Big)^A \to A^A.
@@ -509,11 +509,11 @@ K & : g\circ f = \idfunc[A].
   \begin{equation*}
     \Big(\prd{x:A}B(x)\Big) \eqvsym \sections(\proj 1) \eqvsym \fib{\proj 1 \circ\blank}{\idfunc[A]}.
   \end{equation*}
-\item Suppose that $A:I\to \UU$ is a type family over a set $I$ with decidable equality. Show that
+\exercise Suppose that $A:I\to \UU$ is a type family over a set $I$ with decidable equality. Show that
   \begin{equation*}
     \Big(\prd{i:I}\iscontr(A_i)\Big)\leftrightarrow \iscontr\Big(\prd{i:I}A_i\Big).
   \end{equation*}
-\item Construct equivalences
+\exercise Construct equivalences
   \begin{align*}
     \Fin(n^m) & \simeq (\Fin(m)\to\Fin(n)) \\
     \Fin(n!) & \simeq (\Fin(n)\simeq\Fin(n)).

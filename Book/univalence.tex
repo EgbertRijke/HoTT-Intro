@@ -159,7 +159,7 @@ Note that for any $P:\prop$, we usually also write $P$ for the underlying type o
 \end{proof}
 
 \begin{exercises}
-\item \label{ex:istrunc_UUtrunc}
+\exercise \label{ex:istrunc_UUtrunc}
 \begin{subexenum}
 \item Use the univalence axiom to show that the type $\sm{A:\UU}\iscontr(A)$ of all contractible types in $\UU$ is contractible.\index{universe!of contractible types}
 \item Use \cref{cor:emb_into_ktype,cor:funtype_trunc,ex:isprop_isequiv} to show that if $A$ and $B$ are $(k+1)$-types, then the type $\eqv{A}{B}$ is also a $(k+1)$-type.\index{A simeq B@{$\eqv{A}{B}$}!truncatedness}
@@ -171,8 +171,8 @@ is a $(k+1)$-type, for any $k\geq -2$.
 \item Show that $\UU^{\leq-1}$ is not a proposition.\index{universe!of propositions}
 \item Show that $\eqv{(\eqv{\bool}{\bool})}{\bool}$, and conclude by the univalence axiom that the universe of sets\index{universe!of sets} $\UU^{\leq 0}$ is not a set. 
 \end{subexenum}
-\item Use the univalence axiom to show that the type $\sm{P:\prop}P$ is contractible.
-\item Let $A$ and $B$ be small types. 
+\exercise Use the univalence axiom to show that the type $\sm{P:\prop}P$ is contractible.
+\exercise Let $A$ and $B$ be small types. 
 \begin{subexenum}
 \item Construct an equivalence
 \begin{equation*}
@@ -200,13 +200,13 @@ by $\opp{R}(y,x)\defeq R(x,y)$. Construct an equivalence\index{A simeq B@{$\eqv{
 \eqv{\Big(\sm{R:A\to (B\to \UU)}\isfunction(R)\times\isfunction(\opp{R})\Big)}{(\eqv{A}{B})}.
 \end{equation*}
 \end{subexenum}
-\item
+\exercise
   \begin{subexenum}
   \item Show that $\isdecidable(P)$ is a proposition\index{is-decidable@{$\isdecidable$}!is a proposition}, for any proposition $P$.
   \item Show that $\classicalprop$%
     \index{classical-Prop@{$\classicalprop$}!classical-Prop bool@{$\classicalprop\eqvsym\bool$}} is equivalent to $\bool$.
   \end{subexenum}
-\item Recall that $\UU_\ast$ is the universe of pointed types\index{UU*@{$\UU_\ast$}}.
+\exercise Recall that $\UU_\ast$ is the universe of pointed types\index{UU*@{$\UU_\ast$}}.
   \begin{subexenum}
   \item For any $(A,a)$ and $(B,b)$ in $\UU_\ast$, write $(A,a)\simeq_\ast(B,b)$ for the type of \define{pointed equivalences}\index{pointed equivalence}\index{equivalence!pointed equivalence} from $A$ to $B$, i.e.,
     \begin{equation*}
@@ -222,7 +222,7 @@ by $\opp{R}(y,x)\defeq R(x,y)$. Construct an equivalence\index{A simeq B@{$\eqv{
       \Big(\sm{P:X\to \UU}P(x_0)\Big)\simeq \sm{(A,a_0):\UU_\ast}(A,a_0)\to_\ast(X,x_0).
     \end{equation*}
   \end{subexenum}
-\item Show that any subuniverse\index{subuniverse!closed under equivalences} is closed under equivalences, i.e., show that there is a map
+\exercise Show that any subuniverse\index{subuniverse!closed under equivalences} is closed under equivalences, i.e., show that there is a map
   \begin{equation*}
     (X\simeq Y) \to (P(X)\to P(Y))
   \end{equation*}

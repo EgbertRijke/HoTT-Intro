@@ -325,19 +325,19 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
 \end{constr}
 
 \begin{exercises}
-\item
+\exercise
   \begin{subexenum}
   \item State Goldbach's Conjecture\index{Goldbach's Conjecture} in type theory.
   \item State the Twin Prime Conjecture\index{Twin Prime Conjecture} in type theory.
   \end{subexenum}
-\item \label{ex:inv_assoc}Show that the operation inverting paths distributes over the concatenation operation, i.e., construct an identification
+\exercise \label{ex:inv_assoc}Show that the operation inverting paths distributes over the concatenation operation, i.e., construct an identification
   \index{distributivity!of inv over concat@{of $\invfunc$ over $\concat$}}
   \index{identity type!distributive-inv-concat@{$\distributiveinvconcat$}}
   \begin{align*}
     \distributiveinvconcat(p,q):\id{(\ct{p}{q})^{-1}}{\ct{q^{-1}}{p^{-1}}}.
   \end{align*}
   for any $p:\id{x}{y}$ and $q:\id{y}{z}$.
-\item \label{ex:inv_con}For any $p:x=y$, $q:y=z$, and $r:x=z$, construct maps
+\exercise \label{ex:inv_con}For any $p:x=y$, $q:y=z$, and $r:x=z$, construct maps
   \index{identity type!inv-con@{$\invcon$}}
   \index{inv-con@{$\invcon$}}
   \index{identity type!con-inv@{$\coninv$}}
@@ -346,12 +346,12 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
     \invcon(p,q,r) & : (\ct{p}{q}=r)\to (q=\ct{p^{-1}}{r}) \\
     \coninv(p,q,r) & : (\ct{p}{q}=r)\to (p=\ct{r}{q^{-1}}).
   \end{align*}
-\item Let $B$ be a type family over $A$, and consider a path $p:\id{x}{x'}$ in $A$. Construct for any $y:B(x)$ a path\index{lift@{$\lift$}}\index{identity type!lift@{$\lift$}}
+\exercise Let $B$ be a type family over $A$, and consider a path $p:\id{x}{x'}$ in $A$. Construct for any $y:B(x)$ a path\index{lift@{$\lift$}}\index{identity type!lift@{$\lift$}}
   \begin{equation*}
     \lift_B(p,y) : \id{(x,y)}{(x',\tr_B(p,y))}.
   \end{equation*}
   In other words, a path in the \emph{base type} $A$ \emph{lifts} to a path in the total space $\sm{x:A}B(x)$ for every term over the domain, analogous to the path lifting property for fibrations in homotopy theory.
-\item \label{ex:semi-ring-laws-N}Show that the operations of addition and multiplication on the natural numbers satisfy the laws of a commutative
+\exercise \label{ex:semi-ring-laws-N}Show that the operations of addition and multiplication on the natural numbers satisfy the laws of a commutative
   \define{semi-ring}:%
   \index{semi-ring laws!for N@{for $\N$}}%
   \index{natural numbers!semi-ring laws}%
@@ -371,7 +371,7 @@ Since transporting along $\refl{x}$ is the identity function on $B(x)$, we simpl
     & & m\cdot n & = n\cdot m\\
     & & m\cdot (n+k) & = m\cdot n + m\cdot k.
   \end{align*}
-\item Consider four consecutive identifications
+\exercise Consider four consecutive identifications
   \begin{equation*}
     \begin{tikzcd}
       a \arrow[r,equals,"p"] & b \arrow[r,equals,"q"] & c \arrow[r,equals,"r"] & d \arrow[r,equals,"s"] & e

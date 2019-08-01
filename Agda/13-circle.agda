@@ -212,6 +212,24 @@ abstract
       ( pr2 (ind-circle P))
       ( isretr-ind-circle l ind-circle P)
 
+{- We use the dependent universal property to derive a uniqeness property of
+   dependent functions on the circle. -}
+
+dependent-uniqueness-circle :
+  { l1 l2 : Level} {X : UU l1} (l : free-loops X) →
+  dependent-universal-property-circle l2 l →
+  { P : X → UU l2} (k : dependent-free-loops l P) →
+  is-contr
+    ( Σ ( (x : X) → P x)
+        ( λ h → Eq-dependent-free-loops l P (ev-free-loop' l P h) k))
+dependent-uniqueness-circle l dup-circle {P} k =
+  is-contr-is-equiv'
+    ( fib (ev-free-loop' l P) k)
+    ( tot (λ h → Eq-dependent-free-loops-eq l P (ev-free-loop' l P h) k))
+    ( is-equiv-tot-is-fiberwise-equiv
+      (λ h → is-equiv-Eq-dependent-free-loops-eq l P (ev-free-loop' l P h) k))
+    ( is-contr-map-is-equiv (dup-circle P) k)
+
 {- Now that we have established the dependent universal property, we can
    reduce the (non-dependent) universal property to the dependent case. We do
    so by constructing a commuting triangle relating ev-free-loop to 
@@ -315,6 +333,12 @@ dependent-universal-property-𝕊¹ :
   {l : Level} → dependent-universal-property-circle l free-loop-𝕊¹
 dependent-universal-property-𝕊¹ =
   dependent-universal-property-induction-principle-circle free-loop-𝕊¹ ind-𝕊¹
+
+dependent-uniqueness-𝕊¹ :
+  {l : Level} {P : 𝕊¹ → UU l} (k : dependent-free-loops free-loop-𝕊¹ P) →
+  is-contr (Σ ((x : 𝕊¹) → P x) (λ h → Eq-dependent-free-loops free-loop-𝕊¹ P (ev-free-loop' free-loop-𝕊¹ P h) k))
+dependent-uniqueness-𝕊¹ {l} {P} k =
+  dependent-uniqueness-circle free-loop-𝕊¹ dependent-universal-property-𝕊¹ k
 
 universal-property-𝕊¹ :
   {l : Level} → universal-property-circle l free-loop-𝕊¹

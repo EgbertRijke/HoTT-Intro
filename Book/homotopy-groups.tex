@@ -296,26 +296,26 @@ This is immediate by path induction and the fact that $\alpha(\ast)=\tproj{0}{\r
 \end{proof}
 
 \begin{exercises}
-\item Show that the type of pointed families over a pointed type $(X,x)$ is equivalent to the type
+\exercise Show that the type of pointed families over a pointed type $(X,x)$ is equivalent to the type
 \begin{equation*}
 \sm{Y:\UU_\ast} Y\to_\ast X.
 \end{equation*}
-\item Given two pointed types $A$ and $X$, we say that $A$ is a (pointed) retract of $X$ if we have $i:A\to_\ast X$, a retraction $r:X\to_\ast A$, and a pointed homotopy $H:r\circ_\ast i\htpy_\ast \idfunc^\ast$. 
+\exercise Given two pointed types $A$ and $X$, we say that $A$ is a (pointed) retract of $X$ if we have $i:A\to_\ast X$, a retraction $r:X\to_\ast A$, and a pointed homotopy $H:r\circ_\ast i\htpy_\ast \idfunc^\ast$. 
 \begin{subexenum}
 \item Show that if $A$ is a pointed retract of $X$, then $\loopspace{A}$ is a pointed retract of $\loopspace{X}$. 
 \item Show that if $A$ is a pointed retract of $X$ and $\pi_n(X)$ is a trivial group, then $\pi_n(A)$ is a trivial group.
 \end{subexenum}
-\item Construct by path induction a family of maps
+\exercise Construct by path induction a family of maps
 \begin{equation*}
 \prd{A,B:\UU}{a:A}{b:B} (\id{\pairr{A,a}}{\pairr{B,b}})\to \sm{e:\eqv{A}{B}}e(a)=b,
 \end{equation*}
 and show that this map is an equivalence. In other words, an \emph{identification of pointed types} is a base point preserving equivalence.
-\item Let $\pairr{A,a}$ and $\pairr{B,b}$ be two pointed types. Construct by path induction a family of maps
+\exercise Let $\pairr{A,a}$ and $\pairr{B,b}$ be two pointed types. Construct by path induction a family of maps
 \begin{equation*}
 \prd{f,g:A\to B}{p:f(a)=b}{q:g(a)=b} (\id{\pairr{f,p}}{\pairr{g,q}})\to \sm{H:f\htpy g} p = \ct{H(a)}{q},
 \end{equation*}
 and show that this map is an equivalence. In other words, an \emph{identification of pointed maps} is a base point preserving homotopy.
-\item Show that if $A\leftarrow S\rightarrow B$ is a span of pointed types, then for any pointed type $X$ the square
+\exercise Show that if $A\leftarrow S\rightarrow B$ is a span of pointed types, then for any pointed type $X$ the square
 \begin{equation*}
 \begin{tikzcd}
 (A\sqcup^S B \to_\ast X) \arrow[r] \arrow[d] & (B \to_\ast X) \arrow[d] \\
@@ -323,7 +323,7 @@ and show that this map is an equivalence. In other words, an \emph{identificatio
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
-\item \label{ex:yoneda_ptd_types}Let $f:A\to_\ast B$ be a pointed map. Show that the following are equivalent:
+\exercise \label{ex:yoneda_ptd_types}Let $f:A\to_\ast B$ be a pointed map. Show that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
 \item For any pointed type $X$, the precomposition map
@@ -332,7 +332,7 @@ is a pullback square.
 \end{equation*}
 is an equivalence. 
 \end{enumerate}
-\item In this exercise we prove the suspension-loopspace adjunction.
+\exercise In this exercise we prove the suspension-loopspace adjunction.
 \begin{subexenum}
 \item Construct a pointed equivalence
 \begin{equation*}
@@ -347,7 +347,7 @@ for any two pointed spaces $X$ and $Y$.
 \end{tikzcd}
 \end{equation*}
 \end{subexenum}
-\item Show that if
+\exercise Show that if
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[r] \arrow[d] & B \arrow[d] \\
@@ -361,13 +361,13 @@ is a pullback square of pointed types, then so is
 \loopspace{A} \arrow[r] & \loopspace{X}.
 \end{tikzcd}
 \end{equation*}
-\item 
+\exercise 
 \begin{subexenum}
 \item Show that if $X$ is $k$-truncated, then its $n$-th homotopy group $\pi_n(X)$ is trivial for each choice of base point, and each $n> k$.
 \item Show that if $X$ is $(k+l)$-truncated, and for each $0< i\leq l$ the $(k+i)$-th homotopy groups $\pi_{k+i}(X)$ are trivial for each choice of base point, then $X$ is $k$-truncated.
 \end{subexenum}
 It is consistent to assume that there are types for which all homotopy groups are trivial, but which aren't contractible nonetheless. Such types are called \define{$\infty$-connected}.
-\item
+\exercise
   Consider a cospan
   \begin{equation*}
     \begin{tikzcd}

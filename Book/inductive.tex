@@ -306,7 +306,7 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
 \index{inductive type!cartesian product|)}
 
 \begin{exercises}
-\item
+\exercise
   \index{rules!for unit type}\index{unit type!rules}
   \index{rules!for empty type}\index{empty type!rules}
   \index{rules!for booleans}\index{booleans!rules}
@@ -320,12 +320,12 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
   \item An elimination rule.
   \item Computation rules.
   \end{enumerate}
-\item Let $A$ be a type.
+\exercise Let $A$ be a type.
   \begin{subexenum}
   \item Show that $(A+\neg A)\to(\neg\neg A\to A)$.
   \item Show that $\neg\neg\neg A \to \neg A$.
   \end{subexenum}
-\item \label{ex:boolean-operation}Define the following operations of Boolean algebra:\index{boolean algebra}\index{booleans!exclusive disjunction}\index{booleans!implication}\index{booleans!if and only if}\index{booleans!Peirce's arrow}\index{booleans!Sheffer stroke}
+\exercise \label{ex:boolean-operation}Define the following operations of Boolean algebra:\index{boolean algebra}\index{booleans!exclusive disjunction}\index{booleans!implication}\index{booleans!if and only if}\index{booleans!Peirce's arrow}\index{booleans!Sheffer stroke}
   \begin{center}
     \begin{tabular}{ll}
       exclusive disjunction & $p \oplus q$ \\
@@ -336,20 +336,20 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
     \end{tabular}
   \end{center}
   Here $p$ and $q$ range over $\bool$. 
-\item \label{ex:int_pred}\index{integers|(}\index{predecessor function}\index{function!pred Z@{$\predZ$}}\index{integers!pred Z@{$\predZ$}}\index{pred Z@{$\predZ$}}Define the predecessor function $\predZ:\Z\to \Z$.
-\item \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define the group operations\index{add Z@{$\addZ$}}\index{integers!add Z@{$\addZ$}}\index{neg Z@{$\negZ$}}\index{integers!neg Z@{$\negZ$}}\index{mul Z@{$\mulZ$}}\index{integers!mul Z@{$\mulZ$}}
+\exercise \label{ex:int_pred}\index{integers|(}\index{predecessor function}\index{function!pred Z@{$\predZ$}}\index{integers!pred Z@{$\predZ$}}\index{pred Z@{$\predZ$}}Define the predecessor function $\predZ:\Z\to \Z$.
+\exercise \label{ex:int_group_ops}\index{group operations!on Z@{on $\Z$}}Define the group operations\index{add Z@{$\addZ$}}\index{integers!add Z@{$\addZ$}}\index{neg Z@{$\negZ$}}\index{integers!neg Z@{$\negZ$}}\index{mul Z@{$\mulZ$}}\index{integers!mul Z@{$\mulZ$}}
   \begin{align*}
     \addZ & : \Z \to (\Z \to \Z) \\
     \negZ & : \Z \to \Z,
     \intertext{and define the multiplication}
     \mulZ & : \Z \to (\Z \to \Z).
   \end{align*}
-\item Construct a function $F:\Z\to\Z$ that extends the Fibonacci sequence\index{Fibonacci sequence}\index{integers!Fibonacci sequence} to the negative integers
+\exercise Construct a function $F:\Z\to\Z$ that extends the Fibonacci sequence\index{Fibonacci sequence}\index{integers!Fibonacci sequence} to the negative integers
   \begin{equation*}
     \ldots,5,-3,2,-1,1,0,1,1,2,3,5,8,13,\ldots
   \end{equation*}
   in the expected way.\index{integers|)}
-\item \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e., define
+\exercise \label{ex:one_plus_one} Show that $\unit+\unit$ satisfies the same induction principle\index{induction principle!of booleans} as $\bool$, i.e., define
   \begin{align*}
     t_0 & : \unit + \unit \\
     t_1 & : \unit + \unit,
@@ -364,7 +364,7 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
     \ind{\unit+\unit}(p_0,p_1,t_1) & \jdeq p_1.
   \end{align*}
   In other words, \emph{type theory cannot distinguish between the types $\bool$ and $\unit+\unit$.}
-\item \label{ex:lists}For any type $A$ we can define the type $\lst(A)$\index{list A@{$\lst(A)$}|see {lists in $A$}} of \define{lists}\index{lists in A @{lists in $A$}}\index{inductive type!list A@{$\lst(A)$}} elements of $A$ as the inductive type with constructors\index{lists in A@{lists in $A$}!nil@{$\nil$}}\index{nil@{$\nil$}}\index{cons(a,l)@{$\cons(a,l)$}}\index{lists in A@{lists in $A$}!cons@{$\cons$}}
+\exercise \label{ex:lists}For any type $A$ we can define the type $\lst(A)$\index{list A@{$\lst(A)$}|see {lists in $A$}} of \define{lists}\index{lists in A @{lists in $A$}}\index{inductive type!list A@{$\lst(A)$}} elements of $A$ as the inductive type with constructors\index{lists in A@{lists in $A$}!nil@{$\nil$}}\index{nil@{$\nil$}}\index{cons(a,l)@{$\cons(a,l)$}}\index{lists in A@{lists in $A$}!cons@{$\cons$}}
   \begin{align*}
     \nil & : \lst(A) \\
     \cons & : A \to (\lst(A) \to \lst(A)).

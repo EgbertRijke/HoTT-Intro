@@ -10,11 +10,11 @@ g:\prd{x:A}P(x)\to Q(f(x))
 gives rise to a commuting square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
-\sm{x:A}P(x) \arrow[r,"{\total[f]{g}}"] \arrow[d,swap,"\proj 1"] & \sm{y:B}Q(y) \arrow[d,"\proj 1"] \\
+\sm{x:A}P(x) \arrow[r,"{\tot[f]{g}}"] \arrow[d,swap,"\proj 1"] & \sm{y:B}Q(y) \arrow[d,"\proj 1"] \\
 A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
-where $\total[f]{g}$ is defined as $\lam{(x,y)}(f(x),g(x,y))$. In the main theorem of this chapter we show that $g$ is a family of equivalences if and only if this square satisfies a certain universal property: the universal property of \emph{pullback squares}.
+where $\tot[f]{g}$ is defined as $\lam{(x,y)}(f(x),g(x,y))$. In the main theorem of this chapter we show that $g$ is a family of equivalences if and only if this square satisfies a certain universal property: the universal property of \emph{pullback squares}.
 
 Pullback squares are of interest because they appear in many situations. Cartesian products, fibers of maps, and substitutions can all be presented as pullbacks. Moreover, the fact that a family of maps $g:\prd{x:A}P(x)\to Q(f(x))$ is a family of equivalences if and only if it induces a pullback square has the very useful corollary that a square of the form
 \begin{equation*}
@@ -474,7 +474,7 @@ which commutes by $\proj 2 : \prd{t:\fib{f}{b}} f(\proj 1(t))=b$. This is a pull
 \begin{proof}
 By \cref{thm:is_pullback} it suffices to show that the gap map is an equivalence. The gap map is homotopic to the function
 \begin{equation*}
-\mathsf{total}(\lam{x}{p}(\ttt,p))
+\tot(\lam{x}{p}(\ttt,p))
 \end{equation*}
 The map $\lam{x}{p}(\ttt,p)$ is a family of equivalences by \cref{ex:contr_in_sigma}, so it induces an equivalence on total spaces by \cref{thm:fib_equiv}.
 \end{proof}
@@ -528,7 +528,7 @@ Let $f:A\to B$, and let $g:\prd{a:A}P(a)\to Q(f(a))$ be a family of maps\index{f
 \item The commuting square
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
-\sm{a:A}P(a) \arrow[r,"{\total[f]{g}}"] \arrow[d,->>] & \sm{b:B}Q(b) \arrow[d,->>] \\
+\sm{a:A}P(a) \arrow[r,"{\tot[f]{g}}"] \arrow[d,->>] & \sm{b:B}Q(b) \arrow[d,->>] \\
 A \arrow[r,swap,"f"] & B
 \end{tikzcd}
 \end{equation*}
@@ -541,7 +541,7 @@ is a pullback square.
 The gap map is homotopic to the composite
 \begin{equation*}
 \begin{tikzcd}[column sep=large]
-\sm{x:A}P(x) \arrow[r,"\total{g}"] & \sm{x:A}Q(f(x)) \arrow[r,"{\mathsf{gap}'}"] & A \times_B \Big(\sm{y:B}Q(y)\Big)
+\sm{x:A}P(x) \arrow[r,"\tot{g}"] & \sm{x:A}Q(f(x)) \arrow[r,"{\mathsf{gap}'}"] & A \times_B \Big(\sm{y:B}Q(y)\Big)
 \end{tikzcd}
 \end{equation*}
 where $\mathsf{gap}'$ is the gap map for the square in \cref{lem:pb_subst}. Since $\mathsf{gap}'$ is an equivalence, it follows by \cref{ex:3_for_2,thm:fib_equiv} that the gap map is an equivalence if and only if $g$ is a family of equivalences.
@@ -588,8 +588,8 @@ is a family of equivalences.
 First we observe that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
-\sm{x:X}\fib{f}{x} \arrow[d,swap,"\eqvsym"] \arrow[r,"\total{\mathsf{fib\usc{}sq}}"] &
-\sm{x:X}\fib{g}{f(x)} \arrow[d,"\total{\total{\mathsf{inv}}}"] \\
+\sm{x:X}\fib{f}{x} \arrow[d,swap,"\eqvsym"] \arrow[r,"\tot{\mathsf{fib\usc{}sq}}"] &
+\sm{x:X}\fib{g}{f(x)} \arrow[d,"\tot{\tot{\mathsf{inv}}}"] \\
 A \arrow[r,swap,"\mathsf{gap}"] & X \times_Y B
 \end{tikzcd}
 \end{equation*}
@@ -832,7 +832,7 @@ for each $i:I$. Then the following are equivalent:
 \item The commuting square
 \begin{equation*}
 \begin{tikzcd}
-\sm{i:I}A'_i \arrow[d,swap,"\total{f}"] \arrow[r] & X' \arrow[d,"h"] \\
+\sm{i:I}A'_i \arrow[d,swap,"\tot{f}"] \arrow[r] & X' \arrow[d,"h"] \\
 \sm{i:I}A_i \arrow[r,"\alpha"] & X
 \end{tikzcd}
 \end{equation*}
@@ -850,15 +850,15 @@ By \cref{cor:pb_fibequiv} it suffices to show that the following are equivalent 
 is an equivalence.
 \item The map
 \begin{equation*}
-\mathsf{fib\usc{}sq} : \fib{\total{f}}{i,a}\to \fib{g}{\alpha_i(a)}
+\mathsf{fib\usc{}sq} : \fib{\tot{f}}{i,a}\to \fib{g}{\alpha_i(a)}
 \end{equation*}
 is an equivalence.
 \end{enumerate}
 To see this, note that we have a commuting triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=-1em]
-\fib{f_i}{a} \arrow[rr] \arrow[dr] & & \fib{\total{f}}{i,a} \arrow[dl] \\
-\phantom{\fib{\total{f}}{i,a}} & \fib{g}{\alpha_i(a)},
+\fib{f_i}{a} \arrow[rr] \arrow[dr] & & \fib{\tot{f}}{i,a} \arrow[dl] \\
+\phantom{\fib{\tot{f}}{i,a}} & \fib{g}{\alpha_i(a)},
 \end{tikzcd}
 \end{equation*}
 where the top map is an equivalence by \cref{lem:fib_total}. Therefore the claim follows by the 3-for-2 property of equivalences.
@@ -883,7 +883,7 @@ Then there is an equivalence
 
 
 \begin{exercises}
-\item \label{ex:id_pb}\index{identity type!as pullback}
+\exercise \label{ex:id_pb}\index{identity type!as pullback}
 \begin{subexenum}
 \item Show that the square\index{identity type!as pullback}
 \begin{equation*}
@@ -902,7 +902,7 @@ is a pullback square.
 \end{equation*}
 is a pullback square, where $\delta_A:A\to A\times A$ is the diagonal of $A$, defined in \cref{ex:diagonal}.
 \end{subexenum}
-\item \label{ex:trunc_diagonal_map}In this exercise we give an alternative characterization of the notion of $k$-truncated map, compared to \cref{thm:trunc_ap}. Given a map $f:A\to X$ define the \define{diagonal}\index{diagonal!of a map} of $f$ to be the map $\delta_f:A\to A\times_X A$ given by $x\mapsto (x,x,\refl{f(x)})$.
+\exercise \label{ex:trunc_diagonal_map}In this exercise we give an alternative characterization of the notion of $k$-truncated map, compared to \cref{thm:trunc_ap}. Given a map $f:A\to X$ define the \define{diagonal}\index{diagonal!of a map} of $f$ to be the map $\delta_f:A\to A\times_X A$ given by $x\mapsto (x,x,\refl{f(x)})$.
 \begin{subexenum}
 \item Construct an equivalence
 \begin{equation*}
@@ -919,7 +919,7 @@ is a pullback square, for every $x,y:A$ and $p:f(x)=f(y)$.
 \item Show that a map $f:A\to X$ is $(k+1)$-truncated if and only if $\delta_f$ is $k$-truncated.\index{truncated!map!by truncatedness of diagonal}
 \end{subexenum}
 Conclude that $f$ is an embedding if and only if $\delta_f$ is an equivalence.\index{embedding!diagonal is an equivalence}
-\item Consider a commuting square 
+\exercise Consider a commuting square 
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
@@ -934,7 +934,7 @@ B \arrow[r,swap,"g"] & X
 \end{tikzcd}
 \end{equation*}
 with $H^{-1}:g\circ q\htpy f\circ p$ is a pullback square.
-\item Show that any square of the form
+\exercise Show that any square of the form
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[r] \arrow[d] & B \arrow[d] \\
@@ -942,7 +942,7 @@ C \arrow[r] \arrow[d] & B \arrow[d] \\
 \end{tikzcd}
 \end{equation*}
 commutes and is a pullback square. This is the \emph{descent property} of the empty type.\index{descent!empty type}
-\item Consider a commuting square
+\exercise Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
@@ -962,7 +962,7 @@ A^T \arrow[r,swap,"f\circ\blank"] & X^T
 is a pullback square.
 \end{enumerate}
 Note: property (ii) is really just a rephrasing of the universal property of pullbacks.\index{pullback square!universal property}
-\item \label{ex:pb_diagonal}Consider a commuting square
+\exercise \label{ex:pb_diagonal}Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
@@ -981,7 +981,7 @@ A\times B \arrow[r,swap,"f\times g"] & X\times X
 \end{equation*}
 which commutes by $\lam{z}\mathsf{eq\usc{}pair}(H(z),\refl{g(q(z))})$ is a pullback square.
 \end{enumerate}
-\item \label{ex:pb_prod}Consider two commuting squares\index{pullback!cartesian products of pullbacks}
+\exercise \label{ex:pb_prod}Consider two commuting squares\index{pullback!cartesian products of pullbacks}
 \begin{equation*}
 \begin{tikzcd}
 C_1 \arrow[r] \arrow[d] & B_1 \arrow[d] & C_2 \arrow[r] \arrow[d] & B_2 \arrow[d] \\
@@ -999,7 +999,7 @@ A_1 \times A_2 \arrow[r] & X_1\times X_2.
 is also a pullback square.
 \item Show that if there are terms $t_1:A_1\times_{X_1}B_1$ and $t_2:A_2\times_{X_2}B_2$, then the converse of (a) also holds.
 \end{subexenum}
-\item Consider for each $i:I$ a pullback square
+\exercise Consider for each $i:I$ a pullback square
 \begin{equation*}
 \begin{tikzcd}
 C_i \arrow[r,"q_i"] \arrow[d,swap,"p_i"] & B_i \arrow[d,"g_i"] \\
@@ -1015,7 +1015,7 @@ Show that the commuting square
 \end{tikzcd}
 \end{equation*}
 is a pullback square.
-%\item 
+%\exercise
 %\begin{subexenum}
 %\item Show that \index{equivalence!type of equivalences!as pullback}
 %\begin{equation*}
@@ -1034,7 +1034,7 @@ is a pullback square.
 %\end{equation*}
 %is a pullback square.
 %\end{subexenum}
-%\item Consider a commuting square
+%\exercise Consider a commuting square
 %\begin{equation*}
 %\begin{tikzcd}
 %C \arrow[r] \arrow[d] & A \arrow[d] \\
@@ -1043,7 +1043,7 @@ is a pullback square.
 %\end{equation*}
 %Show that this square is cartesian if and only if the induced map $C\to A\times_X B$ has a retraction.
 %\end{subexenum}
-%\item Suppose that the squares
+%\exercise Suppose that the squares
 %\begin{equation*}
 %\begin{tikzcd}
 %C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] & {C'} \arrow[r,"{q'}"] \arrow[d,swap,"{p'}"] & B \arrow[d,"g"] \\
@@ -1056,7 +1056,7 @@ is a pullback square.
 %\end{equation*}
 %is contractible.
 \begin{comment}
-\item Consider a \define{natural transformation of cospans}\index{cospan!natural transformation of}, i.e., a commuting diagram of the form
+\exercise Consider a \define{natural transformation of cospans}\index{cospan!natural transformation of}, i.e., a commuting diagram of the form
 \begin{equation*}
 \begin{tikzcd}
 A \arrow[r,"f"] \arrow[d,swap,"i"] & X \arrow[d,swap,"j"] & B \arrow[l,swap,"g"] \arrow[d,"k"] \\
@@ -1070,7 +1070,7 @@ Show that the map
 is $k$-truncated if each of the vertical maps is.
 \end{comment}
 \begin{comment}
-\item \label{ex:pb_fib}Consider a commuting square
+\exercise \label{ex:pb_fib}Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
 C \arrow[d,swap,"p"] \arrow[r,"q"] & B \arrow[d,"g"] \\

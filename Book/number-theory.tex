@@ -379,8 +379,8 @@ Some further ideas to include in this chapter:
 \end{enumerate}
 
 \begin{exercises}
-\item Show that for any $f:\Fin(m)\to\Fin(n)$ and any $i:\Fin(n)$, the type $\fib{f}{i}$ is decidable.
-\item Consider a decidable type $P(i)$ indexed by $i:\Fin(n)$.
+\exercise Show that for any $f:\Fin(m)\to\Fin(n)$ and any $i:\Fin(n)$, the type $\fib{f}{i}$ is decidable.
+\exercise Consider a decidable type $P(i)$ indexed by $i:\Fin(n)$.
   \begin{subexenum}
   \item Show that the type
     \begin{equation*}
@@ -393,17 +393,17 @@ Some further ideas to include in this chapter:
     \end{equation*}
     is decidable.
   \end{subexenum}
-\item
+\exercise
   \begin{subexenum}
-  \item Show that $\nat$ and $\bool$ have decidable equality. Hint: to show that $\N$ has decidable equality, show first that the successor function is injective.
+  \item Show that $\N$ and $\bool$ have decidable equality. Hint: to show that $\N$ has decidable equality, show first that the successor function is injective.
   \item Show that if $A$ and $B$ have decidable equality, then so do $A+B$ and $A\times B$. Conclude that $\Z$ has decidable equality.
   \item Show that if $A$ is a retract of a type $B$ with decidable equality, then $A$ also has decidable equality.
   \end{subexenum}
-\item Define the prime-counting function $\pi:\N\to\N$.
-\item (The Cantor-Schr\"oder-Bernstein theorem) Let $X$ and $Y$ be two sets with decidable equality, and consider two maps $f:X\to Y$ and $g:Y\to X$, both of which we assume to be injective. Construct an equivalence $X\simeq Y$.
-\item For any $k:\Z$, define a function $i\mapsto i+k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence.
-\item For any $k:\Z$, define a function $i\mapsto i\cdot k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence if and only if $\gcd(n,k)=1$.
-\item Show that
+\exercise Define the prime-counting function $\pi:\N\to\N$.
+\exercise (The Cantor-Schr\"oder-Bernstein theorem) Let $X$ and $Y$ be two sets with decidable equality, and consider two maps $f:X\to Y$ and $g:Y\to X$, both of which we assume to be injective. Construct an equivalence $X\simeq Y$.
+\exercise For any $k:\Z$, define a function $i\mapsto i+k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence.
+\exercise For any $k:\Z$, define a function $i\mapsto i\cdot k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence if and only if $\gcd(n,k)=1$.
+\exercise Show that
   \begin{equation*}
     \sum_{i=0}^n \binom{n-i}{i}=F_{n+1}
   \end{equation*}
