@@ -1397,3 +1397,77 @@ hom-mul-Group :
   {l : Level} (G : Group l) →
   hom-Group G Aut
 -}
+
+-- Reviewing
+
+LL : {l1 : Level} (l2 : Level) (X : UU l1) → UU ((lsuc l2) ⊔ l1)
+LL l2 X = Σ (UU l2) (λ P → (P → X) × (is-prop P))
+
+Eq-LL :
+  {l1 : Level} (l2 : Level) (X : UU l1) →
+  (x y : LL l2 X) → UU (l2 ⊔ l1)
+Eq-LL l2 X (pair P (pair f p)) y =
+  Σ (P ≃ (pr1 y)) (λ e → f ~ ((pr1 (pr2 y)) ∘ (map-equiv e)))
+
+reflexive-Eq-LL :
+  {l1 : Level} (l2 : Level) (X : UU l1) →
+  (x : LL l2 X) → Eq-LL l2 X x x
+reflexive-Eq-LL l2 X (pair P (pair f p)) = pair (equiv-id P) htpy-refl
+
+Eq-LL-eq :
+  {l1 l2 : Level} {X : UU l1} →
+  (x y : LL l2 X) → Id x y → Eq-LL l2 X x y
+Eq-LL-eq {l1} {l2} {X} x .x refl = reflexive-Eq-LL l2 X x
+
+is-contr-total-Eq-LL :
+  {l1 l2 : Level} {X : UU l1} (x : LL l2 X) →
+  is-contr (Σ (LL l2 X) (Eq-LL l2 X x))
+is-contr-total-Eq-LL (pair P (pair f p)) =
+  is-contr-total-Eq-structure
+    ( λ Q gq (e : P ≃ Q) → f ~ ((pr1 gq) ∘ (map-equiv e)))
+    ( is-contr-total-equiv P)
+    ( pair P (equiv-id P))
+    ( is-contr-total-Eq-substructure
+      ( is-contr-total-htpy f)
+      ( λ h → is-prop-is-prop P)
+      ( f)
+      ( htpy-refl)
+      ( p))
+
+unit-LL : {l1 : Level} (l2 : Level) {X : UU l1} → X → LL l2 X
+unit-LL l2 {X} x =
+  pair
+    ( raise l2 unit)
+    ( pair
+      ( const (raise l2 unit) X x)
+      ( is-prop-is-equiv'
+        unit
+        ( map-raise l2 unit)
+        ( is-equiv-map-raise l2 unit)
+        is-prop-unit))
+
+functor-LL :
+  {l1 l1' : Level} (l2 : Level) {X : UU l1} {X' : UU l1'} (h : X → X') →
+  LL l2 X → LL l2 X'
+functor-LL l2 h =
+  tot
+    ( λ P →
+      toto
+        ( λ f → is-prop P)
+        ( λ f → h ∘ f)
+        ( λ f → id))
+
+htpy-id-functor-LL :
+  {l1 : Level} (l2 : Level) {X : UU l1} →
+  (functor-LL l2 (id {A = X})) ~ id
+htpy-id-functor-LL l2 {X} (pair P (pair f p)) = refl
+
+mul-LL :
+  {l1 l2 : Level} (X : UU l1) → (LL l2 (LL l2 X)) → LL l2 X
+mul-LL X (pair P (pair f p)) =
+  pair
+    ( Σ P (λ p → pr1 (f p)))
+    ( pair
+      ( λ p → {!!})
+      {!!})
+

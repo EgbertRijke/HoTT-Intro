@@ -462,6 +462,11 @@ abstract
 
 -- Section 9.3 Composing with equivalences.
 
+precomp-Π :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
+  ((b : B) → C b) → ((a : A) → C (f a))
+precomp-Π f C h a = h (f a)
+
 tr-precompose-fam :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3)
   (f : A → B) {x y : A} (p : Id x y) → tr C (ap f p) ~ tr (λ x → C (f x)) p
@@ -471,9 +476,9 @@ abstract
   is-equiv-precomp-Π-is-half-adjoint-equivalence :
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
     is-half-adjoint-equivalence f →
-    (C : B → UU l3) → is-equiv (λ (s : (y : B) → C y) (x : A) → s (f x))
+    (C : B → UU l3) → is-equiv (precomp-Π f C)
   is-equiv-precomp-Π-is-half-adjoint-equivalence f
-    ( pair g (pair issec-g (pair isretr-g coh))) C =
+    ( pair g (pair issec-g (pair isretr-g coh))) C = 
     is-equiv-has-inverse
       (λ s y → tr C (issec-g y) (s (g y)))
       ( λ s → eq-htpy (λ x → 
@@ -481,11 +486,6 @@ abstract
         ( ( tr-precompose-fam C f (isretr-g x) (s (g (f x)))) ∙
           ( apd s (isretr-g x)))))
       ( λ s → eq-htpy λ y → apd s (issec-g y))
-
-precomp-Π :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
-  ((b : B) → C b) → ((a : A) → C (f a))
-precomp-Π f C h a = h (f a)
 
 abstract
   is-equiv-precomp-Π-is-equiv :
@@ -1883,3 +1883,4 @@ is-contr-total-Eq-Π {A = A} {B} C is-contr-total-C f =
     ( (x : A) → Σ (B x) (C x))
     ( equiv-choice-∞ C)
     ( is-contr-Π is-contr-total-C)
+

@@ -21,7 +21,7 @@ in context $\Gamma$, consisting of all the dependent functions of which the outp
 \item The elimination rule, which tells us how to use arbitrary terms of dependent function types.
 \item The computation rules, which tell us how the introduction and elimination rules interact. These computation rules guarantee that every term of a dependent function type behaves as expected: as a dependent function.
 \end{enumerate}
-In the cases of the formation rule, the introduction rule, and the elimination rule, we will also provide conversion rules that ensure that all the constructions respect judgmental equality.
+In the cases of the formation rule, the introduction rule, and the elimination rule, we also need rules that assert that all the constructions respect judgmental equality. Those rules are called \define{congruence rules}.
 
 \subsubsection{The $\Pi$-formation rule}
 \index{dependent function type!formation rule}
@@ -31,16 +31,22 @@ In the cases of the formation rule, the introduction rule, and the elimination r
 \RightLabel{$\Pi$.}
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)~\type$}
 \end{prooftree}
-With the following conversion rule we postulate that formation of dependent function types respects judgmental equality of types:
-\index{rules!for dependent function types!conversion}
-\index{dependent function type!conversion rule}
+
+The congruence rule for $\Pi$-formation asserts that formation of dependent function types respects judgmental equality of types:
+\index{rules!for dependent function types!congruence}
+\index{dependent function type!congruence rule}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A\jdeq A'~\type$}
 \AxiomC{$\Gamma,x:A\vdash B(x)\jdeq B'(x)~\textrm{type}$}
 \RightLabel{$\Pi$-eq.}
 \BinaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq\prd{x:A'}B'(x)~\type$}
 \end{prooftree}
-Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the context $\Gamma,x:A$, we also postulate that
+
+There is one last rule that we need about the formation of $\Pi$-types, asserting that it does not matter what name we use for the variable $x$ that appears in the expression
+\begin{equation*}
+  \prd{x:A}B(x).
+\end{equation*}
+More precisely, when $x'$ is a fresh variable, i.e., which does not occur in the context $\Gamma,x:A$, we postulate that
 \index{rules!for dependent function types!change of bound variable}
 \index{dependent function type!change of bound variable}
 \begin{prooftree}
@@ -48,6 +54,7 @@ Furthermore, when $x'$ is a fresh variable, i.e., which does not occur in the co
 \RightLabel{$\Pi$-$x'/x$.}
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)\jdeq \prd{x':A}B(x')~\type$}
 \end{prooftree}
+This rule is also known as \define{$\alpha$-conversion} for $\Pi$-types.
 
 \subsubsection{The $\Pi$-introduction rule}
 The introduction rule%
@@ -64,10 +71,12 @@ is as follows:
   \UnaryInfC{$\Gamma\vdash \lam{x}b(x) : \prd{x:A}B(x)$}
 \end{prooftree}
 
-Just like ordinary mathematicians, we will sometimes write $x\mapsto f(x)$ for a function $f$. The map $n\mapsto n^2$ is an example. The $\lambda$-abstraction is also required to respect judgmental equality. Therefore we postulate the \define{$\lambda$-conversion rule},
-\index{rules!for dependent function types!lambda-conversion@{$\lambda$-conversion}}
-\index{lambda-conversion@{$\lambda$-conversion}}
-\index{dependent function type!lambda-conversion@{$\lambda$-conversion}}
+Just like ordinary mathematicians, we will sometimes write $x\mapsto f(x)$ for a function $f$. The map $n\mapsto n^2$ is an example.
+
+The $\lambda$-abstraction is also required to respect judgmental equality. Therefore we postulate the \define{congruence rule} for $\lambda$-abstraction,
+\index{rules!for dependent function types!lambda-congruence@{$\lambda$-congruence}}
+\index{lambda-congruence@{$\lambda$-congruence}}
+\index{dependent function type!lambda-congruence@{$\lambda$-congruence}}
 which asserts that
 \begin{prooftree}
   \AxiomC{$\Gamma,x:A \vdash b(x)\jdeq b'(x) : B(x)$}
@@ -119,7 +128,7 @@ In the case where both $A$ and $B$ are types in context $\Gamma$, we may first w
 \end{prooftree}
 The result is the type of functions that take an argument of type $A$, and return a term of type $B$. In other words, terms of the type $\prd{x:A}B$ are \emph{ordinary} functions from $A$ to $B$. We write $A\to B$\index{A arrow B@{$A\to B$}|see {function type}} for the \define{type of functions}\index{function type} from $A$ to $B$. Sometimes we will also write $B^A$\index{B^A@{$B^A$}|see {function type}} for the type $A\to B$.
 
-We give a brief summary of the rules specifying ordinary function types, omitting the conversion rules. All of these rules can be derived easily from the corresponding rules for $\Pi$-types.\index{rules!for function types}
+We give a brief summary of the rules specifying ordinary function types, omitting the congruence rules. All of these rules can be derived easily from the corresponding rules for $\Pi$-types.\index{rules!for function types}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}

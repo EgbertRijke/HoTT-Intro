@@ -246,7 +246,8 @@ abstract
     is-set-prop-in-id
       Eq-ℕ
       is-prop-Eq-ℕ
-      refl-Eq-ℕ eq-Eq-ℕ
+      refl-Eq-ℕ
+      eq-Eq-ℕ
 
 set-ℕ : UU-Set lzero
 set-ℕ = pair ℕ is-set-ℕ
