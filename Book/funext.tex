@@ -73,7 +73,7 @@ For the remainder of this chapter we will assume that the function extensionalit
 As a first application of the function extensionality axiom we generalize the weak function extensionality axiom to $k$-types.
 
 \begin{thm}\label{thm:trunc_pi}\index{k-type@{$k$-type}}
-Assume function extensionality. Then for any type family $B$ over $A$ one has\index{truncated type!closed under Pi@{closed under $\Pi$}}
+For any type family $B$ over $A$ one has\index{truncated type!closed under Pi@{closed under $\Pi$}}
 \begin{equation*}
 \Big(\prd{x:A}\istrunc{k}(B(x))\Big)\to \istrunc{k}\Big(\prd{x:A}B(x)\Big).
 \end{equation*}
@@ -177,7 +177,7 @@ given by $\lam{(f,g)}{x}(f(x),g(x))$ is an equivalence.
   \end{equation*}
   Now we note that the type $(f(x)=1)+(f(x)=0)$ is contractible for any $f:A\to\bool$ and $x:A$. Therefore we have equivalences
   \begin{align*}
-    \sm{f:A\to\bool}\prd{x:A}P(f(x) & \simeq
+    \sm{f:A\to\bool}\prd{x:A}P(f(x)) & \simeq
     \sm{f:A\to\bool}\prd{x:A}{t:(f(x)=1)+(f(x)=0)}P(f(x)) \\
     & \simeq \sm{f:A\to\bool}(\fib{f}{1}\to B)\times (\fib{f}{0}\to C)
   \end{align*}
