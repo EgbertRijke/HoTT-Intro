@@ -40,7 +40,7 @@ reflexive-htpy-cocone :
   (f : S → A) (g : S → B) {X : UU l4} (c : cocone f g X) →
   htpy-cocone f g c c
 reflexive-htpy-cocone f g (pair i (pair j H)) =
-  pair htpy-refl (pair htpy-refl htpy-right-unit)
+  pair refl-htpy (pair refl-htpy htpy-right-unit)
 
 htpy-cocone-eq :
   {l1 l2 l3 l4 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -57,13 +57,13 @@ is-contr-total-htpy-cocone f g c =
     ( λ i' jH' K → Σ ((pr1 (pr2 c)) ~ (pr1 jH'))
       ( coherence-htpy-cocone f g c (pair i' jH') K))
     ( is-contr-total-htpy (pr1 c))
-    ( pair (pr1 c) htpy-refl)
+    ( pair (pr1 c) refl-htpy)
     ( is-contr-total-Eq-structure
       ( λ j' H' → coherence-htpy-cocone f g c
         ( pair (pr1 c) (pair j' H'))
-        ( htpy-refl))
+        ( refl-htpy))
       ( is-contr-total-htpy (pr1 (pr2 c)))
-      ( pair (pr1 (pr2 c)) htpy-refl)
+      ( pair (pr1 (pr2 c)) refl-htpy)
       ( is-contr-is-equiv'
         ( Σ (((pr1 c) ∘ f) ~ ((pr1 (pr2 c)) ∘ g)) (λ H' → (pr2 (pr2 c)) ~ H'))
         ( tot (λ H' M → htpy-right-unit ∙h M))
@@ -437,16 +437,16 @@ pointed-htpy :
 pointed-htpy (pair X x) (pair P p) (pair f α) g =
   pointed-Π (pair X x) (pair (λ x' → Id (f x') (pr1 g x')) (α ∙ (inv (pr2 g))))
 
-pointed-htpy-refl :
+pointed-refl-htpy :
   {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) →
   (f : pointed-Π X P) → pointed-htpy X P f f
-pointed-htpy-refl (pair X x) (pair P p) (pair f α) =
-  pair htpy-refl (inv (right-inv α))
+pointed-refl-htpy (pair X x) (pair P p) (pair f α) =
+  pair refl-htpy (inv (right-inv α))
 
 pointed-htpy-eq :
   {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) →
   (f g : pointed-Π X P) → Id f g → pointed-htpy X P f g
-pointed-htpy-eq X P f .f refl = pointed-htpy-refl X P f
+pointed-htpy-eq X P f .f refl = pointed-refl-htpy X P f
 
 is-contr-total-pointed-htpy :
   {l1 l2 : Level} (X : UU-pt l1) (P : pointed-fam l2 X) (f : pointed-Π X P) →
@@ -455,7 +455,7 @@ is-contr-total-pointed-htpy (pair X x) (pair P p) (pair f α) =
   is-contr-total-Eq-structure
     ( λ g β (H : f ~ g) → Id (H x) (α ∙ (inv β)))
     ( is-contr-total-htpy f)
-    ( pair f htpy-refl)
+    ( pair f refl-htpy)
     ( is-contr-equiv'
       ( Σ (Id (f x) p) (λ β → Id β α))
       ( equiv-tot (λ β → equiv-con-inv refl β α))
@@ -466,7 +466,7 @@ is-equiv-pointed-htpy-eq :
   (f g : pointed-Π X P) → is-equiv (pointed-htpy-eq X P f g)
 is-equiv-pointed-htpy-eq X P f =
   fundamental-theorem-id f
-    ( pointed-htpy-refl X P f)
+    ( pointed-refl-htpy X P f)
     ( is-contr-total-pointed-htpy X P f)
     ( pointed-htpy-eq X P f)
 
@@ -501,8 +501,8 @@ htpy-precomp H C h = eq-htpy (h ·l H)
 
 compute-htpy-precomp :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : UU l3) →
-  (htpy-precomp (htpy-refl' f) C) ~ htpy-refl
-compute-htpy-precomp f C h = eq-htpy-htpy-refl (h ∘ f)
+  (htpy-precomp (refl-htpy' f) C) ~ refl-htpy
+compute-htpy-precomp f C h = eq-htpy-refl-htpy (h ∘ f)
 
 cone-pullback-property-pushout :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -698,7 +698,7 @@ wedge-inclusion {l1} {l2} (pair A a) (pair B b) =
       ( λ x → pair x b)
       ( pair
         ( λ y → pair a y)
-        ( htpy-refl)))
+        ( refl-htpy)))
 
 -- Exercises
 
@@ -968,19 +968,19 @@ is-contr-pt A = is-contr (pr1 A)
 
 -- Exercise 16.2
 
-ev-disjunction :
-  {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
-  ((type-Prop P) * (type-Prop Q) → (type-Prop R)) →
-  (type-Prop P → type-Prop R) × (type-Prop Q → type-Prop R)
-ev-disjunction P Q R f =
-  pair
-    ( f ∘ (inl-join (type-Prop P) (type-Prop Q)))
-    ( f ∘ (inr-join (type-Prop P) (type-Prop Q)))
+-- ev-disjunction :
+--   {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
+--   ((type-Prop P) * (type-Prop Q) → (type-Prop R)) →
+--   (type-Prop P → type-Prop R) × (type-Prop Q → type-Prop R)
+-- ev-disjunction P Q R f =
+--   pair
+--     ( f ∘ (inl-join (type-Prop P) (type-Prop Q)))
+--     ( f ∘ (inr-join (type-Prop P) (type-Prop Q)))
 
-comparison-ev-disjunction :
-  {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
-  cocone-join (type-Prop P) (type-Prop Q) (type-Prop R)
+-- comparison-ev-disjunction :
+--   {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
+--   cocone-join (type-Prop P) (type-Prop Q) (type-Prop R)
 
-universal-property-disjunction-join-prop :
-  {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
-  is-equiv (ev-disjunction P Q R)
+-- universal-property-disjunction-join-prop :
+--   {l1 l2 l3 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (R : UU-Prop l3) →
+--   is-equiv (ev-disjunction P Q R)

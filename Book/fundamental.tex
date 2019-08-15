@@ -311,11 +311,9 @@ The reflexivity term $\rho$ is constructed by induction on $t:A+B$, using
 \end{align*}
 \end{constr}
 
-To show that $\Eqcoprodeq$ is a family of equivalences, we will use the fundamental theorem, \cref{thm:id_fundamental}. Moreover, we will use the functoriality of coproducts (established in \cref{ex:coproduct_functor}), along with the following facts about $\Sigma$-types, coproducts, and the empty type:
+To show that $\Eqcoprodeq$ is a family of equivalences, we will use the fundamental theorem, \cref{thm:id_fundamental}. Moreover, we will use the functoriality of coproducts (established in \cref{ex:coproduct_functor}), and the fact that any total space over a coproduct is again a coproduct:
 \begin{align*}
-\sm{t:A+B}P(t) & \eqvsym \Big(\sm{x:A}P(\inl(x))\Big)+\Big(\sm{y:B}P(\inr(y))\Big)\\
-\sm{x:A}\emptyt & \eqvsym \emptyt \\
-A+\emptyt & \eqvsym A.
+\sm{t:A+B}P(t) & \eqvsym \Big(\sm{x:A}P(\inl(x))\Big)+\Big(\sm{y:B}P(\inr(y))\Big)
 \end{align*}
 All of these equivalences are straightforward to construct, so we leave them as an exercise to the reader. 
 
@@ -342,7 +340,7 @@ is contractible. Note that we have equivalences
 & \eqvsym \sm{x':A}x=x'.
 \end{align*}%
 \end{samepage}%
-The latter type is contractible by \cref{thm:total_path}.
+In the last two equivalences we used \cref{ex:unit-laws-coprod}. This shows that the total space is contractible, since the latter type is contractible by \cref{thm:total_path}.
 \end{proof}
 
 \begin{proof}[Proof of \cref{thm:id-coprod-compute}]

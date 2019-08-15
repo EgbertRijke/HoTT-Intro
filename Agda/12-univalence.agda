@@ -8,17 +8,16 @@ open 11-function-extensionality public
 -- Section 10.1 Type extensionality
 
 equiv-eq : {i : Level} {A : UU i} {B : UU i} → Id A B → A ≃ B
-equiv-eq {A = A} refl = pair id (is-equiv-id A)
+equiv-eq {A = A} refl = equiv-id A
 
 UNIVALENCE : {i : Level} (A B : UU i) → UU (lsuc i)
 UNIVALENCE A B = is-equiv (equiv-eq {A = A} {B = B})
-
 
 is-contr-total-equiv-UNIVALENCE : {i : Level} (A : UU i) →
   ((B : UU i) → UNIVALENCE A B) → is-contr (Σ (UU i) (λ X → A ≃ X))
 is-contr-total-equiv-UNIVALENCE A UA =
   fundamental-theorem-id' A
-    ( pair id (is-equiv-id A))
+    ( equiv-id A)
     ( λ B → equiv-eq {B = B})
     ( UA)
 
@@ -26,20 +25,20 @@ UNIVALENCE-is-contr-total-equiv : {i : Level} (A : UU i) →
   is-contr (Σ (UU i) (λ X → A ≃ X)) → (B : UU i) → UNIVALENCE A B
 UNIVALENCE-is-contr-total-equiv A c =
   fundamental-theorem-id A
-    ( pair id (is-equiv-id A))
+    ( equiv-id A)
     ( c)
     ( λ B → equiv-eq {B = B})
 
 ev-id : {i j : Level} {A : UU i} (P : (B : UU i) → (A ≃ B) → UU j) →
-  ((B : UU i) (e : A ≃ B) → P B e) → P A (pair id (is-equiv-id A))
-ev-id {A = A} P f = f A (pair id (is-equiv-id A))
+  ((B : UU i) (e : A ≃ B) → P B e) → P A (equiv-id A)
+ev-id {A = A} P f = f A (equiv-id A)
 
 IND-EQUIV : {i j : Level} {A : UU i} → ((B : UU i) (e : A ≃ B) → UU j) → UU _
 IND-EQUIV P = sec (ev-id P)
 
 triangle-ev-id : {i j : Level} {A : UU i}
   (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) →
-  (ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (pair id (is-equiv-id A))) P)
+  (ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (equiv-id A)) P)
   ~ ((ev-id (λ X e → P (pair X e))) ∘ (ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P}))
 triangle-ev-id P f = refl
 
@@ -49,16 +48,16 @@ abstract
     (P : (Σ (UU i) (λ X → A ≃ X)) → UU j) → IND-EQUIV (λ B e → P (pair B e))
   IND-EQUIV-is-contr-total-equiv {i} {j} A c P =
     section-comp
-      ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (pair id (is-equiv-id A))) P)
+      ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (equiv-id A)) P)
       ( ev-id (λ X e → P (pair X e)))
       ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
       ( triangle-ev-id P)
       ( sec-ev-pair (UU i) (λ X → A ≃ X) P)
       ( is-sing-is-contr (Σ (UU i) (λ X → A ≃ X))
         ( pair
-          ( pair A (pair id (is-equiv-id A)))
+          ( pair A (equiv-id A))
           ( λ t → 
-            ( inv (contraction c (pair A (pair id (is-equiv-id A))))) ∙
+            ( inv (contraction c (pair A (equiv-id A)))) ∙
             ( contraction c t)))
         ( P)
         ( pair A (equiv-id A)))
@@ -71,9 +70,9 @@ abstract
   is-contr-total-equiv-IND-EQUIV {i} A ind =
     is-contr-is-sing
       ( Σ (UU i) (λ X → A ≃ X))
-      ( pair A (pair id (is-equiv-id A)))
+      ( pair A (equiv-id A))
       ( λ P → section-comp'
-        ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (pair id (is-equiv-id A))) P)
+        ( ev-pt (Σ (UU i) (λ X → A ≃ X)) (pair A (equiv-id A)) P)
         ( ev-id (λ X e → P (pair X e)))
         ( ev-pair {A = UU i} {B = λ X → A ≃ X} {C = P})
         ( triangle-ev-id P)
@@ -95,7 +94,7 @@ abstract
 inv-inv-equiv :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) →
   Id (inv-equiv (inv-equiv e)) e
-inv-inv-equiv (pair f (pair (pair g G) (pair h H))) = eq-htpy-equiv htpy-refl
+inv-inv-equiv (pair f (pair (pair g G) (pair h H))) = eq-htpy-equiv refl-htpy
 
 is-equiv-inv-equiv :
   {i j : Level} {A : UU i} {B : UU j} → is-equiv (inv-equiv {A = A} {B = B})
@@ -126,7 +125,7 @@ abstract
     ( λ t → P (pr1 t) (pr2 t))
 
 ind-equiv : {i j : Level} (A : UU i) (P : (B : UU i) (e : A ≃ B) → UU j) →
-  P A (pair id (is-equiv-id A)) → {B : UU i} (e : A ≃ B) → P B e
+  P A (equiv-id A) → {B : UU i} (e : A ≃ B) → P B e
 ind-equiv A P p {B} = pr1 (Ind-equiv A P) p B
 
 -- Subuniverses
@@ -218,7 +217,7 @@ weak-funext-univalence {A = A} {B} is-contr-B =
       ( λ f → pair (λ x → pair x (f x)) refl)
       ( pair
         ( λ h x → tr B (htpy-eq (pr2 h) x) (pr2 (pr1 h x)))
-        ( htpy-refl)))
+        ( refl-htpy)))
     ( is-contr-map-is-equiv
       ( is-equiv-postcomp-univalence A (equiv-pr1 is-contr-B))
       ( id))
@@ -504,7 +503,7 @@ associative-comp-equiv :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4} →
   (e : A ≃ B) (f : B ≃ C) (g : C ≃ D) →
   Id ((g ∘e f) ∘e e) (g ∘e (f ∘e e))
-associative-comp-equiv e f g = eq-htpy-equiv htpy-refl
+associative-comp-equiv e f g = eq-htpy-equiv refl-htpy
 
 has-associative-mul-aut-Set :
   {l : Level} (X : UU-Set l) → has-associative-mul (aut-Set X)
@@ -523,12 +522,12 @@ aut-Semi-Group X =
 left-unit-law-equiv :
   {l1 l2 : Level} {X : UU l1} {Y : UU l2} (e : X ≃ Y) →
   Id ((equiv-id Y) ∘e e) e
-left-unit-law-equiv e = eq-htpy-equiv htpy-refl
+left-unit-law-equiv e = eq-htpy-equiv refl-htpy
 
 right-unit-law-equiv :
   {l1 l2 : Level} {X : UU l1} {Y : UU l2} (e : X ≃ Y) →
   Id (e ∘e (equiv-id X)) e
-right-unit-law-equiv e = eq-htpy-equiv htpy-refl
+right-unit-law-equiv e = eq-htpy-equiv refl-htpy
 
 is-unital-aut-Semi-Group :
   {l : Level} (X : UU-Set l) → is-unital (aut-Semi-Group X)
@@ -617,7 +616,7 @@ htpy-hom-Semi-Group G H f g =
 reflexive-htpy-hom-Semi-Group :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
   ( f : hom-Semi-Group G H) → htpy-hom-Semi-Group G H f f
-reflexive-htpy-hom-Semi-Group G H f = htpy-refl
+reflexive-htpy-hom-Semi-Group G H f = refl-htpy
 
 htpy-hom-Semi-Group-eq :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2) →
@@ -634,7 +633,7 @@ abstract
       ( is-contr-total-htpy (map-hom-Semi-Group G H f))
       ( is-prop-preserves-mul G H)
       ( map-hom-Semi-Group G H f)
-      ( htpy-refl)
+      ( refl-htpy)
       ( preserves-mul-hom-Semi-Group G H f)
 
 abstract
@@ -792,7 +791,7 @@ associative-Semi-Group :
      ( composition-Semi-Group G K L h
        ( composition-Semi-Group G H K g f))
 associative-Semi-Group G H K L (pair h μ-h) (pair g μ-g) (pair f μ-f) =
-  eq-htpy-hom-Semi-Group G L htpy-refl
+  eq-htpy-hom-Semi-Group G L refl-htpy
 
 left-unit-law-Semi-Group :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2)
@@ -802,7 +801,7 @@ left-unit-law-Semi-Group G
   (pair (pair H is-set-H) (pair μ-H assoc-H)) (pair f μ-f) =
   eq-htpy-hom-Semi-Group G
     ( pair (pair H is-set-H) (pair μ-H assoc-H))
-    ( htpy-refl)
+    ( refl-htpy)
 
 right-unit-law-Semi-Group :
   { l1 l2 : Level} (G : Semi-Group l1) (H : Semi-Group l2)
@@ -811,7 +810,7 @@ right-unit-law-Semi-Group :
 right-unit-law-Semi-Group
   (pair (pair G is-set-G) (pair μ-G assoc-G)) H (pair f μ-f) =
   eq-htpy-hom-Semi-Group
-    ( pair (pair G is-set-G) (pair μ-G assoc-G)) H htpy-refl
+    ( pair (pair G is-set-G) (pair μ-G assoc-G)) H refl-htpy
 
 {- Now we introduce the notion of group isomorphism. Finally, we will show that
    isomorphic groups are equal. -}
@@ -1107,7 +1106,7 @@ eq-iso-Group G H = inv-is-equiv (is-equiv-iso-eq-Group G H)
 
 tr-equiv-eq-ap : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {x y : A}
   (p : Id x y) → (map-equiv (equiv-eq (ap B p))) ~ tr B p
-tr-equiv-eq-ap refl = htpy-refl
+tr-equiv-eq-ap refl = refl-htpy
 
 -- Exercise 10.2
 
@@ -1201,7 +1200,7 @@ ev-true f = f true
 triangle-ev-true :
   {l : Level} (A : UU l) →
   (ev-true) ~ (pr1 ∘ (ev-true-false A))
-triangle-ev-true A = htpy-refl
+triangle-ev-true A = refl-htpy
 
 aut-bool-bool :
   bool → (bool ≃ bool)
@@ -1412,7 +1411,7 @@ Eq-LL l2 X (pair P (pair f p)) y =
 reflexive-Eq-LL :
   {l1 : Level} (l2 : Level) (X : UU l1) →
   (x : LL l2 X) → Eq-LL l2 X x x
-reflexive-Eq-LL l2 X (pair P (pair f p)) = pair (equiv-id P) htpy-refl
+reflexive-Eq-LL l2 X (pair P (pair f p)) = pair (equiv-id P) refl-htpy
 
 Eq-LL-eq :
   {l1 l2 : Level} {X : UU l1} →
@@ -1431,7 +1430,7 @@ is-contr-total-Eq-LL (pair P (pair f p)) =
       ( is-contr-total-htpy f)
       ( λ h → is-prop-is-prop P)
       ( f)
-      ( htpy-refl)
+      ( refl-htpy)
       ( p))
 
 unit-LL : {l1 : Level} (l2 : Level) {X : UU l1} → X → LL l2 X

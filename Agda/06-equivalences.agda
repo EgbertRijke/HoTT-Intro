@@ -11,17 +11,17 @@ _~_ :
   {i j : Level} {A : UU i} {B : A → UU j} (f g : (x : A) → B x) → UU (i ⊔ j)
 f ~ g = (x : _) → Id (f x) (g x)
 
-htpy-refl :
+refl-htpy :
   {i j : Level} {A : UU i} {B : A → UU j} {f : (x : A) → B x} → f ~ f
-htpy-refl x = refl
+refl-htpy x = refl
 
-{- Most of the time we get by with htpy-refl. However, sometimes Agda wants us
-   to specify the implicit argument. The it is easier to call htpy-refl' than
+{- Most of the time we get by with refl-htpy. However, sometimes Agda wants us
+   to specify the implicit argument. The it is easier to call refl-htpy' than
    to use Agda's {f = ?} notation. -}
    
-htpy-refl' :
+refl-htpy' :
   {i j : Level} {A : UU i} {B : A → UU j} (f : (x : A) → B x) → f ~ f
-htpy-refl' f = htpy-refl
+refl-htpy' f = refl-htpy
 
 htpy-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x} →
@@ -46,22 +46,22 @@ htpy-assoc H K L x = assoc (H x) (K x) (L x)
 
 htpy-left-unit :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  {H : f ~ g} → (htpy-refl ∙h H) ~ H
+  {H : f ~ g} → (refl-htpy ∙h H) ~ H
 htpy-left-unit x = left-unit
 
 htpy-right-unit :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  {H : f ~ g} → (H ∙h htpy-refl) ~ H
+  {H : f ~ g} → (H ∙h refl-htpy) ~ H
 htpy-right-unit x = right-unit
 
 htpy-left-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → ((htpy-inv H) ∙h H) ~ htpy-refl
+  (H : f ~ g) → ((htpy-inv H) ∙h H) ~ refl-htpy
 htpy-left-inv H x = left-inv (H x)
 
 htpy-right-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
-  (H : f ~ g) → (H ∙h (htpy-inv H)) ~ htpy-refl
+  (H : f ~ g) → (H ∙h (htpy-inv H)) ~ refl-htpy
 htpy-right-inv H x = right-inv (H x)
 
 htpy-left-whisk :
@@ -177,7 +177,7 @@ inv-equiv e = pair (inv-map-equiv e) (is-equiv-inv-map-equiv e)
 
 is-equiv-id :
   {i : Level} (A : UU i) → is-equiv (id {i} {A})
-is-equiv-id A = pair (pair id htpy-refl) (pair id htpy-refl)
+is-equiv-id A = pair (pair id refl-htpy) (pair id refl-htpy)
 
 equiv-id :
   {i : Level} (A : UU i) → A ≃ A
@@ -195,8 +195,8 @@ abstract
   is-equiv-Π-swap C =
     is-equiv-has-inverse
       ( inv-Π-swap C)
-      ( htpy-refl)
-      ( htpy-refl)
+      ( refl-htpy)
+      ( refl-htpy)
 
 -- Section 6.3 The identity type of a Σ-type
 
@@ -650,7 +650,7 @@ abstract
   is-equiv-comp' :
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
     is-equiv h → is-equiv g → is-equiv (g ∘ h)
-  is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h htpy-refl
+  is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h refl-htpy
 
 equiv-comp :
   {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
@@ -683,7 +683,7 @@ abstract
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
     is-equiv (g ∘ h) → is-equiv h → is-equiv g
   is-equiv-left-factor' g h =
-    is-equiv-left-factor (g ∘ h) g h htpy-refl
+    is-equiv-left-factor (g ∘ h) g h refl-htpy
 
 abstract
   is-equiv-right-factor :
@@ -705,7 +705,7 @@ abstract
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) → 
     is-equiv g → is-equiv (g ∘ h) → is-equiv h
   is-equiv-right-factor' g h =
-    is-equiv-right-factor (g ∘ h) g h htpy-refl
+    is-equiv-right-factor (g ∘ h) g h refl-htpy
 
 -- Exercise 6.6
 
@@ -1056,7 +1056,7 @@ htpy-right-whisk-htpy-inv :
   {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
   {g g' : B → C} (H : g ~ g') (f : A → B) →
   ((htpy-inv H) ·r f) ~ (htpy-inv (H ·r f))
-htpy-right-whisk-htpy-inv H f = htpy-refl
+htpy-right-whisk-htpy-inv H f = refl-htpy
 
 
 -- Old stuff
