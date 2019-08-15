@@ -7,8 +7,7 @@ The [course][1] was taught by Egbert Rijke at Carnegie Mellon University during 
 
 The course consisted of 27 one-hour lectures, in which we covered most of the following topics:
 
-I. Martin-Lof's dependent type theory
-
+1. Martin-Lof's dependent type theory
   1. Dependent type theory
   2. Dependent function types
   3. The type of natural numbers
