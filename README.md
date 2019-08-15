@@ -8,20 +8,18 @@ The [course][1] was taught by Egbert Rijke at Carnegie Mellon University during 
 The course consisted of 27 one-hour lectures, in which we covered most of the following topics:
 
 1. Martin-Lof's dependent type theory
-  1. Dependent type theory
-  2. Dependent function types
-  3. The type of natural numbers
-  4. More inductive types
-  5. Identity types
-  6. Type theoretic universes
-
-II. Basic homotopy type theory
-
-  7. Equivalences
-  8. Contractible types and maps
-  9. The fundamental theorem of identity types
-  10. The hierarchy of homotopical complexity
-  11. Elementary number theory
+  * Dependent type theory
+  * Dependent function types
+  * The type of natural numbers
+  * More inductive types
+  * Identity types
+  * Type theoretic universes
+2. Basic homotopy type theory
+  * Equivalences
+  * Contractible types and maps
+  * The fundamental theorem of identity types
+  * The hierarchy of homotopical complexity
+  * Elementary number theory
   
 III. Univalent mathematics
   
