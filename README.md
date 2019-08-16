@@ -14,7 +14,7 @@ The course consisted of 27 one-hour lectures, in which we covered most of the fo
     * More inductive types
     * Identity types
     * Type theoretic universes
-2. Basic homotopy type theory
+2. Basic concepts of homotopy type theory
     * Equivalences
     * Contractible types and maps
     * The fundamental theorem of identity types
@@ -26,7 +26,7 @@ The course consisted of 27 one-hour lectures, in which we covered most of the fo
     * Groups in univalent mathematics
     * The circle
     * The fundamental cover of the circle
-4. Homotopu pullbacks and pushouts
+4. Homotopy pullbacks and pushouts
     * Homotopy pullbacks
     * Homotopy pushouts
     * Cubical diagrams
