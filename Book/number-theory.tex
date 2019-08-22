@@ -346,8 +346,6 @@ This prime decomposition is unique if we require that the primes $p_i<p_{i+1}$ f
 
 \subsection{The infinitude of primes}
 
-Recall that Euclid's proof
-
 \begin{thm}
   There are infinitely many primes.
 \end{thm}
@@ -357,11 +355,7 @@ Recall that Euclid's proof
   \begin{equation*}
     \prd{n:\N}\sm{p:\N}\isprime(p)\times (n\leq p).
   \end{equation*}
-  To show this, let $P$ be the type family over $\N$ given by
-  \begin{equation*}
-    P(m)\defeq \isprime(m)\times (m\leq n).
-  \end{equation*}
-  Since $P$ is decidable and bounded from above by $n$, we can take the product of all $m:\N$ for which $P$ holds. Write $k$ for this product. Then $k+1$ is coprime to every prime less than $n$. Therefore the primes in its prime factorization must all be larger than $n$.  
+  Note that the number $n!+1$ is relatively prime to any number $m\leq n$. Therefore the primes in its prime factorization must all be larger than $n$. Thus, the function that assigns to $n$ the least prime factor of $n!+1$ shows that for any $n:\N$ there is a prime number $p$ that is larger than $n$.
 \end{proof}
 
 \begin{cor}
@@ -371,12 +365,6 @@ Recall that Euclid's proof
   \end{equation*}
   that sends $n$ to the $n$-th prime. This function is strictly monotone, so it is an embedding.
 \end{cor}
-
-Some further ideas to include in this chapter:
-\begin{enumerate}
-\item If $2^n-1$ is prime, then $n$ is prime.
-\item Fermat's little theorem.
-\end{enumerate}
 
 \begin{exercises}
 \exercise Show that for any $f:\Fin(m)\to\Fin(n)$ and any $i:\Fin(n)$, the type $\fib{f}{i}$ is decidable.
@@ -407,4 +395,6 @@ Some further ideas to include in this chapter:
   \begin{equation*}
     \sum_{i=0}^n \binom{n-i}{i}=F_{n+1}
   \end{equation*}
+\exercise Show that if $2^n-1$ is prime, then $n$ is prime.
+\exercise Prove Fermat's little theorem.
 \end{exercises}

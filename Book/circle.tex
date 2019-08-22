@@ -229,6 +229,7 @@ given by $f\mapsto (f(\base),\ap{f}{\lloop})$ is an equivalence.
 \end{cor}
 
 \subsection{Multiplication on the circle}
+\label{sec:mulcircle}
 
 One way the circle arises classically, is as the set of complex numbers at distance $1$ from the origin. It is an elementary fact that $|xy|=|x||y|$ for any two complex numbers $x,y\in\mathbb{C}$, so it follows that when we multiply two complex numbers that both lie on the unit circle, then the result lies again on the unit circle. Thus, using complex multiplication we see that there is a multiplication operation on the circle. And there is a shadow of this operation in type theory, even though our circle arises in a very different way!
 
@@ -359,7 +360,7 @@ For the right unit law, however, we need to give a separate argument that is sur
     \ind{\sphere{1}}(x,\refl{x}):\sphere{1}\to X
   \end{equation*}
   is homotopic to the constant map $\mathsf{const}_x$.
-  \exercise
+  \exercise \label{ex:mulcircle-is-equiv}
   \begin{subexenum}
   \item Show that for any $x:\sphere{1}$, both functions
     \begin{equation*}
@@ -386,4 +387,26 @@ is an equivalence.
   \end{equation*}
   is an equivalence.
   \end{subexenum}
+  \exercise Show that the multiplicative operation on the circle is commutative, i.e.~construct an identification
+  \begin{equation*}
+    \mulcircle(x,y)=\mulcircle(y,x).
+  \end{equation*}
+  for every $x,y:\sphere{1}$.
+  \exercise Show that the circle, equipped with the multiplicative operation $\mulcircle$ is an abelian group, i.e.~construct an inverse operation
+  \begin{equation*}
+    \invcircle : \sphere{1}\to\sphere{1}
+  \end{equation*}
+  and construct identifications
+  \begin{align*}
+    \leftinv_{\sphere{1}} & : \mulcircle(\invcircle(x),x) = \base \\
+    \rightinv_{\sphere{1}} & : \mulcircle(x,\invcircle(x)) = \base.
+  \end{align*}
+  Moreover, show that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \invcircle(\base) \arrow[d,equals] \arrow[r,equals] & \mulcircle(\base,\invcircle(\base)) \arrow[d,equals] \\
+      \mulcircle(\invcircle(\base),\base) \arrow[r,equals] & \base
+    \end{tikzcd}
+  \end{equation*}
+  commutes.
 \end{exercises}

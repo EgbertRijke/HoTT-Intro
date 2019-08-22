@@ -558,11 +558,11 @@ X \arrow[r,swap,"i"] & Y
 \end{equation*}
 with $H: i\circ f ~ g \circ h$ induces a map
 \begin{equation*}
-\mathsf{fib\usc{}sq} : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
+\fibsquare : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
 \end{equation*}
 on the fibers, by
 \begin{equation*}
-\mathsf{fib\usc{}sq}(x,(a,p))\defeq (h(a),\ct{H(a)^{-1}}{\ap{i}{p}}).
+\fibsquare(x,(a,p))\defeq (h(a),\ct{H(a)^{-1}}{\ap{i}{p}}).
 \end{equation*}
 
 \begin{thm}\label{cor:pb_fibequiv}
@@ -578,7 +578,7 @@ with $H: i\circ f ~ g \circ h$. The following are equivalent:
 \item The square is a pullback square.\index{pullback square!characterized by families of equivalences}
 \item The induced map on fibers
 \begin{equation*}
-\mathsf{fib\usc{}sq} : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
+\fibsquare : \prd{x:X} \fib{f}{x} \to \fib{g}{f(x)}
 \end{equation*}
 is a family of equivalences.
 \end{enumerate}
@@ -588,7 +588,7 @@ is a family of equivalences.
 First we observe that the square
 \begin{equation*}
 \begin{tikzcd}[column sep=huge]
-\sm{x:X}\fib{f}{x} \arrow[d,swap,"\eqvsym"] \arrow[r,"\tot{\mathsf{fib\usc{}sq}}"] &
+\sm{x:X}\fib{f}{x} \arrow[d,swap,"\eqvsym"] \arrow[r,"\tot{\fibsquare}"] &
 \sm{x:X}\fib{g}{f(x)} \arrow[d,"\tot{\tot{\mathsf{inv}}}"] \\
 A \arrow[r,swap,"\mathsf{gap}"] & X \times_Y B
 \end{tikzcd}
@@ -709,13 +709,13 @@ witnessing that the outer rectangle commutes. Furthermore, suppose that the squa
 The commutativity of the two squares and the outer rectangle induces a commuting triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]
-\fib{f}{x} \arrow[rr,"\mathsf{fib\usc{}sq}_{(f,k,H)}(x)"] \arrow[dr,swap,"\mathsf{fib\usc{}sq}_{f,l\circ k,\ct{(j\cdot H)}{(K\cdot k)}}(x)"] & & \fib{g}{i(x)} \arrow[dl,"\mathsf{fib\usc{}sq}_{(g,l,K)}(i(x))"] \\
+\fib{f}{x} \arrow[rr,"\fibsquare_{(f,k,H)}(x)"] \arrow[dr,swap,"\fibsquare_{f,l\circ k,\ct{(j\cdot H)}{(K\cdot k)}}(x)"] & & \fib{g}{i(x)} \arrow[dl,"\fibsquare_{(g,l,K)}(i(x))"] \\
 & \fib{h}{j(i(x))}.
 \end{tikzcd}
 \end{equation*}
 A homotopy witnessing that the triangle commutes is constructed by a routine calculation.
 
-Since the triangle commutes, and since the map $\mathsf{fib\usc{}sq}_{(g,l,K)}(i(x))$ is an equivalence for each $x:X$ by \cref{cor:pb_fibequiv}, it follows
+Since the triangle commutes, and since the map $\fibsquare_{(g,l,K)}(i(x))$ is an equivalence for each $x:X$ by \cref{cor:pb_fibequiv}, it follows
 by the 3-for-2 property of equivalences that for each $x:X$ the top map in the triangle is an equivalence if and only if the left map is an equivalence.
 The claim now follows by a second application of \cref{cor:pb_fibequiv}.
 \end{proof}
@@ -749,26 +749,26 @@ By \cref{cor:pb_fibequiv} it suffices to show that the following are equivalent:
 \begin{enumerate}
 \item For each $x:A$ the map
 \begin{equation*}
-\mathsf{fib\usc{}sq}:\fib{f}{x}\to\fib{h}{\alpha_A(x)}
+\fibsquare:\fib{f}{x}\to\fib{h}{\alpha_A(x)}
 \end{equation*}
 is an equivalence, and for each $y:B$ the map
 \begin{equation*}
-\mathsf{fib\usc{}sq}:\fib{g}{y}\to\fib{h}{\alpha_B(y)}
+\fibsquare:\fib{g}{y}\to\fib{h}{\alpha_B(y)}
 \end{equation*}
 is an equivalence.
 \item For each $t:A+B$ the map
 \begin{equation*}
-\mathsf{fib\usc{}sq}:\fib{f+g}{t} \to \fib{h}{\alpha(t)}
+\fibsquare:\fib{f+g}{t} \to \fib{h}{\alpha(t)}
 \end{equation*}
 is an equivalence.
 \end{enumerate}
 By the dependent universal property of coproducts, the second claim is equivalent to the claim that both for each $x:A$ the map
 \begin{equation*}
-\mathsf{fib\usc{}sq}:\fib{f+g}{\inl(x)}\to \fib{h}{\alpha_A(x)}
+\fibsquare:\fib{f+g}{\inl(x)}\to \fib{h}{\alpha_A(x)}
 \end{equation*}
 is an equivalence, and for each $y:B$, the map
 \begin{equation*}
-\mathsf{fib\usc{}sq}:\fib{f+g}{\inr(y)}\to \fib{h}{\alpha_B(y)} 
+\fibsquare:\fib{f+g}{\inr(y)}\to \fib{h}{\alpha_B(y)} 
 \end{equation*}
 is an equivalence.
 
@@ -845,12 +845,12 @@ By \cref{cor:pb_fibequiv} it suffices to show that the following are equivalent 
 \begin{enumerate}
 \item The map
 \begin{equation*}
-\mathsf{fib\usc{}sq} : \fib{f_i}{a} \to \fib{g}{\alpha_i(a)}
+\fibsquare : \fib{f_i}{a} \to \fib{g}{\alpha_i(a)}
 \end{equation*}
 is an equivalence.
 \item The map
 \begin{equation*}
-\mathsf{fib\usc{}sq} : \fib{\tot{f}}{i,a}\to \fib{g}{\alpha_i(a)}
+\fibsquare : \fib{\tot{f}}{i,a}\to \fib{g}{\alpha_i(a)}
 \end{equation*}
 is an equivalence.
 \end{enumerate}

@@ -133,56 +133,99 @@ Any fiber sequence $F\hookrightarrow E\twoheadrightarrow B$ induces a long exact
 \end{thm}
 
 \subsection{The Hopf fibration}
-Our goal in this section is to construct the Hopf fibration, i.e.~a fiber sequence
+Our goal in this section is to construct the \define{Hopf fibration}. The Hopf fibration is a fiber sequence
 \begin{equation*}
 \sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}.
 \end{equation*}
-This fiber sequence involves the complex multiplication of the unit sphere in the complex number, which is a circle. Viewing the circle as a subspace of the complex numbers, we write $1$ for the base point of the circle.
+More generally, we show that for any type $A$ equipped with a multiplicative operation $\mu:A\to (A\to A)$ for which $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences, there is a fiber sequence
+\begin{equation*}
+  A\hookrightarrow \join{A}{A}\twoheadrightarrow \susp A.
+\end{equation*}
+The construction of this fiber sequence is known as the \define{Hopf construction}. We then get the Hopf fibration from the Hopf construction by using the multiplication on $\sphere{1}$ constructed in \cref{sec:mulcircle} after we show that $\eqv{\join{\sphere{1}}{\sphere{1}}}{\sphere{3}}$.
 
 \begin{defn}
-We define the \define{complex multiplication} operation
-\begin{equation*}
-\mu_{\mathbb{C}}:\sphere{1}\to(\sphere{1}\to\sphere{1}).
-\end{equation*}
+  An \define{unpointed H-space} structure on a type $A$ consists of a multiplicative operation
+  \begin{equation*}
+    \mu:A\to(A\to A)
+  \end{equation*}
+  for which $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences.
+
+  If $A$ is a pointed type with base point $x_0:A$, then an \define{H-space} structure on $A$ is an unpointed H-space structure on $A$ such that $\mu(x_0,x_0)=x_0$.
 \end{defn}
 
-\begin{constr}
-By the universal property of the circle, it is equivalent to define
-\begin{align*}
-\mu_{\mathbb{C}}(1) & : \sphere{1}\to\sphere{1} \\
-\ap{\mu_{\mathbb{C}}}{\lloop} & : \mu_{\mathbb{C}}(1)=\mu_{\mathbb{C}}(1). 
-\end{align*}
-The function $\mu_{\mathbb{C}}(1)$ is multiplication by $1$, which is the identity function. The type of $\ap{\mu_{\mathbb{C}}}{\lloop}$ is equivalent to the type of homotopies
-\begin{equation*}
-\idfunc[\sphere{1}] \htpy \idfunc[\sphere{1}]. 
-\end{equation*}
-We construct this homotopy by induction on $\sphere{1}$. Therefore it suffices to construct
-\begin{align*}
-p & : 1=1 \\
-q & : \mathsf{tr}_{L}(\lloop,p)=p
-\end{align*}
-\end{constr}
+\begin{rmk}
+  It is usually assumed that the base point $x_0:A$ satisfies the unit laws with respect to the H-space structure on $A$, i.e.~that the H-space structure comes equipped with the further identifications.
+  \begin{align*}
+    \leftunit_\mu(x) & : \mu(x_0,x)=x \\
+    \rightunit_\mu(x) & : \mu(x,x_0)=x \\
+    \cohunit_\mu(x) & : \leftunit_\mu(x_0)=\rightunit_\mu(x_0).
+  \end{align*}
+  If $x_0$ is assumed to be unital, we do not assume additionally that $\mu(x_0,x_0)=x_0$.
+\end{rmk}
 
-\begin{lem}
-The complex multiplication operation $\mu_{\mathbb{C}}$ on the circle satisfies the unit laws
-\begin{align*}
-\mathsf{left\usc{}unit}_{\mathbb{C}}(x) & : \mu_{\mathbb{C}}(1,x) = x \\
-\mathsf{right\usc{}unit}_{\mathbb{C}}(x) & : \mu_{\mathbb{C}}(x,1) = x \\
-\mathsf{coh\usc{}unit}_{\mathbb{C}} & : \mathsf{left\usc{}unit}_{\mathbb{C}}(1)=\mathsf{right\usc{}unit}_{\mathbb{C}}(1),
-\end{align*}
-and the functions $\mu_{\mathbb{C}}(x,\blank)$ and $\mu_{\mathbb{C}}(\blank,y)$ are equivalences for each $x:\sphere{1}$ and $y:\sphere{1}$, respectively.
-\end{lem}
-
-\begin{lem}
-Both commuting squares in the diagram
+By an unpointed fiber sequence, we mean a sequence
 \begin{equation*}
-\begin{tikzcd}
-\sphere{1} \arrow[d] & \sphere{1}\times\sphere{1} \arrow[d,swap,"\mu_{\mathbb{C}}"] \arrow[l,swap,"\proj 1"] \arrow[r,"\proj 2"] & \sphere{1} \arrow[d] \\
-\unit & \sphere{1} \arrow[l] \arrow[r] & \unit
-\end{tikzcd}
+  \begin{tikzcd}
+    F \arrow[r,hook,"i"] E \arrow[r,->>,"p"] & B
+  \end{tikzcd}
 \end{equation*}
-are pullback squares.
-\end{lem}
+where only the type $B$ is assumed to be pointed (with base point $b$), and the square
+\begin{equation*}
+  \begin{tikzcd}
+    F \arrow[r,"i"] \arrow[d,swap,"\const{\star}"] & E \arrow[d,"p"] \\
+    \unit \arrow[r,swap,"\const{b}"] & B
+  \end{tikzcd}
+\end{equation*}
+is a pullback square. The most immediate 
+
+
+\begin{thm}[The Hopf construction]\label{thm:hopf-construction}
+  Consider a type $A$ equipped with an H-space structure $\mu$. Then there is an unpointed fiber sequence
+  \begin{equation*}
+    A \hookrightarrow \join{A}{A} \twoheadrightarrow \susp A.
+  \end{equation*}
+  If $A$ and the $H$-space structure are pointed, then this unpointed fiber sequence is an fiber sequence.
+\end{thm}
+
+\begin{proof}
+  Note that there is a unique map $h:\join{A}{A}\to \susp A$ such that the cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & A \times A \arrow[d,swap,"\mu"] \arrow[dl,swap,"\proj 1"] \arrow[dr,"\proj 2"] \\
+      A \arrow[d] & A \arrow[dl] \arrow[dr] & A \arrow[dl,crossing over] \arrow[d] \\
+      \unit \arrow[dr] & \join{A}{A} \arrow[from=ul,crossing over] \arrow[d,swap,densely dotted,"h"] & \unit \arrow[dl] \\
+      & \susp A
+    \end{tikzcd}
+  \end{equation*}
+  commutes. By this commuting cube it is enough to show that the two back squares are pullback squares, because then it follows by ... that the two front squares are pullback squares. We then define the Hopf fibration to be
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,hook,"\inl"] & \join{A}{A} \arrow[r,->>,"h"] & \susp A,
+    \end{tikzcd}
+  \end{equation*}
+  which is a fiber sequence by the fact that the front left square in the cube is a pullback square.
+
+  Thus, we have to show that the two squares
+    \begin{equation*}
+    \begin{tikzcd}
+      A\times A \arrow[d,swap,"\proj 1"] \arrow[r,"\mu"] & A \arrow[d] & A\times A \arrow[r,"\mu"] \arrow[d,"\proj 2"] & A \arrow[d] \\
+      A \arrow[r] & \unit & A \arrow[r] & \unit
+    \end{tikzcd}
+  \end{equation*}
+  are pullback squares. Thus, we have to show that the maps
+  \begin{align*}
+    \fibsquare & : \fib{\proj 1}{x}\to\fib{\const{\star}}{\star} \\
+    \fibsquare & : \fib{\proj 2}{x}\to\fib{\const{\star}}{\star}
+  \end{align*}
+  are equivalences for each $x:X$. Note that there are commuting squares
+  \begin{equation*}
+    \begin{tikzcd}
+      \fib{\proj 1}{x} \arrow[r,"\fibsquare"] \arrow[d] & \fib{\const{\star}}{\star} \arrow[d] & \fib{\proj 2}{x} \arrow[r,"\fibsquare"] \arrow[d] & \fib{\const{\star}}{\star} \arrow[d] \\
+      A \arrow[r,swap,"{\mu(x,\blank)}"] & A & A \arrow[r,swap,"{\mu(\blank,x)}"] & A.
+    \end{tikzcd}
+  \end{equation*}
+  In both squares both vertical maps are equivalences by \cref{ex:proj_fiber}. Moreover, we have assumed that $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences for each $x:X$, so the claim follows.
+\end{proof}
 
 \begin{cor}
 There is a fiber sequence
@@ -226,6 +269,28 @@ is exact at $G$ and $H$, where we write $0$ for the trivial group consisting of 
 \begin{cor}
 We have $\pi_2(\sphere{2})=\Z$, and for $k>2$ we have $\pi_k(\sphere{2})=\pi_k(\sphere{3})$.
 \end{cor}
+
+Since the Hopf fibration is in close connection to the multiplication operation of the complex numbers on the unit circle, the Hopf fibration is sometimes also called the \emph{complex} Hopf fibration. Indeed, there is also a \emph{real} Hopf fibration
+\begin{equation*}
+  \sphere{0}\hookrightarrow\sphere{1}\twoheadrightarrow\sphere{1}.
+\end{equation*}
+This is just the double cover of the circle. There is even a \emph{quaternionic} Hopf fibration
+\begin{equation*}
+  \sphere{3}\hookrightarrow\sphere{7}\twoheadrightarrow\sphere{4},
+\end{equation*}
+which uses the multiplication of the quaternionic numbers on the unit sphere. The main difficulty in defining the quaternionic Hopf fibration is to define the quaternionic multiplication
+\begin{equation*}
+  \mulsphere{3} : \sphere{3}\to(\sphere{3}\to\sphere{3}).
+\end{equation*}
+The construction of the octonionic Hopf fibration
+\begin{equation*}
+  \sphere{7}\hookrightarrow\sphere{15}\twoheadrightarrow\sphere{8}
+\end{equation*}
+in homotopy type theory is still an open problem. Another open problem is to formalize Adams' theorem \cite{Adams58} in homotopy type theory, that there are \emph{no} further fiber sequences of the form
+\begin{equation*}
+  \sphere{k}\hookrightarrow\sphere{l}\twoheadrightarrow\sphere{m},
+\end{equation*}
+for $k,l,m\geq 0$. 
 
 
 \begin{exercises}

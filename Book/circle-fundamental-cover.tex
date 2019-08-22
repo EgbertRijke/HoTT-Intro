@@ -478,6 +478,51 @@ and conclude that ${\mathsf{has\usc{}inverse}}(\idfunc[\sphere{1}])\not\simeq{\i
   \begin{equation*}
     \iscontr(A)+\isequiv(i).
   \end{equation*}
+  \exercise
+  \begin{subexenum}
+  \item Show that the multiplicative operation on the circle is associative, i.e.~construct an identification
+    \begin{equation*}
+      \assoc_{\sphere{1}}(x,y,z) :
+      \mulcircle(\mulcircle(x,y),z)=\mulcircle(x,\mulcircle(y,z))
+    \end{equation*}
+    for any $x,y,z:\sphere{1}$.
+  \item Show that the associator satisfies unit laws, in the sense that the following triangles commute:
+    \begin{equation*}
+      \begin{tikzcd}[column sep=-1em]
+        \mulcircle(\mulcircle(\base,x),y) \arrow[rr,equals] \arrow[dr,equals] & & \mulcircle(\base,\mulcircle(x,y)) \arrow[dl,equals] \\
+        & \mulcircle(x,y)
+      \end{tikzcd}
+    \end{equation*}
+    \begin{equation*}
+      \begin{tikzcd}[column sep=-1em]
+        \mulcircle(\mulcircle(x,\base),y) \arrow[rr,equals] \arrow[dr,equals] & & \mulcircle(x,\mulcircle(\base,y)) \arrow[dl,equals] \\
+        & \mulcircle(x,y)
+      \end{tikzcd}
+    \end{equation*}
+    \begin{equation*}
+      \begin{tikzcd}[column sep=-1em]
+        \mulcircle(\mulcircle(x,y),\base) \arrow[rr,equals] \arrow[dr,equals] & & \mulcircle(x,\mulcircle(y,\base)) \arrow[dl,equals] \\
+        & \mulcircle(x,y).
+      \end{tikzcd}
+    \end{equation*}
+  \item State the laws that compute
+    \begin{align*}
+      & \assoc_{\sphere{1}}(\base,\base,x) \\
+      & \assoc_{\sphere{1}}(\base,x,\base) \\
+      & \assoc_{\sphere{1}}(x,\base,\base) \\
+      & \assoc_{\sphere{1}}(\base,\base,\base).
+    \end{align*}
+    Note: the first three laws should be $3$-cells and the last law should be a $4$-cell. The laws are automatically satisfied, since the circle is a $1$-type.
+  \end{subexenum}
+  \exercise Construct the \define{Mac Lane pentagon} for the circle, i.e.~show that the pentagon
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-6em]
+      &[-6em] \mulcircle(\mulcircle(\mulcircle(x,y),z),w) \arrow[rr,equals] \arrow[dl,equals] & & \mulcircle(\mulcircle(x,y),\mulcircle(z,w)) \arrow[dr,equals] &[-6em] \\
+      \mulcircle(\mulcircle(x,\mulcircle(y,z)),w) \arrow[drr,equals] & & & & \mulcircle(x,\mulcircle(y,\mulcircle(z,w))) \\
+      & & \mulcircle(x,\mulcircle(\mulcircle(y,z),w)) \arrow[urr,equals]
+    \end{tikzcd}
+  \end{equation*}
+  commutes for every $x,y,z,w:\sphere{1}$.
 \end{exercises}
 
 \index{circle!fundamental cover|)}

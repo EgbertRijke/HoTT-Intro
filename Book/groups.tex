@@ -375,7 +375,7 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
   \item Consider a pointed type $A$. Show that the concatenation function
     \begin{equation*}
       \concat:\loopspace{A}\to (\loopspace{A}\simeq\loopspace{A})
-    \end{equation*}
+x    \end{equation*}
     is an embedding.\index{concat@{$\concat$}!is an embedding}
   \end{subexenum}
   \exercise Let $f:\hom(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that\index{group homomorphism!preserves units and inverses}
@@ -397,4 +397,19 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
   \end{equation*}
   commutes. 
   \exercise Construct the category of posets.\index{category!of posets}
+  \exercise Consider the \define{walking isomorphism}, i.e.~the pre-category $\mathcal{I}$ given by
+  \begin{equation*}
+    \begin{tikzcd}
+      0 \arrow[r,bend left=15,"f"] & 1 \arrow[l,bend left=15,"{f^{-1}}"]
+    \end{tikzcd}
+  \end{equation*}
+  satisfying $f\circ f^{-1}=\idfunc$ and $f^{-1}\circ f=\idfunc$. Show that for any precategory $\mathcal{C}$ the following are equivalent:
+  \begin{enumerate}
+  \item The precategory $\mathcal{C}$ is Rezk complete.
+  \item The precomposition function
+    \begin{equation*}
+      \mathcal{C}\to\mathsf{Fun}(\mathcal{I},\mathcal{C})
+    \end{equation*}
+    is an equivalence.
+  \end{enumerate}
 \end{exercises}

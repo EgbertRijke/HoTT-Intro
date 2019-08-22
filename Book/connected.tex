@@ -115,4 +115,27 @@ X \arrow[r] & Y
 \end{tikzcd}
 \end{equation*}
 Show that if $f$ is $n$-connected, then $g$ is $n$-connected.
+\exercise Show that any fiber sequence
+\begin{equation*}
+  F \hookrightarrow E \twoheadrightarrow B
+\end{equation*}
+where the base points are $x_0:B$, $y_0:F$, and $z_0:E$ induces a fiber sequence of connected components
+\begin{equation*}
+  \mathsf{BAut}(y_0) \hookrightarrow \mathsf{BAut}(z_0) \twoheadrightarrow \mathsf{BAut}(x_0).
+\end{equation*}
+\exercise Consider a pullback square
+\begin{equation*}
+  \begin{tikzcd}
+    C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
+    A \arrow[r,swap,"f"] & X.
+  \end{tikzcd}
+\end{equation*}
+Show that the commuting square
+\begin{equation*}
+  \begin{tikzcd}[column sep=large]
+    \trunc{k+1}{C} \arrow[r,"\trunc{k+1}{q}"] \arrow[d,swap,"\trunc{k+1}{p}"] & \trunc{k+1}{B} \arrow[d,"\trunc{k+1}{g}"] \\
+    \trunc{k+1}{A} \arrow[r,swap,"\trunc{k+1}{f}"] & \trunc{k+1}{X}
+  \end{tikzcd}
+\end{equation*}
+is $k$-cartesian, i.e.~that the gap map is $k$-connected.
 \end{exercises}
