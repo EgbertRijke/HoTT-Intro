@@ -7,36 +7,44 @@ The [course][1] was taught by Egbert Rijke at Carnegie Mellon University during 
 
 The course consisted of 27 one-hour lectures, in which we covered most of the following topics:
 
-1. Dependent type theory
-2. Dependent function types and the natural numbers
-3. Inductive types
-4. Universes and type-valued relations
-5. Identity types
-6. Equivalences
-7. Contractible types and maps
-8. The fundamental theorem of identity types
-9. The hierarchy of homotopical complexity
-10. Elementary number theory
-11. Function extensionality
-12. The univalence axiom
-13. The circle
-14. The fundamental cover of the circle
-15. Homotopy pullbacks
-16. Homotopy pushouts
-17. Cubical diagrams
-18. Universality and descent for pushouts
-19. Identity types of pushouts
-20. Sequential colimits
-21. The homotopy image of a map
-22. Type theoretic replacement
-23. Classifying types of groups
-24. Set quotients
-25. Truncations
-26. Homotopy groups of types
-27. The long exact sequence of homotopy groups
-28. Connected types
-29. Wedges and smash products
-30. The Blakers-Massey Theorem
+1. Martin-Lof's dependent type theory
+    * Dependent type theory
+    * Dependent function types
+    * The type of natural numbers
+    * More inductive types
+    * Identity types
+    * Type theoretic universes
+2. Basic concepts of homotopy type theory
+    * Equivalences
+    * Contractible types and maps
+    * The fundamental theorem of identity types
+    * The hierarchy of homotopical complexity
+    * Elementary number theory
+3. Univalent mathematics
+    * Function extensionality
+    * The univalence axiom
+    * Groups in univalent mathematics
+    * The circle
+    * The fundamental cover of the circle
+4. Homotopy pullbacks and pushouts
+    * Homotopy pullbacks
+    * Homotopy pushouts
+    * Cubical diagrams
+    * Universality and descent for pushouts
+    * Identity types of pushouts
+5. The homotopy image of a map
+    * Sequential colimits
+    * The homotopy image of a map
+    * Type theoretic replacement
+    * Classifying types of groups
+    * Set quotients
+    * Truncations
+6. Synthetic homotopy theory
+    * Homotopy groups of types
+    * The long exact sequence of homotopy groups
+    * Connected types
+    * Wedges and smash products
+    * The Blakers-Massey Theorem
 
 ## Book
 The course notes that I took are evolving into an introductory textbook for students who want to learn homotopy type theory fo the first time. They are currently subject to frequent change. For the version of the notes that I used during the course, see the original [course website][1].
