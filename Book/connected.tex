@@ -260,7 +260,10 @@ showing that the class of $k$-connected maps is contained in the class of $k$-eq
 \end{proof}
 
 \subsubsection{The 3-for-2 property}
-An important distinction between the class of $k$-equivalences and the class of $k$-connected maps is that the $k$-equivalences satisfy the 3-for-2 property, while the $k$-connected maps do not. It is not hard to see that the $k$-connected maps don't satisfy the 3-for-2 property. For example, consider the following commuting triangle
+An important distinction between the class of $k$-equivalences and the class of $k$-connected maps is that the $k$-equivalences satisfy the 3-for-2 property, while the $k$-connected maps do not.
+
+\begin{rmk}\label{rmk:conn-3-for-2}
+  It is not hard to see that the $k$-connected maps don't satisfy the 3-for-2 property. For example, consider the following commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=tiny]
       \sphere{1} \arrow[rr,"d_2"] \arrow[dr] & & \sphere{1} \arrow[dl] \\
@@ -268,6 +271,7 @@ An important distinction between the class of $k$-equivalences and the class of 
     \end{tikzcd}
   \end{equation*}
   where $d_2:\sphere{1}\to\sphere{1}$ is the degree $2$ map. Since the circle is a $0$-connected type, it follows that the maps $\sphere{1}\to\unit$ are $0$-connected. However, the fiber of $d_2$ at the base point is equivalent to the booleans, which is a non-contractible set so it is certainly not $0$-connected.
+  \end{rmk}
 
 \begin{lem}
   The $k$-equivalences satisfy the 3-for-2 property, i.e., for any commuting triangle
@@ -404,6 +408,14 @@ is a pullback square.
   \begin{enumerate}
   \item The map $f$ is a $k$-equivalence.
   \item The map $f$ is left orthogonal to every map between $k$-truncated types.
+  \item The map $f$ is left orthogonal to every map $g:X\to Y$ for which the naturality square
+    \begin{equation*}
+      \begin{tikzcd}
+        X \arrow[r,"g"] \arrow[d,swap,"\eta"] & Y \arrow[d,"\eta"] \\
+        \trunc{k}{X} \arrow[r,swap,"\trunc{k}{g}"] & \trunc{k}{Y}
+      \end{tikzcd}
+    \end{equation*}
+    is a pullback square. Such maps are called \define{$k$-\'etale}.
   \end{enumerate}
 \end{thm}
 
@@ -495,22 +507,12 @@ If the maps $A\to X$ and $B\to X$ are $k$- and $l$-connected, respectively, then
 \end{thm}
 
 \begin{exercises}
-\exercise Show that a pointed $X$ is $n$-connected precisely when $\pi_k(X)=0$ for each $k\leq n$.
 \exercise Show that retracts of $n$-connected types are again $n$-connected.
 \exercise Let $f:A\to_\ast B$ be a pointed map between pointed $n$-connected types, for $n\geq -1$. Show that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
 \item $\loopspace[n+1]{f}$ is an equivalence. 
 \end{enumerate}
-\exercise Let $f:A\to B$ be a surjective map, and let $g:A\to C$ be any map. Show that if there is a unique extension
-\begin{equation*}
-\begin{tikzcd}
-\fib{f}{f(a)} \arrow[r,"g\circ\pi_1"] \arrow[d] & C \\
-\unit \arrow[ur,densely dotted]
-\end{tikzcd}
-\end{equation*}
-for any $a:A$, then $g$ extends uniquely along $f$.
-\exercise Consider a span $A \leftarrow S \rightarrow B$, in which the map $S\to A$ is $n$-connected. Show that the map $\inr : B\to A\sqcup^S B$ is again $n$-connected.
 \exercise Show that if
 \begin{equation*}
 \begin{tikzcd}
@@ -518,7 +520,7 @@ A \arrow[r] \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
 X \arrow[r] & Y
 \end{tikzcd}
 \end{equation*}
-is a $k$-cocartesian, then the map $\mathsf{cofib}(f)\to \mathsf{cofib}(g)$ is $k$-connected.
+is \define{$k$-cocartesian} in the sense that the cogap map is $k$-connected, then the map $\mathsf{cofib}(f)\to \mathsf{cofib}(g)$ is $k$-connected.
 \exercise Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -527,26 +529,20 @@ X \arrow[r] & Y
 \end{tikzcd}
 \end{equation*}
 \begin{subexenum}
-\item Show that if the square is $n$-cartesian and $g$ is $n$-connected, then so is $f$.
-\item Show that if $f$ is $n$-connected and $g$ is $(n+1)$-connected, then the square is $n$-cartesian. 
+\item Show that if the square is $k$-cartesian and $g$ is $k$-connected, then so is $f$.
+\item Show that if $f$ is $k$-connected and $g$ is $(k+1)$-connected, then the square is $k$-cartesian. 
 \end{subexenum}
-\exercise Show that any sequential colimit of $n$-connected types is again $n$-connected.
-\exercise Consider a pushout square
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[d,swap,"f"] \arrow[r] & B \arrow[d,"g"] \\
-X \arrow[r] & Y
-\end{tikzcd}
-\end{equation*}
-Show that if $f$ is $n$-connected, then $g$ is $n$-connected.
-\exercise Show that any fiber sequence
-\begin{equation*}
-  F \hookrightarrow E \twoheadrightarrow B
-\end{equation*}
-where the base points are $x_0:B$, $y_0:F$, and $z_0:E$ induces a fiber sequence of connected components
-\begin{equation*}
-  \mathsf{BAut}(y_0) \hookrightarrow \mathsf{BAut}(z_0) \twoheadrightarrow \mathsf{BAut}(x_0).
-\end{equation*}
+\exercise
+\begin{subexenum}
+\item Show that any sequential colimit of $k$-connected types is again $k$-connected.
+\item Show that if every map in a type sequence
+  \begin{equation*}
+    \begin{tikzcd}
+      A_0\arrow[r] & A_1 \arrow[r] & A_2 \arrow[r] & \cdots
+    \end{tikzcd}
+  \end{equation*}
+  is $k$-connected, then so is the transfinite composition $A_0\to A_\infty$.
+\end{subexenum}
 \exercise Recall that a commuting square is called $k$-cartesian, if its gap map is $k$-connected. Show that $(k+1)$-truncation preserves $l$-cartesian squares for any $l\leq k$, i.e., show that for any $l\leq k$, if a square
 \begin{equation*}
   \begin{tikzcd}
@@ -562,7 +558,7 @@ is $l$-cartesian, then the square
   \end{tikzcd}
 \end{equation*}
 is $l$-cartesian.
-\exercise Generalize \cref{rmk:conn-3-for-2} to show that for every $k\geq-1$, the $k$-truncated maps do not satisfy the 3-for-2 property.
+\exercise Generalize \cref{rmk:conn-3-for-2} to show that for every $k\geq-1$, the $k$-connected maps do not satisfy the 3-for-2 property.
 \exercise Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -579,4 +575,12 @@ Show that the following are equivalent:
 \end{equation*}
 is $n$-connected.
 \end{enumerate}
+\exercise Let $f:A\to B$ be a surjective map, and let $g:A\to C$ be any map. Show that if there is a unique extension
+\begin{equation*}
+\begin{tikzcd}
+\fib{f}{f(a)} \arrow[r,"g\circ\pi_1"] \arrow[d] & C \\
+\unit \arrow[ur,densely dotted]
+\end{tikzcd}
+\end{equation*}
+for any $a:A$, then $g$ extends uniquely along $f$.
 \end{exercises}
