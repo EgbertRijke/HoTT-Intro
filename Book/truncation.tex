@@ -481,6 +481,16 @@ This follows by path induction.
 \end{proof}
 \end{comment}
 
+\subsection{Theorems not to forget}
+
+\begin{thm}
+  Consider a type $X$ and a family $P$ of $(k+n)$-truncated types over $\trunc{k}{X}$. Then the precomposition map
+  \begin{equation*}
+    \blank\circ\eta : \Big(\prd{y:\trunc{k}{X}}P(y)\Big)\to\Big(\prd{x:X}P(\eta(x))\Big)
+  \end{equation*}
+  is $(n-2)$-truncated.
+\end{thm}
+
 \begin{exercises}
 \exercise Consider an equivalence relation $R:A\to (A\to\prop)$. Show that the map $\tproj{0}{\blank}\circ \inl:A\to \trunc{0}{A\sqcup^{R} A}$ satisfies the universal property of the quotient $A/R$, where $A\sqcup^{R} A$ is the canonical pushout
 \begin{equation*}
@@ -503,5 +513,18 @@ where $\fin:\N\to\UU$ is defined in \cref{defn:fin}.
 \begin{subexenum}
 \item Show that $\eqv{\mathbb{F}}{\sm{n:\N}\UU_{\fin(n)}}$. 
 \item Show that $\mathbb{F}$ is closed under $\Sigma$ and $\Pi$. 
+\end{subexenum}
+\exercise
+\begin{subexenum}
+\item A type $Y$ is called \define{$k$-separated} if for every type $X$ the map
+  \begin{equation*}
+    (\trunc{k}{X}\to Y)\to(X\to Y)
+  \end{equation*}
+  is an embedding. Show that $Y$ is $k$-separated  if and only if it is $(k+1)$-truncated.
+\item A type $Y$ is called \define{$n$-fold $k$-separated} if for every type $X$ the map
+  \begin{equation*}
+    (\trunc{k}{X}\to Y)\to (X\to Y)
+  \end{equation*}
+  is $(n-2)$-truncated. Show that $Y$ is $n$-fold $k$-separated if and only if it is $(k+n)$-truncated.
 \end{subexenum}
 \end{exercises}

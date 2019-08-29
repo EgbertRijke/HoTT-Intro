@@ -142,15 +142,6 @@ It is not hard to see that also $\tau_{X,Y}$ is pointed. We leave this to the re
 \end{thm}
 
 \subsection{Homotopy groups}
-In homotopy type theory we use $0$-types to define groups.
-\begin{defn}
-A \define{group} $\mathcal{G}$ consists of a set $G$ with a unit $e:G$, a multiplication $x,y\mapsto x\cdot y$, and an inverse operation $x\mapsto x^{-1}$ satisfying the \define{group laws}:
-\begin{align*}
-(x\cdot y)\cdot z & =x\cdot(y\cdot z) & x^{-1}\cdot x & = e \\
-e\cdot x & = x & x\cdot x^{-1} & = e. \\
-x\cdot e & =x
-\end{align*}
-\end{defn}
 
 \begin{defn}
 For $n\geq 1$, the \define{$n$-th homotopy group} of a type $X$ at a base point $x:X$ consists of the type
@@ -253,46 +244,6 @@ Now we use that $\tproj{0}{r}\cdot\tproj{0}{s}\jdeq \tproj{0}{\ct{r}{s}}$ and $\
 & = \ct{(\ct[h]{\refl{x}}{s})}{(\ct[h]{r}{\refl{x}})} \\
 & = \ct{s}{r}.\qedhere
 \end{align*}
-\end{proof}
-
-\subsection{Simply connectedness of the $2$-sphere}
-
-\begin{defn}
-A pointed type $X$ is said to be \define{$n$-connected} if its homotopy groups $\pi_i(X)$ are trivial for $i\leq n$. A $0$-connected type is also just called \define{connected}, and a $1$-connected type is also called \define{simply connected}. 
-\end{defn}
-
-We write $\ast$ for the base point of the sphere $\sphere{n}$.
-
-\begin{thm}
-For any $n:\N$ and any family $P$ of $n$-types over the $(n+2)$-sphere $\sphere{n+2}$, the function
-\begin{equation*}
-\Big(\prd{x:\sphere{n+2}}P(x)\Big)\to P(\ast)
-\end{equation*}
-given by $f\mapsto f(\ast)$, is an equivalence.
-\end{thm}
-
-\begin{cor}
-The $2$-sphere is simply connected.
-\end{cor}
-
-\begin{proof}
-Our goal is to show that $\pi_1(\sphere{2})$ is contractible. In other words, we have to show that $\trunc{0}{\loopspace{\sphere{2}}}$ is contractible. We do this by constructing a term of type
-\begin{equation*}
-\prd{t:\sphere{2}}\iscontr(\trunc{0}{\ast=t}).
-\end{equation*}
-First we note that
-\begin{equation*}
-\prd{t:\sphere{2}}\trunc{0}{\ast=t}
-\end{equation*}
-is equivalent to the type $\trunc{0}{\ast=\ast}$, of which we have the term $\tproj{0}{\refl{\ast}}$. Thus we obtain a dependent function $\alpha:\prd{t:\sphere{2}}\trunc{0}{\ast=t}$ equipped with $\alpha(\ast)=\tproj{0}{\refl{\ast}}$. Now we proceed to show that
-\begin{equation*}
-\prd{t:\sphere{2}}{p:\trunc{0}{\ast=t}} \alpha(t)=p
-\end{equation*}
-by the dependent universal property of $0$-truncation. Therefore it suffices to construct a term of type
-\begin{equation*}
-\prd{t:\sphere{2}}{p:\ast=t}\alpha(t)=\tproj{0}{p}.
-\end{equation*}
-This is immediate by path induction and the fact that $\alpha(\ast)=\tproj{0}{\refl{\ast}}$.
 \end{proof}
 
 \begin{exercises}

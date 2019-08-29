@@ -1,0 +1,369 @@
+\section{The Hopf fibration}
+
+Our goal in this section is to construct the \define{Hopf fibration}. The Hopf fibration is a fiber sequence
+\begin{equation*}
+\sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}.
+\end{equation*}
+More generally, we show that for any type $A$ equipped with a multiplicative operation $\mu:A\to (A\to A)$ for which $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences, there is a fiber sequence
+\begin{equation*}
+  A\hookrightarrow \join{A}{A}\twoheadrightarrow \susp A.
+\end{equation*}
+The construction of this fiber sequence is known as the \define{Hopf construction}. We then get the Hopf fibration from the Hopf construction by using the multiplication on $\sphere{1}$ constructed in \cref{sec:mulcircle} after we show that $\eqv{\join{\sphere{1}}{\sphere{1}}}{\sphere{3}}$.
+
+We then introduce the long exact sequence of homotopy groups. The long exact sequence is an important tool to compute homotopy groups which applies to any fiber sequence
+\begin{equation*}
+  F \hookrightarrow E \twoheadrightarrow B.
+\end{equation*}
+In the case of the Hopf fibration, we will use the long exact sequence to show that
+\begin{equation*}
+  \pi_k(\sphere{3})=\pi_k(\sphere{2})
+\end{equation*}
+for any $k\geq 3$.
+
+Since the Hopf fibration is closely related to the multiplication operation of the complex numbers on the unit circle, the Hopf fibration is sometimes also called the \emph{complex} Hopf fibration. Indeed, there is also a \emph{real} Hopf fibration
+\begin{equation*}
+  \sphere{0}\hookrightarrow\sphere{1}\twoheadrightarrow\sphere{1}.
+\end{equation*}
+This is just the double cover of the circle. There is even a \emph{quaternionic} Hopf fibration
+\begin{equation*}
+  \sphere{3}\hookrightarrow\sphere{7}\twoheadrightarrow\sphere{4},
+\end{equation*}
+which uses the multiplication of the quaternionic numbers on the unit sphere. The main difficulty in defining the quaternionic Hopf fibration in homotopy type theory is to define the quaternionic multiplication
+\begin{equation*}
+  \mulsphere{3} : \sphere{3}\to(\sphere{3}\to\sphere{3}).
+\end{equation*}
+The construction of the octonionic Hopf fibration
+\begin{equation*}
+  \sphere{7}\hookrightarrow\sphere{15}\twoheadrightarrow\sphere{8}
+\end{equation*}
+in homotopy type theory is still an open problem. Another open problem is to formalize Adams' theorem \cite{Adams58} in homotopy type theory, that there are \emph{no} further fiber sequences of the form
+\begin{equation*}
+  \sphere{k}\hookrightarrow\sphere{l}\twoheadrightarrow\sphere{m},
+\end{equation*}
+for $k,l,m\geq 0$.
+
+\subsection{Fiber sequences}
+
+\begin{defn}
+  A \define{short sequence} of maps into a pointed type $B$ with base point $b$ consists of maps
+  \begin{equation*}
+    \begin{tikzcd}
+      F \arrow[r,"i"] & E \arrow[r,"p"] & B
+    \end{tikzcd}
+  \end{equation*}
+  equipped with a homotopy $p\circ i\htpy \const_b$. We say that a short sequence as above is an \define{unpointed fiber sequence} if the commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      F \arrow[r,"i"] \arrow[d,swap,"\const_\star"] & E \arrow[d,"p"] \\
+      \unit \arrow[r,swap,"\const_b"] & B
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square.
+\end{defn}
+
+\begin{defn}
+  A \define{short sequence} of pointed maps into a pointed type $B$ with base point $b$ consists of pointed maps
+    \begin{equation*}
+    \begin{tikzcd}
+      F \arrow[r,"i"] & E \arrow[r,"p"] & B
+    \end{tikzcd}
+  \end{equation*}
+  equipped with a pointed homotopy $p\circ i\htpy_\ast \const_b$. We say that a short sequence as above is an \define{fiber sequence} if the commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      F \arrow[r,"i"] \arrow[d,swap,"\const_\star"] & E \arrow[d,"p"] \\
+      \unit \arrow[r,swap,"\const_b"] & B
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square.
+\end{defn}
+
+\subsection{The Hopf construction}
+
+The Hopf construction is a general construction of a fiber sequence
+\begin{equation*}
+  A \hookrightarrow \join{A}{A}\twoheadrightarrow \susp A,
+\end{equation*}
+that applies to any H-space $A$. Our definition of an H-space is chosen such that it provides only the necessary structure to apply the Hopf construction. We give an unpointed and a pointed variant, and moreover we give a coherent variant that is more closely related to the traditional definition of an H-space.
+
+\begin{defn}
+  ~
+  \begin{enumerate}
+  \item An \define{unpointed H-space} structure on a type $A$ consists of a multiplicative operation
+  \begin{equation*}
+    \mu:A\to(A\to A)
+  \end{equation*}
+  for which $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences.
+  \item If $A$ is a pointed type with base point $e:A$, then an \define{H-space} structure on $A$ is an unpointed H-space structure on $A$ equipped with an identification $\mu(e,e)=e$.
+  \item A \define{coherent H-space} structure on a pointed type $A$ with base point $e:A$ consists of an unpointed H-space structure $\mu$ on $A$ that satisfies the unit laws, i.e., $\mu$ comes equipped with identifications
+  \begin{align*}
+    \leftunit_\mu & : \mu(e,a) = a \\
+    \rightunit_\mu & : \mu(a,e) = a \\
+    \cohunit_\mu & : \leftunit_\mu(e)=\rightunit_\mu(e).
+  \end{align*}
+  \end{enumerate}
+\end{defn}
+
+\begin{eg}
+  The loop space $\loopspace{A}$ of any pointed type is a coherent H-space, where the multiplication is given by path concatenation.
+\end{eg}
+
+By an unpointed fiber sequence, we mean a sequence
+\begin{equation*}
+  \begin{tikzcd}
+    F \arrow[r,hook,"i"] & E \arrow[r,->>,"p"] & B
+  \end{tikzcd}
+\end{equation*}
+where only the type $B$ is assumed to be pointed (with base point $b$), and the square
+\begin{equation*}
+  \begin{tikzcd}
+    F \arrow[r,"i"] \arrow[d,swap,"\const_{\star}"] & E \arrow[d,"p"] \\
+    \unit \arrow[r,swap,"\const_{b}"] & B
+  \end{tikzcd}
+\end{equation*}
+is a pullback square. The most immediate 
+
+
+\begin{thm}[The Hopf construction]\label{thm:hopf-construction}
+  Consider a type $A$ equipped with an H-space structure $\mu$. Then there is an unpointed fiber sequence
+  \begin{equation*}
+    A \hookrightarrow \join{A}{A} \twoheadrightarrow \susp A.
+  \end{equation*}
+  If $A$ and the $H$-space structure are pointed, then this unpointed fiber sequence is an fiber sequence.
+\end{thm}
+
+\begin{proof}
+  Note that there is a unique map $h:\join{A}{A}\to \susp A$ such that the cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & A \times A \arrow[d,swap,"\mu"] \arrow[dl,swap,"\proj 1"] \arrow[dr,"\proj 2"] \\
+      A \arrow[d] & A \arrow[dl] \arrow[dr] & A \arrow[dl,crossing over] \arrow[d] \\
+      \unit \arrow[dr] & \join{A}{A} \arrow[from=ul,crossing over] \arrow[d,swap,densely dotted,"h"] & \unit \arrow[dl] \\
+      & \susp A
+    \end{tikzcd}
+  \end{equation*}
+  commutes. By this commuting cube it is enough to show that the two back squares are pullback squares, because then it follows by ... that the two front squares are pullback squares. We then define the Hopf fibration to be
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,hook,"\inl"] & \join{A}{A} \arrow[r,->>,"h"] & \susp A,
+    \end{tikzcd}
+  \end{equation*}
+  which is a fiber sequence by the fact that the front left square in the cube is a pullback square.
+
+  Thus, we have to show that the two squares
+    \begin{equation*}
+    \begin{tikzcd}
+      A\times A \arrow[d,swap,"\proj 1"] \arrow[r,"\mu"] & A \arrow[d] & A\times A \arrow[r,"\mu"] \arrow[d,"\proj 2"] & A \arrow[d] \\
+      A \arrow[r] & \unit & A \arrow[r] & \unit
+    \end{tikzcd}
+  \end{equation*}
+  are pullback squares. Thus, we have to show that the maps
+  \begin{align*}
+    \fibsquare & : \fib{\proj 1}{x}\to\fib{\const_{\star}}{\star} \\
+    \fibsquare & : \fib{\proj 2}{x}\to\fib{\const_{\star}}{\star}
+  \end{align*}
+  are equivalences for each $x:X$. Note that there are commuting squares
+  \begin{equation*}
+    \begin{tikzcd}
+      \fib{\proj 1}{x} \arrow[r,"\fibsquare"] \arrow[d] & \fib{\const_{\star}}{\star} \arrow[d] & \fib{\proj 2}{x} \arrow[r,"\fibsquare"] \arrow[d] & \fib{\const_{\star}}{\star} \arrow[d] \\
+      A \arrow[r,swap,"{\mu(x,\blank)}"] & A & A \arrow[r,swap,"{\mu(\blank,x)}"] & A.
+    \end{tikzcd}
+  \end{equation*}
+  In both squares both vertical maps are equivalences by \cref{ex:proj_fiber}. Moreover, we have assumed that $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences for each $x:X$, so the claim follows.
+\end{proof}
+
+\begin{cor}
+There is a fiber sequence
+\begin{equation*}
+\sphere{1}\hookrightarrow \join{\sphere{1}}{\sphere{1}} \twoheadrightarrow \sphere{2}.
+\end{equation*}
+\end{cor}
+
+\begin{lem}
+The join operation is associative
+\end{lem}
+
+\begin{proof}
+\begin{equation*}
+\begin{tikzcd}
+A & A\times C \arrow[l] \arrow[r] & A\times C \\
+A\times B \arrow[u] \arrow[d] & A\times B \times C \arrow[r] \arrow[d] \arrow[l] \arrow[u] & A\times C \arrow[u] \arrow[d] \\
+B & B\times C \arrow[l] \arrow[r] & C
+\end{tikzcd}
+\end{equation*}
+\end{proof}
+
+\begin{cor}
+There is an equivalence $\eqv{\join{\sphere{1}}{\sphere{1}}}{\sphere{3}}$.
+\end{cor}
+
+\begin{thm}
+There is a fiber sequence $\sphere{1}\hookrightarrow\sphere{3}\twoheadrightarrow\sphere{2}$. 
+\end{thm}
+
+\begin{lem}
+Suppose $f:G\to H$ is a group homomorphism, such that the sequence
+\begin{equation*}
+\begin{tikzcd}
+0 \arrow[r] & G \arrow[r,"f"] & H \arrow[r] & 0
+\end{tikzcd}
+\end{equation*}
+is exact at $G$ and $H$, where we write $0$ for the trivial group consisting of just the unit element. Then $f$ is a group isomorphism.
+\end{lem}
+
+\begin{cor}
+We have $\pi_2(\sphere{2})=\Z$, and for $k>2$ we have $\pi_k(\sphere{2})=\pi_k(\sphere{3})$.
+\end{cor}
+
+\subsection{The long exact sequence}
+
+\begin{defn}
+A fiber sequence $F\hookrightarrow E \twoheadrightarrow B$ consists of:
+\begin{enumerate}
+\item Pointed types $F$, $E$, and $B$, with base points $x_0$, $y_0$, and $b_0$ respectively, 
+\item Base point preserving maps $i:F\to_\ast E$ and $p:E\to_\ast B$, with $\alpha:i(x_0)=y_0$ and $\beta:p(y_0)=b_0$,
+\item A pointed homotopy $H:\mathsf{const}_{b_0}\htpy_\ast p\circ_\ast i$ witnessing that the square
+\begin{equation*}
+\begin{tikzcd}
+F \arrow[r,"i"] \arrow[d] & E \arrow[d,"p"] \\
+\unit \arrow[r,swap,"\mathsf{const}_{b_0}"] & B,
+\end{tikzcd}
+\end{equation*}
+commutes and is a pullback square.
+\end{enumerate}
+\end{defn}
+
+\begin{lem}
+Any fiber sequence $F\hookrightarrow E\twoheadrightarrow B$ induces a sequence of pointed maps
+\begin{equation*}
+\begin{tikzcd}
+\loopspace{F} \arrow[r,"\loopspace{i}"] & \loopspace{E} \arrow[r,"\loopspace{p}"] & \loopspace{B} \arrow[r,"\partial"] & F \arrow[r,"i"] & E \arrow[r,"p"] & B,
+\end{tikzcd}
+\end{equation*}
+in which every two consecutive maps form a fiber sequence.
+\end{lem}
+
+\begin{proof}
+By taking pullback squares repeatedly, we obtain the diagram
+\begin{equation*}
+\begin{gathered}[b]
+\begin{tikzcd}[column sep=large]
+\loopspace{F} \arrow[d,swap,"\loopspace{i}"] \arrow[r] & \unit \arrow[d,"\mathsf{const}_{\refl{b_0}}"] \\
+\loopspace{E} \arrow[r,"\loopspace{p}"] \arrow[d] & \loopspace{B} \arrow[r] \arrow[d,swap,"\partial"] & \unit \arrow[d,"\mathsf{const}_{y_0}"] \\
+\unit \arrow[r,swap,"\mathsf{const}_{x_0}"] & F \arrow[r,"i"] \arrow[d] & E \arrow[d,"p"] \\
+& \unit \arrow[r,swap,"\mathsf{const}_{b_0}"] & B.
+\end{tikzcd}\\[-\dp\strutbox]
+\end{gathered}\qedhere
+\end{equation*}
+\end{proof}
+
+\begin{defn}
+We say that a consecutive pair of pointed maps between pointed sets
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"f"] & B \arrow[r,"g"] & C
+\end{tikzcd}
+\end{equation*}
+is \define{exact} at $B$ if we have
+\begin{equation*}
+\Big(\exis{a:A}f(a)=b\Big)\leftrightarrow (g(b)=c)
+\end{equation*}
+for any $b:B$. 
+\end{defn}
+
+\begin{rmk}
+If a pair of consecutive pointed maps between pointed sets
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r,"f"] & B \arrow[r,"g"] & C
+\end{tikzcd}
+\end{equation*}
+is exact at $B$, it directly that $\im(f)=\fib{g}{c}$. Indeed, such a pair of pointed maps is exact at $B$ if and only if there is an equivalence $e:\im(f)\eqvsym \fib{g}{c}$ such that the triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=tiny]
+\im(f) \arrow[dr] \arrow[rr,"e"] & & \fib{g}{c} \arrow[dl] \\
+& B
+\end{tikzcd}
+\end{equation*}
+commutes. In other words, $\im(f)$ and $\fib{g}{c}$ are equal \emph{as subsets of $B$}.
+\end{rmk}
+
+\begin{lem}
+Suppose $F\hookrightarrow E \twoheadrightarrow B$ is a fiber sequence. Then the sequence
+\begin{equation*}
+\begin{tikzcd}
+\trunc{0}{F} \arrow[r,"\trunc{0}{i}"] & \trunc{0}{E} \arrow[r,"\trunc{0}{p}"] & \trunc{0}{B}
+\end{tikzcd}
+\end{equation*}
+is exact at $\trunc{0}{E}$. 
+\end{lem}
+
+\begin{proof}
+To show that the image $\im\trunc{0}{i}$ is the fiber $\fib{\trunc{0}{p}}{\tproj{0}{b_0}}$, it suffices to construct a fiberwise equivalence
+\begin{equation*}
+\prd{x:\trunc{0}{E}} \trunc{-1}{\fib{\trunc{0}{i}}{x}} \eqvsym \trunc{0}{p}(x)=\tproj{0}{b_0}.
+\end{equation*}
+By the universal property of $0$-truncation it suffices to show that
+\begin{equation*}
+\prd{x:E} \trunc{-1}{\fib{\trunc{0}{i}}{\tproj{0}{x}}} \eqvsym \trunc{0}{p}(\tproj{0}{x})=\tproj{0}{b_0}.
+\end{equation*}
+First we note that 
+\begin{align*}
+\trunc{0}{p}(\tproj{0}{x})=\tproj{0}{b_0} & \eqvsym \tproj{0}{p(x)} = \tproj{0}{b_0} \\
+& \eqvsym \trunc{-1}{p(x)=b_0}.
+\end{align*}
+Next, we note that
+\begin{align*}
+\fib{\trunc{0}{i}}{\tproj{0}{x}} & \eqvsym \sm{y:\trunc{0}{F}}\trunc{0}{i}(y)=\tproj{0}{x} \\
+& \eqvsym \trunc{0}{\sm{y:F}\trunc{0}{i}(\tproj{0}{y})=\tproj{0}{x}} \\
+& \eqvsym \trunc{0}{\sm{y:F}\tproj{0}{i(y)}=\tproj{0}{x}} \\
+& \eqvsym \trunc{0}{\sm{y:F}\trunc{-1}{i(y)=x}}.
+\end{align*}
+Therefore it follows that
+\begin{align*}
+\trunc{-1}{\fib{\trunc{0}{i}}{\tproj{0}{x}}} & \eqvsym \trunc{-1}{\sm{y:F}\trunc{-1}{i(y)=x}} \\
+& \eqvsym \trunc{-1}{\sm{y:F}i(y)=x} \\
+\end{align*}
+Now it suffices to show that $\eqv{\big(\sm{y:F}i(y)=x\big)}{p(x)=b_0}$. This follows by the pasting lemma of pullbacks
+\begin{equation*}
+\begin{tikzcd}
+(p(x)=b_0) \arrow[r] \arrow[d] & \unit \arrow[d] \\
+F \arrow[r] \arrow[d] & E \arrow[d] \\
+\unit \arrow[r] & B
+\end{tikzcd}
+\end{equation*}
+\end{proof}
+
+\begin{thm}
+Any fiber sequence $F\hookrightarrow E\twoheadrightarrow B$ induces a long exact sequence on homotopy groups
+\begin{equation*}
+\begin{tikzcd}
+& & \cdots \arrow[out=355,in=175,dll] \\
+\pi_n(F) \arrow[r,"\pi_n(i)"] & \pi_n(E) \arrow[r,"\pi_n(p)"] & \pi_n(B) \arrow[out=355,in=175,dll,densely dotted] \\
+\pi_1(F) \arrow[r,"\pi_1(i)"] & \pi_1(E) \arrow[r,"\pi_1(p)"] & \pi_1(B) \arrow[out=355,in=175,dll] \\
+\pi_0(F) \arrow[r,"\pi_0(i)"] & \pi_0(E) \arrow[r,"\pi_0(p)"] & \pi_0(B)
+\end{tikzcd}
+\end{equation*}
+\end{thm}
+
+
+\begin{exercises}
+\exercise Give the $0$-sphere $\sphere{0}$ the structure of an H-space.
+\exercise For any pointed type $A$, give $\loopspace{A}$ the structure of an H-space.
+\exercise Show that the type of (small) fiber sequences is equivalent to the type of quadruples $(B,P,b_0,x_0)$, consisting of
+\begin{align*}
+B & : \UU \\
+P & : B \to \UU \\
+b_0 & : B \\
+x_0 & : P(b_0).
+\end{align*}
+\exercise Show that there is a fiber sequence
+\begin{equation*}
+  \sphere{3}\hookrightarrow\sphere{2}\twoheadrightarrow\trunc{2}{\sphere{2}},
+\end{equation*}
+where the map $\sphere{2}\to\trunc{2}{\sphere{2}}$ is the unit of the $2$-truncation.
+\exercise Show that there is a fiber sequence
+\begin{equation*}
+  \rprojective{\infty}\hookrightarrow\cprojective{\infty}\twoheadrightarrow\cprojective{\infty}.
+\end{equation*}
+\end{exercises}

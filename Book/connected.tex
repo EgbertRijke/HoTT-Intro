@@ -2,57 +2,481 @@
 
 \section{Connected types and maps}
 
+\subsection{Connected types}
+
 \begin{defn}
-A type $A$ is said to be $n$-connected if $\trunc{n}{A}$ is contractible.
-If $A$ is $0$-connected we also say that $A$ is \define{(path) connected},
-and if $A$ is $1$-connected we also say that $A$ is \define{simply connected}.
+  A type $X$ is said to be \define{$k$-connected} if its $k$-truncation $\trunc{k}{X}$ is contractible. We define
+  \begin{equation*}
+    \isconn_k(X)\defeq\iscontr\trunc{k}{X}.
+  \end{equation*}
+\end{defn}
+
+\begin{rmk}
+  Since the $(-2)$-truncation of any type is just $\unit$, it follows that every type is $(-2)$-connected. Furthermore, since any proposition is contractible as soon as it comes equipped with a term, it follows that any type is $(-1)$-connected as soon as it is inhabited.
+
+    In \cref{thm:conn-succ} below, we will see that a type $X$ is $0$-connected if and only if it is inhabited and every two points are connected by an unspecified path. In this sense $0$-connected types are also called \define{path connected}, or just \define{connected}. Thus, it is immediate that the circle is an example of a connected type.
+
+  Similarly, in the case where $k\jdeq 0$ the theorem states that a type $X$ is $1$-conneced if and only if it is inhabited and for every $x,y:X$ the identity type $x=y$ is path connected. In other words, a type is \define{simply connected} if it is $1$-connected! The $2$-sphere is an example of a simply connected type. This fact is shown in \cref{cor:conn-sphere} below, where we will show more generally that the $n$-sphere is $(n-1)$-connected, for each $n:\N$.
+\end{rmk}
+
+\begin{lem}
+  If a type is $(k+1)$-connected, then it is also $k$-connected.
+\end{lem}
+
+\begin{proof}
+  This follows from the fact that $\trunc{k}{\trunc{k+1}{X}}\simeq\trunc{k}{X}$. Indeed, if $\trunc{k+1}{X}$ is contractible, then its $k$-truncation is also contractible, so it follows that $\trunc{k}{X}$ is contractible.
+\end{proof}
+
+For the following theorem, recall that a type $X$ is said to be inhabited if it comes equipped with a term $\trunc{-1}{X}$.
+
+\begin{thm}\label{thm:conn-succ}
+  Consider a type $X$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The type $X$ is $(k+1)$-connected.
+  \item The type $X$ is inhabited, and the type $x=y$ is $k$-connected for each $x,y:X$.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  Suppose first that $X$ is $(k+1)$-connected. It is immediate that $X$ is inhabited in this case. Moreover, since we have equivalences
+  \begin{equation*}
+    (\eta(x)=\eta(y))\simeq \trunc{k}{x=y}
+  \end{equation*}
+  for each $x,y:X$, it follows from the assumption that $\trunc{k+1}{X}$ is contractible that the type $\trunc{k}{x=y}$ is equivalent to a contractible type. This proves that (i) implies (ii).
+
+  To see that (ii) implies (i), suppose that $X$ is inhabited and that its identity types are $k$-connected. Our goal is to construct a term of type
+  \begin{equation*}
+    \iscontr\trunc{k+1}{X},
+  \end{equation*}
+  which is a proposition, so we may eliminate the assumption that $X$ is inhabited and assume to have $x:X$. Now we simply take $\eta(x)$ for the center of contraction of $\trunc{k+1}{X}$. To construct the contraction, note that by the dependent universal property of $(k+1)$-truncation we have an equivalence
+  \begin{equation*}
+    \Big(\prd{y:\trunc{k+1}{X}}\eta(x)=y\Big)\simeq\Big(\prd{y:X}\eta(x)=\eta(y)\Big).
+  \end{equation*}
+  Therefore it suffices to construct an identification $\eta(x)=\eta(y)$ for every $y:X$. However, this type is contractible, since it is equivalent to the contractible type $\trunc{k}{x=y}$. This completes the proof of (ii) implies (i).
+\end{proof}
+
+In the case where $k\geq -1$ we can improve \cref{thm:conn-succ} and characterize a high degree of connectedness entirely in terms of the triviality of homotopy groups. This is what connectedness is all about.
+
+\begin{thm}\label{thm:conn-htpy-groups}
+  Consider a type $X$, and suppose that $k\geq 0$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The type $X$ is $k$-connected.
+  \item The type $X$ is connected, and for every $x:X$ the loop space
+    \begin{equation*}
+      \loopspace{X,x}
+    \end{equation*}
+    is $(k-1)$-connected.
+  \item For each $i\leq k$ and each $x:X$, the $i$-th homotopy group $\pi_i(X,x)$ is trivial.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  If $X$ is $k$-connected for $k\geq 0$, then it is certainly connected, and $\loopspace{X,x}$ is $(k-1)$-connected by \cref{thm:conn-succ}. Thus, the fact that (i) implies (ii) is immediate.
+
+  To see that (ii) implies (i), note that if $X$ is connected and its loop spaces are $(k-1)$-connected, then all its identity types are $(k-1)$-connected, since we have
+  \begin{align*}
+    \prd{x,y:X}\iscontr(\trunc{k-1}{x=y}) & \simeq \prd{x,y:X}\trunc{-1}{x=y}\to\iscontr(\trunc{k-1}{x=y}) \\
+    & \simeq \prd{x,y:X}(x=y)\to\iscontr(\trunc{k-1}{x=y}) \\
+    & \simeq \prd{x:X}\iscontr(\trunc{k-1}{x=x}).
+  \end{align*}
+  In the first step of this calculation we use that $X$ is connected, so $\trunc{-1}{x=y}$ is contractible; then we use that $\iscontr(\trunc{k-1}{x=y})$ is a proposition; and finally we use the universal property of identity types to arrive at our assumption that the loop spaces of $X$ are $(k-1)$-connected. Since we have shown that the identity types are $(k-1)$-connected, it follows by \cref{thm:conn-succ} that $X$ is $k$-connected, which concludes the proof that (ii) implies (i).
+
+  It is easy to see by induction on $k\geq 0$ that (ii) holds if and only if (iii) holds, since we have
+  \begin{equation*}
+    \pi_{i+1}(X,x)=\pi_i(\loopspace{X,x}).\qedhere
+  \end{equation*}
+\end{proof}
+
+\begin{rmk}
+  If $X$ is assumed to be a pointed type in \cref{thm:conn-htpy-groups}, then conditions (ii) and (iii) only have to be checked at the base point.
+\end{rmk}
+
+\subsection{\texorpdfstring{$k$}{k}-Equivalences and \texorpdfstring{$k$}{k}-connected maps}
+
+We now study two classes of maps that differ only slightly: the $k$-equivalences and the $k$-connected maps. 
+
+\begin{defn}
+  ~
+  \begin{enumerate}
+  \item A map $f:X\to Y$ is said to be \define{$k$-connected} if its fibers are $k$-connected. We will write
+  \begin{equation*}
+    \isconn_k(f)\defeq\prd{y:Y}\isconn_k(\fib{f}{y}).
+  \end{equation*}
+  \item A map $f:X\to Y$ is said to be a \define{$k$-equivalence} if
+    \begin{equation*}
+      \trunc{k}{f}:\trunc{k}{X}\to\trunc{k}{Y}
+    \end{equation*}
+    is an equivalence. We will write
+    \begin{equation*}
+      \isequiv_k(f)\defeq\isequiv(\trunc{k}{f}).
+    \end{equation*}
+  \end{enumerate}
+\end{defn}
+
+\begin{eg}
+  Any equivalence is a $k$-connected map, as well as a $k$-equivalence. Moreover, for any $k$-connected type $X$ the map $\const_\ttt:X\to\unit$ is $k$-connected. It is also immediate that \emph{any} map between $k$-connected types is a $k$-equivalence.
+\end{eg}
+
+\begin{rmk}
+  While the definitions of $k$-equivalences and $k$-connected maps may look very different, there is in fact only a very subtle difference between these two classes of maps. This diffence is best understood by characterizing $k$-equivalences and $k$-connected maps via their actions on homotopy groups: $k$-Equivalences are maps that induce isomorphisms
+\begin{equation*}
+  \pi_i(f,x):\pi_i(X,x)\to\pi_i(Y,f(x))
+\end{equation*}
+on homotopy groups for every $x:X$ and $i\leq k$, while the condition of being $k$-connected is equivalent to inducing isomorphisms on the same homotopy groups \emph{and} a surjective homomorphism
+\begin{equation*}
+  \pi_{k+1}(f,x):\pi_{k+1}(X,x)\to\pi_{k+1}(Y,f(x))
+\end{equation*}
+on the $(k+1)$-st homotopy group. Our goal in this section to prove these characterizations. We will establish many useful facts along the way.
+\end{rmk}
+
+\begin{rmk}
+  An immediate difference between the classes of $k$-equivalences and $k$-connected maps is that the $k$-connected maps are stable under base change, while the $k$-equivalences are not. By this, we mean that for any pullback square
+  \begin{equation*}
+    \begin{tikzcd}
+      E' \arrow[d,swap,"{p'}"] \arrow[r,"g"] & E \arrow[d,"p"] \\
+      B' \arrow[r,swap,"f"] & B,
+    \end{tikzcd}
+  \end{equation*}
+  if the map $p$ is $k$-connected, then the map $p'$ is also $k$-connected. In such a pullback diagram, the map $p'$ is sometimes called the \define{base change} of $p$ along $f$. By \cref{cor:pb_fibequiv} we have an equivalence
+  \begin{equation*}
+    \fib{p'}{b'}\simeq\fib{p}{f(b')}
+  \end{equation*}
+  for any $b':B'$, so it is indeed the case that if the fibers of $p$ are $k$-connected, then so are the fibers of $p'$.
+
+  An example showing that the $k$-equivalences are not stable under base change is given by the pullback square
+  \begin{equation*}
+    \begin{tikzcd}
+      \loopspace{\sphere{k+1}} \arrow[r] \arrow[d] & \unit \arrow[d] \\
+      \unit \arrow[r] & \sphere{k+1}
+    \end{tikzcd}
+  \end{equation*}
+  We will show in \cref{cor:conn-sphere} that the $(k+1)$-sphere is $k$-connected, so the map $\unit\to\sphere{k+1}$ is a $k$-equivalence. However, its loop space is only $(k-1)$-connected, and indeed we will show in \cref{far-future} that
+  $\pi_{k+1}(\sphere{k+1})=\Z$ for $k\geq 0$, showing that $\loopspace{\sphere{k+1}}$ is \emph{not} $k$-connected. Thus, the map $\loopspace{\sphere{k+1}}\to\unit$ is not a $k$-equivalence.
+\end{rmk}
+
+\subsubsection{Elimination properties}
+We will show that a map $f:X\to Y$ is a $k$-equivalence if and only if the precomposition function
+\begin{equation*}
+  \blank\circ f : (Y\to Z)\to (X\to Z)
+\end{equation*}
+is an equivalence for every $k$-type $Z$. On the other hand, we will show that $f$ is $k$-connected if and only if the precomposition function
+\begin{equation*}
+  \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+\end{equation*}
+is an equivalence for every family $P$ of $k$-types over $Y$. In other words, the $k$-connected maps satisfy a \emph{dependent} unique elimination property, while the $k$-equivalences only satisfy a \emph{non-dependent} unique elimination property.
+
+\begin{thm}\label{thm:k-equiv-precomp}
+  Consider a function $f:X\to Y$. Then the following are equivalent
+  \begin{enumerate}
+  \item The map $f$ is a $k$-equivalence.
+  \item For every $k$-type $Z$, the precomposition function
+    \begin{equation*}
+      \blank\circ f:(Y\to Z)\to(X\to Z)
+    \end{equation*}
+    is an equivalence.
+  \end{enumerate}
+\end{thm}
+
+\begin{thm}\label{thm:conn-dup}
+  Let $f:X\to Y$ be a map. The following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is $k$-connected.
+  \item For every family $P$ of $k$-truncated types over $Y$, the precomposition map
+    \begin{equation*}
+      \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+    \end{equation*}
+    is an equivalence.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  Suppose $f$ is $k$-connected and let $P$ be a family of $k$-types over $Y$. Now we may consider the following commuting diagram
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-10em]
+      \phantom{\prd{x:X}{y:Y}{p:f(x)=y}P(y)} & \prd{y:Y}P(y) \arrow[r,"\blank\circ f"] \arrow[dl] &[10em] \prd{x:X}P(f(x)) \\
+      \prd{y:Y}\trunc{k}{\fib{f}{y}}\to P(y) \arrow[dr] & \phantom{\prd{y:Y}{x:X}{p:f(x)=y}P(y)} & & \prd{x:X}{y:Y}{p:f(x)=y}P(y) \arrow[ul] \\
+      & \prd{y:Y}\fib{f}{y}\to P(y) \arrow[r] & \prd{y:Y}{x:X}{p:f(x)=y}P(y) \arrow[ur]
+    \end{tikzcd}
+  \end{equation*}
+  which commutes by $\htpyrefl$. In this diagram, the five maps going around counter clockwise are all equivalences for obvious reasons, so it follows that the top map is an equivalence.
+
+  Now suppose that $f$ satisfies the dependent elimination property stated in (ii). In order to construct a center of contraction of $\trunc{k}{\fib{f}{y}}$ for every $y:Y$, we use the dependent elimination property with respect to the family $P$ given by $P(y)\defeq\trunc{k}{\fib{f}{y}}$. 
+\end{proof}
+
+\begin{cor}
+  For any type $X$, the unit $\eta:X\to\trunc{k}{X}$ of the $k$-truncation is a $k$-connected map. 
+\end{cor}
+
+\subsubsection{The inclusions}
+
+We will prove the following implications
+\begin{equation*}
+  \begin{tikzcd}[column sep=8em]
+    \isequiv_{k+1}(f) \arrow[r,"\text{\cref{prp:is-k-equiv-is-k-conn}}"] & \isconn_k(f) \arrow[r,"\text{\cref{prp:is-k-conn-is-succk-equiv}}"] & \isequiv_k(f)
+  \end{tikzcd}
+\end{equation*}
+showing that the class of $k$-connected maps is contained in the class of $k$-equivalences, and that the class of $(k+1)$-equivalences is contained in the class of $k$-connected maps. Neither of these implications reverses.
+
+\begin{prp}\label{prp:is-k-equiv-is-k-conn}
+  Any $k$-connected map is a $k$-equivalence.
+\end{prp}
+
+\begin{prp}\label{prp:is-k-conn-is-succk-equiv}
+  Any $(k+1)$-equivalence is $k$-connected.
+\end{prp}
+
+\begin{proof}
+  Consider a $(k+1)$-equivalence $f:X\to Y$. Recall that the map $\trunc{k+1}{f}$ comes equipped with a homotopy $H:\trunc{k+1}{f}\circ\eta\htpy\eta\circ f$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=large]
+      X \arrow[r,"f"] \arrow[d,swap,"\eta"] & Y \arrow[d,"\eta"] \\
+      \trunc{k+1}{X} \arrow[r,swap,"\trunc{k+1}{f}"] & \trunc{k+1}{Y}
+    \end{tikzcd}
+  \end{equation*}
+  commutes. We be using this homotopy, and we will use \cref{thm:conn-dup} to show that $f$ is $k$-connected. Thus, our goal is to show that
+  \begin{equation*}
+    \blank\circ f:\Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+  \end{equation*}
+  is an equivalence for any family $P$ of $k$-types over $Y$.
+
+  Note that any family $P$ of $k$-types over $Y$ extends to a family $\tilde{P}$ of $k$-types over $\trunc{k+1}{Y}$, since any univalent universe of $k$-types that contains $P$ is itself a $(k+1)$-type by \cref{ex:istrunc_UUtrunc}. The extended family $\tilde{P}$ of $k$-types over $\trunc{k+1}{Y}$ comes equipped with a family of equivalences
+  \begin{equation*}
+    e:\prd{y:Y}\tilde{P}(\eta(y))\simeq P(y).
+  \end{equation*}
+  Now consider the commuting diagram
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-9em]
+      \phantom{\prd{x:X}\tilde{P}(\trunc{k+1}{f}(\eta(x)))} & \phantom{\prd{x:X}\tilde{P}(\trunc{k+1}{f}(\eta(x)))} & \prd{y:\trunc{k+1}{Y}}\tilde{P}(y) \arrow[r,"\blank\circ\trunc{k+1}{f}"] \arrow[ddll,swap,"\blank\circ\eta"] &[11em] \prd{x:\trunc{k+1}{X}}\tilde{P}(\trunc{k+1}{f}(x)) \arrow[dr,"\blank\circ\eta" near end] & & \phantom{\prd{x:X}\tilde{P}(\trunc{k+1}{f}(\eta(x)))} \\
+      & & \phantom{\prd{x:\trunc{k+1}{X}}\tilde{P}(\trunc{k+1}{f}(x))} & & \prd{x:X}\tilde{P}(\trunc{k+1}{f}(\eta(x))) \arrow[dr,"{h\mapsto\lam{x}\tr_{\tilde{P}}(H(x),h(x))}" near end] \\
+      \prd{y:Y}\tilde{P}(\eta(y)) \arrow[drr,swap,"{h\mapsto\lam{y}e_y(h(y))}" near start] & & & & & \prd{x:X}\tilde{P}(\eta(f(x))) \arrow[dll,"{h\mapsto\lam{x}e_{f(x)}(h(x))}" near start] \\
+      & & \prd{y:Y}P(y) \arrow[r,swap,"\blank\circ f"] & \prd{x:X}P(f(x)).
+    \end{tikzcd}
+  \end{equation*}
+  This diagram commutes by the homotopy
+  \begin{equation*}
+    \lam{h}\eqhtpy(\lam{x}\ap{e(f(x))}{\apd{h}{H(x)}}^{-1}).
+  \end{equation*}
+  In this diagrams all the maps pointing downwards are equivalences for obvious reasons: the two maps $\blank\circ\eta$ are equivalences since $\tilde{P}$ is a family of $k$-types, and the remaining three maps pointing downwards are all postcomposing with an equivalence. The top map is an equivalence since $\trunc{k+1}{f}$ is assumed to be an equivalence. Thus we conclude that the bottom map $\blank\circ f$ is an equivalence.
+\end{proof}
+
+\subsubsection{The 3-for-2 property}
+An important distinction between the class of $k$-equivalences and the class of $k$-connected maps is that the $k$-equivalences satisfy the 3-for-2 property, while the $k$-connected maps do not. It is not hard to see that the $k$-connected maps don't satisfy the 3-for-2 property. For example, consider the following commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      \sphere{1} \arrow[rr,"d_2"] \arrow[dr] & & \sphere{1} \arrow[dl] \\
+      & \unit,
+    \end{tikzcd}
+  \end{equation*}
+  where $d_2:\sphere{1}\to\sphere{1}$ is the degree $2$ map. Since the circle is a $0$-connected type, it follows that the maps $\sphere{1}\to\unit$ are $0$-connected. However, the fiber of $d_2$ at the base point is equivalent to the booleans, which is a non-contractible set so it is certainly not $0$-connected.
+
+\begin{lem}
+  The $k$-equivalences satisfy the 3-for-2 property, i.e., for any commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+      & X,
+    \end{tikzcd}   
+  \end{equation*}
+  if any two of the three maps are $k$-equivalences, then so is the third.
+\end{lem}
+
+\begin{proof}
+  This follows immediately from the fact that equivalences satisfy the 3-for-2 property.
+\end{proof}
+
+\begin{prp}
+  Consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  with $H:f\htpy g\circ h$. The following three statements hold:
+  \begin{enumerate}
+  \item If $f$ and $h$ are $k$-connected, then $g$ is $k$-connected.
+  \item If $g$ and $h$ are $k$-connected, then $f$ is $k$-connected.
+  \item If $f$ and $g$ are $k$-connected, then $h$ is a $k$-equivalence.
+  \end{enumerate}
+\end{prp}
+
+\begin{proof}
+  The first two statements combined assert that if $h$ is $k$-connected, then $f$ is $k$-connected if and only if $g$ is $k$-connected. To see that this equivalence holds, consider for any family $P$ of $k$-truncated types over $X$ the commuting square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=10em]
+      \prd{x:X}P(x) \arrow[r,"\blank\circ g"] \arrow[d,swap,"\blank\circ f"] & \prd{b:B}P(g(b)) \arrow[d,"\blank\circ h"] \\
+      \prd{a:A}P(f(a)) \arrow[r,swap,"{\lam{s}{a}\tr_P(H(a),s(a))}"] & \prd{a:A}P(g(h(a)))
+    \end{tikzcd}
+  \end{equation*}
+  In this square, the bottom map is given by postcomposing with the family of equivalences $\tr_P(H(a))$ indexed by $a:A$, so it is an equivalence. The map on the right is an equivalence by \cref{thm:conn-dup}, using the assumption that $h$ is a $k$-connected map. The square commutes by the homotopy
+  \begin{equation*}
+    \lam{s}\eqhtpy\big(\lam{a}\apd{s}{H(a)}\big).
+  \end{equation*}
+  Therefore it follows that the precomposition map $\blank\circ f$ is an equivalence if and only if the precomposition map $\blank\circ g$ is. By \cref{thm:conn-dup} we conclude that $f$ is connected if and only if $g$ is. This proves statements (i) and (ii).
+
+  Statement (iii) follows from the facts that any $k$-connected map is a $k$-equivalence by \cref{cor:k-equiv-k-conn} and that the $k$-equivalences satisfy the 3-for-2 property \cref{lem:3-for-2-k-equiv}.
+\end{proof}
+
+\subsubsection{The acion on homotopy groups}
+
+\begin{thm}
+  Consider a map $f:X\to Y$. The following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is $(k+1)$-connected.
+  \item The map $f$ is surjective, and for each $x,x':X$ the action on paths
+    \begin{equation*}
+      \apfunc{f} : (x=x')\to (f(x)=f(x'))
+    \end{equation*}
+    is $k$-connected.
+  \end{enumerate}
+\end{thm}
+
+\begin{thm}
+  Consider a surjective map $f:X\to Y$. The following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is $k$-connected.
+  \item The induced maps on loop spaces
+    \begin{equation*}
+      \loopspace{f,x}:\loopspace{X,x}\to\loopspace{Y,f(x)}
+    \end{equation*}
+    is $(k-1)$-connected for every $x:X$.
+  \item The induced maps on homotopy groups
+    \begin{equation*}
+      \pi_i(f,x):\pi_i(X,x)\to\pi_i(Y,f(x))
+    \end{equation*}
+    are isomorphisms for $0\leq i\leq k$, and it is surjective for $i=k+1$. 
+  \end{enumerate}
+\end{thm}
+
+\begin{rmk}
+  If $f:X\to Y$ is a pointed map between connected types, then conditions (ii) and (iii) in \cref{thm:htpy-groups-conn-map} only have to be checked at the base point.
+\end{rmk}
+
+\subsection{Orthogonality}
+
+The idea of orthogonality is that a map $f:A\to B$ is left orthogonal to a map $g:X\to Y$ if for every commuting square of the form
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[d,swap,"f"] \arrow[r,"h"] & X \arrow[d,"g"] \\
+    B \arrow[r,swap,"i"] & Y,
+  \end{tikzcd}
+\end{equation*}
+with $H:(i\circ f)\htpy (g\circ h)$, the type of diagonal fillers is contractible. The type of diagonal fillers is the type of maps $j:B\to X$ equipped with homotopies
+\begin{align*}
+  K & : j\circ f\htpy h \\
+  L & : g\circ j\htpy i
+\end{align*}
+and a homotopy $M$ witnessing that the triangle
+\begin{equation*}
+  \begin{tikzcd}[column sep=small]
+    g\circ j\circ f \arrow[rr,"g\cdot K"] \arrow[dr,swap,"L\cdot f"] & & h\circ g \\
+    & i\circ f \arrow[ur,swap,"H"]
+  \end{tikzcd}
+\end{equation*}
+commutes. A slicker way to express this condition is to assert that the map
+\begin{equation*}
+   (B\to X)\to \sm{h:A\to X}{i:B\to Y} i\circ f\htpy g\circ h
+\end{equation*}
+given by $j\mapsto(j\circ f,g\circ j,\htpyrefl)$ is an equivalence. Indeed, the type of triples $(h,i,H)$ in the codomain is the type of commuting squares with respect to which we stated the orthogonality condition. Now we may even recognize the above map as a gap map of a commuting square, and we arrive at our actual definition of orthogonality.
+
+\begin{defn}
+  A map $f:A\to B$ is said to be \define{left orthogonal} to a map $g:X\to Y$, or equivalently the map $g$ is said to be \define{right orthogonal} to $f$, if the commuting square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=large]
+      X^B \arrow[r,"\blank\circ f"] \arrow[d,swap,"g\circ\blank"] & X^A \arrow[d,"g\circ\blank"] \\
+      Y^B \arrow[r,swap,"\blank\circ f"] & Y^A
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square.
 \end{defn}
 
 \begin{thm}
 Let $f:A\to B$ be a map. The following are equivalent:
 \begin{enumerate}
-\item The map $f$ is \define{$n$-connected}, i.e. the fibers of $f$ are $n$-connected types.
-\item The map $f$ is \define{left orthogonal} with respect to every $n$-truncated map $g:X\to Y$, i.e. the square
-\begin{equation*}
-\begin{tikzcd}
-X^B \arrow[r,"\blank\circ f"] \arrow[d,swap,"g\circ \blank"] & X^A \arrow[d,"g\circ\blank"] \\
-Y^B \arrow[r,swap,"\blank\circ f"] & Y^A
-\end{tikzcd}
-\end{equation*}
+\item The map $f$ is $k$-connected.
+\item The map $f$ is left orthogonal to every $k$-truncated map.
 is a pullback square.
-\item For each $i\leq n$, the map $f$ induces an isomorphism
-\begin{equation*}
-\pi_i(f):\pi_i(A)\to\pi_i(B)
-\end{equation*}
-of homotopy groups, and 
-\begin{equation*}
-\pi_{n+1}(f):\pi_{n+1}(A)\to\pi_{n+1}(B)
-\end{equation*}
-is surjective.
 \end{enumerate}
 \end{thm}
 
 \begin{thm}
-Consider a commuting square
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[d,swap,"f"] \arrow[r] & B \arrow[d,"g"] \\
-X \arrow[r] & Y
-\end{tikzcd}
-\end{equation*}
-The following are equivalent:
-\begin{enumerate}
-\item The map $A\to X\times_Y B$ is $n$-connected. In this case the square is called \define{$n$-cartesian}.
-\item For each $x:X$ the map
-\begin{equation*}
-\fib{f}{x}\to \fib{g}{f(x)}
-\end{equation*}
-is $n$-connected.
-\end{enumerate}
+  Let $f:A\to B$ be a map. The following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is a $k$-equivalence.
+  \item The map $f$ is left orthogonal to every map between $k$-truncated types.
+  \end{enumerate}
 \end{thm}
 
+\subsection{The connectedness of suspensions}
+
+We will use connected maps to prove the connectedness of suspensions.
+
+\begin{prp}\label{prp:conn-pushout}
+  Consider a pushout square
+  \begin{equation*}
+    \begin{tikzcd}
+      S \arrow[d,swap,"f"] \arrow[r,"g"] & B \arrow[d,"j"] \\
+      A \arrow[r,swap,"i"] & X.
+    \end{tikzcd}
+  \end{equation*}
+  If the map $f:S\to A$ is $k$-connected, then so is the map $j:B\to X$.
+\end{prp}
+
+\begin{proof}
+  We claim that the map $j:B\to X$ is left orthogonal to any $k$-truncated map $p:Y\to Z$, which is equivalent to the property that $j$ is $k$-connected. To see that $j$ is left orthogonal to $p$, consider the commuting cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & Y^X \arrow[dl] \arrow[d] \arrow[dr] & \\
+      Y^A \arrow[d] & Y^B \arrow[dl] \arrow[dr] & Z^X \arrow[dl,crossing over] \arrow[d] \\
+      Y^S \arrow[dr] & Z^A \arrow[d] \arrow[from=ul,crossing over] & Z^B \arrow[dl] \\
+      & Z^S.
+    \end{tikzcd}
+  \end{equation*}
+  In this cube, the front left square is a pullback square because the map $f:S\to A$ is assumed to be $k$-connected, and therefore it is left orthogonal to the $k$-truncated map $p$. The back left and front right squares are pullback squares by the pullback property of pushouts. Therefore it follows that the back right square is a pullback square. This shows that $j$ is left orthogonal to $p$.
+\end{proof}
+
+\begin{lem}\label{lem:conn-mismatch}
+  A pointed type $X$ is $(k+1)$-connected if and only if the point inclusion
+  \begin{equation*}
+    \unit\to X
+  \end{equation*}
+  is a $k$-connected map.
+\end{lem}
+
+\begin{proof}
+  Since $X$ is assumed to have a base point $x_0:X$, it follows that $X$ is $(k+1)$-connected if and only if its identity types $(x=y)$ are $k$-connected. Now the claim follows from the fact that there is an equivalence
+  \begin{equation*}
+    \fib{\const_{x_0}}{y}\simeq (x_0=y).\qedhere
+  \end{equation*}
+\end{proof}
+
+\begin{thm}\label{thm:conn-suspension}
+  If $X$ is an $k$-connected type, then its suspension $\susp X$ is $(k+1)$-connected.
+\end{thm}
+
+\begin{proof}
+  The type $X$ is $k$-connected if and only if the map $\const_\ttt:X\to\unit$ is a $k$-connected map. Recall that the suspension of $X$ is a pushout
+  \begin{equation*}
+    \begin{tikzcd}
+      X \arrow[d,swap,"\const_\ttt"] \arrow[r,"\const_\ttt"] & \unit \arrow[d,"\south"] \\
+      \unit \arrow[r,swap,"\north"] & \susp X.
+    \end{tikzcd}
+  \end{equation*}
+  Therefore we see by \cref{prp:conn-pushout} that the point inclusions $\north,\south:\unit\to\susp X$ are both $k$-connected maps. By \cref{lem:conn-mismatch} it follows that $\susp X$ is a $(k+1)$-connected type.
+\end{proof}
+
+\begin{cor}\label{cor:conn-sphere}
+  The $n$-sphere is $(n-1)$-connected.
+\end{cor}
+
+\begin{proof}
+  The $0$-sphere is $(-1)$-connected, since it contains a point. Thus the claim follows by induction on $n:\N$, using \cref{thm:conn-suspension}.
+\end{proof}
+
+\subsection{The join connectivity theorem}
+
 \begin{thm}
-If $X$ is $m$-connected and $Y$ is $n$-connected, then $\join{X}{Y}$ is $(m+n+2)$-connected. 
+  If $X$ is $k$-connected and $Y$ is $l$-connected, then their join $\join{X}{Y}$ is $(k+l+2)$-connected.
 \end{thm}
 
 \begin{thm}
@@ -63,7 +487,7 @@ C \arrow[r] \arrow[d] & B \arrow[d] \\
 A \arrow[r] & X.
 \end{tikzcd}
 \end{equation*}
-If the maps $A\to X$ and $B\to X$ are $m$- and $n$-connected, respectively, then the map $A\sqcup^C B\to X$ is $(m+n+2)$-connected.
+If the maps $A\to X$ and $B\to X$ are $k$- and $l$-connected, respectively, then the map $A\sqcup^C B\to X$ is $(k+l+2)$-connected.
 \end{thm}
 
 \begin{thm}
@@ -123,19 +547,36 @@ where the base points are $x_0:B$, $y_0:F$, and $z_0:E$ induces a fiber sequence
 \begin{equation*}
   \mathsf{BAut}(y_0) \hookrightarrow \mathsf{BAut}(z_0) \twoheadrightarrow \mathsf{BAut}(x_0).
 \end{equation*}
-\exercise Consider a pullback square
+\exercise Recall that a commuting square is called $k$-cartesian, if its gap map is $k$-connected. Show that $(k+1)$-truncation preserves $l$-cartesian squares for any $l\leq k$, i.e., show that for any $l\leq k$, if a square
 \begin{equation*}
   \begin{tikzcd}
     C \arrow[r,"q"] \arrow[d,swap,"p"] & B \arrow[d,"g"] \\
     A \arrow[r,swap,"f"] & X.
   \end{tikzcd}
 \end{equation*}
-Show that the commuting square
+is $l$-cartesian, then the square
 \begin{equation*}
   \begin{tikzcd}[column sep=large]
     \trunc{k+1}{C} \arrow[r,"\trunc{k+1}{q}"] \arrow[d,swap,"\trunc{k+1}{p}"] & \trunc{k+1}{B} \arrow[d,"\trunc{k+1}{g}"] \\
     \trunc{k+1}{A} \arrow[r,swap,"\trunc{k+1}{f}"] & \trunc{k+1}{X}
   \end{tikzcd}
 \end{equation*}
-is $k$-cartesian, i.e.~that the gap map is $k$-connected.
+is $l$-cartesian.
+\exercise Generalize \cref{rmk:conn-3-for-2} to show that for every $k\geq-1$, the $k$-truncated maps do not satisfy the 3-for-2 property.
+\exercise Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[d,swap,"f"] \arrow[r] & B \arrow[d,"g"] \\
+X \arrow[r] & Y
+\end{tikzcd}
+\end{equation*}
+Show that the following are equivalent:
+\begin{enumerate}
+\item The map $A\to X\times_Y B$ is $n$-connected. In this case the square is called \define{$n$-cartesian}.
+\item For each $x:X$ the map
+\begin{equation*}
+\fib{f}{x}\to \fib{g}{f(x)}
+\end{equation*}
+is $n$-connected.
+\end{enumerate}
 \end{exercises}
