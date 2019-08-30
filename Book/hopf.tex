@@ -348,25 +348,8 @@ Any fiber sequence $F\hookrightarrow E\twoheadrightarrow B$ induces a long exact
 
 
 \begin{exercises}
-\exercise Give the $0$-sphere $\sphere{0}$ the structure of an H-space.
-\exercise For any pointed type $A$, give $\loopspace{A}$ the structure of an H-space.
-\exercise Show that the type of (small) fiber sequences is equivalent to the type of quadruples $(B,P,b_0,x_0)$, consisting of
-\begin{align*}
-B & : \UU \\
-P & : B \to \UU \\
-b_0 & : B \\
-x_0 & : P(b_0).
-\end{align*}
-\exercise Show that there is a fiber sequence
-\begin{equation*}
-  \sphere{3}\hookrightarrow\sphere{2}\twoheadrightarrow\trunc{2}{\sphere{2}},
-\end{equation*}
-where the map $\sphere{2}\to\trunc{2}{\sphere{2}}$ is the unit of the $2$-truncation.
-\exercise Show that there is a fiber sequence
-\begin{equation*}
-  \rprojective{\infty}\hookrightarrow\cprojective{\infty}\twoheadrightarrow\cprojective{\infty}.
-\end{equation*}
-\exercise Show that any fiber sequence
+  \exercise For any pointed type $A$, give $\loopspace{A}$ the structure of an H-space.
+  \exercise Show that any fiber sequence
 \begin{equation*}
   F \hookrightarrow E \twoheadrightarrow B
 \end{equation*}
@@ -374,4 +357,30 @@ where the base points are $x_0:B$, $y_0:F$, and $z_0:E$ induces a fiber sequence
 \begin{equation*}
   \mathsf{BAut}(y_0) \hookrightarrow \mathsf{BAut}(z_0) \twoheadrightarrow \mathsf{BAut}(x_0).
 \end{equation*}
+  \exercise Show that there is a fiber sequence
+\begin{equation*}
+  \sphere{3}\hookrightarrow\sphere{2}\twoheadrightarrow\trunc{2}{\sphere{2}},
+\end{equation*}
+where the map $\sphere{2}\to\trunc{2}{\sphere{2}}$ is the unit of the $2$-truncation.
+  \exercise Construct a fiber sequence
+  \begin{equation*}
+    \cprojective{\infty}\hookrightarrow \join{\cprojective{\infty}}{\cprojective{\infty}} \twoheadrightarrow \sphere{3}.
+  \end{equation*}
+  \exercise Construct for every group $G$ of order $n+1$ a fiber sequence
+  \begin{equation*}
+    \begin{tikzcd}
+      G \arrow[r,hook] & \bigvee_{(i:\Fin(n^2))}\sphere{1}\arrow[r,->>] & \bigvee_{(i:\Fin(n))}\sphere{1}
+    \end{tikzcd}
+  \end{equation*}
+  \exercise Show that there is a fiber sequence
+\begin{equation*}
+  \rprojective{\infty}\hookrightarrow\cprojective{\infty}\twoheadrightarrow\cprojective{\infty}.
+\end{equation*}
+\exercise Show that the type of (small) fiber sequences is equivalent to the type of quadruples $(B,P,b_0,x_0)$, consisting of
+\begin{align*}
+B & : \UU \\
+P & : B \to \UU \\
+b_0 & : B \\
+x_0 & : P(b_0).
+\end{align*}
 \end{exercises}

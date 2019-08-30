@@ -2,6 +2,42 @@
 
 \section{Connected types and maps}
 
+In this section we introduce the concept of $k$-connected types and maps. We define $k$-connected types to be types with contractible $k$-truncation, and a $k$-connected map is just a map of which the fibers are $k$-connected. The idea is that a type is $k$-connected if and only if its homotopy groups $\pi_i(X)$ are trivial for all $i\leq k$.
+
+One of the main theorems in this section is a characterization of $k$-connected maps in terms of their action on homotopy groups: A map $f:X\to Y$ is $k$-connected if and only if it induces isomorphisms
+\begin{equation*}
+  \pi_i(f,x):\pi_i(X,x)\to\pi_i(Y,f(x))
+\end{equation*}
+of homotopy groups, for each $i\leq k$ and each $x:X$, and a \emph{surjective} group homomorphism
+\begin{equation*}
+  \pi_{k+1}(f,x):\pi_{k+1}(X,x)\to\pi_{k+1}(Y,f(x))
+\end{equation*}
+on the $(k+1)$-st homotopy group, for each $x:X$. If one drops the condition that $f$ induces a surjective group homomorphism on the $(k+1)$-st homotopy group, then the map is only a $k$-equivalence, i.e., a map of which $\trunc{k}{f}$ is an equivalence. We see from the above characterization that any $k$-connected map is a $k$-equivalence, and also that any $(k+1)$-equivalence is a $k$-connected map. Nevertheless, the difference between the classes of $k$-equivalences and $k$-connected maps is somewhat subtle.
+
+We will study $k$-equivalences and $k$-connected maps synchronously, because understanding the subtle differences between the results about either of them will increase the understanding of both classes of maps. For instance, we will show that the $k$-connected maps enjoy a dependent elimination property, while the $k$-equivalences only satisfy a non-dependent elimination property. We will see that the $k$-equivalences satisfy the 3-for-2 property, while one of the cases of the 3-for-2 property fails for $k$-connected maps.
+
+The $k$-connected maps can be characterized as the class of maps that is left orthogonal to the class of $k$-truncated maps, where a map $f:A\to B$ is said to be left orthogonal to a map $g:X\to Y$ if the type of diagonal fillers of any commuting square of the form
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[d,swap,"f"] \arrow[r] & X \arrow[d,"g"] \\
+    B \arrow[r] \arrow[ur,densely dotted] & Y
+  \end{tikzcd}
+\end{equation*}
+is contractible. Similarly, the class of $k$-equivalences is the class of maps that is left orthogonal to any map between $k$-truncated types. However, this result is not entirely sharp, because there are more maps that the $k$-equivalences are left orthogonal to. It turns out that a map is a $k$-equivalence if and only if it is left orthogonal to any map $g:X\to Y$ for which the naturality square
+\begin{equation*}
+  \begin{tikzcd}[column sep=large]
+    X \arrow[r,"g"] \arrow[d,swap,"\eta"] & Y \arrow[d] \\
+    \trunc{k}{X} \arrow[r,swap,"\trunc{k}{g}"] & \trunc{k}{Y}
+  \end{tikzcd}
+\end{equation*}
+is a pullback square. Such maps are called $k$-\'etale, and they induce isomorphisms
+\begin{equation*}
+  \pi_i(g,x):\pi_i(X,x)\to\pi_i(Y,g(x))
+\end{equation*}
+on homotopy groups for $i>k$.
+
+In the final part of this section we will use the results about $k$-equivalences to show that the $n$-sphere is $(n-1)$-connected, for each $n:\N$, and that the join $\join{A}{B}$ is $(k+l+2)$-connected if $A$ is $k$-connected and $B$ is $l$-connected.
+
 \subsection{Connected types}
 
 \begin{defn}
@@ -117,17 +153,29 @@ We now study two classes of maps that differ only slightly: the $k$-equivalences
   Any equivalence is a $k$-connected map, as well as a $k$-equivalence. Moreover, for any $k$-connected type $X$ the map $\const_\ttt:X\to\unit$ is $k$-connected. It is also immediate that \emph{any} map between $k$-connected types is a $k$-equivalence.
 \end{eg}
 
-\begin{rmk}
-  While the definitions of $k$-equivalences and $k$-connected maps may look very different, there is in fact only a very subtle difference between these two classes of maps. This diffence is best understood by characterizing $k$-equivalences and $k$-connected maps via their actions on homotopy groups: $k$-Equivalences are maps that induce isomorphisms
-\begin{equation*}
-  \pi_i(f,x):\pi_i(X,x)\to\pi_i(Y,f(x))
-\end{equation*}
-on homotopy groups for every $x:X$ and $i\leq k$, while the condition of being $k$-connected is equivalent to inducing isomorphisms on the same homotopy groups \emph{and} a surjective homomorphism
-\begin{equation*}
-  \pi_{k+1}(f,x):\pi_{k+1}(X,x)\to\pi_{k+1}(Y,f(x))
-\end{equation*}
-on the $(k+1)$-st homotopy group. Our goal in this section to prove these characterizations. We will establish many useful facts along the way.
-\end{rmk}
+\begin{eg}
+  A $(-1)$-connected map is a map $f:X\to Y$ for which the propositionally truncated fibers
+  \begin{equation*}
+    \trunc{-1}{\fib{f}{y}}
+  \end{equation*}
+  are contractible. Since propositions are contractible as soon as they are inhabited, we see that a map is $(-1)$-connected if and only if it is surjective.
+
+  A $(-1)$-equivalence, on the other hand, is just a map $f:X\to Y$ that induces an equivalence $\trunc{-1}{X}\simeq\trunc{-1}{Y}$. The map $\const_\btrue : \unit\to\bool$ is an example of such a map, showing that $(-1)$-equivalences don't need to be surjective.
+
+  However, it is the case that every surjective map $f:X\to Y$ is in fact $(-1)$-equivalence. To see this, we need to show that
+  \begin{equation*}
+    \trunc{-1}{Y}\to\trunc{-1}{X}.
+  \end{equation*}
+  Such a map is constructed by the universal property of $(-1)$-truncation. Thus, it suffices to construct a function $Y\to\trunc{-1}{X}$. Since we have assumed that $f$ is surjective, we have for every $y:Y$ a term
+  \begin{equation*}
+    s(y):\trunc{-1}{\fib{f}{y}}.
+  \end{equation*}
+  Thus, we define a function $Y\to\trunc{-1}{X}$ by
+  \begin{equation*}
+    y\mapsto\trunc{-1}{\proj 1}(s(y)).
+  \end{equation*}
+  This concludes the proof that $f$ is a $(-1)$-equivalence, since we have shown that $\trunc{-1}{X}\leftrightarrow\trunc{-1}{Y}$. 
+\end{eg}
 
 \begin{rmk}
   An immediate difference between the classes of $k$-equivalences and $k$-connected maps is that the $k$-connected maps are stable under base change, while the $k$-equivalences are not. By this, we mean that for any pullback square
@@ -507,7 +555,10 @@ If the maps $A\to X$ and $B\to X$ are $k$- and $l$-connected, respectively, then
 \end{thm}
 
 \begin{exercises}
-\exercise Show that retracts of $n$-connected types are again $n$-connected.
+  \exercise Show that every type is equivalent to a disjoint union of connected components, i.e., show that for every type $X$ there is a family of connected types $B_i$ by a set $I$, with an equivalence
+  \begin{equation*}
+    X \eqvsym \sm{i:I}B_i.
+  \end{equation*}
 \exercise Let $f:A\to_\ast B$ be a pointed map between pointed $n$-connected types, for $n\geq -1$. Show that the following are equivalent:
 \begin{enumerate}
 \item $f$ is an equivalence.
@@ -575,12 +626,4 @@ Show that the following are equivalent:
 \end{equation*}
 is $n$-connected.
 \end{enumerate}
-\exercise Let $f:A\to B$ be a surjective map, and let $g:A\to C$ be any map. Show that if there is a unique extension
-\begin{equation*}
-\begin{tikzcd}
-\fib{f}{f(a)} \arrow[r,"g\circ\pi_1"] \arrow[d] & C \\
-\unit \arrow[ur,densely dotted]
-\end{tikzcd}
-\end{equation*}
-for any $a:A$, then $g$ extends uniquely along $f$.
 \end{exercises}
