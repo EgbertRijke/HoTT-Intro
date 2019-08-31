@@ -3,6 +3,7 @@
 \section{The Blakers-Massey theorem}
 The Blakers-Massey theorem is a connectivity theorem which can be used to prove the Freudenthal suspension theorem, giving rise to the field of \emph{stable homotopy theory}. It was proven in the setting of homotopy type theory by Lumsdaine et al, and their proof was the first that was given entirely in an elementary way, using only constructions that are invariant under homotopy equivalence. 
 
+\subsection{The Blakers-Massey theorem}
 Consider a span $A \leftarrow S \rightarrow B$, consisting of an $m$-connected map $f:S\to A$ and an $n$-connected map $g:S\to B$. We take the pushout of this span, and subsequently the pullback of the resulting cospan, as indicated in the diagram
 \begin{equation}\label{eq:BM}
 \begin{tikzcd}
@@ -15,6 +16,20 @@ The universal property of the pullback determines a unique map $u:S\to A \times_
 
 \begin{thm}[Blakers-Massey]
 The map $u:S\to A \times_{(A\sqcup^S B)} B$ of \cref{eq:BM} is $(n+m)$-connected.
+\end{thm}
+
+\subsection{The Freudenthal suspension theorem}
+
+\begin{thm}
+  If $X$ is a $k$-connected pointed type, then the canonical map
+  \begin{equation*}
+    X \to \loopspace{\susp{X}}
+  \end{equation*}
+  is $2k$-connected.
+\end{thm}
+
+\begin{thm}
+  $\pi_n(\sphere{n})=\Z$ for $n\geq 1$.
 \end{thm}
 
 \subsection{Higher groups}
@@ -362,6 +377,8 @@ open problem whether this is true in general.
 Also, the abelianization of a set-level group $G : 1\mathsf{Grp}$ is
 $\pi_2(\susp BG)$. If $G : (n,k)\GType$ is in the stable range ($k \ge
 n+2$), then $SFG=G$.
+
+\subsection{Eilenberg-Mac Lane spaces}
 
 \begin{exercises}
 \exercise Show that if $X$ is $m$-connected and $f:X\to Y$ is $n$-connected, then the map
