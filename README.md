@@ -47,13 +47,9 @@ The course consisted of 27 one-hour lectures, in which we covered most of the fo
     * The Blakers-Massey Theorem
 
 ## Book
-The course notes that I took are evolving into an introductory textbook for students who want to learn homotopy type theory fo the first time. They are currently subject to frequent change. For the version of the notes that I used during the course, see the original [course website][1].
+The course notes that I took are evolving into an introductory textbook for students who want to learn homotopy type theory for the first time. They are currently subject to frequent change, so my recommendation would be to have a look at the 2018 course notes or the 2019 summer school notes instead. Those can be found in the `pdfs` folder of this repository. 
 
-* To compile the book, run `pdflatex hott-intro.tex`. It should run well with TeXLive 2017 or later.
-* To generate the bibliography, run `biber hott-intro.bcf`.
-* To generate the index, run `makeindex hott-intro.idx`.
-
-All of this is automated when you run `latexmk -pdf hott-intro.tex`.
+To compile the notes, run `latexmk -pdf hott-intro.tex`.
 
 ## Agda formalization
 The Agda formalization can be found in the Agda folder. Except for the first lecture, which explains the rules for dependent type theory, the files of the formalization correspond 1-to-1 with the Lectures in the course notes, and the formalization follows the course material as closely as possible. A formalization of all the exercises is included, since many of them are essential in the development of the theory.
