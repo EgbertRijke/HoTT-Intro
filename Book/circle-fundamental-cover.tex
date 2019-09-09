@@ -428,11 +428,23 @@ Therefore the following computation completes the proof:
     \Z\to\loopspace{\sphere{1}}
   \end{equation*}
   is a group homomorphism. Conclude that the loop space $\loopspace{\sphere{1}}$ as a group is isomorphic to $\Z$.
-\exercise \label{ex:degk}Use the fundamental cover of the circle to show that
-\begin{equation*}
-\neg\Big(\prd{t:\sphere{1}}\base=t\Big).
-\end{equation*}
-\exercise \label{ex:circle_degk}
+  \exercise
+  \begin{subexenum}
+  \item Show that
+    \begin{equation*}
+      \prd{x:\sphere{1}}\neg\neg(\base=x).
+    \end{equation*}
+  \item On the other hand, use the fundamental cover of the circle to show that
+    \begin{equation*}
+      \neg\Big(\prd{x:\sphere{1}}\base=x\Big).
+    \end{equation*}
+  \item Conclude that
+    \begin{equation*}
+      \neg\Big(\prd{X:\UU} \neg\neg X\to X\Big)
+    \end{equation*}
+    for any univalent universe $\UU$ containing the circle.
+  \end{subexenum}
+  \exercise \label{ex:circle_degk}
 \begin{subexenum}
 \item Show that for every $x:X$, we have an equivalence
 \begin{equation*}

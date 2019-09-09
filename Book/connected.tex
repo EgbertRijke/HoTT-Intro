@@ -372,6 +372,36 @@ An important distinction between the class of $k$-equivalences and the class of 
 \subsubsection{The acion on homotopy groups}
 
 \begin{thm}
+  Consider a map $f:X\to Y$, and suppose that $k\geq -1$. The following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is a $k$-equivalence.
+  \item The map $f$ is a $(-1)$-equivalence, and for every $0\leq i\leq k$ and every $x:X$, the induced group homomorphism
+    \begin{equation*}
+      \pi_i(f,x):\pi_i(X,x)\to\pi_i(Y,f(x))
+    \end{equation*}
+    is an isomorphism.
+  \end{enumerate}
+\end{thm}
+
+\begin{defn}
+  A map $f:X\to Y$ is said to be a \define{weak equivalence} if it is a $0$-equivalence, and it induces an isomorphism
+  \begin{equation*}
+    \pi_i(f,x):\pi_i(X,x)\cong\pi_i(Y,f(x))
+  \end{equation*}
+  on homotopy groups, for every $x:X$ and every $i\geq 1$. 
+\end{defn}
+
+The following corollary is an instance of Whitehead's principle, which asserts that a map between any two spaces is a homotopy equivalence if and only if it is a weak equivalence. Thus, by the following corollary, Whitehead's principle holds for $k$-types.
+
+\begin{cor}
+  Consider two $k$-types $X$ and $Y$, and consider a map $f:X\to Y$ between them. Then the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is an equivalence.
+  \item The map $f$ is a weak equivalence.
+  \end{enumerate}
+\end{cor}
+
+\begin{thm}
   Consider a map $f:X\to Y$. The following are equivalent:
   \begin{enumerate}
   \item The map $f$ is $(k+1)$-connected.
@@ -572,6 +602,13 @@ X \arrow[r] & Y
 \end{tikzcd}
 \end{equation*}
 is \define{$k$-cocartesian} in the sense that the cogap map is $k$-connected, then the map $\mathsf{cofib}(f)\to \mathsf{cofib}(g)$ is $k$-connected.
+\exercise Show that if $f:X\to Y$ is a $k$-connected map, then so is
+\begin{equation*}
+  \begin{tikzcd}
+    \trunc{l}{f}:\trunc{l}{X}\to\trunc{l}{Y}
+  \end{tikzcd}
+\end{equation*}
+for any $l\geq-2$.
 \exercise Consider a commuting square
 \begin{equation*}
 \begin{tikzcd}
@@ -626,4 +663,20 @@ Show that the following are equivalent:
 \end{equation*}
 is $n$-connected.
 \end{enumerate}
+\exercise Consider a map $f:A\to B$. Show that the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is a weak equivalence.
+  \item The map $f$ is $\infty$-connected, in the sense that $f$ is $k$-connected for each $k$.
+  \item The map $f$ is left orthogonal to any map between truncated types of any truncation level.
+  \item The map $f$ is left orthogonal to any truncated map, for any truncation level.
+  \end{enumerate}
+  Thus we see that, while the classes of $k$-connected maps and $k$-equivalences differ for finite $k\geq-1$, they come to agree at $\infty$.
+  \exercise Consider a pointed $(k+1)$-connected type $X$. Show that every $k$-truncated map $f:A\to X$ trivializes, in the sense that there is a $k$-type $B$ and an equivalence $e:\eqv{A}{X\times B}$ for which the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=0]
+      A \arrow[rr,"e"] \arrow[dr,swap,"f"] & & X\times B \arrow[dl,"\proj 1"] \\
+      \phantom{X\times B} & X
+    \end{tikzcd}
+  \end{equation*}
+  commutes.
 \end{exercises}

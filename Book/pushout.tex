@@ -639,4 +639,12 @@ This is known as the \define{3-by-3 lemma}\index{3-by-3 lemma!for pushouts} for 
     \end{tikzcd}
   \end{equation*}
   is a pushout square.
+  \exercise Consider a map $f:A\to B$. Show that $f$ is a $k$-truncated map if and only if the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"\delta"] \arrow[d,swap,"f"] & A^{\sphere{k+1}} \arrow[d,"f^{\sphere{k+1}}"] \\
+      B \arrow[r,swap,"\delta"] & B^{\sphere{k+1}}
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square.
 \end{exercises}

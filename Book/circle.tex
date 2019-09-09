@@ -345,15 +345,23 @@ For the right unit law, however, we need to give a separate argument that is sur
 \end{proof}
 
 \begin{exercises}
-  \exercise \label{ex:circle-connected}Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
-  \begin{equation*}
-    P(\base)\to\prd{x:\sphere{1}}P(x).
-  \end{equation*}
-  In this sense the circle is \emph{connected}.
-  \exercise Show that
-  \begin{equation*}
-    \prd{x,y:\sphere{1}}\neg\neg(x=y).
-  \end{equation*}
+  \exercise \label{ex:circle-connected}
+  \begin{subexenum}
+  \item Let $P:\sphere{1}\to\prop$ be a family of propositions over the circle. Show that
+    \begin{equation*}
+      P(\base)\to\prd{x:\sphere{1}}P(x).
+    \end{equation*}
+    In this sense the circle is \emph{connected}.
+  \item Show that any embedding $m:\sphere{1}\to\sphere{1}$ is an equivalence.
+  \item Show that for any embedding $m:X\to\sphere{1}$, there is a proposition $P$ and an equivalence $e:\eqv{X}{\sphere{1}\times P}$ for which the triangle
+    \begin{equation*}
+      \begin{tikzcd}[column sep=0]
+        X \arrow[dr,swap,"m"] \arrow[rr,"e"] & & \sphere{1}\times P \arrow[dl,"\proj 1"] \\
+        \phantom{\sphere{1}\times P} & \sphere{1}
+      \end{tikzcd}
+    \end{equation*}
+    commutes. In other words, all the embeddings into the circle are of the form $\sphere{1}\times P\to \sphere{1}$.
+  \end{subexenum}
   \exercise \label{ex:circle-constant}
   Show that for any type $X$ and any $x:X$, the map
   \begin{equation*}
@@ -409,4 +417,13 @@ is an equivalence.
     \end{tikzcd}
   \end{equation*}
   commutes.
+  \exercise Show that for any multiplicative operation
+  \begin{equation*}
+    \mu:\sphere{1}\to(\sphere{1}\to\sphere{1})
+  \end{equation*}
+  that satisfies the condition that $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences for any $x:\sphere{1}$, there is a term $e:\sphere{1}$ such that
+  \begin{equation*}
+    \mu(x,y)=\mulcircle(x,\mulcircle(\bar{e},y))
+  \end{equation*}
+  for every $x,y:\sphere{1}$, where $\bar{e}\defeq\invcircle(e)$ is the complex conjucation of $e$ on $\sphere{1}$.
 \end{exercises}
