@@ -353,7 +353,7 @@ The proof is now concluded with an application of \cref{thm:id_fundamental}, usi
 \index{coproduct!disjointness|)}
 
 \begin{exercises}
-\exercise
+  \exercise
   \begin{subexenum}
   \item \label{ex:is-emb-empty}Show that the map $\emptyt\to A$ is an embedding for every type $A$.\index{is an embedding!0 to A@{$\emptyt\to A$}}
   \item \label{ex:is-emb-inl-inr}Show that $\inl:A\to A+B$ and $\inr:B\to A+B$ are embeddings for any two types $A$ and $B$.
@@ -362,29 +362,29 @@ The proof is now concluded with an application of \cref{thm:id_fundamental}, usi
     \index{inl@{$\inl$}!is an embedding}
     \index{inr@{$\inr$}!is an embedding}
   \end{subexenum}
-\exercise Consider an equivalence $e:A\simeq B$. Construct an equivalence
+  \exercise Consider an equivalence $e:A\simeq B$. Construct an equivalence
   \begin{equation*}
     (e(x)=y)\simeq(x=e^{-1}(y))
   \end{equation*}
   for every $x:A$ and $y:B$.
-\exercise Show that\index{embedding!closed under homotopies}
-\begin{equation*}
-(f\htpy g)\to (\isemb(f)\leftrightarrow\isemb(g))
-\end{equation*}
-for any $f,g:A\to B$.
-\exercise \label{ex:emb_triangle}Consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
-& X
-\end{tikzcd}
-\end{equation*}
-with $H:f\htpy g\circ h$. 
-\begin{subexenum}
-\item Suppose that $g$ is an embedding. Show that $f$ is an embedding if and only if $h$ is an embedding.\index{is an embedding!composite of embeddings}\index{is an embedding!right factor of embedding if left factor is an embedding}
-\item Suppose that $h$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.\index{is an embedding!left factor of embedding if right factor is an equivalence}
-\end{subexenum}
-\exercise \label{ex:is-equiv-is-equiv-functor-coprod}Consider two maps $f:A\to A'$ and $g:B \to B'$.
+  \exercise Show that\index{embedding!closed under homotopies}
+  \begin{equation*}
+    (f\htpy g)\to (\isemb(f)\leftrightarrow\isemb(g))
+  \end{equation*}
+  for any $f,g:A\to B$.
+  \exercise \label{ex:emb_triangle}Consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  with $H:f\htpy g\circ h$. 
+  \begin{subexenum}
+  \item Suppose that $g$ is an embedding. Show that $f$ is an embedding if and only if $h$ is an embedding.\index{is an embedding!composite of embeddings}\index{is an embedding!right factor of embedding if left factor is an embedding}
+  \item Suppose that $h$ is an equivalence. Show that $f$ is an embedding if and only if $g$ is an embedding.\index{is an embedding!left factor of embedding if right factor is an equivalence}
+  \end{subexenum}
+  \exercise \label{ex:is-equiv-is-equiv-functor-coprod}Consider two maps $f:A\to A'$ and $g:B \to B'$.
   \begin{subexenum}
   \item Show that if the map
     \begin{equation*}
@@ -393,119 +393,107 @@ with $H:f\htpy g\circ h$.
     is an equivalence, then so are both $f$ and $g$ (this is the converse of \cref{ex:coproduct_functor_equivalence}).
   \item \label{ex:is-emb-coprod}Show that $f+g$ is an embedding if and only if both $f$ and $g$ are embeddings.
   \end{subexenum}
-\exercise \label{ex:htpy_total} 
-\begin{subexenum}
-\item Let $f,g:\prd{x:A}B(x)\to C(x)$ be two families of maps. Show that
-\begin{equation*}
-\Big(\prd{x:A}f(x)\htpy g(x)\Big)\to \Big(\tot{f}\htpy \tot{g}\Big). 
-\end{equation*}
-\item Let $f:\prd{x:A}B(x)\to C(x)$ and let $g:\prd{x:A}C(x)\to D(x)$. Show that
-\begin{equation*}
-\tot{\lam{x}g(x)\circ f(x)}\htpy \tot{g}\circ\tot{f}.
-\end{equation*}
-\item For any family $B$ over $A$, show that
-\begin{equation*}
-\tot{\lam{x}\idfunc[B(x)]}\htpy\idfunc.
-\end{equation*}
-\end{subexenum}
-\exercise \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. 
-\begin{subexenum}
-\item Use \cref{ex:htpy_total,ex:contr_retr} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
-  \index{fundamental theorem of identity types!formulation with retractions}
-\item Conclude that for any family of maps
-  \index{fundamental theorem of identity types!formulation with sections}
-\begin{equation*}
-f : \prd{x:A} (a=x) \to B(x),
-\end{equation*}
-if each $f(x)$ has a section, then $f$ is a family of equivalences.
-\end{subexenum}
-\exercise Use \cref{ex:id_fundamental_retr} to show that for any map $f:A\to B$, if
-\begin{equation*}
-\apfunc{f} : (x=y) \to (f(x)=f(y))
-\end{equation*}
-has a section for each $x,y:A$, then $f$ is an embedding.\index{is an embedding!if the action on paths have sections}
-\exercise \label{ex:path-split}We say that a map $f:A\to B$ is \define{path-split}\index{path-split} if $f$ has a section, and for each $x,y:A$ the map
-\begin{equation*}
-\apfunc{f}(x,y):(x=y)\to (f(x)=f(y))
-\end{equation*}
-also has a section. We write $\pathsplit(f)$\index{path-split(f)@{$\pathsplit(f)$}} for the type
-\begin{equation*}
-\sections(f)\times\prd{x,y:A}\sections(\apfunc{f}(x,y)).
-\end{equation*}
-Show that for any map $f:A\to B$ the following are equivalent:
-\begin{enumerate}
-\item The map $f$ is an equivalence.
-\item The map $f$ is path-split.
-\end{enumerate}
-\begin{comment}
-\exercise \label{ex:eqv_sigma_mv}Consider a map
-\begin{equation*}
-f:A \to \sm{y:B}C(y).
-\end{equation*}
-\begin{subexenum}
-\item Construct a family of maps
-\begin{equation*}
-f':\prd{y:B} \fib{\proj 1\circ f}{y}\to C(y).
-\end{equation*}
-\item Construct an equivalence
-\begin{equation*}
-\eqv{\fib{f'(b)}{c}}{\fib{f}{(b,c)}}
-\end{equation*}
-for every $(b,c):\sm{y:B}C(y)$.
-\item Conclude that the following are equivalent:
-\begin{enumerate}
-\item $f$ is an equivalence.
-\item $f'$ is a family of equivalences.
-\end{enumerate}
-\end{subexenum}
-\exercise \label{ex:coh_intro}Consider a type $A$ with base point $a:A$, and let $B$ be a type family on $A$ that implies the identity type, i.e., there is a term
-\begin{equation*}
-\alpha : \prd{x:A} B(x)\to (a=x).
-\end{equation*}
-Show that the \define{coherence reduction map}
-\begin{equation*}
-\cohreduction : \Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big) \to \Big(\sm{x:A}B(x)\Big)
-\end{equation*}
-defined by $\lam{(y,q)}(a,y)$ is an equivalence.
-\end{comment}
-\exercise \label{ex:fiber_trans}Consider a triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=small]
-A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
-& X
-\end{tikzcd}
-\end{equation*}
-with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle commutes. 
-\begin{subexenum}
-\item Construct a family of maps
-\begin{equation*}
-\fibtriangle(h,H):\prd{x:X}\fib{f}{x}\to\fib{g}{x},
-\end{equation*}
-for which the square
-\begin{equation*}
-\begin{tikzcd}[column sep=8em]
-\sm{x:X}\fib{f}{x} \arrow[r,"\tot{\fibtriangle(h,H)}"] \arrow[d] & \sm{x:X}\fib{g}{x} \arrow[d] \\
-A \arrow[r,swap,"h"] & B
-\end{tikzcd}
-\end{equation*}
-commutes, where the vertical maps are as constructed in \cref{ex:fib_replacement}.
-\item Show that $h$ is an equivalence if and only if $\fibtriangle(h,H)$ is a family of equivalences.
-\end{subexenum}
-\begin{comment}
-\exercise Let $f:A\to B$ be a map, and let $s,t : \fib{f}{b}$. Consider the function
-\begin{equation*}
-\varphi : (s=t)\to \fib{\apfunc{f}}{\ct{\proj 2(s)}{\proj 2(t)^{-1}}}
-\end{equation*}
-given by $\varphi(\refl{s})=(\refl{\proj 1(s)},\rightinv(\proj 2(s))^{-1})$. Show that this map is an equivalence. Conclude that for any $q:f(x)=f(y)$ we have an equivalence
-\begin{equation*}
-((x,q)=(y,\refl{f(y)})) \simeq \fib{\apfunc{f}}{q}.
-\end{equation*}
-\exercise Construct an equivalence 
-\begin{equation*}
-\eqv{\big(\sm{x:A}f(x)=y\big)}{\big(\sm{x:A}y=f(x)\big)}.
-\end{equation*}
-%Conclude that $\sm{x:A}a=x$ is contractible for any $a:A$.
-\end{comment}
+  \exercise \label{ex:htpy_total} 
+  \begin{subexenum}
+  \item Let $f,g:\prd{x:A}B(x)\to C(x)$ be two families of maps. Show that
+    \begin{equation*}
+      \Big(\prd{x:A}f(x)\htpy g(x)\Big)\to \Big(\tot{f}\htpy \tot{g}\Big). 
+    \end{equation*}
+  \item Let $f:\prd{x:A}B(x)\to C(x)$ and let $g:\prd{x:A}C(x)\to D(x)$. Show that
+    \begin{equation*}
+      \tot{\lam{x}g(x)\circ f(x)}\htpy \tot{g}\circ\tot{f}.
+    \end{equation*}
+  \item For any family $B$ over $A$, show that
+    \begin{equation*}
+      \tot{\lam{x}\idfunc[B(x)]}\htpy\idfunc.
+    \end{equation*}
+  \end{subexenum}
+  \exercise \label{ex:id_fundamental_retr}Let $a:A$, and let $B$ be a type family over $A$. 
+  \begin{subexenum}
+  \item Use \cref{ex:htpy_total,ex:contr_retr} to show that if each $B(x)$ is a retract of $\id{a}{x}$, then $B(x)$ is equivalent to $\id{a}{x}$ for every $x:A$.
+    \index{fundamental theorem of identity types!formulation with retractions}
+  \item Conclude that for any family of maps
+    \index{fundamental theorem of identity types!formulation with sections}
+    \begin{equation*}
+      f : \prd{x:A} (a=x) \to B(x),
+    \end{equation*}
+    if each $f(x)$ has a section, then $f$ is a family of equivalences.
+  \end{subexenum}
+  \exercise Use \cref{ex:id_fundamental_retr} to show that for any map $f:A\to B$, if
+  \begin{equation*}
+    \apfunc{f} : (x=y) \to (f(x)=f(y))
+  \end{equation*}
+  has a section for each $x,y:A$, then $f$ is an embedding.\index{is an embedding!if the action on paths have sections}
+  \exercise \label{ex:path-split}We say that a map $f:A\to B$ is \define{path-split}\index{path-split} if $f$ has a section, and for each $x,y:A$ the map
+  \begin{equation*}
+    \apfunc{f}(x,y):(x=y)\to (f(x)=f(y))
+  \end{equation*}
+  also has a section. We write $\pathsplit(f)$\index{path-split(f)@{$\pathsplit(f)$}} for the type
+  \begin{equation*}
+    \sections(f)\times\prd{x,y:A}\sections(\apfunc{f}(x,y)).
+  \end{equation*}
+  Show that for any map $f:A\to B$ the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is an equivalence.
+  \item The map $f$ is path-split.
+  \end{enumerate}
+  \exercise \label{ex:fiber_trans}Consider a triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=small]
+      A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle commutes. 
+  \begin{subexenum}
+  \item Construct a family of maps
+    \begin{equation*}
+      \fibtriangle(h,H):\prd{x:X}\fib{f}{x}\to\fib{g}{x},
+    \end{equation*}
+    for which the square
+    \begin{equation*}
+      \begin{tikzcd}[column sep=8em]
+        \sm{x:X}\fib{f}{x} \arrow[r,"\tot{\fibtriangle(h,H)}"] \arrow[d] & \sm{x:X}\fib{g}{x} \arrow[d] \\
+        A \arrow[r,swap,"h"] & B
+      \end{tikzcd}
+    \end{equation*}
+    commutes, where the vertical maps are as constructed in \cref{ex:fib_replacement}.
+  \item Show that $h$ is an equivalence if and only if $\fibtriangle(h,H)$ is a family of equivalences.
+  \end{subexenum}
 \end{exercises}
 \index{fundamental theorem of identity types|)}
 \index{characterization of identity type!fundamental theorem of identity types|)}
+
+\endinput
+
+  \begin{comment}
+    \exercise \label{ex:eqv_sigma_mv}Consider a map
+    \begin{equation*}
+      f:A \to \sm{y:B}C(y).
+    \end{equation*}
+    \begin{subexenum}
+    \item Construct a family of maps
+      \begin{equation*}
+        f':\prd{y:B} \fib{\proj 1\circ f}{y}\to C(y).
+      \end{equation*}
+    \item Construct an equivalence
+      \begin{equation*}
+        \eqv{\fib{f'(b)}{c}}{\fib{f}{(b,c)}}
+      \end{equation*}
+      for every $(b,c):\sm{y:B}C(y)$.
+    \item Conclude that the following are equivalent:
+      \begin{enumerate}
+      \item $f$ is an equivalence.
+      \item $f'$ is a family of equivalences.
+      \end{enumerate}
+    \end{subexenum}
+    \exercise \label{ex:coh_intro}Consider a type $A$ with base point $a:A$, and let $B$ be a type family on $A$ that implies the identity type, i.e., there is a term
+    \begin{equation*}
+      \alpha : \prd{x:A} B(x)\to (a=x).
+    \end{equation*}
+    Show that the \define{coherence reduction map}
+    \begin{equation*}
+      \cohreduction : \Big(\sm{y:B(a)}\alpha(a,y)=\refl{a}\Big) \to \Big(\sm{x:A}B(x)\Big)
+    \end{equation*}
+    defined by $\lam{(y,q)}(a,y)$ is an equivalence.
+  \end{comment}

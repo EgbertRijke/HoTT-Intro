@@ -1,25 +1,101 @@
 \section{The homotopy image of a map}\label{chap:image}
+
 \subsection{The universal property of the image of a map}
+In this section we will construct the \emph{homotopy image} of an arbitrary map $f:A\to X$. The idea of the image of $f$ is that it is in a way the least subtype of $X$ that contains all the values of $f$. More precisely, the image of $f$ is an embedding $i:\im(f)\hookrightarrow X$ that fits in a commuting triangle
+\begin{equation*}
+  \begin{tikzcd}[column sep=tiny]
+    A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & \im(f) \arrow[dl,hook,"i"] \\
+    \phantom{\im(f)} & X
+  \end{tikzcd}
+\end{equation*}
+and satisfies the \emph{universal property} of the image inclusion of $f$. Informally, the universal property of the image asserts that there is a unique map $h:\im(f)\to B$ for which the diagram
+\begin{equation*}
+  \begin{tikzcd}[column sep=large]
+    A \arrow[rr] \arrow[dr,"q"] \arrow[dddr,swap,"f"] & & B \arrow[dddl,"m"] \\
+    & \im(f) \arrow[ur,densely dotted,"h"] \arrow[dd,"i"] \\ \\
+    & X
+  \end{tikzcd}
+\end{equation*}
+commutes. Note that there is quite a lot of information in this diagram: not only are there the three small commuting triangles; there is also the large commuting triange in the back, and there is a three-dimensional solid filling the space between the four triangles. We make the following definition, in order to express the universal property of the image efficiently.
 
 \begin{defn}
-Let $f:A\to X$ and $g:B\to X$ be maps. We define
-\begin{equation*}
-\mathrm{hom}_X(f,g)\defeq\sm{h:A\to B}f\htpy g\circ h.
-\end{equation*}
-\end{defn}
-
-\begin{rmk}
-In other words, a term $(h,H):\mathrm{hom}_X(f,g)$ consists of a map $h:A\to B$ equipped with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle
+  Let $f:A\to X$ and $g:B\to X$ be maps. A \define{morphism} from $f$ to $g$ over $X$ consists of a map $h:A\to B$ equipped with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]
 A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
 & X
 \end{tikzcd}
 \end{equation*}
-commutes. Recall from \cref{ex:triangle_fib} that the type $\mathrm{hom}_X(f,g)$ is equivalent to the type
+commutes. Thus, we define the type
 \begin{equation*}
-\prd{x:X}\fib{f}{x}\to\fib{g}{x}.
+\mathrm{hom}_X(f,g)\defeq\sm{h:A\to B}f\htpy g\circ h.
 \end{equation*}
+Composition of morphisms over $X$ is defined by
+\begin{equation*}
+  (k,K)\circ (h,H) \defeq (k\circ h,\ct{H}{(K\cdot h)}).
+\end{equation*}
+\end{defn}
+
+\begin{defn}
+Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=small]
+A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & I \arrow[dl,"i"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $H:f\htpy i\circ q$, where $i$ is an embedding\index{embedding}.
+We say that $i$ has the \define{universal property of the image of $f$}\index{universal property!of the image} if the map
+\begin{equation*}
+\blank\circ(q,H) : \mathrm{hom}_X(i,m)\to\mathrm{hom}_X(f,m)
+\end{equation*}
+is an equivalence for every embedding $m:B\to X$. 
+\end{defn}
+
+\begin{rmk}
+  Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=small]
+A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & I \arrow[dl,"i"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $H:f\htpy i\circ q$, where $i$ is an embedding. Then it is not hard to see that the embedding $i$ satisfies the universal property of the image inclusion if and only if for every commuting triangle
+\begin{equation*}
+  \begin{tikzcd}[column sep=small]
+    A \arrow[dr,swap,"f"] \arrow[rr,"g"] & & B \arrow[dl,"m"] \\
+    & X
+  \end{tikzcd}
+\end{equation*}
+with $G:f\htpy m\circ g$, where $m$ is an embedding, the type of quadruples $(h,K,L,M)$ consisting of
+\begin{enumerate}
+\item a map $h:I\to B$,
+\item a homotopy $K:i\htpy m\circ h$ witnessing that the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=small]
+      I \arrow[rr,"h"] \arrow[dr,swap,"i"] & & B \arrow[dl,"m"] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  commutes,
+\item a homotopy $L:g\htpy h\circ q$ witnessing that the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=small]
+      A \arrow[rr,"q"] \arrow[dr,swap,"g"] & & I \arrow[dl,"h"] \\
+      & B
+    \end{tikzcd}
+  \end{equation*}
+  commutes,
+\item a homotopy $M:\ct{H}{(K\cdot q)}\htpy\ct{G}{(m\cdot L)}$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      f \arrow[d,swap,"H"] \arrow[r,"G"] & m\circ g \arrow[d,"m\cdot L"] \\
+      i\circ q \arrow[r,swap,"K\cdot q"] & m\circ h\circ g
+    \end{tikzcd}
+  \end{equation*}
+  commutes,
+\end{enumerate}
+is contractible. However, the situation is in fact much simpler, because the type $\mathrm{hom}_X(f,m)$ is a proposition whenever $m$ is an embedding.
 \end{rmk}
 
 \begin{lem}
@@ -27,40 +103,35 @@ For any $f:A\to X$ and any embedding\index{embedding} $m:B\to X$, the type $\mat
 \end{lem}
 
 \begin{proof}
-Since propositions are closed under equivalences by \cref{lem:prop_equiv}, it suffices to show that the type
-\begin{equation*}
-\prd{x:X}\fib{f}{x}\to\fib{m}{x},
-\end{equation*}
-is a proposition. Recall from \cref{cor:prop_emb} that a map is an embedding if and only if its fibers are propositions.
-Thus we see that the type $\prd{x:X}\fib{f}{x}\to\fib{m}{x}$ is a product of propositions, so it is a proposition by \cref{thm:trunc_pi}.
+  Recall from \cref{ex:triangle_fib} that the type $\mathrm{hom}_X(f,m)$ is equivalent to the type
+  \begin{equation*}
+    \prd{x:X}\fib{f}{x}\to\fib{m}{x}.
+  \end{equation*}
+  Therefore it suffices to show that this type is a proposition. Recall from \cref{cor:prop_emb} that a map is an embedding if and only if its fibers are propositions.
+  Thus we see that the type $\prd{x:X}\fib{f}{x}\to\fib{m}{x}$ is a product of propositions, hence it is a proposition by \cref{thm:trunc_pi}.
 \end{proof}
 
-\begin{defn}
-Consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=small]
-A \arrow[rr,"i"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
-& X
+\begin{prp}
+  Consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=small]
+      A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & I \arrow[dl,"i"] \\
+      & X
 \end{tikzcd}
-\end{equation*}
-with $I:f\htpy m\circ i$, and where $m$ is an embedding\index{embedding}.
-We say that $m$ has the \define{universal property of the image of $f$}\index{universal property!of the image} if the map
-\begin{equation*}
-(i,I)^\ast : \mathrm{hom}_X(m,m')\to\mathrm{hom}_X(f,m')
-\end{equation*}
-defined by $(i,I)^\ast(h,H)\defeq (h\circ i,\ct{I}{(i\cdot H)})$,
-is an equivalence for every embedding $m':B'\to X$. 
-\end{defn}
+  \end{equation*}
+  with $H:f\htpy i\circ q$, where $i$ is an embedding. Then the following are equivalent:
+  \begin{enumerate}
+  \item The embedding $i$ satisfies the universal property of the image inclusion of $f$.
+  \item For every embedding $m:B\to X$ there is a map
+    \begin{equation*}
+      \mathrm{hom}_X(f,m)\to\mathrm{hom}_X(i,m).
+    \end{equation*}
+  \end{enumerate}
+\end{prp}
 
-\begin{rmk}
-Since $\mathrm{hom}_X(f,m)$ is a proposition for every $f:A\to X$ and every embedding $m:B\to X$, it follows by \cref{ex:prop_equiv} that the universal property of the image of $f$ is equivalent to the property that the implication
-\begin{equation*}
-\mathrm{hom}_X(f,m')\to\mathrm{hom}_X(m,m')
-\end{equation*}
-holds for every embedding $m':B'\to X$. 
-\end{rmk}
-
-The homotopy image can be used in many important constructions. In this lecture we discuss two applications: the propositional truncation, and set quotients.
+\begin{proof}
+Since $\mathrm{hom}_X(f,m)$ is a proposition for every every embedding $m:B\to X$, the claim follows immediately by \cref{ex:prop_equiv}.
+\end{proof}
 
 \subsection{The propositional truncation}
 Note that embeddings into the unit type are just propositions. To see this, note that
@@ -89,7 +160,7 @@ A \arrow[rr,"i"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
 & X
 \end{tikzcd}
 \end{equation*}
-with $I:f\htpy m\circ i$, and where $m$ is an embedding. The following are equivalent:
+with $I:f\htpy m\circ i$, where $m$ is an embedding. The following are equivalent:
 \begin{enumerate}
 \item $m$ satisfies the universal property of the image of $f$.
 \item for each $x:X$, the proposition $\fib{m}{x}$ satisfies the universal property of the propositional truncation of $\fib{f}{x}$.

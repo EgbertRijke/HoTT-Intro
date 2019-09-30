@@ -679,4 +679,16 @@ is $n$-connected.
     \end{tikzcd}
   \end{equation*}
   commutes.
+  \exercise Consider a $k$-equivalence $f:B'\to B$. Show that the base-change functor induces an equivalence
+  \begin{equation*}
+    \Big(\sm{E:\UU}{p:E\to B}\isetale_k(p)\Big)\simeq\Big(\sm{E':\UU}{p':E'\to B'}\isetale_k(p')\Big).
+  \end{equation*}
+  In other words, for every $k$-\'etale map $p':E'\to B'$ there is a unique $k$-\'etale map $p:E\to B$ equipped with a map $q:E'\to E$ such that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      E' \arrow[d,swap,"{p'}"] \arrow[r,densely dotted,"q"] & E \arrow[d,densely dotted,"p"] \\
+      B' \arrow[r,swap,"f"] & B
+    \end{tikzcd}
+  \end{equation*}
+  commutes and is a pullback square. In this sense $k$-\'etale maps descend along $k$-equivalences.
 \end{exercises}
