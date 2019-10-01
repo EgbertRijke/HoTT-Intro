@@ -309,6 +309,32 @@ The type $\trunc{-1}{A}$ is a proposition by \cref{prp:isprop-infjp}, and
 \end{equation*}
 satisfies the universal property of propositional truncation by \cref{prp:universal-property-brck}.
 
+\begin{prp}
+  The propositional truncation operation is functorial in the sense that for any map $f:A\to B$ there is a unique map $\brck{f}:\brck{A}\to\brck{B}$ such that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"f"] \arrow[d,swap,"\eta"] & B \arrow[d,"\eta"] \\
+      \brck{A} \arrow[r,swap,"\brck{f}"] & \brck{B}
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Moreover, there are homotopies
+  \begin{align*}
+    \brck{\idfunc[A]} & \htpy \idfunc[\brck{A}] \\
+    \brck{g\circ f} & \htpy \brck{g}\circ\brck{f}.
+  \end{align*}
+\end{prp}
+
+\begin{proof}
+  The functorial action of propositional truncation is immediate by the universal property of propositional truncation. To see that the functorial action preserves the identity, note that the type of maps $\brck{A}\to\brck{A}$ for which the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"\idfunc"] \arrow[d,swap,"\eta"] & A \arrow[d,"\eta"] \\
+      \brck{A} \arrow[r,densely dotted] & \brck{A}
+    \end{tikzcd}
+  \end{equation*}
+  commutes is contractible. Since this square commutes for both $\brck{\idfunc}$ and for $\idfunc$, it must be that they are homotopic. The proof that the functorial action of propositional truncation preserves composition is similar.
+\end{proof}
+
 \subsection{The image of a map}
 The image of a map $f:A\to X$ can now be defined using the propositional truncation:
 
@@ -560,7 +586,11 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
   \end{equation*}
   in which $q:B'\to B$ is surjective. Show that if $f':A'\to B'$ is an embedding, then so is $f:A\to B$.
   \exercise Show that a type $A$ is a proposition if and only if the map $\inl:A\to \join{A}{A}$ is an equivalence.
-  \exercise Show that $\inl:\brck{A}\to \join{\brck{A}}{A}$ is an equivalence for any type $A$.
+  \exercise Let $A$ be a type, and let $P$ be a proposition.
+  \begin{subexenum}
+  \item Show that $\inl:P\to \join{P}{A}$ is an embedding.
+  \item Show that $\inl:P\to \join{P}{A}$ is an equivalence if and only if $\brck{A}\to P$ holds.
+  \end{subexenum}
   \exercise Consider a family of diagrams of the form
   \begin{equation*}
     \begin{tikzcd}
@@ -589,23 +619,42 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
   \end{equation*}
   where the map $B \to D$ is assumed to be surjective.
   \exercise
-    \begin{subexenum}
-    \item Consider a map $f:A\to B$. Show that the following are equivalent:
-      \begin{enumerate}
+  \begin{subexenum}
+  \item Consider a map $f:A\to B$. Show that the following are equivalent:
+    \begin{enumerate}
       \item The map $f$ is surjective.
       \item For every set $C$, the precomposition function
         \begin{equation*}
           \blank\circ f:(B\to C)\to (A\to C)
         \end{equation*}
         is an embedding.
-      \end{enumerate}
+    \end{enumerate}
     Hint: To show that (ii) implies (i), use the assumption with the set $C\jdeq\prop$.
-    \item Give an example of a surjective map $f:A\to B$ and a type $C$ which is not a set, such that the precomposition function
-              \begin{equation*}
-          \blank\circ f:(B\to C)\to (A\to C)
-        \end{equation*}
-        is not an embedding.
-    \end{subexenum}
+  \item Give an example of a surjective map $f:A\to B$ and a type $C$ which is not a set, such that the precomposition function
+    \begin{equation*}
+      \blank\circ f:(B\to C)\to (A\to C)
+    \end{equation*}
+    is not an embedding.
+  \end{subexenum}
+  \exercise Consider a pushout square
+  \begin{equation*}
+    \begin{tikzcd}
+      S \arrow[d,swap,"f"] \arrow[r,"g"] & B \arrow[d,"j"] \\
+      A \arrow[r,swap,"i"] & X.
+    \end{tikzcd}
+  \end{equation*}
+  \begin{subexenum}
+  \item Show that if $f$ is surjective, then so is $j$.
+  \item Show that the two small squares in the diagram
+    \begin{equation*}
+      \begin{tikzcd}
+        S \arrow[r,"g"] \arrow[d,swap,"q_f"] & B \arrow[d,"q_j"] \\
+        \im(f) \arrow[r,densely dotted] \arrow[d,swap,"i_f"] & \im(j) \arrow[d,"i_j"] \\
+        A \arrow[r,swap,"i"] & X
+      \end{tikzcd}
+    \end{equation*}
+    are both pushout squares, and that the bottom square is also a pullback square.
+  \end{subexenum}
 \end{exercises}
 
 \endinput
