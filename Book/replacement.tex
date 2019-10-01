@@ -156,6 +156,82 @@ Now the result follows from \cref{thm:classifier}.
 \end{proof}
 
 \subsection{Smallness of images}
+However, the construction of the fiberwise join in \cref{ex:fib_join} suggests that we can also define the image of $f$ as the infinite join power $f^{\ast\infty}$, where we repeatedly take the fiberwise join of $f$ with itself. The reasons for defining the image in this way are twofold: we will be able to use this construction to show that the set-quotients of a small type are small, and second, we many interesting types appear in this construction.
+
+\begin{lem}
+Consider a map $f:A\to X$, an embedding $m:U\to X$, and $h:\mathrm{hom}_X(f,m)$. Then the map
+\begin{equation*}
+\mathrm{hom}_X(\join{f}{g},m)\to \mathrm{hom}_X(g,m)
+\end{equation*}
+is an equivalence for any $g:B\to X$.
+\end{lem}
+
+\begin{proof}
+Note that both types are propositions, so any equivalence can be used to prove the claim. Thus, we simply calculate
+\begin{align*}
+\mathrm{hom}_X(\join{f}{g},m) & \eqvsym \prd{x:X}\fib{\join{f}{g}}{x}\to \fib{m}{x} \\
+& \eqvsym \prd{x:X}\join{\fib{f}{x}}{\fib{g}{x}}\to\fib{m}{x} \\
+& \eqvsym \prd{x:X}\fib{g}{x}\to\fib{m}{x} \\
+& \eqvsym \mathrm{hom}_X(g,m).
+\end{align*}
+The first equivalence holds by \cref{ex:triangle_fib}; the second equivalence holds by \cref{ex:fib_join}, also using \cref{ex:equiv_precomp,lem:postcomp_equiv} where we established that that pre- and postcomposing by an equivalence is an equivalence; the third equivalence holds by \cref{lem:extend_join_prop,lem:postcomp_equiv}; the last equivalence again holds by \cref{ex:triangle_fib}.
+\end{proof}
+
+For the construction of the image of $f:A\to X$ we observe that if we are given an embedding $m:U\to X$ and a map $(i,I):\mathrm{hom}_X(f,m)$, then $(i,I)$ extends uniquely along $\inr:A\to \join[X]{A}{A}$ to a map $\mathrm{hom}_X(\join{f}{f},m)$. This extension again extends uniquely along $\inr:\join[X]{A}{A}\to \join[X]{A}{(\join[X]{A}{A})}$ to a map $\mathrm{hom}_X(\join{f}{(\join{f}{f})},m)$ and so on, resulting in a diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[dr] \arrow[r,"\inr"] & \join[X]{A}{A} \arrow[d,densely dotted] \arrow[r,"\inr"] & \join[X]{A}{(\join[X]{A}{A})} \arrow[dl,densely dotted] \arrow[r,"\inr"] & \cdots \arrow[dll,densely dotted,bend left=10] \\
+& U
+\end{tikzcd}
+\end{equation*}
+
+\begin{defn}
+Suppose $f:A\to X$ is a map. Then we define the \define{fiberwise join powers} 
+\begin{equation*}
+f^{\ast n}:A_X^{\ast n} X.
+\end{equation*}
+\end{defn}
+
+\begin{constr}
+Note that the operation $(B,g)\mapsto (\join[X]{A}{B},\join{f}{g})$ defines an endomorphism on the type
+\begin{equation*}
+\sm{B:\UU}B\to X.
+\end{equation*}
+We also have $(\emptyt,\ind{\emptyt})$ and $(A,f)$ of this type. For $n\geq 1$ we define
+\begin{align*}
+A_X^{\ast (n+1)} & \defeq \join[X]{A}{A_X^{\ast n}} \\
+f^{\ast (n+1)} & \defeq \join{f}{f^{\ast n}}.\qedhere
+\end{align*}
+\end{constr}
+
+\begin{defn}
+We define $A_X^{\ast\infty}$ to be the sequential colimit of the type sequence
+\begin{equation*}
+\begin{tikzcd}
+A_X^{\ast 0} \arrow[r] & A_X^{\ast 1} \arrow[r,"\inr"] & A_X^{\ast 2} \arrow[r,"\inr"] & \cdots.
+\end{tikzcd}
+\end{equation*}
+Since we have a cocone
+\begin{equation*}
+\begin{tikzcd}
+A_X^{\ast 0} \arrow[r] \arrow[dr,swap,"f^{\ast 0}" near start] & A_X^{\ast 1} \arrow[r,"\inr"] \arrow[d,swap,"f^{\ast 1}" near start] & A_X^{\ast 2} \arrow[r,"\inr"] \arrow[dl,swap,"f^{\ast 2}" xshift=1ex] & \cdots \arrow[dll,bend left=10] \\
+& X
+\end{tikzcd}
+\end{equation*}
+we also obtain a map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ by the universal property of $A_X^{\ast\infty}$. 
+\end{defn}
+
+\begin{lem}\label{lem:finfjp_up}
+Let $f:A\to X$ be a map, and let $m:U\to X$ be an embedding. Then the function
+\begin{equation*}
+\blank\circ \seqin_0: \mathrm{hom}_X(f^{\ast\infty},m)\to \mathrm{hom}_X(f,m)
+\end{equation*}
+is an equivalence. 
+\end{lem}
+
+\begin{thm}\label{lem:isprop_infjp}
+For any map $f:A\to X$, the map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ is an embedding that satisfies the universal property of the image inclusion of $f$.
+\end{thm}
 
 \begin{exercises}
 \exercise

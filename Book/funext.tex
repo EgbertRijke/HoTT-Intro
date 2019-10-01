@@ -455,11 +455,30 @@ with $H:f\htpy g\circ h$.
 \item Show that if $h$ has a section, then $\sections(g)$ is a retract of $\sections(f)$.
 \item Show that if $g$ has a retraction, then $\retractions(h)$ is a retract of $\sections(f)$.
 \end{subexenum}
-\exercise \label{ex:equiv_pi}Let $e_i:\eqv{A_i}{B_i}$ be an equivalence for every $i:I$. Show that the map
-\begin{equation*}
-\lam{f}{i}e_i\circ f:\Big(\prd{i:I}A_i\Big)\to\Big(\prd{i:I}B_i\Big)
-\end{equation*}
-is an equivalence.
+\exercise \label{ex:equiv_pi} Consider a family $f_i:A_i\to B_i$ of $k$-truncated maps, indexed by $i:I$. Show that the map
+  \begin{equation*}
+    \lam{h}{i}f_i(h(i)):\Big(\prd{i:I}A_i\Big)\to\Big(\prd{i:I}B_i\Big)
+  \end{equation*}
+  is again $k$-truncated. Conclude that if each $f_i$ is an equivalence, then so is the above map.
+  \exercise Consider a map $f:X\to Y$. Show that the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is $k$-truncated.
+  \item For every type $A$, the postcomposition function
+    \begin{equation*}
+      f\circ\blank : (A\to X)\to (A\to Y)
+    \end{equation*}
+    is $k$-truncated.
+  \end{enumerate}
+  In particular it follows that $f$ is an embedding if and only if $f\circ\blank$ is an embedding.
+
+  Hint: Show that the square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      (f=g) \arrow[r,"\apfunc{m}"] \arrow[d,swap,"\htpyeq"] & (m\circ f=m\circ g) \arrow[d,"\htpyeq"] \\
+      (f\htpy g) \arrow[r,swap,"H\mapsto m\cdot H"] & (m\circ f\htpy m\circ g)
+    \end{tikzcd}
+  \end{equation*}
+  commutes, and apply \cref{ex:equiv_pi}.
 \exercise \label{ex:triangle_fib}Consider a diagram of the form
 \begin{equation*}
 \begin{tikzcd}[column sep=tiny]

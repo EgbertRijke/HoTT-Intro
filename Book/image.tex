@@ -111,7 +111,7 @@ For any $f:A\to X$ and any embedding\index{embedding} $m:B\to X$, the type $\mat
   Thus we see that the type $\prd{x:X}\fib{f}{x}\to\fib{m}{x}$ is a product of propositions, hence it is a proposition by \cref{thm:trunc_pi}.
 \end{proof}
 
-\begin{prp}
+\begin{prp}\label{prp:simplifly-universal-property-image}
   Consider a commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=small]
@@ -133,8 +133,13 @@ For any $f:A\to X$ and any embedding\index{embedding} $m:B\to X$, the type $\mat
 Since $\mathrm{hom}_X(f,m)$ is a proposition for every every embedding $m:B\to X$, the claim follows immediately by \cref{ex:prop_equiv}.
 \end{proof}
 
-\subsection{The propositional truncation}
-Note that embeddings into the unit type are just propositions. To see this, note that
+\subsection{The universal property of propositional truncation}
+
+An important special case of the homotopy image of a map is the image of the terminal projection
+\begin{equation*}
+  \const_\ttt : A \to \unit,
+\end{equation*}
+which results in an embedding $I\hookrightarrow \unit$. Embeddings into the unit type are in fact just propositions. To see this, note that
 \begin{align*}
 \sm{A:\UU}{f:A\to\unit}\isemb(f)
 & \eqvsym \sm{A:\UU}\isemb(\const_\ttt) \\
@@ -142,32 +147,324 @@ Note that embeddings into the unit type are just propositions. To see this, note
 & \eqvsym \sm{A:\UU}\isprop(\fib{\const_\ttt}{\ttt}) \\
 & \eqvsym \sm{A:\UU}\isprop(A).
 \end{align*}
-Therefore, the universal property of the image of the map $A\to\unit$ is a proposition $P$ satisfying the universal property of the propositional truncation:
+Therefore, the universal property of the image of the map $A\to\unit$ is equivalently described as a proposition $P$ satisfying the universal property of the propositional truncation:
 
 \begin{defn}
-Let $A$ be a type, and let $P$ be a proposition that comes equipped with a map $\eta:A\to P$. We say that $\eta:A\to P$ satisfies the \define{universal property of propositional truncation}\index{universal property!of propositional truncation} if for every proposition $Q$, the precomposition map
+Let $A$ be a type, and let $P$ be a proposition that comes equipped with a map $f:A\to P$. We say that $f:A\to P$ satisfies the \define{universal property of propositional truncation}\index{universal property!of propositional truncation} of $A$ if for every proposition $Q$, the precomposition map
 \begin{equation*}
-\blank\circ\eta:(P\to Q)\to (A\to Q)
+\blank\circ f:(P\to Q)\to (A\to Q)
 \end{equation*}
 is an equivalence.
 \end{defn}
 
+\begin{prp}
+  Let $A$ be a type, and consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      \phantom{P'} & A \arrow[dl,swap,"f"] \arrow[dr,"{f'}"] \\
+      P \arrow[rr,swap,"h"] & & P'
+    \end{tikzcd}
+  \end{equation*}
+  where $P$ and $P'$ are propositions. If any two of the following three assertions hold, so does the third:
+  \begin{enumerate}
+  \item The map $f$ satisfies the universal property of the propositional truncation of $A$.
+  \item The map $f'$ satisfies the universal propertyof the propositional truncation of $A$.
+  \item The map $h$ is an equivalence.
+  \end{enumerate}
+\end{prp}
+
+\begin{proof}
+  Note that the map $h:P\to P'$ is an equivalence if and only if for every proposition $Q$, the precomposition map
+  \begin{equation*}
+    \blank\circ h:(P'\to Q)\to (P\to Q)
+  \end{equation*}
+  is an equivalence. Thus, the claim follows by observing that for every proposition $Q$ we have the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-1em]
+      (P'\to Q) \arrow[rr,"\blank\circ h"] \arrow[dr,swap,"\blank\circ {f'}"] & & (P\to Q) \arrow[dl,"\blank\circ f"] \\
+      & (A\to Q). & \phantom{(P'\to Q)}
+    \end{tikzcd}
+  \end{equation*}
+\end{proof}
+
+\subsection{Constructing the propositional truncation}
+The propositional truncation can be used to construct the image of a map, so we construct that first. We construct the propositional truncation of $A$ via a construction called the \define{join construction}, as the colimit of the sequence of join-powers of $A$
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[r] & \join{A}{A} \arrow[r] & \join{A}{(\join{A}{A})} \arrow[r] & \cdots
+  \end{tikzcd}
+\end{equation*}
+The join-powers of $A$ are defined recursively on $n$, by taking\footnote{In this definition, the case $A^{\ast1}\defeq A$ is slightly redundant because we have an equivalence
+\begin{equation*}
+  \join{A}{\emptyt}\simeq A.
+\end{equation*}
+Nevertheless, it is nice to have that $A^{\ast 1}\jdeq A$.}
+\begin{align*}
+  A^{\ast0} & \defeq \emptyt \\
+  A^{\ast 1} & \defeq A \\
+  A^{\ast(n+2)} & \defeq \join{A}{A^{\ast (n+1)}}.
+\end{align*}
+We will write $A^{\ast\infty}$ for the colimit of the sequence
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[r,"\inr"] & \join{A}{A} \arrow[r,"\inr"] & \join{A}{(\join{A}{A})} \arrow[r,"\inr"] & \cdots.
+  \end{tikzcd}
+\end{equation*}
+The sequential colimit $A^{\ast\infty}$ comes equipped with maps $\inseq_n:A^{\ast (n+1)}\to A^{\ast\infty}$, and we will write
+\begin{equation*}
+  \eta\defeq\inseq_0:A\to A^{\ast\infty}.
+\end{equation*}
+Our goal is to show $A^{\ast\infty}$ is a proposition, and that $\eta:A\to A^{\ast\infty}$ satisfies the universal property of the propositional truncation of $A$. Before showing that $A^{\ast\infty}$ is indeed a proposition, let us show in two steps that for any proposition $P$, the map
+\begin{equation*}
+  (A^{\ast\infty}\to P)\to (A\to P)
+\end{equation*}
+is indeed an equivalence. 
+
+\begin{lem}\label{lem:extend_join_prop}
+Suppose $f:A\to P$, where $A$ is any type and $P$ is a proposition.
+Then the precomposition function
+\begin{equation*}
+\blank\circ\inr:(\join{A}{B}\to P)\to (B\to P)
+\end{equation*}
+is an equivalence, for any type $B$.
+\end{lem}
+
+\begin{proof}
+  Since the precomposition function
+  \begin{equation*}
+    \blank\circ\inr:(\join{A}{B}\to P)\to (B\to P)
+  \end{equation*}
+  is a map between propositions, it suffices to construct a map
+  \begin{equation*}
+    (B\to P)\to (\join{A}{B}\to P).
+  \end{equation*}
+  Let $g:B\to P$. Then the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A\times B \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & B \arrow[d,"g"] \\
+      A \arrow[r,swap,"f"] & P
+    \end{tikzcd}
+  \end{equation*}
+  commutes since $P$ is a proposition. Therefore we obtain a map $\join{A}{B}\to P$ by the universal property of the join.
+\end{proof}
+
+\begin{prp}\label{prp:universal-property-brck}
+Let $A$ be a type, and let $P$ be a proposition. Then the function
+\begin{equation*}
+\blank\circ \eta : (A^{\ast\infty}\to P)\to (A\to P)
+\end{equation*}
+is an equivalence. 
+\end{prp}
+
+\begin{proof}
+  Since the map
+  \begin{equation*}
+    \blank\circ \eta : (A^{\ast\infty}\to P)\to (A\to P)
+  \end{equation*}
+  is a map between propositions, it suffices to construct a map in the converse direction.
+
+  Let $f:A\to P$. First, we show by recursion that there are maps
+  \begin{equation*}
+    f_n:A^{\ast(n+1)}\to P.
+  \end{equation*}
+  The map $f_0$ is of course just defined to be $f$. Given $f_n:A^{\ast(n+1)}$ we obtain $f_{n+1}:\join{A}{A^{\ast(n+1)}}\to P$ by \cref{lem:extend_join_prop}. Because $P$ is assumed to be a proposition it is immediate that the maps $f_n$ form a cocone with vertex $P$ on the sequence
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"\inr"] & \join{A}{A} \arrow[r,"\inr"] & \join{A}{(\join{A}{A})} \arrow[r,"\inr"] & \cdots.
+    \end{tikzcd}
+  \end{equation*}
+  From this cocone we obtain the desired map $(A^{\ast\infty}\to P)$.
+\end{proof}
+
+\begin{prp}\label{prp:isprop-infjp}
+The type $A^{\ast\infty}$ is a proposition for any type $A$.
+\end{prp}
+
+\begin{proof}
+  By \cref{lem:isprop_eq} it suffices to show that
+  \begin{equation*}
+    A^{\ast\infty}\to \iscontr(A^{\ast\infty}).
+  \end{equation*}
+  Since the type $\iscontr(A^{\ast\infty})$ is already known to be a proposition by \cref{ex:isprop_istrunc}, it follows from \cref{prp:universal-property-brck} that it suffices to show that
+\begin{equation*}
+A\to \iscontr(A^{\ast\infty}).
+\end{equation*}
+
+Let $x:A$. To see that $A^{\ast\infty}$ is contractible it suffices by \cref{ex:seqcolim_contr} to show that $\inr:A^{\ast n}\to A^{\ast(n+1)}$ is homotopic to the constant function $\const_{\inl(x)}$. However, we get a homotopy $\const_{\inl(x)}\htpy \inr$ immediately from the path constructor $\glue$.  
+\end{proof}
+
+All the definitions are now in place to define the propositional truncation of a type.
+
+\begin{defn}
+  For any type $A$ we define the type
+  \begin{equation*}
+    \trunc{-1}{A}\defeq A^{\ast\infty},
+  \end{equation*}
+  and we define $\eta:A\to\trunc{-1}{A}$ to be the constructor $\seqin_0$ of the sequential colimit $A^{\ast\infty}$. Often we simply write $\brck{A}$ for $\trunc{-1}{A}$.
+\end{defn}
+
+The type $\trunc{-1}{A}$ is a proposition by \cref{prp:isprop-infjp}, and
+\begin{equation*}
+  \eta:A\to\trunc{-1}{A}
+\end{equation*}
+satisfies the universal property of propositional truncation by \cref{prp:universal-property-brck}.
+
+\subsection{The image of a map}
+The image of a map $f:A\to X$ can now be defined using the propositional truncation:
+
+\begin{defn}
+For any map $f:A\to X$ we define the \define{image}\index{image} of $f$ to be the type
+\begin{equation*}
+\im(f) \defeq \sm{x:X}\brck{\fib{f}{x}}.
+\end{equation*}
+Furthermore, we define
+\begin{enumerate}
+\item The \define{image inclusion}
+  \begin{equation*}
+    i_f:\im(f)\to X
+  \end{equation*}
+  to be the projection $\proj 1$.
+\item The map
+  \begin{equation*}
+    q_f:A\to\im(f)
+  \end{equation*}
+  to be the map given by $q_f(x)\defeq(f(x),\eta(x,\refl{f(x)}))$.
+\item The homotopy $I_f:f\htpy i_f\circ q_f$ witnessing that the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"q_f"] \arrow[dr,swap,"f"] & & \im(f) \arrow[dl,"i_f"] \\
+      \phantom{\im(f)} & X
+    \end{tikzcd}
+  \end{equation*}
+  commutes, to be given by $I_f(x)\defeq\refl{f(x)}$.
+\end{enumerate}
+\end{defn}
+
+\begin{prp}
+  The image inclusion $i_f:\im(f)\to X$ of any map $f:A\to X$ is an embedding.
+\end{prp}
+
+\begin{proof}
+  The fiber of $i_f$ at $x:X$ is equivalent to the type $\brck{\fib{f}{x}}$. In particular we see that the fibers are propositions, so $i_f$ is an embedding.
+\end{proof}
+
 \begin{thm}
+  The image inclusion $i_f:\im(f)\to X$ of any map $f:A\to X$ satisfies the universal property of the image inclusion of $f$.
+\end{thm}
+
+\begin{proof}
+  Consider an embedding $m:B\to X$. Note that we have a commuting square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=6em]
+      \mathrm{hom}_X(i_f,m) \arrow[d] \arrow[r] & \mathrm{hom}_X(f,m) \arrow[d] \\
+      \Big(\prd{x:X}\fib{i_f}{x}\to\fib{m}{x}\Big) \arrow[r,swap,"h\mapsto{\lam{x}h_x\circ\varphi_x}"] & \Big(\prd{x:X}\fib{f}{x}\to\fib{m}{x}\Big)
+    \end{tikzcd}
+  \end{equation*}
+  The vertical maps are of the form
+  \begin{equation*}
+    (h,H) \mapsto \lam{x}{(y,p)}(h(y),\ct{H(y)^{-1}}{p}),
+  \end{equation*}
+  and they are both equivalences. The map
+  \begin{equation*}
+    \varphi_x:\fib{f}{x}\to\fib{i_f}{x}
+  \end{equation*}
+  given by $\varphi_x(a,p)\defeq((h(a),\eta(a,p)),p)$ is a propositional truncation for every $x:X$. Therefore it follows that the map
+  \begin{equation*}
+    (\fib{i_f}{x}\to\fib{m}{x})\to(\fib{f}{x}\to\fib{m}{x})
+  \end{equation*}
+  is an equivalence, for every $x:X$. Thus we conclude that the bottom map in the above square is an equivalence, which implies that the top map is an equivalence. 
+\end{proof}
+
+
+
+\subsection{Surjective maps}
+
+Another application of the propositional truncation is the notion of surjective map.
+
+\begin{defn}
+A map $f:A\to B$ is said to be \define{surjective} if there is a term of type
+\begin{equation*}
+\issurj(f)\defeq \prd{y:B}\brck{\fib{f}{b}}.
+\end{equation*}
+\end{defn}
+
+\begin{eg}
+Any equivalence is a surjective map, and so is any map that has a section (those are sometimes called \define{split epimorphisms}). Other examples include the base point inclusion $\unit\to\sphere{n}$ for any $n\geq 1$. 
+\end{eg}
+
+\begin{prp}
+  Consider a map $f:A\to B$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The map $f:A\to B$ is surjective.
+  \item For any family $P$ of propositions over $B$, the precomposition map
+    \begin{equation*}
+      \blank\circ f : \Big(\prd{y:B}P(y)\Big)\to\Big(\prd{x:A}P(f(x))\Big)
+    \end{equation*}
+    is an equivalence.
+  \end{enumerate}
+\end{prp}
+
+\begin{proof}
+  Suppose first that $f$ is surjective, and consider the commuting square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=6em]
+      \Big(\prd{y:B}P(y)\Big) \arrow[r,"\blank\circ f"] \arrow[d,swap,"h\mapsto\lam{y}\const_{h(y)}"] & \Big(\prd{x:A}P(f(x))\Big)  \\
+      \Big(\prd{y:B}\brck{\fib{f}{y}}\to P(y)\Big) \arrow[r,swap,"h\mapsto\lam{y}h(y)\circ\eta"] & \Big(\prd{y:B}\fib{f}{y}\to P(y)\Big) \arrow[u,swap,"{h\mapsto\lam{x}h(f(x),(x,\refl{f(x)}))}"]
+    \end{tikzcd}
+  \end{equation*}
+  In this square, the bottom map is an equivalence by the universal property of the propositional truncation of $\fib{f}{y}$. The map on the right is also easily seen to be an equivalence. Furthermore, the map on the left is an equivalence by the assumption that $f$ is surjective, from which it follows that the types $\brck{\fib{f}{y}}$ are contractible. Therefore it follows that the top map is an equivalence, which completes the proof that (i) implies (ii).
+
+  For the converse, it follows immediately from the assumption (ii) that
+  \begin{equation*}
+    \blank\circ f : \Big(\prd{y:B}\brck{\fib{f}{y}}\Big)\to\Big(\prd{x:A}\brck{\fib{f}{f(x)}}\Big)
+  \end{equation*}
+  is an equivalence. Hence it suffices to construct a term of type $\brck{\fib{f}{f(x)}}$ for each $x:A$. This is easy, because we have
+  \begin{equation*}
+    \eta(x,\refl{f(x)}):\brck{\fib{f}{f(x)}}.\qedhere.
+  \end{equation*}
+\end{proof}
+
+\begin{thm}\label{thm:surjective}
 Consider a commuting triangle
 \begin{equation*}
-\begin{tikzcd}[column sep=small]
-A \arrow[rr,"i"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
+\begin{tikzcd}[column sep=tiny]
+A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
 & X
 \end{tikzcd}
 \end{equation*}
-with $I:f\htpy m\circ i$, where $m$ is an embedding. The following are equivalent:
+in which $m$ is an embedding. Then $m$ satisfies the universal property of the image inclusion of $f$ if and only if $q:A\to B$ is surjective.
+\end{thm}
+
+\begin{proof}
+  First assume that $m$ satisfies the universal property of the image inclusion of $f$, and consider the composite function
+  \begin{equation*}
+    \begin{tikzcd}
+      \Big(\sm{y:B}\brck{\fib{q}{y}}\Big) \arrow[r,"\proj 1"] & B \arrow[r,"m"] & X.
+    \end{tikzcd}
+  \end{equation*}
+  Note that $m\circ\proj 1$ is a composition of embeddings, so it is an embedding. By the universal property of $m$ we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=0]
+      B \arrow[dr,swap,"m"] \arrow[rr,densely dotted,"h"] & & \sm{y:B}\brck{\fib{q}{y}} \arrow[dl,"m\circ\proj 1"] \\
+      \phantom{\sm{y:B}\brck{\fib{q}{y}}} & X.
+    \end{tikzcd}
+  \end{equation*}
+  Now note that $\proj 1\circ h$ is a map such that $m\circ (\proj 1\circ h)\htpy m$. 
+\end{proof}
+
+\begin{thm}
+Let $f:A\to B$ be a map. The following are equivalent:
 \begin{enumerate}
-\item $m$ satisfies the universal property of the image of $f$.
-\item for each $x:X$, the proposition $\fib{m}{x}$ satisfies the universal property of the propositional truncation of $\fib{f}{x}$.
+\item $f$ is an equivalence.
+\item $f$ is both surjective and an embedding.
 \end{enumerate}
 \end{thm}
 
+\begin{thm}
+  Every map factors uniquely as a surjective map followed by an embedding.
+\end{thm}
 
+\subsection{Logic in type theory}
 Note that, given a family of propositions $P$ over a type $A$, the type $\sm{a:A}P(a)$ isn't necessarily a proposition. Instead, we think of $\sm{a:A}P(a)$ of the \emph{subtype} of $A$ containing the terms that satisfies $P$. Using the propositional truncation we can assert that there \emph{exists} a term in $A$ that satisfies $P$ without requiring one to construct it. 
 
 \begin{defn}
@@ -201,319 +498,74 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
 \end{center}
 \end{table}
 
-\subsection{Constructing the propositional truncation}
-Although technically it is not necessary to construct the propositional truncation before constructing the image of a map, we do so because the construction is simpler in this special case, and yet contains most of the essential ideas.
-
-\begin{lem}\label{lem:extend_join_prop}
-Suppose $f:A\to P$, where $A$ is any type, and $P$ is a proposition.
-Then the map
-\begin{equation*}
-(\join{A}{B}\to P)\to (B\to P)
-\end{equation*}
-given by $h\mapsto h\circ \inr$ is an equivalence, for any type $B$.
-\end{lem}
-
-\begin{proof}
-Since both types are propositions by \cref{thm:trunc_pi} it suffices to construct a map
-\begin{equation*}
-(B\to P)\to (\join{A}{B}\to P).
-\end{equation*}
-Let $g:B\to P$. Then the square
-\begin{equation*}
-\begin{tikzcd}
-A\times B \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & B \arrow[d,"g"] \\
-A \arrow[r,swap,"f"] & P
-\end{tikzcd}
-\end{equation*}
-commutes since $P$ is a proposition. Therefore we obtain a map $\join{A}{B}\to P$ by the universal property of the join.
-\end{proof}
-
-The idea of the construction of the propositional truncation is that if we are given a map $f:A\to P$, where $P$ is a proposition, then it extends uniquely along $\inr:A\to \join{A}{A}$ to a map $\join{A}{A}\to P$. This extension again extends uniquely along $\inr:\join{A}{A}\to \join{A}{(\join{A}{A})}$ to a map $\join{A}{(\join{A}{A})}\to P$ and so on, resulting in a diagram of the form
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[dr] \arrow[r,"\inr"] & \join{A}{A} \arrow[d,densely dotted] \arrow[r,"\inr"] & \join{A}{(\join{A}{A})} \arrow[dl,densely dotted] \arrow[r,"\inr"] & \cdots \arrow[dll,densely dotted,bend left=10] \\
-& P
-\end{tikzcd}
-\end{equation*}
-
-\begin{defn}
-The \define{join powers} $A^{\ast n}$ of a type $X$ are defined by
-\begin{align*}
-A^{\ast 0} & \defeq \emptyt \\
-A^{\ast 1} & \defeq A \\
-A^{\ast (n+1)} & \defeq \join{A}{A^{\ast n}}.
-\end{align*}
-Furthermore, we define $A^{\ast\infty}$ to be the sequential colimit of the type sequence
-\begin{equation*}
-\begin{tikzcd}
-A^{\ast 0} \arrow[r] & A^{\ast 1} \arrow[r,"\inr"] & A^{\ast 2} \arrow[r,"\inr"] & \cdots.
-\end{tikzcd}
-\end{equation*}
-\end{defn}
-
-Our goal is now to show that $A^{\ast\infty}$ is a proposition and satisfies the universal property of the propositional truncation.
-
-\begin{lem}
-Consider a type sequence
-\begin{equation*}
-\begin{tikzcd}
-A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
-\end{tikzcd}
-\end{equation*}
-with sequential colimit $A_\infty$, and let $P$ be a proposition. Then the map
-\begin{equation*}
-\seqin^\ast: (A_\infty\to P)\to \Big(\prd{n:\N}A_n\to P\Big)
-\end{equation*}
-given by $h\mapsto \lam{n}(h\circ \seqin_n)$ is an equivalence. 
-\end{lem}
-
-\begin{proof}
-By the universal property of sequential colimits established in \cref{thm:sequential_up} we obtain that $\coconemap$ is an equivalence. Note that we have a commuting triangle
-\begin{equation*}
-\begin{tikzcd}
-& P^{A_\infty} \arrow[dl,swap,"\coconemap"] \arrow[dr,"\seqin^\ast"] \\
-\cocone(P) \arrow[rr,swap,"\proj 1"] & & \Big(\prd{n:\N}A_n\to P\Big).
-\end{tikzcd}
-\end{equation*}
-Note that for any $g:\prd{n:\N}A_n\to P$ the type 
-\begin{equation*}
-\prd{n:\N} g_n\htpy g_{n+1}\circ f_n
-\end{equation*}
-is a product of contractible types, since $P$ is a proposition. Therefore it is contractible by \cref{thm:funext_wkfunext}, and it follows by \cref{ex:proj_fiber} that the projection is an equivalence. We conclude by the 3-for-2 property of equivalences (\cref{ex:3_for_2}) that $\seqin^\ast$ is an equivalence.
-\end{proof}
-
-\begin{lem}\label{lem:infjp_up}
-Let $A$ be a type, and let $P$ be a proposition. Then the function
-\begin{equation*}
-\blank\circ \seqin_0: (A^{\ast\infty}\to P)\to (A\to P)
-\end{equation*}
-is an equivalence. 
-\end{lem}
-
-\begin{proof}
-We have the commuting triangle
-\begin{equation*}
-\begin{tikzcd}
-&[-3em] P^{A^{\ast\infty}} \arrow[dl,swap,"\seqin^\ast"] \arrow[dr,"\blank\circ\seqin_0"] \\
-\Big(\prd{n:\N}A^{\ast n} \to P\Big) \arrow[rr,swap,"\lam{h}h_0"] & & P^A.
-\end{tikzcd}
-\end{equation*}
-Therefore it suffices to show that the bottom map is an equivalence. Since this is a map between propositions, it suffices to construct a map in the converse direction. Let $f:A\to P$. We will construct a term of type
-\begin{equation*}
-\prd{n:\N}A^{\ast n} \to P
-\end{equation*}
-by induction on $n:\N$. The base case is trivial. Given a map $g:A^{\ast n}\to P$, we obtain a map $g:A^{\ast(n+1)}\to P$ by \cref{lem:extend_join_prop}.
-\end{proof}
-
-\begin{lem}\label{lem:isprop_infjp}
-The type $A^{\ast\infty}$ is a proposition for any type $A$.
-\end{lem}
-
-\begin{proof}
-By \cref{cor:contr_prop} it suffices to show that $A^{\ast\infty}\to \iscontr(A^{\ast\infty})$, and by \cref{lem:infjp_up} it suffices to show that
-\begin{equation*}
-A\to \iscontr(A^{\ast\infty}),
-\end{equation*}
-because $\iscontr(A^{\ast\infty})$ is a proposition by \cref{ex:isprop_istrunc}. 
-
-Let $x:A$. To see that $A^{\ast\infty}$ is contractible it suffices by \cref{ex:seqcolim_contr} to show that $\inr:A^{\ast n}\to A^{\ast(n+1)}$ is homotopic to the constant function $\const_{\inl(x)}$. However, we get a homotopy $\const_{\inl(x)}\htpy \inr$ immediately from the path constructor $\glue$.  
-\end{proof}
-
-\begin{thm}
-For any type $A$ there is a type $\brck{A}$ that comes equipped with a map $\eta:A\to \brck{A}$, and satisfies the universal property of propositional truncation.
-\end{thm}
-
-\begin{proof}
-Let $A$ be a type. Then we define $\brck{A}\defeq A^{\ast\infty}$, and we define $\eta\defeq \seqin_0:A\to A^{\ast\infty}$. Then $\brck{A}$ is a proposition by \cref{lem:isprop_infjp}, and $\eta:A\to \brck{A}$ satisfies the universal property of propositional truncation by \cref{lem:infjp_up}.
-\end{proof}
-
-\subsection{The construction of the image of a map}
-The image of a map $f:A\to X$ can be defined using the propositional truncation:
-\begin{defn}
-For any map $f:A\to X$ we define the \define{image}\index{image} of $f$ to be the type
-\begin{equation*}
-\im(f) \defeq \sm{x:X}\brck{\fib{f}{x}}
-\end{equation*}
-and we define the \define{image inclusion} to be the projection $\proj 1 :\im(f)\to X$. 
-\end{defn}
-However, the construction of the fiberwise join in \cref{ex:fib_join} suggests that we can also define the image of $f$ as the infinite join power $f^{\ast\infty}$, where we repeatedly take the fiberwise join of $f$ with itself. The reasons for defining the image in this way are twofold: we will be able to use this construction to show that the set-quotients of a small type are small, and second, we many interesting types appear in this construction.
-
-\begin{lem}
-Consider a map $f:A\to X$, an embedding $m:U\to X$, and $h:\mathrm{hom}_X(f,m)$. Then the map
-\begin{equation*}
-\mathrm{hom}_X(\join{f}{g},m)\to \mathrm{hom}_X(g,m)
-\end{equation*}
-is an equivalence for any $g:B\to X$.
-\end{lem}
-
-\begin{proof}
-Note that both types are propositions, so any equivalence can be used to prove the claim. Thus, we simply calculate
-\begin{align*}
-\mathrm{hom}_X(\join{f}{g},m) & \eqvsym \prd{x:X}\fib{\join{f}{g}}{x}\to \fib{m}{x} \\
-& \eqvsym \prd{x:X}\join{\fib{f}{x}}{\fib{g}{x}}\to\fib{m}{x} \\
-& \eqvsym \prd{x:X}\fib{g}{x}\to\fib{m}{x} \\
-& \eqvsym \mathrm{hom}_X(g,m).
-\end{align*}
-The first equivalence holds by \cref{ex:triangle_fib}; the second equivalence holds by \cref{ex:fib_join}, also using \cref{ex:equiv_precomp,lem:postcomp_equiv} where we established that that pre- and postcomposing by an equivalence is an equivalence; the third equivalence holds by \cref{lem:extend_join_prop,lem:postcomp_equiv}; the last equivalence again holds by \cref{ex:triangle_fib}.
-\end{proof}
-
-For the construction of the image of $f:A\to X$ we observe that if we are given an embedding $m:U\to X$ and a map $(i,I):\mathrm{hom}_X(f,m)$, then $(i,I)$ extends uniquely along $\inr:A\to \join[X]{A}{A}$ to a map $\mathrm{hom}_X(\join{f}{f},m)$. This extension again extends uniquely along $\inr:\join[X]{A}{A}\to \join[X]{A}{(\join[X]{A}{A})}$ to a map $\mathrm{hom}_X(\join{f}{(\join{f}{f})},m)$ and so on, resulting in a diagram of the form
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[dr] \arrow[r,"\inr"] & \join[X]{A}{A} \arrow[d,densely dotted] \arrow[r,"\inr"] & \join[X]{A}{(\join[X]{A}{A})} \arrow[dl,densely dotted] \arrow[r,"\inr"] & \cdots \arrow[dll,densely dotted,bend left=10] \\
-& U
-\end{tikzcd}
-\end{equation*}
-
-\begin{defn}
-Suppose $f:A\to X$ is a map. Then we define the \define{fiberwise join powers} 
-\begin{equation*}
-f^{\ast n}:A_X^{\ast n} X.
-\end{equation*}
-\end{defn}
-
-\begin{constr}
-Note that the operation $(B,g)\mapsto (\join[X]{A}{B},\join{f}{g})$ defines an endomorphism on the type
-\begin{equation*}
-\sm{B:\UU}B\to X.
-\end{equation*}
-We also have $(\emptyt,\ind{\emptyt})$ and $(A,f)$ of this type. For $n\geq 1$ we define
-\begin{align*}
-A_X^{\ast (n+1)} & \defeq \join[X]{A}{A_X^{\ast n}} \\
-f^{\ast (n+1)} & \defeq \join{f}{f^{\ast n}}.\qedhere
-\end{align*}
-\end{constr}
-
-\begin{defn}
-We define $A_X^{\ast\infty}$ to be the sequential colimit of the type sequence
-\begin{equation*}
-\begin{tikzcd}
-A_X^{\ast 0} \arrow[r] & A_X^{\ast 1} \arrow[r,"\inr"] & A_X^{\ast 2} \arrow[r,"\inr"] & \cdots.
-\end{tikzcd}
-\end{equation*}
-Since we have a cocone
-\begin{equation*}
-\begin{tikzcd}
-A_X^{\ast 0} \arrow[r] \arrow[dr,swap,"f^{\ast 0}" near start] & A_X^{\ast 1} \arrow[r,"\inr"] \arrow[d,swap,"f^{\ast 1}" near start] & A_X^{\ast 2} \arrow[r,"\inr"] \arrow[dl,swap,"f^{\ast 2}" xshift=1ex] & \cdots \arrow[dll,bend left=10] \\
-& X
-\end{tikzcd}
-\end{equation*}
-we also obtain a map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ by the universal property of $A_X^{\ast\infty}$. 
-\end{defn}
-
-\begin{lem}\label{lem:finfjp_up}
-Let $f:A\to X$ be a map, and let $m:U\to X$ be an embedding. Then the function
-\begin{equation*}
-\blank\circ \seqin_0: \mathrm{hom}_X(f^{\ast\infty},m)\to \mathrm{hom}_X(f,m)
-\end{equation*}
-is an equivalence. 
-\end{lem}
-
-\begin{thm}\label{lem:isprop_infjp}
-For any map $f:A\to X$, the map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ is an embedding that satisfies the universal property of the image inclusion of $f$.
-\end{thm}
-
-\subsection{Surjective maps}
-
-Another application of the propositional truncation is the notion of surjective map.
-
-\begin{defn}
-A map $f:A\to B$ is said to be \define{surjective} if there is a term of type
-\begin{equation*}
-\issurj(f)\defeq \prd{y:B}\brck{\fib{f}{b}}.
-\end{equation*}
-\end{defn}
-
-\begin{eg}
-Any equivalence is a surjective map, and so is any map that has a section (those are sometimes called \define{split epimorphisms}). Other examples include the base point inclusion $\unit\to\sphere{n}$ for any $n\geq 1$. 
-\end{eg}
-
-\begin{thm}\label{thm:surjective}
-Consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
-& X
-\end{tikzcd}
-\end{equation*}
-in which $m$ is an embedding. Then $m$ satisfies the universal property of the image of $f$ if and only if $i:A\to B$ is surjective.
-\end{thm}
-
-\begin{thm}
-Let $f:A\to B$ be a map. The following are equivalent:
-\begin{enumerate}
-\item $f$ is an equivalence.
-\item $f$ is both surjective and an embedding.
-\end{enumerate}
-\end{thm}
-
 \begin{exercises}
-\exercise Show that
-\begin{equation*}
-\eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
-\end{equation*}
-for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
-\exercise For any $B:A\to\UU$, construct an equivalence
-\begin{equation*}
-\eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
-\end{equation*}
-%\exercise \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
-%\begin{equation*}
-%P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
-%\end{equation*}
-%\begin{subexenum}
-%\item Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$.
-%\end{subexenum}
-%\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
-\exercise Let
-\begin{tikzcd}
-P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
-\end{tikzcd}
-be a sequence of propositions. Show that
-\begin{equation*}
-\eqv{\colim_n(P_n)}{\exists_{(n:\N)} P_n}.
-\end{equation*}
-\exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
-\exercise Let $f:A\to X$ be a map. Construct an equivalence
-\begin{equation*}
-\eqv{\Big(\sm{y:\mathsf{join\usc{}power}_X(n,A)}f(x)=f^{\ast n}(y)\Big)}{\Big(\sm{y:A}f(x)=f(y)\Big)^{\ast n}}
-\end{equation*}
-for any $x:A$.
-\exercise Let $f:A\to B$ be a map. Show that the following are equivalent:
-\begin{enumerate}
-\item The commuting square
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[d,swap,"f"] \arrow[r] & \brck{A} \arrow[d,"\brck{f}"] \\
-B \arrow[r] & \brck{B}.
-\end{tikzcd}
-\end{equation*}
-is a pullback square.
-\item There is a term of type $A\to\isequiv(f)$.
-\item The commuting square
-\begin{equation*}
-\begin{tikzcd}
-A\times A \arrow[r,"f\times f"] \arrow[d,swap,"\proj 1"] & B \times B \arrow[d,"\proj 1"] \\
-A \arrow[r,swap,"f"] & B
-\end{tikzcd}
-\end{equation*}
-is a pullback square. 
-\end{enumerate}
-\exercise Consider a pullback square
-\begin{equation*}
-\begin{tikzcd}
-A' \arrow[d,swap,"{f'}"] \arrow[r,"p"] & A \arrow[d,"f"] \\
-B' \arrow[r,swap,"q"] & B,
-\end{tikzcd}
-\end{equation*}
-in which $q:B'\to B$ is surjective. Show that if $f':A'\to B'$ is an embedding, then so is $f:A\to B$.
-\exercise Show that a type $A$ is a proposition if and only if the map $\inl:A\to \join{A}{A}$ is an equivalence.
-\exercise Show that $\inl:\brck{A}\to \join{\brck{A}}{A}$ is an equivalence for any type $A$.
-\exercise Consider a family of diagrams of the form
+  \exercise Show that if $f:A\to X$ is an embedding, then $f$ itself satisfies the universal property of the image inclusion of $f$.
+  \exercise Show that
+  \begin{equation*}
+    \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
+  \end{equation*}
+  for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
+  \exercise For any $B:A\to\UU$, construct an equivalence
+  \begin{equation*}
+    \eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
+  \end{equation*}
+  %\exercise \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
+  %\begin{equation*}
+  %P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
+  %\end{equation*}
+  %\begin{subexenum}
+  %\item Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$.
+  %\end{subexenum}
+  %\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
+  \exercise Let
+  \begin{tikzcd}
+    P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
+  \end{tikzcd}
+  be a sequence of propositions. Show that
+  \begin{equation*}
+    \eqv{\colim_n(P_n)}{\exists_{(n:\N)} P_n}.
+  \end{equation*}
+  \exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
+  %\exercise Let $f:A\to X$ be a map. Construct an equivalence
+  %\begin{equation*}
+  %\eqv{\Big(\sm{y:\mathsf{join\usc{}power}_X(n,A)}f(x)=f^{\ast n}(y)\Big)}{\Big(\sm{y:A}f(x)=f(y)\Big)^{\ast n}}
+  %\end{equation*}
+  %for any $x:A$.
+  \exercise Let $f:A\to B$ be a map. Show that the following are equivalent:
+  \begin{enumerate}
+  \item The commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        A \arrow[d,swap,"f"] \arrow[r] & \brck{A} \arrow[d,"\brck{f}"] \\
+        B \arrow[r] & \brck{B}.
+      \end{tikzcd}
+    \end{equation*}
+    is a pullback square.
+  \item There is a term of type $A\to\isequiv(f)$.
+  \item The commuting square
+    \begin{equation*}
+      \begin{tikzcd}
+        A\times A \arrow[r,"f\times f"] \arrow[d,swap,"\proj 1"] & B \times B \arrow[d,"\proj 1"] \\
+        A \arrow[r,swap,"f"] & B
+      \end{tikzcd}
+    \end{equation*}
+    is a pullback square. 
+  \end{enumerate}
+  \exercise Consider a pullback square
+  \begin{equation*}
+    \begin{tikzcd}
+      A' \arrow[d,swap,"{f'}"] \arrow[r,"p"] & A \arrow[d,"f"] \\
+      B' \arrow[r,swap,"q"] & B,
+    \end{tikzcd}
+  \end{equation*}
+  in which $q:B'\to B$ is surjective. Show that if $f':A'\to B'$ is an embedding, then so is $f:A\to B$.
+  \exercise Show that a type $A$ is a proposition if and only if the map $\inl:A\to \join{A}{A}$ is an equivalence.
+  \exercise Show that $\inl:\brck{A}\to \join{\brck{A}}{A}$ is an equivalence for any type $A$.
+  \exercise Consider a family of diagrams of the form
   \begin{equation*}
     \begin{tikzcd}
       A_i \arrow[r] \arrow[d,swap,"{f_i}"] &
-        C \arrow[r] \arrow[d,"g"] & X \arrow[d,"h"] \\
+      C \arrow[r] \arrow[d,"g"] & X \arrow[d,"h"] \\
       B_i \arrow[r] & D \arrow[r] & Y 
     \end{tikzcd}
   \end{equation*}
@@ -528,12 +580,47 @@ in which $q:B'\to B$ is surjective. Show that if $f':A'\to B'$ is an embedding, 
   \item The right square is a pullback square.
   \end{enumerate}
   Hint: By \cref{thm:descent-Sigma} it suffices to prove this equivalence for a single diagram of the form
-    \begin{equation*}
+  \begin{equation*}
     \begin{tikzcd}
       A \arrow[r] \arrow[d,swap,"{f}"] &
-        C \arrow[r] \arrow[d,swap,"g"] & X \arrow[d,"h"] \\
+      C \arrow[r] \arrow[d,swap,"g"] & X \arrow[d,"h"] \\
       B \arrow[r] & D \arrow[r] & Y 
     \end{tikzcd}
-    \end{equation*}
+  \end{equation*}
   where the map $B \to D$ is assumed to be surjective.
+  \exercise
+    \begin{subexenum}
+    \item Consider a map $f:A\to B$. Show that the following are equivalent:
+      \begin{enumerate}
+      \item The map $f$ is surjective.
+      \item For every set $C$, the precomposition function
+        \begin{equation*}
+          \blank\circ f:(B\to C)\to (A\to C)
+        \end{equation*}
+        is an embedding.
+      \end{enumerate}
+    Hint: To show that (ii) implies (i), use the assumption with the set $C\jdeq\prop$.
+    \item Give an example of a surjective map $f:A\to B$ and a type $C$ which is not a set, such that the precomposition function
+              \begin{equation*}
+          \blank\circ f:(B\to C)\to (A\to C)
+        \end{equation*}
+        is not an embedding.
+    \end{subexenum}
 \end{exercises}
+
+\endinput
+
+\begin{thm}
+Consider a commuting triangle
+\begin{equation*}
+\begin{tikzcd}[column sep=small]
+A \arrow[rr,"i"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
+& X
+\end{tikzcd}
+\end{equation*}
+with $I:f\htpy m\circ i$, where $m$ is an embedding. The following are equivalent:
+\begin{enumerate}
+\item $m$ satisfies the universal property of the image of $f$.
+\item for each $x:X$, the proposition $\fib{m}{x}$ satisfies the universal property of the propositional truncation of $\fib{f}{x}$.
+\end{enumerate}
+\end{thm}
