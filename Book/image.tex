@@ -133,6 +133,54 @@ For any $f:A\to X$ and any embedding\index{embedding} $m:B\to X$, the type $\mat
 Since $\mathrm{hom}_X(f,m)$ is a proposition for every every embedding $m:B\to X$, the claim follows immediately by \cref{ex:prop_equiv}.
 \end{proof}
 
+Just as in the cases for pullbacks and pushouts, the universal property of the image implies that the image is determined uniquely. We will show here that the type of image factorizations of any map is a proposition. In \cref{sec:image-construction} we will construct the image, after constructing the propositional truncation.
+
+\begin{prp}
+  Let $f$ be a map, and consider two commuting triangles
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[dr,swap,"f"] \arrow[rr,"q"] & & B \arrow[dl,"i"] &[2em] A \arrow[dr,swap,"f"] \arrow[rr,"{q'}"] & & B' \arrow[dl,"{i'}"] \\
+      & X & & \phantom{B'} & X
+    \end{tikzcd}
+  \end{equation*}
+  with $I:f\htpy i\circ q$ and $I':f\htpy i'\circ q'$, in which $i$ and $i'$ are assumed to be embeddings. Moreover, consider
+  \begin{equation*}
+    (h,H):\mathrm{hom}_X(i,i')
+  \end{equation*}
+  equipped with an identification $(h,H)\circ(q,I)=(q',I')$ in $\mathrm{hom}_X(f,i')$. Then, if any two of the following properties hold, so does the third:
+  \begin{enumerate}
+  \item The embedding $i$ satisfies the universal property of the image inclusion of $f$.
+  \item The embedding $i'$ satisfies the universal property of the image inclusion of $f$.
+  \item The map $h$ is an equivalence.
+  \end{enumerate}
+\end{prp}
+
+\begin{proof}
+  Consider an embedding $m:C\to X$. Then we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-1em]
+      \mathrm{hom}_X(i',m) \arrow[rr,"{\blank\circ(h,H)}"] \arrow[dr,swap,"{\blank\circ(q',I')}"] & & \mathrm{hom}_X(i,m) \arrow[dl,"{\blank\circ(q,I)}"] \\
+      & \mathrm{hom}_X(f,m), & \phantom{\mathrm{hom}_X(i',m)}
+    \end{tikzcd}
+  \end{equation*}
+  so it follows that if any two of these maps are equivalences, then so is the third. The claim now follows by the observation that $\blank\circ(h,H)$ is an equivalence for every embedding $m:C\to X$ if and only if $h$ is an equivalence.
+\end{proof}
+
+\begin{cor}
+  Consider two image factorizations
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[dr,swap,"f"] \arrow[rr,"q"] & & B \arrow[dl,"i"] &[2em] A \arrow[dr,swap,"f"] \arrow[rr,"{q'}"] & & B' \arrow[dl,"{i'}"] \\
+      & X & & \phantom{B'} & X
+    \end{tikzcd}
+  \end{equation*}
+  of a map $f$, with $I:f\htpy i\circ q$ and $I':f\htpy i'\circ q'$. Then the type of $(e,H):\mathrm{hom}_X(i,i')$ in which $e$ is an equivalence, equipped with an identification
+  \begin{equation*}
+    (e,H)\circ(q,I)=(q',I')
+  \end{equation*}
+  in $\mathrm{hom}_X(f,i')$, is contractible.
+\end{cor}
+
 \subsection{The universal property of propositional truncation}
 
 An important special case of the homotopy image of a map is the image of the terminal projection
@@ -335,7 +383,7 @@ satisfies the universal property of propositional truncation by \cref{prp:univer
   commutes is contractible. Since this square commutes for both $\brck{\idfunc}$ and for $\idfunc$, it must be that they are homotopic. The proof that the functorial action of propositional truncation preserves composition is similar.
 \end{proof}
 
-\subsection{The image of a map}
+\subsection{The image of a map}\label{sec:image-construction}
 The image of a map $f:A\to X$ can now be defined using the propositional truncation:
 
 \begin{defn}
@@ -655,6 +703,18 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
     \end{equation*}
     are both pushout squares, and that the bottom square is also a pullback square.
   \end{subexenum}
+  \exercise Consider a pullback square
+  \begin{equation*}
+    \begin{tikzcd}
+      E' \arrow[d,swap,"{p'}"] \arrow[r,"g"] & E \arrow[d,"p"] \\
+      B' \arrow[r,swap,"f"] & B
+    \end{tikzcd}
+  \end{equation*}
+  in which $p$ is assumed to be surjective. Show that $p'$ is also surjective, and show that the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is an equivalence.
+  \item The map $g$ is an equivalence.
+  \end{enumerate}
 \end{exercises}
 
 \endinput
