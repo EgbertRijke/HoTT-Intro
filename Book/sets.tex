@@ -1,69 +1,92 @@
 \section{Set quotients}
 
+In this section we construct the quotient of a type by an equivalence relation. By an equivalence relation we understand a binary relation $R:A\to(A\to\prop)$ which is reflexive, symmetric, and transitive. In particular, we note that equivalence relations take values in $\prop$. The quotient $A/R$ is constructed as the type of equivalence classes, which is just the image of the map $R:A\to (A\to\prop)$. Thus, our construction of the quotient by an equivalence relation is very much like the classical construction of a quotient set.
+
+However, there is a subtle issue. What is the universe level of the quotient $A/R$? Let us suppose that $\UU$ is a universe that contains $A$ and each $R(x,y)$. Then $\prop$, the type of propositions in $\UU$, is a type in the universe $\UU^+$, constructed in \cref{rmk:universe-constructions}. Therefore the type $\prop^A$ as well as the quotient $A/R$ are also types in $\UU^+$. That seems unfortunate, because in Zermelo-Fraenkel set theory the quotient of a set by an equivalence relation is an ordinary set, and not a more general class.
+
+In Zermelo-Fraenkel set theory quotients are are sets because of the axiom schema of replacement. The replacement axioms assert that the image of any function is again a set. This leads us to wonder about a type theoretical variant of the replacement axioms. Indeed, there is such a variant. The type theoretic replacement property asserts that for any map $f:A\to B$ from a type $A$ in $\UU$ to a type $B$ of which the \emph{identity types} are equivalent to types in $\UU$, the image of $f$ is also equivalent to a type in $\UU$. Moreover, the type theoretic replacement property is a theorem! We prove it in \cref{thm:replacement}, using the univalence axiom and a new construction of the image of a map.
+
 \subsection{Equivalence relations}
 
 \begin{defn}\label{defn:eq_rel}
-Let $R:A\to (A\to\prop)$ be a binary relation valued in the propositions. We say that $R$ is an \define{($0$-)equivalence relation}\index{equivalence relation}\index{0-equivalence relation|see {equivalence relation}} if $R$ comes equipped with
+Let $R:A\to (A\to\prop)$ be a binary relation valued in the propositions. We say that $R$ is an \define{equivalence relation}\index{equivalence relation} if $R$ comes equipped with
 \begin{align*}
 \rho & : \prd{x:A}R(x,x) \\
 \sigma & : \prd{x,y:A} R(x,y)\to R(y,x) \\
-\tau & : \prd{x,y,z:A} R(x,y)\to (R(y,z)\to R(x,z)).
+\tau & : \prd{x,y,z:A} R(x,y)\to (R(y,z)\to R(x,z)),
 \end{align*}
-Given an equivalence relation $R:A\to (A\to\prop)$, the \define{equivalence class}\index{equivalence class} $[x]_R$ of $x:A$ is defined to be
-\begin{equation*}
-[x]_R\defeq R(x).
-\end{equation*}
+witnessing that $R$ is reflexive, symmetric, and transitive.
 \end{defn}
 
 \begin{defn}
-Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
-We define for any $x,y:A$ a map\index{class_eq@{$\mathsf{class\usc{}eq}$}}
-\begin{equation*}
-\mathsf{class\usc{}eq}:R(x,y)\to ([x]_R=[y]_R).
-\end{equation*}
+  Let $R:A\to (A\to\prop)$ be an equivalence relation. The \define{equivalence class} of $x:A$ is defined to be
+  \begin{equation*}
+    [x]_R\defeq R(x).
+  \end{equation*}
+  More generally, a subtype $P:A\to \prop$ is said to be an \define{equivalence class} if it satisfies
+  \begin{equation*}
+    \mathsf{is\usc{}equivalence\usc{}class}(P)\defeq\exists_{(x:A)}P=R(x).
+  \end{equation*}
+  Furthermore, we define $A/R$ to be the type of equivalence classes, i.e., we define
+  \begin{equation*}
+    A/R\defeq \sm{P:A\to\prop}\mathsf{is\usc{}equivalence\usc{}class}(P).
+  \end{equation*}
 \end{defn}
 
-\begin{proof}[Construction.]
-Let $r:R(x,y)$. By function extensionality, the identity type $R(x)=R(y)$ is equivalent to the type
+In other words, $A/R$ is the image of the map $[{-}]_R:A\to (A\to\prop)$. In the following proposition we characterize the identity type of $A/R$. As a corollary, we obtain equivalences
 \begin{equation*}
-\prd{z:A}R(x,z)=R(y,z).
+  ([x]_R=[y]_R)\simeq R(x,y),
 \end{equation*}
-Let $z:A$. By the univalence axiom, the type $R(x,z)=R(y,z)$ is equivalent to the type
-\begin{equation*}
-\eqv{R(x,z)}{R(y,z)}.
-\end{equation*}
-We have the map $\tau_{y,x,z}(\sigma(r)):R(x,z)\to R(y,z)$. Since this is a map between propositions, we only have to construct a map in the converse direction to show that it is an equivalence. The map in the converse direction is just $\tau_{x,y,z}(r):R(y,z)\to R(x,z)$. 
-\end{proof}
+justifying that the quotient $A/R$ is defined to be the type of equivalence classes. Note that in our characterization of the identity type of $A/R$ we make use of the univalence axiom.
 
-\begin{thm}\label{thm:equivalence_classes}
-Let $R:A\to (A\to\prop)$ be a $0$-equivalence relation. 
-Then for any $x,y:A$ the map
-\begin{equation*}
-\mathsf{class\usc{}eq} : R(x,y)\to ([x]_R=[y]_R)
-\end{equation*}
-is an equivalence.
-\end{thm}
+\begin{prp}\label{prp:eq-quotient}
+  Let $R:A\to (A\to\prop)$ be an equivalence relation. Furthermore, consider $x:A$ and an equivalence class $P$. Then the canonical map
+  \begin{equation*}
+    ([x]_R=P)\to P(x)
+  \end{equation*}
+  is an equivalence.
+\end{prp}
 
 \begin{proof}
-By the 3-for-2 property of equivalences, it suffices to show that the map
-\begin{equation*}
-\lam{r}{z}\tau_{y,x,z}(\sigma(r)) : R(x,y)\to \prd{z:A} \eqv{R(x,z)}{R(y,z)}
-\end{equation*}
-is an equivalence. Since this is a map between propositions, it suffices to construct a map of type
-\begin{equation*}
-\Big(\prd{z:A} \eqv{R(x,z)}{R(y,z)}\Big)\to R(x,y).
-\end{equation*}
-This map is simply $\lam{f} \sigma_{y,x}(f_x(\rho(x)))$. 
+  By \cref{thm:id_fundamental} it suffices to show that the total space
+  \begin{equation*}
+    \sm{P:A/R}P(x)
+  \end{equation*}
+  is contractible. The center of contraction is of course $[x]_R$, which satisfies $[x]_R(x)$ by reflexivity of $R$. It remains to construct a contraction. Since $\sm{P:A/R}P(x)$ is a subtype of $A/R$, we construct a contraction by showing that
+  \begin{equation*}
+    [x]_R=P
+  \end{equation*}
+  whenever $P(x)$ holds. Recall that $P$ is an equivalence relation, i.e., that there exists a $y:A$ such that $P=[y]_R$. Note that our goal is a proposition, so we may assume that we have such a $y$. Then we obtain that $R(x,y)$ holds from the assumption that $P(x)$ holds. Thus, we have to show that
+  \begin{equation*}
+    [x]_R=[y]_R
+  \end{equation*}
+  given that $R(x,y)$ holds. By function extensionality and the univalence axiom, it is equivalent to show that
+  \begin{equation*}
+    \prd{z:A}R(x,z)\simeq R(y,z)
+  \end{equation*}
+  We get a function $R(x,z)\to R(y,z)$ by transitivity, since $R(y,x)$ holds by symmetry. Conversely, we get a function $R(y,z)\to R(x,z)$ directly by transitivity. Thus, we obtain that
+  \begin{equation*}
+    R(x,z)\leftrightarrow R(y,z)
+  \end{equation*}
+  for any $z:A$, which is sufficient to prove that they are equivalent because $R$ is valued in $\prop$.
 \end{proof}
 
-\begin{rmk}
-By \cref{thm:equivalence_classes} we can begin to think of the \emph{quotient}\index{quotient} $A/R$ of a type $A$ by an equivalence relation $R$. Classically, the quotient is described as the set of equivalence classes, and \cref{thm:equivalence_classes} establishes that two equivalence classes $[x]_R$ and $[y]_R$ are equal precisely when $x$ and $y$ are related by $R$.
+\begin{cor}
+  Consider an equivalence relation $R$ on a type $A$, and let $x,y:A$. Then there is an equivalence
+  \begin{equation*}
+    ([x]_R=[y]_R)\simeq R(x,y).
+  \end{equation*}
+\end{cor}
 
-However, the type $A\to\prop$ may contain many more terms than just the $R$-equivalence classes. Therefore we are facing the task of finding a type theoretic description of the smallest subtype of $A\to\prop$ containing the equivalence classes.
-Another to think about this is as the \emph{image}\index{image} of $R$ in $A\to \prop$. 
-The construction of the (homotopy) image of a map can be done with \emph{higher inductive types}\index{higher inductive type}, which we will do in \cref{chap:image}.
-\end{rmk}
+\begin{proof}
+  By \cref{prp:eq-quotient} we have an equivalence
+  \begin{equation*}
+    ([x]_R=[y]_R)\simeq R(y,x).
+  \end{equation*}
+  Moreover, $R(y,x)$ is equivalent to $R(x,y)$ by symmetry of $R$.
+\end{proof}
 
+\begin{comment}
 The notion of $0$-equivalence relation which we defined in \cref{defn:eq_rel} fits in a hierarchy of `$n$-equivalence relations'\index{n-equivalence relation@{$n$-equivalence relation}}, the study of which is a research topic on its own. However, we already know an example of a relation that should count as an `$\infty$-equivalence relation'\index{infinity-equivalence relation@{$\infty$-equivalence relation}}: the identity type. Analogous to \cref{thm:equivalence_classes}, the following theorem shows that the canonical map
 \begin{equation*}
 (x=y)\to (\idtypevar{A}(x)=\idtypevar{A}(y))
@@ -106,39 +129,44 @@ Note that $\varphi_a(\lam{x}\idfunc[(a=x)])\jdeq\refl{a}$. Therefore it follows 
 that satisfies $\alpha_a(\refl{a})=\lam{x}\idfunc[(a=x)]$ is a family of sections of $\varphi$. 
 It follows that $\alpha$ is a family of equivalences. Now the proof is completed by reverting the direction of the family of equivalences in the codomain.
 \end{proof}
+\end{comment}
 
 \subsection{The universal property of set quotients}
 
-\begin{defn}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a map $q:A\to B$ where the type $B$ is a set, for which we have
+The quotient $A/R$ is constructed as the image of $R$, so we obtain a commuting triangle
 \begin{equation*}
-\prd{x,y:A}R(x,y)\to q(x)=q(y).
+  \begin{tikzcd}[column sep=-1em]
+    A \arrow[rr,"q_R"] \arrow[dr,swap,"R"] & & A/R \arrow[dl,hook,"i_R"] \\
+    \phantom{A/R} & \prop^A,
+  \end{tikzcd}
 \end{equation*}
-We will define a map
-\begin{equation*}
-\quotientrestr:(B\to X) \to \Big(\sm{f:A\to X}\prd{x,y:A}R(x,y)\to (f(x)=f(y))\Big).
-\end{equation*}
-\end{defn}
-
-\begin{constr}
-Let $h:B\to X$. Then we have $h\circ q : A\to X$, so it remains to show that
-\begin{equation*}
-\prd{x,y:A}R(x,y)\to (h(q(x))=h(q(y)))
-\end{equation*}
-Consider $x,y:A$ which are related by $R$. Then we have an identification $p:q(x)=q(y)$, so it follows that $\ap{h}{p}:h(q(x))=h(q(y))$.  
-\end{constr}
+and the embedding $i_R:A/R\to\prop^A$ satisfies the universal property of the image of $R$. This universal property is, however, not the usual universal property of the quotient.
 
 \begin{defn}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a map $q:A\to B$ satisfying
-\begin{equation*}
-\prd{x,y:A}R(x,y)\to q(x)=q(y),
-\end{equation*}
-where the type $B$ is a set. We say that the map $q:A\to B$ satisfies the universal property of the \define{set quotient}\index{set quotient}\index{universal property!of set quotients} $A/R$ if for any set $X$ the map
-\begin{equation*}
-\quotientrestr : (B\to X) \to \Big(\sm{f:A\to X}\prd{x,y:A}R(x,y)\to (f(x)=f(y))\Big)
-\end{equation*}
-is an equivalence.
+  Consider a map $q:A\to B$ into a set $B$ satisfying the property that $f(x)=f(y)$ whenever $R(x,y)$ holds. We say that $q$ satisfies the \define{universal property of the set quotient by $R$} if for every map $f:A\to X$ into a set $X$ such that $f(x)=f(y)$ whenever $R(x,y)$ holds, there is a unique extension
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[d,swap,"q"] \arrow[dr,"f"] \\
+      B \arrow[r,densely dotted] & X.
+    \end{tikzcd}
+  \end{equation*}
 \end{defn}
+
+\begin{rmk}
+  Formally, we express the universal property of the quotient by $R$ as follows. Consider a map $q:A\to B$ that satisfies the property that
+  \begin{equation*}
+    H:\prd{x,y:A}R(x,y)\to (f(x)=f(y)).
+  \end{equation*}
+  Then there is for any set $X$ a map
+  \begin{equation*}
+    q^\ast:(B\to X) \to \Big(\sm{f:A\to X}\prd{x,y:A}R(x,y)\to (f(x)=f(y))\Big).
+  \end{equation*}
+  This map takes a function $h:B\to X$ to the pair
+  \begin{equation*}
+    q^\ast(h)\defeq(h\circ q,\lam{x}{y}{r}\ap{h}{H_{x,y}(r)}).
+  \end{equation*}
+  The universal property of the set quotient of $R$ asserts that the map $q^\ast$ is an equivalence for every set $X$. It is important to note that the universal property of set quotients is formulated with respect to sets.
+\end{rmk}
 
 \begin{lem}
 Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a commuting triangle
@@ -177,45 +205,6 @@ Suppose $m:U\to \prop^A$ satisfies the universal property of the image of $R$. T
 \cref{thm:quotient_up} suggests that we can define the quotient of an equivalence relation $R$ on a type $A$ as the image of a map. However, the type $\prop^A$ of which the quotient is a subtype is not a small type, even if $A$ is a small type.
 Therefore it is not clear that the quotient $A/R$ is essentially small\index{essentially small}, as it should be. Luckily, our construction of the image of a map allows us to show that the image is indeed essentially small, using the fact that $\prop^A$ is locally small\index{locally small}.
 \end{rmk}
-
-\subsection{The construction of set quotients}
-\begin{lem}
-Consider a commuting square
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[r] \arrow[d] & B \arrow[d] \\
-C \arrow[r] & D.
-\end{tikzcd}
-\end{equation*}
-\begin{enumerate}
-\item If the square is cartesian, $B$ and $C$ are essentially small, and $D$ is locally small, then $A$ is essentially small.
-\item If the square is cocartesian, and $A$, $B$, and $C$ are essentially small, then $D$ is essentially small. 
-\end{enumerate}
-\end{lem}
-
-\begin{cor}
-Suppose $f:A\to X$ and $g:B\to X$ are maps from essentially small types $A$ and $B$, respectively, to a locally small type $X$. Then $A\times_X B$ is again essentially small. 
-\end{cor}
-
-\begin{lem}
-Consider a type sequence
-\begin{equation*}
-\begin{tikzcd}
-A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
-\end{tikzcd}
-\end{equation*}
-where each $A_n$ is essentially small. Then its sequential colimit is again essentially small. 
-\end{lem}
-
-\begin{thm}
-For any map $f:A\to X$ from a small type $A$ into a locally small type $X$, the image $\im(f)$ is an essentially small type.
-\end{thm}
-
-Recall that in set theory, the replacement axiom asserts that for any family of sets $\{X_i\}_{i\in I}$ indexed by a set $I$, there is a set $X[I]$ consisting of precisely those sets $x$ for which there exists an $i\in I$ such that $x\in X_i$. In other words: the image of a set-indexed family of sets is again a set. Without the replacement axiom, $X[I]$ would be a class. In the following corollary we establish a type-theoretic analogue of the replacement axiom: the image of a family of small types indexed by a small type is again (essentially) small.
-
-\begin{cor}\label{cor:im_small}
-For any small type family $B:A\to\UU$, where $A$ is small, the image $\im(B)$ is essentially small. We call $\im(B)$ the \define{univalent completion} of $B$. 
-\end{cor}
 
 \subsection{Type theoretic replacement}
 \subsubsection{Essentially small types and maps}
@@ -494,6 +483,44 @@ is an equivalence.
 
 \begin{thm}\label{lem:isprop_infjp}
 For any map $f:A\to X$, the map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ is an embedding that satisfies the universal property of the image inclusion of $f$.
+\end{thm}
+
+\begin{lem}
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r] \arrow[d] & B \arrow[d] \\
+C \arrow[r] & D.
+\end{tikzcd}
+\end{equation*}
+\begin{enumerate}
+\item If the square is cartesian, $B$ and $C$ are essentially small, and $D$ is locally small, then $A$ is essentially small.
+\item If the square is cocartesian, and $A$, $B$, and $C$ are essentially small, then $D$ is essentially small. 
+\end{enumerate}
+\end{lem}
+
+\begin{cor}
+Suppose $f:A\to X$ and $g:B\to X$ are maps from essentially small types $A$ and $B$, respectively, to a locally small type $X$. Then $A\times_X B$ is again essentially small. 
+\end{cor}
+
+\begin{lem}
+Consider a type sequence
+\begin{equation*}
+\begin{tikzcd}
+A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
+\end{tikzcd}
+\end{equation*}
+where each $A_n$ is essentially small. Then its sequential colimit is again essentially small. 
+\end{lem}
+
+\begin{thm}
+For any map $f:A\to X$ from a small type $A$ into a locally small type $X$, the image $\im(f)$ is an essentially small type.
+\end{thm}
+
+Recall that in set theory, the replacement axiom asserts that for any family of sets $\{X_i\}_{i\in I}$ indexed by a set $I$, there is a set $X[I]$ consisting of precisely those sets $x$ for which there exists an $i\in I$ such that $x\in X_i$. In other words: the image of a set-indexed family of sets is again a set. Without the replacement axiom, $X[I]$ would be a class. In the following corollary we establish a type-theoretic analogue of the replacement axiom: the image of a family of small types indexed by a small type is again (essentially) small.
+
+\begin{thm}\label{thm:replacement}
+  For any map $f:A\to B$ from an essentially small type $A$ into a locally small type $B$, the image of $f$ is again essentially small.
 \end{thm}
 
 \subsection{Connected components of types}
