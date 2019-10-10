@@ -71,7 +71,7 @@ justifying that the quotient $A/R$ is defined to be the type of equivalence clas
   for any $z:A$, which is sufficient to prove that they are equivalent because $R$ is valued in $\prop$.
 \end{proof}
 
-\begin{cor}
+\begin{cor}\label{cor:eq-quotient}
   Consider an equivalence relation $R$ on a type $A$, and let $x,y:A$. Then there is an equivalence
   \begin{equation*}
     ([x]_R=[y]_R)\simeq R(x,y).
@@ -176,6 +176,10 @@ and the embedding $i_R:A/R\to\prop^A$ satisfies the universal property of the im
       q(x)=q(y)
     \end{equation*}
     for every $x,y:A$ for which $R(x,y)$ holds, and moreover $q$ satisfies the universal property of the set quotient of $R$.
+  \item The map $q$ is surjective and $q$ is \define{effective}, which means that for each $x,y:A$ we have an equivalence
+    \begin{equation*}
+      (q(x)=q(y))\simeq R(x,y).
+    \end{equation*}
   \item The map $R:A\to (A\to \prop)$ extends along $q$ to an embedding
     \begin{equation*}
       \begin{tikzcd}[column sep=tiny]
@@ -184,12 +188,128 @@ and the embedding $i_R:A/R\to\prop^A$ satisfies the universal property of the im
       \end{tikzcd}
     \end{equation*}
     and the embedding $i$ satisfies the universal property of the image inclusion of $R$.
-  \item The map $q$ is surjective, and for each $x,y:A$ we have an equivalence
-    \begin{equation*}
-      (q(x)=q(y))\simeq R(x,y).
-    \end{equation*}
   \end{enumerate}
 \end{thm}
+
+\begin{proof}
+  We first show that (ii) is equivalent to (iii), since this is the easiest part. After that, we will show that (i) is equivalent to (ii).
+
+  Assume that (ii) holds. Then $q$ is surjective by \cref{thm:surjective}. Moreover, we have
+  \begin{align*}
+    R(x,y) & \simeq R(x)=R(y) \\
+           & \simeq i(q(x))=i(q(y)) \\
+           & \simeq q(x)=q(y)
+  \end{align*}
+  In this calculation, the first equivalence holds by \cref{cor:eq-quotient}; the second equivalence holds since we have a homotopy $R\htpy i\circ q$; and the third equivalence holds since $i$ is an embedding. This completes the proof that (ii) implies (iii).
+
+  Next, we show that (iii) implies (ii). Assuming (iii), we define a map
+  \begin{equation*}
+    i:B\to\prop^A
+  \end{equation*}
+  by $i(b,a)\defeq b=q(a)$. Then the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & B \arrow[dl,"i"] \\
+      & \prop^A
+    \end{tikzcd}
+  \end{equation*}
+  commutes, since we have an equivalence
+  \begin{align*}
+    i(q(a),a') & \simeq R(a,a')
+  \end{align*}
+  for each $a,a':A$. To show that $i$ is an embedding, it suffices to show that $i$ is injective, i.e., that
+  \begin{equation*}
+    \prd{b,b':B}(i(b)=i(b'))\to (b=b')
+  \end{equation*}
+  Note that this is a property, and that $q$ is assumed to be surjective. Hence by \cref{prp:surjective} it is equivalent to show that
+  \begin{equation*}
+    \prd{a,a':A}(i(q(a))=i(q(a')))\to (q(a)=q(a')).
+  \end{equation*}
+  Since $R\htpy i\circ q$, and $q(a)=q(a')$ is assumed to be equivalent to $R(a,a')$, it suffices to show that
+  \begin{equation*}
+    \prd{a,a':A}(R(a)=R(a'))\to R(a,a'),
+  \end{equation*}
+  which follows directly from \cref{cor:eq-quotient}. Thus we have shown that the factorization $R\htpy i\circ q$ factors $R$ as a surjective map followed by an injective map. We conclude by \cref{thm:surjective} that the embedding $i$ satisfies the universal property of the image factorization of $R$, which finishes the proof that (iii) implies (ii).
+  
+  Now we show that (i) implies (ii). To see that $q$ is surjective if it satisfies the assumptions in (i), consider the image factorization
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[dr,swap,"q"] \arrow[rr,"q_q"] & & \im(q) \arrow[dl,"i_q"] \\
+      \phantom{\im(q)} & B.
+    \end{tikzcd}
+  \end{equation*}
+  We claim that the map $i_q$ has a section. To see this, we first note that we have
+  \begin{equation*}
+    q_q(x)=q_q(y)
+  \end{equation*}
+  for any $x,y:A$ satisfying $R(x,y)$, because if $R(x,y)$ holds, then $q(x)=q(y)$ and hence $i_q(q_q(x))=i_q(q_q(y))$ holds and $i_q$ is an embedding. Since $\im(q)$ is a set, we may apply the universal property of $q$ and we obtain a unique extension of $q_q$ along $q$
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[d,swap,"q"] \arrow[dr,"q_q"] \\
+      B \arrow[r,densely dotted,swap,"h"] & \im(q).
+    \end{tikzcd}
+  \end{equation*}
+  Now we observe that the composite $i_q\circ h$ is an extension of $q$ along $q$, so it must be the identity function by uniqueness. Thus we have established that $h$ is a section of $i_q$. Now it follows from the fact that $i_q$ is an embedding with a section, that $i_q$ is an equivalence. We conclude that $q$ is surjective, because $q$ is the composite $i_q\circ q_q$ of a surjective map followed by an equivalence.
+
+  Now we have to show that $q(x)=q(y)$ is equivalent to $R(x,y)$. We first apply the universal property of $q$ to obtain for each $x:A$ an extension of $R(x)$ along $q$
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[d,swap,"q"] \arrow[dr,"R(x)"] \\
+      B \arrow[r,densely dotted,swap,"\tilde{R}(x)"] & \prop.
+    \end{tikzcd}
+  \end{equation*}
+  Since the triangle commutes, we have an equivalence $\tilde{R}(x,q(x'))\simeq R(x,x')$ for each $x':A$. Now we apply \cref{thm:id_fundamental} to see that the canonical family of maps
+  \begin{equation*}
+    \prd{y:B}(q(x)=y)\to \tilde{R}(x,y)
+  \end{equation*}
+  is a family of equivalences. Thus, we need to show that the type $\sm{y:B}\tilde{R}(x,y)$ is contractible. For the center of contraction, note that we have $q(x):B$, and the type $\tilde{R}(x,q(x))$ is equivalent to the type $R(x,x)$, which is inhabited by reflexivity of $R$. To construct the contraction, it suffices to show that
+  \begin{equation*}
+    \prd{y:B}\tilde{R}(x,y)\to (q(x)=y).
+  \end{equation*}
+  Since this is a property, and since we have already shown that $q$ is a surjective map, we may apply \cref{prp:surjective}, by which it suffices to show that
+  \begin{equation*}
+    \prd{x':A}\tilde{R}(x,q(x'))\to (q(x)=q(x')).
+  \end{equation*}
+  Since $\tilde{R}(x,q(x'))\simeq R(x,x')$, this is immediate from our assumption on $q$. Thus we obtain the contraction, and we conclude that we have an equivalence $\tilde{R}(x,y)\simeq (q(x)=y)$ for each $y:B$. It follows that we have an equivalence
+  \begin{equation*}
+    R(x,y)\simeq (q(x)=q(y))
+  \end{equation*}
+  for each $x,y:A$, which completes the proof that (i) implies (ii).
+  
+  It remains to show that (iii) implies (i). Assume (iii), and let $f:A\to X$ be a map into a set $X$, satisfying the property that
+  \begin{equation*}
+    \prd{a,a':A}R(a,a')\to (f(a)=f(a')).
+  \end{equation*}
+  Our goal is to show that the type of extensions of $f$ along $q$ is contractible. By \cref{ex:surjective-precomp} it follows that there is at most one such an extension, so it suffices to construct one.
+
+  In order to construct an extension, we will construct for every $b:B$ a term $x:X$ satisfying the property that
+  \begin{equation*}
+    \exists_{(a:A)}(f(a)=x)\land (q(a)=b).
+  \end{equation*}
+  Before we make this construction, we first observe that there is at most one such $x$, i.e., that the type of such $x$ is in fact a proposition. To see this, we need to show that $x=x'$ for any $x,x':X$ satisfying 
+  \begin{align*}
+    & \exists_{(a:A)}(f(a)=x)\land (q(a)=b) \\
+    & \exists_{(a:A)}(f(a)=x')\land (q(a)=b),
+  \end{align*}
+  respectively. Since $X$ is assumed to be a set, our goal of showing that $x=x'$ is a property. Therefore we may assume that we have $a,a':A$ satisfying
+  \begin{align*}
+    f(a) & = x & q(a) & = b \\
+    f(a') & = x' & q(a') & = b.
+  \end{align*}
+  It follows from these assumptions that $q(a)=q(a')$, and hence that $R(a,a')$ holds. This in turn implies that $f(a)=f(a')$, and hence that $x=x'$.
+
+  Now let $b:B$. Our goal is to construct an $x:X$ that satisfies the property
+  \begin{equation*}
+    \exists_{(a:A)}(f(a)=x)\land (q(a)=b).
+  \end{equation*}
+  Since $q$ is assumed to be surjective, we have $\brck{\fib{q}{b}}$. Moreover, since we have shown that at most one $x:X$ exists with the asserted property, we get to assume that we have $a:A$ satisfying $q(a)=b$. Now we see that $x\defeq f(a)$ satisfies the desired property.
+
+  Thus, we obtain a function $h:B\to X$ satisfying the property that for all $b:B$ there exists an $a:A$ such that
+  \begin{equation*}
+    (f(a)=h(b))\land(q(a)=b).
+  \end{equation*}
+  In particular, it follows that $h(q(a))=f(a)$ for all $a:A$, which completes the proof that (ii) implies (i).  
+\end{proof}
 
 \subsection{The rational numbers}
 

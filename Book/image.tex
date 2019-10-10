@@ -466,7 +466,7 @@ A map $f:A\to B$ is said to be \define{surjective} if there is a term of type
 Any equivalence is a surjective map, and so is any map that has a section (those are sometimes called \define{split epimorphisms}). Other examples include the base point inclusion $\unit\to\sphere{n}$ for any $n\geq 1$. 
 \end{eg}
 
-\begin{prp}
+\begin{prp}\label{prp:surjective}
   Consider a map $f:A\to B$. Then the following are equivalent:
   \begin{enumerate}
   \item The map $f:A\to B$ is surjective.
@@ -668,7 +668,7 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
   where the map $B \to D$ is assumed to be surjective.
   \exercise
   \begin{subexenum}
-  \item Consider a map $f:A\to B$. Show that the following are equivalent:
+  \item \label{ex:surjective-precomp}Consider a map $f:A\to B$. Show that the following are equivalent:
     \begin{enumerate}
       \item The map $f$ is surjective.
       \item For every set $C$, the precomposition function
