@@ -1,10 +1,10 @@
 \section{Set quotients}
 
-In this section we construct the quotient of a type by an equivalence relation. By an equivalence relation we understand a binary relation $R:A\to(A\to\prop)$ which is reflexive, symmetric, and transitive. In particular, we note that equivalence relations take values in $\prop$. The quotient $A/R$ is constructed as the type of equivalence classes, which is just the image of the map $R:A\to (A\to\prop)$. Thus, our construction of the quotient by an equivalence relation is very much like the classical construction of a quotient set.
+In this section we construct the quotient of a type by an equivalence relation. By an equivalence relation we understand a binary relation $R:A\to(A\to\prop)$ which is reflexive, symmetric, and transitive. In particular, we note that equivalence relations take values in $\prop$. The quotient $A/R$ is constructed as the type of equivalence classes, which is just the image of the map $R:A\to (A\to\prop)$. Thus, our construction of the quotient by an equivalence relation is very much like the classical construction of a quotient set. Examples of set quotients are abundant. We cover two of them: the type of rational numbers and the set truncation of a type.
 
-However, there is a subtle issue. What is the universe level of the quotient $A/R$? Let us suppose that $\UU$ is a universe that contains $A$ and each $R(x,y)$. Then $\prop$, the type of propositions in $\UU$, is a type in the universe $\UU^+$, constructed in \cref{rmk:universe-constructions}. Therefore the type $\prop^A$ as well as the quotient $A/R$ are also types in $\UU^+$. That seems unfortunate, because in Zermelo-Fraenkel set theory the quotient of a set by an equivalence relation is an ordinary set, and not a more general class.
+There is, however, a subtle issue with our construction of the set quotient as the image of the map $R:A\to(A\to\prop)$. What is the universe level of the quotient $A/R$? Let us suppose that $\UU$ is a universe that contains $A$ and each $R(x,y)$. Then $\prop$, the type of propositions in $\UU$, is a type in the universe $\UU^+$, constructed in \cref{rmk:universe-constructions}. Therefore the type $\prop^A$ as well as the quotient $A/R$ are also types in $\UU^+$. That seems unfortunate, because in Zermelo-Fraenkel set theory the quotient of a set by an equivalence relation is an ordinary set, and not a more general class.
 
-In Zermelo-Fraenkel set theory quotients are are sets because of the axiom schema of replacement. The replacement axioms assert that the image of any function is again a set. This leads us to wonder about a type theoretical variant of the replacement axioms. Indeed, there is such a variant. The type theoretic replacement property asserts that for any map $f:A\to B$ from a type $A$ in $\UU$ to a type $B$ of which the \emph{identity types} are equivalent to types in $\UU$, the image of $f$ is also equivalent to a type in $\UU$. Moreover, the type theoretic replacement property is a theorem! We prove it in \cref{thm:replacement}, using the univalence axiom and a new construction of the image of a map.
+In Zermelo-Fraenkel set theory quotients are are sets because of the axiom schema of replacement. The replacement axioms assert that the image of any function is again a set. This leads us to wonder about a type theoretical variant of the replacement axioms. Indeed, there is such a variant. The type theoretic replacement property asserts that for any map $f:A\to B$ from a type $A$ in $\UU$ to a type $B$ of which the \emph{identity types} are equivalent to types in $\UU$, the image of $f$ is also equivalent to a type in $\UU$, and in fact this property is a theorem. We prove it in \cref{thm:replacement}, using the univalence axiom and a new construction of the image of a map.
 
 \subsection{Equivalence relations}
 
@@ -168,43 +168,63 @@ and the embedding $i_R:A/R\to\prop^A$ satisfies the universal property of the im
   The universal property of the set quotient of $R$ asserts that the map $q^\ast$ is an equivalence for every set $X$. It is important to note that the universal property of set quotients is formulated with respect to sets.
 \end{rmk}
 
-\begin{lem}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & U \arrow[dl,"m"] \\
-& \prop^A
-\end{tikzcd}
-\end{equation*}
-with $H:R\htpy m\circ q$, where $m$ is an embedding. Then we have
-\begin{equation*}
-\prd{x,y:A}R(x,y)\to (q(x)=q(y)).
-\end{equation*}
-\end{lem}
-
 \begin{thm}\label{thm:quotient_up}
-Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, for $A:\UU$, and consider a commuting triangle
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & U \arrow[dl,"m"] \\
-& \prop^A
-\end{tikzcd}
-\end{equation*}
-with $H:R\htpy m\circ q$, where $m$ is an embedding. Then the following are equivalent:
-\begin{enumerate}
-\item The embedding $m:U\to \prop^A$ satisfies the universal property of the image of $R$.
-\item The map $q:A\to U$ satisfies the universal property of the set quotient $A/R$.
-\end{enumerate}
+  Let $R:A\to (A\to \prop)$ be an equivalence relation\index{equivalence relation}, and consider a map $q:A\to B$ into a set $B$. Then the following are equivalent.
+  \begin{enumerate}
+  \item The map $q$ satisfies the property that
+    \begin{equation*}
+      q(x)=q(y)
+    \end{equation*}
+    for every $x,y:A$ for which $R(x,y)$ holds, and moreover $q$ satisfies the universal property of the set quotient of $R$.
+  \item The map $R:A\to (A\to \prop)$ extends along $q$ to an embedding
+    \begin{equation*}
+      \begin{tikzcd}[column sep=tiny]
+        A \arrow[rr,"q"] \arrow[dr,swap,"R"] & & B \arrow[dl,densely dotted,"i"] \\
+        & \prop^A
+      \end{tikzcd}
+    \end{equation*}
+    and the embedding $i$ satisfies the universal property of the image inclusion of $R$.
+  \item The map $q$ is surjective, and for each $x,y:A$ we have an equivalence
+    \begin{equation*}
+      (q(x)=q(y))\simeq R(x,y).
+    \end{equation*}
+  \end{enumerate}
 \end{thm}
 
+\subsection{The rational numbers}
+
+\subsection{Set truncation}
+
+\begin{lem}
+For each type $A$, the relation $I_{(-1)}:A\to (A\to\prop)$ given by
+\begin{equation*}
+I_{(-1)}(x,y)\defeq\brck{x=y}
+\end{equation*}
+is an equivalence relation.
+\end{lem}
+
 \begin{proof}
-Suppose $m:U\to \prop^A$ satisfies the universal property of the image of $R$. Then it follows by \cref{thm:surjective} that the map $q:A\to U$ is surjective. Our goal is to prove that $U$ satisfies the universal property of the set quotient $A/R$. 
+For every $x:A$ we have $\bproj{\refl{x}}:\brck{x=x}$, so the relation is reflexive. To see that the relation is symmetric note that by the universal property of propositional truncation there is a unique map $\brck{\invfunc}:\brck{x=y}\to\brck{y=x}$ for which the square
+\begin{equation*}
+\begin{tikzcd}
+(x=y) \arrow[r,"\invfunc"] \arrow[d,swap,"\bproj{\blank}"] & (y=x) \arrow[d,"\bproj{\blank}"] \\
+\brck{x=y} \arrow[r,densely dotted,swap,"\brck{\invfunc}"] & \brck{y=x}
+\end{tikzcd}
+\end{equation*}
+commutes. This shows that the relation is symmetric. Similarly, we show by the universal property of propositional truncation that the relation is transitive.
 \end{proof}
 
-\begin{rmk}
-\cref{thm:quotient_up} suggests that we can define the quotient of an equivalence relation $R$ on a type $A$ as the image of a map. However, the type $\prop^A$ of which the quotient is a subtype is not a small type, even if $A$ is a small type.
-Therefore it is not clear that the quotient $A/R$ is essentially small\index{essentially small}, as it should be. Luckily, our construction of the image of a map allows us to show that the image is indeed essentially small, using the fact that $\prop^A$ is locally small\index{locally small}.
-\end{rmk}
+\begin{defn}
+For each type $A$ we define the \define{set truncation}
+\begin{equation*}
+\trunc{0}{A}\defeq A/I_{(-1)},
+\end{equation*}
+and the unit of the set truncation is defined to be the quotient map.
+\end{defn}
+
+\begin{thm}
+For each type $A$, the set truncation satisfies the universal property of the set truncation.
+\end{thm}
 
 \subsection{Type theoretic replacement}
 \subsubsection{Essentially small types and maps}
@@ -523,42 +543,14 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
   For any map $f:A\to B$ from an essentially small type $A$ into a locally small type $B$, the image of $f$ is again essentially small.
 \end{thm}
 
-\subsection{Connected components of types}
-
-\subsection{Set truncation}
-
-\begin{lem}
-For each type $A$, the relation $I_{(-1)}:A\to (A\to\prop)$ given by
-\begin{equation*}
-I_{(-1)}(x,y)\defeq\brck{x=y}
-\end{equation*}
-is an equivalence relation.
-\end{lem}
-
-\begin{proof}
-For every $x:A$ we have $\bproj{\refl{x}}:\brck{x=x}$, so the relation is reflexive. To see that the relation is symmetric note that by the universal property of propositional truncation there is a unique map $\brck{\invfunc}:\brck{x=y}\to\brck{y=x}$ for which the square
-\begin{equation*}
-\begin{tikzcd}
-(x=y) \arrow[r,"\invfunc"] \arrow[d,swap,"\bproj{\blank}"] & (y=x) \arrow[d,"\bproj{\blank}"] \\
-\brck{x=y} \arrow[r,densely dotted,swap,"\brck{\invfunc}"] & \brck{y=x}
-\end{tikzcd}
-\end{equation*}
-commutes. This shows that the relation is symmetric. Similarly, we show by the universal property of propositional truncation that the relation is transitive.
-\end{proof}
-
-\begin{defn}
-For each type $A$ we define the \define{set truncation}
-\begin{equation*}
-\trunc{0}{A}\defeq A/I_{(-1)},
-\end{equation*}
-and the unit of the set truncation is defined to be the quotient map.
-\end{defn}
-
-\begin{thm}
-For each type $A$, the set truncation satisfies the universal property of the set truncation.
-\end{thm}
-
 \begin{exercises}
+  \exercise Consider a map $f:A\to B$ into a set $B$, and let $R:A\to(A\to\prop)$ be the equivalence relation given by
+  \begin{equation*}
+    R(x,y)\defeq f(x)=f(y).
+  \end{equation*}
+  Show that the map $q_f:A\to\im(f)$ satisfies the universal property of the set quotient of $R$.
+  \exercise Show that the set truncation of a loop space is a group.
+  \exercise Recall that a normal subgroup $H$ of a group $G$ is a subgroup of $G$ such that $ghg^{-1}$ is in $H$ for every $h:H$ and $g:G$. Given a normal subgroup $H$ of $G$, we write $G/H$ for the quotient of $G$ by the equivalence relation where $g\sim g'$ if and only if there is a $h:H$ such that $gh=g'$. Show that $G/H$ is again a group. 
 \exercise
 \begin{subexenum}
 \item Show that any proposition is locally small.\index{proposition!is locally small}
