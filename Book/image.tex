@@ -166,7 +166,7 @@ Just as in the cases for pullbacks and pushouts, the universal property of the i
   so it follows that if any two of these maps are equivalences, then so is the third. The claim now follows by the observation that $\blank\circ(h,H)$ is an equivalence for every embedding $m:C\to X$ if and only if $h$ is an equivalence.
 \end{proof}
 
-\begin{cor}
+\begin{cor}\label{cor:uniqueness-image}
   Consider two image factorizations
   \begin{equation*}
     \begin{tikzcd}[column sep=tiny]
@@ -506,7 +506,11 @@ A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & B \arrow[dl,"m"] \\
 & X
 \end{tikzcd}
 \end{equation*}
-in which $m$ is an embedding. Then $m$ satisfies the universal property of the image inclusion of $f$ if and only if $q:A\to B$ is surjective.
+in which $m$ is an embedding. Then the following are equivalent:
+\begin{enumerate}
+\item The embedding $m$ satisfies the universal property of the image inclusion of $f$.
+\item The map $q$ is surjective.
+\end{enumerate}
 \end{thm}
 
 \begin{proof}
@@ -516,27 +520,53 @@ in which $m$ is an embedding. Then $m$ satisfies the universal property of the i
       \Big(\sm{y:B}\brck{\fib{q}{y}}\Big) \arrow[r,"\proj 1"] & B \arrow[r,"m"] & X.
     \end{tikzcd}
   \end{equation*}
-  Note that $m\circ\proj 1$ is a composition of embeddings, so it is an embedding. By the universal property of $m$ we have a commuting triangle
+  Note that $m\circ\proj 1$ is a composition of embeddings, so it is an embedding. By the universal property of $m$ there is a unique map $h$ for which the triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=0]
       B \arrow[dr,swap,"m"] \arrow[rr,densely dotted,"h"] & & \sm{y:B}\brck{\fib{q}{y}} \arrow[dl,"m\circ\proj 1"] \\
-      \phantom{\sm{y:B}\brck{\fib{q}{y}}} & X.
+      \phantom{\sm{y:B}\brck{\fib{q}{y}}} & X
     \end{tikzcd}
   \end{equation*}
-  Now note that $\proj 1\circ h$ is a map such that $m\circ (\proj 1\circ h)\htpy m$. 
+  commutes. Now note that $\proj 1\circ h$ is a map such that $m\circ (\proj 1\circ h)\htpy m$. The identity function is another map for which we have $m\circ\idfunc\htpy m$, so it follows by uniqueness that $\proj 1\circ h\htpy \idfunc$. In other words, the map $h$ is a section of the projection map. Therefore we obtain by \cref{ex:pi_sec} a dependent function
+  \begin{equation*}
+    \prd{b:B}\brck{\fib{q}{b}},
+  \end{equation*}
+  showing that $q$ is surjective.
+
+  For the converse, suppose that $q$ is surjective. To prove that $m$ satisfies the universal property of the image factorization of $f$, it suffices to construct an equivalence
+  \begin{equation*}
+    \mathrm{hom}_X(f,m')\to\mathrm{hom}_X(m,m'),
+  \end{equation*}
+  for any embedding $m':B'\to X$. To see that there is such an equivalence, we make the following calculation
+  \begin{align*}
+    \mathrm{hom}_X(m,m') & \simeq \prd{x:X}\fib{m}{x}\to\fib{m'}{x} \\
+                         & \simeq \prd{b:B}\fib{m'}{m(b)} \\
+                         & \simeq \prd{a:A}\fib{m'}{m(q(a))} \\
+                         & \simeq \prd{a:A}\fib{m'}{f(a)} \\
+                         & \simeq \prd{x:X}\fib{f}{x}\to\fib{m'}{x} \\
+                         & \simeq \mathrm{hom}_X(f,m').
+  \end{align*}
+  In this calculation, the first and last equivalence hold by \cref{ex:triangle_fib}. The second and second to last equivalences hold by \cref{ex:pi-fib}. The third equivalence holds by \cref{prp:surjective}, since $q$ is assumed to be surjective, and the fourth equivalence holds since we have a homotopy $f\htpy m\circ f$.
 \end{proof}
 
-\begin{thm}
-Let $f:A\to B$ be a map. The following are equivalent:
-\begin{enumerate}
-\item $f$ is an equivalence.
-\item $f$ is both surjective and an embedding.
-\end{enumerate}
-\end{thm}
-
-\begin{thm}
+\begin{cor}
   Every map factors uniquely as a surjective map followed by an embedding.
-\end{thm}
+\end{cor}
+
+\begin{proof}
+  Consider a map $f:A\to X$, and two factorizations
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & B \arrow[dl,"i"] &[3em] A \arrow[rr,"{q'}"] \arrow[dr,swap,"f"] & & B' \arrow[dl,"{i'}"] \\
+      & X & & & X
+    \end{tikzcd}
+  \end{equation*}
+  of $f$ where $m$ and $m'$ are embeddings, and $q$ and $q'$ are surjective. Then both $m$ and $m'$ satisfy the universal property of the image factorization of $f$ by \cref{thm:surjective}. Now it follows by \cref{cor:uniqueness-image} that the type of $(e,H):\mathrm{hom}_X(i,i')$ in which $e$ is an equivalence, equipped with an identification
+  \begin{equation*}
+    (e,H)\circ(q,I)=(q',I')
+  \end{equation*}
+  in $\mathrm{hom}_X(f,i')$, is contractible.
+\end{proof}
 
 \subsection{Logic in type theory}
 Note that, given a family of propositions $P$ over a type $A$, the type $\sm{a:A}P(a)$ isn't necessarily a proposition. Instead, we think of $\sm{a:A}P(a)$ of the \emph{subtype} of $A$ containing the terms that satisfies $P$. Using the propositional truncation we can assert that there \emph{exists} a term in $A$ that satisfies $P$ without requiring one to construct it. 
@@ -548,10 +578,8 @@ Let $P:A\to \prop$ be a family of propositions over a type $A$. Then we define
 \end{equation*}
 \end{defn}
 
-Similarly, we can define the disjunction of two propositions $P$ and $Q$ to be the \emph{proposition} $\brck{P+Q}$, which clearly satisfies the universal property of disjunction\footnote{Alternatively, we have shown in \cref{ex:join_propositions} that the join $\join{P}{Q}$ also is a proposition that satisfies the universal property of disjunction.}. In \cref{table:logic} we give an overview of the logical connectives on propositions.
+Similarly, we can define the disjunction of two propositions $P$ and $Q$ to be the \emph{proposition} $\brck{P+Q}$, which clearly satisfies the universal property of disjunction\footnote{Alternatively, we have shown in \cref{ex:join_propositions} that the join $\join{P}{Q}$ also is a proposition that satisfies the universal property of disjunction.}. In the following table we give an overview of the logical connectives on propositions.
 
-\begin{table}
-\caption{\label{table:logic}Logic in type theory}
 \begin{center}
 \begin{tabular}{ll}
 \toprule
@@ -570,7 +598,6 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
 \bottomrule
 \end{tabular}
 \end{center}
-\end{table}
 
 \begin{exercises}
   \exercise Show that if $f:A\to X$ is an embedding, then $f$ itself satisfies the universal property of the image inclusion of $f$.
@@ -714,6 +741,12 @@ $\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
   \begin{enumerate}
   \item The map $f$ is an equivalence.
   \item The map $g$ is an equivalence.
+  \end{enumerate}
+  \exercise
+  Consider a map $f:A\to B$. Show that the following are equivalent:
+  \begin{enumerate}
+  \item $f$ is an equivalence.
+  \item $f$ is both surjective and an embedding.
   \end{enumerate}
 \end{exercises}
 

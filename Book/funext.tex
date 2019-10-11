@@ -519,11 +519,10 @@ g & : B\to A \\
 H & : f\circ g = \idfunc[B] \\
 K & : g\circ f = \idfunc[A].
 \end{align*}
-\exercise \label{ex:pi_sec}Let $B$ be a type family over $A$, and consider the maps
-  \begin{align*}
-    \proj 1 & : \sm{x:A} B(x)\to A \\
-    \proj1 \circ \blank & : \Big(\sm{x:A} B(x)\Big)^A \to A^A.
-  \end{align*}
+\exercise \label{ex:pi_sec}Let $B$ be a type family over $A$, and consider the postcomposition function
+  \begin{equation*}
+    \proj1 \circ \blank : \Big(\sm{x:A} B(x)\Big)^A \to A^A.
+  \end{equation*}
   Construct equivalences
   \begin{equation*}
     \Big(\prd{x:A}B(x)\Big) \eqvsym \sections(\proj 1) \eqvsym \fib{\proj 1 \circ\blank}{\idfunc[A]}.
@@ -537,4 +536,9 @@ K & : g\circ f = \idfunc[A].
     \Fin(n^m) & \simeq (\Fin(m)\to\Fin(n)) \\
     \Fin(n!) & \simeq (\Fin(n)\simeq\Fin(n)).
   \end{align*}
+  \exercise \label{ex:pi-fib}Consider a function $f:A\to B$, and let $P$ be a family of types over $B$. Show that the map
+  \begin{equation*}
+    \Big(\prd{b:B}\fib{f}{b}\to P(b)\Big)\to\Big(\prd{a:A}P(f(a))\Big)
+  \end{equation*}
+  given by $h\mapsto h_{f(a)}(a,\refl{f(a)})$ is an equivalence.
 \end{exercises}

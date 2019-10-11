@@ -176,7 +176,7 @@ and the embedding $i_R:A/R\to\prop^A$ satisfies the universal property of the im
       q(x)=q(y)
     \end{equation*}
     for every $x,y:A$ for which $R(x,y)$ holds, and moreover $q$ satisfies the universal property of the set quotient of $R$.
-  \item The map $q$ is surjective and $q$ is \define{effective}, which means that for each $x,y:A$ we have an equivalence
+  \item The map $q$ is surjective and \define{effective}, which means that for each $x,y:A$ we have an equivalence
     \begin{equation*}
       (q(x)=q(y))\simeq R(x,y).
     \end{equation*}
@@ -282,16 +282,11 @@ and the embedding $i_R:A/R\to\prop^A$ satisfies the universal property of the im
   \end{equation*}
   Our goal is to show that the type of extensions of $f$ along $q$ is contractible. By \cref{ex:surjective-precomp} it follows that there is at most one such an extension, so it suffices to construct one.
 
-  In order to construct an extension, we will construct for every $b:B$ a term $x:X$ satisfying the property that
+  In order to construct an extension, we will construct for every $b:B$ a term $x:X$ satisfying the property
   \begin{equation*}
-    \exists_{(a:A)}(f(a)=x)\land (q(a)=b).
+    P(x)\defeq \exists_{(a:A)}(f(a)=x)\land (q(a)=b).
   \end{equation*}
-  Before we make this construction, we first observe that there is at most one such $x$, i.e., that the type of such $x$ is in fact a proposition. To see this, we need to show that $x=x'$ for any $x,x':X$ satisfying 
-  \begin{align*}
-    & \exists_{(a:A)}(f(a)=x)\land (q(a)=b) \\
-    & \exists_{(a:A)}(f(a)=x')\land (q(a)=b),
-  \end{align*}
-  respectively. Since $X$ is assumed to be a set, our goal of showing that $x=x'$ is a property. Therefore we may assume that we have $a,a':A$ satisfying
+  Before we make this construction, we first observe that there is at most one such $x$, i.e., that the type of $x:X$ satisfying $P(x)$ is in fact a proposition. To see this, we need to show that $x=x'$ for any $x,x':X$ satisfying $P(x)$ and $P(x')$. Since $X$ is assumed to be a set, our goal of showing that $x=x'$ is a property. Therefore we may assume that we have $a,a':A$ satisfying
   \begin{align*}
     f(a) & = x & q(a) & = b \\
     f(a') & = x' & q(a') & = b.
@@ -306,7 +301,7 @@ and the embedding $i_R:A/R\to\prop^A$ satisfies the universal property of the im
 
   Thus, we obtain a function $h:B\to X$ satisfying the property that for all $b:B$ there exists an $a:A$ such that
   \begin{equation*}
-    (f(a)=h(b))\land(q(a)=b).
+    f(a)=h(b)\qquad\text{and}\qquad q(a)=b.
   \end{equation*}
   In particular, it follows that $h(q(a))=f(a)$ for all $a:A$, which completes the proof that (ii) implies (i).  
 \end{proof}
