@@ -3,7 +3,7 @@
 \subsection{The universal property of the truncations}
 
 \begin{defn}\label{defn:is_truncation}
-Let $X$ be a type. A map $f:X\to Y$ into an $k$-type $Y$ is said to satisfy the \define{universal property of $k$-truncation} if the precomposition map
+Let $X$ be a type. A map $f:X\to Y$ into an $k$-type $Y$ is said to satisfy the \define{universal property of the $k$-truncation of $X$} if the precomposition map
 \begin{equation*}
 \blank\circ f: (Y\to Z)\to (X\to Z)
 \end{equation*}
@@ -26,53 +26,119 @@ which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g
 \end{rmk}
 
 \begin{thm}\label{thm:trunc_dup}
-Suppose the map $f:X\to Y$ into an $k$-type $Y$. The following are equivalent:
-\begin{enumerate}
-\item The map $f$ satisfies the universal property of $k$-truncation.
-\item For any type family $P$ of $k$-types over $Y$, the precomposition map
-\begin{equation*}
-\blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to \Big(\prd{x:X}P(f(x))\Big)
-\end{equation*}
-is an equivalence. This property is also called the \define{dependent universal property} of the $k$-truncation.
-\end{enumerate}
+  Suppose the map $f:X\to Y$ into an $k$-type $Y$. The following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ satisfies the universal property of $k$-truncation.
+  \item For any family $P$ of $k$-types over $Y$, the precomposition map
+    \begin{equation*}
+      \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to \Big(\prd{x:X}P(f(x))\Big)
+    \end{equation*}
+    is an equivalence. This property is also called the \define{dependent universal property} of the $k$-truncation.
+  \item For any family $P$ of $k$-types over $Y$, the precomposition map
+    \begin{equation*}
+      \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+    \end{equation*}
+    has a section.
+  \end{enumerate}
 \end{thm}
 
 \begin{proof}
-The direction from (ii) to (i) is immediate, so we only have to show that (i) implies (ii).
+  The fact that (ii) implies (i) and (iii) is immediate, so we only have to show that both (i) and (iii) imply (i).
 
-Suppose $P$ is a family of $k$-truncated types over $Y$.  
-Then we have a commuting square
-\begin{equation*}
-\begin{tikzcd}
-\Big(Y\to\sm{y:Y}P(y)\Big) \arrow[r,"\blank\circ f"] \arrow[d,swap,"\proj 1 \circ\blank"] & \Big(X\to \sm{y:Y}P(y)\Big) \arrow[d,"\proj 1\circ \blank"] \\
-\Big(Y\to Y\Big) \arrow[r,swap,"\blank\circ f"] & \Big(X\to Y)
-\end{tikzcd}
-\end{equation*}
-Since the total space $\sm{y:Y}P(y)$ is again $k$-truncated by \cref{ex:istrunc_sigma}, it follows by the universal property of the $k$-truncation that the top map is an equivalence, and by the universal property the bottom map is an equivalence too. It follows from \cref{cor:pb_equiv} that this square is a pullback square, so it induces equivalences on the fibers by \cref{cor:pb_fibequiv}. In particular we have a commuting square
-\begin{equation*}
-\begin{tikzcd}
-\Big(\prd{y:Y}P(y)\Big) \arrow[r] \arrow[d] & \Big(\prd{x:X}P(f(x))\Big) \arrow[d] \\
-\fib{(\proj 1\circ \blank)}{\idfunc[Y]} \arrow[r] & \fib{(\proj 1 \circ \blank)}{f}
-\end{tikzcd}
-\end{equation*}
-in which the left and right maps are equivalences by \cref{ex:pi_sec}, and the bottom map is an equivalence as we have just established. Therefore the top map is an equivalence, so we conclude that $f$ satisfies the dependent universal property.
+  To prove that (i) implies (ii), suppose $P$ is a family of $k$-truncated types over $Y$.  
+  Then we have a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      \Big(Y\to\sm{y:Y}P(y)\Big) \arrow[r,"\blank\circ f"] \arrow[d,swap,"\proj 1 \circ\blank"] & \Big(X\to \sm{y:Y}P(y)\Big) \arrow[d,"\proj 1\circ \blank"] \\
+      \Big(Y\to Y\Big) \arrow[r,swap,"\blank\circ f"] & \Big(X\to Y)
+    \end{tikzcd}
+  \end{equation*}
+  Since the total space $\sm{y:Y}P(y)$ is again $k$-truncated by \cref{ex:istrunc_sigma}, it follows by the universal property of the $k$-truncation that the top map is an equivalence, and by the universal property the bottom map is an equivalence too. It follows from \cref{cor:pb_equiv} that this square is a pullback square, so it induces equivalences on the fibers by \cref{cor:pb_fibequiv}. In particular we have a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      \Big(\prd{y:Y}P(y)\Big) \arrow[r] \arrow[d] & \Big(\prd{x:X}P(f(x))\Big) \arrow[d] \\
+      \fib{(\proj 1\circ \blank)}{\idfunc[Y]} \arrow[r] & \fib{(\proj 1 \circ \blank)}{f}
+    \end{tikzcd}
+  \end{equation*}
+  in which the left and right maps are equivalences by \cref{ex:pi_sec}, and the bottom map is an equivalence as we have just established. Therefore the top map is an equivalence, so we conclude that $f$ satisfies the dependent universal property.
 \end{proof}
 
-%\begin{thm}
-%Suppose the map $f:X\to Y$ into an $k$-type $Y$ is an $k$-truncation, and let $Q$ be a type family of $(k+l)$-types over $Y$.
-%Then the precomposition map
-%\begin{equation*}
-%\blank\circ f : \Big(\prd{y:Y}Q(y)\Big)\to \Big(\prd{x:X}Q(f(x))\Big)
-%\end{equation*}
-%is $(l-2)$-truncated, for $l:\N$. 
-%\end{thm}
+\begin{prp}
+  Consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      \phantom{Y'} & X \arrow[dl,swap,"f"] \arrow[dr,"{f'}"] \\
+      Y \arrow[rr,swap,"h"] & & Y'
+    \end{tikzcd}
+  \end{equation*}
+  where $Y$ and $Y'$ are assumed to be $k$-types. If any two of the following three properties hold, so does the third:
+  \begin{enumerate}
+  \item The map $f:X\to Y$ satisfies the universal property of the $k$-truncation of $X$.
+  \item The map $f':X\to X'$ satisfies the universal property of the $k$-truncation of $X$.
+  \item The map $h$ is an equivalence.
+  \end{enumerate}
+\end{prp}
 
-\begin{thm}\label{thm:trunc_id}
+\begin{cor}
+  Consider two maps $f:X\to Y$ and $f':X\to Y'$ into $k$-types $Y$ and $Y'$, and suppose that both $f$ and $f'$ satisfy the universal property of the $k$-truncation of $X$. Then the type of equivalences $e:Y\simeq Y'$ equipped with a homotopy witnessing that the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      \phantom{Y'} & X \arrow[dl,swap,"f"] \arrow[dr,"{f'}"] \\
+      Y \arrow[rr,swap,"e"] & & Y'
+    \end{tikzcd}
+  \end{equation*}
+  commutes is contractible.
+\end{cor}
+
+\subsection{The construction of the  \texorpdfstring{$(k+1)$}{(k+1)}-truncation as a quotient}
+
+\begin{thm}
+  Consider a map $f:X\to Y$ into a $(k+1)$-truncated type $Y$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ satisfies the universal property of the $(k+1)$-truncation of $X$.
+  \item The map $f$ is surjective, and for each $x,x':X$ the map
+    \begin{equation*}
+      \apfunc{f} : (x=x')\to(f(x)=f(x'))
+    \end{equation*}
+    satisfies the universal property of the $k$-truncation of $x=x'$.
+  \end{enumerate}
+\end{thm}
+
+\begin{defn}
+  Consider a universe $\UU$. We say that $\UU$ \define{has $k$-truncations} if for every type $X:\UU$ there is a map $f:X\to Y$ into a $k$-type $Y:\UU$ that satisfies the universal property of the $k$-truncation of $X$.
+\end{defn}
+
+\begin{rmk}
+  Note that the universal property of $k$-truncations is formulated with respect to all $k$-types, and not only with respect to the $k$-types in $\UU$.
+\end{rmk}
+
+\begin{thm}
+  Any univalent universe $\UU$ that is closed under pushouts has $k$-truncations, for every truncation level $k$. We will write
+  \begin{equation*}
+    \eta:X\to\trunc{k}{X}
+  \end{equation*}
+  for the $k$-truncation of $X$.
+\end{thm}
+
+\begin{proof}
+  It is easy to see that the terminal projection $X\to\unit$ is a $(-2)$-truncation, for any type $X$. Thus, any universe has $(-2)$-truncations.
+
+  We will proceed by induction on $k$. Our inductive hypothesis is that $\UU$ has $k$-truncations, and our goal is to show that $\UU$ has $(k+1)$-truncations. The idea of the construction is very similar to the construction of the set quotient by an equivalence relation. Consider the type-valued relation $R_k:X\to (X\to \UU)$ given by
+  \begin{equation*}
+    R_k(x,x') \defeq \trunc{k}{x=x'}.
+  \end{equation*}
+  Thinking of $R_k$ as an `equivalence relation valued in the $k$-types', we define
+  \begin{equation*}
+    \trunc{k+1}{X}\defeq \im(R_k)
+  \end{equation*}
+\end{proof}
+
+\begin{cor}\label{thm:trunc_id}
 For any $x,y:X$, there is an equivalence
 \begin{equation*}
 \eqv{(\tproj{k+1}{x}=\tproj{k+1}{y})}{\trunc{k}{x=y}}.
 \end{equation*}
-\end{thm}
+\end{cor}
 
 \begin{proof}
 Let $x:X$. Then we define a family $E_x : \trunc{k+1}{X}\to \UU^{\leq k}$ as the unique extension
@@ -107,9 +173,240 @@ which is $(k+1)$-truncated by \cref{ex:istrunc_sigma,thm:istrunc_next}. Therefor
 We get such an identification for each $p:x=y$ by path induction on $p$.
 \end{proof}
 
-\begin{comment}
-\subsection{Connected maps}
+\subsection{The truncations as recursive higher inductive types}
 
+Recall from \cref{thm:trunc_ap} that a map $f:A\to B$ is $(k+1)$-truncated if and only if the action on paths
+\begin{equation*}
+  \apfunc{f}:(x=y)\to(f(x)=f(y))
+\end{equation*}
+is a $k$-truncated map, for each $x,y:A$. Moreover, in \cref{ex:trunc_diagonal_map} we established that the fibers of the diagonal map $\delta_f:A\to A\times_BA$ are equivalent to the fibers of the maps $\apfunc{f}$, so it is also the case that $f$ is $(k+1)$-truncated if and only if the diagonal $\delta_f$ is $k$-truncated.
+
+In the following theorem, we add yet another equivalent characterization to the truncatedness of a map. We will use this theorem in two ways. First, a simple corollary gives a useful characterization of $k$-truncated types. Second, we will use this theorem to derive an elimination principle of the $(k+1)$-sphere that can be applied to families of $k$-types
+
+\begin{thm}
+  Consider a map $f:A\to B$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is $k$-truncated.
+  \item The commuting square
+    \begin{equation*}
+      \begin{tikzcd}[column sep=large]
+        A \arrow[r,"f"] \arrow[d,swap,"\lam{x}\const_x"] & B \arrow[d,"\lam{y}\const_y"] \\
+        A^{\sphere{k+1}} \arrow[r,swap,"f^{\sphere{k+1}}"] & B^{\sphere{k+1}}
+      \end{tikzcd}
+    \end{equation*}
+    is a pullback square.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  We prove the claim by induction on $k\geq-2$. The base case is clear, because the map $A^{\sphere{-1}}\to B^{\sphere{-1}}$ is a map between contractible types, hence an equivalence. Therefore the square
+  \begin{equation*}
+    \begin{tikzcd}
+        A \arrow[r] \arrow[d] & B \arrow[d] \\
+        A^{\sphere{-1}} \arrow[r] & B^{\sphere{-1}}
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square if and only if $A\to B$ is an equivalence.
+
+  For the inductive step, assume that for any map $g:X\to Y$, the map $g$ is $k$-truncated if and only if the square
+  \begin{equation*}
+    \begin{tikzcd}
+      X \arrow[r] \arrow[d] & Y \arrow[d] \\
+      X^{\sphere{k+1}} \arrow[r] & Y^{\sphere{k+1}}
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square, and consider a map $f:A\to B$. Then $f$ is $(k+1)$-truncated if and only if $\apfunc{f}:(x=y)\to(f(x)=f(y))$ is $k$-truncated for each $x,y:A$. By the inductive hypothesis this happens if and only if the square
+  \begin{equation*}
+    \begin{tikzcd}
+      (x=y) \arrow[r] \arrow[d] & (f(x)=f(y)) \arrow[d] \\
+      (x=y)^{\sphere{k+1}} \arrow[r] & (f(x)=f(y))^{\sphere{k+1}}
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square, for each $x,y:A$. Now we observe that this is the case if and only if the square on the left in the diagram
+  \begin{equation*}
+    \begin{tikzcd}[column sep=small]
+      \sm{x,y:A}x=y \arrow[r] \arrow[d] & \sm{x,y:A}(f(x)=f(y)) \arrow[d] \arrow[r] & \sm{x,y:B}x=y \arrow[d] \\
+      \sm{x,y:A}(x=y)^{\sphere{k+1}} \arrow[r] & \sm{x,y:A}(f(x)=f(y))^{\sphere{k+1}} \arrow[r] & \sm{x,y:B}(x=y)^{\sphere{k+1}}
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square. The square on the right is a pullback square, so the square on the left is a pullback if and only if the outer rectangle is a pullback. By the universal property of $\sphere{k+2}$ it follows that the outer rectangle is a pullback if and only if the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r] \arrow[d] & B \arrow[d] \\
+      A^{\sphere{k+2}} \arrow[r] & B^{\sphere{k+2}}
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback.
+\end{proof}
+
+\begin{thm}\label{thm:truncated}
+  Consider a type $A$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The type $A$ is $k$-truncated.
+  \item The map
+    \begin{equation*}
+      \lam{x}\const_x:A\to (\sphere{k+1}\to A)
+    \end{equation*}
+    is an equivalence.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  We prove the claim by induction on $k\geq-2$. The base case is clear, because the map $A^{\sphere{-1}}$ is contractible.
+
+  For the inductive step, assume that any type $X$ is $k$-truncated if and only if the map
+  \begin{equation*}
+    \lam{x}\const_x:X\to (\sphere{k+1}\to X)
+  \end{equation*}
+  is an equivalence.
+  Then $A$ is $(k+1)$-truncated if and only if its identity types $x=y$ are $k$-truncated, for each $x,y:A$. By the inductive hypothesis this happens if and only if
+  \begin{equation*}
+    (x=y)\to (\sphere{k+1}\to (x=y))
+  \end{equation*}
+  is a family of equivalences indexed by $x,y:A$. This is a family of equivalences if and only if the induced map on total spaces
+  \begin{equation*}
+    \Big(\sm{x,y:A}x=y\Big)\to\Big(\sm{x,y:A}(x=y)^{\sphere{k+1}}\Big)
+  \end{equation*}
+  is an equivalence. Note that we have a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r] \arrow[d] & A^{\sphere{k+2}} \arrow[d] \\
+      \Big(\sm{x,y:A}x=y\Big) \arrow[r] & \Big(\sm{x,y:A}(x=y)^{\sphere{k+1}}\Big)
+    \end{tikzcd}
+  \end{equation*}
+  in which both vertical maps are equivalences. Therefore the top map is an equivalence if and only if the bottom map is an equivalence, which completes the proof.
+\end{proof}
+
+\begin{proof}
+  Immediate from the fact that $A$ is $k$-truncated if and only if the map $A\to\unit$ is $k$-truncated.
+\end{proof}
+
+\begin{defn}
+  Consider a type $X$. A \textbf{$k$-truncation} of $X$ consist of a $k$-type $Y$, and a map $f:X\to Y$ satisfying the \textbf{universal property of $k$-truncation}, that for every $k$-type $Z$ the precomposition map
+  \begin{equation*}
+    \blank\circ f: (Y\to Z)\to (X\to Z)
+  \end{equation*}
+  is an equivalence.
+\end{defn}
+
+We define $\trunc{k}{X}$ by the `hubs-and-spokes' method, as a higher inductive type. The idea is to force any map $\sphere{k}{X}\to \trunc{k}{X}$ to be homotopic to a constant function by including enough points (the hubs) for the values of these constant functions, and enough paths (the spokes) for the homotopies to these constant functions.
+
+\begin{defn}
+  For any type $X$ we define a type $\trunc{k}{X}$ as a higher inductive type, with constructors
+  \begin{align*}
+    \eta & : X \to \trunc{k}{X}. \\
+    \mathsf{hub} & : (\sphere{k+1}\to\trunc{k}{X})\to\trunc{k}{X} \\
+    \mathsf{spoke} & : \prd{f:\sphere{k+1}\to\trunc{k}{X}}\prd{t:\sphere{k+1}}f(t)=\mathsf{hub}(f).
+  \end{align*}
+\end{defn}
+
+\begin{rmk}
+  The induction principle for $\trunc{k}{X}$ asserts that for any family $P$ of types over $\trunc{k}{X}$, if we have a dependent function $\alpha : \prd{x:X}P(\eta(x))$ and a dependent function
+  \begin{equation*}
+    \beta : \prd{f:\sphere{k+1}\to\trunc{k}{X}}\Big(\prd{t:\sphere{k+1}}P(f(t))\Big)\to P(\mathsf{hub}(f))
+  \end{equation*}
+  equipped with an identification
+  \begin{equation*}
+    \gamma(f,g,t):\tr_P(\mathsf{spoke}(f,t),g(t))=\beta(f,g),
+  \end{equation*}
+  for every $f:\sphere{k+1}\to\trunc{k}{X}$, $g:\prd{t:\sphere{k+1}}P(f(t))$, and every $t:\sphere{k+1}$, then we obtain a dependent function
+  \begin{equation*}
+    h:\prd{x:\trunc{k}{X}}P(\eta(x))
+  \end{equation*}
+  equipped with an identification $H(x):h(\eta(x))=\alpha(x)$ for any $x:X$.
+\end{rmk}
+
+\begin{prp}
+  For any type $X$, the type $\trunc{k}{X}$ is $k$-truncated.
+\end{prp}
+
+\begin{proof}
+  By \cref{thm:truncated} it suffices to show that the map
+  \begin{equation*}
+    \delta\defeq\lam{x}\const_x:\trunc{k}{X}\to (\sphere{k+1}\to\trunc{k}{X})
+  \end{equation*}
+  is an equivalence. Note that the inverse of this map is simply the map
+  \begin{equation*}
+    \mathsf{hub}: (\sphere{k+1}\to\trunc{k}{X})\to \trunc{k}{X},
+  \end{equation*}
+  which is a section of $\delta$ by the homotopy $\mathsf{spoke}$. Therefore it remains to show that
+  \begin{equation*}
+    \mathsf{hub}(\const_x)=x.
+  \end{equation*}
+  for every $x:\trunc{k}{X}$. Note that $\mathsf{spoke}(\const_x,\mathsf{hub}(\const_x))^{-1}$ is such an identification.
+\end{proof}
+
+Recall that the $(k+1)$-sphere is $k$-connected in the following sense.
+
+\begin{lem}\label{lem:sphere-connected}
+  For any family $P$ of $k$-types over $\sphere{k+1}$, the evaluation map at the base point
+  \begin{equation*}
+    \ev_\ast : \Big(\prd{t:\sphere{k+1}}P(t)\Big)\to P(\ast)
+  \end{equation*}
+  is an equivalence.
+\end{lem}
+
+\begin{thm}
+  For any family $P$ of $k$-types over $\trunc{k}{X}$, the function
+  \begin{equation*}
+    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}P(x)\Big)\to\Big(\prd{x:X}P(\eta(x))\Big)
+  \end{equation*}
+  is an equivalence.
+\end{thm}
+
+\begin{proof}
+  We first show that for any family $P$ of $k$-types over $\trunc{k}{X}$, the function
+  \begin{equation*}
+    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}P(x)\Big)\to\Big(\prd{x:X}P(\eta(x))\Big)
+  \end{equation*}
+  has a section. To see this, we apply the induction principle of $\trunc{k}{X}$. For any function $\alpha:\prd{x:X}P(\eta(x))$ we need to construct a function $h:\prd{x:\trunc{k}{X}}P(x)$ such that $h\circ\eta\htpy\alpha$, so it suffices to show that the $k$-truncatedness of the types in the family $P$ imply the existence of the terms $\beta$ and $\eta$ of the induction principle of $\trunc{k}{X}$. In other words, we need to show that for every $f:\sphere{k+1}\to\trunc{k}{X}$ and every $g:\prd{t:\sphere{k+1}}P(f(t))$ there are
+  \begin{align*}
+    \beta(f,g) & : P(\mathsf{hub}(f)) \\
+    \gamma(f,g) & : \prd{t:\sphere{k+1}}\tr_P(\mathsf{spoke}(f,t),g(t))=\beta(f,g).
+  \end{align*}
+  Since we have already shown that $\trunc{k}{X}$ is $k$-truncated, it suffices to show the above for $f\defeq\const_x$, for any $x:\trunc{k}{X}$. Now the type of $g$ is just the function type $\sphere{k+1}\to P(x)$, so by the truncatedness of $P(x)$ it suffices to construct
+  \begin{align*}
+    \beta(\const_x,\const_y) & : P(\mathsf{hub}(\const_x)) \\
+    \gamma(\const_x,\const_y) & : \prd{t:\sphere{k+1}}\tr_P(\mathsf{spoke}(\const_x,t),y)=\beta(\const_x,\const_y)
+  \end{align*}
+  for any $x:X$ and $y:P(x)$. Now we simply define
+  \begin{equation*}
+    \beta(\const_x,\const_y) \defeq \tr_P(\mathsf{spoke}(\const_x,\ast),y).
+  \end{equation*}
+  Then it remains to construct an identification
+  \begin{equation*}
+    \tr_P(\mathsf{spoke}(\const_x,t),y)=\tr_P(\mathsf{spoke}(\const_x,\ast),y)
+  \end{equation*}
+  for any $t:\sphere{k+1}$, but this follows at once from \cref{lem:sphere-connected}, because the identity types of a $k$-truncated type is again $k$-truncated. This completes the proof that the precomposition function
+  \begin{equation*}
+    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}P(x)\Big)\to\Big(\prd{x:X}P(\eta(x))\Big)
+  \end{equation*}
+  has a section $s$ for every family $P$ of $k$-types over $\trunc{k}{X}$.
+
+  To show that it is an equivalence, we have to show that $s$ is also a retraction of the precomposition function $\blank\circ\eta$, i.e., we have to show that
+  \begin{equation*}
+    s(h\circ\eta)= h
+  \end{equation*}
+  for any $h:\prd{x:\trunc{k}{X}}P(x)$. By function extensionality, it is equivalent to show that
+  \begin{equation*}
+    \prd{x:\trunc{k}{X}}s(h\circ\eta)(x)=h(x).
+  \end{equation*}
+  Now we observe that the type $s(h\circ\eta)(x)=h(x)$ is a $k$-type, and therefore we already know that the function
+  \begin{equation*}
+    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}s(h\circ\eta)(x)=h(x)\Big)\to \Big(\prd{x:X}s(h\circ\eta)(\eta(x))=h(\eta(x))\Big)
+  \end{equation*}
+  has a section. In other words, it suffices to construct a dependent function of type
+  \begin{equation*}
+    \prd{x:X}s(h\circ\eta)(\eta(x))=h(\eta(x)).
+  \end{equation*}
+  Here we simply use that $s$ is a section $\blank\circ\eta$, and we are done.
+\end{proof}
+
+\begin{cor}\label{cor:k-type-is-reflective-subuniverse}
+  For any type $X$, the map $\eta:X\to\trunc{k}{X}$ satisfies the universal property of $k$-truncation. 
+\end{cor}
+
+\begin{comment}
 \subsection{The join extension and connectivity theorems}
 
 \begin{defn}\label{defn:local}
@@ -481,239 +778,6 @@ This follows by path induction.
 \end{proof}
 \end{comment}
 
-\subsection{The truncations as recursive higher inductive types}
-
-Recall from \cref{thm:trunc_ap} that a map $f:A\to B$ is $(k+1)$-truncated if and only if the action on paths
-\begin{equation*}
-  \apfunc{f}:(x=y)\to(f(x)=f(y))
-\end{equation*}
-is a $k$-truncated map, for each $x,y:A$. Moreover, in \cref{ex:trunc_diagonal_map} we established that the fibers of the diagonal map $\delta_f:A\to A\times_BA$ are equivalent to the fibers of the maps $\apfunc{f}$, so it is also the case that $f$ is $(k+1)$-truncated if and only if the diagonal $\delta_f$ is $k$-truncated.
-
-In the following theorem, we add yet another equivalent characterization to the truncatedness of a map. We will use this theorem in two ways. First, a simple corollary gives a useful characterization of $k$-truncated types. Second, we will use this theorem to derive an elimination principle of the $(k+1)$-sphere that can be applied to families of $k$-types
-
-\begin{thm}
-  Consider a map $f:A\to B$. Then the following are equivalent:
-  \begin{enumerate}
-  \item The map $f$ is $k$-truncated.
-  \item The commuting square
-    \begin{equation*}
-      \begin{tikzcd}[column sep=large]
-        A \arrow[r,"f"] \arrow[d,swap,"\lam{x}\const_x"] & B \arrow[d,"\lam{y}\const_y"] \\
-        A^{\sphere{k+1}} \arrow[r,swap,"f^{\sphere{k+1}}"] & B^{\sphere{k+1}}
-      \end{tikzcd}
-    \end{equation*}
-    is a pullback square.
-  \end{enumerate}
-\end{thm}
-
-\begin{proof}
-  We prove the claim by induction on $k\geq-2$. The base case is clear, because the map $A^{\sphere{-1}}\to B^{\sphere{-1}}$ is a map between contractible types, hence an equivalence. Therefore the square
-  \begin{equation*}
-    \begin{tikzcd}
-        A \arrow[r] \arrow[d] & B \arrow[d] \\
-        A^{\sphere{-1}} \arrow[r] & B^{\sphere{-1}}
-    \end{tikzcd}
-  \end{equation*}
-  is a pullback square if and only if $A\to B$ is an equivalence.
-
-  For the inductive step, assume that for any map $g:X\to Y$, the map $g$ is $k$-truncated if and only if the square
-  \begin{equation*}
-    \begin{tikzcd}
-      X \arrow[r] \arrow[d] & Y \arrow[d] \\
-      X^{\sphere{k+1}} \arrow[r] & Y^{\sphere{k+1}}
-    \end{tikzcd}
-  \end{equation*}
-  is a pullback square, and consider a map $f:A\to B$. Then $f$ is $(k+1)$-truncated if and only if $\apfunc{f}:(x=y)\to(f(x)=f(y))$ is $k$-truncated for each $x,y:A$. By the inductive hypothesis this happens if and only if the square
-  \begin{equation*}
-    \begin{tikzcd}
-      (x=y) \arrow[r] \arrow[d] & (f(x)=f(y)) \arrow[d] \\
-      (x=y)^{\sphere{k+1}} \arrow[r] & (f(x)=f(y))^{\sphere{k+1}}
-    \end{tikzcd}
-  \end{equation*}
-  is a pullback square, for each $x,y:A$. Now we observe that this is the case if and only if the square on the left in the diagram
-  \begin{equation*}
-    \begin{tikzcd}[column sep=small]
-      \sm{x,y:A}x=y \arrow[r] \arrow[d] & \sm{x,y:A}(f(x)=f(y)) \arrow[d] \arrow[r] & \sm{x,y:B}x=y \arrow[d] \\
-      \sm{x,y:A}(x=y)^{\sphere{k+1}} \arrow[r] & \sm{x,y:A}(f(x)=f(y))^{\sphere{k+1}} \arrow[r] & \sm{x,y:B}(x=y)^{\sphere{k+1}}
-    \end{tikzcd}
-  \end{equation*}
-  is a pullback square. The square on the right is a pullback square, so the square on the left is a pullback if and only if the outer rectangle is a pullback. By the universal property of $\sphere{k+2}$ it follows that the outer rectangle is a pullback if and only if the square
-  \begin{equation*}
-    \begin{tikzcd}
-      A \arrow[r] \arrow[d] & B \arrow[d] \\
-      A^{\sphere{k+2}} \arrow[r] & B^{\sphere{k+2}}
-    \end{tikzcd}
-  \end{equation*}
-  is a pullback.
-\end{proof}
-
-\begin{thm}\label{thm:truncated}
-  Consider a type $A$. Then the following are equivalent:
-  \begin{enumerate}
-  \item The type $A$ is $k$-truncated.
-  \item The map
-    \begin{equation*}
-      \lam{x}\const_x:A\to (\sphere{k+1}\to A)
-    \end{equation*}
-    is an equivalence.
-  \end{enumerate}
-\end{thm}
-
-\begin{proof}
-  We prove the claim by induction on $k\geq-2$. The base case is clear, because the map $A^{\sphere{-1}}$ is contractible.
-
-  For the inductive step, assume that any type $X$ is $k$-truncated if and only if the map
-  \begin{equation*}
-    \lam{x}\const_x:X\to (\sphere{k+1}\to X)
-  \end{equation*}
-  is an equivalence.
-  Then $A$ is $(k+1)$-truncated if and only if its identity types $x=y$ are $k$-truncated, for each $x,y:A$. By the inductive hypothesis this happens if and only if
-  \begin{equation*}
-    (x=y)\to (\sphere{k+1}\to (x=y))
-  \end{equation*}
-  is a family of equivalences indexed by $x,y:A$. This is a family of equivalences if and only if the induced map on total spaces
-  \begin{equation*}
-    \Big(\sm{x,y:A}x=y\Big)\to\Big(\sm{x,y:A}(x=y)^{\sphere{k+1}}\Big)
-  \end{equation*}
-  is an equivalence. Note that we have a commuting square
-  \begin{equation*}
-    \begin{tikzcd}
-      A \arrow[r] \arrow[d] & A^{\sphere{k+2}} \arrow[d] \\
-      \Big(\sm{x,y:A}x=y\Big) \arrow[r] & \Big(\sm{x,y:A}(x=y)^{\sphere{k+1}}\Big)
-    \end{tikzcd}
-  \end{equation*}
-  in which both vertical maps are equivalences. Therefore the top map is an equivalence if and only if the bottom map is an equivalence, which completes the proof.
-\end{proof}
-
-\begin{proof}
-  Immediate from the fact that $A$ is $k$-truncated if and only if the map $A\to\unit$ is $k$-truncated.
-\end{proof}
-
-\begin{defn}
-  Consider a type $X$. A \textbf{$k$-truncation} of $X$ consist of a $k$-type $Y$, and a map $f:X\to Y$ satisfying the \textbf{universal property of $k$-truncation}, that for every $k$-type $Z$ the precomposition map
-  \begin{equation*}
-    \blank\circ f: (Y\to Z)\to (X\to Z)
-  \end{equation*}
-  is an equivalence.
-\end{defn}
-
-We define $\trunc{k}{X}$ by the `hubs-and-spokes' method, as a higher inductive type. The idea is to force any map $\sphere{k}{X}\to \trunc{k}{X}$ to be homotopic to a constant function by including enough points (the hubs) for the values of these constant functions, and enough paths (the spokes) for the homotopies to these constant functions.
-
-\begin{defn}
-  For any type $X$ we define a type $\trunc{k}{X}$ as a higher inductive type, with constructors
-  \begin{align*}
-    \eta & : X \to \trunc{k}{X}. \\
-    \mathsf{hub} & : (\sphere{k+1}\to\trunc{k}{X})\to\trunc{k}{X} \\
-    \mathsf{spoke} & : \prd{f:\sphere{k+1}\to\trunc{k}{X}}\prd{t:\sphere{k+1}}f(t)=\mathsf{hub}(f).
-  \end{align*}
-\end{defn}
-
-\begin{rmk}
-  The induction principle for $\trunc{k}{X}$ asserts that for any family $P$ of types over $\trunc{k}{X}$, if we have a dependent function $\alpha : \prd{x:X}P(\eta(x))$ and a dependent function
-  \begin{equation*}
-    \beta : \prd{f:\sphere{k+1}\to\trunc{k}{X}}\Big(\prd{t:\sphere{k+1}}P(f(t))\Big)\to P(\mathsf{hub}(f))
-  \end{equation*}
-  equipped with an identification
-  \begin{equation*}
-    \gamma(f,g,t):\tr_P(\mathsf{spoke}(f,t),g(t))=\beta(f,g),
-  \end{equation*}
-  for every $f:\sphere{k+1}\to\trunc{k}{X}$, $g:\prd{t:\sphere{k+1}}P(f(t))$, and every $t:\sphere{k+1}$, then we obtain a dependent function
-  \begin{equation*}
-    h:\prd{x:\trunc{k}{X}}P(\eta(x))
-  \end{equation*}
-  equipped with an identification $H(x):h(\eta(x))=\alpha(x)$ for any $x:X$.
-\end{rmk}
-
-\begin{prp}
-  For any type $X$, the type $\trunc{k}{X}$ is $k$-truncated.
-\end{prp}
-
-\begin{proof}
-  By \cref{thm:truncated} it suffices to show that the map
-  \begin{equation*}
-    \delta\defeq\lam{x}\const_x:\trunc{k}{X}\to (\sphere{k+1}\to\trunc{k}{X})
-  \end{equation*}
-  is an equivalence. Note that the inverse of this map is simply the map
-  \begin{equation*}
-    \mathsf{hub}: (\sphere{k+1}\to\trunc{k}{X})\to \trunc{k}{X},
-  \end{equation*}
-  which is a section of $\delta$ by the homotopy $\mathsf{spoke}$. Therefore it remains to show that
-  \begin{equation*}
-    \mathsf{hub}(\const_x)=x.
-  \end{equation*}
-  for every $x:\trunc{k}{X}$. Note that $\mathsf{spoke}(\const_x,\mathsf{hub}(\const_x))^{-1}$ is such an identification.
-\end{proof}
-
-Recall that the $(k+1)$-sphere is $k$-connected in the following sense.
-
-\begin{lem}\label{lem:sphere-connected}
-  For any family $P$ of $k$-types over $\sphere{k+1}$, the evaluation map at the base point
-  \begin{equation*}
-    \ev_\ast : \Big(\prd{t:\sphere{k+1}}P(t)\Big)\to P(\ast)
-  \end{equation*}
-  is an equivalence.
-\end{lem}
-
-\begin{thm}
-  For any family $P$ of $k$-types over $\trunc{k}{X}$, the function
-  \begin{equation*}
-    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}P(x)\Big)\to\Big(\prd{x:X}P(\eta(x))\Big)
-  \end{equation*}
-  is an equivalence.
-\end{thm}
-
-\begin{proof}
-  We first show that for any family $P$ of $k$-types over $\trunc{k}{X}$, the function
-  \begin{equation*}
-    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}P(x)\Big)\to\Big(\prd{x:X}P(\eta(x))\Big)
-  \end{equation*}
-  has a section. To see this, we apply the induction principle of $\trunc{k}{X}$. For any function $\alpha:\prd{x:X}P(\eta(x))$ we need to construct a function $h:\prd{x:\trunc{k}{X}}P(x)$ such that $h\circ\eta\htpy\alpha$, so it suffices to show that the $k$-truncatedness of the types in the family $P$ imply the existence of the terms $\beta$ and $\eta$ of the induction principle of $\trunc{k}{X}$. In other words, we need to show that for every $f:\sphere{k+1}\to\trunc{k}{X}$ and every $g:\prd{t:\sphere{k+1}}P(f(t))$ there are
-  \begin{align*}
-    \beta(f,g) & : P(\mathsf{hub}(f)) \\
-    \gamma(f,g) & : \prd{t:\sphere{k+1}}\tr_P(\mathsf{spoke}(f,t),g(t))=\beta(f,g).
-  \end{align*}
-  Since we have already shown that $\trunc{k}{X}$ is $k$-truncated, it suffices to show the above for $f\defeq\const_x$, for any $x:\trunc{k}{X}$. Now the type of $g$ is just the function type $\sphere{k+1}\to P(x)$, so by the truncatedness of $P(x)$ it suffices to construct
-  \begin{align*}
-    \beta(\const_x,\const_y) & : P(\mathsf{hub}(\const_x)) \\
-    \gamma(\const_x,\const_y) & : \prd{t:\sphere{k+1}}\tr_P(\mathsf{spoke}(\const_x,t),y)=\beta(\const_x,\const_y)
-  \end{align*}
-  for any $x:X$ and $y:P(x)$. Now we simply define
-  \begin{equation*}
-    \beta(\const_x,\const_y) \defeq \tr_P(\mathsf{spoke}(\const_x,\ast),y).
-  \end{equation*}
-  Then it remains to construct an identification
-  \begin{equation*}
-    \tr_P(\mathsf{spoke}(\const_x,t),y)=\tr_P(\mathsf{spoke}(\const_x,\ast),y)
-  \end{equation*}
-  for any $t:\sphere{k+1}$, but this follows at once from \cref{lem:sphere-connected}, because the identity types of a $k$-truncated type is again $k$-truncated. This completes the proof that the precomposition function
-  \begin{equation*}
-    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}P(x)\Big)\to\Big(\prd{x:X}P(\eta(x))\Big)
-  \end{equation*}
-  has a section $s$ for every family $P$ of $k$-types over $\trunc{k}{X}$.
-
-  To show that it is an equivalence, we have to show that $s$ is also a retraction of the precomposition function $\blank\circ\eta$, i.e., we have to show that
-  \begin{equation*}
-    s(h\circ\eta)= h
-  \end{equation*}
-  for any $h:\prd{x:\trunc{k}{X}}P(x)$. By function extensionality, it is equivalent to show that
-  \begin{equation*}
-    \prd{x:\trunc{k}{X}}s(h\circ\eta)(x)=h(x).
-  \end{equation*}
-  Now we observe that the type $s(h\circ\eta)(x)=h(x)$ is a $k$-type, and therefore we already know that the function
-  \begin{equation*}
-    \blank\circ\eta:\Big(\prd{x:\trunc{k}{X}}s(h\circ\eta)(x)=h(x)\Big)\to \Big(\prd{x:X}s(h\circ\eta)(\eta(x))=h(\eta(x))\Big)
-  \end{equation*}
-  has a section. In other words, it suffices to construct a dependent function of type
-  \begin{equation*}
-    \prd{x:X}s(h\circ\eta)(\eta(x))=h(\eta(x)).
-  \end{equation*}
-  Here we simply use that $s$ is a section $\blank\circ\eta$, and we are done.
-\end{proof}
-
-\begin{cor}\label{cor:k-type-is-reflective-subuniverse}
-  For any type $X$, the map $\eta:X\to\trunc{k}{X}$ satisfies the universal property of $k$-truncation. 
-\end{cor}
-
 \subsection{Theorems not to forget}
 
 \begin{thm}
@@ -760,4 +824,12 @@ where $\fin:\N\to\UU$ is defined in \cref{defn:fin}.
   \end{equation*}
   is $(n-2)$-truncated. Show that $Y$ is $n$-fold $k$-separated if and only if it is $(k+n)$-truncated.
 \end{subexenum}
+\exercise Consider a map $f:A\to B$. Show that the square
+\begin{equation*}
+  \begin{tikzcd}[column sep=large]
+    A \arrow[r,"f"] \arrow[d,swap,"\lam{x}\const_x"] & B \arrow[d,"\lam{y}\const_y"] \\
+    A^{\sphere{k+1}} \arrow[r,swap,"f^{\sphere{k+1}}"] & B^{\sphere{k+1}}
+  \end{tikzcd}
+\end{equation*}
+is a pullback square if and only if its gap map has a section.
 \end{exercises}

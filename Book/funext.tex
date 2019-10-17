@@ -479,47 +479,52 @@ with $H:f\htpy g\circ h$.
     \end{tikzcd}
   \end{equation*}
   commutes, and apply \cref{ex:equiv_pi}.
-\exercise \label{ex:triangle_fib}Consider a diagram of the form
-\begin{equation*}
-\begin{tikzcd}[column sep=tiny]
-A \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
-& X
-\end{tikzcd}
-\end{equation*}
-\begin{subexenum}
-\item Show that the type $\sm{h:A\to B} f\htpy g\circ h$ is equivalent to the type of families of maps
-\begin{equation*}
-\prd{x:X}\fib{f}{x}\to\fib{g}{x}.
-\end{equation*}
-\item Show that the type $\sm{h:\eqv{A}{B}} f\htpy g\circ h$ is equivalent to the type of families of equivalences
-\begin{equation*}
-\prd{x:X}\fib{f}{x}\eqvsym\fib{g}{x}.
-\end{equation*}
-\end{subexenum}
-\exercise \label{ex:sq_fib}Consider a diagram of the form
-\begin{equation*}
-\begin{tikzcd}
-A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
-X \arrow[r,swap,"h"] & Y.
-\end{tikzcd}
-\end{equation*}
-Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the type of families of maps
-\begin{equation*}
-\prd{x:X}\fib{f}{x}\to\fib{g}{h(x)}.
-\end{equation*}
-%Note: In \cref{thm:pb_fibequiv_complete} we will characterize the type of families of equivalences $\prd{x:X}\fib{f}{x}\simeq\fib{g}{x}$.
-%\item Show that the type $\sm{i:\eqv{A}{B}}h\circ f\htpy g\circ i$ is equivalent to the type of families of equivalences
-%\begin{equation*}
-%\prd{x:X}\fib{f}{x}\eqvsym\fib{g}{h(x)}.
-%\end{equation*}
-\exercise \label{ex:iso_equiv}Let $A$ and $B$ be sets. Show that type type $\eqv{A}{B}$ of equivalences from $A$ to $B$ is equivalent to the type $A\cong B$ of \define{isomorphisms}\index{isomorphism}\index{set!isomorphism} from $A$ to $B$, i.e., the type of quadruples $(f,g,H,K)$ consisting of
-\begin{align*}
-f & : A\to B \\
-g & : B\to A \\
-H & : f\circ g = \idfunc[B] \\
-K & : g\circ f = \idfunc[A].
-\end{align*}
-\exercise \label{ex:pi_sec}Let $B$ be a type family over $A$, and consider the postcomposition function
+  \exercise \label{ex:pi-fib}Consider a function $f:A\to B$, and let $P$ be a family of types over $B$. Show that the map
+  \begin{equation*}
+    \Big(\prd{b:B}\fib{f}{b}\to P(b)\Big)\to\Big(\prd{a:A}P(f(a))\Big)
+  \end{equation*}
+  given by $h\mapsto h_{f(a)}(a,\refl{f(a)})$ is an equivalence.
+  \exercise \label{ex:triangle_fib}Consider a diagram of the form
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  \begin{subexenum}
+  \item Show that the type $\sm{h:A\to B} f\htpy g\circ h$ is equivalent to the type of families of maps
+    \begin{equation*}
+      \prd{x:X}\fib{f}{x}\to\fib{g}{x}.
+    \end{equation*}
+  \item Show that the type $\sm{h:\eqv{A}{B}} f\htpy g\circ h$ is equivalent to the type of families of equivalences
+    \begin{equation*}
+      \prd{x:X}\fib{f}{x}\eqvsym\fib{g}{x}.
+    \end{equation*}
+  \end{subexenum}
+  \exercise \label{ex:sq_fib}Consider a diagram of the form
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[d,swap,"f"] & B \arrow[d,"g"] \\
+      X \arrow[r,swap,"h"] & Y.
+    \end{tikzcd}
+  \end{equation*}
+  Show that the type $\sm{i:A\to B}h\circ f\htpy g\circ i$ is equivalent to the type of families of maps
+  \begin{equation*}
+    \prd{x:X}\fib{f}{x}\to\fib{g}{h(x)}.
+  \end{equation*}
+  % Note: In \cref{thm:pb_fibequiv_complete} we will characterize the type of families of equivalences $\prd{x:X}\fib{f}{x}\simeq\fib{g}{x}$.
+  % \item Show that the type $\sm{i:\eqv{A}{B}}h\circ f\htpy g\circ i$ is equivalent to the type of families of equivalences
+  %   \begin{equation*}
+  %     \prd{x:X}\fib{f}{x}\eqvsym\fib{g}{h(x)}.
+  %   \end{equation*}
+  \exercise \label{ex:iso_equiv}Let $A$ and $B$ be sets. Show that type type $\eqv{A}{B}$ of equivalences from $A$ to $B$ is equivalent to the type $A\cong B$ of \define{isomorphisms}\index{isomorphism}\index{set!isomorphism} from $A$ to $B$, i.e., the type of quadruples $(f,g,H,K)$ consisting of
+  \begin{align*}
+    f & : A\to B \\
+    g & : B\to A \\
+    H & : f\circ g = \idfunc[B] \\
+    K & : g\circ f = \idfunc[A].
+  \end{align*}
+  \exercise \label{ex:pi_sec}Let $B$ be a type family over $A$, and consider the postcomposition function
   \begin{equation*}
     \proj1 \circ \blank : \Big(\sm{x:A} B(x)\Big)^A \to A^A.
   \end{equation*}
@@ -527,18 +532,13 @@ K & : g\circ f = \idfunc[A].
   \begin{equation*}
     \Big(\prd{x:A}B(x)\Big) \eqvsym \sections(\proj 1) \eqvsym \fib{\proj 1 \circ\blank}{\idfunc[A]}.
   \end{equation*}
-\exercise Suppose that $A:I\to \UU$ is a type family over a set $I$ with decidable equality. Show that
+  \exercise Suppose that $A:I\to \UU$ is a type family over a set $I$ with decidable equality. Show that
   \begin{equation*}
     \Big(\prd{i:I}\iscontr(A_i)\Big)\leftrightarrow \iscontr\Big(\prd{i:I}A_i\Big).
   \end{equation*}
-\exercise Construct equivalences
+  \exercise Construct equivalences
   \begin{align*}
     \Fin(n^m) & \simeq (\Fin(m)\to\Fin(n)) \\
     \Fin(n!) & \simeq (\Fin(n)\simeq\Fin(n)).
   \end{align*}
-  \exercise \label{ex:pi-fib}Consider a function $f:A\to B$, and let $P$ be a family of types over $B$. Show that the map
-  \begin{equation*}
-    \Big(\prd{b:B}\fib{f}{b}\to P(b)\Big)\to\Big(\prd{a:A}P(f(a))\Big)
-  \end{equation*}
-  given by $h\mapsto h_{f(a)}(a,\refl{f(a)})$ is an equivalence.
 \end{exercises}
