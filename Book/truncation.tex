@@ -1,5 +1,19 @@
 \section{Truncations}
 
+Truncation is a universal way of turning an arbitrary type into a $k$-truncated type. We have already seen the propositional truncation of a type $X$ in \cref{chap:image}, which is the proposition that $X$ is merely inhabited, and the set truncation of $X$ in \cref{sec:set-truncation}, which is the set of connected components of $X$. The $k$-truncation is a generalization of the propositional truncation and the set truncation to an arbitrary truncation level $k$.
+
+We construct the truncations by recursion on $k$. The base case $k\jdeq -2$ is just the operation that sends a type $X$ to the unit type $\unit$, because up to equivalence there is only one contractible type. For the inductive step, we need to construct the $(k+1)$-truncation assuming that the $k$-truncation of an arbitrary type in a fixed universe $\UU$ exists. Our construction of the $(k+1)$-truncation is a direct generalization of the construction of the set truncation as a set quotient, where we quotient out the equivalence relation
+\begin{equation*}
+  (x\sim y)\defeq \trunc{-1}{x=y}.
+\end{equation*}
+The idea is simple: if $\trunc{k+1}{X}$ is to be the universal $(k+1)$-truncated type equipped with a map $\tproj{k+1}{\blank}:X\to \trunc{k+1}{X}$, then it has to be the case that
+\begin{equation*}
+  (\tproj{k+1}{x}=\tproj{k+1}{x'})\simeq \trunc{k}{x=y}.
+\end{equation*}
+We prove that this is indeed the case in \cref{thm:trunc_id}.
+
+The construction of the $(k+1)$-truncation as a quotient is different than the construction of the $(k+1)$-truncation that appears in \cite{hottbook} as a higher inductive type. This construction is based on the observation that a type $X$ is $k$-truncated if and only if every map $\sphere{k+1}\to X$ is constant. In other words, for every map $f:\sphere{k+1}\to X$ into a $k$-type $X$, there is a point $x:X$ and a family of paths $p(t):x=f(t)$. If we think of $f$ as a `wheel' in $X$, then $x$ is the hub at the center of the wheel, and the paths $p(t)$ are the spokes. This leads to defining the $k$-truncation of a type $X$ by the \emph{hubs-and-spokes method}. In \cref{sec:hubs-and-spokes} we show that the $k$-truncation of a type is such a higher inductive type.
+
 \subsection{The universal property of the truncations}
 
 \begin{defn}\label{defn:is_truncation}
@@ -25,7 +39,9 @@ is contractible. Indeed, the type of such extensions is the type
 which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g$. 
 \end{rmk}
 
-\begin{thm}\label{thm:trunc_dup}
+In the following proposition we show that if a map $f:X\to Y$ into a $k$-type $Y$ satisfies the universal property of the $k$-truncation of $X$, then $f$ also satisfies the dependent elimination property.
+
+\begin{prp}\label{thm:trunc_dup}
   Suppose the map $f:X\to Y$ into an $k$-type $Y$. The following are equivalent:
   \begin{enumerate}
   \item The map $f$ satisfies the universal property of $k$-truncation.
@@ -34,18 +50,20 @@ which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g
       \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to \Big(\prd{x:X}P(f(x))\Big)
     \end{equation*}
     is an equivalence. This property is also called the \define{dependent universal property} of the $k$-truncation.
-  \item For any family $P$ of $k$-types over $Y$, the precomposition map
-    \begin{equation*}
-      \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
-    \end{equation*}
-    has a section.
+%  \item For any family $P$ of $k$-types over $Y$, the precomposition map
+%    \begin{equation*}
+%      \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+%    \end{equation*}
+%    has a section.
   \end{enumerate}
-\end{thm}
+\end{prp}
 
 \begin{proof}
-  The fact that (ii) implies (i) and (iii) is immediate, so we only have to show that both (i) and (iii) imply (i).
+  % The fact that (ii) implies (i) and (iii) is immediate, so we only have to show that both (i) and (iii) imply (ii).
+  The fact that (ii) implies (i) is immediate, so we only have to prove the converse.
 
-  To prove that (i) implies (ii), suppose $P$ is a family of $k$-truncated types over $Y$.  
+  % To prove that (i) implies (ii),
+  Suppose $P$ is a family of $k$-truncated types over $Y$.  
   Then we have a commuting square
   \begin{equation*}
     \begin{tikzcd}
@@ -61,7 +79,19 @@ which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g
     \end{tikzcd}
   \end{equation*}
   in which the left and right maps are equivalences by \cref{ex:pi_sec}, and the bottom map is an equivalence as we have just established. Therefore the top map is an equivalence, so we conclude that $f$ satisfies the dependent universal property.
+%
+%  To see that (iii) implies (ii), consider a family $P$ of $k$-types over $Y$. Our goal is to show that the precomposition function
+%  \begin{equation*}
+%    \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+%  \end{equation*}
+%  is an equivalence. It has a section by assumption, for which we will write $\varphi$. It therefore remains to show that $\varphi(h\circ f)\htpy h$ for any dependent function $h:\prd{y:Y}P(y)$. Note that the precomposition function
+%  \begin{equation*}
+%    \blank\circ f : \Big(\prd{y:Y}\varphi(h\circ f)(y)=h(y)\Big)\to\Big(\prd{x:X}\varphi(h\circ f)(f(x))=h(x)\Big)
+%  \end{equation*}
+%  has a section, so it suffices to show that $\varphi(h\circ f)\circ f\htpy h\circ f$. This follows again from the assumption that $\varphi$ is a section of $\blank\circ f$.
 \end{proof}
+
+Just as for pullbacks, pushouts, and the many other types characterized by a universal property, the $k$-truncation of a type is unique once it exists. We prove this in the following proposition and its corollary.
 
 \begin{prp}
   Consider a commuting triangle
@@ -79,6 +109,17 @@ which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g
   \end{enumerate}
 \end{prp}
 
+\begin{proof}
+  The claim follows by the 3-for-2 property of equivalences, since we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      Z^{Y'} \arrow[rr,"\blank\circ h"] \arrow[dr,swap,"{\blank\circ f'}"] & & Z^Y \arrow[dl,"\blank\circ f"] \\
+      & Z^X & \phantom{Z^{Y'}}
+    \end{tikzcd}
+  \end{equation*}
+  for any $k$-type $Z$.
+\end{proof}
+
 \begin{cor}
   Consider two maps $f:X\to Y$ and $f':X\to Y'$ into $k$-types $Y$ and $Y'$, and suppose that both $f$ and $f'$ satisfy the universal property of the $k$-truncation of $X$. Then the type of equivalences $e:Y\simeq Y'$ equipped with a homotopy witnessing that the triangle
   \begin{equation*}
@@ -92,18 +133,6 @@ which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g
 
 \subsection{The construction of the  \texorpdfstring{$(k+1)$}{(k+1)}-truncation as a quotient}
 
-\begin{thm}
-  Consider a map $f:X\to Y$ into a $(k+1)$-truncated type $Y$. Then the following are equivalent:
-  \begin{enumerate}
-  \item The map $f$ satisfies the universal property of the $(k+1)$-truncation of $X$.
-  \item The map $f$ is surjective, and for each $x,x':X$ the map
-    \begin{equation*}
-      \apfunc{f} : (x=x')\to(f(x)=f(x'))
-    \end{equation*}
-    satisfies the universal property of the $k$-truncation of $x=x'$.
-  \end{enumerate}
-\end{thm}
-
 \begin{defn}
   Consider a universe $\UU$. We say that $\UU$ \define{has $k$-truncations} if for every type $X:\UU$ there is a map $f:X\to Y$ into a $k$-type $Y:\UU$ that satisfies the universal property of the $k$-truncation of $X$.
 \end{defn}
@@ -112,10 +141,91 @@ which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g
   Note that the universal property of $k$-truncations is formulated with respect to all $k$-types, and not only with respect to the $k$-types in $\UU$.
 \end{rmk}
 
+We will use the following proposition to prove the universal property of the $(k+1)$-truncation. In fact, the converse of the following proposition also holds, and we prove it below in \cref{thm:is-truncation}.
+
+\begin{prp}\label{prp:is-truncation}
+  Consider a map $f:X\to Y$ into a $(k+1)$-type $Y$. If $f$ is surjective, and its action on paths
+  \begin{equation*}
+    \apfunc{f}:(x=x')\to(f(x)=f(x'))
+  \end{equation*}
+  satisfies the universal property of the $k$-truncation of $x=x'$, then $f$ satisfies the universal property of the $(k+1)$-truncaton of $X$.
+\end{prp}
+
+\begin{proof}
+  Consider a map $g:X\to Z$ into a $(k+1)$-type $Z$. Our goal is to show that $g$ extends uniquely along $f$ to a map $h:Y\to Z$. We claim that for any $y:Y$, the type of extensions
+  \begin{equation*}
+    \begin{tikzcd}
+      \fib{f}{y} \arrow[d] \arrow[dr,"g\circ\proj 1"] \\
+      \unit \arrow[r,densely dotted] & Z
+    \end{tikzcd}
+  \end{equation*}
+  is contractible. In other words, on each of the fibers of $f$, the map $g$ is constant in a unique way. Since $f$ is assumed to be surjective, it follows by \cref{prp:surjective} that it suffices to prove the above extension property for $y\jdeq f(x)$, for each $x:X$. In other words, we have to show that the type
+  \begin{equation*}
+    \sm{z:Z}\prd{x':X}(f(x)=f(x'))\to (z=g(x'))
+  \end{equation*}
+  is contractible for each $x:X$.
+
+  Note that the type $z=g(x')$ is $k$-truncated, and that the map $\apfunc{f}$ is assumed to satisfy the universal property of the $k$-truncation of $x=x'$. Therefore it is equivalent to show that the type
+  \begin{equation*}
+    \sm{z:Z}\prd{x':X}(x=x')\to (z=g(x'))
+  \end{equation*}
+  is contractible. This is immediate by the universal property of the identity type (\cref{thm:yoneda}), and the fact that $\sm{z:Z}z=g(x')$ is contractible (\cref{cor:contr_path}).
+
+  It follows by \cref{thm:funext_wkfunext} that the product
+  \begin{equation*}
+    \prd{y:Y}\sm{z:Z}\prd{x:X}(y=f(x))\to (z=g(x))
+  \end{equation*}
+  is contractible. Since $\Pi$ distributes over $\Sigma$ by \cref{thm:choice}, we obtain that the type of functions $h:Y\to Z$ equipped with a homotopy $h\circ f\htpy g$ is contractible.
+\end{proof}
+
+Before we show that any universe has $k$-truncations for arbitrary $k$, we prove a truncated version of the type theoretic Yoneda lemma under the assumption that $\UU$ has $k$-truncations for a given $k$. 
+
+\begin{lem}\label{lem:truncated-yoneda}
+  Suppose $\UU$ is a universe that has $k$-truncations
+  \begin{equation*}
+    \tproj{k}{\blank}:X\to\trunc{k}{X}
+  \end{equation*}
+  for a given $k\geq-2$, and consider a family $P$ of types over $X$. We make two claims:
+  \begin{enumerate}
+  \item The evaluation function
+    \begin{equation*}
+      \Big(\prd{y:X}\trunc{k}{x=y}\to\trunc{k}{P(y)}\Big)\to \trunc{k}{P(x)}
+    \end{equation*}
+    given by $h\mapsto h_x(\tproj{k}{\refl{x}})$, is an equivalence.
+  \item If the total space of $P$ is contractible, then the evaluation function
+    \begin{equation*}
+      \Big(\prd{y:X}\trunc{k}{x=y}\simeq\trunc{k}{P(y)}\Big)\to \trunc{k}{P(x)}
+    \end{equation*}
+    given by $e\mapsto e_x(\tproj{k}{\refl{x}})$, is an equivalence.
+  \end{enumerate}
+\end{lem}
+
+\begin{proof}
+  The first claim follows immediately by the universal property of the $k$-truncation of $x=y$ and the type theoretical Yoneda lemma (\cref{thm:yoneda}).
+  
+  To prove the second claim, we first observe that the inclusion of equivalences into all maps induces an embedding that fits in a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=0]
+      \Big(\prd{y:X}\trunc{k}{x=y}\simeq\trunc{k}{P(y)}\Big) \arrow[rr,hook] \arrow[dr,swap,"\ev_{\tproj{k}{\refl{x}}}"] & & \Big(\prd{y:X}\trunc{k}{x=y}\to\trunc{k}{P(y)}\Big) \arrow[dl,"\ev_{\tproj{k}{\refl{x}}}"] \\
+      & \trunc{k}{P(x)}.
+    \end{tikzcd}
+  \end{equation*}
+  The evaluation map on the right is an equivalence, and we have to show that if the total space $\sm{y:X}P(y)$ is contractible, then the evaluation map on the left is an equivalence. We do this by showing that the top map is an equivalence.
+
+  To see this, note that we have a commuting diagram
+    \begin{equation*}
+    \begin{tikzcd}
+      \Big(\prd{y:X}(x=y)\simeq P(y)\Big) \arrow[d,swap,"e\mapsto\lam{y}\trunc{k}{e_y}"] \arrow[r,hook] & \Big(\prd{y:X}(x=y)\to P(y)\Big) \arrow[r,"\evrefl"] \arrow[d,swap,"h\mapsto\lam{y}\trunc{k}{h_y}"] &[2em] P(x) \arrow[d] \\
+      \Big(\prd{y:X}\trunc{k}{x=y}\simeq\trunc{k}{P(y)}\Big) \arrow[r,hook] & \Big(\prd{y:X}\trunc{k}{x=y}\to\trunc{k}{P(y)}\Big) \arrow[r,swap,"\ev_{\tproj{k}{\refl{x}}}"] & \trunc{k}{P(x)}
+    \end{tikzcd}
+  \end{equation*}
+  In the top row of this diagram we have a concatenation of equivalences: the first map is an equivalence by the fundamental theorem of identity types, and the second map is an equivalence by \cref{thm:yoneda}. The second map in the bottom row is an equivalence by the first claim of this lemma. Therefore it follows that the vertical map in the middle satisfies the universal property of the $k$-truncation. Since the type at the bottom left is $k$-truncated, we obtain by the universal property of the $k$-truncation a section of the embedding in the bottom row, which proves the claim.
+\end{proof}
+
 \begin{thm}
   Any univalent universe $\UU$ that is closed under pushouts has $k$-truncations, for every truncation level $k$. We will write
   \begin{equation*}
-    \eta:X\to\trunc{k}{X}
+    \tproj{k}{\blank}:X\to\trunc{k}{X}
   \end{equation*}
   for the $k$-truncation of $X$.
 \end{thm}
@@ -127,10 +237,100 @@ which is equivalent to the fiber of the precomposition map $\blank\circ f$ at $g
   \begin{equation*}
     R_k(x,x') \defeq \trunc{k}{x=x'}.
   \end{equation*}
-  Thinking of $R_k$ as an `equivalence relation valued in the $k$-types', we define
+  Analogous to the definition of set quotients, we define
   \begin{equation*}
-    \trunc{k+1}{X}\defeq \im(R_k)
+    \trunc{k+1}{X}\defeq \im(R_k),
   \end{equation*}
+  which comes equipped with a surjective map $q:X\to\trunc{k+1}{X}$. Note that the image of $R:X\to(X\to\UU)$ is (essentially) small by \cref{thm:replacement}. To see that $q:X\to\trunc{k+1}{X}$ satisfies the universal property of the $(k+1)$-truncation of $X$, we apply \cref{prp:is-truncation}. Therefore it remains to show that the action on paths
+  \begin{equation*}
+    \apfunc{q}:(x=x')\to (q(x)=q(x'))
+  \end{equation*}
+  satisfies the universal property of the $k$-truncation of $x=x'$. Since $q$ is the surjective map in the image factorization of $R_k$, it is equivalent to show that the action on paths
+  \begin{equation*}
+    \apfunc{R}:(x=x')\to (R_k(x)=R_k(x'))
+  \end{equation*}
+  satisfies the universal property of the $k$-truncation of $x=x'$. Note that we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-2em]
+      \phantom{\prd{y:X}\trunc{k}{x=y}\simeq\trunc{k}{x'=y},} & (x=x') \arrow[dl,swap,"\apfunc{R_k}"] \arrow[dr] \\
+      \Big(R_k(x)=R_k(x')\Big) \arrow[rr,swap,"\simeq"] & & \Big(\prd{y:X}\trunc{k}{x=y}\simeq\trunc{k}{x'=y}\Big),
+    \end{tikzcd}
+  \end{equation*}
+  where the bottom map is an equivalence by function extensionality and the univalence axiom. Therefore it suffices to show that the map on the right of this triangle, which is the unique map that sends $\refl{x}$ to the family of identity equivalences, satisfies the universal property of the $k$-truncation of $x=x'$.
+
+  This map fits in a commuting square
+  \begin{equation*}
+    \begin{tikzcd}[column sep=huge]
+      (x=x') \arrow[d] \arrow[r,"\tproj{k}{\blank}"] & \trunc{k}{x=x'} \arrow[d,"\trunc{k}{\invfunc}"] \\
+      \Big(\prd{y:X}\trunc{k}{x=y}\simeq\trunc{k}{x'=y}\Big) \arrow[r,swap,"\ev_{\tproj{k}{\refl{x}}}"] & \trunc{k}{x'=x}.
+    \end{tikzcd}
+  \end{equation*}
+  The map on the right is an equivalence because $\invfunc:(x=x')\to(x'=x)$ is an equivalence. The bottom map is an equivalence by \cref{lem:truncated-yoneda}. The top map satisfies the universal property of the $k$-truncation of $x=x'$, hence so does the map on the left, which completes the proof.
+\end{proof}
+
+
+\begin{thm}\label{thm:is-truncation}
+  Consider a map $f:X\to Y$ into a $(k+1)$-truncated type $Y$. Then the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ satisfies the universal property of the $(k+1)$-truncation of $X$.
+  \item The map $f$ is surjective, and for each $x,x':X$ the map
+    \begin{equation*}
+      \apfunc{f} : (x=x')\to(f(x)=f(x'))
+    \end{equation*}
+    satisfies the universal property of the $k$-truncation of $x=x'$.
+  \end{enumerate}
+\end{thm}
+
+\begin{proof}
+  The fact that (ii) implies (i) was established in \cref{prp:is-truncation}, so it suffices to show that (i) implies (ii).
+  
+  Suppose first that the map $f$ satisfies the universal property of the $(k+1)$-truncation, and let $x:X$. Recall from \cref{ex:istrunc_UUtrunc} that the universe of $k$-truncated types is itself $(k+1)$-truncated. Therefore it follows that the map $x'\mapsto \trunc{k}{x=x'}$ has a unique extension
+  \begin{equation*}
+    \begin{tikzcd}
+      X \arrow[dr,"{x'\mapsto\trunc{k}{x=x'}}"] \arrow[d,swap,"f"] \\
+      Y \arrow[r,densely dotted,swap,"P"] & \UU_{\leq k}.
+    \end{tikzcd}
+  \end{equation*}
+  In other words, we obtain a unique family $P$ of $k$-types over $Y$ equipped with equivalences
+  \begin{equation*}
+    e_{x'}:P(f(x'))\simeq \trunc{k}{x=x'}
+  \end{equation*}
+  indexed by $x':X$. In particular, $P$ comes equipped with a point $p_0:P(f(x))$ such that $e_x(p_0)=\tproj{k}{\refl{x}}$. Hence we obtain a family of maps
+  \begin{equation*}
+    \prd{y:Y} (f(x)=y)\to P(y).
+  \end{equation*}
+  We claim that this is a family of equivalences. By the fundamental theorem of identity types, \cref{thm:id_fundamental}, it suffices to show that the total space
+  \begin{equation*}
+    \sm{y:Y}P(y)
+  \end{equation*}
+  is contractible. We have $(f(x),p_0)$ at the center of contraction, so we have to construct a contraction
+  \begin{equation*}
+    \prd{y:Y}{p:P(y)} (f(x),p_0)=(y,p).
+  \end{equation*}
+  Now we observe that the type $\sm{y:Y}P(y)$ is $(k+1)$-truncated, using the fact that any $\Sigma$-type of a family of $k$-types over a $(k+1)$-type is again $(k+1)$-truncated (\cref{ex:istrunc_sigma}). It follows that the type $(f(x),p_0)=(y,p)$ is $k$-truncated for each $y:Y$ and each $p:P(y)$. Now we use the dependent universal property of the $k$-truncation of $X$, which was proven in \cref{thm:trunc_dup}, so it suffices to show that
+  \begin{equation*}
+    \prd{x':X}{p:P(f(x'))} (f(x),p_0)=(f(x'),p).
+  \end{equation*}
+  Since we have an equivalence $e_{x'}:P(f(x'))\simeq \trunc{k}{x=x'}$ for each $x':X$, it is equivalent to show that
+  \begin{equation*}
+    \prd{x':X}{p:\trunc{k}{x=x'}}(f(x),p_0)=(f(x'),e_{x'}^{-1}(p)).
+  \end{equation*}
+  Again, we use that the type of paths $(f(x),p_0)=(f(x'),e_{x'}^{-1}(p))$ is a $k$-type, so we use \cref{thm:trunc_dup} to conclude that it suffices to show that
+  \begin{equation*}
+    \prd{x':X}{p:x=x'}(f(x),p_0)=(f(x'),e_{x'}^{-1}(p)).
+  \end{equation*}
+  This is immediate by path induction on $p:x=x'$. This proves the claim that the canonical map
+  \begin{equation*}
+    h_y:(f(x)=y)\to P(y)
+  \end{equation*}
+  is an equivalence for each $y:Y$. Now observe that we have a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=0]
+      \phantom{\trunc{k}{x=x'}} & (x=x') \arrow[dl,swap,"\apfunc{f}"] \arrow[dr,"\tproj{k}{\blank}"] & \phantom{(f(x)=f(x'))} \\
+      (f(x)=f(x')) \arrow[rr,swap,"h_{f(x')}"] & & \trunc{k}{x=x'}
+    \end{tikzcd}
+  \end{equation*}
+  for each $x':X$. Therefore it follows that $\apfunc{f}:(x=x')\to(f(x)=f(x'))$ satisfies the universal property of the $k$-truncation of $x=x'$.
 \end{proof}
 
 \begin{cor}\label{thm:trunc_id}
@@ -140,40 +340,7 @@ For any $x,y:X$, there is an equivalence
 \end{equation*}
 \end{cor}
 
-\begin{proof}
-Let $x:X$. Then we define a family $E_x : \trunc{k+1}{X}\to \UU^{\leq k}$ as the unique extension
-\begin{equation*}
-\begin{tikzcd}[column sep=huge]
-X \arrow[r] \arrow[d,swap,"\tproj{k}{\blank}"] \arrow[r,"{y\mapsto \trunc{k}{x=y}}"] & \UU^{\leq k} \\
-\trunc{k}{X} \arrow[ur,densely dotted,swap,"E_x"] 
-\end{tikzcd}
-\end{equation*}
-This unique extension exists by the universal property of $(k+1)$-truncation, because the universe $\UU^{\leq k}$ is itself a $(k+1)$-truncated type by \cref{ex:istrunc_UUtrunc}. 
-
-To see that there is an equivalence 
-\begin{equation*}
-\eqv{(\tproj{k}{x}=y)}{E_x(y)}
-\end{equation*}
-for each $y:\trunc{k+1}{X}$, it suffices by \cref{thm:id_fundamental} to show that the total space 
-\begin{equation*}
-\sm{y:\trunc{k+1}{X}}E_x(y)
-\end{equation*}
-is contractible. At the center of contraction we have $(\tproj{k+1}{x},\tproj{k}{\refl{x}})$. It remains to construct the contraction
-\begin{equation*}
-\prd{y:\trunc{k+1}{X}}{p:E_x(y)} (\tproj{k+1}{x},\tproj{k}{\refl{x}})=(y,p).
-\end{equation*}
-We note that the type $(\tproj{k+1}{x},\tproj{k}{\refl{x}})=(y,p)$ is $k$-truncated, since it is an identity type in the total space
-\begin{equation*}
-\sm{y:\trunc{k+1}{X}}E_x(y),
-\end{equation*}
-which is $(k+1)$-truncated by \cref{ex:istrunc_sigma,thm:istrunc_next}. Therefore it suffices by \cref{thm:trunc_dup}, applied twice, to construct a term of type
-\begin{equation*}
-\prd{y:X}{p:x=y} (\tproj{k+1}{x},\tproj{k}{\refl{x}})=(\tproj{k+1}{y},\tproj{k}{p}).
-\end{equation*}
-We get such an identification for each $p:x=y$ by path induction on $p$.
-\end{proof}
-
-\subsection{The truncations as recursive higher inductive types}
+\subsection{The truncations as recursive higher inductive types}\label{sec:hubs-and-spokes}
 
 Recall from \cref{thm:trunc_ap} that a map $f:A\to B$ is $(k+1)$-truncated if and only if the action on paths
 \begin{equation*}
@@ -832,4 +999,22 @@ where $\fin:\N\to\UU$ is defined in \cref{defn:fin}.
   \end{tikzcd}
 \end{equation*}
 is a pullback square if and only if its gap map has a section.
+\exercise Consider a map $f:X\to Y$ into a $k$-truncated type $Y$. Show that the following are equivalent:
+\begin{enumerate}
+\item For any family $P$ of $k$-types over $Y$, the precomposition map
+  \begin{equation*}
+    \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+  \end{equation*}
+  is an equivalence.
+\item For any family $P$ of $k$-types over $Y$, the precomposition map
+  \begin{equation*}
+    \blank\circ f : \Big(\prd{y:Y}P(y)\Big)\to\Big(\prd{x:X}P(f(x))\Big)
+  \end{equation*}
+  has a section.
+\end{enumerate}
+\exercise Show that for each type $X$, the map
+\begin{equation*}
+  \trunc{k+1}{X}\to\UU^X
+\end{equation*}
+given by $y\mapsto\lam{x}(y=\eta'(x))$ is an embedding.
 \end{exercises}
