@@ -53,7 +53,7 @@ for $k,l,m\geq 0$.
   \end{equation*}
   equipped with a homotopy $p\circ i\htpy \const_b$. We say that a short sequence as above is an \define{unpointed fiber sequence} if the commuting square
   \begin{equation*}
-    \begin{tikzcd}
+    \begin{tikzcd}[column sep=large]
       F \arrow[r,"i"] \arrow[d,swap,"\const_\star"] & E \arrow[d,"p"] \\
       \unit \arrow[r,swap,"\const_b"] & B
     \end{tikzcd}
@@ -64,7 +64,7 @@ for $k,l,m\geq 0$.
 \begin{defn}
   A \define{short sequence} of pointed maps into a pointed type $B$ with base point $b$ consists of pointed maps
     \begin{equation*}
-    \begin{tikzcd}
+    \begin{tikzcd}[column sep=large]
       F \arrow[r,"i"] & E \arrow[r,"p"] & B
     \end{tikzcd}
   \end{equation*}
@@ -93,7 +93,7 @@ that applies to any H-space $A$. Our definition of an H-space is chosen such tha
   \begin{equation*}
     \mu:A\to(A\to A)
   \end{equation*}
-  for which $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences.
+  such that $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences, for each $x:A$.
   \item If $A$ is a pointed type with base point $e:A$, then an \define{H-space} structure on $A$ is an unpointed H-space structure on $A$ equipped with an identification $\mu(e,e)=e$.
   \item A \define{coherent H-space} structure on a pointed type $A$ with base point $e:A$ consists of an unpointed H-space structure $\mu$ on $A$ that satisfies the unit laws, i.e., $\mu$ comes equipped with identifications
   \begin{align*}
@@ -121,7 +121,7 @@ where only the type $B$ is assumed to be pointed (with base point $b$), and the 
     \unit \arrow[r,swap,"\const_{b}"] & B
   \end{tikzcd}
 \end{equation*}
-is a pullback square. The most immediate 
+is a pullback square.
 
 
 \begin{thm}[The Hopf construction]\label{thm:hopf-construction}
@@ -142,34 +142,33 @@ is a pullback square. The most immediate
       & \susp A
     \end{tikzcd}
   \end{equation*}
-  commutes. By this commuting cube it is enough to show that the two back squares are pullback squares, because then it follows by ... that the two front squares are pullback squares. We then define the Hopf fibration to be
+  commutes. In other words, $h$ is the unique map $\join{A}{A}\to\susp A$ equipped with identifications
+  \begin{align*}
+    p & : \north = h(\inl(x)) \\
+    p' & : \south = h(\inr(x'))
+  \end{align*}
+  and an identification $q$ witnessing that the square
   \begin{equation*}
     \begin{tikzcd}
-      A \arrow[r,hook,"\inl"] & \join{A}{A} \arrow[r,->>,"h"] & \susp A,
+      \north \arrow[d,equals,swap,"{\merid(\mu(x,x'))}"] \arrow[r,equals,"p"] & h(\inl(x)) \arrow[d,equals,"\ap{h}{\glue(x,x')}"] \\
+      \south \arrow[r,equals,swap,"{p'}"] & h(\inr(x'))
     \end{tikzcd}
   \end{equation*}
-  which is a fiber sequence by the fact that the front left square in the cube is a pullback square.
-
-  Thus, we have to show that the two squares
+  commutes. Thus we see that we obtain a fiber sequence $A\hookrightarrow\join{A}{A}\twoheadrightarrow\susp A$ if we show that the front two squares are pullback squares. By the descent theorem, \cref{thm:descent}, it suffices to show that the two squares in the back
     \begin{equation*}
     \begin{tikzcd}
-      A\times A \arrow[d,swap,"\proj 1"] \arrow[r,"\mu"] & A \arrow[d] & A\times A \arrow[r,"\mu"] \arrow[d,"\proj 2"] & A \arrow[d] \\
+      A\times A \arrow[d,swap,"\proj 1"] \arrow[r,"\mu"] & A \arrow[d] &[2em] A\times A \arrow[r,"\mu"] \arrow[d,swap,"\proj 2"] & A \arrow[d] \\
       A \arrow[r] & \unit & A \arrow[r] & \unit
     \end{tikzcd}
   \end{equation*}
-  are pullback squares. Thus, we have to show that the maps
-  \begin{align*}
-    \fibsquare & : \fib{\proj 1}{x}\to\fib{\const_{\star}}{\star} \\
-    \fibsquare & : \fib{\proj 2}{x}\to\fib{\const_{\star}}{\star}
-  \end{align*}
-  are equivalences for each $x:X$. Note that there are commuting squares
+  are pullback squares. We claim that in both squares, the multiplicative operation $\mu$ induces equivalences on the fibers, and hence both squares are pullbacks by \cref{cor:pb_fibequiv}. To see this, note that the induced map on fibers fit in commuting squares
   \begin{equation*}
     \begin{tikzcd}
-      \fib{\proj 1}{x} \arrow[r,"\fibsquare"] \arrow[d] & \fib{\const_{\star}}{\star} \arrow[d] & \fib{\proj 2}{x} \arrow[r,"\fibsquare"] \arrow[d] & \fib{\const_{\star}}{\star} \arrow[d] \\
+      \fib{\proj 1}{x} \arrow[r,densely dotted] \arrow[d,swap,"\simeq"] & \fib{\const_{\star}}{\star} \arrow[d,"\simeq"] & \fib{\proj 2}{x} \arrow[r,densely dotted] \arrow[d,swap,"\simeq"] & \fib{\const_{\star}}{\star} \arrow[d,"\simeq"] \\
       A \arrow[r,swap,"{\mu(x,\blank)}"] & A & A \arrow[r,swap,"{\mu(\blank,x)}"] & A.
     \end{tikzcd}
   \end{equation*}
-  In both squares both vertical maps are equivalences by \cref{ex:proj_fiber}. Moreover, we have assumed that $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences for each $x:X$, so the claim follows.
+  The claim now follows, since we have assumed that $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences for each $x:X$.
 \end{proof}
 
 \begin{cor}
