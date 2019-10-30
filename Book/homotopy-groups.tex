@@ -96,8 +96,8 @@ In order to introduce the suspension-loop space adjunction, we also need to cons
 \begin{proof}[Construction]
   The underlying map of $\varepsilon_X$ takes $x:X$ to the concatenation
   \begin{equation*}
-    \begin{tikzcd}
-      \north \arrow[r,equals,"\merid(x)"] & \south \arrow[r,equals,"\merid(\ast_X)^{-1}"] & \north.
+    \begin{tikzcd}[column sep=huge]
+      \north \arrow[r,equals,"\merid(x)"] & \south \arrow[r,equals,"\merid(\ast_X)^{-1}"] &[1em] \north.
     \end{tikzcd}
   \end{equation*}
   This map preserves the base point, since $\ct{\merid(\ast_X)}{\merid(\ast_X)^{-1}}=\refl{\north}$. 

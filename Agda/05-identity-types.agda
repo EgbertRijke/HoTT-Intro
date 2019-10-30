@@ -170,8 +170,7 @@ abstract
     ap succ-ℕ (right-successor-law-add-ℕ x y)
 
 abstract
-  commutative-add-ℕ :
-    (x y : ℕ) → Id (add-ℕ x y) (add-ℕ y x)
+  commutative-add-ℕ : (x y : ℕ) → Id (add-ℕ x y) (add-ℕ y x)
   commutative-add-ℕ zero-ℕ y = inv (right-unit-law-add-ℕ y)
   commutative-add-ℕ (succ-ℕ x) y =
     (ap succ-ℕ (commutative-add-ℕ x y)) ∙ (inv (right-successor-law-add-ℕ y x))
