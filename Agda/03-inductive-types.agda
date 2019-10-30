@@ -25,6 +25,9 @@ data empty : UU lzero where
 ind-empty : {i : Level} {P : empty → UU i} → ((x : empty) → P x)
 ind-empty ()
 
+ex-falso : {i : Level} {P : empty →  UU i} → ((x : empty) → P x)
+ex-falso = ind-empty
+
 ¬ : {i : Level} → UU i → UU i
 ¬ A = A → empty
 

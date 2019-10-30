@@ -142,18 +142,6 @@ is a pullback square.
       & \susp A
     \end{tikzcd}
   \end{equation*}
-  commutes. In other words, $h$ is the unique map $\join{A}{A}\to\susp A$ equipped with identifications
-  \begin{align*}
-    p & : \north = h(\inl(x)) \\
-    p' & : \south = h(\inr(x'))
-  \end{align*}
-  and an identification $q$ witnessing that the square
-  \begin{equation*}
-    \begin{tikzcd}
-      \north \arrow[d,equals,swap,"{\merid(\mu(x,x'))}"] \arrow[r,equals,"p"] & h(\inl(x)) \arrow[d,equals,"\ap{h}{\glue(x,x')}"] \\
-      \south \arrow[r,equals,swap,"{p'}"] & h(\inr(x'))
-    \end{tikzcd}
-  \end{equation*}
   commutes. Thus we see that we obtain a fiber sequence $A\hookrightarrow\join{A}{A}\twoheadrightarrow\susp A$ if we show that the front two squares are pullback squares. By the descent theorem, \cref{thm:descent}, it suffices to show that the two squares in the back
     \begin{equation*}
     \begin{tikzcd}
@@ -171,12 +159,32 @@ is a pullback square.
   The claim now follows, since we have assumed that $\mu(x,\blank)$ and $\mu(\blank,x)$ are equivalences for each $x:X$.
 \end{proof}
 
+\begin{rmk}
+  The Hopf map $h$ constructed in \cref{thm:hopf-construction} is the unique map $\join{A}{A}\to\susp A$ equipped with identifications
+  \begin{align*}
+    p & : \north = h(\inl(x)) \\
+    p' & : \south = h(\inr(x'))
+  \end{align*}
+  and an identification $q$ witnessing that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \north \arrow[d,equals,swap,"{\merid(\mu(x,x'))}"] \arrow[r,equals,"p"] & h(\inl(x)) \arrow[d,equals,"\ap{h}{\glue(x,x')}"] \\
+      \south \arrow[r,equals,swap,"{p'}"] & h(\inr(x'))
+    \end{tikzcd}
+  \end{equation*}
+  commutes.
+\end{rmk}
+
 \begin{cor}
 There is a fiber sequence
 \begin{equation*}
 \sphere{1}\hookrightarrow \join{\sphere{1}}{\sphere{1}} \twoheadrightarrow \sphere{2}.
 \end{equation*}
 \end{cor}
+
+\begin{proof}
+  By \cref{thm:hopf-construction} it suffices to construct an H-space structure on $\sphere{1}$. This H-space structure $\sphere{1}\times\sphere{1}\to\sphere{1}$ is determined by the complex multiplication operation constructed in \cref{defn:mul-circle}.
+\end{proof}
 
 \begin{lem}
 The join operation is associative

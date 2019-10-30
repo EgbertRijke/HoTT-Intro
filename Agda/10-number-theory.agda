@@ -140,6 +140,13 @@ has-decidable-equality-Fin (succ-ℕ n) =
     ( has-decidable-equality-Fin n)
     ( has-decidable-equality-unit)
 
+decidable-Eq-Fin :
+  (n : ℕ) (i j : Fin n) → classical-Prop lzero
+decidable-Eq-Fin n i j =
+  pair
+    ( pair (Id i j) (is-set-Fin n i j))
+    ( has-decidable-equality-Fin n i j)
+
 {- Decidable equality of ℤ. -}
 
 has-decidable-equality-ℤ : has-decidable-equality ℤ
@@ -286,21 +293,26 @@ count-Fin-succ-ℕ n P m (inl x) = succ-ℕ m
 count-Fin-succ-ℕ n P m (inr x) = m
 
 count-Fin :
-  (l : Level) (n : ℕ) (P : Fin n → classical-Prop l) → ℕ
-count-Fin l zero-ℕ P = zero-ℕ
-count-Fin l (succ-ℕ n) P =
+  {l : Level} (n : ℕ) (P : Fin n → classical-Prop l) → ℕ
+count-Fin zero-ℕ P = zero-ℕ
+count-Fin (succ-ℕ n) P =
   count-Fin-succ-ℕ n P
-    ( count-Fin l n (P ∘ inl))
+    ( count-Fin n (P ∘ inl))
     ( pr2 (P (inr star)))
 
 {- Next we prove the pigeonhole principle. -}
 
-decidable-Eq-Fin :
-  (n : ℕ) (i j : Fin n) → classical-Prop lzero
-decidable-Eq-Fin n i j =
-  pair
-    ( pair (Id i j) (is-set-Fin n i j))
-    ( has-decidable-equality-Fin n i j)
+max-Fin :
+  (n : ℕ) → Fin (succ-ℕ n)
+max-Fin n = inr star
+
+contraction-Fin-one-ℕ :
+  (t : Fin one-ℕ) → Id (inr star) t
+contraction-Fin-one-ℕ (inr star) = refl
+
+is-contr-Fin-one-ℕ :
+  is-contr (Fin one-ℕ)
+is-contr-Fin-one-ℕ = pair (inr star) contraction-Fin-one-ℕ
 
 skip :
   (n : ℕ) → Fin (succ-ℕ n) → Fin n → Fin (succ-ℕ n)
@@ -308,43 +320,53 @@ skip (succ-ℕ n) (inl i) (inl j) = inl (skip n i j)
 skip (succ-ℕ n) (inl i) (inr star) = inr star
 skip (succ-ℕ n) (inr star) j = inl j
 
-double :
+repeat :
   (n : ℕ) → Fin n → Fin (succ-ℕ n) → Fin n
-double (succ-ℕ n) (inl i) (inl j) = inl (double n i j)
-double (succ-ℕ n) (inl j) (inr star) = inr star
-double (succ-ℕ n) (inr star) (inl j) = j
-double (succ-ℕ n) (inr star) (inr star) = inr star
+repeat (succ-ℕ n) (inl i) (inl j) = inl (repeat n i j)
+repeat (succ-ℕ n) (inl j) (inr star) = inr star
+repeat (succ-ℕ n) (inr star) (inl j) = j
+repeat (succ-ℕ n) (inr star) (inr star) = inr star
 
-{-
-skip-skip :
-  (n : ℕ) (i : Fin (succ-ℕ (succ-ℕ n))) (j : Fin (succ-ℕ n)) →
-    ( ( skip (succ-ℕ n) i) ∘ (skip n j)) ~
-    ( ( skip (succ-ℕ n) (skip (succ-ℕ n) i j)) ∘
-      ( skip n (double (succ-ℕ n) j i)))
-skip-skip zero-ℕ (inl x) (inl x₁) ()
-skip-skip zero-ℕ (inl x) (inr x₁) ()
-skip-skip zero-ℕ (inr x) (inl x₁) ()
-skip-skip zero-ℕ (inr x) (inr x₁) ()
-skip-skip (succ-ℕ n) (inl i) (inl j) (inl k) = {!!}
-skip-skip (succ-ℕ n) (inl x) (inl x₁) (inr x₂) = {!!}
-skip-skip (succ-ℕ n) (inl x) (inr x₁) (inl x₂) = {!!}
-skip-skip (succ-ℕ n) (inl x) (inr x₁) (inr x₂) = {!!}
-skip-skip (succ-ℕ n) (inr x) (inl x₁) (inl x₂) = {!!}
-skip-skip (succ-ℕ n) (inr x) (inl x₁) (inr x₂) = {!!}
-skip-skip (succ-ℕ n) (inr x) (inr x₁) (inl x₂) = {!!}
-skip-skip (succ-ℕ n) (inr x) (inr x₁) (inr x₂) = {!!}
--}
+repeat-repeat :
+  (n : ℕ) (i j : Fin n) →
+    ((repeat n i) ∘ (repeat (succ-ℕ n) (skip n (inl i) j))) ~
+    ((repeat n j) ∘ (repeat (succ-ℕ n) (skip n (inl j) i)))
+repeat-repeat zero-ℕ () j k
+repeat-repeat (succ-ℕ n) (inl i) (inl j) (inl k) =
+  ap inl (repeat-repeat n i j k)
+repeat-repeat (succ-ℕ n) (inl i) (inl j) (inr star) = refl
+repeat-repeat (succ-ℕ n) (inl i) (inr star) (inr star) = refl
+repeat-repeat (succ-ℕ n) (inr star) (inl j) (inr star) = refl
+repeat-repeat (succ-ℕ n) (inr star) (inr star) (inl k) = refl
+repeat-repeat (succ-ℕ n) (inr star) (inr star) (inr star) = refl
+repeat-repeat (succ-ℕ zero-ℕ) (inl ()) (inr star) (inl k)
+repeat-repeat (succ-ℕ (succ-ℕ n)) (inl i) (inr star) (inl k) = refl
+repeat-repeat (succ-ℕ zero-ℕ) (inr star) (inl ()) (inl k) 
+repeat-repeat (succ-ℕ (succ-ℕ n)) (inr star) (inl j) (inl k) = refl
 
-{-
-pigeonhole-principle :
-  (m n : ℕ) (f : Fin n → Fin m) (H : le-ℕ m n) →
-  Σ ( Fin m) (λ i →
-    le-ℕ one-ℕ
-      ( count-Fin lzero n
-        ( λ j → decidable-Eq-Fin m (f j) i)))
-pigeonhole-principle zero-ℕ (succ-ℕ n) f H = {!!}
-pigeonhole-principle (succ-ℕ m) n f H = {!!}
--}
+skip-repeat :
+  (n : ℕ) (i : Fin n) → ((skip n (inl i)) ∘ (repeat n i)) ~ id
+skip-repeat n i = {!!}
+
+map-lift-Fin :
+  (m n : ℕ) (f : Fin (succ-ℕ m) → Fin (succ-ℕ n))
+  (i : Fin (succ-ℕ n)) (H : fib f i → empty) →
+  Fin m → Fin n
+map-lift-Fin m n f (inl i) H = (repeat n i) ∘ (f ∘ inl)
+map-lift-Fin m (succ-ℕ n) f (inr star) H =
+  ( repeat (succ-ℕ n) (max-Fin n)) ∘
+  ( f ∘ inl)
+map-lift-Fin zero-ℕ zero-ℕ f (inr star) H = ind-empty
+map-lift-Fin (succ-ℕ m) zero-ℕ f (inr star) H =
+  ex-falso
+    ( H (pair (inr star) (inv (contraction-Fin-one-ℕ (f (inr star))))))
+
+is-lift-lift-Fin :
+  (m n : ℕ) (f : Fin (succ-ℕ m) → Fin (succ-ℕ n))
+  (i : Fin (succ-ℕ n)) (H : fib f i → empty) →
+  (f ∘ inl) ~ ((skip n i) ∘ (map-lift-Fin m n f i H))
+is-lift-lift-Fin m n f (inl i) H x = {!!}
+is-lift-lift-Fin m n f (inr i) H x = {!!}
 
 -- The greatest common divisor
 
