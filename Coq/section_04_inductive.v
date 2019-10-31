@@ -382,13 +382,17 @@ Proof.
   - exact (const succ_N).
 Defined.
 
+(** Exercise 4.8.d *)
+
 Definition sum_list_N : list N -> N.
 Proof.
   apply fold_list.
   - exact zero_N.
   - exact add_N.
 Defined.
-  
+
+(** Exercise 4.8.e *)
+
 Definition concat_list {A} : list A -> (list A -> list A).
 Proof.
   apply (@fold_list A (list A -> list A)).
@@ -396,12 +400,16 @@ Proof.
   - intro a. exact (comp (cons a)).
 Defined.
 
+(** Exercise 4.8.f *)
+
 Definition flatten_list {A} : list (list A) -> list A.
 Proof.
   apply fold_list.
   - exact nil.
   - exact concat_list.
 Defined.
+
+(** Exercise 4.8.g *)
 
 Definition reverse_list {A} : list A -> list A.
 Proof.

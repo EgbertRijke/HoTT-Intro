@@ -180,8 +180,8 @@ abstract
     (x : ℕ) → Id (mul-ℕ x one-ℕ) x
   right-unit-law-mul-ℕ zero-ℕ = refl
   right-unit-law-mul-ℕ (succ-ℕ x) =
-    ( right-successor-law-add-ℕ (mul-ℕ x one-ℕ) zero-ℕ) ∙
-    ( ap succ-ℕ ((right-unit-law-add-ℕ _) ∙ (right-unit-law-mul-ℕ x)))
+    ( commutative-add-ℕ (mul-ℕ x one-ℕ) one-ℕ) ∙
+    ( ap succ-ℕ (right-unit-law-mul-ℕ x))
   
   left-unit-law-mul-ℕ :
     (x : ℕ) → Id (mul-ℕ one-ℕ x) x

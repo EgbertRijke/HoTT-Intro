@@ -24,18 +24,20 @@ Definition nine_N : N := succ_N eight_N.
 
 Definition ten_N : N := succ_N nine_N.
 
-Fixpoint add_N (m n : N) :=
-  match n with
-  | zero_N => m
-  | succ_N n => succ_N (add_N m n)
-  end.
+Definition add_N (m n : N) : N.
+Proof.
+  induction n as [|n s].
+  - exact m.
+  - exact (succ_N s).
+Defined.
 
 Definition add_N' (m n : N) : N :=
   add_N n m.
 
 Notation "x '+' y" := (add_N x y).
 
-Fixpoint min_N (m n : N) :=
+(*
+Fixpoint min_N (m n : N) : N :=
   match n with
   | zero_N => zero_N
   | succ_N n =>
@@ -44,6 +46,18 @@ Fixpoint min_N (m n : N) :=
     | succ_N m => succ_N (min_N m n)
     end
   end.
+ *)
+
+Definition min_N : N -> N -> N.
+Proof.
+  intro m.
+  induction m as [|m f].
+  - exact (const zero_N).
+  - intro n.
+    induction n as [|n k].
+    * exact zero_N.
+    * exact (succ_N (f k)).
+Defined.
 
 Fixpoint max_N (m n : N) :=
   match n with
@@ -55,11 +69,12 @@ Fixpoint max_N (m n : N) :=
     end
   end.
 
-Fixpoint mul_N (m n : N) : N :=
-  match n with
-  | zero_N => zero_N
-  | succ_N n => m + (mul_N m n)
-  end.
+Definition mul_N (m n : N) : N.
+Proof.
+  induction n as [|n v].
+  - exact zero_N.
+  - exact (add_N m v).
+Defined.
 
 Notation "x '*' y" := (mul_N x y).
 
