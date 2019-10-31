@@ -1,8 +1,10 @@
 Require Export section_04_inductive.
 
 Inductive Id {A} (a : A) : A -> Type :=
-| refl : Id a a.
+| refl' : Id a a.
 
+Definition refl {A} {a : A} : Id a a := refl' a.
+  
 Notation "x '==' y" := (Id x y) (at level 80).
 
 Lemma inv {A} {x y : A} (p : x == y) : y == x.
@@ -21,11 +23,11 @@ Defined.
 Ltac transitivity x := apply (@concat _ _ x).
 
 Lemma left_unit {A} {x y : A} (p : x == y) :
-  concat (refl x) p == p.
+  concat refl p == p.
 Proof. reflexivity. Defined.
 
 Lemma right_unit {A} {x y : A} (p : x == y) :
-  concat p (refl y) == p.
+  concat p refl == p.
 Proof.
   destruct p.
   reflexivity.
@@ -39,14 +41,14 @@ Proof.
 Defined.
 
 Lemma left_inv {A} {x y : A} (p : x == y) :
-  concat (inv p) p == refl y.
+  concat (inv p) p == refl.
 Proof.
   destruct p.
   reflexivity.
 Defined.
 
 Lemma right_inv {A} {x y : A} (p : x == y) :
-  concat p (inv p) == refl x.
+  concat p (inv p) == refl.
 Proof.
   destruct p.
   reflexivity.
@@ -80,7 +82,7 @@ Defined.
 Lemma left_unit_law_add_N (n : N) : zero_N + n == n.
 Proof.
   induction n.
-  - apply refl.
+  - reflexivity.
   - cbn. now apply ap.
 Defined.
 
