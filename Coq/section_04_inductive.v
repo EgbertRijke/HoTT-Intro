@@ -68,26 +68,16 @@ Definition neg_one_Z : Z := inl zero_N.
 
 Definition neg_two_Z : Z := inl one_N.
 
-Fixpoint succ_Z (k : Z) : Z :=
-  match k with
-  | inl' _ _ n =>
-    match n with
-    | zero_N => zero_Z
-    | succ_N m => inl m
-    end
-  | inr' _ _ x =>
-    match x with
-    | inl' _ _ x =>
-      match x with
-      | star => one_Z
-      end
-    | inr' _ _ n =>
-      match n with
-      | zero_N => two_Z
-      | succ_N n => inr (inr (succ_N (succ_N n)))
-      end
-    end
-  end.
+Definition succ_Z (k : Z) : Z.
+Proof.
+  destruct k as [n | x].
+  - destruct n.
+    * exact zero_Z.
+    * exact (inl n).
+  - destruct x as [x | n].
+    * exact one_Z.
+    * exact (inr (inr (succ_N n))).
+Defined.
 
 Inductive Sigma (A : Type) (B : A -> Type) : Type :=
 | pair' : forall x, B x -> Sigma A B.
@@ -128,26 +118,16 @@ Proof.
   now apply f.
 Defined.
 
-Fixpoint pred_Z (k : Z) : Z :=
-  match k with
-  | inl' _ _ n =>
-    match n with
-    | zero_N => neg_two_Z
-    | succ_N m => inl (succ_N (succ_N m))
-    end
-  | inr' _ _ x =>
-    match x with
-    | inl' _ _ x =>
-      match x with
-      | star => neg_one_Z
-      end
-    | inr' _ _ n =>
-      match n with
-      | zero_N => zero_Z
-      | succ_N m => inr (inr m)
-      end
-    end
-  end.
+Definition pred_Z (k : Z) : Z.
+Proof.
+  destruct k as [n | x].
+  - exact (inl (succ_N n)).
+  - destruct x as [x | n].
+    * exact neg_one_Z.
+    * destruct n.
+      ** exact zero_Z.
+      ** exact (inr (inr n)).
+Defined.
 
 Definition add_Z (k l : Z) : Z.
 Proof.
