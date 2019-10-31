@@ -77,33 +77,33 @@ Proof.
   reflexivity.
 Defined.
 
-Lemma left_unit_law_add_NN (n : NN) : zero + n == n.
+Lemma left_unit_law_add_N (n : N) : zero_N + n == n.
 Proof.
   induction n.
   - apply refl.
   - cbn. now apply ap.
 Defined.
 
-Lemma right_unit_law_add_NN (n : NN) : n + zero == n.
+Lemma right_unit_law_add_N (n : N) : n + zero_N == n.
 Proof.
   reflexivity.
 Defined.
 
-Lemma left_successor_law_add_NN (m n : NN) :
-  (succ m) + n == succ (m + n).
+Lemma left_successor_law_add_N (m n : N) :
+  (succ_N m) + n == succ_N (m + n).
 Proof.
   induction n.
   - reflexivity.
   - cbn. now apply ap.
 Defined.
 
-Lemma right_successor_law_add_NN (m n : NN) :
-  m + (succ n) == succ (m + n).
+Lemma right_successor_law_add_N (m n : N) :
+  m + (succ_N n) == succ_N (m + n).
 Proof.
   reflexivity.
 Defined.
 
-Theorem associative_add_NN (m n k : NN) :
+Theorem associative_add_N (m n k : N) :
   (m + n) + k == m + (n + k).
 Proof.
   induction k.
@@ -111,83 +111,81 @@ Proof.
   - cbn. now apply ap.
 Defined.
 
-Theorem commutative_add_NN (m n : NN) :
+Theorem commutative_add_N (m n : N) :
   m + n == n + m.
 Proof.
   induction n.
-  - apply inv.
-    apply left_unit_law_add_NN.
-  - transitivity (succ (n + m)).
-    * now apply (ap succ).
-    * apply inv, left_successor_law_add_NN.
+  - apply inv, left_unit_law_add_N.
+  - transitivity (succ_N (n + m)).
+    * now apply (ap succ_N).
+    * apply inv, left_successor_law_add_N.
 Defined.
 
-Definition left_zero_law_mul_NN (n : NN) :
-  zero * n == zero.
+Definition left_zero_law_mul_N (n : N) :
+  zero_N * n == zero_N.
 Proof.
   induction n.
   - reflexivity.
-  - transitivity (zero * n).
-    * apply left_unit_law_add_NN.
+  - transitivity (zero_N * n).
+    * apply left_unit_law_add_N.
     * assumption.
 Defined.
 
-Definition right_zero_law_mul_NN (n : NN) :
-  n * zero == zero.
+Definition right_zero_law_mul_N (n : N) :
+  n * zero_N == zero_N.
 Proof. reflexivity. Defined.
 
-Definition left_successor_law_mul_NN (m n : NN) :
-  (succ m) * n == (m * n) + n.
+Definition left_successor_law_mul_N (m n : N) :
+  (succ_N m) * n == (m * n) + n.
 Proof.
   induction n.
   - reflexivity.
-  - transitivity (succ m + (m * n + n)).
-    * now apply (ap (add_NN (succ m))).
-    * { transitivity (succ (m + (m * n + n))).
-        - apply left_successor_law_add_NN.
-        - apply (ap succ), inv, associative_add_NN.
+  - transitivity (succ_N m + (m * n + n)).
+    * now apply (ap (add_N (succ_N m))).
+    * { transitivity (succ_N (m + (m * n + n))).
+        - apply left_successor_law_add_N.
+        - apply (ap succ_N), inv, associative_add_N.
       }
 Defined.
 
-Definition right_successor_law_mul_NN (m n : NN) :
-  m * (succ n) == m + (m * n).
+Definition right_successor_law_mul_N (m n : N) :
+  m * (succ_N n) == m + (m * n).
 Proof. reflexivity. Defined.
 
-Definition left_distributive_mul_add_NN (m n k : NN) :
+Definition left_distributive_mul_add_N (m n k : N) :
   m * (n + k) == (m * n) + (m * k).
 Proof.
   induction k.
   - reflexivity.
   - transitivity (m + (m * n + m * k)).
-    * now apply (ap (add_NN m)).
+    * now apply (ap (add_N m)).
     * { transitivity (m + m * n + m * k).
-        - apply inv, associative_add_NN.
+        - apply inv, associative_add_N.
         - transitivity ((m * n + m) + (m * k)).
-          * apply (ap (fun x => x + (m * k))).
-            apply commutative_add_NN.
-          * apply associative_add_NN.
+          * apply (ap (add_N' (m * k))), commutative_add_N.
+          * apply associative_add_N.
       }
 Defined.
     
-Definition associative_mul_NN (m n k : NN) :
+Definition associative_mul_N (m n k : N) :
   (m * n) * k == m * (n * k).
 Proof.
   induction k.
   - reflexivity.
   - transitivity (m * n + m * (n * k)).
-    * now apply (ap (add_NN (m * n))).
-    * apply inv, left_distributive_mul_add_NN.
+    * now apply (ap (add_N (m * n))).
+    * apply inv, left_distributive_mul_add_N.
 Defined.
 
-Definition commutative_mul_NN (m n : NN) :
+Definition commutative_mul_N (m n : N) :
   m * n == n * m.
 Proof.
   induction n.
-  - apply inv. apply left_zero_law_mul_NN.
-  - cbn. transitivity (m * n + m).
-    * apply commutative_add_NN.
-    * cbn. transitivity ((n * m) + m).
-      ** now apply (ap (add_NN' m)).
-      ** apply inv, left_successor_law_mul_NN.
+  - apply inv, left_zero_law_mul_N.
+  - transitivity (m * n + m).
+    * apply commutative_add_N.
+    * transitivity ((n * m) + m).
+      ** now apply (ap (add_N' m)).
+      ** apply inv, left_successor_law_mul_N.
 Defined.
 
