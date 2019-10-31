@@ -1,4 +1,4 @@
-Require Export pi.
+Require Export section_02_pi.
 
 Inductive N : Type :=
 | zero_N : N

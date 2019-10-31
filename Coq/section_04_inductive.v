@@ -1,4 +1,4 @@
-Require Export nat.
+Require Export section_03_nat.
 
 Inductive unit : Type :=
 | star : unit.

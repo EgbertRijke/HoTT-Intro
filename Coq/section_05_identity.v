@@ -1,4 +1,4 @@
-Require Export pi nat inductive.
+Require Export section_04_inductive.
 
 Inductive Id {A} (a : A) : A -> Type :=
 | refl : Id a a.
