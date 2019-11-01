@@ -503,6 +503,6 @@ Proof.
   intros P p0 pS.
   apply conclusion_strong_ind_N.
   apply induction_strong_ind_N.
-  apply zero_strong_ind_N; exact p0.
-  apply succ_strong_ind_N; exact pS.
+  - now apply zero_strong_ind_N.
+  - now apply succ_strong_ind_N.
 Defined.
