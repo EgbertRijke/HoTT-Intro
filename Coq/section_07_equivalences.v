@@ -107,6 +107,9 @@ Definition map_retr {A B} {f : A -> B} (r : retr f) : B -> A := pr1 r.
 Definition is_retr_map_retr {A B} {f : A -> B} (r : retr f) :
   comp (map_retr r) f ~ idmap := pr2 r.
 
+Definition sr_pair (A B : Type) :=
+  Sigma (A -> B) retr.
+
 Definition is_equiv {A B} (f : A -> B) : Type :=
   prod (sec f) (retr f).
 
@@ -640,4 +643,151 @@ Definition is_equiv_right_factor' {A B X} {g : B -> X} {h : A -> B} :
   is_equiv (comp g h) -> is_equiv g -> is_equiv h :=
   is_equiv_right_factor (pair h (@refl_htpy _ _ (comp g h))).
 
-      
+(** Exercise 7.5 *)
+
+(** Exercise 7.5.a *)
+
+Definition negb_negb (b : bool) : negb (negb b) == b.
+Proof.
+  destruct b; reflexivity.
+Defined.
+
+Definition is_equiv_negb : is_equiv negb.
+Proof.
+  apply (is_equiv_has_inverse negb); exact negb_negb.
+Defined.
+
+Definition negb_equiv : bool <~> bool := pair negb is_equiv_negb.
+
+(** Exercise 7.5.b *)
+
+Notation "x =/= y" := (neg (x == y)) (at level 80).
+
+Definition neg_eq_true_false : (true =/= false).
+Proof.
+  intro p.
+  now apply (tr (Eq_bool true) p).
+Defined.
+
+(** Exercise 7.5.c *)
+
+Definition neg_is_equiv_const_b (b : bool) :
+  neg (is_equiv (@const bool bool b)).
+Proof.
+  intro H.
+  apply neg_eq_true_false.
+  transitivity (inv_is_equiv H b).
+  - apply inv. apply (is_retr_inv_is_equiv H).
+  - apply (is_retr_inv_is_equiv H).
+Defined.
+
+(** Exercise 7.6 *)
+
+Definition is_sec_pred_Z : comp succ_Z pred_Z ~ idmap.
+Proof.
+  intro k.
+  destruct k as [n | x];
+    try induction n as [|n p];
+    try destruct x as [x | m];
+    try destruct x;
+    try induction m as [|m q];
+    now try auto.
+Defined.
+
+Definition is_retr_pred_Z : comp pred_Z succ_Z ~ idmap.
+Proof.
+  intro k.
+  destruct k as [n | x];
+    try induction n as [|n p];
+    try destruct x as [x | m];
+    try destruct x;
+    try induction m as [|m q];
+    now try auto.
+Defined.
+    
+Theorem is_equiv_succ_Z : is_equiv succ_Z.
+Proof.
+  apply (is_equiv_has_inverse pred_Z).
+  - exact is_sec_pred_Z.
+  - exact is_retr_pred_Z.
+Defined.
+
+Definition succ_Z_equiv : Z <~> Z := pair succ_Z is_equiv_succ_Z.
+
+Theorem is_equiv_pred_Z : is_equiv pred_Z.
+Proof.
+  apply (is_equiv_has_inverse succ_Z).
+  - exact is_retr_pred_Z.
+  - exact is_sec_pred_Z.
+Defined.
+
+Definition pred_Z_equiv : Z <~> Z := pair pred_Z is_equiv_pred_Z.
+
+(** Exercise 7.7 *)
+
+Definition swap_coprod {A B} : coprod A B -> coprod B A.
+Proof.
+  intro x.
+  destruct x.
+  - now apply inr.
+  - now apply inl.
+Defined.
+
+Definition swap_swap_coprod {A B} :
+  comp (@swap_coprod A B) (@swap_coprod B A) ~ idmap.
+Proof.
+  intro x. now destruct x.
+Defined.
+
+Theorem is_equiv_swap_coprod {A B} : is_equiv (@swap_coprod A B).
+Proof.
+  apply (is_equiv_has_inverse swap_coprod); now apply swap_swap_coprod.
+Defined.
+
+Definition commutative_coprod A B : coprod A B <~> coprod B A :=
+  pair swap_coprod is_equiv_swap_coprod.
+
+Definition swap_prod {A B} : prod A B -> prod B A.
+Proof.
+  intro x; destruct x.
+  now apply pair.
+Defined.
+
+Definition swap_swap_prod {A B} :
+  comp (@swap_prod A B) (@swap_prod B A) ~ idmap.
+Proof.
+  intro x; destruct x.
+  reflexivity.
+Defined.
+
+Theorem is_equiv_swap_prod {A B} : is_equiv (@swap_prod A B).
+Proof.
+  apply (is_equiv_has_inverse swap_prod); now apply swap_swap_prod.
+Defined.
+
+Definition commutative_prod A B : prod A B <~> prod B A :=
+  pair swap_prod is_equiv_swap_prod.
+
+(** Exercise 7.8 *)
+
+Definition incl_sr_pair {A B} : sr_pair A B -> A -> B := pr1.
+
+Definition retr_incl_sr_pair {A B} (R : sr_pair A B) :
+  retr (incl_sr_pair R) := pr2 R.
+
+Definition map_retr_incl_sr_pair {A B} (R : sr_pair A B) :
+  B -> A := map_retr (retr_incl_sr_pair R).
+
+Definition is_retr_map_retr_incl_sr_pair {A B} (R : sr_pair A B) :
+  comp (map_retr_incl_sr_pair R) (incl_sr_pair R) ~ idmap :=
+  is_retr_map_retr (retr_incl_sr_pair R).
+
+(* I don't know how to imprive this term, because when I apply pair, coq doesn't generate goals for both arguments. Instead it gets stuck on guessing what the first component of the pair is going to be. *)
+
+Definition path_sr_pair {A B} (x y : A) (R : sr_pair A B) :
+    (sr_pair (x == y) (incl_sr_pair R x == incl_sr_pair R y)).
+Proof.
+  apply (pair (ap (incl_sr_pair R))).
+  apply (pair (fun q => concat (inv (is_retr_map_retr_incl_sr_pair R x)) (concat (ap (map_retr_incl_sr_pair R) q) (is_retr_map_retr_incl_sr_pair R y)))).
+  intro p. destruct p. apply left_inv.
+Defined.
