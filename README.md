@@ -1,5 +1,5 @@
 # Introduction to Homotopy Type Theory
-This repository contains a book for a first introduction course to Homotopy Type Theory, accompanied by an Agda formalization of all the results and exercises.
+This repository contains a book for a first introduction course to Homotopy Type Theory, accompanied by formalization projects in several proof assistats, closely following the material in the book.
 
 The [course][1] was taught by Egbert Rijke at Carnegie Mellon University during the spring semester of 2018, and was aimed at advanced undergraduate students and graduate students from the Mathematics, Philosophy, and Computer Science departments.
 
