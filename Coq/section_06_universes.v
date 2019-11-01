@@ -175,6 +175,13 @@ Proof.
   now apply (t n k).
 Defined.
 
+Definition anti_symmetric_leq_N :
+  forall m n, leq_N m n -> leq_N n m -> m == n.
+Proof.
+  intro m. induction m as [|m H]; intros n p q; destruct n; try now auto.
+  exact (ap succ_N (H n p q)).
+Defined.
+
 Definition transitive_le_N :
   forall m n k, le_N m n -> le_N n k -> le_N m k.
 Proof.
@@ -441,4 +448,61 @@ Proof.
     try now auto.
   - now apply (t (inl n') (inl n'')).
   - now apply (t (inr (inr n')) (inr (inr n''))).
+Defined.
+
+(** Exercise 6.7 *)
+
+(** Exercise 6.7.a *)
+
+Definition zero_leq_N n : leq_N zero_N n.
+Proof.
+  induction n as [|n H]; try now auto.
+Defined.
+
+Definition fam_strong_ind_N (P : N -> Type) (n : N) : Type :=
+  forall x, leq_N x n -> P x.
+                                                     
+Definition zero_strong_ind_N :
+  forall (P : N -> Type), P zero_N -> fam_strong_ind_N P zero_N.
+Proof.
+  intros P p0 x H.
+  induction x; try now auto.
+Defined.
+
+Definition succ_strong_ind_N (P : N -> Type) :
+  ( forall k, (fam_strong_ind_N P k) -> P (succ_N k)) ->
+  forall k, (fam_strong_ind_N P k) -> (fam_strong_ind_N P (succ_N k)).
+Proof.
+  intros pS k f m t.
+  induction m.
+  - exact (f zero_N (zero_leq_N k)).
+  - apply pS. intros m' t'. exact (f m' (transitive_leq_N m' m k t' t)).
+Defined.
+
+Definition conclusion_strong_ind_N (P : N -> Type) :
+  ( forall n, fam_strong_ind_N P n) -> forall n, P n.
+Proof.
+  intros f n. exact (f n n (reflexive_leq_N n)).
+Defined.
+
+Definition induction_strong_ind_N :
+  forall (P : N -> Type) (p0 : fam_strong_ind_N P zero_N)
+         (pS : forall k,
+             (fam_strong_ind_N P k) -> (fam_strong_ind_N P (succ_N k))),
+    forall n, fam_strong_ind_N P n.
+Proof.
+  intros P p0 pS n.
+  induction n; now auto.
+Defined.
+
+Definition strong_induction_N :
+  forall (P : N -> Type),
+    P zero_N -> (forall x, (forall y, leq_N y x -> P y) -> P (succ_N x)) ->
+    forall n, P n.
+Proof.
+  intros P p0 pS.
+  apply conclusion_strong_ind_N.
+  apply induction_strong_ind_N.
+  apply zero_strong_ind_N; exact p0.
+  apply succ_strong_ind_N; exact pS.
 Defined.
