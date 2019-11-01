@@ -288,16 +288,16 @@ We can also define observational equality for many other kinds of types, such as
   \begin{equation*}
     \prd{n,m:\N} \EqN(n,m)\to \EqN(f(n),f(m)).
   \end{equation*}
-  \emph{Hint: to get the inductive step going the induction hypothesis has to be strong enough. Construct by double induction a term of type}
+  Hint: to get the inductive step going the induction hypothesis has to be strong enough. Construct by double induction a term of type
   \begin{equation*}
     \prd{n,m:\N}\prd{f:\N\to\N} \EqN(n,m)\to \EqN(f(n),f(m)),
   \end{equation*}
-  \emph{and pull out the universal quantification over $f:\N\to\N$ by \cref{ex:swap}.}
+  and pull out the universal quantification over $f:\N\to\N$ by \cref{ex:swap}.
 \exercise 
   \begin{subexenum}
-  \item Define the \define{order relations}\index{relation!order}\index{order relation} $\leq$ and $<$ on $\N$.
-  \item Show that $\leq$ is reflexive and that $<$ is \define{anti-reflexive}\index{anti-reflexive}\index{relation!anti-reflexive}, i.e., that $\neg(n<n)$. 
-  \item Show that both $\leq$ and $<$ are transitive, and that $n<S(n)$.
+  \item Define the \define{order relations}\index{relation!order}\index{order relation!leq on N@{$\leq$ on $\N$}}\index{order relation!le on N@{$<$ on $\N$}}\index{leq@{$\leq$}!on N@{on $\N$}}\index{le@{$<$}!on N@{on $\N$}} $\leq$ and $<$ on $\N$.
+  \item Show that $\leq$ is reflexive\index{reflexive!leq on N@{$\leq$ on $\N$}}, transtive, and \define{antisymmetric}, i.e., show that $m=n$ whenever both $m\leq n$ and $n\leq m$ hold.
+  \item Show that $<$ is \define{irreflexive}\index{irreflexive}\index{relation!irreflexive} ($n \nless n$ for any $n$), and transitive. Furthermore show that $n<\succN(n)$.
   \item Show that $k\leq \min(m,n)$ holds if and only if both $k\leq m$ and $k\leq n$ hold, and show that $\max(m,n)\leq k$ holds if and only if both $m\leq k$ and $n\leq k$ hold.
   \end{subexenum}
 \exercise \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
@@ -312,8 +312,8 @@ We can also define observational equality for many other kinds of types, such as
 \exercise \label{ex:int_order}
   \begin{subexenum}
   \item Define the order relations\index{relation!order}\index{order relation} $\leq$ and $<$ on and $\Z$.
-  \item Show that $\leq$ is reflexive, transitive, and anti-symmetric.
-  \item Show that $<$ is anti-reflexive and transitive.
+  \item Show that $\leq$ is reflexive, transitive, and antisymmetric.
+  \item Show that $<$ is irreflexive and transitive.
   \end{subexenum}
 \exercise
   \begin{subexenum}

@@ -149,23 +149,28 @@ Defined.
 
 Definition le_N : N -> N -> Type.
 Proof.
+  intro m; induction m as [|m L].
+  - intro n; destruct n.
+    * exact empty.
+    * exact unit.
+  - intro n; destruct n.
+    * exact empty.
+    * exact (L n).
+Defined.
+(*
+  Proof.
   intro m; induction m as [|m L]; intro n; destruct n.
   - exact empty.
   - exact unit.
   - exact empty.
   - exact (L n).
-Defined.
+  Defined.
+ *)
 
 (** Exercise 6.4.b *)
 
 Definition reflexive_leq_N (n : N) : leq_N n n.
 Proof. now induction n. Defined.
-
-Definition anti_reflexive_le_N (n : N) : neg (le_N n n).
-Proof. now induction n. Defined.
-
-
-(** Exercise 6.4.c *)
 
 Definition transitive_leq_N :
   forall m n k, leq_N m n -> leq_N n k -> leq_N m k.
@@ -182,6 +187,8 @@ Proof.
   exact (ap succ_N (H n p q)).
 Defined.
 
+(** Exercise 6.4.c *)
+
 Definition transitive_le_N :
   forall m n k, le_N m n -> le_N n k -> le_N m k.
 Proof.
@@ -189,6 +196,9 @@ Proof.
     intros n k p q; destruct n; destruct k; try now cbn.
   now apply (t n k).
 Defined.
+
+Definition anti_reflexive_le_N (n : N) : neg (le_N n n).
+Proof. now induction n. Defined.
 
 Definition succ_le_N (n : N) : le_N n (succ_N n).
 Proof.
@@ -495,7 +505,7 @@ Proof.
   induction n; now auto.
 Defined.
 
-Definition strong_induction_N :
+Definition strong_ind_N :
   forall (P : N -> Type),
     P zero_N -> (forall x, (forall y, leq_N y x -> P y) -> P (succ_N x)) ->
     forall n, P n.
@@ -505,4 +515,64 @@ Proof.
   apply induction_strong_ind_N.
   - now apply zero_strong_ind_N.
   - now apply succ_strong_ind_N.
+Defined.
+
+(** Exercise 6.7.b *)
+
+Definition fam_ordinal_ind_N (P : N -> Type) (n : N) :=
+  forall k, (le_N k n) -> P k.
+
+Definition neg_le_zero_N (n : N) : neg (le_N n zero_N).
+Proof.
+  induction n; now auto.
+Defined.
+
+Definition strong_transitive_le_N (m : N) :
+  forall n k, le_N m n -> le_N n (succ_N k) -> le_N m k.
+Proof.
+  induction m as [|m H]; intros n k p q; destruct n; destruct k;
+    try now auto.
+  - apply ex_falso_map. now apply (neg_le_zero_N n).
+  - apply ex_falso_map. now apply (neg_le_zero_N n).
+  - now apply (H n k).
+Defined.
+
+Definition zero_ordinal_ind_N (P : N -> Type) :
+  fam_ordinal_ind_N P zero_N.
+Proof.
+  intros k p.
+  induction k; now auto.
+Defined.
+
+Definition succ_ordinal_ind_N
+           (P : N -> Type) (pS : forall k, fam_ordinal_ind_N P k -> P k) :
+  (forall k, fam_ordinal_ind_N P k -> fam_ordinal_ind_N P (succ_N k)).
+Proof.
+  intros k H l p.
+  apply (pS l).
+  intros k' p'.
+  apply (H k').
+  now apply (strong_transitive_le_N k' l k).
+Defined.
+
+Definition inductive_step_ordinal_ind_N (P : N -> Type)
+           (p0 : fam_ordinal_ind_N P zero_N)
+           (pS : forall k, fam_ordinal_ind_N P k -> fam_ordinal_ind_N P (succ_N k)) :
+  forall k, fam_ordinal_ind_N P k.
+Proof.
+  intro k. induction k; now auto.
+Defined.
+
+Definition conclusive_step_ordinal_ind_N (P : N -> Type) :
+  (forall k, fam_ordinal_ind_N P k) -> (forall k, P k).
+Proof.
+  intros H k. apply (H (succ_N k)). apply succ_le_N.
+Defined.
+
+Definition ordinal_ind_N (P : N -> Type) (H : forall k, fam_ordinal_ind_N P k -> P k) : forall k, P k.
+Proof.
+  apply conclusive_step_ordinal_ind_N.
+  apply inductive_step_ordinal_ind_N.
+  - now apply zero_ordinal_ind_N.
+  - now apply succ_ordinal_ind_N.
 Defined.
