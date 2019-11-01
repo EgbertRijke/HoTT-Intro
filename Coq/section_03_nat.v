@@ -53,10 +53,9 @@ Proof.
   intro m.
   induction m as [|m f].
   - exact (const zero_N).
-  - intro n.
-    induction n as [|n k].
+  - intro n; destruct n.
     * exact zero_N.
-    * exact (succ_N (f k)).
+    * exact (succ_N (f n)).
 Defined.
 
 Fixpoint max_N (m n : N) :=

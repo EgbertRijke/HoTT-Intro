@@ -347,4 +347,3 @@ Proof.
   destruct q.
   reflexivity.
 Defined.
-
