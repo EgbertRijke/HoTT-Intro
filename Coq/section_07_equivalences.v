@@ -21,6 +21,9 @@ Proof.
   exact (concat (H x) (K x)).
 Defined.
 
+Definition concat_htpy' {A} {B : A -> Type} {f g h : forall x, B x}
+           (K : g ~ h) (H : f ~ g) := concat_htpy H K.
+
 Definition inv_htpy {A} {B : A -> Type} {f g : forall x, B x} :
   f ~ g -> g ~ f.
 Proof.
@@ -93,7 +96,7 @@ Definition sec {A B} (f : A -> B) : Type :=
 
 Definition map_sec {A B} {f : A -> B} (s : sec f) : B -> A := pr1 s.
 
-Definition htpy_sec {A B} {f : A -> B} (s : sec f) :
+Definition is_sec_map_sec {A B} {f : A -> B} (s : sec f) :
   comp f (map_sec s) ~ idmap := pr2 s.
 
 Definition retr {A B} (f : A -> B) : Type :=
@@ -101,7 +104,7 @@ Definition retr {A B} (f : A -> B) : Type :=
 
 Definition map_retr {A B} {f : A -> B} (r : retr f) : B -> A := pr1 r.
 
-Definition htpy_retr {A B} {f : A -> B} (r : retr f) :
+Definition is_retr_map_retr {A B} {f : A -> B} (r : retr f) :
   comp (map_retr r) f ~ idmap := pr2 r.
 
 Definition is_equiv {A B} (f : A -> B) : Type :=
@@ -144,7 +147,7 @@ Definition inv_is_equiv {A B} {f : A -> B} (H : is_equiv f) : B -> A :=
   map_sec (sec_is_equiv H).
 
 Definition is_sec_inv_is_equiv {A B} {f : A -> B} (H : is_equiv f) :
-  comp f (inv_is_equiv H) ~ idmap := htpy_sec (sec_is_equiv H).
+  comp f (inv_is_equiv H) ~ idmap := is_sec_map_sec (sec_is_equiv H).
 
 Definition retr_is_equiv {A B} {f : A -> B} (H : is_equiv f) : retr f := pr2 H.
 
@@ -152,7 +155,7 @@ Definition map_retr_is_equiv {A B} {f : A -> B} (H : is_equiv f) :
   B -> A := map_retr (retr_is_equiv H).
 
 Definition htpy_retr_is_equiv {A B} {f : A -> B} (H : is_equiv f) :
-  comp (map_retr_is_equiv H) f ~ idmap := htpy_retr (retr_is_equiv H).
+  comp (map_retr_is_equiv H) f ~ idmap := is_retr_map_retr (retr_is_equiv H).
 
 Definition htpy_sec_retr {A B} {f : A -> B} (H : is_equiv f) :
   inv_is_equiv H ~ map_retr_is_equiv H.
@@ -461,8 +464,10 @@ Definition is_equiv_htpy' {A B} {f g : A -> B} (H : f ~ g) :
 Definition htpy_equiv {A B} (e e' : A <~> B) : Type :=
   map_equiv e ~ map_equiv e'.
 
+Notation "e '~e' f" := (htpy_equiv e f) (at level 70).
+
 Definition htpy_inv_equiv {A B} {e e' : A <~> B} :
-  htpy_equiv e e' -> htpy_equiv (inv_equiv e) (inv_equiv e').
+  e ~e e' -> (inv_equiv e) ~e (inv_equiv e').
 Proof.
   intros H y.
   transitivity
@@ -476,3 +481,163 @@ Proof.
     * apply (ap (map_equiv (inv_equiv e'))).
       apply (is_sec_inv_is_equiv (is_equiv_map_equiv e)).
 Defined.
+
+(** Exercise 7.4 *)
+
+(** Exercise 7.4.a *)
+
+Definition hom_slice {A B X} (f : A -> X) (g : B -> X) : Type :=
+  Sigma (A -> B) (fun h => f ~ comp g h).
+
+Definition map_hom_slice {A B X} {f : A -> X} {g : B -> X} (h : hom_slice f g) :
+  A -> B := pr1 h.
+
+Definition triangle_hom_slice {A B X} {f : A -> X} {g : B -> X} (h : hom_slice f g) : f ~ comp g (map_hom_slice h) := pr2 h.
+
+Definition triangle_sec_map_hom_slice {A B X} {f : A -> X} {g : B -> X} (h : hom_slice f g) (s : sec (map_hom_slice h)) :
+  g ~ comp f (map_sec s).
+Proof.
+  apply inv_htpy.
+  eapply concat_htpy.
+  - exact (right_whisker_htpy (triangle_hom_slice h) (map_sec s)).
+  - exact (left_whisker_htpy g (is_sec_map_sec s)).
+Defined.
+
+Definition hom_slice_sec_map_hom_slice {A B X} {f : A -> X} {g : B -> X}
+           (h : hom_slice f g) (s : sec (map_hom_slice h)) :
+  hom_slice g f.
+Proof.
+  apply (pair (map_sec s)).
+  exact (triangle_sec_map_hom_slice h s).
+Defined.
+
+Definition section_comp {A B X} {f : A -> X} {g : B -> X} (h : hom_slice f g) :
+  sec (map_hom_slice h) -> sec f -> sec g.
+Proof.
+  intros sh sf.
+  apply (pair (comp (map_hom_slice h) (map_sec sf))).
+  eapply concat_htpy.
+  - apply inv_htpy.
+    exact (right_whisker_htpy (triangle_hom_slice h) (map_sec sf)).
+  - exact (is_sec_map_sec sf).
+Defined.
+
+Definition section_comp' {A B X} {f : A -> X} {g : B -> X} (h : hom_slice f g) :
+  sec (map_hom_slice h) -> sec g -> sec f.
+Proof.
+  intros sh sg.
+  apply (pair (comp (map_sec sh) (map_sec sg))).
+  eapply concat_htpy.
+  - exact (right_whisker_htpy (triangle_hom_slice h) (comp (map_sec sh) (map_sec sg))).
+  - apply (concat_htpy' (is_sec_map_sec sg)).
+    apply (left_whisker_htpy g).
+    exact (right_whisker_htpy (is_sec_map_sec sh) (map_sec sg)).
+Defined.
+
+(** Exercise 7.4.b *)
+
+Definition triangle_retr_map_hom_slice {A B X} {f : A -> X} {g : B -> X}
+           (h : hom_slice f g) (r : retr g) :
+  (map_hom_slice h) ~ comp (map_retr r) f.
+Proof.
+  apply inv_htpy.
+  eapply concat_htpy.
+  - exact (left_whisker_htpy (map_retr r) (triangle_hom_slice h)).
+  - exact (right_whisker_htpy (is_retr_map_retr r) (map_hom_slice h)).
+Defined.
+
+Definition hom_slice_retr_map_hom_slice {A B X} {f : A -> X} {g : B -> X}
+           (h : hom_slice f g) (r : retr g) :
+  hom_slice (map_hom_slice h) (map_retr r).
+Proof.
+  apply (pair f).
+  exact (triangle_retr_map_hom_slice h r).
+Defined.
+
+Definition retraction_comp {A B X} {f : A -> X} {g : B -> X}
+           (h : hom_slice f g) :
+  retr g -> retr f -> retr (map_hom_slice h).
+Proof.
+  intros rg rf.
+  apply (pair (comp (map_retr rf) g)).
+  eapply concat_htpy.
+  - apply inv_htpy.
+    exact (left_whisker_htpy (map_retr rf) (triangle_hom_slice h)).
+  - exact (is_retr_map_retr rf).
+Defined.
+
+Definition retraction_comp' {A B X} {f : A -> X} {g : B -> X}
+           (h : hom_slice f g) :
+  retr g -> retr (map_hom_slice h) -> retr f.
+Proof.
+  intros rg rh.
+  apply (pair (comp (map_retr rh) (map_retr rg))).
+  eapply concat_htpy.
+  - eapply (left_whisker_htpy (comp (map_retr rh) (map_retr rg))).
+    exact (triangle_hom_slice h).
+  - eapply concat_htpy.
+    * eapply (left_whisker_htpy (map_retr rh)).
+      exact (right_whisker_htpy (is_retr_map_retr rg) (map_hom_slice h)).
+    * exact (is_retr_map_retr rh).
+Defined.
+
+(** Exercise 7.4.c *)
+
+Definition is_equiv_comp {A B X} {f : A -> X} {g : B -> X} (h : hom_slice f g) :
+  is_equiv (map_hom_slice h) -> is_equiv g -> is_equiv f.
+Proof.
+  intros is_equiv_h is_equiv_g.
+  apply pair.
+  - apply (section_comp' h); now apply sec_is_equiv.
+  - apply (retraction_comp' h); now apply retr_is_equiv.
+Defined.
+
+Definition is_equiv_comp' {A B X} {g : B -> X} {h : A -> B} :
+  is_equiv h -> is_equiv g -> is_equiv (comp g h) :=
+  is_equiv_comp (pair h (@refl_htpy _ _ (comp g h))).
+
+Definition comp_equiv {A B C} (e : A <~> B) (e' : B <~> C) : A <~> C.
+Proof.
+  apply (pair (comp (map_equiv e') (map_equiv e))).
+  exact (is_equiv_comp' (is_equiv_map_equiv e) (is_equiv_map_equiv e')).
+Defined.
+
+Definition is_equiv_left_factor {A B X} {f : A -> X} {g : B -> X}
+           (h : hom_slice f g) :
+  is_equiv f -> is_equiv (map_hom_slice h) -> is_equiv g.
+Proof.
+  intros is_equiv_f is_equiv_h.
+  apply pair.
+  - apply (section_comp h); now apply sec_is_equiv.
+  - apply
+      (retraction_comp'
+         (hom_slice_sec_map_hom_slice h (sec_is_equiv is_equiv_h))).
+    * now apply retr_is_equiv.
+    * apply retr_is_equiv.
+      apply is_equiv_inv_is_equiv.
+Defined.
+
+Definition is_equiv_left_factor' {A B X} {g : B -> X} {h : A -> B} :
+  is_equiv (comp g h) -> is_equiv h -> is_equiv g :=
+  is_equiv_left_factor (pair h (@refl_htpy _ _ (comp g h))).
+
+Definition is_equiv_right_factor {A B X} {f : A -> X} {g : B -> X}
+           (h : hom_slice f g) :
+  is_equiv f -> is_equiv g -> is_equiv (map_hom_slice h).
+Proof.
+  intros is_equiv_f is_equiv_g.
+  apply pair.
+  - apply (section_comp' (hom_slice_retr_map_hom_slice h (retr_is_equiv is_equiv_g))).
+    * exact (sec_is_equiv is_equiv_f).
+    * apply sec_is_equiv.
+      apply (is_equiv_htpy' (htpy_sec_retr is_equiv_g)).
+      now apply is_equiv_inv_is_equiv.
+  - apply (retraction_comp h (retr_is_equiv is_equiv_g)).
+    now apply retr_is_equiv.
+Defined.
+
+Definition is_equiv_right_factor' {A B X} {g : B -> X} {h : A -> B} :
+  is_equiv (comp g h) -> is_equiv g -> is_equiv h :=
+  is_equiv_right_factor (pair h (@refl_htpy _ _ (comp g h))).
+
+      
