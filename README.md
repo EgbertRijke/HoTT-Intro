@@ -45,14 +45,16 @@ The course consisted of 27 one-hour lectures, in which we covered most of the fo
     * Connected types
     * Wedges and smash products
     * The Blakers-Massey Theorem
+    
+## The Formalization Rosetta Stone
+This repositories contains formalizations of the first half of the course in several proof assistants: currently Agda and Coq. These formalization project are designed to follow the course notes as closely as possible, and they include solutions to the exercises. From the dual point of view, the course notes form an extensive documentation of the formalization projects, and it is my hope that people will find it helpful to have such a documentation with the formalization.
+
+Formalization projects of this course in more proof assistants that support homotopy type theory might be added in the future.
 
 ## Book
 The course notes that I took are evolving into an introductory textbook for students who want to learn homotopy type theory for the first time. They are currently subject to frequent change, so my recommendation would be to have a look at the 2018 course notes or the 2019 summer school notes instead. Those can be found in the `pdfs` folder of this repository. 
 
 To compile the notes, run `latexmk -pdf hott-intro.tex`.
-
-## Agda formalization
-The Agda formalization can be found in the Agda folder. Except for the first lecture, which explains the rules for dependent type theory, the files of the formalization correspond 1-to-1 with the Lectures in the course notes, and the formalization follows the course material as closely as possible. A formalization of all the exercises is included, since many of them are essential in the development of the theory.
 
 
 [1]: http://www.andrew.cmu.edu/user/erijke/hott/
