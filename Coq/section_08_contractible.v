@@ -9,9 +9,12 @@ Definition is_contr (A : Type) : Type :=
 
 Definition center {A : Type} : is_contr A -> A := pr1.
 
+Definition contraction' {A : Type} (c : is_contr A) (x y : A) : x == y :=
+  concat (inv (pr2 c x)) (pr2 c y).
+
 Definition contraction {A : Type} (c : is_contr A) :
   forall x, (center c) == x :=
-  fun x => concat (inv (pr2 c (center c))) (pr2 c x).
+  contraction' c (center c).
 
 Definition coh_contraction {A : Type} (c : is_contr A) :
   contraction c (center c) == refl :=
@@ -119,3 +122,111 @@ Proof.
   apply (is_contr_Ind_sing (pt_total_path a)).
   exact (Ind_sing_total_path a).
 Defined.
+
+(** Section 8.2 Contractible maps *)
+
+(** Definition 8.2.1 *)
+
+Definition fib {A B} (f : A -> B) (b : B) : Type :=
+  Sigma A (fun x => f x == b).
+
+(** Definition 8.2.2 *)
+
+Definition Eq_fib {A B} (f : A -> B) {b : B} (s t : fib f b) : Type :=
+  Sigma (pr1 s == pr1 t) (fun p => pr2 s == concat (ap f p) (pr2 t)).
+
+Definition refl_Eq_fib {A B} (f : A -> B) {b : B} (s : fib f b) :
+  Eq_fib f s s := pair refl refl.
+
+(** Lemma 8.2.3 *)
+
+Definition Eq_fib_eq {A B} (f : A -> B) {b : B} {s t : fib f b} :
+  s == t -> Eq_fib f s t.
+Proof.
+  intro p; destruct p.
+  apply refl_Eq_fib.
+Defined.
+
+Definition eq_Eq_fib {A B} (f : A -> B) {b : B} {s t : fib f b} :
+  Eq_fib f s t -> s == t.
+Proof.
+  induction s as [x p]; induction t as [y q].
+  intro e; destruct e as [u v].
+  cbn in u; induction u.
+  cbn in v; now induction v.
+Defined.
+
+Definition is_sec_eq_Eq_fib {A B} (f : A -> B) {b : B} {s t : fib f b} :
+  comp (@Eq_fib_eq _ _ f b s t) (eq_Eq_fib f) ~ idmap.
+Proof.
+  induction s as [x p]; induction t as [y q].
+  intro e; destruct e as [u v].
+  cbn in u; induction u.
+  cbn in v; now induction v.
+Defined.
+
+Definition is_retr_eq_Eq_fib {A B} (f : A -> B) {b : B} {s t : fib f b} :
+  comp (eq_Eq_fib f) (@Eq_fib_eq _ _ f b s t) ~ idmap.
+Proof.
+  intro p; destruct p; now destruct s.
+Defined.
+
+Theorem is_equiv_Eq_fib_eq {A B} (f : A -> B) {b : B} {s t : fib f b} :
+  is_equiv (@Eq_fib_eq _ _ f b s t).
+Proof.
+  apply (is_equiv_has_inverse (eq_Eq_fib f)).
+  - exact (is_sec_eq_Eq_fib f).
+  - exact (is_retr_eq_Eq_fib f).
+Defined.
+
+Theorem is_equiv_eq_Eq_fib {A B} (f : A -> B) {b : B} {s t : fib f b} :
+  is_equiv (@eq_Eq_fib _ _ f b s t).
+Proof.
+  apply (is_equiv_has_inverse (Eq_fib_eq f)).
+  - exact (is_retr_eq_Eq_fib f).
+  - exact (is_sec_eq_Eq_fib f).
+Defined.
+
+(** Definition 8.2.4 *)
+
+Definition is_contr_map {A B} (f : A -> B) : Type :=
+  forall b, is_contr (fib f b).
+
+(** Theorem 8.2.5 *)
+
+Definition inv_is_contr_map {A B} {f : A -> B} (c : is_contr_map f) :
+  B -> A.
+Proof.
+  intro b.
+  exact (pr1 (center (c b))).
+Defined.
+
+Definition is_sec_inv_is_contr_map {A B} {f : A -> B} (c : is_contr_map f) :
+  comp f (inv_is_contr_map c) ~ idmap.
+Proof.
+  intro b.
+  exact (pr2 (center (c b))).
+Defined.
+
+(** Sometimes Coq pretends it cannot apply a tactic, while it should certainly
+    accept my steps. This is one of those cases, where it is easier to just
+    write out the proof term than to convince Coq of some sequence of tactics. *)
+
+Definition is_retr_inv_is_contr_map {A B} {f : A -> B} (c : is_contr_map f) :
+  comp (inv_is_contr_map c) f ~ idmap :=
+  fun a =>
+    ap pr1
+       (contraction' (c (f a))
+                     (pair (inv_is_contr_map c (f a))
+                           (is_sec_inv_is_contr_map c (f a)))
+                     (pair a refl)).
+
+Theorem is_equiv_is_contr_map {A B} {f : A -> B} :
+  is_contr_map f -> is_equiv f.
+Proof.
+  intro is_contr_f.
+  apply (is_equiv_has_inverse (inv_is_contr_map is_contr_f)).
+  - apply is_sec_inv_is_contr_map.
+  - apply is_retr_inv_is_contr_map.
+Defined.
+    
