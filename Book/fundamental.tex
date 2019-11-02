@@ -78,6 +78,8 @@ Now consider the situation where we have a map $f:A\to B$, and a family $C$ over
 \end{equation*}
 We claim that this map is an equivalence when $f$ is an equivalence. The technique to prove this claim is the same as the technique we used in \cref{thm:fib_equiv}: first we note that the fibers are equivalent to the fibers of $f$, and then we use the fact that a map is an equivalence if and only if its fibers are contractible to finish the proof.
 
+The converse of the following lemma does not hold. Why not?
+
 \begin{lem}\label{lem:total-equiv-base-equiv}
   Consider an equivalence $e:A\simeq B$, and let $C$ be a type family over $B$. Then the map
   \begin{equation*}
@@ -91,19 +93,12 @@ We claim that this map is an equivalence when $f$ is an equivalence. The techniq
   \begin{equation*}
     \fib{\sigma_f(C)}{t}\simeq \fib{f}{\proj 1(t)}.
   \end{equation*}
-  We prove this by constructing
+  We obtain such an equivalence by constructing the following functions and homotopies:
   \begin{align*}
-    \varphi(t) & : \fib{\sigma_f(C)}{t}\to\fib{f}{\proj 1 (t)} \\
-    \psi(t) & : \fib{f}{\proj 1(t)} \to\fib{\sigma_f(C)}{t} \\
-    G(t) & : \varphi\circ\psi\htpy\idfunc\\
-    H(t) & : \psi\circ\varphi\htpy\idfunc.
-  \end{align*}
-  The construction of these functions and homotopies is by using $\Sigma$-induction and path induction all the way through, just as in the proof of \cref{lem:fib_total}. We list the definitions
-  \begin{align*}
-    \varphi((f(x),z),((x,z),\refl{})) & \defeq (x,\refl{}) \\
-    \psi((f(x),z),(x,\refl{})) & \defeq ((x,z),\refl{}) \\
-    G((f(x),z),(x,\refl{})) & \defeq \refl{} \\
-    H((f(x),z),((x,z),\refl{})) & \defeq \refl{}.
+    \varphi(t) & : \fib{\sigma_f(C)}{t}\to\fib{f}{\proj 1 (t)} & \varphi((f(x),z),((x,z),\refl{})) & \defeq (x,\refl{}) \\
+    \psi(t) & : \fib{f}{\proj 1(t)} \to\fib{\sigma_f(C)}{t} & \psi((f(x),z),(x,\refl{})) & \defeq ((x,z),\refl{}) \\
+    G(t) & : \varphi(t)\circ\psi(t)\htpy\idfunc & G((f(x),z),(x,\refl{})) & \defeq \refl{} \\
+    H(t) & : \psi(t)\circ\varphi(t)\htpy\idfunc & H((f(x),z),((x,z),\refl{})) & \defeq \refl{}.
   \end{align*}
   Now the claim follows, since we see that $\varphi$ is a contractible map if and only if $f$ is a contractible map.
 \end{proof}

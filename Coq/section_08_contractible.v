@@ -391,4 +391,93 @@ Defined.
 
 Definition is_contr_total_path' {A} (a : A) : is_contr (total_path' a) :=
   is_contr_map_idmap a.
-  
+
+(** Exercises *)
+
+(** Exercise 8.1 *)
+
+Definition is_prop_is_contr {A} (c : is_contr A) {x y : A} : is_contr (x == y).
+Proof.
+  apply (pair (contraction' c x y)).
+  intro p; destruct p.
+  apply left_inv.
+Defined.
+
+(** Exercise 8.2 *)
+
+Definition is_contr_retract {A B} (R : sr_pair A B) :
+  is_contr B -> is_contr A.
+Proof.
+  destruct R as [i [r H]].
+  intro is_contr_B; destruct is_contr_B as [b c].
+  apply (pair (r b)).
+  intro x.
+  transitivity (r (i x)).
+  - now apply (ap r).
+  - now apply H.
+Defined.
+
+(** Exercise 8.3 *)
+
+(** Exercise 8.3.a *)
+
+Definition sr_pair_is_equiv {A B} {f : A -> B} :
+  is_equiv f -> sr_pair A B.
+Proof.
+  intro H.
+  exact (pair f (retr_is_equiv H)).
+Defined.
+
+Definition is_contr_is_equiv_const_star {A} :
+  is_equiv (@const A unit star) -> is_contr A.
+Proof.
+  intro H.
+  apply (is_contr_retract (sr_pair_is_equiv H)).
+  exact is_contr_unit.
+Defined.
+
+Definition is_equiv_const_star_is_contr {A} :
+  is_contr A -> is_equiv (@const A unit star).
+Proof.
+  intro c.
+  apply (is_equiv_has_inverse (const (center c))).
+  exact (contraction is_contr_unit).
+  exact (contraction c).
+Defined.
+
+(** Exercise 8.3.b *)
+
+Definition is_contr_is_equiv {A B} {f : A -> B} :
+  is_equiv f -> is_contr B -> is_contr A.
+Proof.
+  intro H.
+  apply is_contr_retract.
+  apply (sr_pair_is_equiv H).
+Defined.
+
+Definition is_contr_equiv {A B} (e : A <~> B) :
+  is_contr B -> is_contr A :=
+  is_contr_is_equiv (is_equiv_map_equiv e).
+
+Definition is_contr_is_equiv' {A B} {f : A -> B} :
+  is_equiv f -> is_contr A -> is_contr B.
+Proof.
+  intro H.
+  exact (is_contr_is_equiv (is_equiv_inv_is_equiv H)).
+Defined.
+
+Definition is_contr_equiv' {A B} (e : A <~> B) :
+  is_contr A -> is_contr B :=
+  is_contr_is_equiv' (is_equiv_map_equiv e).
+
+Definition is_equiv_is_contr {A B} (f : A -> B) :
+  is_contr A -> is_contr B -> is_equiv f.
+Proof.
+  intros CA CB.
+  apply (@is_equiv_right_factor A B unit
+                                (@const A unit star)
+                                (@const B unit star)
+                                (pair f (@refl_htpy _ _ (@const A unit star)))).
+  - now apply is_equiv_const_star_is_contr.
+  - now apply is_equiv_const_star_is_contr.
+Defined.

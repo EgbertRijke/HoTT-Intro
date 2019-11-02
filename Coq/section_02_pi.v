@@ -10,11 +10,7 @@ Proof.
   exact (g (f a)).
 Defined.
 
-Definition const {A B} (a : A) : B -> A.
-Proof.
-  intro b.
-  exact a.
-Defined.
+Definition const {A B} (b : B) : A -> B := fun x => b.
 
 Definition comp_Pi {A} {B : A -> Type} {C : forall x, B x -> Type} :
   forall (f : forall x, B x), (forall x y, C x y) -> (forall x, C x (f x)).
