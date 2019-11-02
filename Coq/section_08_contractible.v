@@ -17,8 +17,7 @@ Definition contraction {A : Type} (c : is_contr A) :
   contraction' c (center c).
 
 Definition coh_contraction {A : Type} (c : is_contr A) :
-  contraction c (center c) == refl :=
-  left_inv (pr2 c (center c)).
+  contraction c (center c) == refl := left_inv.
 
 (** Remark 8.1.3 *)
 
@@ -229,4 +228,167 @@ Proof.
   - apply is_sec_inv_is_contr_map.
   - apply is_retr_inv_is_contr_map.
 Defined.
-    
+
+(** Section 8.3 Equivalences are contractible maps *)
+
+(** Definition 8.3.1 *)
+
+Definition is_coh_invertible {A B} (f : A -> B) : Type :=
+  Sigma
+    (B -> A)
+    (fun g => Sigma
+                (comp f g ~ idmap)
+                (fun G => Sigma
+                            (comp g f ~ idmap)
+                            (fun H =>
+                               right_whisker_htpy G f ~
+                                                  left_whisker_htpy f H))).
+
+Definition inv_is_coh_invertible {A B} {f : A -> B} :
+  is_coh_invertible f -> B -> A := pr1.
+
+Definition is_sec_inv_is_coh_invertible {A B} {f : A -> B}
+           (I : is_coh_invertible f) :
+  comp f (inv_is_coh_invertible I) ~ idmap := pr1 (pr2 I).
+
+Definition is_retr_inv_is_coh_invertible {A B} {f : A -> B}
+           (I : is_coh_invertible f) :
+  comp (inv_is_coh_invertible I) f ~ idmap := pr1 (pr2 (pr2 I)).
+
+Definition coh_inv_is_coh_invertible {A B} {f : A -> B}
+           (I : is_coh_invertible f) :
+  right_whisker_htpy (is_sec_inv_is_coh_invertible I) f ~
+                     left_whisker_htpy f (is_retr_inv_is_coh_invertible I) :=
+  pr2 (pr2 (pr2 I)).
+
+(** Lemma 8.3.2 *)
+
+Definition center_fib_is_coh_invertible {A B} {f : A -> B}
+           (I : is_coh_invertible f) (b : B) : fib f b :=
+  pair (inv_is_coh_invertible I b) (is_sec_inv_is_coh_invertible I b).
+
+Definition contraction_fib_is_coh_invertible {A B} {f : A -> B}
+           (I : is_coh_invertible f) (b : B) (x : fib f b) :
+  center_fib_is_coh_invertible I b == x.
+Proof.
+  apply (eq_Eq_fib f).
+  destruct x as [x p]; destruct p.
+  apply (pair (is_retr_inv_is_coh_invertible I x)).
+  transitivity (ap f (is_retr_inv_is_coh_invertible I x)).
+  - apply (coh_inv_is_coh_invertible I).
+  - apply inv; apply right_unit.
+Defined.
+
+Theorem is_contr_map_is_coh_invertible {A B} {f : A -> B} :
+  is_coh_invertible f -> is_contr_map f.
+Proof.
+  intros I b.
+  apply (pair (center_fib_is_coh_invertible I b)).
+  exact (contraction_fib_is_coh_invertible I b).
+Defined.
+  
+(** Definition 8.3.3 *)
+
+Definition nat_htpy {A B} {f g : A -> B} (H : f ~ g) {x y : A} (p : x == y) :
+  concat (ap f p) (H y) == concat (H x) (ap g p).
+Proof.
+  destruct p.
+  apply inv; apply right_unit.
+Defined.
+
+(** Definition 8.3.4 *)
+
+Definition left_unwhisk {A} {x y z : A} (p : x == y) {q r : y == z} :
+  concat p q == concat p r -> q == r.
+Proof.
+  now destruct p.
+Defined.
+
+Definition right_unwhisk {A} {x y z : A} {p q : x == y} (r : y == z) :
+  concat p r == concat q r -> p == q.
+Proof.
+  destruct r.
+  intro s.
+  exact (concat (inv right_unit) (concat s right_unit)).
+Defined.
+
+Definition reduce_htpy {A} {f : A -> A} {H : f ~ idmap} {x : A} :
+  ap f (H x) == H (f x).
+Proof.
+  apply (right_unwhisk (H x)).
+  transitivity (concat (H (f x)) (ap idmap (H x))).
+  apply nat_htpy.
+  apply (ap (concat (H (f x)))).
+  apply inv. apply ap_id.
+Defined.
+
+(** Lemma 8.3.5 *)
+
+Definition mod_is_sec_inv_has_inverse {A B} {f : A -> B} (I : has_inverse f) :
+  comp f (inv_has_inverse I) ~ idmap.
+Proof.
+  intro y.
+  transitivity (f (inv_has_inverse I (f (inv_has_inverse I y)))).
+  - apply inv.
+    exact (is_sec_inv_has_inverse I (f (inv_has_inverse I y))).
+  - transitivity (f (inv_has_inverse I y)).
+    * exact (ap f (is_retr_inv_has_inverse I (inv_has_inverse I y))).
+    * exact (is_sec_inv_has_inverse I y).
+Defined.
+
+Definition coh_inv_has_inverse {A B} {f : A -> B} (I : has_inverse f) :
+  right_whisker_htpy (mod_is_sec_inv_has_inverse I) f ~
+                     left_whisker_htpy f (is_retr_inv_has_inverse I).
+Proof.
+  intro x.
+  apply inv; apply inv_con; apply inv.
+  transitivity (concat (ap (comp f (comp (inv_has_inverse I) f)) (is_retr_inv_has_inverse I x)) (is_sec_inv_has_inverse I (f x))).
+  - apply (ap (concat' (is_sec_inv_has_inverse I (f x)))).
+    transitivity (ap f (ap (comp (inv_has_inverse I) f) (is_retr_inv_has_inverse I x))).
+    * apply (ap (ap f)).
+      apply inv. exact reduce_htpy. (* apply reduce_htpy doesn't work *)
+    * apply ap_comp.
+  - apply (nat_htpy (right_whisker_htpy (is_sec_inv_has_inverse I) f)).
+Defined.
+
+Lemma is_coh_invertible_has_inverse {A B} {f : A -> B} :
+  has_inverse f -> is_coh_invertible f.
+Proof.
+  intro I.
+  apply (pair (inv_has_inverse I)).
+  apply (pair (mod_is_sec_inv_has_inverse I)).
+  apply (pair (is_retr_inv_has_inverse I)).
+  exact (coh_inv_has_inverse I).
+Defined.
+
+(** Theorem 8.3.6 *)
+
+Lemma is_contr_map_has_inverse {A B} {f : A -> B} :
+  has_inverse f -> is_contr_map f.
+Proof.
+  intro I.
+  apply is_contr_map_is_coh_invertible.
+  now apply is_coh_invertible_has_inverse.
+Defined.
+
+Theorem is_contr_map_is_equiv {A B} {f : A -> B} : is_equiv f -> is_contr_map f.
+Proof.
+  intro is_equiv_f.
+  apply is_contr_map_has_inverse.
+  now apply has_inverse_is_equiv.
+Defined.
+
+(** Corollary 8.3.7 *)
+
+Definition total_path' {A} (a : A) : Type :=
+  Sigma A (fun x => x == a).
+
+Lemma is_contr_map_idmap {A} : is_contr_map (@idmap A).
+Proof.
+  apply is_contr_map_is_equiv.
+  exact is_equiv_idmap.
+Defined.
+
+Definition is_contr_total_path' {A} (a : A) : is_contr (total_path' a) :=
+  is_contr_map_idmap a.
+  

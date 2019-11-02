@@ -46,11 +46,11 @@ Defined.
 
 (** Definition 5.2.4 *)
 
-Lemma left_unit {A} {x y : A} (p : x == y) :
+Lemma left_unit {A} {x y : A} {p : x == y} :
   concat refl p == p.
 Proof. reflexivity. Defined.
 
-Lemma right_unit {A} {x y : A} (p : x == y) :
+Lemma right_unit {A} {x y : A} {p : x == y} :
   concat p refl == p.
 Proof.
   destruct p.
@@ -59,14 +59,14 @@ Defined.
 
 (** Definition 5.2.5 *)
 
-Lemma left_inv {A} {x y : A} (p : x == y) :
+Lemma left_inv {A} {x y : A} {p : x == y} :
   concat (inv p) p == refl.
 Proof.
   destruct p.
   reflexivity.
 Defined.
 
-Lemma right_inv {A} {x y : A} (p : x == y) :
+Lemma right_inv {A} {x y : A} {p : x == y} :
   concat p (inv p) == refl.
 Proof.
   destruct p.
@@ -158,6 +158,24 @@ Defined.
 
 (** Exercise 5.3 *)
 
+Definition inv_con {A} {x y z : A} {p : x == y} {q : y == z} {r : x == z} :
+  concat p q == r -> q == concat (inv p) r.
+Proof.
+  intro s.
+  destruct s; destruct p; destruct q.
+  reflexivity.
+Defined.
+
+Definition con_inv {A} {x y z : A} {p : x == y} {q : y == z} {r : x == z} :
+  concat p q == r -> p == concat r (inv q).
+Proof.
+  intro s.
+  destruct s; destruct p; destruct q.
+  reflexivity.
+Defined.
+
+(** Exercise 5.4 *)
+
 Definition lift_path {A} {B : A -> Type} {x y : A} (p : x == y) (b : B x) :
   pair x b == pair y (tr B p b).
 Proof.
@@ -165,9 +183,9 @@ Proof.
   reflexivity.
 Defined.
 
-(** Exercise 5.4 *)
+(** Exercise 5.5 *)
 
-(** Exercise 5.4.a *)
+(** Exercise 5.5.a *)
 
 Lemma left_unit_law_add_N (n : N) : zero_N + n == n.
 Proof.
@@ -195,7 +213,7 @@ Proof.
   reflexivity.
 Defined.
 
-(** Exercise 5.4.b *)
+(** Exercise 5.5.b *)
 
 Theorem associative_add_N (m n k : N) :
   (m + n) + k == m + (n + k).
@@ -215,7 +233,7 @@ Proof.
     * apply inv, left_successor_law_add_N.
 Defined.
 
-(** Exercise 5.4.c *)
+(** Exercise 5.5.c *)
 
 Definition left_zero_law_mul_N (n : N) :
   zero_N * n == zero_N.
@@ -264,7 +282,7 @@ Definition right_successor_law_mul_N (m n : N) :
   m * (succ_N n) == m + (m * n).
 Proof. reflexivity. Defined.
 
-(** Exercise 5.4.d *)
+(** Exercise 5.5.d *)
 
 Definition left_distributive_mul_add_N (m n k : N) :
   m * (n + k) == (m * n) + (m * k).
@@ -307,7 +325,7 @@ Proof.
     * now apply add_pairs.
 Defined.
 
-(** Exercise 5.4.e *)
+(** Exercise 5.5.e *)
     
 Definition associative_mul_N (m n k : N) :
   (m * n) * k == m * (n * k).

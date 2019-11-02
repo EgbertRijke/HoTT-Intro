@@ -40,35 +40,35 @@ Proof.
 Defined.
 
 Definition left_unit_htpy {A} {B : A -> Type} {f g : forall x, B x}
-           (H : f ~ g) :
+           {H : f ~ g} :
   concat_htpy refl_htpy H ~ H.
 Proof.
   intro x.
-  exact (left_unit (H x)).
+  exact left_unit.
 Defined.
 
 Definition right_unit_htpy {A} {B : A -> Type} {f g : forall x, B x}
-           (H : f ~ g) :
+           {H : f ~ g} :
   concat_htpy H refl_htpy ~ H.
 Proof.
   intro x.
-  exact (right_unit (H x)).
+  exact right_unit.
 Defined.
 
 Definition left_inv_htpy {A} {B : A -> Type} {f g : forall x, B x}
-           (H : f ~ g) :
+           {H : f ~ g} :
   concat_htpy (inv_htpy H) H ~ refl_htpy.
 Proof.
   intro x.
-  exact (left_inv (H x)).
+  exact left_inv.
 Defined.
 
 Definition right_inv_htpy {A} {B : A -> Type} {f g : forall x, B x}
-           (H : f ~ g) :
+           {H : f ~ g} :
   concat_htpy H (inv_htpy H) ~ refl_htpy.
 Proof.
   intro x.
-  exact (right_inv (H x)).
+  exact right_inv.
 Defined.
 
 (** Definition 7.1.3 *)
@@ -126,6 +126,15 @@ Definition is_equiv_map_equiv {A B} (e : A <~> B) :
 
 Definition has_inverse {A B} (f : A -> B) : Type :=
   Sigma (B -> A) (fun g => prod (comp f g ~ idmap) (comp g f ~ idmap)).
+
+Definition inv_has_inverse {A B} {f : A -> B} :
+  has_inverse f -> B -> A := pr1.
+
+Definition is_sec_inv_has_inverse {A B} {f : A -> B} (H : has_inverse f) :
+  comp f (inv_has_inverse H) ~ idmap := pr1 (pr2 H).
+
+Definition is_retr_inv_has_inverse {A B} {f : A -> B} (H : has_inverse f) :
+  comp (inv_has_inverse H) f ~ idmap := pr2 (pr2 H).
 
 Definition is_equiv_has_inverse {A B} {f : A -> B} :
   forall (g : B -> A), (comp f g ~ idmap) -> (comp g f ~ idmap) -> is_equiv f.

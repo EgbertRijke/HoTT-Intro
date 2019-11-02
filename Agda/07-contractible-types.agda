@@ -236,7 +236,7 @@ htpy-nat :
   Id ((H x) ∙ (ap g p)) ((ap f p) ∙ (H y))
 htpy-nat H refl = right-unit
 
--- We will also need to undo concatenation on the left and right. One might notice that, in the terminology of Lecture 7, we almost show here that concat p and concat' q are embeddings.
+-- We will also need to undo concatenation on the left and right. One might notice that, in the terminology of Lecture 9, we almost show here that concat p and concat' q are embeddings.
 left-unwhisk :
   {i : Level} {A : UU i} {x y z : A} (p : Id x y) {q r : Id y z} →
   Id (p ∙ q) (p ∙ r) → Id q r
