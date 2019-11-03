@@ -800,3 +800,98 @@ Proof.
   apply (pair (fun q => concat (inv (is_retr_map_retr_incl_sr_pair R x)) (concat (ap (map_retr_incl_sr_pair R) q) (is_retr_map_retr_incl_sr_pair R y)))).
   intro p. destruct p. apply left_inv.
 Defined.
+
+(** Exercise 7.13 *)
+
+(** Exercise 7.13.a *)
+
+Definition coprod_map {A B A' B'} (f : A -> A') (g : B -> B') :
+  coprod A B -> coprod A' B'.
+Proof.
+  intro x; destruct x as [a|b].
+  - exact (inl (f a)).
+  - exact (inr (g b)).
+Defined.
+
+(** Exercise 7.13.b *)
+
+Definition coprod_htpy {A B A' B'}
+           {f f' : A -> A'} (H : f ~ f') {g g' : B -> B'} (K : g ~ g') :
+  coprod_map f g ~ coprod_map f' g'.
+Proof.
+  intro x; destruct x as [a|b].
+  - exact (ap inl (H a)).
+  - exact (ap inr (K b)).
+Defined.
+
+(** Exercise 7.13.c *)
+
+Definition coprod_idmap {A B} :
+  coprod_map (@idmap A) (@idmap B) ~ idmap.
+Proof.
+  intro x; now destruct x as [a|b].
+Defined.
+
+(** Exercise 7.13.d *)
+
+Definition coprod_comp {A B A' B' A'' B''}
+           (f : A -> A') (f' : A' -> A'') (g : B -> B') (g' : B' -> B'') :
+  coprod_map (comp f' f) (comp g' g) ~
+             comp (coprod_map f' g') (coprod_map f g).
+Proof.
+  intro x; now destruct x as [a|b].
+Defined.
+
+(** Exercise 7.13.e *)
+
+Definition inv_coprod_map_is_equiv {A B A' B'} {f : A -> A'} {g : B -> B'}
+           (Ef : is_equiv f) (Eg : is_equiv g) :
+  coprod A' B' -> coprod A B.
+Proof.
+  intro x; destruct x as [a|b].
+  - exact (inl (inv_is_equiv Ef a)).
+  - exact (inr (inv_is_equiv Eg b)).
+Defined.
+
+Definition is_sec_inv_coprod_map_is_equiv {A B A' B'} {f : A -> A'} {g : B -> B'}
+           (Ef : is_equiv f) (Eg : is_equiv g) :
+  comp (coprod_map f g) (inv_coprod_map_is_equiv Ef Eg) ~ idmap.
+Proof.
+  apply @concat_htpy with (coprod_map (@idmap A') (@idmap B')).
+  - apply @concat_htpy
+      with (coprod_map (comp f (inv_is_equiv Ef)) (comp g (inv_is_equiv Eg))).
+    * apply inv_htpy.
+      apply coprod_comp.
+    * apply coprod_htpy.
+      ** exact (is_sec_inv_is_equiv Ef).
+      ** exact (is_sec_inv_is_equiv Eg).
+  - apply coprod_idmap.
+Defined.
+
+Definition is_retr_inv_coprod_map_is_equiv {A B A' B'}
+           {f : A -> A'} {g : B -> B'} (Ef : is_equiv f) (Eg : is_equiv g) :
+  comp (inv_coprod_map_is_equiv Ef Eg) (coprod_map f g) ~ idmap.
+Proof.
+  apply @concat_htpy with (coprod_map (@idmap A) (@idmap B)).
+  - apply @concat_htpy
+      with (coprod_map (comp (inv_is_equiv Ef) f) (comp (inv_is_equiv Eg) g)).
+    * apply inv_htpy.
+      apply coprod_comp.
+    * apply coprod_htpy.
+      ** exact (is_retr_inv_is_equiv Ef).
+      ** exact (is_retr_inv_is_equiv Eg).
+  - apply coprod_idmap.
+Defined.
+
+Theorem is_equiv_coprod_map_is_equiv {A B A' B'}
+        {f : A -> A'} {g : B -> B'} (Ef : is_equiv f) (Eg : is_equiv g) :
+  is_equiv (coprod_map f g).
+Proof.
+  apply is_equiv_has_inverse with (inv_coprod_map_is_equiv Ef Eg).
+  - exact (is_sec_inv_coprod_map_is_equiv Ef Eg).
+  - exact (is_retr_inv_coprod_map_is_equiv Ef Eg).
+Defined.
+
+Definition coprod_equiv {A B A' B'} (f : A <~> A') (g : B <~> B') :
+  coprod A B <~> coprod A' B' :=
+  pair (coprod_map (map_equiv f) (map_equiv g)) (is_equiv_coprod_map_is_equiv (is_equiv_map_equiv f) (is_equiv_map_equiv g)).

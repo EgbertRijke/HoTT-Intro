@@ -368,3 +368,93 @@ Proof.
   - apply (is_contr_equiv (fib_fib_equiv f (f x))).
     now apply is_contr_map_is_equiv.
 Defined.
+
+(** Section 9.4 Disjointness of coproducts *)
+
+(** Theorem 9.4.1 *)
+
+(** This theorem is stated at the beginning of the section, and proven at the
+    end. *)
+
+(** Definition 9.4.2 *)
+
+Definition Eq_coprod {A B} (x y : coprod A B) : Type.
+Proof.
+  destruct x as [a|b].
+  - destruct y as [a'|b'].
+    * exact (a == a').
+    * exact empty.
+  - destruct y as [a'|b'].
+    * exact empty.
+    * exact (b == b').
+Defined.
+
+(** Lemma 9.4.3 *)
+
+Lemma refl_Eq_coprod {A B} (x : coprod A B) : Eq_coprod x x.
+Proof.
+  now destruct x.
+Defined.
+
+Definition Eq_coprod_eq {A B} {x y : coprod A B} (p : x == y) : Eq_coprod x y.
+Proof.
+  destruct p. apply refl_Eq_coprod.
+Defined.
+
+(** Lemma 9.4.4 *)
+
+(** We show that Sigma distributes over coproducts *)
+
+Definition map_distr_Sigma_coprod {A B} (P : coprod A B -> Type) :
+  Sigma (coprod A B) P ->
+  coprod (Sigma A (comp P inl)) (Sigma B (comp P inr)).
+Proof.
+  intro t; destruct t as [[a | b] y].
+  - exact (inl (pair a y)).
+  - exact (inr (pair b y)).
+Defined.
+
+Definition inv_map_distr_Sigma_coprod {A B} (P : coprod A B -> Type) :
+  coprod (Sigma A (comp P inl)) (Sigma B (comp P inr)) ->
+  Sigma (coprod A B) P.
+Proof.
+  intro x; destruct x as [[a p]|[b p]].
+  - exact (pair (inl a) p).
+  - exact (pair (inr b) p).
+Defined.
+
+Definition is_sec_inv_map_distr_Sigma_coprod {A B} (P : coprod A B -> Type) :
+  comp (map_distr_Sigma_coprod P) (inv_map_distr_Sigma_coprod P) ~ idmap.
+Proof.
+    intro x; now destruct x as [[a p]|[b p]].
+Defined.
+
+Definition is_retr_inv_map_distr_Sigma_coprod {A B} (P : coprod A B -> Type) :
+  comp (inv_map_distr_Sigma_coprod P) (map_distr_Sigma_coprod P) ~ idmap.
+Proof.
+  intro t; now destruct t as [[a | b] y].
+Defined.
+
+Lemma is_equiv_map_distr_Sigma_coprod {A B} (P : coprod A B -> Type) :
+  is_equiv (map_distr_Sigma_coprod P).
+Proof.
+  refine (is_equiv_has_inverse _ _ _).
+  - exact (is_sec_inv_map_distr_Sigma_coprod P).
+  - exact (inv_map_distr_Sigma_coprod P).
+  apply is_equiv_has_inverse with (inv_map_distr_Sigma_coprod P).
+  - exact (is_sec_inv_map_distr_Sigma_coprod P).
+  - exact (is_retr_inv_map_distr_Sigma_coprod P).
+Defined.
+  
+Definition distr_Sigma_coprod {A B} (P : coprod A B -> Type) :
+  Sigma (coprod A B) P
+        <~>
+        coprod (Sigma A (comp P inl)) (Sigma B (comp P inr)) :=
+  pair (map_distr_Sigma_coprod P) (is_equiv_map_distr_Sigma_coprod P).
+
+Lemma is_contr_total_Eq_coprod_inl {A B} (x : A) :
+  is_contr (Sigma (coprod A B) (Eq_coprod (inl x))).
+Proof.
+  apply (is_contr_equiv (distr_Sigma_coprod (Eq_coprod (inl x)))).
+  apply (is_contr_equiv' (coprod_equiv id_equiv
+  
