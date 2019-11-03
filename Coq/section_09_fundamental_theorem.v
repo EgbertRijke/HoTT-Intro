@@ -315,7 +315,7 @@ Theorem Ind_path_is_contr_total
   is_contr (Sigma A B) -> sec (ev_refl_gen a b C).
 Proof.
   intro c.
-  apply (section_comp (pair (ev_pair (fam_Sigma C)) (triangle_path_ind b (fam_Sigma C)))).
+    apply section_comp with (hom_slice_path_ind b (fam_Sigma C)).
   - exact (sec_ev_pair (fam_Sigma C)).
   - exact (Ind_sing_is_contr c (pair a b) (fam_Sigma C)).
 Defined.
@@ -338,12 +338,8 @@ Proof.
   intro P.
   apply (is_contr_Ind_sing (pair a b)).
   intro C.
-  Eval compute in (P (fun x y => C (pair x y))).
-  exact (@section_comp' _ _ _
-                        (ev_pt (pair a b))
-                        (ev_refl_gen a b (fun x y => C (pair x y)))
-                        (hom_slice_path_ind b C)
-                        (sec_ev_pair C)
-                        (P (fun x y => C (pair x y)))).
+  apply section_comp' with (hom_slice_path_ind b C).
+  exact (sec_ev_pair C).
+  exact (P (fun x y => C (pair x y))).
 Defined.
   
