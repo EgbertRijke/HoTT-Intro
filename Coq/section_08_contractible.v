@@ -62,16 +62,16 @@ Defined.
 
 (** Theorem 8.1.6 *)
 
-Definition ind_sing_is_contr {A} (c : is_contr A) {B : A -> Type}
-           (b : B (center c)) : forall x, B x :=
-  fun x => tr B (contraction c x) b.
+Definition ind_sing_is_contr {A} {a : A} (c : is_contr A) {B : A -> Type}
+           (b : B a) : forall x, B x :=
+  fun x => tr B (contraction' c a x) b.
 
-Definition comp_sing_is_contr {A} (c : is_contr A) {B : A -> Type}
-           (b : B (center c)) :
-  ev_pt (center c) (ind_sing_is_contr c b) == b :=
-  ap (fun p => tr B p b) (coh_contraction c).
+Definition comp_sing_is_contr {A} {a : A} (c : is_contr A) {B : A -> Type}
+           (b : B a) :
+  ev_pt a (ind_sing_is_contr c b) == b :=
+  ap (fun p => tr B p b) left_inv.
 
-Theorem Ind_sing_is_contr {A} (c : is_contr A) : Ind_sing (center c).
+Theorem Ind_sing_is_contr {A} (c : is_contr A) (a : A) : Ind_sing a.
 Proof.
   intro B.
   exact (pair (ind_sing_is_contr c) (comp_sing_is_contr c)).

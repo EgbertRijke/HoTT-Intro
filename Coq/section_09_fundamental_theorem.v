@@ -83,7 +83,7 @@ Proof.
   now apply is_contr_map_is_equiv.
 Defined.
 
-Theorem is_equiv_tot_is_equiv {A} {B C : A -> Type} (f : forall x, B x -> C x) :
+Theorem is_equiv_tot_is_equiv {A} {B C : A -> Type} {f : forall x, B x -> C x} :
   (forall x, is_equiv (f x)) -> is_equiv (tot f).
 Proof.
   intro H.
@@ -92,6 +92,13 @@ Proof.
   apply (is_contr_equiv (fib_fmap_fib_tot_equiv f (pair x z))); cbn.
   now apply is_contr_map_is_equiv.
 Defined.
+
+Definition tot_equiv {A} {B C : A -> Type} :
+  (forall x, (B x <~> C x)) -> ((Sigma A B) <~> (Sigma A C)) :=
+  fun e =>
+    pair
+      (tot (fun x => map_equiv (e x)))
+      (is_equiv_tot_is_equiv (fun x => is_equiv_map_equiv (e x))).
 
 (** Lemma 9.1.4 *)
 
@@ -130,3 +137,213 @@ Proof.
   intro s; destruct s as [s p]; destruct p; destruct s as [x z]; cbn.
   reflexivity.
 Defined.
+
+Lemma is_equiv_fib_map_fib_btot
+      {A B} (f : A -> B) (C : B -> Type) (t : Sigma B C) :
+  is_equiv (fib_map_fib_btot f C t).
+Proof.
+  apply (is_equiv_has_inverse (fib_btot_fib_map f C t)).
+  - exact (is_sec_fib_btot_fib_map f C t).
+  - exact (is_retr_fib_btot_fib_map f C t).
+Defined.
+
+Definition fib_map_fib_btot_equiv
+           {A B} (f : A -> B) (C : B -> Type) (t : Sigma B C) :
+  fib (btot f C) t <~> fib f (pr1 t) :=
+  pair (fib_map_fib_btot f C t) (is_equiv_fib_map_fib_btot f C t).
+
+Lemma is_equiv_fib_btot_fib_map
+      {A B} (f : A -> B) (C : B -> Type) (t : Sigma B C) :
+  is_equiv (fib_btot_fib_map f C t).
+Proof.
+  apply (is_equiv_has_inverse (fib_map_fib_btot f C t)).
+  - exact (is_retr_fib_btot_fib_map f C t).
+  - exact (is_sec_fib_btot_fib_map f C t).
+Defined.
+
+Definition fib_btot_fib_map_equiv
+           {A B} (f : A -> B) (C : B -> Type) (t : Sigma B C) :
+  fib f (pr1 t) <~> fib (btot f C) t :=
+  pair (fib_btot_fib_map f C t) (is_equiv_fib_btot_fib_map f C t).
+
+Lemma is_equiv_btot_is_equiv {A B} {f : A -> B} (C : B -> Type) :
+  is_equiv f -> is_equiv (btot f C).
+Proof.
+  intro H.
+  apply is_equiv_is_contr_map.
+  intro t; destruct t as [x z].
+  apply (is_contr_equiv (fib_map_fib_btot_equiv f C (pair x z))); cbn.
+  now apply is_contr_map_is_equiv.
+Defined.
+
+Definition btot_equiv {A B} (e : A <~> B) (C : B -> Type) :
+  Sigma A (comp C (map_equiv e)) <~> Sigma B C :=
+  pair (btot (map_equiv e) C) (is_equiv_btot_is_equiv C (is_equiv_map_equiv e)).
+
+(** Definition 9.1.5 *)
+
+Definition toto {A B} (f : A -> B) {C : A -> Type} (D : B -> Type) :
+  (forall x, C x -> D (f x)) -> Sigma A C -> Sigma B D :=
+  fun g t => pair (f (pr1 t)) (g (pr1 t) (pr2 t)).
+
+(** Theorem 9.1.6 *)
+
+Definition triangle_toto {A B} (f : A -> B)
+           {C : A -> Type} (D : B -> Type) (g : forall x, C x -> D (f x)) :
+  toto f D g ~ comp (btot f D) (tot g).
+Proof.
+  exact refl_htpy.
+Defined.
+
+(** Tactics were again too annoying, but the proof term is easy to write down. 
+ *)
+
+Definition is_equiv_toto_is_equiv {A B} {f : A -> B}
+        {C : A -> Type} (D : B -> Type) {g : forall x, C x -> D (f x)} :
+  is_equiv f -> (forall x, is_equiv (g x)) -> is_equiv (toto f D g) :=
+  fun Ef Eg =>
+    @is_equiv_comp _ _ _
+                   (toto f D g)
+                   (btot f D)
+                   (pair (tot g) (triangle_toto f D g))
+                   (is_equiv_tot_is_equiv Eg)
+                   (is_equiv_btot_is_equiv D Ef).
+
+Definition equiv_toto {A B} (e : A <~> B) {C : A -> Type} (D : B -> Type)
+           (g : forall x, (C x <~> D (map_equiv e x))) :
+  Sigma A C <~> Sigma B D :=
+  pair (toto (map_equiv e) D (fun x => map_equiv (g x)))
+       (is_equiv_toto_is_equiv D (is_equiv_map_equiv e)
+                                 (fun x => is_equiv_map_equiv (g x))).
+
+Definition is_equiv_is_equiv_toto {A B} {f : A -> B}
+        {C : A -> Type} (D : B -> Type) {g : forall x, C x -> D (f x)} :
+  is_equiv f -> is_equiv (toto f D g) -> (forall x, is_equiv (g x)) :=
+  fun Ef Efg =>
+    is_equiv_is_equiv_tot g
+      (@is_equiv_right_factor _ _ _
+                              (toto f D g)
+                              (btot f D)
+                              (pair (tot g) (triangle_toto f D g))
+                              Efg
+                              (is_equiv_btot_is_equiv D Ef)).
+
+(** Section 9.2 The fundamental theorem *)
+
+(** Definition 9.2.1 *)
+
+(** We define a generalized ev_refl *)
+Definition ev_refl_gen {A} (a : A) {B : A -> Type} (b : B a)
+           (C : forall x, B x -> Type) : (forall x y, C x y) -> C a b :=
+  fun h => h a b.
+
+(* We also say that a family B over A with b : B a is an identity system if
+   it satisfies the following path induction principle. *)
+
+Definition Ind_path {A} {a : A} (B : A -> Type) (b : B a) : Type :=
+  forall (C : forall x, B x -> Type), sec (ev_refl_gen a b C).
+
+Definition Identity_System {A} (a : A) : Type :=
+  Sigma (A -> Type) (fun B => Sigma (B a) (fun b => Ind_path B b)).
+
+(** Theorem 9.2.3 The fundamental theorem of identity types *)
+
+Theorem fundamental_thm_id {A} {a : A} {B : A -> Type} (b : B a)
+        (f : forall x, a == x -> B x) :
+  is_contr (Sigma A B) -> forall x, is_equiv (f x).
+Proof.
+  intro c.
+  apply is_equiv_is_equiv_tot.
+  apply is_equiv_is_contr.
+  - apply is_contr_total_path.
+  - assumption.
+Defined.
+
+Theorem fundamental_thm_id' {A} {a : A} (B : A -> Type) (b : B a) :
+  is_contr (Sigma A B) -> forall x, is_equiv (fun (p : a == x) => tr B p b).
+Proof.
+  now apply fundamental_thm_id.
+Defined.
+
+Theorem conv_fundamental_thm_id {A} {a : A} {B : A -> Type} (b : B a)
+        (f : forall x, a == x -> B x) :
+  (forall x, is_equiv (f x)) -> is_contr (Sigma A B).
+Proof.
+  intro H.
+  apply (is_contr_is_equiv' (is_equiv_tot_is_equiv H)).
+  apply is_contr_total_path.
+Defined.
+
+Definition fam_Sigma {A} {B : A -> Type} (C : forall x, B x -> Type) :
+  Sigma A B -> Type.
+Proof.
+  intro t; destruct t as [x y]. (* now destruct t does not give the correct definition. I don't understand why *)
+  exact (C x y).
+Defined.
+
+Definition ev_pair {A} {B : A -> Type} (C : Sigma A B -> Type) :
+  (forall (t : Sigma A B), C t) -> (forall x y, C (pair x y)) :=
+  fun h x y => h (pair x y).
+
+Definition inv_ev_pair {A} {B : A -> Type} (C : Sigma A B -> Type) :
+  (forall x y, C (pair x y)) -> (forall (t : Sigma A B), C t).
+Proof.
+  intros h t; destruct t as [x y].
+  exact (h x y).
+Defined.
+
+Definition is_sec_inv_ev_pair {A} {B : A -> Type} (C : Sigma A B -> Type) :
+  comp (ev_pair C) (inv_ev_pair C) ~ idmap := refl_htpy.
+
+Definition sec_ev_pair {A} {B : A -> Type} (C : Sigma A B -> Type) :
+  sec (ev_pair C) :=
+  pair (inv_ev_pair C) (is_sec_inv_ev_pair C).
+
+Definition triangle_path_ind
+           {A} {a : A} {B : A -> Type} (b : B a) (C : Sigma A B -> Type) :
+  @ev_pt (Sigma A B) C (pair a b) ~
+         comp (ev_refl_gen a b (fun x y => C (pair x y))) (ev_pair C) :=
+  refl_htpy.
+
+Definition hom_slice_path_ind
+           {A} {a : A} {B : A -> Type} (b : B a) (C : Sigma A B -> Type) :
+  hom_slice (ev_pt (pair a b)) (ev_refl_gen a b (fun x y => C (pair x y))) :=
+  pair (ev_pair C) (triangle_path_ind b C).
+
+Theorem Ind_path_is_contr_total
+        {A} {a : A} {B : A -> Type} (b : B a) (C : forall x, B x -> Type) :
+  is_contr (Sigma A B) -> sec (ev_refl_gen a b C).
+Proof.
+  intro c.
+  apply (section_comp (pair (ev_pair (fam_Sigma C)) (triangle_path_ind b (fam_Sigma C)))).
+  - exact (sec_ev_pair (fam_Sigma C)).
+  - exact (Ind_sing_is_contr c (pair a b) (fam_Sigma C)).
+Defined.
+
+Definition ind_path_is_contr_total
+           {A} {a : A} {B : A -> Type} (b : B a) (C : forall x, B x -> Type) :
+  is_contr (Sigma A B) -> C a b -> forall x y, C x y :=
+  fun is_contr_AB => pr1 (Ind_path_is_contr_total b C is_contr_AB).
+
+Definition comp_path_is_contr_total
+           {A} {a : A} {B : A -> Type} (b : B a) (C : forall x, B x -> Type)
+           (is_contr_AB : is_contr (Sigma A B)) (c : C a b) :
+  ind_path_is_contr_total b C is_contr_AB c a b == c :=
+  pr2 (Ind_path_is_contr_total b C is_contr_AB) c.
+
+Theorem is_contr_total_Ind_path
+        {A} {a : A} {B : A -> Type} (b : B a) :
+  Ind_path B b -> is_contr (Sigma A B).
+Proof.
+  intro P.
+  apply (is_contr_Ind_sing (pair a b)).
+  intro C.
+  Eval compute in (P (fun x y => C (pair x y))).
+  exact (@section_comp' _ _ _
+                        (ev_pt (pair a b))
+                        (ev_refl_gen a b (fun x y => C (pair x y)))
+                        (hom_slice_path_ind b C)
+                        (sec_ev_pair C)
+                        (P (fun x y => C (pair x y)))).
+Defined.
+  
