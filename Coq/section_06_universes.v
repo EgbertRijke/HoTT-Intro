@@ -20,8 +20,8 @@ Definition path_pMap {A B : pType} (f : pMap A B) :
   map_pMap f (pt_pType A) == pt_pType B :=
   pr2 f.
 
-Definition pid (A : pType) : pMap A A :=
-  pair (fun a => a) refl.
+Definition idpmap (A : pType) : pMap A A :=
+  pair idmap refl.
 
 Definition pcomp {A B C : pType} (g : pMap B C) (f : pMap A B) :
   pMap A C.
@@ -53,7 +53,18 @@ Defined.
 
 (** Definition 6.4.2 *)
 
-Fixpoint Eq_N (m n : N) : Type :=
+Definition Eq_N : N -> N -> Type.
+Proof.
+  intro m; induction m as [|m E].
+  - intro n; destruct n.
+    * exact unit.
+    * exact empty.
+  - intro n; destruct n.
+    * exact empty.
+    * exact (E n).
+Defined.
+
+(*
   match m with
   | zero_N =>
     match n with
@@ -66,6 +77,7 @@ Fixpoint Eq_N (m n : N) : Type :=
     | succ_N n => Eq_N m n
     end
   end.
+*)
 
 Definition reflexive_Eq_N (n : N) : Eq_N n n.
 Proof.
@@ -80,8 +92,8 @@ Definition is_identity_system_Eq_N' (m : N) :
 Proof.
   induction m as [|m H]; intros n p P r; destruct n; try now destruct p.
   - destruct p. exact (r zero_N).
-  - exact
-      (H n p (fun x y q => P (succ_N x) (succ_N y) q) (fun x => r (succ_N x))).
+  - eapply (H n p).
+    intro x. exact (r (succ_N x)).
 Defined.
 
 Definition is_identity_system_Eq_N
@@ -90,10 +102,9 @@ Definition is_identity_system_Eq_N
            {m n : N} (p : Eq_N m n) : P m n p :=
   is_identity_system_Eq_N' m n p P r.
   
-Definition is_least_reflexive_Eq_N
-           {R : N -> N -> Type} (r : forall n, R n n)
-           (m n : N) (p : Eq_N m n) : R m n :=
-  @is_identity_system_Eq_N (fun x y (p : Eq_N x y) => R x y) r m n p.
+Definition is_least_reflexive_Eq_N {R : N -> N -> Type} (r : forall n, R n n) :
+  forall (m n : N), Eq_N m n -> R m n :=
+  @is_identity_system_Eq_N (fun x y (p : Eq_N x y) => R x y) r.
 
 (** Exercises *)
 
@@ -125,14 +136,11 @@ Defined.
 
 (** Exercise 6.3 *)
 
-Definition preserves_Eq_N (f : N -> N) {m n : N} :
-  Eq_N m n -> Eq_N (f m) (f n).
-Proof.
-  apply
-    (@is_least_reflexive_Eq_N
-       (fun x y => Eq_N (f x) (f y))
-       (fun x => reflexive_Eq_N (f x))).
-Defined.
+Definition preserves_Eq_N (f : N -> N) :
+  forall {m n}, Eq_N m n -> Eq_N (f m) (f n) :=
+  @is_least_reflexive_Eq_N
+    (fun x y => Eq_N (f x) (f y))
+    (fun x => reflexive_Eq_N (f x)).
 
 (** Exercise 6.4 *)
 
@@ -157,15 +165,6 @@ Proof.
     * exact empty.
     * exact (L n).
 Defined.
-(*
-  Proof.
-  intro m; induction m as [|m L]; intro n; destruct n.
-  - exact empty.
-  - exact unit.
-  - exact empty.
-  - exact (L n).
-  Defined.
- *)
 
 (** Exercise 6.4.b *)
 
@@ -486,13 +485,16 @@ Proof.
   intros pS k f m t.
   induction m.
   - exact (f zero_N (zero_leq_N k)).
-  - apply pS. intros m' t'. exact (f m' (transitive_leq_N m' m k t' t)).
+  - apply pS.
+    intros m' t'.
+    exact (f m' (transitive_leq_N m' m k t' t)).
 Defined.
 
 Definition conclusion_strong_ind_N (P : N -> Type) :
   ( forall n, fam_strong_ind_N P n) -> forall n, P n.
 Proof.
-  intros f n. exact (f n n (reflexive_leq_N n)).
+  intros f n.
+  exact (f n n (reflexive_leq_N n)).
 Defined.
 
 Definition induction_strong_ind_N :
@@ -557,7 +559,8 @@ Defined.
 
 Definition inductive_step_ordinal_ind_N (P : N -> Type)
            (p0 : fam_ordinal_ind_N P zero_N)
-           (pS : forall k, fam_ordinal_ind_N P k -> fam_ordinal_ind_N P (succ_N k)) :
+           (pS : forall k,
+               fam_ordinal_ind_N P k -> fam_ordinal_ind_N P (succ_N k)) :
   forall k, fam_ordinal_ind_N P k.
 Proof.
   intro k. induction k; now auto.
