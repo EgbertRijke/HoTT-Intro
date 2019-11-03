@@ -315,7 +315,7 @@ Theorem Ind_path_is_contr_total
   is_contr (Sigma A B) -> sec (ev_refl_gen a b C).
 Proof.
   intro c.
-    apply section_comp with (hom_slice_path_ind b (fam_Sigma C)).
+  apply section_comp with (hom_slice_path_ind b (fam_Sigma C)).
   - exact (sec_ev_pair (fam_Sigma C)).
   - exact (Ind_sing_is_contr c (pair a b) (fam_Sigma C)).
 Defined.
@@ -342,4 +342,29 @@ Proof.
   exact (sec_ev_pair C).
   exact (P (fun x y => C (pair x y))).
 Defined.
-  
+
+(** Section 9.3 Embeddings *)
+
+(** Definition 9.3.1 *)
+
+Definition is_emb {A B} (f : A -> B) : Type :=
+  forall x y, is_equiv (@ap A B f x y).
+
+(** Theorem 9.3.2 *)
+
+Definition fib' {A B} (f : A -> B) (b : B) : Type :=
+  Sigma A (fun x => b == f x).
+
+Definition fib_fib_equiv {A B} (f : A -> B) (b : B) :
+  fib' f b <~> fib f b :=
+  tot_equiv (fun x => @invmap_equiv B b (f x)).
+
+Theorem is_emb_is_equiv {A B} (f : A -> B) :
+  is_equiv f -> is_emb f.
+Proof.
+  intros H x.
+  apply fundamental_thm_id.
+  - reflexivity.
+  - apply (is_contr_equiv (fib_fib_equiv f (f x))).
+    now apply is_contr_map_is_equiv.
+Defined.
