@@ -317,7 +317,7 @@ We can also define observational equality for many other kinds of types, such as
   \end{subexenum}
 \exercise
   \begin{subexenum}
-  \item Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function of type
+  \item \label{ex:strong-induction}Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function of type
     \begin{equation*}
       P(\zeroN) \to \Big(\prd{k:\N}\Big(\prd{m:\N} (m\leq k) \to P(m)\Big)\to P(\succN(k))\Big) \to \prd{n:\N}P(n).
     \end{equation*}

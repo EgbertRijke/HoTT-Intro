@@ -328,6 +328,62 @@ In the following lemma we show that if a decidable family $P$ is bounded from ab
   Consider the type family $P(d)\defeq (d\mid m)\times (d\mid n)$. Then $P$ is bounded from above by $m$. Moreover, $P(1)$ holds since $1\mid n$ for any natural number $n$. Furthermore, the divisibility relation is decidable, so it follows that $P$ is a family of decidable types. Now the greatest common divisor is defined as the maximal $P$-element, which is obtained by \cref{lem:maximal}
 \end{proof}
 
+\subsection{The Euclidean algorithm}
+
+It was immediate from our definition of the greatest common divisor of $a$ and $b$ that it indeed divides both $a$ and $b$, and that it is the greatest such number. However, as a program that is supposed to \emph{compute} the greatest common divisor of $a$ and $b$ it performs rather poorly: it checks for every $n$ from $1$ until either $a$ or $b$ whether it is a divisor of both $a$ and $b$, and only then it gives as output the largest common divisor that it has found. In this section we give a new definition of an operation
+\begin{equation*}
+  \gcdeuclid:\N \to (\N \to \N)
+\end{equation*}
+following Euclid's algorithm, with the opposite qualities: it will compute rather quicky a value for $\gcdeuclid(a,b)$, but it will be left as something to show that this value is indeed the greatest common divisor of $a$ and $b$.
+
+\begin{defn}
+  We define a binary operation
+  \begin{equation*}
+    \gcdeuclid:\N \to (\N\to\N).
+  \end{equation*}
+\end{defn}
+
+\begin{proof}
+  We will define the operation $\gcdeuclid$ with the \emph{strong} induction principle for $\N$, which was given as \cref{ex:strong-induction}. Thus it suffices to construct a function $f:\N\to\N$, which will provide the values for $\gcdeuclid(\zeroN)$, and a function
+  \begin{equation*}
+    F_a : \Big(\prd{x:\N}(x\leq a) \to \N\to\N\Big)\to (\N\to\N),
+  \end{equation*}
+  for every $a:\N$, which will provide the values for $\gcdeuclid(a+1)$.
+
+  In the base case, we simply define
+  \begin{equation*}
+    f\defeq\idfunc.
+  \end{equation*}
+  For the inductive step, consider a family of maps $g_x:\N\to\N$ indexed by $x\leq a$. We think of $g_x(b)$ as the value for $\gcdeuclid(x,b)$, so our assumption of having such a family of maps $g_x$ is really the assumption that $\gcdeuclid(x,b)$ is defined for every $x\leq a$. Our goal is to construct a map
+  \begin{equation*}
+    \gcdeuclid(a+1):\N\to\N
+  \end{equation*}
+  We proceed by induction on $b:\N$. In the base case, we define
+  \begin{equation*}
+    \gcdeuclid(a+1,\zeroN)\defeq a+1.
+  \end{equation*}
+  For the inductive step, assume that we have a number $h_y:\N$ for every $y\leq b$. Observe that $(b\leq a)+(a<b)$ holds for any $b:B$. Thus we can proceed by case analysis to define
+  \begin{equation*}
+    F_a(g,b+1)\defeq
+    \begin{cases}
+      g_{(a+1)-(b+1)}(b+1) & \text{if }b\leq a\\
+      h_{(b+1)-(a+1)} & \text{if }a<b.
+    \end{cases}
+  \end{equation*}
+  This completes the inductive step, and hence we obtain a binary operation
+  $\gcdeuclid$ that satisfies
+  \begin{align*}
+    \gcdeuclid(\zeroN,b) & \jdeq b \\
+    \gcdeuclid(a+1,\zeroN) & \jdeq a+1 \\
+    \gcdeuclid(a+1,b+1) & \jdeq \gcdeuclid((a+1)-(b+1),b+1) & & \text{if }b\leq a.\\
+    \gcdeuclid(succN(a),b+1) & \jdeq \gcdeuclid(a+1,(b+1)-(a+1)) & & \text{if }a<b.\qedhere            
+  \end{align*}
+\end{proof}
+
+\begin{prp}
+  For each $a,b:\N$, the number $\gcdeuclid(a,b)$ is the greatest common divisor of $a$ and $b$.
+\end{prp}
+
 \subsection{The trial division primality test}
 
 \begin{thm}
@@ -397,4 +453,5 @@ This prime decomposition is unique if we require that the primes $p_i<p_{i+1}$ f
   \end{equation*}
 \exercise Show that if $2^n-1$ is prime, then $n$ is prime.
 \exercise Prove Fermat's little theorem.
+\exercise Extend the definition of the greatest common divisor to all integers.
 \end{exercises}
