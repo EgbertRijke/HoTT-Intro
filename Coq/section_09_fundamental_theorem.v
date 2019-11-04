@@ -438,10 +438,8 @@ Defined.
 Lemma is_equiv_map_distr_Sigma_coprod {A B} (P : coprod A B -> Type) :
   is_equiv (map_distr_Sigma_coprod P).
 Proof.
-  refine (is_equiv_has_inverse _ _ _).
-  - exact (is_sec_inv_map_distr_Sigma_coprod P).
+  simple refine (is_equiv_has_inverse _ _ _).
   - exact (inv_map_distr_Sigma_coprod P).
-  apply is_equiv_has_inverse with (inv_map_distr_Sigma_coprod P).
   - exact (is_sec_inv_map_distr_Sigma_coprod P).
   - exact (is_retr_inv_map_distr_Sigma_coprod P).
 Defined.
@@ -456,5 +454,44 @@ Lemma is_contr_total_Eq_coprod_inl {A B} (x : A) :
   is_contr (Sigma (coprod A B) (Eq_coprod (inl x))).
 Proof.
   apply (is_contr_equiv (distr_Sigma_coprod (Eq_coprod (inl x)))).
-  apply (is_contr_equiv' (coprod_equiv id_equiv
-  
+  simple refine (is_contr_equiv _ _).
+  - exact (coprod (total_path x) empty).
+  - refine (coprod_equiv _ _).
+    * exact id_equiv.
+    * exact right_zero_law_prod.
+  - simple refine (is_contr_equiv' _ _).
+    * exact (total_path x).
+    * exact right_unit_law_coprod.
+    * apply is_contr_total_path.
+Defined.
+
+Lemma is_contr_total_Eq_coprod_inr {A B} (y : B) :
+  is_contr (Sigma (coprod A B) (Eq_coprod (inr y))).
+Proof.
+  apply (is_contr_equiv (distr_Sigma_coprod (Eq_coprod (inr y)))).
+  simple refine (is_contr_equiv _ _).
+  - exact (coprod empty (total_path y)).
+  - refine (coprod_equiv _ _).
+    * exact right_zero_law_prod.
+    * exact id_equiv.
+  - simple refine (is_contr_equiv' _ _).
+    * exact (total_path y).
+    * exact left_unit_law_coprod.
+    * apply is_contr_total_path.
+Defined.
+
+Theorem is_contr_total_Eq_coprod {A B} (x : coprod A B) :
+  is_contr (Sigma (coprod A B) (Eq_coprod x)).
+Proof.
+  destruct x as [x|y].
+  - apply is_contr_total_Eq_coprod_inl.
+  - apply is_contr_total_Eq_coprod_inr.
+Defined.
+
+Theorem is_equiv_Eq_coprod_eq {A B} {x y : coprod A B} :
+  is_equiv (@Eq_coprod_eq A B x y).
+Proof.
+  apply fundamental_thm_id.
+  - apply refl_Eq_coprod.
+  - apply is_contr_total_Eq_coprod.
+Defined.

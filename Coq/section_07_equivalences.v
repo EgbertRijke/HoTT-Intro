@@ -389,6 +389,9 @@ Proof.
   - exact is_retr_inv_inl.
 Defined.
 
+Definition right_unit_law_coprod {X} : X <~> coprod X empty :=
+  pair inl is_equiv_inl.
+
 Definition inv_inr {X} : coprod empty X -> X.
 Proof.
   intro x; now destruct x.
@@ -412,6 +415,9 @@ Proof.
   - exact is_retr_inv_inr.
 Defined.
 
+Definition left_unit_law_coprod {X} : X <~> coprod empty X :=
+  pair inr is_equiv_inr.
+
 Definition inv_pr1_empty {X} : empty -> prod empty X := ex_falso.
 
 Definition is_sec_inv_pr1_empty {X} :
@@ -431,6 +437,9 @@ Proof.
   - exact is_retr_inv_pr1_empty.
 Defined.
 
+Definition left_zero_law_prod {X} : prod empty X <~> empty :=
+  pair pr1 is_equiv_pr1_empty.
+
 Definition inv_pr2_empty {X} : empty -> prod X empty := ex_falso.
 
 Definition is_sec_inv_pr2_empty {X} :
@@ -449,6 +458,9 @@ Proof.
   - exact is_sec_inv_pr2_empty.
   - exact is_retr_inv_pr2_empty.
 Defined.
+
+Definition right_zero_law_prod {X} : prod X empty <~> empty :=
+  pair pr2 is_equiv_pr2_empty.
 
 (** Exercise 7.3 *)
 
