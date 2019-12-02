@@ -212,13 +212,14 @@ Defined.
     write out the proof term than to convince Coq of some sequence of tactics. *)
 
 Definition is_retr_inv_is_contr_map {A B} {f : A -> B} (c : is_contr_map f) :
-  comp (inv_is_contr_map c) f ~ idmap :=
-  fun a =>
-    ap pr1
-       (contraction' (c (f a))
-                     (pair (inv_is_contr_map c (f a))
-                           (is_sec_inv_is_contr_map c (f a)))
-                     (pair a refl)).
+  comp (inv_is_contr_map c) f ~ idmap.
+Proof.
+  intro a.
+  set (g := inv_is_contr_map c).
+  assert (p : f (g (f a)) == f a) by apply is_sec_inv_is_contr_map.
+  assert (q : pair (g (f a)) p == pair a refl) by apply (contraction' (c (f a))).
+  exact (ap pr1 q).
+Defined.
 
 Theorem is_equiv_is_contr_map {A B} {f : A -> B} :
   is_contr_map f -> is_equiv f.
@@ -346,7 +347,7 @@ Proof.
   - apply (ap (concat' (is_sec_inv_has_inverse I (f x)))).
     transitivity (ap f (ap (comp (inv_has_inverse I) f) (is_retr_inv_has_inverse I x))).
     * apply (ap (ap f)).
-      apply inv. exact reduce_htpy. (* apply reduce_htpy doesn't work *)
+      apply inv. exact reduce_htpy.
     * apply ap_comp.
   - apply (nat_htpy (right_whisker_htpy (is_sec_inv_has_inverse I) f)).
 Defined.

@@ -120,22 +120,51 @@ To include introduction:
 \setsecnumdepth{subsection}
 
 \chapter{Martin-L\"of's dependent type theory}
+
+In this first chapter we explain what dependent type theory is. We begin with the structural rules of dependent type theory. The important concepts here are contexts, types in context, and terms in context, and the concept of judgmental equality. The structural rules contain rules for substitution and weakening, but they do not yet contain rules for forming new types. The informed reader may recognize that the rules we present are those of Voevodsky's \emph{B-systems}, which are equivalent to Cartmell's \emph{contextual categories}.
 \input{dtt}
 \input{pi}
 \input{nat}
 \input{inductive}
 \input{identity}
 \input{universes-relations}
-%\input{finite-types}
 
-\chapter{Basic concepts of type theory}
+\chapter{Basic type theory}
+
+In this chapter we develop some basic concepts of dependent type theory, without adding further axioms to the theory.
+
+The first concept we study is that of equivalences. Equivalent types are the same for all practical purposes. The concept of equivalence generalizes the concept of isomorphism of sets to type theory. As we delve deeper into synthetic homotopy theory, we will see how vast this generalization really is, even though the type theoretic definition is really simple.
+
+The next topic is that of contractible types and maps. Contractible types that are singletons up to homotopy, i.e., types that come equipped with a point so that every (other) point can be identified with it. Contractible maps are maps $f:A\to B$ such that for every $b:B$ the type $\sm{a:A}f(a)=b$ is contractible. We will show that a map is an equivalence if and only if it is a contractible map in this sense.
+
+It is a very important observation that for any $a:A$, the type
+\begin{equation*}
+  \sm{x:A}a=x  
+\end{equation*}
+is contractible. In other words, the total space of the path fibration is contractible. The fundamental theorem of identity types asserts that a type family $B$ over $A$ with $b:B(a)$ has a contractible total space
+\begin{equation*}
+  \sm{x:A}B(x)
+\end{equation*}
+if and only if $(a=x)\simeq B(x)$ for all $x:A$. The fundamental theorem of identity types helps us characterizing the identity types of virtually any type that we will encounter. Since types are only fully understood if we also have a clear understanding of their identity types, it is one of the core tasks of a homotopy type theorist to characterize identity types and the fundamental theorem is the main tool.
+
+Not all types have very complicated identity types. For example, some types have the property that all their identity types are contractible. Such types have up to homotopy at most one term, so they are in a sense ``proof irrelevant''. The only thing that matters about such types is whether or not we can construct a term. Since this is also the case for propositions in first order logic, we call such types propositions.
+
+At the next level there are types of which the identity types are propositions. In other words, the identity types of such types have the property of proof irrelevance. We are familiar with this situation from set theory, where equality is a proposition, so we call such types sets. One of our first major theorems is that the type of natural numbers is a set in this sense.
+
+It is now clear that there is a hierarchy arising: first we have the contractible types; then we have the propositions, of which the identity types are contractible; after the propositions we have the sets, of which the identity types are propositions. Defining sets to be of truncation level $0$, we define a type to be of truncation level $n+1$ if its identity types are of truncation level $n$.
+
+The hierarchy of truncation level is due to Voevodsky, who recognized the importance of specifying the level which you are working in. Most mathematics, for example, takes place at truncation level $0$, the level of sets. Groups, rings, posets, and so on are all set-level objects. Categories, on the other hand, are objects of truncation level $1$, the level of groupoids. The study of all these objects will be greatly facilitated by the univalence axiom, so we will postpone a detailed discussion of them until then.
+
+We end the chapter with a section on elementary number theory, the way it is done in type theory. Our goal is to show how to prove in type theory that there are infinitely many prime numbers. Here it will be important to show that the ordering and divisilibility are properties, i.e., that the types $m\leq n$ and $d\mid n$ are propositions. Even more so, we will show that these are \emph{decidable} propositions. Type theory is by its very nature a constructive theory, but that doesn't stop us from showing that either $P$ or $\not P$ holds for some specific propositions $P$, like $m\leq n$ or $d\mid n$. One of the goals in the chapter on elementary number theory is to show how this is done, and how it is used.
+
 \input{equivalences}
 \input{contractible}
 \input{fundamental}
 \input{hierarchy}
 \input{number-theory}
 
-\chapter{Univalent mathematics}
+\chapter{Univalent mathematics}\label{chap:univalent-mathematics}
+
 \input{funext}
 \input{univalence}
 \input{groups}

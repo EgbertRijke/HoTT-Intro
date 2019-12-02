@@ -19,7 +19,7 @@ A type $A$ is said to be a \define{proposition} if there is a term of type\index
 \end{equation*}
 Given a universe $\UU$, we define $\prop_\UU$\index{Prop@{$\prop$}} to be the type of all small propositions, i.e.,
 \begin{equation*}
-  \prop_\UU\defeq\sm{X:\UU}\isprop(A).
+  \prop_\UU\defeq\sm{X:\UU}\isprop(X).
 \end{equation*}
 \end{defn}
 
@@ -50,18 +50,18 @@ In the following lemma we prove that in order to show that a type $A$ is a propo
 \end{thm}
 
 \begin{proof}
-  To show that (i) implies (ii), let $A$ be a proposition. Then its identity types are contractible, so the center of contraction of $\id{x}{y}$ is identification $\id{x}{y}$, for each $x,y:A$.
+  To show that (i) implies (ii), let $A$ be a proposition. Then its identity types are contractible, so the center of contraction of $\id{x}{y}$ is identification $\id{x}{y}$, for each $x,y:A$. 
 
   To show that (ii) implies (iii), suppose that $A$ comes equipped with $p:\prd{x,y:A}\id{x}{y}$. Then for any $x:A$ the dependent function $p(x):\prd{y:A}\id{x}{y}$ is a contraction of $A$. Thus we obtain the function
   \begin{equation*}
     \lam{x}(x,p(x)):A\to\iscontr(A).
   \end{equation*}
 
-  To show that (iii) implies (iv), suppose that $A\to\iscontr(A)$ and let $x,y:A$. We have to show that
+  To show that (iii) implies (iv), suppose that $A\to\iscontr(A)$. We first make the simple observation that
   \begin{equation*}
-    \apfunc{\const_\ttt}:(x=y)\to (\ttt=\ttt)
+    (X\to \isemb(f))\to \isemb(f)
   \end{equation*}
-  is an equivalence. Since we have $x:A$ it follows that $A$ is contractible. Since the unit type is contractible it follows that $\const_\ttt$ is an equivalence. Therefore we conclude by \cref{cor:emb_equiv} that it is an embedding.
+  for any map $f:X\to Y$, so it suffices to show that $A\to\isemb(\const_\ttt)$. However, assuming we have $x:A$, it follows by assumption that $A$ is contractible. Therefore, it follows by \cref{ex:contr_equiv} that the map $\const_\ttt:A\to\unit$ is an equivalence. Since it is an equivalence, it is an embedding by \cref{cor:emb_equiv}.
 
   To show that (iv) implies (i), note that if $A\to\unit$ is an embedding, then the identity types of $A$ are equivalent to contractible types and therefore they must be contractible.
 \end{proof}

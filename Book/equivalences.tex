@@ -1,8 +1,10 @@
 % !TEX root = hott_intro.tex
 
 \section{Equivalences}
-
 \index{equivalence|(}
+
+We introduce equivalences in this section as functions that have a left inverse and a separate right inverse. This choice of definition might seem a little strange: why would we not say that an equivalence map is a map $f:A\to B$ for which there is a map $g:B\to A$ that is at the same time a left and a right inverse? We will be able to show, after all, that if a map has separate left and right inverses, then it has an inverse. For a precise answer to this question we will have to wait until \cref{chap:univalent-mathematics}, but we can say already that it turns out to be important that the condition of being an equivalence is a property, not structure. We have chose the definition of equivalences with a separate left and right inverses so that being an equivalence will indeed be a property.
+
 \subsection{Homotopies}
 \index{homotopy|(}
 In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$. We view the type of homotopies as the observational equality for $\Pi$-types.\index{observational equality!of Pi-types@{of $\Pi$-types}}

@@ -302,6 +302,7 @@ zero-ℕ-leq-ℕ :
   (n : ℕ) → leq-ℕ zero-ℕ n
 zero-ℕ-leq-ℕ n = star
 
+{- 
 fam-strong-ind-ℕ :
   { l : Level} → (ℕ → UU l) → ℕ → UU l
 fam-strong-ind-ℕ P n = (m : ℕ) → (leq-ℕ m n) → P m
@@ -342,6 +343,21 @@ strong-ind-ℕ P p0 pS =
     ( induction-strong-ind-ℕ P
       ( zero-strong-ind-ℕ P p0)
       ( succ-strong-ind-ℕ P pS))
+        
+
+zero-comp-strong-ind-ℕ :
+  { l : Level} → (P : ℕ → UU l) (p0 : P zero-ℕ) →
+  ( pS : (k : ℕ) → (fam-strong-ind-ℕ P k) → P (succ-ℕ k)) →
+  Id (strong-ind-ℕ P p0 pS zero-ℕ) p0
+zero-comp-strong-ind-ℕ P p0 pS = refl
+
+succ-comp-strong-ind-ℕ :
+  { l : Level} → (P : ℕ → UU l) (p0 : P zero-ℕ) →
+  ( pS : (k : ℕ) → (fam-strong-ind-ℕ P k) → P (succ-ℕ k)) (n : ℕ) →
+  Id (strong-ind-ℕ P p0 pS (succ-ℕ n))
+     (pS n {!!})
+succ-comp-strong-ind-ℕ P p0 pS = {!refl!}
+-}
 
 -- We show that induction on ℕ implies ordinal induction.
 

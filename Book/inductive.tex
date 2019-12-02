@@ -169,7 +169,7 @@ An important example of a type that can be defined using coproducts is the type 
   which are both of type $\N\to\Z$, and the constants\index{integers!-1 Z@{$-1_\Z$}}\index{integers!0 Z@{$0_\Z$}}\index{integers!1 Z@{$1_\Z$}}\index{-1 Z@{$-1_\Z$}}\index{0 Z@{$0_\Z$}}\index{1 Z@{$1_{\Z}$}}
   \begin{align*}
     -1_\Z & \defeq \inneg(0)\\
-    0_\Z & \defeq \inr(\inl(\ttt))\\
+    0_\Z & \defeq \inl(\inr(\ttt))\\
     1_\Z & \defeq \inpos(0).
   \end{align*}
 \end{defn}

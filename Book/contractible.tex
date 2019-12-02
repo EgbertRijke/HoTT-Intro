@@ -6,15 +6,19 @@
 \index{contractible type|(}
 A contractible type is a type which has, up to identification, only one term. In other words, a contractible type is a type that comes equipped with a point, and an identification of this point with any point.
 
-We may think of contractible types as singletons up to homotopy, and indeed we show that the unit type is an example of a contractible type. Moreover, we show that contractible types satisfy an induction principle that is very similar to the induction principle of the unit type, provided that we formulate the computation rule using the identity type rather than postulating a judgmental computation rule. Another example of a contractible type is the total space of the family of identifications with a fixed starting point.
+We may think of contractible types as singletons up to homotopy, and indeed we show that the unit type is an example of a contractible type. Moreover, we show that contractible types satisfy an induction principle that is very similar to the induction principle of the unit type, provided that we formulate the computation rule using the identity type rather than postulating a judgmental computation rule.
 
-We then introduce the notion of fiber of a map, which is the type theoretic analogue of the pre-image of a map, and we say that a map in contractible if all its fibers are contractible. Thus, a map is contractible if the pre-image at any point in the codomain is a singleton. This condition is of course analogous to the set theoretic notion of bijective map, which suggests that on the type theoretical side of things a map should be contractible if and only if it is an equivalence.
-
-The forward direction of this claim is straightforward, and we prove this direction immediately in \cref{thm:equiv_contr}. The converse direction can be done directly, but it is certainly more involved. Therefore we prepare the proof of the converse direction by first characterizing the identity type of a fiber of a map. Then we show that any equivalence $e$ can be given the structure of a invertible map with an additional coherence relating the homotopies
+Another case of an inductive type with a single constructor is the type of identifications $p:a=x$ with a fixed starting point $a:A$. To specify such an identification, we have to give its end point $x:A$ as well as the identification $p:a=x$, and the path induction principle asserts that in order to show something about all such identifications, it suffices to show that thing in the case where the end point is $a$, and the path is $\refl{a}$. This suggests that the total space
 \begin{equation*}
-  e\circ e^{-1}\htpy \idfunc,\qquad\text{and}\qquad e^{-1}\circ e\htpy\idfunc,
+  \sm{x:A}a=x
 \end{equation*}
-and finally we use these observations in \cref{thm:contr_equiv} to conclude that the fibers of any equivalence must be contractible.
+of all paths with starting point $a:A$ is contractible. This important fact will be shown in \cref{thm:total_path}, and it is the basis for the fundamental theorem of identity types (\cref{chap:fundamental}).
+
+In the remainder of this section we will show that for any equivalence $e:A\simeq B$ and any $b:B$, the type of all $a:A$ equipped with a path $p:e(a)=b$ is contractible. In other words, if a map $f:A\to B$ is an equivalence, then the `preimage'
+\begin{equation*}
+  \sm{a:A}f(a)=b
+\end{equation*}
+is contractible for each $b:B$. The preimage of a map $f:A\to B$ at a point $b:B$ is called the fiber of $f$ at $b$, and we say that a map is contractible if all its fibers are contractible. This condition is of course analogous to the set theoretic notion of bijective map, or $1$-to-$1$-correspondence. We will see that a map is contractible if and only if it is an equivalence.
 
 \subsection{Contractible types}
 
@@ -29,7 +33,7 @@ and finally we use these observations in \cref{thm:contr_equiv} to conclude that
 \begin{rmk}
 Suppose $A$ is a contractible type with center of contraction $c$ and contraction $C$. Then the type of $C$ is (judgmentally) equal to the type
 \begin{equation*}
-\mathsf{const}_c\htpy\idfunc[A].
+\const_c\htpy\idfunc[A].
 \end{equation*}
 In other words, the contraction $C$ is a \emph{homotopy} from the constant function to the identity function.
 \end{rmk}
@@ -72,31 +76,35 @@ Let $A$ be a type. The following are equivalent:\index{is contractible!iff singl
 \end{thm}
 
 \begin{proof}
-Suppose $A$ is contractible with center of contraction $c$ and contraction $C$. 
-First we observe that, without loss of generality, we may assume that $C$ comes equipped with an identification $p:C(c)=\refl{c}$.
+Suppose $A$ is contractible with center of contraction $a$ and contraction $C$. 
+First we observe that, without loss of generality, we may assume that $C$ comes equipped with an identification $p:C(a)=\refl{a}$.
 To see this, note that we can always define a new contraction $C'$ by
 \begin{equation*}
-C'(x)\defeq\ct{C(c)^{-1}}{C(x)},
+C'(x)\defeq\ct{C(a)^{-1}}{C(x)},
 \end{equation*}
 which satisfies the requirement by the left inverse law, constructed in \cref{defn:id_invlaw}.
 
-To show that $A$ satisfies singleton induction let $B$ be a type family over $A$ equipped with $b:B(a)$. To define $\mathsf{sing\usc{}ind}_a(b):\prd{x:A}B(x)$, let $x:A$. We have an identification $C(x):a=x$, and $b$ is in $B(a)$. Therefore we can transport $b$ along the path $C(x)$ to obtain
+To show that $A$ satisfies singleton induction let $B$ be a type family over $A$, and suppose we have $b:B(a)$. Our goal is to define
 \begin{equation*}
-  \mathsf{sing\usc{}ind}_a(b)\defeq \mathsf{tr}_B(C(x),b):B(x).
+  \indsing_a(b):\prd{x:A}B(x).
 \end{equation*}
-To see that $\mathsf{sing\usc{}ind}(c)=b$ note that we have
+Let $x:A$. Since we have an identification $C(x):a=x$, and a term $b$ in $B(a)$, we may transport $b$ along the path $C(x)$ to obtain
+\begin{equation*}
+  \indsing_a(b,x)\defeq \tr_B(C(x),b):B(x).
+\end{equation*}
+Therefore, the function $\indsing_a(b)$ is defined to be the dependent function $\lam{x}\tr_B(C(x),b)$. Now we have to show that $\indsing_a(b,a)=b$. Then we have the identifications
 \begin{equation*}
 \begin{tikzcd}
-\mathsf{tr}_B(C(c),b) \arrow[r,equals,"\ap{\lam{\omega}\mathsf{tr}_B(\omega,b)}{p}"] &[4em] \mathsf{tr}_B(\refl{c},b) \arrow[r,equals,"\refl{b}"] & b.
+\tr_B(C(a),b) \arrow[r,equals,"\ap{\lam{\omega}\tr_B(\omega,b)}{p}"] &[4em] \tr_B(\refl{a},b) \arrow[r,equals,"\refl{b}"] & b.
 \end{tikzcd}
 \end{equation*}
-This completes the proof that $A$ satisfies singleton induction.
+This shows that the computation rule is satisfied, which completes the proof that $A$ satisfies singleton induction.
 
 For the converse, suppose that $a:A$ and that $A$ satisfies singleton induction. Our goal is to show that $A$ is contractible. For the center of contraction we take the term $a:A$. By singleton induction applied to $B(x)\defeq a=x$ we have the map 
 \begin{equation*}
-\mathsf{sing\usc{}ind}_{a} : a=a \to \prd{x:A}a=x.
+\indsing_{a} : a=a \to \prd{x:A}a=x.
 \end{equation*}
-Therefore $\mathsf{sing\usc{}ind}_{A,a}(\refl{a})$ is a contraction.
+Therefore $\indsing_{a}(\refl{a})$ is a contraction.
 \end{proof}
 
 \begin{thm}\label{thm:total_path}
@@ -113,16 +121,16 @@ is contractible.\index{identity type!total space is contractible}\index{is contr
   Now let $P$ be a type family over $\sm{x:A}a=x$. Note that we have a commuting triangle
   \begin{equation*}
     \begin{tikzcd}[column sep=0]
-      \prd{t:\sm{x:A}a=x}P(t) \arrow[dr,swap,"\evpt"] \arrow[rr,"\evpair"] & & \prd{x:A}\prd{p:a=x}P(x,p) \arrow[dl,"\mathsf{ev\usc{}refl}"] \\
+      \prd{t:\sm{x:A}a=x}P(t) \arrow[dr,swap,"\evpt"] \arrow[rr,"\evpair"] & & \prd{x:A}\prd{p:a=x}P(x,p) \arrow[dl,"\evrefl"] \\
       \phantom{\prd{x:A}\prd{p:a=x}P(x,p)} & P(a,\refl{a})
     \end{tikzcd}
   \end{equation*}
-  where the maps $\evpair$ and $\mathsf{ev\usc{}refl}$ are defined as
+  where the maps $\evpair$ and $\evrefl$ are defined as
   \begin{align*}
     f & \mapsto \lam{x}\lam{p}f(x,p) \\
     g & \mapsto g(a,\refl{a}),
   \end{align*}
-  respectively. By the induction principle for $\Sigma$-types it follows that $\evpair$ has a section, and by path induction it follows that $\mathsf{ev\usc{}refl}$ has a section. Therefore it follows from \cref{ex:3_for_2} that the composite $\evpt$ has a section.
+  respectively. By the induction principle for $\Sigma$-types it follows that $\evpair$ has a section, and by path induction it follows that $\evrefl$ has a section. Therefore it follows from \cref{ex:3_for_2} that the composite $\evpt$ has a section.
 \end{proof}
 
 \subsection{Contractible maps}
@@ -257,7 +265,7 @@ First we introduce a new notion of \emph{coherently invertible map}, for which w
     \end{align*}
     is defined as
     \begin{equation*}
-      K'\defeq \ct{K}{\mathsf{htpy\usc{}right\usc{}unit}(f\cdot H)^{-1}}.\qedhere
+      K'\defeq \ct{K}{\htpyrightunit}(f\cdot H)^{-1}}.\qedhere
     \end{equation*}
   \end{proof}
 
@@ -310,7 +318,7 @@ commutes. This gives the desired identification $H(f(x))=\ap{f}{H(x)}$.
 \end{constr}
 
 \begin{lem}\label{lem:coherently-invertible}
-  Let $f:A\to B$ be a map, and consider $(g,G,H):\mathsf{has\usc{}inverse}(f)$. Then there is a homotopy $G':f\circ g\htpy \idfunc$ equipped with a further homotopy
+  Let $f:A\to B$ be a map, and consider $(g,G,H):\hasinverse(f)$. Then there is a homotopy $G':f\circ g\htpy \idfunc$ equipped with a further homotopy
   \begin{equation*}
     K : G'\cdot f \htpy f\cdot H.
   \end{equation*}

@@ -151,7 +151,10 @@ The first variable conversion rule states that
 \AxiomC{$\Gamma,x:A,\Delta\vdash B(x)~\type$}
 \BinaryInfC{$\Gamma,x:A',\Delta\vdash B(x)~\type$}
 \end{prooftree}
-In this conversion rule, the context of the form $\Gamma,x:A,\Delta$ is just any extension of the context $\Gamma,x:A$.
+In this conversion rule, the context of the form $\Gamma,x:A,\Delta$ is just any extension of the context $\Gamma,x:A$, i.e., a context of the form
+\begin{equation*}
+  x_1:A_1,\ldots,x_{n-1}:A_{n-1},x:A,x_{n+1}:A_{n+1},\ldots,x_{n+m}:A_{n+m}.
+\end{equation*}
 
 Similarly, there are variable conversion rules for judgmental equality of types, for terms, and for judgmental equality of terms. To avoid having to state essentially the same rule four times, we state all four variable conversion rules at once using a \emph{generic judgment} $\mathcal{J}$, which can be any of the four kinds of judgments.
 \begin{prooftree}
@@ -164,18 +167,32 @@ An analogous \emph{term conversion rule}, stated in \cref{ex:term_conversion}, c
 
 \subsubsection*{Substitution}
 \index{substitution|(}\index{rules!for type dependency!rules for substitution|(}
-If we are given a term $a:A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can form the type $B[a/x]$ in context $\Gamma,\Delta[a/x]$, where $B[a/x]$ is an abbreviation for
+If we are given a term $a:A$ in context $\Gamma$, then for any type $B$ in context $\Gamma,x:A,\Delta$ we can simultaneously substitute $a$ for all occurences of the variable $x$ in $\Delta$ and in $B$, to obtain a type $B[a/x]$ in context $\Gamma,\Delta[a/x]$. You are already familiar with simultaneous substitution, e.g., substituting $0$ for $x$ in the polynomial
 \begin{equation*}
-B(x_1,\ldots,x_{n-1},a(x_1,\ldots,x_{n-1}),x_{n+1},\ldots,x_{n+m-1}).
+  1+x+x^2+x^3
 \end{equation*}
-This syntactic operation of substituting $a$ for $x$ is understood to be defined recursively over the length of $\Delta$. Similarly we obtain for any term $b:B$ in context $\Gamma,x:A,\Delta$ a term $b[a/x]:B[a/x]$. The \define{substitution rule} asserts that substitution preserves well-formedness and judgmental equality of types and terms:
+resuts in the number $1+0+0^2+0^3$, which can be computed to the value $1$. 
+
+Type theoretic substitution is similar. In a bit more detail, suppose we have well-formed type
+\begin{equation*}
+  x_1:A_1,\ldots,x_{n-1}:A_{n-1},x_n:A_n,x_{n+1}:A_{n+1},\ldots,x_{n+m}:A_{n+m}\vdash B~\textrm{type}
+\end{equation*}
+and a term $a:A_n$ in context $x_1:A_1,\ldots,x_{n-1}:A_{n-1}$. Then we can form the type
+\begin{equation*}
+  x_1:A_1,\ldots,x_{n-1}:A_{n-1},x_{n+1}:A_{n+1}[a/x_n],\ldots,x_{n+m}:A_{n+m}[a/x_n]\vdash B[a/x_n]~\textrm{type}
+\end{equation*}
+by substituting $a$ for all occurences of $x_n$. Note that the variables $x_{n+1},\ldots,x_{n+m}$ are assigned new types after performing the substitution of $a$ for $x_n$.
+
+This operation of substituting $a$ for $x$ is understood to be defined recursively over the length of $\Delta$. When $B$ is a family of types over $A$ and $a:A$, we also say that $B[a/x]$ is the \define{fiber}\index{family!fiber of}\index{fiber!of a family} of $B$ at $a$. We will usually write $B(a)$ for $B[a/x]$. Similarly we obtain for any term $b:B$ in context $\Gamma,x:A,\Delta$ a term $b[a/x]:B[a/x]$. The term $b[a/x]$ is called the \define{value} of $b$ at $a$. When we substitute in a judgmental equality, either of types or terms, we simply subtitute on both sides of the equation.
+
+We can now postulate the \define{substitution rule} as follows:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash a:A$}
 \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
 \RightLabel{$S_a$}
 \BinaryInfC{$\Gamma,\Delta[a/x]\vdash \mathcal{J}[a/x]$}
 \end{prooftree}
-Furthermore, we postulate that substitution by judgmentally equal terms results in judgmentally equal types
+In other words, the substitution rule asserts that substitution preserves well-formedness and judgmental equality of types and terms. Furthermore, we postulate that substitution by judgmentally equal terms results in judgmentally equal types
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash a\jdeq a':A$}
 \AxiomC{$\Gamma,x:A,\Delta\vdash B~\type$}
@@ -187,7 +204,7 @@ and it also results in judgmentally equal terms
 \AxiomC{$\Gamma,x:A,\Delta\vdash b:B$}
 \BinaryInfC{$\Gamma,\Delta[a/x]\vdash b[a/x]\jdeq b[a'/x]:B[a/x]$}
 \end{prooftree}
-When $B$ is a family of types over $A$ and $a:A$, we also say that $B[a/x]$ is the \define{fiber}\index{family!fiber of}\index{fiber!of a family} of $B$ at $a$. We will usually write $B(a)$ for $B[a/x]$.
+To see that these rules make sense, we observe that both $B[a/x]$ and $B[a'/x]$ are types in context $\Delta[a/x]$, provided that $a\jdeq a'$. This is immediate by recursion on the length of $\Delta$.
 \index{substitution|)}\index{rules!for type dependency!rules for substitution|)}
 
 \subsubsection*{Weakening}
@@ -223,9 +240,16 @@ One of the reasons for including the variable rule is that it provides an \emph{
 \subsection{Derivations}\label{sec:derivations}
 
 \index{derivation|(}
-A derivation in type theory is a tree in which each node is a valid rule of inference. We give two examples of derivations: a derivation showing that any variable can be changed to a fresh one, and a derivation showing that any two variables that do not depend on one another can be swapped in order.
+A derivation in type theory is a finite tree in which each node is a valid rule of inference. At the root of the tree we find the conclusion, and in the leaves of the tree we find the hypotheses. We give two examples of derivations: a derivation showing that any variable can be changed to a fresh one, and a derivation showing that any two variables that do not mutually depend on one another can be swapped in order.
 
-Thus, we will see some examples of new inference rules that can be derived using the rules of type theory. Such inference rules are called \define{admissible}. Since derivations tend to get long and unwieldy, we declare that admissible inference rules are also valid to be used in derivations.
+Given a derivation with hypotheses $\mathcal{H}_1,\ldots,\mathcal{H}_n$ and conclusion $\mathcal{C}$, we can form a new inference rule
+\begin{prooftree}
+  \AxiomC{$\mathcal{H}_1$}
+  \AxiomC{$\cdots$}
+  \AxiomC{$\mathcal{H}_n$}
+  \TrinaryInfC{$\mathcal{C}$}
+\end{prooftree}
+Such a rule is called \define{derivable}, because we have a derivation for it. In order to keep proof trees reasonably short and manageable, we use the convention that any derived rules can be used in future derivations.
 
 \subsubsection*{Changing variables}
 
@@ -236,7 +260,7 @@ Variables can always be changed to fresh variables. We show that this is the cas
   \RightLabel{$x'/x$}
   \UnaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash \mathcal{J}[x'/x]$}
 \end{prooftree}
-is admissible, where $x'$ is a variable that does not occur in the context $\Gamma,x:A,\Delta$. 
+is derivable, where $x'$ is a variable that does not occur in the context $\Gamma,x:A,\Delta$. 
 
 Indeed, we have the following derivation using substitution, weakening, and the variable rule:
 \begin{prooftree}
@@ -260,7 +284,7 @@ The \define{interchange rule}\index{rules!for type dependency!interchange}\index
 \AxiomC{$\Gamma,x:A,y:B,\Delta\vdash \mathcal{J}$}
 \BinaryInfC{$\Gamma,y:B,x:A,\Delta\vdash \mathcal{J}$}
 \end{prooftree}
-Just as the rule for changing variables, we claim that the interchange rule is an admissible rule.
+Just as the rule for changing variables, we claim that the interchange rule is a derivable rule.
 
 The idea of the derivation for the interchange rule is as follows: If we have a judgment
 \begin{equation*}

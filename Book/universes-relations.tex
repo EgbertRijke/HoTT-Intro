@@ -293,11 +293,26 @@ We can also define observational equality for many other kinds of types, such as
     \prd{n,m:\N}\prd{f:\N\to\N} \EqN(n,m)\to \EqN(f(n),f(m)),
   \end{equation*}
   and pull out the universal quantification over $f:\N\to\N$ by \cref{ex:swap}.
-\exercise 
+\exercise \label{ex:order_N}
   \begin{subexenum}
   \item Define the \define{order relations}\index{relation!order}\index{order relation!leq on N@{$\leq$ on $\N$}}\index{order relation!le on N@{$<$ on $\N$}}\index{leq@{$\leq$}!on N@{on $\N$}}\index{le@{$<$}!on N@{on $\N$}} $\leq$ and $<$ on $\N$.
-  \item Show that $\leq$ is reflexive\index{reflexive!leq on N@{$\leq$ on $\N$}}, transtive, and \define{antisymmetric}, i.e., show that $m=n$ whenever both $m\leq n$ and $n\leq m$ hold.
-  \item Show that $<$ is \define{irreflexive}\index{irreflexive}\index{relation!irreflexive} ($n \nless n$ for any $n$), and transitive. Furthermore show that $n<\succN(n)$.
+  \item Show that $\leq$ is reflexive\index{reflexive!leq on N@{$\leq$ on $\N$}} and that $<$ is \define{irreflexive}\index{irreflexive}\index{relation!irreflexive}, i.e., show that
+    \begin{equation*}
+      (n\leq n)\qquad\text{and}\qquad (n\nless n).
+    \end{equation*}
+  \item Show that $n\leq\succN(n)$ and $n<\succN(n)$.
+  \item Show that both $\leq$ and $<$ are transitive.
+  \item Show that $\leq$ is \define{antisymmetric}, i.e., show that $m=n$ whenever both $m\leq n$ and $n\leq m$ hold. Also show that if $m<n$, then $n\nless m$.
+  \item Show that
+    \begin{equation*}
+      (m\leq n)\leftrightarrow (m=n)+(m<n)
+    \end{equation*}
+    holds for all $m,n$.
+  \item Show that
+    \begin{equation*}
+      (m\leq n)+(n<m)
+    \end{equation*}
+    holds for all $m,n$.
   \item Show that $k\leq \min(m,n)$ holds if and only if both $k\leq m$ and $k\leq n$ hold, and show that $\max(m,n)\leq k$ holds if and only if both $m\leq k$ and $n\leq k$ hold.
   \end{subexenum}
 \exercise \label{ex:obs_bool}\index{observational equality!on 2@{on $\bool$}}
@@ -317,10 +332,15 @@ We can also define observational equality for many other kinds of types, such as
   \end{subexenum}
 \exercise
   \begin{subexenum}
-  \item \label{ex:strong-induction}Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function of type
+  \item \label{ex:strong-induction}Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function $\mathbf{ind}_\N$ of type
     \begin{equation*}
-      P(\zeroN) \to \Big(\prd{k:\N}\Big(\prd{m:\N} (m\leq k) \to P(m)\Big)\to P(\succN(k))\Big) \to \prd{n:\N}P(n).
+       P(\zeroN) \to \Big(\prd{n:\N}\Big(\prd{x:\N} (x\leq n) \to P(m)\Big)\to P(\succN(k))\Big) \to \prd{n:\N}P(n),
     \end{equation*}
+    and check that the following computation rules are satisfied:
+    \begin{align*}
+      \mathbf{ind}_\N(p_0,p_S,\zeroN) & \jdeq p_0 \\
+      \mathbf{ind}_\N(p_0,p_S,\succN(n)) & \jdeq p_S\Big(n,\big(x\leq n\mapsto\mathbf{ind}_\N(p_0,p_S,x)\big)\Big).
+    \end{align*}
   \item Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
     \begin{equation*}
       \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).

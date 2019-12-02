@@ -344,30 +344,30 @@ following Euclid's algorithm, with the opposite qualities: it will compute rathe
 \end{defn}
 
 \begin{proof}
-  We will define the operation $\gcdeuclid$ with the \emph{strong} induction principle for $\N$, which was given as \cref{ex:strong-induction}. Thus it suffices to construct a function $f:\N\to\N$, which will provide the values for $\gcdeuclid(\zeroN)$, and a function
+  We will define the operation $\gcdeuclid$ with the \emph{strong} induction principle for $\N$, which was given as \cref{ex:strong-induction}. Thus it suffices to construct a function $\N\to\N$, which will provide the values for $\gcdeuclid(\zeroN)$, and a function
   \begin{equation*}
-    F_a : \Big(\prd{x:\N}(x\leq a) \to \N\to\N\Big)\to (\N\to\N),
+    h_a:\Big(\prd{x:\N}(x\leq a) \to \N\to\N\Big)\to (\N\to\N),
   \end{equation*}
   for every $a:\N$, which will provide the values for $\gcdeuclid(a+1)$.
 
   In the base case, we simply define
   \begin{equation*}
-    f\defeq\idfunc.
+    \gcdeuclid(\zeroN)\defeq\idfunc.
   \end{equation*}
-  For the inductive step, consider a family of maps $g_x:\N\to\N$ indexed by $x\leq a$. We think of $g_x(b)$ as the value for $\gcdeuclid(x,b)$, so our assumption of having such a family of maps $g_x$ is really the assumption that $\gcdeuclid(x,b)$ is defined for every $x\leq a$. Our goal is to construct a map
+  For the inductive step, consider a family of maps $F_x:\N\to\N$ indexed by $x\leq a$. We think of $F_x(b)$ as the value for $\gcdeuclid(x,b)$, so our assumption of having such a family of maps $F_x$ is really the assumption that $\gcdeuclid(x,b)$ is defined for every $x\leq a$. Our goal is to construct a map
   \begin{equation*}
     \gcdeuclid(a+1):\N\to\N
   \end{equation*}
-  We proceed by induction on $b:\N$. In the base case, we define
+  We proceed by strong induction on $b:\N$. In the base case, we define
   \begin{equation*}
     \gcdeuclid(a+1,\zeroN)\defeq a+1.
   \end{equation*}
-  For the inductive step, assume that we have a number $h_y:\N$ for every $y\leq b$. Observe that $(b\leq a)+(a<b)$ holds for any $b:B$. Thus we can proceed by case analysis to define
+  For the inductive step, assume that we have a number $G_y:\N$ for every $y\leq b$. Observe that $(b\leq a)+(a<b)$ holds for any $b:B$, see \cref{ex:order_N}. Thus we can proceed by case analysis to define
   \begin{equation*}
-    F_a(g,b+1)\defeq
+    h_a(F,b+1)\defeq
     \begin{cases}
-      g_{(a+1)-(b+1)}(b+1) & \text{if }b\leq a\\
-      h_{(b+1)-(a+1)} & \text{if }a<b.
+      F_{(a+1)-(b+1)}(b+1) & \text{if }b\leq a\\
+      G_{(b+1)-(a+1)} & \text{if }a<b.
     \end{cases}
   \end{equation*}
   This completes the inductive step, and hence we obtain a binary operation

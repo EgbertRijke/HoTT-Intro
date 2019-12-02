@@ -275,11 +275,11 @@ Proof.
 Defined.
 
 Definition fam_Sigma {A} {B : A -> Type} (C : forall x, B x -> Type) :
-  Sigma A B -> Type.
-Proof.
-  intro t; destruct t as [x y]. (* now destruct t does not give the correct definition. I don't understand why *)
-  exact (C x y).
-Defined.
+  Sigma A B -> Type :=
+  fun t =>
+    match t with
+    | pair x y => C x y
+    end.
 
 Definition ev_pair {A} {B : A -> Type} (C : Sigma A B -> Type) :
   (forall (t : Sigma A B), C t) -> (forall x y, C (pair x y)) :=

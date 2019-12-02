@@ -531,8 +531,11 @@
 \newcommand{\rightinverselawaddZ}{\mathsf{right\usc{}inverse\usc{}law\usc{}add\usc{}}\Z}
 
 % Macros for contractible types
-\newcommand{\singind}{\mathsf{sing\usc{}ind}}
-\newcommand{\singcomp}{\mathsf{sing\usc{}comp}}
+\newcommand{\indsing}{\mathsf{ind\usc{}sing}}
+\newcommand{\compsing}{\mathsf{comp\usc{}sing}}
+\let\singind\indsing
+\let\singcomp\compsing
+\newcommand{\evrefl}{\mathsf{ev\usc{}refl}}
 \newcommand{\iscontr}{\ensuremath{\mathsf{is\usc{}contr}}}
 \newcommand{\ev}{\mathsf{ev}}
 \newcommand{\evpt}{\mathsf{ev\usc{}pt}}
@@ -590,7 +593,6 @@
 \newcommand{\htpyeq}{\mathsf{htpy\usc{}eq}}
 \newcommand{\funext}{\mathsf{funext}}
 \newcommand{\evtruefalse}{\mathsf{ev\usc{}true\usc{}false}}
-\newcommand{\evrefl}{\mathsf{ev\usc{}refl}}
 \newcommand{\evunit}{\mathsf{ev\usc{}unit}}
 \newcommand{\precomp}[1]{{#1}^\ast}
 \newcommand{\pathsplit}{\mathsf{path\usc{}split}}

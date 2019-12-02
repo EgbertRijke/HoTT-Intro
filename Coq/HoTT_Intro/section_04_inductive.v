@@ -101,19 +101,19 @@ Arguments inr {A B}.
 (** Using coproducts, the type of natural numbers, and the unit type we now
     construct the type of integers. *)
 
-Definition Z : Type := coprod N (coprod unit N).
+Definition Z : Type := coprod ℕ (coprod unit ℕ).
 
 (** We define some integers close to zero. *)
 
 Definition zero_Z : Z := inr (inl star).
 
-Definition one_Z : Z := inr (inr zero_N).
+Definition one_Z : Z := inr (inr zero_ℕ).
 
-Definition two_Z : Z := inr (inr one_N).
+Definition two_Z : Z := inr (inr one_ℕ).
 
-Definition neg_one_Z : Z := inl zero_N.
+Definition neg_one_Z : Z := inl zero_ℕ.
 
-Definition neg_two_Z : Z := inl one_N.
+Definition neg_two_Z : Z := inl one_ℕ.
 
 (** Now we extend the successor function on the natural numbers to a successor
     function on the integers. *)
@@ -126,7 +126,7 @@ Proof.
     * exact (inl n).
   - destruct x as [x | n].
     * exact one_Z.
-    * exact (inr (inr (succ_N n))).
+    * exact (inr (inr (succ_ℕ n))).
 Defined.
 
 (** Section 4.6. Dependent pair types *)
@@ -255,7 +255,7 @@ Defined.
 Definition pred_Z (k : Z) : Z.
 Proof.
   destruct k as [n | x].
-  - exact (inl (succ_N n)).
+  - exact (inl (succ_ℕ n)).
   - destruct x as [x | n].
     * exact neg_one_Z.
     * destruct n.
@@ -308,18 +308,18 @@ Fixpoint Fibonacci_Z (k : Z) : Z :=
   match k with
   | inl n =>
     match n with
-    | zero_N => one_Z
-    | succ_N m =>
+    | zero_ℕ => one_Z
+    | succ_ℕ m =>
       match m with
-      | zero_N => neg_one_Z
-      | succ_N m' =>
+      | zero_ℕ => neg_one_Z
+      | succ_ℕ m' =>
         add_Z (Fibonacci_Z (inl m)) (neg_Z (Fibonacci_Z (inl m')))
       end
     end
   | inr x =>
     match x with
     | inl x => zero_Z
-    | inr n => inr (inr (Fibonacci (succ_N n)))
+    | inr n => inr (inr (Fibonacci (succ_ℕ n)))
     end
   end.
  *)
@@ -332,7 +332,7 @@ Proof.
     * exact (neg_Z !!!
   - destruct x as [x | n].
     * exact zero_Z.
-    * exact (inr (inr (Fibonacci (succ_N n)))).
+    * exact (inr (inr (Fibonacci (succ_ℕ n)))).
 Defined.
  *)
 
@@ -375,20 +375,20 @@ Defined.
 
 (** Exercise 4.8.c *)
 
-Definition length_list {A} : list A -> N.
+Definition length_list {A} : list A -> ℕ.
 Proof.
   apply fold_list.
-  - exact zero_N.
-  - exact (const succ_N).
+  - exact zero_ℕ.
+  - exact (const succ_ℕ).
 Defined.
 
 (** Exercise 4.8.d *)
 
-Definition sum_list_N : list N -> N.
+Definition sum_list_ℕ : list ℕ -> ℕ.
 Proof.
   apply fold_list.
-  - exact zero_N.
-  - exact add_N.
+  - exact zero_ℕ.
+  - exact add_ℕ.
 Defined.
 
 (** Exercise 4.8.e *)
