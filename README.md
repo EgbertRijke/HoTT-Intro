@@ -46,7 +46,7 @@ The course consisted of 27 one-hour lectures, in which we covered most of the fo
     * Wedges and smash products
     * The Blakers-Massey Theorem
     
-## The Formalization Rosetta Stone
+## Formalizations
 This repositories contains formalizations of the first half of the course in several proof assistants: currently Agda and Coq. These formalization project are designed to follow the course notes as closely as possible, and they include solutions to the exercises. From the dual point of view, the course notes form an extensive documentation of the formalization projects, and it is my hope that people will find it helpful to have such a documentation with the formalization.
 
 Formalization projects of this course in more proof assistants that support homotopy type theory might be added in the future.
