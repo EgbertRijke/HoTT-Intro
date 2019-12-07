@@ -1,36 +1,9 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 10-number-theory where
+module 11-number-theory where
 
-import 09-truncation-levels
-open 09-truncation-levels public
-
-two-ℕ : ℕ
-two-ℕ = succ-ℕ one-ℕ
-
-three-ℕ : ℕ
-three-ℕ = succ-ℕ two-ℕ
-
-four-ℕ : ℕ
-four-ℕ = succ-ℕ three-ℕ
-
-five-ℕ : ℕ
-five-ℕ = succ-ℕ four-ℕ
-
-six-ℕ : ℕ
-six-ℕ = succ-ℕ five-ℕ
-
-seven-ℕ : ℕ
-seven-ℕ = succ-ℕ six-ℕ
-
-eight-ℕ : ℕ
-eight-ℕ = succ-ℕ seven-ℕ
-
-nine-ℕ : ℕ
-nine-ℕ = succ-ℕ eight-ℕ
-
-ten-ℕ : ℕ
-ten-ℕ = succ-ℕ nine-ℕ
+import 10-truncation-levels
+open 10-truncation-levels public
 
 -- Section 10.1 Decidability.
 
@@ -361,43 +334,76 @@ map-lift-Fin (succ-ℕ m) zero-ℕ f (inr star) H =
   ex-falso
     ( H (pair (inr star) (inv (contraction-Fin-one-ℕ (f (inr star))))))
 
+{-
 is-lift-lift-Fin :
   (m n : ℕ) (f : Fin (succ-ℕ m) → Fin (succ-ℕ n))
   (i : Fin (succ-ℕ n)) (H : fib f i → empty) →
   (f ∘ inl) ~ ((skip n i) ∘ (map-lift-Fin m n f i H))
 is-lift-lift-Fin m n f (inl i) H x = {!!}
 is-lift-lift-Fin m n f (inr i) H x = {!!}
+-}
 
 -- The greatest common divisor
 
 {- First we show that mul-ℕ n is an embedding whenever n > 0. In order to do
    this, we have to show that add-ℕ n is injective. -}
+
+is-injective-add-ℕ' :
+  (n : ℕ) → is-injective is-set-ℕ is-set-ℕ (λ m → add-ℕ m n)
+is-injective-add-ℕ' zero-ℕ k l p = p
+is-injective-add-ℕ' (succ-ℕ n) k l p =
+  is-injective-add-ℕ' n k l (is-injective-succ-ℕ (add-ℕ k n) (add-ℕ l n) p)
    
 is-injective-add-ℕ :
   (n : ℕ) → is-injective is-set-ℕ is-set-ℕ (add-ℕ n)
-is-injective-add-ℕ zero-ℕ k l p = p
-is-injective-add-ℕ (succ-ℕ n) k l p =
-  is-injective-add-ℕ n k l (is-injective-succ-ℕ (add-ℕ n k) (add-ℕ n l) p)
+is-injective-add-ℕ n k l p = is-injective-add-ℕ' n k l
+  (((commutative-add-ℕ k n) ∙ p) ∙ (commutative-add-ℕ n l))
 
 is-emb-add-ℕ :
   (n : ℕ) → is-emb (add-ℕ n)
 is-emb-add-ℕ n =
   is-emb-is-injective is-set-ℕ is-set-ℕ (add-ℕ n) (is-injective-add-ℕ n)
 
+succ-leq-ℕ : (n : ℕ) → leq-ℕ n (succ-ℕ n)
+succ-leq-ℕ zero-ℕ = star
+succ-leq-ℕ (succ-ℕ n) = succ-leq-ℕ n
+
+add-ℕ' : ℕ → ℕ → ℕ
+add-ℕ' m n = add-ℕ n m
+
+equiv-fib-add-fib-add-ℕ' :
+  (m n : ℕ) → fib (add-ℕ' m) n ≃ fib (add-ℕ m) n
+equiv-fib-add-fib-add-ℕ' m n =
+  equiv-tot (λ k → equiv-concat (commutative-add-ℕ m k) n)
+
+leq-fib-add-ℕ' :
+  (m n : ℕ) → fib (add-ℕ' m) n → (leq-ℕ m n)
+leq-fib-add-ℕ' zero-ℕ n (pair k p) = leq-zero-ℕ n
+leq-fib-add-ℕ' (succ-ℕ m) (succ-ℕ n) (pair k p) =
+  leq-fib-add-ℕ' m n (pair k (is-injective-succ-ℕ (add-ℕ k m) n p))
+
 leq-fib-add-ℕ :
   (m n : ℕ) → fib (add-ℕ m) n → (leq-ℕ m n)
-leq-fib-add-ℕ zero-ℕ n (pair k p) = leq-zero-ℕ n
-leq-fib-add-ℕ (succ-ℕ m) (succ-ℕ n) (pair k p) =
-  leq-fib-add-ℕ m n (pair k (is-injective-succ-ℕ (add-ℕ m k) n p))
+leq-fib-add-ℕ m .m (pair zero-ℕ refl) = reflexive-leq-ℕ m
+leq-fib-add-ℕ m .(add-ℕ m (succ-ℕ k)) (pair (succ-ℕ k) refl) =
+  transitive-leq-ℕ m (add-ℕ m k) (succ-ℕ (add-ℕ m k))
+    ( leq-fib-add-ℕ m (add-ℕ m k) (pair k refl))
+    ( succ-leq-ℕ (add-ℕ m k))
 
 fib-add-leq-ℕ :
   (m n : ℕ) → (leq-ℕ m n) → fib (add-ℕ m) n
+fib-add-leq-ℕ zero-ℕ zero-ℕ star = pair zero-ℕ refl
+fib-add-leq-ℕ zero-ℕ (succ-ℕ n) star = {!!}
+fib-add-leq-ℕ (succ-ℕ m) (succ-ℕ n) p = {!!}
+
+{-
 fib-add-leq-ℕ zero-ℕ zero-ℕ H = pair zero-ℕ refl
 fib-add-leq-ℕ zero-ℕ (succ-ℕ n) H = pair (succ-ℕ n) refl
 fib-add-leq-ℕ (succ-ℕ m) (succ-ℕ n) H =
   pair
     ( pr1 (fib-add-leq-ℕ m n H))
     ( ap succ-ℕ (pr2 (fib-add-leq-ℕ m n H)))
+-}
 
 is-prop-leq-ℕ :
   (m n : ℕ) → is-prop (leq-ℕ m n)
@@ -421,12 +427,6 @@ is-equiv-fib-add-leq-ℕ m n =
     ( is-prop-leq-ℕ m n)
     ( is-prop-map-is-emb _ (is-emb-add-ℕ m) n)
     ( leq-fib-add-ℕ m n)
-
-is-injective-add-ℕ' :
-  (n : ℕ) → is-injective is-set-ℕ is-set-ℕ (λ m → add-ℕ m n)
-is-injective-add-ℕ' n k l p =
-  is-injective-add-ℕ n k l
-    (((commutative-add-ℕ n k) ∙ p) ∙ (commutative-add-ℕ l n))
 
 is-injective-mul-ℕ :
   (n : ℕ) → (le-ℕ zero-ℕ n) → is-injective is-set-ℕ is-set-ℕ (mul-ℕ n)
@@ -510,6 +510,8 @@ leq-eq-right-ℕ m refl = id
 order-preserving-add-ℕ :
   (m n m' n' : ℕ) →
   (leq-ℕ m m') → (leq-ℕ n n') → (leq-ℕ (add-ℕ m n) (add-ℕ m' n'))
+
+{-
 order-preserving-add-ℕ zero-ℕ zero-ℕ m' n' Hm Hn = star
 order-preserving-add-ℕ zero-ℕ (succ-ℕ n) zero-ℕ (succ-ℕ n') Hm Hn = Hn
 order-preserving-add-ℕ zero-ℕ (succ-ℕ n) (succ-ℕ m') (succ-ℕ n') Hm Hn =
@@ -518,6 +520,7 @@ order-preserving-add-ℕ zero-ℕ (succ-ℕ n) (succ-ℕ m') (succ-ℕ n') Hm Hn
     ( order-preserving-add-ℕ zero-ℕ n (succ-ℕ m') n' Hm Hn)
 order-preserving-add-ℕ (succ-ℕ m) n (succ-ℕ m') n' Hm Hn =
   order-preserving-add-ℕ m n m' n' Hm Hn
+-}
 
 le-eq-right-ℕ :
   (m : ℕ) {n n' : ℕ} → Id n n' → le-ℕ m n' → le-ℕ m n
@@ -525,8 +528,11 @@ le-eq-right-ℕ m refl = id
 
 le-add-ℕ :
   (m n : ℕ) → (leq-ℕ one-ℕ n) → le-ℕ m (add-ℕ m n)
+
+{-
 le-add-ℕ zero-ℕ (succ-ℕ n) star = star
 le-add-ℕ (succ-ℕ m) (succ-ℕ n) star = le-add-ℕ m (succ-ℕ n) star
+-}
 
 le-mul-self-ℕ :
   (d n : ℕ) → (leq-ℕ one-ℕ d) → (leq-ℕ one-ℕ n) → le-mul-ℕ d n n

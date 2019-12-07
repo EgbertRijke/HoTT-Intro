@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 06-equivalences where
+module 07-equivalences where
 
 import 06-universes
 open 06-universes public

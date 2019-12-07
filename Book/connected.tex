@@ -246,7 +246,7 @@ is an equivalence for every family $P$ of $k$-types over $Y$. In other words, th
       & \prd{y:Y}\fib{f}{y}\to P(y) \arrow[r] & \prd{y:Y}{x:X}{p:f(x)=y}P(y) \arrow[ur]
     \end{tikzcd}
   \end{equation*}
-  which commutes by $\htpyrefl$. In this diagram, the five maps going around counter clockwise are all equivalences for obvious reasons, so it follows that the top map is an equivalence.
+  which commutes by $\reflhtpy$. In this diagram, the five maps going around counter clockwise are all equivalences for obvious reasons, so it follows that the top map is an equivalence.
 
   Now suppose that $f$ satisfies the dependent elimination property stated in (ii). In order to construct a center of contraction of $\trunc{k}{\fib{f}{y}}$ for every $y:Y$, we use the dependent elimination property with respect to the family $P$ given by $P(y)\defeq\trunc{k}{\fib{f}{y}}$. 
 \end{proof}
@@ -459,7 +459,7 @@ commutes. A slicker way to express this condition is to assert that the map
 \begin{equation*}
    (B\to X)\to \sm{h:A\to X}{i:B\to Y} i\circ f\htpy g\circ h
 \end{equation*}
-given by $j\mapsto(j\circ f,g\circ j,\htpyrefl)$ is an equivalence. Indeed, the type of triples $(h,i,H)$ in the codomain is the type of commuting squares with respect to which we stated the orthogonality condition. Now we may even recognize the above map as a gap map of a commuting square, and we arrive at our actual definition of orthogonality.
+given by $j\mapsto(j\circ f,g\circ j,\reflhtpy)$ is an equivalence. Indeed, the type of triples $(h,i,H)$ in the codomain is the type of commuting squares with respect to which we stated the orthogonality condition. Now we may even recognize the above map as a gap map of a commuting square, and we arrive at our actual definition of orthogonality.
 
 \begin{defn}
   A map $f:A\to B$ is said to be \define{left orthogonal} to a map $g:X\to Y$, or equivalently the map $g$ is said to be \define{right orthogonal} to $f$, if the commuting square

@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 08-fundamental-theorem where
+module 09-fundamental-theorem where
 
-import 07-contractible-types
-open 07-contractible-types public
+import 08-contractible-types
+open 08-contractible-types public
 
 -- Section 8.1 Families of equivalences
 

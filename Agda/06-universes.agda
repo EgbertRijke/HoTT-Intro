@@ -5,86 +5,63 @@ module 06-universes where
 import 05-identity-types
 open 05-identity-types public
 
--- Section 4.1 Type theoretic universes
+-- Section 6.3 Pointed types
 
-{- Because of Agda's design we already had to introduce universes in the very
-   first file. What is left to do here is to formalize the examples of
-   structured types. -}
+-- Definition 6.3.1
 
--- Pointed types
 UU-pt : (i : Level) → UU (lsuc i)
 UU-pt i = Σ (UU i) (λ X → X)
- 
--- Graphs
-Gph : (i : Level) → UU (lsuc i)
-Gph i = Σ (UU i) (λ X → (X → X → (UU i)))
 
--- Reflexive graphs
-rGph : (i : Level) →  UU (lsuc i)
-rGph i = Σ (UU i) (λ X → Σ (X → X → (UU i)) (λ R → (x : X) → R x x))
+type-UU-pt : {i : Level} → UU-pt i → UU i
+type-UU-pt = pr1
 
--- Section 4.2 Defining families and relations using a universe
+pt-UU-pt : {i : Level} (A : UU-pt i) → type-UU-pt A
+pt-UU-pt = pr2
 
--- Finite sets
+-- Definition 6.3.2
+
+_→*_ : {i j : Level} → UU-pt i → UU-pt j → UU-pt (i ⊔ j)
+A →* B =
+  pair
+    ( Σ (type-UU-pt A → type-UU-pt B) (λ f → Id (f (pt-UU-pt A)) (pt-UU-pt B)))
+    ( pair
+      ( const (type-UU-pt A) (type-UU-pt B) (pt-UU-pt B))
+      ( refl))
+
+-- Definition 6.3.3
+
+Ω : {i : Level} → UU-pt i → UU-pt i
+Ω A = pair (Id (pt-UU-pt A) (pt-UU-pt A)) refl
+
+-- Definition 6.3.4
+
+iterated-loop-space : {i : Level} → ℕ → UU-pt i → UU-pt i
+iterated-loop-space zero-ℕ A = A
+iterated-loop-space (succ-ℕ n) A = Ω (iterated-loop-space n A)
+
+-- Section 6.4 Families and relations on the natural numbers
+
+-- Definition 6.4.1
+
 Fin : ℕ → UU lzero
 Fin zero-ℕ = empty
 Fin (succ-ℕ n) = coprod (Fin n) unit
 
+-- Definition 6.4.2
+
 -- Observational equality on the natural numbers
+
 Eq-ℕ : ℕ → (ℕ → UU lzero)
 Eq-ℕ zero-ℕ zero-ℕ = 𝟙
 Eq-ℕ zero-ℕ (succ-ℕ n) = 𝟘
 Eq-ℕ (succ-ℕ m) zero-ℕ = 𝟘
 Eq-ℕ (succ-ℕ m) (succ-ℕ n) = Eq-ℕ m n
 
--- Exercises
+-- Lemma 6.4.3
 
--- Exercise 3.1
-
-{- In this exercise we were asked to show that (A + ¬A) implies (¬¬A → A). In 
-   other words, we get double negation elimination for the types that are 
-   decidable. -}
-
-is-decidable : {l : Level} (A : UU l) → UU l
-is-decidable A = coprod A (¬ A)
-
-double-negation-elim-is-decidable :
-  {i : Level} (A : UU i) → is-decidable A → (¬ (¬ A) → A)
-double-negation-elim-is-decidable A (inl x) p = x
-double-negation-elim-is-decidable A (inr x) p = ind-empty (p x)
-
--- Exercise 3.3
-
-{- In this exercise we were asked to show that the observational equality on ℕ 
-   is an equivalence relation. -}
-   
 refl-Eq-ℕ : (n : ℕ) → Eq-ℕ n n
 refl-Eq-ℕ zero-ℕ = star
 refl-Eq-ℕ (succ-ℕ n) = refl-Eq-ℕ n
-
-symmetric-Eq-ℕ : (m n : ℕ) → Eq-ℕ m n → Eq-ℕ n m
-symmetric-Eq-ℕ zero-ℕ zero-ℕ t = t
-symmetric-Eq-ℕ zero-ℕ (succ-ℕ n) t = t
-symmetric-Eq-ℕ (succ-ℕ n) zero-ℕ t = t
-symmetric-Eq-ℕ (succ-ℕ m) (succ-ℕ n) t = symmetric-Eq-ℕ m n t
-
-transitive-Eq-ℕ : (l m n : ℕ) → Eq-ℕ l m → Eq-ℕ m n → Eq-ℕ l n
-transitive-Eq-ℕ zero-ℕ zero-ℕ zero-ℕ s t = star
-transitive-Eq-ℕ (succ-ℕ n) zero-ℕ zero-ℕ s t = ind-empty s
-transitive-Eq-ℕ zero-ℕ (succ-ℕ n) zero-ℕ s t = ind-empty s
-transitive-Eq-ℕ zero-ℕ zero-ℕ (succ-ℕ n) s t = ind-empty t
-transitive-Eq-ℕ (succ-ℕ l) (succ-ℕ m) zero-ℕ s t = ind-empty t
-transitive-Eq-ℕ (succ-ℕ l) zero-ℕ (succ-ℕ n) s t = ind-empty s
-transitive-Eq-ℕ zero-ℕ (succ-ℕ m) (succ-ℕ n) s t = ind-empty s
-transitive-Eq-ℕ (succ-ℕ l) (succ-ℕ m) (succ-ℕ n) s t = transitive-Eq-ℕ l m n s t
-
--- Exercise 3.4
-
-{- In this exercise we were asked to show that observational equality on the 
-   natural numbers is the least reflexive relation, in the sense that it 
-   implies all other reflexive relation. As we will see once we introduce the 
-   identity type, it follows that observationally equal natural numbers can be 
-   identified. -}
 
 succ-relation-ℕ :
   {i : Level} (R : ℕ → ℕ → UU i) → ℕ → ℕ → UU i
@@ -109,7 +86,23 @@ least-reflexive-Eq-ℕ R ρ (succ-ℕ m) zero-ℕ ()
 least-reflexive-Eq-ℕ R ρ (succ-ℕ m) (succ-ℕ n) e =
   least-reflexive-Eq-ℕ (succ-relation-ℕ R) (succ-reflexivity-ℕ R ρ) m n e
 
--- Exercise 3.5
+-- Exercises
+
+-- Exercise 6.1
+
+{- In this exercise we were asked to show that the observational equality on ℕ 
+   is an equivalence relation. -}
+
+symmetric-Eq-ℕ : (m n : ℕ) → Eq-ℕ m n → Eq-ℕ n m
+symmetric-Eq-ℕ zero-ℕ zero-ℕ star = star
+symmetric-Eq-ℕ (succ-ℕ m) (succ-ℕ n) t = symmetric-Eq-ℕ m n t
+
+transitive-Eq-ℕ : (l m n : ℕ) → Eq-ℕ l m → Eq-ℕ m n → Eq-ℕ l n
+transitive-Eq-ℕ zero-ℕ zero-ℕ zero-ℕ p q = star
+transitive-Eq-ℕ (succ-ℕ l) (succ-ℕ m) (succ-ℕ n) p q =
+  transitive-Eq-ℕ l m n p q
+
+-- Exercise 6.2
 
 {- In this exercise we were asked to show that any function on the natural 
    numbers preserves observational equality. The quick solution uses the fact 
@@ -121,10 +114,12 @@ preserve_Eq-ℕ f =
     ( λ x y → Eq-ℕ (f x) (f y))
     ( λ x → refl-Eq-ℕ (f x))
 
--- Exercise 3.6
+-- Exercise 6.3
 
 {- In this exercise we were asked to construct the relations ≤ and < on the 
    natural numbers, and show basic properties about them. -}
+
+-- Exercise 6.3(a)
 
 -- The definition of ≤ 
 
@@ -137,8 +132,7 @@ _≤_ = leq-ℕ
 
 leq-zero-ℕ :
   (n : ℕ) → leq-ℕ zero-ℕ n
-leq-zero-ℕ zero-ℕ = star
-leq-zero-ℕ (succ-ℕ n) = star
+leq-zero-ℕ n = star
 
 -- The definition of <
 
@@ -172,15 +166,7 @@ succ-le-ℕ : (n : ℕ) → le-ℕ n (succ-ℕ n)
 succ-le-ℕ zero-ℕ = star
 succ-le-ℕ (succ-ℕ n) = succ-le-ℕ n
 
--- Exercise 3.7
-
-{- With the construction of the divisibility relation we open the door to basic
-   number theory. -}
-   
-divides : (d n : ℕ) → UU lzero
-divides d n = Σ ℕ (λ m → Eq-ℕ (mul-ℕ d m) n)
-
--- Exercise 3.8
+-- Exercise 6.5
 
 {- In this exercise we were asked to construct observational equality on the 
    booleans. This construction is analogous to, but simpler than, the 
@@ -204,19 +190,19 @@ least-reflexive-Eq-𝟚 R ρ true false p = ind-empty p
 least-reflexive-Eq-𝟚 R ρ false true p = ind-empty p
 least-reflexive-Eq-𝟚 R ρ false false p = ρ false
 
--- Exercise 3.10
+-- Exercise 6.6
 
 {- In this exercise we were asked to define the relations ≤ and < on the 
    integers. As a criterion of correctness, we were then also asked to show 
    that the type of all integers l satisfying k ≤ l satisfy the induction 
    principle of the natural numbers. -}
 
+diff-ℤ : ℤ → ℤ → ℤ
+diff-ℤ k l = add-ℤ (neg-ℤ k) l
+
 is-non-negative-ℤ : ℤ → UU lzero
 is-non-negative-ℤ (inl x) = empty
 is-non-negative-ℤ (inr k) = unit
-
-diff-ℤ : ℤ → ℤ → ℤ
-diff-ℤ k l = add-ℤ (neg-ℤ k) l
 
 leq-ℤ : ℤ → ℤ → UU lzero
 leq-ℤ k l = is-non-negative-ℤ (diff-ℤ k l)
@@ -296,6 +282,9 @@ le-ℤ (inr (inr (succ-ℕ x))) (inr (inr zero-ℕ)) = empty
 le-ℤ (inr (inr (succ-ℕ x))) (inr (inr (succ-ℕ y))) =
   le-ℤ (inr (inr x)) (inr (inr y))
 
+
+-- Exercise 6.7
+
 -- We prove that the induction principle for ℕ implies strong induction.
 
 zero-ℕ-leq-ℕ :
@@ -334,7 +323,7 @@ induction-strong-ind-ℕ P q0 qS zero-ℕ = q0
 induction-strong-ind-ℕ P q0 qS (succ-ℕ n) = qS n
   ( induction-strong-ind-ℕ P q0 qS n)
 
-strong-ind-ℕ :
+fstrong-ind-ℕ :
   { l : Level} → (P : ℕ → UU l) (p0 : P zero-ℕ) →
   ( pS : (k : ℕ) → (fam-strong-ind-ℕ P k) → P (succ-ℕ k)) →
   ( n : ℕ) → P n
@@ -424,16 +413,16 @@ ordinal-ind-ℕ P f =
 leq-eq-ℕ : {m m' n n' : ℕ} → Id m m' → Id n n' → leq-ℕ m n → leq-ℕ m' n'
 leq-eq-ℕ refl refl = id
 
-right-law-leq-add-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (add-ℕ k m) (add-ℕ k n)
-right-law-leq-add-ℕ zero-ℕ m n = id
-right-law-leq-add-ℕ (succ-ℕ k) m n H = right-law-leq-add-ℕ k m n H
-
 left-law-leq-add-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (add-ℕ m k) (add-ℕ n k)
-left-law-leq-add-ℕ k m n H =
+left-law-leq-add-ℕ zero-ℕ m n = id
+left-law-leq-add-ℕ (succ-ℕ k) m n H = left-law-leq-add-ℕ k m n H
+
+right-law-leq-add-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (add-ℕ k m) (add-ℕ k n) 
+right-law-leq-add-ℕ k m n H =
   leq-eq-ℕ
-    ( commutative-add-ℕ k m)
-    ( commutative-add-ℕ k n)
-    ( right-law-leq-add-ℕ k m n H)
+    ( commutative-add-ℕ m k)
+    ( commutative-add-ℕ n k)
+    ( left-law-leq-add-ℕ k m n H)
 
 preserves-leq-add-ℕ :
   {m m' n n' : ℕ} → leq-ℕ m m' → leq-ℕ n n' → leq-ℕ (add-ℕ m n) (add-ℕ m' n')
@@ -447,7 +436,9 @@ preserves-leq-add-ℕ {m} {m'} {n} {n'} H K =
 
 right-law-leq-mul-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (mul-ℕ k m) (mul-ℕ k n)
 right-law-leq-mul-ℕ zero-ℕ m n H = star
-right-law-leq-mul-ℕ (succ-ℕ k) m n H =
+right-law-leq-mul-ℕ (succ-ℕ k) m n H = {!!}
+
+{-
   preserves-leq-add-ℕ
     { m = mul-ℕ k m}
     { m' = mul-ℕ k n}
@@ -499,3 +490,22 @@ comp-path-ind-Eq-ℕ :
 comp-path-ind-Eq-ℕ R ρ zero-ℕ = refl
 comp-path-ind-Eq-ℕ R ρ (succ-ℕ n) =
   comp-path-ind-Eq-ℕ (succ-fam-Eq-ℕ R) (succ-refl-fam-Eq-ℕ R ρ) n
+-}
+
+{-
+-- Graphs
+Gph : (i : Level) → UU (lsuc i)
+Gph i = Σ (UU i) (λ X → (X → X → (UU i)))
+
+-- Reflexive graphs
+rGph : (i : Level) →  UU (lsuc i)
+rGph i = Σ (UU i) (λ X → Σ (X → X → (UU i)) (λ R → (x : X) → R x x))
+-}
+
+-- Exercise 3.7
+
+{- With the construction of the divisibility relation we open the door to basic
+   number theory. -}
+   
+divides : (d n : ℕ) → UU lzero
+divides d n = Σ ℕ (λ m → Eq-ℕ (mul-ℕ d m) n)

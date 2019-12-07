@@ -376,6 +376,8 @@
 \newcommand{\zeroN}{0_{\N}}
 \newcommand{\succN}{\mathsf{succ}_{\N}}
 \newcommand{\addN}{\mathsf{add_{\N}}}
+\newcommand{\addzeroN}{\mathsf{add\usc{}zero}_\N}
+\newcommand{\addsuccN}{\mathsf{add\usc{}succ}_\N}
 \newcommand{\mulN}{\mathsf{mul}_{\N}}
 \newcommand{\minN}{\mathsf{min}_{\N}}
 \newcommand{\maxN}{\mathsf{max}_{\N}}
@@ -496,17 +498,19 @@
 \newcommand{\EqBool}{\mathsf{Eq}_\bool}
 \newcommand{\universalfam}{\Ty}
 \newcommand{\Fin}{\ensuremath{\mathsf{Fin}}}
+\newcommand{\skipFin}{\mathsf{skip}}
+\newcommand{\doubleFin}
 
 % Macros for equivalences
 \newcommand{\htpy}{\sim}
-\newcommand{\htpyrefl}{\mathsf{htpy\usc{}refl}}
-\newcommand{\htpyinv}{\mathsf{htpy\usc{}inv}}
-\newcommand{\htpyconcat}{\mathsf{htpy\usc{}concat}}
-\newcommand{\htpyleftunit}{\mathsf{htpy\usc{}left\usc{}unit}}
-\newcommand{\htpyrightunit}{\mathsf{htpy\usc{}right\usc{}unit}}
-\newcommand{\htpyleftinv}{\mathsf{htpy\usc{}left\usc{}inv}}
-\newcommand{\htpyrightinv}{\mathsf{htpy\usc{}right\usc{}inv}}
-\newcommand{\htpyassoc}{\mathsf{htpy\usc{}assoc}}
+\newcommand{\reflhtpy}{\mathsf{refl\usc{}htpy}}
+\newcommand{\invhtpy}{\mathsf{inv\usc{}htpy}}
+\newcommand{\concathtpy}{\mathsf{concat\usc{}htpy}}
+\newcommand{\leftunithtpy}{\mathsf{left\usc{}unit\usc{}htpy}}
+\newcommand{\rightunithtpy}{\mathsf{right\usc{}unit\usc{}htpy}}
+\newcommand{\leftinvhtpy}{\mathsf{left\usc{}inv\usc{}htpy}}
+\newcommand{\rightinvhtpy}{\mathsf{right\usc{}inv\usc{}htpy}}
+\newcommand{\assochtpy}{\mathsf{assoc\usc{}htpy}}
 \newcommand{\sections}{\mathsf{sec}}
 \newcommand{\retractions}{\mathsf{retr}}
 \newcommand{\isequiv}{\mathsf{is\usc{}equiv}}
@@ -545,7 +549,7 @@
 \newcommand{\Fib}[2]{\mathsf{fib}_{#1}\left(#2\right)}
 \newcommand{\Eqfib}{\mathsf{Eq\usc{}fib}}
 \newcommand{\iscohinvertible}{\mathsf{is\usc{}coh\usc{}invertible}}
-\newcommand{\htpynat}{\mathsf{htpy\usc{}nat}}
+\newcommand{\nathtpy}{\mathsf{nat\usc{}htpy}}
 
 % Macros for fundamental theorem of identity types
 \newcommand{\tot}[2][]{\ensuremath{\mathsf{tot}_{#1}(#2)}}
@@ -579,7 +583,6 @@
 \newcommand{\classicalprop}{\mathsf{classical\usc{}Prop}}
 \newcommand{\isminimal}{\mathsf{is\usc{}minimal}}
 \newcommand{\ismaximal}{\mathsf{is\usc{}maximal}}
-\newcommand{\skipfun}{\mathsf{skip}}
 \newcommand{\isbounded}{\mathsf{is\usc{}bounded}}
 \newcommand{\maximum}{\mathsf{maximum}}
 \newcommand{\isprime}{\mathsf{is\usc{}prime}}

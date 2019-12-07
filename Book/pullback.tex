@@ -102,15 +102,15 @@ is contractible. Using associativity of $\Sigma$-types and commutativity of cart
 Now we observe that the types $\sm{p':C\to A}p\htpy p'$ and $\sm{q':C\to B}q\htpy q'$ are contractible, with centers of contraction
 \begin{samepage}
 \begin{align*}
-(p,\mathsf{htpy\usc{}refl}_p) & : \sm{p':C'\to A} p\htpy p' \\
-(q,\mathsf{htpy\usc{}refl}_q) & : \sm{q':C'\to B} q\htpy q'.
+(p,\reflhtpy_p) & : \sm{p':C'\to A} p\htpy p' \\
+(q,\reflhtpy_q) & : \sm{q':C'\to B} q\htpy q'.
 \end{align*}%
 \end{samepage}%
 Thus we apply \cref{ex:contr_in_sigma} to see that the type of tuples $((p',K),(q',L),(H',M))$ is equivalent to the type
 \begin{equation*}
-\sm{H':f\circ p'\htpy g\circ q'} \ct{H}{\mathsf{htpy\usc{}refl}_{g\circ q}}\htpy \ct{\mathsf{htpy\usc{}refl}_{f\circ p}}{H'}.
+\sm{H':f\circ p'\htpy g\circ q'} \ct{H}{\reflhtpy_{g\circ q}}\htpy \ct{\reflhtpy_{f\circ p}}{H'}.
 \end{equation*}
-Of course, the type $\ct{H}{\mathsf{htpy\usc{}refl}_{g\circ q}}\htpy \ct{\mathsf{htpy\usc{}refl}_{f\circ p}}{H'}$ is equivalent to the type $H\htpy H'$, and $\sm{H':f\circ p\htpy g\circ q} H\htpy H'$ is contractible.
+Of course, the type $\ct{H}{\reflhtpy_{g\circ q}}\htpy \ct{\reflhtpy_{f\circ p}}{H'}$ is equivalent to the type $H\htpy H'$, and $\sm{H':f\circ p\htpy g\circ q} H\htpy H'$ is contractible.
 \end{proof}
 
 Given a cone with vertex $C$ on a span $A\stackrel{f}{\rightarrow} X \stackrel{g}{\leftarrow} B$ and a map $h:C'\to C$, we construct a new cone with vertex $C'$ in the following definition.

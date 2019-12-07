@@ -6,11 +6,11 @@ To complete our specification of dependent type theory, we introduce type theore
 
 There are several reasons to equip type theory with universes. One reason is that it enables us to define new type families over inductive types, using their induction principle. For example, since the universe is itself a type, we can use the induction principle of $\bool$ to obtain a map $P:\bool\to\UU$ from any two terms $X_0,X_1:\UU$. Then we obtain a type family over $\bool$ by substituting $P$ into the universal type family:
 \begin{equation*}
-  x:\bool\vdash \Ty(P(x))~\mathrm{type}
+  x:\bool\vdash \Ty(P(x))~\type
 \end{equation*}
 satisfying $\Ty(P(0_\bool))\jdeq \Ty(X_0)$ and $\Ty(P(1_\bool))\jdeq \Ty(X_1)$.
 
-We use this way of defining type families to define many familiar relations over $\N$, such as $\leq$ and $<$. We also introduce a relation called \emph{observational equality} $\mathsf{Eq}_\N$ on $\N$, which we can think of as equality of $\N$. This relation is reflexive, symmetric, and transitive, and moreover it is the least reflexive relation. Furthermore, one of the most important aspects of observational equality $\mathsf{Eq}_\N$ on $\N$ is that $\mathsf{Eq}_\N(m,n)$ is a type for every $m,n:\N$, unlike judgmental equality. Therefore we can use type theory to reason about observational equality on $\N$. Indeed, in the exercises we show that some very elementary mathematics can already be done at this early stage in our development of type theory.
+We use this way of defining type families to define many familiar relations over $\N$, such as $\leq$ and $<$. We also introduce a relation called \emph{observational equality} $\EqN$ on $\N$, which we can think of as equality of $\N$. This relation is reflexive, symmetric, and transitive, and moreover it is the least reflexive relation. Furthermore, one of the most important aspects of observational equality $\EqN$ on $\N$ is that $\EqN(m,n)$ is a type for every $m,n:\N$, unlike judgmental equality. Therefore we can use type theory to reason about observational equality on $\N$. Indeed, in the exercises we show that some very elementary mathematics can already be done at this early stage in our development of type theory.
 
 A second reason to introduce universes is that it allows us to define many types of types equipped with structure. One of the most important examples is the type of groups\index{group}, which is the type of types equipped with the group operations satisfying the group laws, and for which the underlying type is a set\index{set}. We won't discuss the condition for a type to be a set until \cref{chap:hierarchy}, so the definition of groups in type theory will be given much later. Therefore we illustrate this use of the universe by giving simpler examples: pointed types, graphs, and reflexive graphs.
 
@@ -69,7 +69,7 @@ In the following definition we already state that universes are closed under ide
   \end{enumerate}
   Given a universe $\UU$, we say that a type $A$ in context $\Gamma$ is \define{small}\index{small type}\index{universe!small types} with respect to $\UU$ if it occurs in the universe, i.e., if it comes equipped with a term $\check{A}:\UU$ in context $\Gamma$, for which the judgment
   \begin{equation*}
-    \Gamma\vdash\Ty\big(\check{A}\big)\jdeq A~\mathrm{type}
+    \Gamma\vdash\Ty\big(\check{A}\big)\jdeq A~\type
   \end{equation*}
   holds. If $A$ is small with respect to $\UU$, we usually write simply $A$ for $\check{A}$ and also $A$ for $\Ty(\check{A})$. In other words, by $A:\UU$ we mean that $A$ is a small type. 
 \end{defn}
@@ -92,9 +92,9 @@ In the following definition we already state that universes are closed under ide
 
   Even though the universe is not a term of itself, it is still convenient if every type, including any universe, is small with respect to \emph{some} universe. Therefore we will assume that there are sufficiently many universes: we will assume that for every finite list of types
 \begin{align*}
-  \Gamma_1 & \vdash A_1~\mathrm{type} \\
+  \Gamma_1 & \vdash A_1~\type \\
   & ~\vdots \\
-  \Gamma_n & \vdash A_n~\mathrm{type},
+  \Gamma_n & \vdash A_n~\type,
 \end{align*}
 there is a universe $\UU$ that contains each $A_i$ in the sense that $\UU$ comes equipped with a term
 \begin{align*}
@@ -102,7 +102,7 @@ there is a universe $\UU$ that contains each $A_i$ in the sense that $\UU$ comes
 \end{align*}
 for which the judgment
 \begin{equation*}
-  \Gamma_i\vdash \Ty\big(\check{A}_i\big)\jdeq A_i~\mathrm{type}
+  \Gamma_i\vdash \Ty\big(\check{A}_i\big)\jdeq A_i~\type
 \end{equation*}
 holds. With this assumption it will rarely be necessary to work with more than one universe at the same time.
 
@@ -112,14 +112,14 @@ holds. With this assumption it will rarely be necessary to work with more than o
   \item There is a \emph{base universe} $\UU_0$ that we obtain using the empty list of types in context. This is a universe, but it isn't specified to contain any further types.
   \item Given a finite list
     \begin{align*}
-      \Gamma_1 & \vdash A_1~\mathrm{type} \\
+      \Gamma_1 & \vdash A_1~\type \\
       & ~\vdots \\
-      \Gamma_n & \vdash A_n~\mathrm{type},
+      \Gamma_n & \vdash A_n~\type,
     \end{align*}
     of types in context, and a universe $\UU$ that contains them, there is a universe $\UU^+$ that contains all the types in $\UU$ as well as $\UU$. More precisely, it is specified by the finite list
     \begin{align*}
-      & \vdash \UU~\mathrm{type} \\
-      X:\UU & \vdash \mathcal{T}(X)~\mathrm{type}.
+      & \vdash \UU~\type \\
+      X:\UU & \vdash \mathcal{T}(X)~\type.
     \end{align*}
     Note that since the universe $\UU^+$ contains all the types in $\UU$, it also contains the types $A_1,\ldots,A_n$. To see this, we derive that there is a code for $A_i$ in $\UU^+$.
     \begin{prooftree}
@@ -134,14 +134,14 @@ holds. With this assumption it will rarely be necessary to work with more than o
     \end{equation*}
   \item Given two finite lists
     \begin{align*}
-      \Gamma_1 & \vdash A_1~\mathrm{type} & \Delta_1 & \vdash B_1~\mathrm{type} \\
+      \Gamma_1 & \vdash A_1~\type & \Delta_1 & \vdash B_1~\type \\
       & ~\vdots & & ~\vdots \\
-      \Gamma_n & \vdash A_n~\mathrm{type} & \Delta_m & \vdash B_m~\mathrm{type}
+      \Gamma_n & \vdash A_n~\type & \Delta_m & \vdash B_m~\type
     \end{align*}
     of types in context, and two universes $\mathcal{U}$ and $\mathcal{V}$ that contain $A_1,\ldots,A_n$ and $B_1,\ldots,B_m$ respectively, there is a universe $\UU\sqcup\mathcal{V}$ that contains the types of both $\UU$ and $\mathcal{V}$. The universe $\UU\sqcup\mathcal{V}$ is specified by the finite list
     \begin{align*}
-      X:\UU & \vdash \mathcal{T}_{\mathcal{U}}(X)~\mathrm{type} \\
-      Y:\mathcal{V} & \vdash \mathcal{T}_{\mathcal{V}}(Y) ~\mathrm{type}.
+      X:\UU & \vdash \mathcal{T}_{\mathcal{U}}(X)~\type \\
+      Y:\mathcal{V} & \vdash \mathcal{T}_{\mathcal{V}}(Y) ~\type.
     \end{align*}
     With an argument similar to the previous construction of a universe, we see that the universe $\UU\sqcup\mathcal{V}$ contains the types $A_1,\ldots,A_n$ as well as the types $B_1,\ldots,B_m$.
 
@@ -200,10 +200,10 @@ We can even go further and define the \emph{iterated loop space} of a pointed ty
 As we have already seen in the case of the iterated loop space, we can use the universe to define a type family over $\N$ by induction on $\N$. For example, we can define the finite types in this way.
 
 \begin{defn}\label{defn:fin}
-We define the type family $\mathsf{Fin}:\N\to\UU$ of finite types\index{Fin@{$\mathsf{Fin}$}}\index{finite types} by induction on $\N$\index{family!of finite types}, taking
+We define the type family $\Fin:\N\to\UU$ of finite types\index{Fin@{$\Fin$}}\index{finite types} by induction on $\N$\index{family!of finite types}, taking
 \begin{align*}
-\mathsf{Fin}(\zeroN) & \defeq \emptyt \\
-\mathsf{Fin}(\succN(n)) & \defeq \mathsf{Fin}(n)+\unit
+\Fin(\zeroN) & \defeq \emptyt \\
+\Fin(\succN(n)) & \defeq \Fin(n)+\unit
 \end{align*}
 \end{defn}
 
@@ -241,8 +241,8 @@ Therefore we have by the computation rule for the first induction that the judgm
 holds, from which the judgmental equalities in the statement of the definition follow.
 \end{constr}
 
-\begin{lem}
-  Suppose $R:\N\to(\N\to\UU)$ is a reflexive relation on $\N$, i.e., $R$ comes equipped with
+\begin{lem}\label{ex:obs_nat_least}\index{observational equality!on N@{on $\N$}!is least reflexive relation}
+  Suppose $R:\N\to(\N\to\UU)$ is a reflexive relation on $\N$\index{reflexive relation}\index{relation!reflexive}, i.e., $R$ comes equipped with
   \begin{equation*}
     \rho : \prd{n:\N}R(n,n).
   \end{equation*}
@@ -280,19 +280,10 @@ We can also define observational equality for many other kinds of types, such as
     & \prd{n,m:\N} \EqN(n,m)\to \EqN(m,n) \\
     & \prd{n,m,l:\N} \EqN(n,m)\to (\EqN(m,l)\to \EqN(n,l)).
   \end{align*}
-\exercise \label{ex:obs_nat_least}\index{observational equality!on N@{on $\N$}!is least reflexive relation}Let $R$ be a reflexive binary relation\index{reflexive relation}\index{relation!reflexive} on $\N$, i.e., $R$ is of type $\N\to (\N\to\UU)$ and comes equipped with a term $\rho:\prd{n:\N}R(n,n)$. Show that
-  \begin{equation*}
-    \prd{n,m:\N} \EqN(n,m)\to R(n,m).
-  \end{equation*}
 \exercise \index{observational equality!on N@{on $\N$}!is preserved by functions}Show that every function $f:\N\to \N$ preserves observational equality in the sense that
   \begin{equation*}
     \prd{n,m:\N} \EqN(n,m)\to \EqN(f(n),f(m)).
   \end{equation*}
-  Hint: to get the inductive step going the induction hypothesis has to be strong enough. Construct by double induction a term of type
-  \begin{equation*}
-    \prd{n,m:\N}\prd{f:\N\to\N} \EqN(n,m)\to \EqN(f(n),f(m)),
-  \end{equation*}
-  and pull out the universal quantification over $f:\N\to\N$ by \cref{ex:swap}.
 \exercise \label{ex:order_N}
   \begin{subexenum}
   \item Define the \define{order relations}\index{relation!order}\index{order relation!leq on N@{$\leq$ on $\N$}}\index{order relation!le on N@{$<$ on $\N$}}\index{leq@{$\leq$}!on N@{on $\N$}}\index{le@{$<$}!on N@{on $\N$}} $\leq$ and $<$ on $\N$.
@@ -349,16 +340,16 @@ We can also define observational equality for many other kinds of types, such as
 \begin{comment}
 \item
   \begin{subexenum}
-  \item For each $i:\mathsf{Fin}(\succN(n))$, define a function
+  \item For each $i:\Fin(\succN(n))$, define a function
     \begin{equation*}
-      \mathsf{skip}_i : \mathsf{Fin}(n)\to\mathsf{Fin}(\succN(n))
+      \skipFin_i : \Fin(n)\to\Fin(\succN(n))
     \end{equation*}
-    that includes $\mathsf{Fin}(n)$ in $\mathsf{Fin}(\succN(n))$ by skipping $i$.
-  \item For each $i:\mathsf{Fin}(n)$, define a function
+    that includes $\Fin(n)$ in $\Fin(\succN(n))$ by skipping $i$.
+  \item For each $i:\Fin(n)$, define a function
     \begin{equation*}
-      \mathsf{double}_i : \mathsf{Fin}(\succN(n))\to\mathsf{Fin}(n)
+      \doubleFin_i : \Fin(\succN(n))\to\Fin(n)
     \end{equation*}
-    that projects $\mathsf{Fin}(\succN(n))$ onto $\mathsf{Fin}(n)$ by doubling at $i$. 
+    that projects $\Fin(\succN(n))$ onto $\Fin(n)$ by doubling at $i$. 
   \end{subexenum}
 \end{comment}
 \end{exercises}

@@ -167,45 +167,68 @@ For instance, we can define the \define{addition operation} by induction on $\N$
   satisfying $\addN(\zeroN,n)\jdeq n$ and $\addN(\succN(m),n)\jdeq\succN(\addN(m,n))$. Usually we will write $n+m$ for $\addN(n,m)$.
 \end{defn}
 
+We first give an informal construction of the addition operation, explaining the ideas behind the construction. This is important, because there are many binary operations on the natural numbers. The correctness of a formal construction of a term
+\begin{equation*}
+  \vdash \N\to(\N\to\N)
+\end{equation*}
+only shows us that we have correctly constructed a binary operation on the natural numbers, but this doesn't tell us that the operation we've defined is deserving of the name addition. There are indeed many binary operations on the natural numbers, such as the $\minN$, $\maxN$, and multiplication operations, so we need to be careful to make sure that the binary operation we are constructing really is the addition operation.
+
 \begin{proof}[Informal construction]
-Informally, the definition of addition is as follows. By induction it suffices to construct a function $\mathsf{add\usc{}}\zeroN : \N\to\N$, and a function
-\begin{align*}
-\mathsf{add\usc{}}\succN(n,f):\N\to\N,
-\end{align*}
-for every $n:\N$ and every $f:\N\to\N$.
+  Our goal is to construct a function of type
+  \begin{equation*}
+    \vdash \addN:\N\to (\N\to\N).
+  \end{equation*}
+  By $\lambda$-abstraction it therefore suffices to construct a term
+  \begin{equation*}
+    m:\N\vdash \addN(m):\N\to\N.
+  \end{equation*}
+  Such a term is constructed by induction. Since we are defining addition, we want our definition of $\addN$ to be such that
+  \begin{align*}
+    \addN(m,\zeroN) & \jdeq n \\
+    \addN(m,\succN(n)) & \jdeq \succN(\addN(m,n)). 
+  \end{align*}
+  In other words, our definition of addition is such that $m+0\jdeq m$ and $m+\succN(n)\jdeq \succN(m+n)$.
 
-The function $\mathsf{add\usc{}}\zeroN:\N\to\N$ is of course taken to be $\idfunc[\N]$, since the result of adding $0$ to $n$ should be $n$.
-
-Given $n:\N$ and a function $f:\N\to\N$ we define $\mathsf{add\usc{}}\succN(n,f)\defeq \succN\circ f$. The idea is that if $f$ represents adding $m$, then $\mathsf{add\usc{}}\succN(n,f)$ should be adding one more than $f$ did.
+  The inductive proof requires us to define a term
+  \begin{equation*}
+    n:\N\vdash \addzeroN(n)\defeq n:\N
+  \end{equation*}
+  in the base case, and a term
+  \begin{equation*}
+    n:\N \vdash \addsuccN(n):\N\to(\N\to\N)
+  \end{equation*}
+  in the inductive step. The result of the inductive proof will then be a function $\addN(n):\N\to\N$ satisfying
+  \begin{align*}
+    n:\N & \vdash \addN(n,\zeroN) \jdeq \addzeroN(n) : \N \\
+    n:\N & \vdash \addN(n,\succN(m)) \jdeq \addsuccN(n,m,\addN(n,m)).
+  \end{align*}
+  Anticipating these computation rules, we see that the following choices result in an addition operation with the expected behavior:
+  \begin{align*}
+    n:\N & \vdash \addzeroN(n)\defeq n : \N \\
+    n:\N & \vdash \addsuccN(n)\defeq\const_{\succN}:\N\to(\N\to\N).\qedhere
+  \end{align*}
 \end{proof}
 
 \begin{proof}[Formal derivation]
-The derivation for the construction of $\mathsf{add\usc{}}\succN$ looks as follows:
+The derivation for the construction of $\addsuccN$ looks as follows:
 \begin{prooftree}
   \AxiomC{}
-  \UnaryInfC{$\succN:\N^\N$}
-  \AxiomC{}
   \UnaryInfC{$\vdash\N~\type$}
   \AxiomC{}
   \UnaryInfC{$\vdash\N~\type$}
   \AxiomC{}
-  \UnaryInfC{$\vdash\N~\type$}
-  \TrinaryInfC{$\vdash \comp:\N^\N\to (\N^\N\to \N^\N)$}
-  \UnaryInfC{$g:\N\to\N\vdash \comp(g):\N^\N\to\N^\N$}
-  \BinaryInfC{$\vdash \comp(\succN):\N^\N\to\N^\N$}
-  \UnaryInfC{$n:\N\vdash \comp(\succN):\N^\N\to\N^\N$}
-  \UnaryInfC{$\vdash \mathsf{add\usc{}}\succN\defeq \lam{n}\comp(\succN):\N\to (\N^\N \to \N^\N)$}
-%\BinaryInfC{$\vdash\addN:\ind{\N}(add_0,add_S):\N\to \N^\N$}
+  \UnaryInfC{$\vdash \succN:\N\to\N$}
+  \BinaryInfC{$x:\N\vdash \succN:\N\to\N$}
+  \BinaryInfC{$n:\N,x:\N \vdash \succN:\N\to\N$}
+  \UnaryInfC{$n:\N \vdash \addsuccN(n) \defeq \lam{x}\succN:\N\to (\N \to \N)$}
 \end{prooftree}
 We combine this derivation with the induction principle of $\N$ to complete the construction of addition:
 \begin{prooftree}
   \AxiomC{$\vdots$}
-  \UnaryInfC{$n:\N\vdash \N^\N~\type$}
+  \UnaryInfC{$n:\N\vdash \addzeroN(n) \defeq n:\N$}
   \AxiomC{$\vdots$}
-  \UnaryInfC{$\vdash \mathsf{add\usc{}}\zeroN\defeq \idfunc[\N]:\N^\N$}
-  \AxiomC{$\vdots$}
-  \UnaryInfC{$\vdash \mathsf{add\usc{}}\succN:\N\to (\N^\N \to \N^\N)$}
-  \TrinaryInfC{$\vdash\addN\jdeq\ind{\N}(\mathsf{add\usc{}}\zeroN,\mathsf{add\usc{}}\succN):\N\to \N^\N$}
+  \UnaryInfC{$n:\N\vdash \addsuccN(n):\N\to (\N \to \N)$}
+  \BinaryInfC{$n:\N\vdash\addN(n)\jdeq\indN(\addzeroN,\addsuccN):\N\to \N$}
 \end{prooftree}
 The asserted judgmental equalities then hold by the computation rules for $\N$.
 \end{proof}
@@ -231,9 +254,9 @@ The asserted judgmental equalities then hold by the computation rules for $\N$.
 \begin{rmk}
   By the computation rules for $\N$ it follows that
   \begin{equation*}
-    \zeroN+n\jdeq n,\qquad\text{and}\qquad \succN(m)+n\jdeq\succN(m+n).
+    m+\zeroN\jdeq m,\qquad\text{and}\qquad m+\succN(n)\jdeq\succN(m+n).
   \end{equation*}
-  However, the rules that we provided so far are not sufficient to also conclude that $n+\zeroN\jdeq n$ and $n+ \succN(m)\jdeq \succN(n+m)$. Nevertheless, once we have introduced the \emph{identity type} in \cref{chap:identity} we will nevertheless be able to \emph{identify} $n+\zeroN$ with $n$, and $n+ \succN(m)$ with $\succN(n+m)$. See \cref{ex:semi-ring-laws-N}. 
+  A simple consequence of this definition is that $\succN(n)\jdeq n+1$, as one would expect. However, the rules that we provided so far are not sufficient to also conclude that $\zeroN+n\jdeq n$ and $\succN(m) + n\jdeq \succN(m+n)$. In fact, we will not be able to prove such judgmental equalities. Nevertheless, once we have introduced the \emph{identity type} in \cref{chap:identity} we will be able to \emph{identify} $\zeroN+n$ with $n$, and $\succN(m)+n$ with $\succN(m+n)$. See \cref{ex:semi-ring-laws-N}. 
 \end{rmk}
 \index{addition on N@{addition on $\N$}|)}
 \index{natural numbers!operations on N@{operations on $\N$}!addition|)}

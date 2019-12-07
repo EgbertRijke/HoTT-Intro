@@ -169,7 +169,7 @@ An important example of a type that can be defined using coproducts is the type 
   which are both of type $\N\to\Z$, and the constants\index{integers!-1 Z@{$-1_\Z$}}\index{integers!0 Z@{$0_\Z$}}\index{integers!1 Z@{$1_\Z$}}\index{-1 Z@{$-1_\Z$}}\index{0 Z@{$0_\Z$}}\index{1 Z@{$1_{\Z}$}}
   \begin{align*}
     -1_\Z & \defeq \inneg(0)\\
-    0_\Z & \defeq \inl(\inr(\ttt))\\
+    0_\Z & \defeq \inr(\inl(\ttt))\\
     1_\Z & \defeq \inpos(0).
   \end{align*}
 \end{defn}
@@ -188,10 +188,10 @@ In the following lemma we derive an induction principle\index{induction principl
   then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:\index{integers!computation rules}\index{computation rules!of Z@{of $\Z$}}
   \begin{align*}
     f(-1_\Z) & \jdeq p_{-1} \\
-    f(\inneg(\mathsf{succ}_\N(n))) & \jdeq p_{-S}(n,f(\inneg(n))) \\
+    f(\inneg(\succN(n))) & \jdeq p_{-S}(n,f(\inneg(n))) \\
     f(0_\Z) & \jdeq p_{0} \\
     f(1_\Z) & \jdeq p_{1} \\
-    f(\inpos(\mathsf{succ}_\N(n))) & \jdeq p_S(n,f(\inpos(n))).
+    f(\inpos(\succN(n))) & \jdeq p_S(n,f(\inpos(n))).
   \end{align*}
 \end{lem}
 

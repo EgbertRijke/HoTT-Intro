@@ -1,7 +1,7 @@
 % !TEX root = hott_intro.tex
 
 \section{Equivalences}
-\index{equivalence|(}
+\index{equivalence|(} 
 
 We introduce equivalences in this section as functions that have a left inverse and a separate right inverse. This choice of definition might seem a little strange: why would we not say that an equivalence map is a map $f:A\to B$ for which there is a map $g:B\to A$ that is at the same time a left and a right inverse? We will be able to show, after all, that if a map has separate left and right inverses, then it has an inverse. For a precise answer to this question we will have to wait until \cref{chap:univalent-mathematics}, but we can say already that it turns out to be important that the condition of being an equivalence is a property, not structure. We have chose the definition of equivalences with a separate left and right inverses so that being an equivalence will indeed be a property.
 
@@ -10,7 +10,7 @@ We introduce equivalences in this section as functions that have a left inverse 
 In homotopy type theory, a homotopy is just a pointwise equality between two functions $f$ and $g$. We view the type of homotopies as the observational equality for $\Pi$-types.\index{observational equality!of Pi-types@{of $\Pi$-types}}
 
 \begin{defn}
-Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies}\index{homotopy} from $f$ to $g$ is defined as\index{f htpy g@{$f\htpy g$}|see {homotopy}}
+Let $f,g:\prd{x:A}P(x)$ be two dependent functions. The type of \define{homotopies}\index{homotopy} from $f$ to $g$ is defined as the type of pointwise identifications, i.e., we define\index{f htpy g@{$f\htpy g$}|see {homotopy}}
 \begin{equation*}
 f\htpy g \defeq \prd{x:A} f(x)=g(x).
 \end{equation*}
@@ -26,21 +26,21 @@ Note that the type of homotopies $f\htpy g$ is a special case of a dependent fun
 In the following definition we define the groupoidal structure of homotopies. Note that we implement the groupoid laws as \emph{homotopies} rather than as identifications.
 
 \begin{defn}\label{defn:htpy_groupoid}\index{groupoid laws!of homotopies}
-For any type family $B$ over $A$ there are operations\index{homotopy!htpy-refl@{$\htpyrefl$}}\index{htpy-refl@{$\htpyrefl$}}\index{homotopy!htpy-inv@{$\htpyinv$}}\index{htpy-inv@{$\htpyinv$}}\index{homotopy!htpy-concat@{$\htpyconcat$}}\index{htpy-concat@{$\htpyconcat$}}
+For any type family $B$ over $A$ there are operations\index{homotopy!refl-htpy@{$\reflhtpy$}}\index{refl-htpy@{$\reflhtpy$}}\index{homotopy!inv-htpy@{$\invhtpy$}}\index{inv-htpy@{$\invhtpy$}}\index{homotopy!concathtpy@{$\concathtpy$}}\index{concathtpy@{$\concathtpy$}}
 \begin{align*}
-& \htpyrefl & & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
-& \htpyinv & & : \prd{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
-& \htpyconcat & & : \prd{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to ((g\htpy h)\to (f\htpy h)).
+\reflhtpy & : \prd{f:\prd{x:A}B(x)}f\htpy f \\
+\invhtpy & : \prd{f,g:\prd{x:A}B(x)} (f\htpy g)\to(g\htpy f) \\
+\concathtpy & : \prd{f,g,h:\prd{x:A}B(x)} (f\htpy g)\to ((g\htpy h)\to (f\htpy h)).
 \end{align*}
-We will write $H^{-1}$ for $\htpyinv(H)$, and $\ct{H}{K}$ for $\htpyconcat(H,K)$. 
+We will write $H^{-1}$ for $\invhtpy(H)$, and $\ct{H}{K}$ for $\concathtpy(H,K)$. 
 
 Furthermore, we define
 \begin{align*}
-& \htpyassoc(H,K,L) & & : \ct{(\ct{H}{K})}{L}\htpy\ct{H}{(\ct{K}{L})} \\
-& \htpyleftunit(H) & & : \ct{\htpyrefl_f}{H}\htpy H \\
-& \htpyrightunit(H) & & : \ct{H}{\htpyrefl_g}\htpy H \\
-& \htpyleftinv(H) & & : \ct{H^{-1}}{H} \htpy \htpyrefl_g \\
-& \htpyrightinv(H) & & : \ct{H}{H^{-1}} \htpy \htpyrefl_f
+\assochtpy(H,K,L) & : \ct{(\ct{H}{K})}{L}\htpy\ct{H}{(\ct{K}{L})} \\
+\leftunithtpy(H) & : \ct{\reflhtpy_f}{H}\htpy H \\
+\rightunithtpy(H) & : \ct{H}{\reflhtpy_g}\htpy H \\
+\leftinvhtpy(H) & : \ct{H^{-1}}{H} \htpy \reflhtpy_g \\
+\rightinvhtpy(H) & : \ct{H}{H^{-1}} \htpy \reflhtpy_f
 \end{align*}
 for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x)$.
 \end{defn}
@@ -48,17 +48,17 @@ for any $H:f\htpy g$, $K:g\htpy h$ and $L:h\htpy i$, where $f,g,h,i:\prd{x:A}B(x
 \begin{constr}
 We define
 \begin{align*}
-\htpyrefl(f) & \defeq \lam{x} \refl{f(x)} \\
-\htpyinv(H) & \defeq \lam{x} H(x)^{-1} \\
-\htpyconcat(H,K) & \defeq \lam{x}\ct{H(x)}{K(x)},
+\reflhtpy(f) & \defeq \lam{x} \refl{f(x)} \\
+\invhtpy(H) & \defeq \lam{x} H(x)^{-1} \\
+\concathtpy(H,K) & \defeq \lam{x}\ct{H(x)}{K(x)},
 \end{align*}
 where $H:f\htpy g$ and $K:g\htpy h$ are homotopies. Furthermore, we define
 \begin{align*}
-\htpyassoc(H,K,L) & \defeq \lam{x}\assoc(H(x),K(x),L(x)) \\
-\htpyleftunit(H) & \defeq \lam{x}\leftunit(H(x)) \\
-\htpyrightunit(H) & \defeq \lam{x}\rightunit(H(x)) \\
-\htpyleftinv(H) & \defeq \lam{x}\leftinv(H(x)) \\
-\htpyrightinv(h) & \defeq \lam{x}\rightinv(H(x)).\qedhere
+\assochtpy(H,K,L) & \defeq \lam{x}\assoc(H(x),K(x),L(x)) \\
+\leftunithtpy(H) & \defeq \lam{x}\leftunit(H(x)) \\
+\rightunithtpy(H) & \defeq \lam{x}\rightunit(H(x)) \\
+\leftinvhtpy(H) & \defeq \lam{x}\leftinv(H(x)) \\
+\rightinvhtpy(h) & \defeq \lam{x}\rightinv(H(x)).\qedhere
 \end{align*}
 \end{constr}
 \index{groupoid laws!of homotopies|)}

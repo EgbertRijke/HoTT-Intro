@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 07-contractible-types where
+module 08-contractible-types where
 
-import 06-equivalences
-open 06-equivalences public
+import 07-equivalences
+open 07-equivalences public
 
 -- Section 6.1 Contractible types
 

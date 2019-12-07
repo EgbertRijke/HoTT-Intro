@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 09-truncation-levels where
+module 10-truncation-levels where
 
-import 08-fundamental-theorem
-open 08-fundamental-theorem public
+import 09-fundamental-theorem
+open 09-fundamental-theorem public
 
 -- Section 8.1 Propositions
 

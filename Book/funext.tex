@@ -7,7 +7,7 @@
   \begin{equation*}
     \htpyeq:(f=g)\to (f\htpy g)
   \end{equation*}
-  that sends $\refl{f}$ to $\htpyrefl_{f}$ is an equivalence. We will write $\eqhtpy$\index{eq-htpy@{$\eqhtpy$}} for its inverse, if it is assumed to exist.
+  that sends $\refl{f}$ to $\reflhtpy_{f}$ is an equivalence. We will write $\eqhtpy$\index{eq-htpy@{$\eqhtpy$}} for its inverse, if it is assumed to exist.
 \end{defn}
 
 In other words, the axiom of function extensionality asserts that for any two dependent functions $f,g:\prd{x:A}B(x)$, the type of identifications $f=g$ is equivalent to the type of homotopies $f\htpy g$ from $f$ to $g$. By the fundamental theorem of identity types (\cref{thm:id_fundamental})\index{fundamental theorem of identity types} there are three equivalent ways of asserting function extensionality. In the following theorem we state one further equivalent condition.
@@ -25,9 +25,9 @@ The following are equivalent:\index{function extensionality}
   The principle of \define{homotopy induction}\index{homotopy induction}\index{induction principle!for homotopies}:
   for any type family $B$ over $A$, any dependent function $f:\prd{x:A}B(x)$, and any family of types $P(g,H)$ indexed by $g:\prd{x:A}B(x)$ and $H:f\htpy g$, the evaluation function
 \begin{equation*}
-\Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\htpyrefl_f)
+\Big(\prd{g:\prd{x:A}B(x)}{H:f\htpy g}P(g,H)\Big)\to P(f,\reflhtpy_f)
 \end{equation*}
-given by $s\mapsto s(f,\htpyrefl_f)$ has a section.
+given by $s\mapsto s(f,\reflhtpy_f)$ has a section.
 \item The \define{weak function extensionality principle}\index{weak function extensionality} holds: For every type family $B$ over $A$ one has\index{contractible!weak function extensionality}
 \begin{equation*}
 \Big(\prd{x:A}\iscontr(B(x))\Big)\to\iscontr\Big(\prd{x:A}B(x)\Big).
@@ -336,13 +336,13 @@ Now we conclude by the contractibility of the fiber that $(\idfunc[B],\refl{f})=
 \end{proof}
 
 \begin{exercises}
-\exercise Show that the functions\index{htpy-inv@{$\htpyinv$}!is an equivalence}\index{htpy-concat@{$\htpyconcat$}!is a family of equivalences}\index{htpy-concat'@{$\htpyconcat'$}!is a family of equivalences}\index{is an equivalence!htpy-inv@{$\htpyinv$}}\index{is an equivalence!htpy-concat(H)@{$\htpyconcat(H)$}}\index{is an equivalence!htpy-concat'(K)@{$\htpyconcat'(K)$}}
+\exercise Show that the functions\index{inv-htpy@{$\invhtpy$}!is an equivalence}\index{concat-htpy@{$\concathtpy$}!is a family of equivalences}\index{concat-htpy'@{$\concathtpy'$}!is a family of equivalences}\index{is an equivalence!inv-htpy@{$\invhtpy$}}\index{is an equivalence!concat-htpy(H)@{$\concathtpy(H)$}}\index{is an equivalence!concat-htpy'(K)@{$\concathtpy'(K)$}}
 \begin{align*}
-\htpyinv & : (f \htpy g) \to (g \htpy f) \\
-\htpyconcat(H) & : (g \htpy h) \to (f \htpy h) \\
-\htpyconcat'(K) & : (f \htpy g) \to (f \htpy h)
+\invhtpy & : (f \htpy g) \to (g \htpy f) \\
+\concathtpy(H) & : (g \htpy h) \to (f \htpy h) \\
+\concathtpy'(K) & : (f \htpy g) \to (f \htpy h)
 \end{align*}
-are equivalences for every $f,g,h : \prd{x:A}B(x)$. Here, $\htpyconcat'(K)$ is the function defined by $H\mapsto \ct{H}{K}$.
+are equivalences for every $f,g,h : \prd{x:A}B(x)$. Here, $\concathtpy'(K)$ is the function defined by $H\mapsto \ct{H}{K}$.
 \exercise \label{ex:isprop_istrunc}
 \begin{subexenum}
 \item Show that for any type $A$ the type $\iscontr(A)$ is a proposition\index{is-cont(A)r@{$\iscontr(A)$}!is a proposition}\index{is contractible!is a property}. %There's an easy proof using double singleton induction. This is a nice application of weak funext.

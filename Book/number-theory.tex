@@ -181,30 +181,30 @@ First we give a definition of a function that counts the number of elements in a
 \begin{defn}
   For any $i:\Fin(\succN(n))$ we define a function
   \begin{equation*}
-    \skipfun(i):\Fin(n)\to\Fin(\succN(n)).
+    \skipFin(i):\Fin(n)\to\Fin(\succN(n)).
   \end{equation*}
 \end{defn}
 
 \begin{proof}[Construction]
-  The function $\skipfun(i)$ is defined by induction on $n:\N$. In the base case, the function
+  The function $\skipFin(i)$ is defined by induction on $n:\N$. In the base case, the function
   \begin{equation*}
-    \skipfun(i):\Fin(\zeroN)\to\Fin(\succN(\zeroN))
+    \skipFin(i):\Fin(\zeroN)\to\Fin(\succN(\zeroN))
   \end{equation*}
   is defined to be the unique map out of the empty type. In the successor case we define
   \begin{equation*}
-    \skipfun(i) : \Fin(\succN(n))\to\Fin(\succN(\succN(n))) 
+    \skipFin(i) : \Fin(\succN(n))\to\Fin(\succN(\succN(n))) 
   \end{equation*}
   by induction on $i:\Fin(\succN(\succN(n)))$. The function
   \begin{equation*}
-    \skipfun(\inl(i)):\Fin(\succN(n))\to\Fin(\succN(\succN(n)))
+    \skipFin(\inl(i)):\Fin(\succN(n))\to\Fin(\succN(\succN(n)))
   \end{equation*}
   is a map between coproducts, so it can be defined using the functorial action of coproducts of \cref{ex:coproduct_functor}. We take
   \begin{equation*}
-    \skipfun(\inl(i))\defeq \skipfun(i)+\idfunc.
+    \skipFin(\inl(i))\defeq \skipFin(i)+\idfunc.
   \end{equation*}
   The function 
   \begin{equation*}
-    \skipfun(\inr(i)):\Fin(\succN(n))\to\Fin(\succN(\succN(n)))
+    \skipFin(\inr(i)):\Fin(\succN(n))\to\Fin(\succN(\succN(n)))
   \end{equation*}
   is just the function $\inl$.
 \end{proof}
@@ -212,7 +212,7 @@ First we give a definition of a function that counts the number of elements in a
 \begin{lem}
   For each $i:\Fin(\succN(n))$, the function
   \begin{equation*}
-    \skipfun(i):\Fin(n)\to\Fin(\succN(n))
+    \skipFin(i):\Fin(n)\to\Fin(\succN(n))
   \end{equation*}
   is an embedding.
 \end{lem}
@@ -220,7 +220,7 @@ First we give a definition of a function that counts the number of elements in a
 \begin{proof}
   This assertion is proven by induction on $n$. In the base case, we note that any map out of the empty type is an embedding, by \cref{ex:is-emb-empty}. In the inductive step we proceed by case analysis on $i:\Fin(\succN(\succN(n)))$. In the case of $\inl(i)$ we note that
   \begin{equation*}
-    \skipfun(\inl(i))\jdeq \skipfun(i)+\idfunc
+    \skipFin(\inl(i))\jdeq \skipFin(i)+\idfunc
   \end{equation*}
   is the functorial action of coproducts on two embeddings. Therefore we conclude by \cref{ex:is-emb-coprod} that this map is an embedding. In the case of $\inr(i)$ we note that $\inl$ is an embedding by \cref{ex:is-emb-inl-inr}.
 \end{proof}
@@ -229,7 +229,7 @@ First we give a definition of a function that counts the number of elements in a
   Consider a map $g:\Fin(m)\to\Fin(\succN(n))$. Furthermore, suppose that $i:\Fin(\succN(n))$ is not in the image of $g$, i.e.~that $\neg(\fib{g}{i})$. Then we can construct a commuting triangle
   \begin{equation*}
     \begin{tikzcd}
-      & \Fin(n) \arrow[d,"\skipfun(i)"] \\
+      & \Fin(n) \arrow[d,"\skipFin(i)"] \\
       \Fin(m) \arrow[r,swap,"g"] \arrow[ur,densely dotted,"f"] & \Fin(\succN(n)).
     \end{tikzcd}
   \end{equation*}
@@ -253,16 +253,16 @@ Finally, we prove the pigeonhole principle.
   Now suppose that $1\not<|P|$. Since $P(\inr(\ttt))$ holds it follows that $|P|=1$. Now we observe that $i$ is not in the image of $f\circ \inl$. Therefore we obtain a commuting square
   \begin{equation*}
     \begin{tikzcd}
-      \Fin(m) \arrow[r,densely dotted,"{f'}"] \arrow[d,swap,"\inl"] & \Fin(n) \arrow[d,"{\skipfun(i)}"] \\
+      \Fin(m) \arrow[r,densely dotted,"{f'}"] \arrow[d,swap,"\inl"] & \Fin(n) \arrow[d,"{\skipFin(i)}"] \\
       \Fin(\succN(m)) \arrow[r,swap,"f"] & \Fin(\succN(n)).
     \end{tikzcd}
   \end{equation*}
 
   Note that the induction hypothesis the pigeonhole principle applies to the function $f':\Fin(m)\to\Fin(n)$. Since $m>n$ it follows that there is an element $j:\Fin(n)$ that is in the image of $f'$ of more than one element of $\Fin(m)$. Now we observe that there is an equivalence
   \begin{equation*}
-    \fib{f'}{j}\simeq \fib{f}{\skipfun(i,j)}
+    \fib{f'}{j}\simeq \fib{f}{\skipFin(i,j)}
   \end{equation*}
-  because both the left and right maps in the commuting square are embeddings. Therefore we conclude that $\skipfun(i,j)$ is in the image of $f$ of more than one element of $\Fin(\succN(m))$. 
+  because both the left and right maps in the commuting square are embeddings. Therefore we conclude that $\skipFin(i,j)$ is in the image of $f$ of more than one element of $\Fin(\succN(m))$. 
  \end{proof}
 
 \begin{cor}\label{cor:pigeonhole}
