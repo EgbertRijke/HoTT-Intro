@@ -599,12 +599,6 @@ equiv-htpy-concat :
 equiv-htpy-concat H h =
   pair (htpy-concat H h) (is-equiv-htpy-concat H h)
 
-htpy-concat' :
-  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
-  (f : (x : A) → B x) {g h : (x : A) → B x} →
-  (g ~ h) → (f ~ g) → (f ~ h)
-htpy-concat' f K H = H ∙h K
-
 inv-htpy-concat' :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
   (f : (x : A) → B x) {g h : (x : A) → B x} →

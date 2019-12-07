@@ -57,6 +57,9 @@ add-ℕ : ℕ → ℕ → ℕ
 add-ℕ x zero-ℕ = x
 add-ℕ x (succ-ℕ y) = succ-ℕ (add-ℕ x y)
 
+add-ℕ' : ℕ → ℕ → ℕ
+add-ℕ' m n = add-ℕ n m
+
 -- Exercises
 
 -- Exercise 3.1

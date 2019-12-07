@@ -5,11 +5,15 @@ module 07-equivalences where
 import 06-universes
 open 06-universes public
 
--- Section 6.1 Homotopies
+-- Section 7.1 Homotopies
+
+-- Definition 7.1.1
 
 _~_ :
   {i j : Level} {A : UU i} {B : A → UU j} (f g : (x : A) → B x) → UU (i ⊔ j)
 f ~ g = (x : _) → Id (f x) (g x)
+
+-- Definition 7.1.2
 
 refl-htpy :
   {i j : Level} {A : UU i} {B : A → UU j} {f : (x : A) → B x} → f ~ f
@@ -38,6 +42,12 @@ htpy-concat :
   (f ~ g) → (h : (x : A) → B x) → (g ~ h) → (f ~ h)
 htpy-concat H h K x = concat (H x) (h x) (K x)
 
+htpy-concat' :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2}
+  (f : (x : A) → B x) {g h : (x : A) → B x} →
+  (g ~ h) → (f ~ g) → (f ~ h)
+htpy-concat' f K H = H ∙h K
+
 htpy-assoc :
   {i j : Level} {A : UU i} {B : A → UU j} {f g h k : (x : A) → B x} →
   (H : f ~ g) → (K : g ~ h) → (L : h ~ k) →
@@ -64,6 +74,8 @@ htpy-right-inv :
   (H : f ~ g) → (H ∙h (htpy-inv H)) ~ refl-htpy
 htpy-right-inv H x = right-inv (H x)
 
+-- Definition 7.1.3
+
 htpy-left-whisk :
   {i j k : Level} {A : UU i} {B : UU j} {C : UU k}
   (h : B → C) {f g : A → B} → (f ~ g) → ((h ∘ f) ~ (h ∘ g))
@@ -78,7 +90,9 @@ htpy-right-whisk H f x = H (f x)
 
 _·r_ = htpy-right-whisk
 
--- Section 6.2 Bi-invertible maps
+-- Section 7.2 Bi-invertible maps
+
+-- Definition 7.2.1
 
 sec :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
@@ -108,6 +122,8 @@ is-equiv-map-equiv :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (map-equiv e)
 is-equiv-map-equiv e = pr2 e
 
+-- Remark 7.2.2
+
 has-inverse :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 has-inverse {i} {j} {A} {B} f =
@@ -124,6 +140,8 @@ is-equiv-has-inverse :
 is-equiv-has-inverse g H K =
   is-equiv-has-inverse' (pair g (pair H K))
 
+-- Lemma 7.2.3
+
 {- We now show that if f is an equivalence, then it has an inverse. -}
 
 htpy-section-retraction :
@@ -139,6 +157,8 @@ has-inverse-is-equiv :
 has-inverse-is-equiv {i} {j} {A} {B} {f} (pair (pair g G) (pair h H)) =
   let is-equiv-f = pair (pair g G) (pair h H) in
   pair g (pair G (((htpy-section-retraction is-equiv-f) ·r f) ∙h H))
+
+-- Corollary 7.2.4
 
 inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
@@ -175,6 +195,8 @@ inv-equiv :
   {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B ≃ A)
 inv-equiv e = pair (inv-map-equiv e) (is-equiv-inv-map-equiv e)
 
+-- Remark 7.2.5
+
 is-equiv-id :
   {i : Level} (A : UU i) → is-equiv (id {i} {A})
 is-equiv-id A = pair (pair id refl-htpy) (pair id refl-htpy)
@@ -182,6 +204,8 @@ is-equiv-id A = pair (pair id refl-htpy) (pair id refl-htpy)
 equiv-id :
   {i : Level} (A : UU i) → A ≃ A
 equiv-id A = pair id (is-equiv-id A)
+
+-- Example 7.2.6
 
 inv-Π-swap :
   {i j k : Level} {A : UU i} {B : UU j} (C : A → B → UU k) →
@@ -198,20 +222,28 @@ abstract
       ( refl-htpy)
       ( refl-htpy)
 
--- Section 6.3 The identity type of a Σ-type
+-- Section 7.3 The identity type of a Σ-type
+
+-- Definition 7.3.1
 
 Eq-Σ :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) → UU (i ⊔ j)
 Eq-Σ {B = B} s t = Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))
 
+-- Lemma 7.3.2
+
 reflexive-Eq-Σ :
   {i j : Level} {A : UU i} {B : A → UU j} (s : Σ A B) → Eq-Σ s s
 reflexive-Eq-Σ (pair a b) = pair refl refl
+
+-- Definition 7.3.3
 
 pair-eq :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
   (Id s t) → Eq-Σ s t
 pair-eq {s = s} refl = reflexive-Eq-Σ s
+
+-- Theorem 7.3.4
 
 eq-pair :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
@@ -258,12 +290,14 @@ abstract
   Id (pair (pr1 t) (pr2 t)) t
 η-pair t = eq-pair refl refl
 
-{- We also define a function eq-pair-triv, which is like eq-pair but simplified 
-   for the case where B is just a type. -}
+{- For our convenience, we repeat the above argument for cartesian products. -}
 
 Eq-prod :
   {i j : Level} {A : UU i} {B : UU j} (s t : A × B) → UU (i ⊔ j)
 Eq-prod s t = (Id (pr1 s) (pr1 t)) × (Id (pr2 s) (pr2 t))
+
+{- We also define a function eq-pair-triv, which is like eq-pair but simplified 
+   for the case where B is just a type. -}
 
 eq-pair-triv' :
   {i j : Level} {A : UU i} {B : UU j} (s t : prod A B) →
@@ -315,7 +349,7 @@ abstract
 
 -- Exercises
 
--- Exercise 6.1
+-- Exercise 7.1
 
 {- We show that inv is an equivalence. -}
 
@@ -435,7 +469,7 @@ equiv-tr :
   (p : Id x y) → (B x) ≃ (B y)
 equiv-tr B p = pair (tr B p) (is-equiv-tr B p)
 
--- Exercise 6.2
+-- Exercise 7.2
 
 {- We prove the left unit law for coproducts. -}
 
@@ -544,7 +578,9 @@ right-zero-law-prod :
 right-zero-law-prod X =
   pair pr2 (is-equiv-pr2-prod-empty X)
 
--- Exercise 6.4
+-- Exercise 7.3
+
+-- Exercise 7.3(a)
 
 abstract
   is-equiv-htpy :
@@ -561,6 +597,8 @@ abstract
     f ~ g → is-equiv f → is-equiv g
   is-equiv-htpy' f H = is-equiv-htpy f (htpy-inv H)
 
+-- Exercise 7.3(b)
+
 htpy-inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f f' : A → B} (H : f ~ f') →
   (is-equiv-f : is-equiv f) (is-equiv-f' : is-equiv f') →
@@ -571,9 +609,11 @@ htpy-inv-is-equiv H is-equiv-f is-equiv-f' b =
     ( ( inv (H (inv-is-equiv is-equiv-f b))) ∙
       ( issec-inv-is-equiv is-equiv-f b)))
 
--- Exercise 6.5
+-- Exercise 7.4
 
-{- Exercise 6.5 (a) asks to show that, given a commuting triangle f ~ g ∘ h and
+-- Exercise 7.4(a)
+
+{- Exercise 7.4 (a) asks to show that, given a commuting triangle f ~ g ∘ h and
    a section s of h, we get a new commuting triangle g ~ f ∘ s. Moreover, under
    the same assumptions it follows that f has a section if and only if g has a 
    section. -}
@@ -602,7 +642,9 @@ section-comp' f g h H sec-h sec-g =
     ( ( H ·r ((pr1 sec-h) ∘ (pr1 sec-g))) ∙h
       ( ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))) ∙h ((pr2 sec-g))))
 
-{- Exercise 6.5 (b) is dual to exercise 5.5 (a). It asks to show that, given a 
+-- Exercise 7.4(b)
+
+{- Exercise 7.4 (b) is dual to exercise 5.5 (a). It asks to show that, given a 
    commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting
    triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f
    has a retraction if and only if h has a retraction. -}
@@ -633,7 +675,9 @@ retraction-comp' f g h H retr-g retr-h =
     ( ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H) ∙h
       ( ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)) ∙h (pr2 retr-h)))
 
-{- In Exercise 6.5 (c) we use the constructions of parts (a) and (b) to derive 
+-- Exercise 7.4(c)
+
+{- In Exercise 7.4 (c) we use the constructions of parts (a) and (b) to derive 
    the 3-for-2 property of equivalences. -}
 
 abstract
@@ -707,7 +751,9 @@ abstract
   is-equiv-right-factor' g h =
     is-equiv-right-factor (g ∘ h) g h refl-htpy
 
--- Exercise 6.6
+-- Exercise 7.5
+
+-- Exercise 7.5(a)
 
 {- In this exercise we show that the negation function on the booleans is an 
    equivalence. Moreover, we show that any constant function on the booleans is
@@ -724,10 +770,14 @@ abstract
 equiv-neg-𝟚 : bool ≃ bool
 equiv-neg-𝟚 = pair neg-𝟚 is-equiv-neg-𝟚
 
+-- Exercise 7.5(b)
+
 abstract
   not-true-is-false : ¬ (Id true false)
   not-true-is-false p =
     tr (Eq-𝟚 true) p (reflexive-Eq-𝟚 true) 
+
+-- Exercise 7.5(c)
 
 abstract
   not-equiv-const :
@@ -737,7 +787,7 @@ abstract
   not-equiv-const false (pair (pair s issec) (pair r isretr)) =
     not-true-is-false (inv (issec true))
 
--- Exercise 6.7
+-- Exercise 7.6
   
   is-equiv-succ-ℤ : is-equiv succ-ℤ
   is-equiv-succ-ℤ =
@@ -746,7 +796,7 @@ abstract
 equiv-succ-ℤ : ℤ ≃ ℤ
 equiv-succ-ℤ = pair succ-ℤ is-equiv-succ-ℤ
 
--- Exercise 6.8
+-- Exercise 7.7
 
 {- In this exercise we construct an equivalence from A + B to B + A, showing 
    that the coproduct is commutative. -}
@@ -798,7 +848,7 @@ equiv-swap-prod :
   {i j : Level} (A : UU i) (B : UU j) → (A × B) ≃ (B × A)
 equiv-swap-prod A B = pair (swap-prod A B) (is-equiv-swap-prod A B)
 
--- Exercise 6.9
+-- Exercise 7.8
 
 {- In this exercise we show that if A is a retract of B, then so are its 
    identity types. -}
@@ -830,7 +880,7 @@ Id-retract-of-Id (pair i (pair r H)) x y =
     ( ap i {x} {y})
     ( retr-ap i (pair r H) x y)
 
--- Exercise 6.10
+-- Exercise 7.9
 
 Σ-assoc :
   {i j k : Level} (A : UU i) (B : A → UU j) (C : (Σ A B) → UU k) →
@@ -868,7 +918,7 @@ equiv-Σ-assoc :
 equiv-Σ-assoc A B C =
   pair (Σ-assoc A B C) (is-equiv-Σ-assoc A B C)
 
--- Exercise 6.11
+-- Exercise 7.10
 
 Σ-swap :
   {i j k : Level} (A : UU i) (B : UU j) (C : A → B → UU k) →
@@ -895,7 +945,7 @@ abstract
       ( Σ-swap-swap B A (λ y x → C x y))
       ( Σ-swap-swap A B C)
 
--- Exercise 6.12
+-- Exercise 7.11
 
 abstract
   is-equiv-add-ℤ-right :
@@ -918,7 +968,9 @@ abstract
       ( λ x → commutative-add-ℤ x y)
       ( is-equiv-add-ℤ-right y)
 
--- Exercise 6.13
+-- Exercise 7.12
+
+-- Exercise 7.13
 
 {- We construct the functoriality of coproducts. -}
 
@@ -1008,6 +1060,8 @@ equiv-con-inv :
   Id (p ∙ q) r ≃ Id p (r ∙ (inv q))
 equiv-con-inv p q r = pair (con-inv p q r) (is-equiv-con-inv p q r)
 
+-- Extra constructions with homotopies
+
 htpy-inv-con :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} {f g h : (x : A) → B x} →
   (H : f ~ g) (K : g ~ h) (L : f ~ h) →
@@ -1061,8 +1115,6 @@ htpy-right-whisk-htpy-inv H f = refl-htpy
 
 -- Old stuff
 
--- Exercise 6.1
-
 element :
   {i : Level} {A : UU i} → A → unit → A
 element a star = a
@@ -1071,8 +1123,6 @@ htpy-element-constant :
   {i : Level} {A : UU i} (a : A) →
   (element a) ~ (const unit A a)
 htpy-element-constant a star = refl
-
--- Exercise 6.2
 
 ap-const :
   {i j : Level} {A : UU i} {B : UU j} (b : B) (x y : A) →

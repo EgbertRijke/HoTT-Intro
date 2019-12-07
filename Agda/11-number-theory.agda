@@ -317,9 +317,15 @@ repeat-repeat (succ-ℕ (succ-ℕ n)) (inl i) (inr star) (inl k) = refl
 repeat-repeat (succ-ℕ zero-ℕ) (inr star) (inl ()) (inl k) 
 repeat-repeat (succ-ℕ (succ-ℕ n)) (inr star) (inl j) (inl k) = refl
 
+{-
 skip-repeat :
   (n : ℕ) (i : Fin n) → ((skip n (inl i)) ∘ (repeat n i)) ~ id
-skip-repeat n i = {!!}
+skip-repeat (succ-ℕ n) (inl x) (inl y) = ap inl (skip-repeat n x y)
+skip-repeat (succ-ℕ n) (inl x) (inr star) = refl
+skip-repeat (succ-ℕ n) (inr star) (inl (inl x)) = ap inl {!ap (skip n) ?!}
+skip-repeat (succ-ℕ n) (inr star) (inl (inr star)) = {!!}
+skip-repeat (succ-ℕ n) (inr star) (inr star) = {!!}
+-}
 
 map-lift-Fin :
   (m n : ℕ) (f : Fin (succ-ℕ m) → Fin (succ-ℕ n))
@@ -367,9 +373,6 @@ is-emb-add-ℕ n =
 succ-leq-ℕ : (n : ℕ) → leq-ℕ n (succ-ℕ n)
 succ-leq-ℕ zero-ℕ = star
 succ-leq-ℕ (succ-ℕ n) = succ-leq-ℕ n
-
-add-ℕ' : ℕ → ℕ → ℕ
-add-ℕ' m n = add-ℕ n m
 
 equiv-fib-add-fib-add-ℕ' :
   (m n : ℕ) → fib (add-ℕ' m) n ≃ fib (add-ℕ m) n
