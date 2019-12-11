@@ -12,6 +12,8 @@ Therefore, we will prove the well-foundedness of the natural numbers for decidab
 
 A common way of reasoning in mathematics is via a proof by contradiction: ``in order to show that $P$ holds we show that it cannot be the case that $P$ doesn't hold". There are no inference rules in type theory that allow us to obtain a term of type $P$ from a term of type $\neg\neg P$. However, for some propositions $P$ one can construct a function $\neg\neg P \to P$. The \emph{decidable propositions} from a class of such propositions $P$ for which we can show $\neg\neg P \to P$.
 
+The following definition of decidability is made for general types, even though we will mostly be interested in the decidabilyt of proposition. The reason will become aparent in a moment, when we show that types with decidable equality are sets. This useful theorem would become trivial if we restricted the notion of decidability to propositions.
+
 \begin{defn}
   A type $A$ is said to be decidable if it comes equipped with a term of type
   \begin{equation*}
@@ -47,7 +49,7 @@ A common way of reasoning in mathematics is via a proof by contradiction: ``in o
   are all decidable. Moreover, the type $\EqN(\succN(m),\succN(n))\jdeq \EqN(m,n)$ is decidable by the inductive hypothesis.
 \end{proof}
 
-Typically we are mostly interested in decidability of propositions. However, we have defined the notion of decidability for general types, because the condition on an arbitrary type that its identity types are decidable is of some interest. We now study such types.
+We will now study the concept of decidable equality.
 
 \begin{defn}
   We say that a type $A$ has decidable equality if the identity type $x=y$ is decidable for every $x,y:A$. 
@@ -160,6 +162,112 @@ Note that the type $\isminimal_P(n,p)$ doesn't depend on $p$. However, it doesn'
     Q'(n)\defeq Q(\succN(n)).
   \end{equation*}
   Since we have $q:Q'(n)$, we obtain a minimal element in $Q'$ by the inductive hypothesis. Of course, by the assumption that $Q(\zeroN)$ doesn't hold, the minimal element of $Q'$ is also the minimal element of $Q$.
+\end{proof}
+
+\subsection{The strong induction principle of \texorpdfstring{$\N$}{N}}
+
+\begin{thm}
+  For any type family $P$ over $\N$ there an operation
+  \begin{equation*}
+    \strongindN : P(\zeroN)\to\Big(\prd{n:\N}\Big(\prd{m:\N}(m\leq n)\to P(m)\Big)\to P(n+1)\Big)\to \Big(\prd{n:\N}P(n)\Big).
+  \end{equation*}
+  Moreover, the operation $\strongindN$ comes equipped with identifications
+  \begin{align*}
+    \strongindN(p_0,p_S,\zeroN) & = p_0 \\
+    \strongindN(p_0,p_S,n+1) & = p_S(n,(\lam{m}\lam{p}\strongindN(p_0,p_S,m))),
+  \end{align*}
+  for any $p_0:P(\zeroN)$ and $p_S:\prd{n:\N}\Big(\prd{m:\N}(m\leq n)\to P(m)\Big)\to P(n+1)$.
+\end{thm}
+
+\begin{proof}
+  Consider
+  \begin{align*}
+    p_0 & : P(\zeroN) \\
+    p_S & : \prd{n:\N}\Big(\prd{m:\N}(m\leq n)\to P(m)\Big)\to P(n+1)
+  \end{align*}
+  
+  First, we claim that there is a function
+  \begin{equation*}
+    \tilde{p}_0 : \prd{m:\N}(m\leq\zeroN)\to P(m)
+  \end{equation*}
+  that comes equipped with an identification
+  \begin{equation*}
+    \tilde{p}_0(\zeroN,p)=p_0
+  \end{equation*}
+  for any $p:\zeroN\leq\zeroN$. The fact that we have such a dependent function $\tilde{p}_0$ follows immediately by induction on $m$ and $p:m\leq \zeroN$.
+
+  Next, we claim that there is a function
+  \begin{equation*}
+    \tilde{p}_S : \prd{n:\N}\Big(\prd{m:\N}(m\leq n) \to P(m)\Big)\to \Big(\prd{m:\N}(m\leq n+1)\to P(m)\Big)
+  \end{equation*}
+  equipped with a homotopy
+  \begin{equation*}
+    \prd{m:\N}\prd{q:m\leq n}{p:m\leq n+1} \tilde{p}_S(n,H,m,p) = H(m,q)
+  \end{equation*}
+  and an identification
+  \begin{equation*}
+    \tilde{p}_S(n,H,n+1,p)=p_S(n,H)
+  \end{equation*}
+  for every $p:n+1\leq n+1$.
+
+  Using $\tilde{p}_0$ and $\tilde{p}_S$, we obtain by induction on $n$ a function
+  \begin{equation*}
+    \tilde{s}:\prd{n:\N}\prd{m:\N} (m\leq n)\to P(m)
+  \end{equation*}
+  satisfying the computation rules
+  \begin{align*}
+    \tilde{s}(\zeroN) & \jdeq \tilde{p}_0 \\
+    \tilde{s}(n+1) & \jdeq \tilde{p}_S(n,\tilde{s}(n)).
+  \end{align*}
+  Now we define
+  \begin{equation*}
+    \strongindN(p_0,p_S,n) \defeq \tilde{s}(n,n,\reflleqN(n)),
+  \end{equation*}
+  where $\reflleqN(n):n\leq n$ is the proof of reflexivity of $\leq$.
+
+  It remains to show that $\strongindN$ satisfies the identifications claimed in the statement of the theorem. The identification that computes $\strongindN$ at $\zeroN$ is easy to obtain:
+  \begin{align*}
+    \strongindN(p_0,p_S,\zeroN) & \jdeq \tilde{s}(\zeroN,\zeroN,\reflleqN(\zeroN)) \\
+                                & \jdeq \tilde{p}_{0}(\zeroN,\reflleqN) \\
+                                & = p_0.
+  \end{align*}
+  To construct the identification that computes $\strongindN$ at a successor, we start with a similar computation:
+  \begin{align*}
+    \strongindN(p_0,p_S,n+1) & \jdeq \tilde{s}(n+1,n+1,\reflleqN(n+1)) \\
+                                   & \jdeq \tilde{p}_S(n,\tilde{s}(n),n+1,\reflleqN(n+1)) \\
+    & = p_S(n,\tilde{s}(n))
+  \end{align*}
+  Thus we see that, in order to show that
+  \begin{equation*}
+    p_S(n,\tilde{s}(n))=p_S(n,(\lam{m}\lam{p}\tilde{s}(m,m,\reflleqN(m)))),
+  \end{equation*}
+  we need to prove that
+  \begin{equation*}
+    \tilde{s}(n)=\lam{m}\lam{p}\tilde{s}(m,m,\reflleqN(m)).
+  \end{equation*}
+  Here we apply function extensionality, so it suffices to show that
+  \begin{equation*}
+    \tilde{s}(n,m,p)=\tilde{s}(m,m,\reflleqN(m))
+  \end{equation*}
+  for every $m:\N$ and $p:m\leq n$. We proceed by induction on $n:\N$. The base case is trivial. For the inductive step, we note that
+  \begin{align*}
+    \tilde{s}(n+1,m,p)=\tilde{p}_S(n,\tilde{s}(n),m,p)=\begin{cases}\tilde{s}(n,m,p) & \text{if }m\leq n \\
+    p_S(n,\tilde{s}(n)) & \text{if }m=n+1.\end{cases}
+  \end{align*}
+  Therefore it follows by the inductive hypothesis that
+  \begin{equation*}
+    \tilde{s}(n+1,m,p)=\tilde{s}(m,m,\reflleqN(m))
+  \end{equation*}
+  if $m\leq n$ holds. In the remaining case, where $m=n+1$, note that we have
+  \begin{align*}
+    \tilde{s}(\succN,\succN,\reflleqN(\succN)) & = \tilde{p}(n,\tilde{s}(n),n+1,\reflleqN(n+1)) \\
+    & = p_S(n,\tilde{s}(n)).
+  \end{align*}
+  Therefore we see that we also have an identification
+  \begin{equation*}
+    \tilde{s}(n+1,m,p)=\tilde{s}(m,m,\reflleqN(m))
+  \end{equation*}
+  when $m=n+1$. This completes the proof of the strong induction principle for $\N$.
 \end{proof}
 
 \subsection{The pigeonhole principle}

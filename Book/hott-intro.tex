@@ -129,10 +129,9 @@ In this first chapter we explain what dependent type theory is. We begin with th
 \input{identity}
 \input{universes-relations}
 
-\chapter{Basic type theory}
+\chapter{The univalent foundations for mathematics}
 
-In this chapter we develop some basic concepts of dependent type theory, without adding further axioms to the theory.
-
+In this chapter we study the foundational concepts of univalent mathematics.
 The first concept we study is that of equivalences. Equivalent types are the same for all practical purposes. The concept of equivalence generalizes the concept of isomorphism of sets to type theory. As we delve deeper into synthetic homotopy theory, we will see how vast this generalization really is, even though the type theoretic definition is really simple.
 
 The next topic is that of contractible types and maps. Contractible types that are singletons up to homotopy, i.e., types that come equipped with a point so that every (other) point can be identified with it. Contractible maps are maps $f:A\to B$ such that for every $b:B$ the type $\sm{a:A}f(a)=b$ is contractible. We will show that a map is an equivalence if and only if it is a contractible map in this sense.
@@ -161,39 +160,34 @@ We end the chapter with a section on elementary number theory, the way it is don
 \input{contractible}
 \input{fundamental}
 \input{hierarchy}
-\input{number-theory}
-
-\chapter{Univalent mathematics}\label{chap:univalent-mathematics}
-
 \input{funext}
 \input{univalence}
+\input{image}
+
+\chapter{Topics in univalent mathematics}\label{chap:univalent-mathematics}
+\input{number-theory}
+\input{sets}
 \input{groups}
 \input{circle}
 \input{circle-fundamental-cover}
+\input{classifying}
 
-\chapter{Homotopy pullbacks and pushouts}
+\chapter{Concepts of higher category theory in type theory}
 \input{pullback}
 \input{pushout}
 \input{cubical}
 \input{descent}
 \input{id-pushout}
-
-\chapter{Homotopy quotients}
 \input{sequences}
-\input{image}
-%\input{replacement}
-\input{sets}
-\input{truncation}
 \input{projective}
-\input{classifying}
 
 \chapter{Synthetic homotopy theory}
 \input{homotopy-groups}
-\input{connected}
-\input{classifying-equivalence}
 \input{hopf}
-%\input{smash}
+\input{truncation}
+\input{connected}
 \input{blakers-massey}
+\input{higher-group-theory}
 
 \backmatter
 
