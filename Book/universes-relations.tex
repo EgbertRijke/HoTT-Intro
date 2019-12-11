@@ -321,22 +321,6 @@ We can also define observational equality for many other kinds of types, such as
   \item Show that $\leq$ is reflexive, transitive, and antisymmetric.
   \item Show that $<$ is irreflexive and transitive.
   \end{subexenum}
-\exercise
-  \begin{subexenum}
-  \item \label{ex:strong-induction}Show that $\N$ satisfies \define{strong induction}, i.e., construct for any type family $P$ over $\N$ a function $\mathbf{ind}_\N$ of type
-    \begin{equation*}
-       P(\zeroN) \to \Big(\prd{n:\N}\Big(\prd{x:\N} (x\leq n) \to P(m)\Big)\to P(\succN(k))\Big) \to \prd{n:\N}P(n),
-    \end{equation*}
-    and check that the following computation rules are satisfied:
-    \begin{align*}
-      \mathbf{ind}_\N(p_0,p_S,\zeroN) & \jdeq p_0 \\
-      \mathbf{ind}_\N(p_0,p_S,\succN(n)) & \jdeq p_S\Big(n,\big(x\leq n\mapsto\mathbf{ind}_\N(p_0,p_S,x)\big)\Big).
-    \end{align*}
-  \item Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
-    \begin{equation*}
-      \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
-    \end{equation*}
-  \end{subexenum}
 \begin{comment}
 \item
   \begin{subexenum}

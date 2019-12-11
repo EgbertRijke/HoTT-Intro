@@ -1,22 +1,170 @@
-\section{The homotopy image of a map}\label{chap:image}
+\section{The image of a map and the replacement axiom}\label{chap:image}
 
-\subsection{The universal property of the image of a map}
-In this section we will construct the \emph{homotopy image} of an arbitrary map $f:A\to X$. The idea of the image of $f$ is that it is in a way the least subtype of $X$ that contains all the values of $f$. More precisely, the image of $f$ is an embedding $i:\im(f)\hookrightarrow X$ that fits in a commuting triangle
+In this section we will study two closely related concepts: the propositional truncation operation and the \emph{homotopy image} of a map $f:A\to X$.
+
+The propositional truncation operation is a universal way of turning type a type $A$ into a proposition $\brck{A}$. Informally, the proposition $\brck{A}$ is the proposition that $A$ is inhabited. More precisely, the propositional truncation of $A$ comes equipped with a map $A\to\brck{A}$ and it is characterized by its universal property, which asserts that any map $A\to P$ into a proposition $P$ extends uniquely to a map $\brck{A}\to P$, as indicated in the diagram
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[dr] \arrow[d] \\
+    \brck{A} \arrow[r,densely dotted] & P.
+  \end{tikzcd}
+\end{equation*}
+Using the propositional truncation operation we can define all the logical connectives and quantifiers in type theory.
+
+The idea of the image of a map $f:A\to X$ is that it is, in a way, the least subtype of $X$ that contains all the values of $f$. More precisely, the image of $f$ is an embedding $i:\im(f)\hookrightarrow X$ that fits in a commuting triangle
 \begin{equation*}
   \begin{tikzcd}[column sep=tiny]
     A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & \im(f) \arrow[dl,hook,"i"] \\
     \phantom{\im(f)} & X
   \end{tikzcd}
 \end{equation*}
-and satisfies the \emph{universal property} of the image inclusion of $f$. Informally, the universal property of the image asserts that there is a unique map $h:\im(f)\to B$ for which the diagram
+and satisfies the \emph{universal property} of the image of $f$. The universal property of the image of $f$ asserts that if a subtype $B\hookrightarrow X$ contains all the values of $f$, then it contains the image of $f$.
+%In other words, for  asserts that there is a unique map $h:\im(f)\to B$ for which the tetrahedron
+%\begin{equation*}
+%  \begin{tikzcd}[column sep=large]
+%    A \arrow[rr] \arrow[dr,"q"] \arrow[dddr,swap,"f"] & & B \arrow[dddl,"m"] \\
+%    & \im(f) \arrow[ur,densely dotted,"h"] \arrow[dd,"i"] \\ \\
+%    & X
+%  \end{tikzcd}
+%\end{equation*}
+%commutes.
+The image of a map can be constructed using the propositional truncation operation. In fact, we can also go the other way around: The propositional truncation of a type $A$ is the image of the map $A\to\unit$.
+
+The final topic of this section is the type theoretic replacement axiom. A specific instance of the replacement axiom asserts that the image of any map $f:A\to\UU$ is equivalent to a type in $\UU$, provided that $A$ is equivant to a type in $\UU$. This property will be used to construct quotients in type theory, much in the same way as quotients are constructed in set theory.
+
+We should note that the existence of the propositional truncation operation and the replacement axiom will be assumed for now. However, once we assume that universes are closed under pushouts, we will be able to construct the propositional truncations and we will be able to prove the replacement axiom. These constructions will be given in \cref{sec:join-construction}.
+
+\subsection{Propositional truncations}\label{sec:propositional-truncation-up}
+
+\begin{defn}
+Let $A$ be a type, and let $f:A\to P$ be a map into a proposition $P$. We say that $f$ satisfies the \define{universal property of propositional truncation of $A$}\index{universal property!of propositional truncation} if for every proposition $Q$, the precomposition map
 \begin{equation*}
-  \begin{tikzcd}[column sep=large]
-    A \arrow[rr] \arrow[dr,"q"] \arrow[dddr,swap,"f"] & & B \arrow[dddl,"m"] \\
-    & \im(f) \arrow[ur,densely dotted,"h"] \arrow[dd,"i"] \\ \\
-    & X
-  \end{tikzcd}
+\blank\circ f:(P\to Q)\to (A\to Q)
 \end{equation*}
-commutes. Note that there is quite a lot of information in this diagram: not only are there the three small commuting triangles; there is also the large commuting triange in the back, and there is a three-dimensional solid filling the space between the four triangles. We make the following definition, in order to express the universal property of the image efficiently.
+is an equivalence.
+\end{defn}
+
+\begin{rmk}
+  Note that if $Q$ is a proposition, then the type $X\to Q$ is a proposition for any type $X$. Furthermore, recall from \cref{ex:equiv-bi-implication} that the map $(P\to Q)\to (A\to Q)$ is an equivalence as soon as there is a map in the converse direction. Therefore, in order to prove the universal property of the propositional truncation it suffices to show that
+  \begin{equation*}
+    (A\to Q)\to (P\to Q).
+  \end{equation*}
+  We also note that the universal property of the propositional truncation of a type is formulated with respect to all propositions, regardless of the universe they live in. 
+\end{rmk}
+
+\begin{eg}
+  Suppose $A$ is a type that comes equipped with a point $a:A$, such as the booleans or the type of natural numbers. Then the constant map
+  \begin{equation*}
+    \const_\ttt: A\to\unit
+  \end{equation*}
+  satisfies the universal property of the propositional truncation. To see this, let $Q$ be an arbitrary proposition. It suffices to show that
+  \begin{equation*}
+    (A\to Q)\to (\unit\to Q).
+  \end{equation*}
+  To see this, let $f:A\to Q$. Then we have $f(a):Q$, so we define $\const_{f(a)}:\unit\to Q$. Thus we see that we have
+  \begin{equation*}
+    \lam{f}\const_{f(a)}:(A\to Q)\to (\unit\to Q).
+  \end{equation*}
+  This proves that $\const_\ttt:A\to \unit$ satisfies the universal property of the propositional truncation of $A$. 
+\end{eg}
+
+\begin{eg}
+  If the type $A$ is already a proposition, then the identity function
+  \begin{equation*}
+    \idfunc:A\to A
+  \end{equation*}
+  satisfies the universal property of the propositional truncation. To see this, simply note that the precomposittion function with the identity function
+  \begin{equation*}
+    \blank\circ\idfunc : (A\to Q)\to (A\to Q)
+  \end{equation*}
+  is itself just the identity function. In particular, it is an equivalence.
+\end{eg}
+
+The universal property of the propositional truncation determines the propositional truncation up to equivalence. Such proofs of uniqueness from a universal property always follow the same pattern.
+
+\begin{prp}\label{prp:propositional-truncation-3-for-2}
+  Let $A$ be a type, and consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      \phantom{P'} & A \arrow[dl,swap,"f"] \arrow[dr,"{f'}"] \\
+      P \arrow[rr,swap,"h"] & & P'
+    \end{tikzcd}
+  \end{equation*}
+  where $P$ and $P'$ are propositions. If any two of the following three assertions hold, so does the third:
+  \begin{enumerate}
+  \item The map $f$ satisfies the universal property of the propositional truncation of $A$.
+  \item The map $f'$ satisfies the universal propertyof the propositional truncation of $A$.
+  \item The map $h$ is an equivalence.
+  \end{enumerate}
+\end{prp}
+
+\begin{proof}
+  Note that the map $h:P\to P'$ is an equivalence if and only if for every proposition $Q$, the precomposition map
+  \begin{equation*}
+    \blank\circ h:(P'\to Q)\to (P\to Q)
+  \end{equation*}
+  is an equivalence. Thus, the claim follows by observing that for every proposition $Q$ we have the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=-1em]
+      (P'\to Q) \arrow[rr,"\blank\circ h"] \arrow[dr,swap,"\blank\circ {f'}"] & & (P\to Q) \arrow[dl,"\blank\circ f"] \\
+      & (A\to Q). & \phantom{(P'\to Q)}
+    \end{tikzcd}
+  \end{equation*}
+\end{proof}
+
+\begin{cor}\label{cor:uniquely-unique-brck}
+  Consider two maps $f:A\to P$ and $f':A\to P'$ into propositions $P$ and $P'$, both satisfying the universal property of the propositional truncation of $A$. Then the type of equivalences $e:P \simeq P'$ for which the triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      \phantom{P'} & A \arrow[dl,swap,"f"] \arrow[dr,"{f'}"] \\
+      P \arrow[rr,swap,"e"] & & P'
+    \end{tikzcd}
+  \end{equation*}
+  commutes, is contractible.
+\end{cor}
+
+\begin{rmk}
+  Note that the triangles in \cref{prp:propositional-truncation-3-for-2,cor:uniquely-unique-brck} always commutes, since $P$ and $P'$ are assumed to be propositions.
+\end{rmk}
+
+Now that we have shown that propositional truncations are determined uniquely, we will assume that any universe is closed under propositional truncations.
+
+\begin{axiom}
+  Any universe $\UU$ is closed under propositional truncation: for any type $A:\UU$ there is a proposition $\brck{A}:\UU$ equipped with a map $\eta:A\to\brck{A}$ that satisfies the universal property of the propositional truncation.
+\end{axiom}
+
+Note that, given a family of propositions $P$ over a type $A$, the type $\sm{a:A}P(a)$ isn't necessarily a proposition. Instead, we think of $\sm{a:A}P(a)$ of the \emph{subtype} of $A$ containing the terms that satisfies $P$. Using the propositional truncation we can assert that there \emph{exists} a term in $A$ that satisfies $P$ without requiring one to construct it. 
+
+\begin{defn}
+Let $P:A\to \prop$ be a family of propositions over a type $A$. Then we define
+\begin{equation*}
+\exists_{(a:A)}P(a)\defeq \brck{\sm{a:A}P(a)}.
+\end{equation*}
+\end{defn}
+
+Similarly, we can define the disjunction of two propositions $P$ and $Q$ to be the \emph{proposition} $\brck{P+Q}$, which clearly satisfies the universal property of disjunction\footnote{Alternatively, we have shown in \cref{ex:join_propositions} that the join $\join{P}{Q}$ also is a proposition that satisfies the universal property of disjunction.}. In the following table we give an overview of the logical connectives on propositions.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\emph{Logical connective} & \emph{Interpretation in HoTT} & \emph{Proof of being a proposition} \\
+\midrule
+$\top$ & $\unit$ & \cref{eg:prop_contr} \\
+$\bot$ & $\emptyt$ & \cref{eg:prop_contr}\\
+$P\land Q$ & $P\times Q$ & \cref{ex:istrunc_sigma} \\
+$P\lor Q$ & $\brck{P+Q}$ & By definition \\
+$P\to Q$ & $P\to Q$ & \cref{cor:funtype_trunc} \\
+$P\leftrightarrow Q$ & $\eqv{P}{Q}$ \\
+$\neg P$ & $P\to\emptyt$ & \cref{cor:funtype_trunc} \\
+$\forall x.P(x)$ & $\prd{x:A}P(x)$ & \cref{thm:trunc_pi} \\
+$\exists x.P(x)$ & $\brck{\sm{x:A}P(x)}$ & By definition \\
+$\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ & \cref{ex:isprop_istrunc} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The image of a map}\label{sec:image-construction}
+ Note that there is quite a lot of information in this diagram: not only are there the three small commuting triangles; there is also the large commuting triange in the back, and there is a three-dimensional solid filling the space between the four triangles. We make the following definition, in order to express the universal property of the image efficiently.
 
 \begin{defn}
   Let $f:A\to X$ and $g:B\to X$ be maps. A \define{morphism} from $f$ to $g$ over $X$ consists of a map $h:A\to B$ equipped with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle
@@ -181,209 +329,6 @@ Just as in the cases for pullbacks and pushouts, the universal property of the i
   in $\mathrm{hom}_X(f,i')$, is contractible.
 \end{cor}
 
-\subsection{The universal property of propositional truncation}\label{sec:propositional-truncation-up}
-
-An important special case of the homotopy image of a map is the image of the terminal projection
-\begin{equation*}
-  \const_\ttt : A \to \unit,
-\end{equation*}
-which results in an embedding $I\hookrightarrow \unit$. Embeddings into the unit type are in fact just propositions. To see this, note that
-\begin{align*}
-\sm{A:\UU}{f:A\to\unit}\isemb(f)
-& \eqvsym \sm{A:\UU}\isemb(\const_\ttt) \\
-& \eqvsym \sm{A:\UU}\prd{x:\unit}\isprop(\fib{\const_\ttt}{x}) \\
-& \eqvsym \sm{A:\UU}\isprop(\fib{\const_\ttt}{\ttt}) \\
-& \eqvsym \sm{A:\UU}\isprop(A).
-\end{align*}
-Therefore, the universal property of the image of the map $A\to\unit$ is equivalently described as a proposition $P$ satisfying the universal property of the propositional truncation:
-
-\begin{defn}
-Let $A$ be a type, and let $P$ be a proposition that comes equipped with a map $f:A\to P$. We say that $f:A\to P$ satisfies the \define{universal property of propositional truncation}\index{universal property!of propositional truncation} of $A$ if for every proposition $Q$, the precomposition map
-\begin{equation*}
-\blank\circ f:(P\to Q)\to (A\to Q)
-\end{equation*}
-is an equivalence.
-\end{defn}
-
-\begin{prp}
-  Let $A$ be a type, and consider a commuting triangle
-  \begin{equation*}
-    \begin{tikzcd}[column sep=tiny]
-      \phantom{P'} & A \arrow[dl,swap,"f"] \arrow[dr,"{f'}"] \\
-      P \arrow[rr,swap,"h"] & & P'
-    \end{tikzcd}
-  \end{equation*}
-  where $P$ and $P'$ are propositions. If any two of the following three assertions hold, so does the third:
-  \begin{enumerate}
-  \item The map $f$ satisfies the universal property of the propositional truncation of $A$.
-  \item The map $f'$ satisfies the universal propertyof the propositional truncation of $A$.
-  \item The map $h$ is an equivalence.
-  \end{enumerate}
-\end{prp}
-
-\begin{proof}
-  Note that the map $h:P\to P'$ is an equivalence if and only if for every proposition $Q$, the precomposition map
-  \begin{equation*}
-    \blank\circ h:(P'\to Q)\to (P\to Q)
-  \end{equation*}
-  is an equivalence. Thus, the claim follows by observing that for every proposition $Q$ we have the triangle
-  \begin{equation*}
-    \begin{tikzcd}[column sep=-1em]
-      (P'\to Q) \arrow[rr,"\blank\circ h"] \arrow[dr,swap,"\blank\circ {f'}"] & & (P\to Q) \arrow[dl,"\blank\circ f"] \\
-      & (A\to Q). & \phantom{(P'\to Q)}
-    \end{tikzcd}
-  \end{equation*}
-\end{proof}
-
-\subsection{Constructing the propositional truncation}\label{sec:propositional-truncation-constr}
-The propositional truncation can be used to construct the image of a map, so we construct that first. We construct the propositional truncation of $A$ via a construction called the \define{join construction}, as the colimit of the sequence of join-powers of $A$
-\begin{equation*}
-  \begin{tikzcd}
-    A \arrow[r] & \join{A}{A} \arrow[r] & \join{A}{(\join{A}{A})} \arrow[r] & \cdots
-  \end{tikzcd}
-\end{equation*}
-The join-powers of $A$ are defined recursively on $n$, by taking\footnote{In this definition, the case $A^{\ast1}\defeq A$ is slightly redundant because we have an equivalence
-\begin{equation*}
-  \join{A}{\emptyt}\simeq A.
-\end{equation*}
-Nevertheless, it is nice to have that $A^{\ast 1}\jdeq A$.}
-\begin{align*}
-  A^{\ast0} & \defeq \emptyt \\
-  A^{\ast 1} & \defeq A \\
-  A^{\ast(n+2)} & \defeq \join{A}{A^{\ast (n+1)}}.
-\end{align*}
-We will write $A^{\ast\infty}$ for the colimit of the sequence
-\begin{equation*}
-  \begin{tikzcd}
-    A \arrow[r,"\inr"] & \join{A}{A} \arrow[r,"\inr"] & \join{A}{(\join{A}{A})} \arrow[r,"\inr"] & \cdots.
-  \end{tikzcd}
-\end{equation*}
-The sequential colimit $A^{\ast\infty}$ comes equipped with maps $\inseq_n:A^{\ast (n+1)}\to A^{\ast\infty}$, and we will write
-\begin{equation*}
-  \eta\defeq\inseq_0:A\to A^{\ast\infty}.
-\end{equation*}
-Our goal is to show $A^{\ast\infty}$ is a proposition, and that $\eta:A\to A^{\ast\infty}$ satisfies the universal property of the propositional truncation of $A$. Before showing that $A^{\ast\infty}$ is indeed a proposition, let us show in two steps that for any proposition $P$, the map
-\begin{equation*}
-  (A^{\ast\infty}\to P)\to (A\to P)
-\end{equation*}
-is indeed an equivalence. 
-
-\begin{lem}\label{lem:extend_join_prop}
-Suppose $f:A\to P$, where $A$ is any type and $P$ is a proposition.
-Then the precomposition function
-\begin{equation*}
-\blank\circ\inr:(\join{A}{B}\to P)\to (B\to P)
-\end{equation*}
-is an equivalence, for any type $B$.
-\end{lem}
-
-\begin{proof}
-  Since the precomposition function
-  \begin{equation*}
-    \blank\circ\inr:(\join{A}{B}\to P)\to (B\to P)
-  \end{equation*}
-  is a map between propositions, it suffices to construct a map
-  \begin{equation*}
-    (B\to P)\to (\join{A}{B}\to P).
-  \end{equation*}
-  Let $g:B\to P$. Then the square
-  \begin{equation*}
-    \begin{tikzcd}
-      A\times B \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & B \arrow[d,"g"] \\
-      A \arrow[r,swap,"f"] & P
-    \end{tikzcd}
-  \end{equation*}
-  commutes since $P$ is a proposition. Therefore we obtain a map $\join{A}{B}\to P$ by the universal property of the join.
-\end{proof}
-
-\begin{prp}\label{prp:universal-property-brck}
-Let $A$ be a type, and let $P$ be a proposition. Then the function
-\begin{equation*}
-\blank\circ \eta : (A^{\ast\infty}\to P)\to (A\to P)
-\end{equation*}
-is an equivalence. 
-\end{prp}
-
-\begin{proof}
-  Since the map
-  \begin{equation*}
-    \blank\circ \eta : (A^{\ast\infty}\to P)\to (A\to P)
-  \end{equation*}
-  is a map between propositions, it suffices to construct a map in the converse direction.
-
-  Let $f:A\to P$. First, we show by recursion that there are maps
-  \begin{equation*}
-    f_n:A^{\ast(n+1)}\to P.
-  \end{equation*}
-  The map $f_0$ is of course just defined to be $f$. Given $f_n:A^{\ast(n+1)}$ we obtain $f_{n+1}:\join{A}{A^{\ast(n+1)}}\to P$ by \cref{lem:extend_join_prop}. Because $P$ is assumed to be a proposition it is immediate that the maps $f_n$ form a cocone with vertex $P$ on the sequence
-  \begin{equation*}
-    \begin{tikzcd}
-      A \arrow[r,"\inr"] & \join{A}{A} \arrow[r,"\inr"] & \join{A}{(\join{A}{A})} \arrow[r,"\inr"] & \cdots.
-    \end{tikzcd}
-  \end{equation*}
-  From this cocone we obtain the desired map $(A^{\ast\infty}\to P)$.
-\end{proof}
-
-\begin{prp}\label{prp:isprop-infjp}
-The type $A^{\ast\infty}$ is a proposition for any type $A$.
-\end{prp}
-
-\begin{proof}
-  By \cref{lem:isprop_eq} it suffices to show that
-  \begin{equation*}
-    A^{\ast\infty}\to \iscontr(A^{\ast\infty}).
-  \end{equation*}
-  Since the type $\iscontr(A^{\ast\infty})$ is already known to be a proposition by \cref{ex:isprop_istrunc}, it follows from \cref{prp:universal-property-brck} that it suffices to show that
-\begin{equation*}
-A\to \iscontr(A^{\ast\infty}).
-\end{equation*}
-
-Let $x:A$. To see that $A^{\ast\infty}$ is contractible it suffices by \cref{ex:seqcolim_contr} to show that $\inr:A^{\ast n}\to A^{\ast(n+1)}$ is homotopic to the constant function $\const_{\inl(x)}$. However, we get a homotopy $\const_{\inl(x)}\htpy \inr$ immediately from the path constructor $\glue$.  
-\end{proof}
-
-All the definitions are now in place to define the propositional truncation of a type.
-
-\begin{defn}
-  For any type $A$ we define the type
-  \begin{equation*}
-    \trunc{-1}{A}\defeq A^{\ast\infty},
-  \end{equation*}
-  and we define $\eta:A\to\trunc{-1}{A}$ to be the constructor $\seqin_0$ of the sequential colimit $A^{\ast\infty}$. Often we simply write $\brck{A}$ for $\trunc{-1}{A}$.
-\end{defn}
-
-The type $\trunc{-1}{A}$ is a proposition by \cref{prp:isprop-infjp}, and
-\begin{equation*}
-  \eta:A\to\trunc{-1}{A}
-\end{equation*}
-satisfies the universal property of propositional truncation by \cref{prp:universal-property-brck}.
-
-\begin{prp}
-  The propositional truncation operation is functorial in the sense that for any map $f:A\to B$ there is a unique map $\brck{f}:\brck{A}\to\brck{B}$ such that the square
-  \begin{equation*}
-    \begin{tikzcd}
-      A \arrow[r,"f"] \arrow[d,swap,"\eta"] & B \arrow[d,"\eta"] \\
-      \brck{A} \arrow[r,swap,"\brck{f}"] & \brck{B}
-    \end{tikzcd}
-  \end{equation*}
-  commutes. Moreover, there are homotopies
-  \begin{align*}
-    \brck{\idfunc[A]} & \htpy \idfunc[\brck{A}] \\
-    \brck{g\circ f} & \htpy \brck{g}\circ\brck{f}.
-  \end{align*}
-\end{prp}
-
-\begin{proof}
-  The functorial action of propositional truncation is immediate by the universal property of propositional truncation. To see that the functorial action preserves the identity, note that the type of maps $\brck{A}\to\brck{A}$ for which the square
-  \begin{equation*}
-    \begin{tikzcd}
-      A \arrow[r,"\idfunc"] \arrow[d,swap,"\eta"] & A \arrow[d,"\eta"] \\
-      \brck{A} \arrow[r,densely dotted] & \brck{A}
-    \end{tikzcd}
-  \end{equation*}
-  commutes is contractible. Since this square commutes for both $\brck{\idfunc}$ and for $\idfunc$, it must be that they are homotopic. The proof that the functorial action of propositional truncation preserves composition is similar.
-\end{proof}
-
-\subsection{The image of a map}\label{sec:image-construction}
 The image of a map $f:A\to X$ can now be defined using the propositional truncation:
 
 \begin{defn}
@@ -449,7 +394,21 @@ Furthermore, we define:
   is an equivalence, for every $x:X$. Thus we conclude that the bottom map in the above square is an equivalence, which implies that the top map is an equivalence. 
 \end{proof}
 
-
+\begin{eg}
+  An important special case of the homotopy image of a map is the image of the terminal projection
+\begin{equation*}
+  \const_\ttt : A \to \unit,
+\end{equation*}
+which results in an embedding $I\hookrightarrow \unit$. Embeddings into the unit type are in fact just propositions. To see this, note that
+\begin{align*}
+\sm{A:\UU}{f:A\to\unit}\isemb(f)
+& \eqvsym \sm{A:\UU}\isemb(\const_\ttt) \\
+& \eqvsym \sm{A:\UU}\prd{x:\unit}\isprop(\fib{\const_\ttt}{x}) \\
+& \eqvsym \sm{A:\UU}\isprop(\fib{\const_\ttt}{\ttt}) \\
+& \eqvsym \sm{A:\UU}\isprop(A).
+\end{align*}
+Therefore, the universal property of the image of the map $A\to\unit$ is equivalently described as a proposition $P$ satisfying the universal property of the propositional truncation.
+\end{eg}
 
 \subsection{Surjective maps}
 
@@ -568,36 +527,81 @@ in which $m$ is an embedding. Then the following are equivalent:
   in $\mathrm{hom}_X(f,i')$, is contractible.
 \end{proof}
 
-\subsection{Logic in type theory}
-Note that, given a family of propositions $P$ over a type $A$, the type $\sm{a:A}P(a)$ isn't necessarily a proposition. Instead, we think of $\sm{a:A}P(a)$ of the \emph{subtype} of $A$ containing the terms that satisfies $P$. Using the propositional truncation we can assert that there \emph{exists} a term in $A$ that satisfies $P$ without requiring one to construct it. 
+\subsection{Type theoretic replacement}
 
-\begin{defn}
-Let $P:A\to \prop$ be a family of propositions over a type $A$. Then we define
+\begin{comment}
+We have constructed the set quotient $A/R$ as the image of the equivalence relation
 \begin{equation*}
-\exists_{(a:A)}P(a)\defeq \brck{\sm{a:A}P(a)}.
+  R:A\to \UU^A.
 \end{equation*}
+However, the type $\UU^A$ is itself in the next universe $\UU^+$. Hence the quotient is also in the universe $\UU^+$. We prove in this section that $A/R$ is nevertheless equivalent to a type in $\UU$. In other words, we show that $A/R$ is \emph{essentially} small.
+\end{comment}
+
+\begin{defn}\label{defn:ess_small}
+\begin{enumerate}
+\item A type $A$ is said to be \define{essentially small}\index{essentially small!type} if there is a type $X:\UU$ and an equivalence $\eqv{A}{X}$. We write\index{ess_small(A)@{$\mathsf{ess\usc{}small}(A)$}}
+\begin{equation*}
+\mathsf{ess\usc{}small}(A)\defeq\sm{X:\UU}\eqv{A}{X}.
+\end{equation*}
+\item A map $f:A\to B$ is said to be \define{essentially small}\index{essentially small!map} if for each $b:B$ the fiber $\fib{f}{b}$ is essentially small.
+We write\index{ess_small(f)@{$\mathsf{ess\usc{}small}(f)$}}
+\begin{equation*}
+\mathsf{ess\usc{}small}(f)\defeq\prd{b:B}\mathsf{ess\usc{}small}(\fib{f}{b}).
+\end{equation*}
+\item A type $A$ is said to be \define{locally small}\index{locally small!type} if for every $x,y:A$ the identity type $x=y$ is essentially small.
+We write\index{loc_small(A)@{$\mathsf{loc\usc{}small}(A)$}}
+\begin{equation*}
+\mathsf{loc\usc{}small}(A)\defeq \prd{x,y:A}\mathsf{ess\usc{}small}(x=y).
+\end{equation*}
+\end{enumerate}
 \end{defn}
 
-Similarly, we can define the disjunction of two propositions $P$ and $Q$ to be the \emph{proposition} $\brck{P+Q}$, which clearly satisfies the universal property of disjunction\footnote{Alternatively, we have shown in \cref{ex:join_propositions} that the join $\join{P}{Q}$ also is a proposition that satisfies the universal property of disjunction.}. In the following table we give an overview of the logical connectives on propositions.
+\begin{eg}
+  \begin{enumerate}
+  \item Any essentially $\UU$-small type is also locally $\UU$-small.
+  \item Any univalent universe $\UU$ is locally $\UU$-small, because by the univalence axiom we have equivalences
+    \begin{equation*}
+      (A=B)\simeq (A\simeq B)
+    \end{equation*}
+    for each $A,B:\UU$, and the type $A\simeq B$ is in $\UU$.
+  \item Any proposition is locally small with respect to any universe $\UU$.
+  \item For any family $P$ of locally $\UU$-small types over a essentially $\UU$-small type $A$, the dependent product $\prd{x:A}P(x)$ is locally $\UU$-small. In particular, any type $A\to B$ of functions from an essentially small type into a locally small type is again locally small.
+  \end{enumerate}
+\end{eg}
 
-\begin{center}
-\begin{tabular}{ll}
-\toprule
-\emph{Logical connective} & \emph{Interpretation in HoTT} \\
-\midrule
-$\top$ & $\unit$ \\
-$\bot$ & $\emptyt$ \\
-$P\land Q$ & $P\times Q$ \\
-$P\lor Q$ & $\brck{P+Q}$ \\
-$P\to Q$ & $P\to Q$ \\
-$P\leftrightarrow Q$ & $\eqv{P}{Q}$ \\
-$\neg P$ & $P\to\emptyt$ \\
-$\forall x.P(x)$ & $\prd{x:A}P(x)$ \\
-$\exists x.P(x)$ & $\brck{\sm{x:A}P(x)}$ \\
-$\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ \\
-\bottomrule
-\end{tabular}
-\end{center}
+\begin{lem}\label{lem:isprop_ess_small}
+The type $\mathsf{ess\usc{}small}(A)$ is a proposition for any type $A$.\index{essentially small!is a proposition}
+\end{lem}
+
+\begin{proof}
+Let $A$ be a type, not necessarily in $\UU$. In order to show that $\mathsf{ess\usc{}small}(A)$ is a proposition, we will use \cref{lem:isprop_eq} and show that for any $X:\UU$ and any equivalence $e:A\simeq X$, the type
+\begin{equation*}
+\sm{Y:\UU}\eqv{A}{Y}
+\end{equation*}
+is contractible. Note that we have an equivalence
+\begin{equation*}
+\eqv{\Big(\sm{Y:\UU}\eqv{X}{Y}\Big)}{\Big(\sm{Y:\UU}\eqv{A}{Y}\Big)}
+\end{equation*}
+because precomposing with the equivalence $e:A \simeq X$ is an equivalence. However, the type $\sm{Y:\UU}\eqv{X}{Y}$ is contractible by \cref{thm:univalence}. This shows that $\mathsf{ess\usc{}small}(A)$ is equivalent to a contractible type, assuming that $A$ is essentially small.
+\end{proof}
+
+\begin{cor}
+For each function $f:A\to B$, the type $\mathsf{ess\usc{}small}(f)$ is a proposition, and for each type $X$ the type $\mathsf{loc\usc{}small}(X)$ is a proposition.
+\end{cor}
+
+\begin{proof}
+This follows from the fact that propositions are closed under dependent products, established in \cref{thm:trunc_pi}.
+\end{proof}
+
+Recall that in set theory, the replacement axiom asserts that for any family of sets $\{X_i\}_{i\in I}$ indexed by a set $I$, there is a set $X[I]$ consisting of precisely those sets $x$ for which there exists an $i\in I$ such that $x\in X_i$. In other words: the image of a set-indexed family of sets is again a set. Without the replacement axiom, $X[I]$ would be a class. In the following corollary we establish a type-theoretic analogue of the replacement axiom: the image of a family of small types indexed by a small type is again (essentially) small.
+
+\begin{axiom}\label{axiom:replacement}
+  For any map $f:A\to B$ from an essentially small type $A$ into a locally small type $B$, the image of $f$ is again essentially small.
+\end{axiom}
+
+\begin{cor}
+  Consider a $\UU$-small type $A$, and an equivalence relation $R$ over $A$ valued in the $\UU$-small propositions. Then the set quotient $A/R$ is essentially small.
+\end{cor}
 
 \begin{exercises}
   \exercise Show that if $f:A\to X$ is an embedding, then $f$ itself satisfies the universal property of the image inclusion of $f$.

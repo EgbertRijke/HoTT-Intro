@@ -236,6 +236,320 @@ B_\infty \arrow[r] & Y
 is a pullback square.
 \end{cor}
 
+\subsection{Constructing the propositional truncation}\label{sec:propositional-truncation-constr}
+The propositional truncation can be used to construct the image of a map, so we construct that first. We construct the propositional truncation of $A$ via a construction called the \define{join construction}, as the colimit of the sequence of join-powers of $A$
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[r] & \join{A}{A} \arrow[r] & \join{A}{(\join{A}{A})} \arrow[r] & \cdots
+  \end{tikzcd}
+\end{equation*}
+The join-powers of $A$ are defined recursively on $n$, by taking\footnote{In this definition, the case $A^{\ast1}\defeq A$ is slightly redundant because we have an equivalence
+\begin{equation*}
+  \join{A}{\emptyt}\simeq A.
+\end{equation*}
+Nevertheless, it is nice to have that $A^{\ast 1}\jdeq A$.}
+\begin{align*}
+  A^{\ast0} & \defeq \emptyt \\
+  A^{\ast 1} & \defeq A \\
+  A^{\ast(n+2)} & \defeq \join{A}{A^{\ast (n+1)}}.
+\end{align*}
+We will write $A^{\ast\infty}$ for the colimit of the sequence
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[r,"\inr"] & \join{A}{A} \arrow[r,"\inr"] & \join{A}{(\join{A}{A})} \arrow[r,"\inr"] & \cdots.
+  \end{tikzcd}
+\end{equation*}
+The sequential colimit $A^{\ast\infty}$ comes equipped with maps $\inseq_n:A^{\ast (n+1)}\to A^{\ast\infty}$, and we will write
+\begin{equation*}
+  \eta\defeq\inseq_0:A\to A^{\ast\infty}.
+\end{equation*}
+Our goal is to show $A^{\ast\infty}$ is a proposition, and that $\eta:A\to A^{\ast\infty}$ satisfies the universal property of the propositional truncation of $A$. Before showing that $A^{\ast\infty}$ is indeed a proposition, let us show in two steps that for any proposition $P$, the map
+\begin{equation*}
+  (A^{\ast\infty}\to P)\to (A\to P)
+\end{equation*}
+is indeed an equivalence. 
+
+\begin{lem}\label{lem:extend_join_prop}
+Suppose $f:A\to P$, where $A$ is any type and $P$ is a proposition.
+Then the precomposition function
+\begin{equation*}
+\blank\circ\inr:(\join{A}{B}\to P)\to (B\to P)
+\end{equation*}
+is an equivalence, for any type $B$.
+\end{lem}
+
+\begin{proof}
+  Since the precomposition function
+  \begin{equation*}
+    \blank\circ\inr:(\join{A}{B}\to P)\to (B\to P)
+  \end{equation*}
+  is a map between propositions, it suffices to construct a map
+  \begin{equation*}
+    (B\to P)\to (\join{A}{B}\to P).
+  \end{equation*}
+  Let $g:B\to P$. Then the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A\times B \arrow[r,"\proj 2"] \arrow[d,swap,"\proj 1"] & B \arrow[d,"g"] \\
+      A \arrow[r,swap,"f"] & P
+    \end{tikzcd}
+  \end{equation*}
+  commutes since $P$ is a proposition. Therefore we obtain a map $\join{A}{B}\to P$ by the universal property of the join.
+\end{proof}
+
+\begin{prp}\label{prp:universal-property-brck}
+Let $A$ be a type, and let $P$ be a proposition. Then the function
+\begin{equation*}
+\blank\circ \eta : (A^{\ast\infty}\to P)\to (A\to P)
+\end{equation*}
+is an equivalence. 
+\end{prp}
+
+\begin{proof}
+  Since the map
+  \begin{equation*}
+    \blank\circ \eta : (A^{\ast\infty}\to P)\to (A\to P)
+  \end{equation*}
+  is a map between propositions, it suffices to construct a map in the converse direction.
+
+  Let $f:A\to P$. First, we show by recursion that there are maps
+  \begin{equation*}
+    f_n:A^{\ast(n+1)}\to P.
+  \end{equation*}
+  The map $f_0$ is of course just defined to be $f$. Given $f_n:A^{\ast(n+1)}$ we obtain $f_{n+1}:\join{A}{A^{\ast(n+1)}}\to P$ by \cref{lem:extend_join_prop}. Because $P$ is assumed to be a proposition it is immediate that the maps $f_n$ form a cocone with vertex $P$ on the sequence
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"\inr"] & \join{A}{A} \arrow[r,"\inr"] & \join{A}{(\join{A}{A})} \arrow[r,"\inr"] & \cdots.
+    \end{tikzcd}
+  \end{equation*}
+  From this cocone we obtain the desired map $(A^{\ast\infty}\to P)$.
+\end{proof}
+
+\begin{prp}\label{prp:isprop-infjp}
+The type $A^{\ast\infty}$ is a proposition for any type $A$.
+\end{prp}
+
+\begin{proof}
+  By \cref{lem:isprop_eq} it suffices to show that
+  \begin{equation*}
+    A^{\ast\infty}\to \iscontr(A^{\ast\infty}).
+  \end{equation*}
+  Since the type $\iscontr(A^{\ast\infty})$ is already known to be a proposition by \cref{ex:isprop_istrunc}, it follows from \cref{prp:universal-property-brck} that it suffices to show that
+\begin{equation*}
+A\to \iscontr(A^{\ast\infty}).
+\end{equation*}
+
+Let $x:A$. To see that $A^{\ast\infty}$ is contractible it suffices by \cref{ex:seqcolim_contr} to show that $\inr:A^{\ast n}\to A^{\ast(n+1)}$ is homotopic to the constant function $\const_{\inl(x)}$. However, we get a homotopy $\const_{\inl(x)}\htpy \inr$ immediately from the path constructor $\glue$.  
+\end{proof}
+
+All the definitions are now in place to define the propositional truncation of a type.
+
+\begin{defn}
+  For any type $A$ we define the type
+  \begin{equation*}
+    \trunc{-1}{A}\defeq A^{\ast\infty},
+  \end{equation*}
+  and we define $\eta:A\to\trunc{-1}{A}$ to be the constructor $\seqin_0$ of the sequential colimit $A^{\ast\infty}$. Often we simply write $\brck{A}$ for $\trunc{-1}{A}$.
+\end{defn}
+
+The type $\trunc{-1}{A}$ is a proposition by \cref{prp:isprop-infjp}, and
+\begin{equation*}
+  \eta:A\to\trunc{-1}{A}
+\end{equation*}
+satisfies the universal property of propositional truncation by \cref{prp:universal-property-brck}.
+
+\begin{prp}
+  The propositional truncation operation is functorial in the sense that for any map $f:A\to B$ there is a unique map $\brck{f}:\brck{A}\to\brck{B}$ such that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"f"] \arrow[d,swap,"\eta"] & B \arrow[d,"\eta"] \\
+      \brck{A} \arrow[r,swap,"\brck{f}"] & \brck{B}
+    \end{tikzcd}
+  \end{equation*}
+  commutes. Moreover, there are homotopies
+  \begin{align*}
+    \brck{\idfunc[A]} & \htpy \idfunc[\brck{A}] \\
+    \brck{g\circ f} & \htpy \brck{g}\circ\brck{f}.
+  \end{align*}
+\end{prp}
+
+\begin{proof}
+  The functorial action of propositional truncation is immediate by the universal property of propositional truncation. To see that the functorial action preserves the identity, note that the type of maps $\brck{A}\to\brck{A}$ for which the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[r,"\idfunc"] \arrow[d,swap,"\eta"] & A \arrow[d,"\eta"] \\
+      \brck{A} \arrow[r,densely dotted] & \brck{A}
+    \end{tikzcd}
+  \end{equation*}
+  commutes is contractible. Since this square commutes for both $\brck{\idfunc}$ and for $\idfunc$, it must be that they are homotopic. The proof that the functorial action of propositional truncation preserves composition is similar.
+\end{proof}
+
+\subsection{Proving type theoretical replacement}
+
+Our goal is now to show that the image of a map $f:A\to B$ from an essentially small type $A$ into a locally small type $B$ is again essentially small. This property is called the type theoretic replacement property. In order to prove this property, we have to find another construction of the image of a map. In order to make this construction, we define a join operation on maps.
+
+\begin{defn}
+  Consider two maps $f:A\to X$ and $g:B\to X$ with a common codomain $X$.
+  \begin{enumerate}
+  \item We define the type $\join[X]{A}{B}$ as the pushout
+    \begin{equation*}
+      \begin{tikzcd}
+        A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"\inr"] \\
+        A \arrow[r,swap,"\inl"] & \join[X]{A}{B}.
+      \end{tikzcd}
+    \end{equation*}
+  \item We define the \define{join} $\join{f}{g}:\join[X]{A}{B}\to X$ to be the unique map for which the diagram
+        \begin{equation*}
+      \begin{tikzcd}
+        A\times_X B \arrow[r,"\pi_2"] \arrow[d,swap,"\pi_1"] & B \arrow[d,"\inr"] \arrow[ddr,bend left=15,"g"] \\
+        A \arrow[r,swap,"\inl"] \arrow[drr,bend right=15,swap,"f"]  & \join[X]{A}{B} \arrow[dr,densely dotted,swap,"\join{f}{g}"] \\
+        & & X
+      \end{tikzcd}
+    \end{equation*}
+  \end{enumerate}
+\end{defn}
+
+The reason to call the map $\join{f}{g}$ the join of $f$ and $g$ is that the fiber of $\join{f}{g}$ at any $x:X$ is equivalent to the join of the fibers of $f$ and $g$ at $x$.
+
+\begin{lem}
+  Consider two maps $f:A\to X$ and $g:B\to X$. Then there is an equivalence
+  \begin{equation*}
+    \fib{\join{f}{g}}{x}\simeq\join{\fib{f}{x}}{\fib{g}{x}}
+  \end{equation*}
+  for any $x:X$.
+\end{lem}
+
+\begin{proof}
+  Consider the commuting cube
+  \begin{equation*}
+    \begin{tikzcd}
+      & \fib{f}{x}\times\fib{g}{x} \arrow[dl] \arrow[dr] \arrow[d] \\
+      \fib{f}{x} \arrow[d] & A\times_X B \arrow[dl] \arrow[dr] & \fib{g}{x} \arrow[d] \arrow[dl,crossing over] \\
+      A \arrow[dr] & \unit \arrow[from=ul,crossing over] \arrow[d] & B \arrow[dl] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  In this cube, the bottom square is a canonical pullback square. The two squares in the front are pullbacks by \cref{lem:fib_pb}, and the top square is a pullback square by \cref{lem:prod_pb}. Therefore it follows by \cref{rmk:strongly-cartesian} that all the faces of this cube are pullback squares, and hence by \cref{thm:effectiveness-pullback} we obtain that the square
+  \begin{equation*}
+    \begin{tikzcd}
+      \join{\fib{f}{x}}{\fib{g}{x}} \arrow[d,densely dotted] \arrow[r] & \unit \arrow[d] \\
+      \join[X]{A}{B} \arrow[r,swap,"\join{f}{g}"] & X
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square. Now the claim follows by the uniqueness of pullbacks, which was shown in \cref{cor:uniquely-unique-pullback}.
+\end{proof}
+
+\begin{lem}
+Consider a map $f:A\to X$, an embedding $m:U\to X$, and $h:\mathrm{hom}_X(f,m)$. Then the map
+\begin{equation*}
+\mathrm{hom}_X(\join{f}{g},m)\to \mathrm{hom}_X(g,m)
+\end{equation*}
+is an equivalence for any $g:B\to X$.
+\end{lem}
+
+\begin{proof}
+Note that both types are propositions, so any equivalence can be used to prove the claim. Thus, we simply calculate
+\begin{align*}
+\mathrm{hom}_X(\join{f}{g},m) & \eqvsym \prd{x:X}\fib{\join{f}{g}}{x}\to \fib{m}{x} \\
+& \eqvsym \prd{x:X}\join{\fib{f}{x}}{\fib{g}{x}}\to\fib{m}{x} \\
+& \eqvsym \prd{x:X}\fib{g}{x}\to\fib{m}{x} \\
+& \eqvsym \mathrm{hom}_X(g,m).
+\end{align*}
+The first equivalence holds by \cref{ex:triangle_fib}; the second equivalence holds by \cref{ex:fib_join}, also using \cref{ex:equiv_precomp,lem:postcomp_equiv} where we established that that pre- and postcomposing by an equivalence is an equivalence; the third equivalence holds by \cref{lem:extend_join_prop,lem:postcomp_equiv}; the last equivalence again holds by \cref{ex:triangle_fib}.
+\end{proof}
+
+For the construction of the image of $f:A\to X$ we observe that if we are given an embedding $m:U\to X$ and a map $(i,I):\mathrm{hom}_X(f,m)$, then $(i,I)$ extends uniquely along $\inr:A\to \join[X]{A}{A}$ to a map $\mathrm{hom}_X(\join{f}{f},m)$. This extension again extends uniquely along $\inr:\join[X]{A}{A}\to \join[X]{A}{(\join[X]{A}{A})}$ to a map $\mathrm{hom}_X(\join{f}{(\join{f}{f})},m)$ and so on, resulting in a diagram of the form
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[dr] \arrow[r,"\inr"] & \join[X]{A}{A} \arrow[d,densely dotted] \arrow[r,"\inr"] & \join[X]{A}{(\join[X]{A}{A})} \arrow[dl,densely dotted] \arrow[r,"\inr"] & \cdots \arrow[dll,densely dotted,bend left=10] \\
+& U
+\end{tikzcd}
+\end{equation*}
+
+\begin{defn}
+Suppose $f:A\to X$ is a map. Then we define the \define{fiberwise join powers} 
+\begin{equation*}
+f^{\ast n}:A_X^{\ast n} X.
+\end{equation*}
+\end{defn}
+
+\begin{constr}
+Note that the operation $(B,g)\mapsto (\join[X]{A}{B},\join{f}{g})$ defines an endomorphism on the type
+\begin{equation*}
+\sm{B:\UU}B\to X.
+\end{equation*}
+We also have $(\emptyt,\ind{\emptyt})$ and $(A,f)$ of this type. For $n\geq 1$ we define
+\begin{align*}
+A_X^{\ast (n+1)} & \defeq \join[X]{A}{A_X^{\ast n}} \\
+f^{\ast (n+1)} & \defeq \join{f}{f^{\ast n}}.\qedhere
+\end{align*}
+\end{constr}
+
+\begin{defn}
+We define $A_X^{\ast\infty}$ to be the sequential colimit of the type sequence
+\begin{equation*}
+\begin{tikzcd}
+A_X^{\ast 0} \arrow[r] & A_X^{\ast 1} \arrow[r,"\inr"] & A_X^{\ast 2} \arrow[r,"\inr"] & \cdots.
+\end{tikzcd}
+\end{equation*}
+Since we have a cocone
+\begin{equation*}
+\begin{tikzcd}
+A_X^{\ast 0} \arrow[r] \arrow[dr,swap,"f^{\ast 0}" near start] & A_X^{\ast 1} \arrow[r,"\inr"] \arrow[d,swap,"f^{\ast 1}" near start] & A_X^{\ast 2} \arrow[r,"\inr"] \arrow[dl,swap,"f^{\ast 2}" xshift=1ex] & \cdots \arrow[dll,bend left=10] \\
+& X
+\end{tikzcd}
+\end{equation*}
+we also obtain a map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ by the universal property of $A_X^{\ast\infty}$. 
+\end{defn}
+
+\begin{lem}\label{lem:finfjp_up}
+Let $f:A\to X$ be a map, and let $m:U\to X$ be an embedding. Then the function
+\begin{equation*}
+\blank\circ \seqin_0: \mathrm{hom}_X(f^{\ast\infty},m)\to \mathrm{hom}_X(f,m)
+\end{equation*}
+is an equivalence. 
+\end{lem}
+
+\begin{thm}\label{lem:isprop_infjp}
+For any map $f:A\to X$, the map $f^{\ast\infty}:A_X^{\ast\infty}\to X$ is an embedding that satisfies the universal property of the image inclusion of $f$.
+\end{thm}
+
+\begin{lem}
+Consider a commuting square
+\begin{equation*}
+\begin{tikzcd}
+A \arrow[r] \arrow[d] & B \arrow[d] \\
+C \arrow[r] & D.
+\end{tikzcd}
+\end{equation*}
+\begin{enumerate}
+\item If the square is cartesian, $B$ and $C$ are essentially small, and $D$ is locally small, then $A$ is essentially small.
+\item If the square is cocartesian, and $A$, $B$, and $C$ are essentially small, then $D$ is essentially small. 
+\end{enumerate}
+\end{lem}
+
+\begin{cor}
+Suppose $f:A\to X$ and $g:B\to X$ are maps from essentially small types $A$ and $B$, respectively, to a locally small type $X$. Then $A\times_X B$ is again essentially small. 
+\end{cor}
+
+\begin{lem}
+Consider a type sequence
+\begin{equation*}
+\begin{tikzcd}
+A_0 \arrow[r,"f_0"] & A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & \cdots
+\end{tikzcd}
+\end{equation*}
+where each $A_n$ is essentially small. Then its sequential colimit is again essentially small. 
+\end{lem}
+
+\begin{thm}\label{thm:replacement}
+  For any map $f:A\to B$ from an essentially small type $A$ into a locally small type $B$, the image of $f$ is again essentially small.
+\end{thm}
+
+\begin{cor}
+  Consider a $\UU$-small type $A$, and an equivalence relation $R$ over $A$ valued in the $\UU$-small propositions. Then the set quotient $A/R$ is essentially small.
+\end{cor}
+
 \begin{exercises}
 \exercise \label{ex:seqcolim_shift}
 Show that the sequential colimit of a type sequence

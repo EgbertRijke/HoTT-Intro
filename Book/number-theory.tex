@@ -567,4 +567,13 @@ This prime decomposition is unique if we require that the primes $p_i<p_{i+1}$ f
 \begin{equation*}
   (\Fin(m)\simeq\Fin(n))\leftrightarrow(m=n).
 \end{equation*}
+\exercise Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
+    \begin{equation*}
+      \ordindN : \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
+    \end{equation*}
+    Moreover, prove that
+    \begin{equation*}
+      \ordindN(h,n)=h(n,\lam{m}\lam{p}\ordindN(h,m))
+    \end{equation*}
+    for any $n:\N$ and any $h:\prd{k:\N}\Big(\prd{m:\N}(m<k)\to P(m)\Big)\to P(k)$.
 \end{exercises}

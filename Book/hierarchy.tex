@@ -1,7 +1,7 @@
 % !TEX root = hott_intro.tex
 
-\section{The hierarchy of homotopical complexity}
-\sectionmark{Homotopical complexity}\label{chap:hierarchy}
+\section{Propositions, sets, and the higher truncation levels}
+\sectionmark{Truncation levels}\label{chap:hierarchy}
 
 \index{truncated type|(}
 \index{truncation level|(}
@@ -24,7 +24,9 @@ Given a universe $\UU$, we define $\prop_\UU$\index{Prop@{$\prop$}} to be the ty
 \end{defn}
 
 \begin{eg}\label{eg:prop_contr}
-Any contractible type is a proposition by \cref{ex:prop_contr}\index{contractible type!is a proposition}\index{is a proposition!contractible type}. However, propositions do not need to be inhabited: the empty type is also a proposition, since\index{empty type!is a proposition}\index{is a proposition!empty type}
+  Any contractible type is a proposition by \cref{ex:prop_contr}\index{contractible type!is a proposition}\index{is a proposition!contractible type}. In particular, the unit type is a proposition.
+
+  However, propositions do not need to be inhabited: the empty type is also a proposition, since\index{empty type!is a proposition}\index{is a proposition!empty type}
 \begin{equation*}
 \prd{x,y:\emptyt}\iscontr(x=y)
 \end{equation*}
