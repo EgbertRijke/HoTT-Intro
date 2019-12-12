@@ -1,0 +1,114 @@
+\section{Finite types}
+
+\subsection{The pigeonhole principle}
+
+The pigeonhole principle states that if we place more than $n$ balls in $n$ bags, then at least one bag will contain more than one ball. In this section we will give a type theoretical proof of the pigeonhole principle.
+
+First we give a definition of a function that counts the number of elements in a decidable subset of $\Fin(n)$.
+
+\begin{defn}
+  Let $P$ be a decidable subset of $\Fin(n)$. We define the number $|P|:\N$ of elements in $P$.
+\end{defn}
+
+\begin{proof}[Construction]
+  We give the construction of $|P|$ by induction on $n:\N$. In the base case we note that $\Fin(\zeroN)$ has no elements, so we define $|P|\defeq\zeroN$.
+
+  For the inductive step, we define $|P|$ by case analysis on $P(\inr(\ttt))+\neg P(\inr(\ttt))$. Let $P'$ be the family over $\Fin(n)$ given by $P'(i)\defeq P(\inl(i))$. In the case where $P(\inr(\ttt))$ holds, then we define $|P|\defeq \succN |P'|$. In the case where $P(\inr(\ttt))$ doesn't hold we define $|P|\defeq |P'|$.
+\end{proof}
+
+\begin{defn}
+  For any $i:\Fin(\succN(n))$ we define a function
+  \begin{equation*}
+    \skipFin(i):\Fin(n)\to\Fin(\succN(n)).
+  \end{equation*}
+\end{defn}
+
+\begin{proof}[Construction]
+  The function $\skipFin(i)$ is defined by induction on $n:\N$. In the base case, the function
+  \begin{equation*}
+    \skipFin(i):\Fin(\zeroN)\to\Fin(\succN(\zeroN))
+  \end{equation*}
+  is defined to be the unique map out of the empty type. In the successor case we define
+  \begin{equation*}
+    \skipFin(i) : \Fin(\succN(n))\to\Fin(\succN(\succN(n))) 
+  \end{equation*}
+  by induction on $i:\Fin(\succN(\succN(n)))$. The function
+  \begin{equation*}
+    \skipFin(\inl(i)):\Fin(\succN(n))\to\Fin(\succN(\succN(n)))
+  \end{equation*}
+  is a map between coproducts, so it can be defined using the functorial action of coproducts of \cref{ex:coproduct_functor}. We take
+  \begin{equation*}
+    \skipFin(\inl(i))\defeq \skipFin(i)+\idfunc.
+  \end{equation*}
+  The function 
+  \begin{equation*}
+    \skipFin(\inr(i)):\Fin(\succN(n))\to\Fin(\succN(\succN(n)))
+  \end{equation*}
+  is just the function $\inl$.
+\end{proof}
+
+\begin{lem}
+  For each $i:\Fin(\succN(n))$, the function
+  \begin{equation*}
+    \skipFin(i):\Fin(n)\to\Fin(\succN(n))
+  \end{equation*}
+  is an embedding.
+\end{lem}
+
+\begin{proof}
+  This assertion is proven by induction on $n$. In the base case, we note that any map out of the empty type is an embedding, by \cref{ex:is-emb-empty}. In the inductive step we proceed by case analysis on $i:\Fin(\succN(\succN(n)))$. In the case of $\inl(i)$ we note that
+  \begin{equation*}
+    \skipFin(\inl(i))\jdeq \skipFin(i)+\idfunc
+  \end{equation*}
+  is the functorial action of coproducts on two embeddings. Therefore we conclude by \cref{ex:is-emb-coprod} that this map is an embedding. In the case of $\inr(i)$ we note that $\inl$ is an embedding by \cref{ex:is-emb-inl-inr}.
+\end{proof}
+
+\begin{lem}
+  Consider a map $g:\Fin(m)\to\Fin(\succN(n))$. Furthermore, suppose that $i:\Fin(\succN(n))$ is not in the image of $g$, i.e.~that $\neg(\fib{g}{i})$. Then we can construct a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}
+      & \Fin(n) \arrow[d,"\skipFin(i)"] \\
+      \Fin(m) \arrow[r,swap,"g"] \arrow[ur,densely dotted,"f"] & \Fin(\succN(n)).
+    \end{tikzcd}
+  \end{equation*}
+\end{lem}
+
+Finally, we prove the pigeonhole principle.
+
+\begin{thm}\label{thm:pigeonhole}
+  For any $m,n:\N$ and any function $f:\Fin(m)\to\Fin(n)$, if $m>n$, then there is an $i:\Fin(n)$ which is in the image of more than one point in $\Fin(m)$.
+\end{thm}
+
+\begin{proof}
+  The pigeonhole principle is proven by induction on $m,n:\N$. In the base case for $m$ there is nothing to show because $m>n$ is empty. For the inductive step on $m$ and the base case for $n$, we note that $\Fin(\succN(m))\jdeq \Fin(m)+\unit$ and $\Fin(\zeroN)\jdeq \emptyt$. Therefore $f:\Fin(\succN(m))\to\Fin(\zeroN)$ is a function from a pointed type to the empty type, which gives us a contradiction.
+
+  It remains to give the inductive step for $n$. Let $i\defeq f(\inr(\ttt)):\Fin(\succN(n))$. Since the ordering relation $<$ on $\N$ is decidable, we can decide whether $i$ is in the image of more than one point in $\Fin(m)$ by deciding whether or not $1<|P|$ holds for
+  \begin{equation*}
+    P(j)\defeq (f(j)=i)
+  \end{equation*}
+  If this is the case, this completes the proof.
+
+  Now suppose that $1\not<|P|$. Since $P(\inr(\ttt))$ holds it follows that $|P|=1$. Now we observe that $i$ is not in the image of $f\circ \inl$. Therefore we obtain a commuting square
+  \begin{equation*}
+    \begin{tikzcd}
+      \Fin(m) \arrow[r,densely dotted,"{f'}"] \arrow[d,swap,"\inl"] & \Fin(n) \arrow[d,"{\skipFin(i)}"] \\
+      \Fin(\succN(m)) \arrow[r,swap,"f"] & \Fin(\succN(n)).
+    \end{tikzcd}
+  \end{equation*}
+
+  Note that the induction hypothesis the pigeonhole principle applies to the function $f':\Fin(m)\to\Fin(n)$. Since $m>n$ it follows that there is an element $j:\Fin(n)$ that is in the image of $f'$ of more than one element of $\Fin(m)$. Now we observe that there is an equivalence
+  \begin{equation*}
+    \fib{f'}{j}\simeq \fib{f}{\skipFin(i,j)}
+  \end{equation*}
+  because both the left and right maps in the commuting square are embeddings. Therefore we conclude that $\skipFin(i,j)$ is in the image of $f$ of more than one element of $\Fin(\succN(m))$. 
+ \end{proof}
+
+\begin{cor}\label{cor:pigeonhole}
+  Given $m>n$, no function $\Fin(m)\to\Fin(n)$ is an embedding.
+\end{cor}
+
+It is straightforward to see that the statements of \cref{thm:pigeonhole,cor:pigeonhole} are equivalent, and one might argue that the statement of \cref{cor:pigeonhole} is the more `type theoretical way' of phrasing the pigeonhole principle. However, the relation to counting the number of points that get mapped to 
+
+\begin{thm}\label{thm:generalized-pigeonhole}
+  For any $m,n:\N$ and any function $f:\Fin(m)\to\Fin(n)$, if $m>kn$ for some $k:\N$, then there is an $i:\Fin(n)$ which is in the image of more than $k$ points in $\Fin(m)$. 
+\end{thm}

@@ -1,4 +1,4 @@
-\section{The image of a map and the replacement axiom}\label{chap:image}
+\section{Propositional truncations and the image of a map}\label{chap:image}
 
 In this section we will study two closely related concepts: the propositional truncation operation and the \emph{homotopy image} of a map $f:A\to X$.
 
@@ -9,7 +9,7 @@ The propositional truncation operation is a universal way of turning type a type
     \brck{A} \arrow[r,densely dotted] & P.
   \end{tikzcd}
 \end{equation*}
-Using the propositional truncation operation we can define all the logical connectives and quantifiers in type theory.
+Using the propositional truncation operation we can define many important mathematical concepts. We will discuss in this section the definitions of disjunction and existential quantification, surjective maps, connected components, and indeed the image of a map.
 
 The idea of the image of a map $f:A\to X$ is that it is, in a way, the least subtype of $X$ that contains all the values of $f$. More precisely, the image of $f$ is an embedding $i:\im(f)\hookrightarrow X$ that fits in a commuting triangle
 \begin{equation*}
@@ -53,7 +53,7 @@ is an equivalence.
 \end{rmk}
 
 \begin{eg}
-  Suppose $A$ is a type that comes equipped with a point $a:A$, such as the booleans or the type of natural numbers. Then the constant map
+  Suppose $A$ is a type that comes equipped with a point $a:A$, such as the booleans, the type of natural numbers, or the loop space $\loopspace{A}$ of a pointed type. Then the constant map
   \begin{equation*}
     \const_\ttt: A\to\unit
   \end{equation*}
@@ -78,6 +78,8 @@ is an equivalence.
     \blank\circ\idfunc : (A\to Q)\to (A\to Q)
   \end{equation*}
   is itself just the identity function. In particular, it is an equivalence.
+
+  Similarly, any equivalence $e:P\simeq P'$ between propositions satisfies the universal property of the propositional truncation of $P$, since precomposing by an equivalence is an equivalence by \cref{ex:equiv_precomp}.
 \end{eg}
 
 The universal property of the propositional truncation determines the propositional truncation up to equivalence. Such proofs of uniqueness from a universal property always follow the same pattern.

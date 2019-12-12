@@ -2,13 +2,15 @@
 \label{chap:funext}
 
 \subsection{Equivalent forms of function extensionality}
-\begin{defn}
-  The \define{axiom of function extensionality}\index{function extensionality}\index{identity type!of a Pi-type@{of a $\Pi$-type}}\index{extensionality principle!for functions} asserts that for any type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map\index{htpy-eq@{$\htpyeq$}}\index{htpy-eq@{$\htpyeq$}!is an equivalence}\index{is an equivalence!htpy-eq@{$\htpyeq$}}
+
+\begin{axiom}[Function Extensionality]\label{axiom:funext}
+  \index{function extensionality}\index{identity type!of a Pi-type@{of a $\Pi$-type}}\index{extensionality principle!for functions}%
+  For any type family $B$ over $A$, and any two dependent functions $f,g:\prd{x:A}B(x)$, the canonical map\index{htpy-eq@{$\htpyeq$}}\index{htpy-eq@{$\htpyeq$}!is an equivalence}\index{is an equivalence!htpy-eq@{$\htpyeq$}}
   \begin{equation*}
     \htpyeq:(f=g)\to (f\htpy g)
   \end{equation*}
-  that sends $\refl{f}$ to $\reflhtpy_{f}$ is an equivalence. We will write $\eqhtpy$\index{eq-htpy@{$\eqhtpy$}} for its inverse, if it is assumed to exist.
-\end{defn}
+  that sends $\refl{f}$ to $\reflhtpy_{f}$ is an equivalence. We will write $\eqhtpy$\index{eq-htpy@{$\eqhtpy$}} for its inverse.
+\end{axiom}
 
 In other words, the axiom of function extensionality asserts that for any two dependent functions $f,g:\prd{x:A}B(x)$, the type of identifications $f=g$ is equivalent to the type of homotopies $f\htpy g$ from $f$ to $g$. By the fundamental theorem of identity types (\cref{thm:id_fundamental})\index{fundamental theorem of identity types} there are three equivalent ways of asserting function extensionality. In the following theorem we state one further equivalent condition.
 

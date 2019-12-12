@@ -4,7 +4,7 @@
 
 The univalence axiom characterizes the identity type of the universe. Roughly speaking, it asserts that equivalent types are equal. It is considered to be an \emph{extensionality principle}\index{extensionality principle!for types} for types.
 
-\begin{defn}
+\begin{axiom}[Univalence]\label{axiom:univalence}
   The \define{univalence axiom}\index{univalence axiom} on a universe $\UU$ is the statement that for any $A:\UU$ the family of maps\index{equiv-eq@{$\equiveq$}}
 \begin{equation*}
 \equiveq : \prd{B:\UU} (\id{A}{B})\to(\eqv{A}{B}).
@@ -12,7 +12,7 @@ The univalence axiom characterizes the identity type of the universe. Roughly sp
 that sends $\refl{A}$ to the identity equivalence $\idfunc:\eqv{A}{A}$ is a family of equivalences.\index{identity type!of a universe} A universe satisfying the univalence axiom is referred to as a \define{univalent universe}\index{univalent universe}. If $\UU$ is a univalent universe we will write
 $\eqequiv$\index{eq-equiv@{$\eqequiv$}}
 for the inverse of $\equiveq$.
-\end{defn}
+\end{axiom}
 
 The following theorem is a special case of the fundamental theorem of identity types (\cref{thm:id_fundamental})\index{fundamental theorem of identity types}. Subsequently we will assume that any type is contained in a univalent universe.\index{axiom!univalence}
 
