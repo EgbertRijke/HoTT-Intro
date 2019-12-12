@@ -51,7 +51,13 @@ Since $P$ and $\neg P$ are mutually exclusive cases, it follows that $\isdecidab
     \inl(p) & =\inl(p') & \inr(f) & =\inl(p') \\
     \inl(p) & =\inr(f') & \inr(f) & =\inr(f').
   \end{align*}
-  First, assume that we have $p,p':P$. Then we have an identification $p=p'$, since $P$ is assumed to be a proposition. Hence it follows that $\inl(p)=\inl(p')$. Next, assume that we have $p:P$ and $f':\neg P$. Then we have $f'(p):\emptyt$, so we obtain an identification $\inl(p)=\inr(f')$ since anything follows from $\emptyt$. Similarly, we obtain an identification $\inr(f)=\inl(p')$ from the term $f(p'):\emptyt$. Finally, assume that we have $f,f':\neg P$. Since $\neg P$ is a proposition, we obtain an identification $\inr(f)=\inr(f')$ from the fact that $f=f'$.
+  We construct these four identifications as follows:
+  \begin{enumerate}
+  \item First, we want to show that $\inl(p)=\inl(p')$ for any $p,p':P$. We obtain this identification from the fact that $p=p'$, which we have because $P$ is assumed to be a proposition.
+  \item Next, we want to show that $\inl(p)=\inr(f')$ for any $p:P$ and $f':\neg P$. Since we have contradictory assumptions, we obtain $f'(p):\emptyt$. We now obtain the desired identification by applying the function $\emptyt \to (\inl(p)=\inr(f')$.
+  \item The construction of an identification $\inr(f)=\inl(p')$ for $f:\neg P$ and $p':P$ is similar. We have $f(p'):\emptyt$, which gives the desired identification via the function $\emptyt\to (\inr(f)=\inl(p'))$.
+  \item Finally, we want to show that $\inr(f)=\inr(f')$ for $f,f':\neg P$. The type $\neg P$ is a proposition, so we have an identification $f=f'$ from which we obtain $\inr(f)=\inr(f')$.\qedhere
+  \end{enumerate}
 \end{proof}
 
 We have seen in \cref{thm:propositional-extensionality} that the univalence axiom implies propositional extensionality. Recall that propositional extensionality is the property that the map
@@ -123,9 +129,14 @@ We will now study the concept of decidable equality.
 \end{cor}
 
 \begin{proof}
-  This follows immediately from the equivalences $(m=n)\simeq \EqN(m,n)$, and the fact that $\EqN(m,n)$ is decidable.
+  Recall from the proof of \cref{thm:eq_nat} that the canonical map
+  \begin{equation*}
+    (m=n)\simeq \EqN(m,n)
+  \end{equation*}
+  is an equivalence. Thus we obtain that $(m=n)$ is decidable from the fact that $\EqN(m,n)$ is decidable.
 \end{proof}
 
+\begin{comment}
 \begin{lem}
   Suppose that $A$ and $B$ are types with decidable equality. Then the coproduct $A+B$ also has decidable equality.
 \end{lem}
@@ -152,8 +163,9 @@ We will now study the concept of decidable equality.
 \begin{cor}
   For any $n:\N$ the type $\Fin(n)$ has decidable equality. 
 \end{cor}
+\end{comment}
 
-We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a set. In fact, any type with decidable equality is a set. This fact is known as Hedberg's theorem. Our proof of Hedberg's theorem might appear to be slightly complicated compared to the proof in \cite{hottbook}. This is due to the fact that we haven't introduced function extensionality yet, which is used there to observe that $\neg\neg(x=y)$ is a proposition for any $x,y:A$.
+We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a set. In fact, any type with decidable equality is a set. This fact is known as Hedberg's theorem.
 
 \begin{thm}[Hedberg]
   Any type with decidable equality is a set.
@@ -164,28 +176,11 @@ We have already shown in \cref{thm:eq_nat} that the type of natural numbers is a
   \begin{equation*}
     d:\prd{x,y:A}(x=y)+\neg(x=y).
   \end{equation*}
-  Our proof is an application of \cref{lem:prop_to_id}. In order to construct a binary relation $R$, we first consider the type family $D(x,y):((\id{x}{y})+\neg(\id{x}{y}))\to\UU$ given by
-  \begin{align*}
-    D(x,y,\inl(p)) & \defeq \unit \\
-    D(x,y,\inr(p)) & \defeq \emptyt.
-  \end{align*}
-  Now we define the binary relation $R:A\to (A\to\UU)$ by
+  Recall from \cref{ex:dne-dec} that $(A+\neg A)\to (\neg\neg A\to A)$ for any type $A$, so we obtain that
   \begin{equation*}
-    R(x,y)\defeq D(x,y,d(x,y)).
+    \prd{x,y:A}\neg\neg(x=y)\to (x=y).
   \end{equation*}
-  It follows that $R(x,y)$ is a proposition for every $x,y:A$, since $D(x,y,z)$ is a proposition for every $z:(x=y)+\neg(x=y)$.
-
-  To see that $R$ is reflexive it suffices to construct a term of type
-  \begin{equation*}
-    \rho':\prd{x:A}{p:(x=x)+\neg(x=x)}D(x,x,p)
-  \end{equation*}
-  For any $x:A$ we define $\rho'(x)$ by case analysis on $p:(x=x)+\neg(x=x)$. Given $p:x=x$, we take $\rho'(x,\inl(p))\defeq\ttt$. Given $p:\neg(x=x)$, we obtain $p(\refl{x}):\emptyt$, so there is nothing to define in this case. This completes the definition of $\rho'$.
-  
-  It remains to show that $R(x,y)\to (x=y)$ for any $x,y:A$. Note that it suffices to construct a function
-  \begin{equation*}
-    \alpha:D(x,y,p)\to (x=y)
-  \end{equation*}
-  for any $x,y:A$ and $p:(x=y)+\neg(x=y)$. This function is constructed by case analisys on $p$. Given $p:x=y$, we simply define $\alpha(x,y,\inl(p))\defeq p$. Given $p:\neg(x=y)$ the type $D(x,y,p)$ is empty, so there is nothing to define.
+  Now observe that $\neg\neg(x=y)$ is a proposition for each $x,y:A$, and that the relation $x,y\mapsto\neg\neg(x=y)$ is reflexive. Therefore we are in position to apply \cref{lem:prop_to_id} and we conclude that $A$ is a set.
 \end{proof}
 
 \subsection{The well-ordering principle for decidable families over \texorpdfstring{$\N$}{ℕ}}
@@ -482,8 +477,8 @@ This prime decomposition is unique if we require that the primes $p_i<p_{i+1}$ f
 \end{cor}
 
 \begin{exercises}
-\exercise Show that for any $f:\Fin(m)\to\Fin(n)$ and any $i:\Fin(n)$, the type $\fib{f}{i}$ is decidable.
-\exercise Consider a decidable type $P(i)$ indexed by $i:\Fin(n)$.
+  \exercise Show that for any $f:\Fin(m)\to\Fin(n)$ and any $i:\Fin(n)$, the type $\fib{f}{i}$ is decidable.
+  \exercise Consider a decidable type $P(i)$ indexed by $i:\Fin(n)$.
   \begin{subexenum}
   \item Show that the type
     \begin{equation*}
@@ -496,34 +491,48 @@ This prime decomposition is unique if we require that the primes $p_i<p_{i+1}$ f
     \end{equation*}
     is decidable.
   \end{subexenum}
-\exercise
+  \exercise
   \begin{subexenum}
   \item Show that $\N$ and $\bool$ have decidable equality. Hint: to show that $\N$ has decidable equality, show first that the successor function is injective.
   \item Show that if $A$ and $B$ have decidable equality, then so do $A+B$ and $A\times B$. Conclude that $\Z$ has decidable equality.
   \item Show that if $A$ is a retract of a type $B$ with decidable equality, then $A$ also has decidable equality.
   \end{subexenum}
-\exercise Define the prime-counting function $\pi:\N\to\N$.
-\exercise (The Cantor-Schr\"oder-Bernstein theorem) Let $X$ and $Y$ be two sets with decidable equality, and consider two maps $f:X\to Y$ and $g:Y\to X$, both of which we assume to be injective. Construct an equivalence $X\simeq Y$.
-\exercise For any $k:\Z$, define a function $i\mapsto i+k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence.
-\exercise For any $k:\Z$, define a function $i\mapsto i\cdot k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence if and only if $\gcd(n,k)=1$.
-\exercise Show that
+  \exercise Define the prime-counting function $\pi:\N\to\N$.
+  \exercise (The Cantor-Schr\"oder-Bernstein theorem) Let $X$ and $Y$ be two sets with decidable equality, and consider two maps $f:X\to Y$ and $g:Y\to X$, both of which we assume to be injective. Construct an equivalence $X\simeq Y$.
+  \exercise For any $k:\Z$, define a function $i\mapsto i+k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence.
+  \exercise For any $k:\Z$, define a function $i\mapsto i\cdot k \mod n$ of type $\Fin(n)\to\Fin(n)$. Show that this function is an equivalence if and only if $\gcd(n,k)=1$.
+  \exercise Show that
   \begin{equation*}
     \sum_{i=0}^n \binom{n-i}{i}=F_{n+1}
   \end{equation*}
-\exercise Show that if $2^n-1$ is prime, then $n$ is prime.
-\exercise Prove Fermat's little theorem.
-\exercise Extend the definition of the greatest common divisor to all integers.
-\exercise Show that
-\begin{equation*}
-  (\Fin(m)\simeq\Fin(n))\leftrightarrow(m=n).
-\end{equation*}
-\exercise Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
+  \exercise Show that if $2^n-1$ is prime, then $n$ is prime.
+  \exercise Prove Fermat's little theorem.
+  \exercise Extend the definition of the greatest common divisor to all integers.
+  \exercise Show that
+  \begin{equation*}
+    (\Fin(m)\simeq\Fin(n))\leftrightarrow(m=n).
+  \end{equation*}
+  \exercise Show that $\N$ satisfies \define{ordinal induction}, i.e., construct for any type family $P$ over $\N$ a function of type
+  \begin{equation*}
+    \ordindN : \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
+  \end{equation*}
+  Moreover, prove that
+  \begin{equation*}
+    \ordindN(h,n)=h(n,\lam{m}\lam{p}\ordindN(h,m))
+  \end{equation*}
+  for any $n:\N$ and any $h:\prd{k:\N}\Big(\prd{m:\N}(m<k)\to P(m)\Big)\to P(k)$.
+  \exercise
+  \begin{subexenum}
+  \item Show that if $A$ and $B$ have decidable equality, then so do the types $A+B$ and $A\times B$.
+  \item Show that $\Z$ and $\Fin(n)$ have decidable equality, for every $n:\N$.
+  \end{subexenum}
+  \exercise Let $P:\N\to\classicalprop$ be a decidable subset of $\N$.
+  \begin{subexenum}
+  \item Show that $\sm{m:\N}{p:P(m)}\isminimal_P(m,p)$ is a proposition.
+  \item Show that the map
     \begin{equation*}
-      \ordindN : \Big(\prd{k:\N} \Big(\prd{m:\N} (m< k) \to P(m)\Big)\to P(k)\Big) \to \prd{n:\N}P(n).
+      \Big(\sm{n:\N}P(n)\Big)\to\Big(\sm{m:\N}{p:P(m)}\isminimal_P(m,p)\Big)
     \end{equation*}
-    Moreover, prove that
-    \begin{equation*}
-      \ordindN(h,n)=h(n,\lam{m}\lam{p}\ordindN(h,m))
-    \end{equation*}
-    for any $n:\N$ and any $h:\prd{k:\N}\Big(\prd{m:\N}(m<k)\to P(m)\Big)\to P(k)$.
+    is a propositional truncation.
+  \end{subexenum}
 \end{exercises}

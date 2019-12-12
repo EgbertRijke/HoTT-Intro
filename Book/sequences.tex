@@ -564,6 +564,14 @@ is equivalent to the sequential colimit of its shifted type sequence
 A_1 \arrow[r,"f_1"] & A_2 \arrow[r,"f_2"] & A_3 \arrow[r,"f_3"] & \cdots.
 \end{tikzcd}
 \end{equation*}
+  \exercise Let
+  \begin{tikzcd}
+    P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
+  \end{tikzcd}
+  be a sequence of propositions. Show that
+  \begin{equation*}
+    \eqv{\colim_n(P_n)}{\exists_{(n:\N)} P_n}.
+  \end{equation*}
 \exercise \label{ex:seqcolim_contr}Consider a type sequence
 \begin{equation*}
 \begin{tikzcd}

@@ -606,16 +606,41 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
 \end{cor}
 
 \begin{exercises}
+  \exercise Let $A$ be a type and let $P$ be a proposition, and suppose that $P$ is a retract of $A$. Show that the retraction $A\to P$ is a propositional truncation.
+  \exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
+  \exercise
+  \begin{subexenum}
+  \item Show that
+    \begin{equation*}
+      \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
+    \end{equation*}
+    for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
+%  \item For any two propositions $P$ and $Q$, define
+%  \begin{equation*}
+%  P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
+%  \end{equation*}
+%  Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$. In other words, the type $P\boxplus Q$ sits between the disjunction and the double negation translation of the disjunction.
+  \end{subexenum}
+%  \exercise For any $B:A\to\UU$, construct an equivalence
+%  \begin{equation*}
+%    \eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
+%  \end{equation*}
+  \exercise Consider a map $f:A\to B$. Show that the following are equivalent:
+  \begin{enumerate}
+  \item $f$ is an equivalence.
+  \item $f$ is both surjective and an embedding.
+  \end{enumerate}
   \exercise Show that if $f:A\to X$ is an embedding, then $f$ itself satisfies the universal property of the image inclusion of $f$.
-  \exercise Show that
-  \begin{equation*}
-    \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
-  \end{equation*}
-  for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
-  \exercise For any $B:A\to\UU$, construct an equivalence
-  \begin{equation*}
-    \eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
-  \end{equation*}
+  \exercise \label{ex:surjective-precomp}Consider a map $f:A\to B$. Show that the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is surjective.
+  \item For every set $C$, the precomposition function
+    \begin{equation*}
+      \blank\circ f:(B\to C)\to (A\to C)
+    \end{equation*}
+    is an embedding.
+  \end{enumerate}
+  Hint: To show that (ii) implies (i), use the assumption with the set $C\jdeq\prop$.
   %\exercise \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
   %\begin{equation*}
   %P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
@@ -624,136 +649,11 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
   %\item Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$.
   %\end{subexenum}
   %\item \label{ex:brck_comp} Formulate the computation rule corresponding to the path constructor $\mu$. That is, compute the type of $\apd{\rec{\brck{\blank}}(f,g)}{\mu(x,y)}$, and find a canonical element in it.
-  \exercise Let
-  \begin{tikzcd}
-    P_0 \arrow[r] & P_1 \arrow[r] & P_2 \arrow[r] & \cdots
-  \end{tikzcd}
-  be a sequence of propositions. Show that
-  \begin{equation*}
-    \eqv{\colim_n(P_n)}{\exists_{(n:\N)} P_n}.
-  \end{equation*}
-  \exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
   %\exercise Let $f:A\to X$ be a map. Construct an equivalence
   %\begin{equation*}
   %\eqv{\Big(\sm{y:\mathsf{join\usc{}power}_X(n,A)}f(x)=f^{\ast n}(y)\Big)}{\Big(\sm{y:A}f(x)=f(y)\Big)^{\ast n}}
   %\end{equation*}
   %for any $x:A$.
-  \exercise Let $f:A\to B$ be a map. Show that the following are equivalent:
-  \begin{enumerate}
-  \item The commuting square
-    \begin{equation*}
-      \begin{tikzcd}
-        A \arrow[d,swap,"f"] \arrow[r] & \brck{A} \arrow[d,"\brck{f}"] \\
-        B \arrow[r] & \brck{B}.
-      \end{tikzcd}
-    \end{equation*}
-    is a pullback square.
-  \item There is a term of type $A\to\isequiv(f)$.
-  \item The commuting square
-    \begin{equation*}
-      \begin{tikzcd}
-        A\times A \arrow[r,"f\times f"] \arrow[d,swap,"\proj 1"] & B \times B \arrow[d,"\proj 1"] \\
-        A \arrow[r,swap,"f"] & B
-      \end{tikzcd}
-    \end{equation*}
-    is a pullback square. 
-  \end{enumerate}
-  \exercise Consider a pullback square
-  \begin{equation*}
-    \begin{tikzcd}
-      A' \arrow[d,swap,"{f'}"] \arrow[r,"p"] & A \arrow[d,"f"] \\
-      B' \arrow[r,swap,"q"] & B,
-    \end{tikzcd}
-  \end{equation*}
-  in which $q:B'\to B$ is surjective. Show that if $f':A'\to B'$ is an embedding, then so is $f:A\to B$.
-  \exercise Show that a type $A$ is a proposition if and only if the map $\inl:A\to \join{A}{A}$ is an equivalence.
-  \exercise Let $A$ be a type, and let $P$ be a proposition.
-  \begin{subexenum}
-  \item Show that $\inl:P\to \join{P}{A}$ is an embedding.
-  \item Show that $\inl:P\to \join{P}{A}$ is an equivalence if and only if $\brck{A}\to P$ holds.
-  \end{subexenum}
-  \exercise Consider a family of diagrams of the form
-  \begin{equation*}
-    \begin{tikzcd}
-      A_i \arrow[r] \arrow[d,swap,"{f_i}"] &
-      C \arrow[r] \arrow[d,"g"] & X \arrow[d,"h"] \\
-      B_i \arrow[r] & D \arrow[r] & Y 
-    \end{tikzcd}
-  \end{equation*}
-  indexed by $i:I$, in which the left squares are pullback squares,
-  and assume that the induced map
-  \begin{equation*}
-    \Big(\sm{i:I}B_i\Big)\to D
-  \end{equation*}
-  is surjective. Show that the following are equivalent:
-  \begin{enumerate}
-  \item For each $i:I$ the outer rectangle is a pullback square.
-  \item The right square is a pullback square.
-  \end{enumerate}
-  Hint: By \cref{thm:descent-Sigma} it suffices to prove this equivalence for a single diagram of the form
-  \begin{equation*}
-    \begin{tikzcd}
-      A \arrow[r] \arrow[d,swap,"{f}"] &
-      C \arrow[r] \arrow[d,swap,"g"] & X \arrow[d,"h"] \\
-      B \arrow[r] & D \arrow[r] & Y 
-    \end{tikzcd}
-  \end{equation*}
-  where the map $B \to D$ is assumed to be surjective.
-  \exercise
-  \begin{subexenum}
-  \item \label{ex:surjective-precomp}Consider a map $f:A\to B$. Show that the following are equivalent:
-    \begin{enumerate}
-      \item The map $f$ is surjective.
-      \item For every set $C$, the precomposition function
-        \begin{equation*}
-          \blank\circ f:(B\to C)\to (A\to C)
-        \end{equation*}
-        is an embedding.
-    \end{enumerate}
-    Hint: To show that (ii) implies (i), use the assumption with the set $C\jdeq\prop$.
-  \item Give an example of a surjective map $f:A\to B$ and a type $C$ which is not a set, such that the precomposition function
-    \begin{equation*}
-      \blank\circ f:(B\to C)\to (A\to C)
-    \end{equation*}
-    is not an embedding.
-  \end{subexenum}
-  \exercise Consider a pushout square
-  \begin{equation*}
-    \begin{tikzcd}
-      S \arrow[d,swap,"f"] \arrow[r,"g"] & B \arrow[d,"j"] \\
-      A \arrow[r,swap,"i"] & X.
-    \end{tikzcd}
-  \end{equation*}
-  \begin{subexenum}
-  \item Show that if $f$ is surjective, then so is $j$.
-  \item Show that the two small squares in the diagram 
-    \begin{equation*}
-      \begin{tikzcd}
-        S \arrow[r,"g"] \arrow[d,swap,"q_f"] & B \arrow[d,"q_j"] \\
-        \im(f) \arrow[r,densely dotted] \arrow[d,swap,"i_f"] & \im(j) \arrow[d,"i_j"] \\
-        A \arrow[r,swap,"i"] & X
-      \end{tikzcd}
-    \end{equation*}
-    are both pushout squares, and that the bottom square is also a pullback square.
-  \end{subexenum}
-  \exercise Consider a pullback square
-  \begin{equation*}
-    \begin{tikzcd}
-      E' \arrow[d,swap,"{p'}"] \arrow[r,"g"] & E \arrow[d,"p"] \\
-      B' \arrow[r,swap,"f"] & B
-    \end{tikzcd}
-  \end{equation*}
-  in which $p$ is assumed to be surjective. Show that $p'$ is also surjective, and show that the following are equivalent:
-  \begin{enumerate}
-  \item The map $f$ is an equivalence.
-  \item The map $g$ is an equivalence.
-  \end{enumerate}
-  \exercise
-  Consider a map $f:A\to B$. Show that the following are equivalent:
-  \begin{enumerate}
-  \item $f$ is an equivalence.
-  \item $f$ is both surjective and an embedding.
-  \end{enumerate}
 \end{exercises}
 
 \endinput

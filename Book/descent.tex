@@ -893,4 +893,23 @@ A \arrow[r,swap,"i"] & X,
 \end{tikzcd}
 \end{equation*}
 and suppose that $f$ is an embedding. Show that $j$ is an embedding, and that the square is also a pullback square.
+  \exercise Consider a pushout square
+  \begin{equation*}
+    \begin{tikzcd}
+      S \arrow[d,swap,"f"] \arrow[r,"g"] & B \arrow[d,"j"] \\
+      A \arrow[r,swap,"i"] & X.
+    \end{tikzcd}
+  \end{equation*}
+  \begin{subexenum}
+  \item Show that if $f$ is surjective, then so is $j$.
+  \item Show that the two small squares in the diagram 
+    \begin{equation*}
+      \begin{tikzcd}
+        S \arrow[r,"g"] \arrow[d,swap,"q_f"] & B \arrow[d,"q_j"] \\
+        \im(f) \arrow[r,densely dotted] \arrow[d,swap,"i_f"] & \im(j) \arrow[d,"i_j"] \\
+        A \arrow[r,swap,"i"] & X
+      \end{tikzcd}
+    \end{equation*}
+    are both pushout squares, and that the bottom square is also a pullback square.
+  \end{subexenum}
 \end{exercises}
