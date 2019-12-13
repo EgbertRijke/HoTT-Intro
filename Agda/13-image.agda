@@ -1,52 +1,108 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 21-image where
+module 13-image where
 
-import 20-sequences
-open 20-sequences public
+import 12-univalence
+open 12-univalence public
 
-{- We give the formal specification of propositional truncation. -}
+-- Section 13 Propositional truncations, the image of a map, and the replacement axiom
+
+-- Section 13.1 Propositional truncations
+
+-- Definition 13.1.1
+
+hom-Prop :
+  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
+hom-Prop P Q = type-Prop P → type-Prop Q
 
 precomp-Prop :
-  { l1 l2 l3 : Level} {A : UU l1} (P : hProp l2) →
-  (A → type-Prop P) → (Q : hProp l3) →
-  (type-Prop P → type-Prop Q) → A → type-Prop Q
+  { l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) →
+  (A → type-Prop P) → (Q : UU-Prop l3) →
+  (hom-Prop P Q) → (A → type-Prop Q)
 precomp-Prop P f Q g = g ∘ f
 
-universal-property-propositional-truncation :
-  ( l : Level) {l1 l2 : Level} {A : UU l1} (P : hProp l2) →
+is-propositional-truncation :
+  ( l : Level) {l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) →
   ( A → type-Prop P) → UU (lsuc l ⊔ l1 ⊔ l2)
-universal-property-propositional-truncation l P f =
-  (Q : hProp l) → is-equiv (precomp-Prop P f Q)
+is-propositional-truncation l P f =
+  (Q : UU-Prop l) → is-equiv (precomp-Prop P f Q)
 
-universal-property-propositional-truncation' :
-  ( l : Level) {l1 l2 : Level} {A : UU l1} (P : hProp l2) →
+-- Remark 13.1.2
+
+is-propositional-truncation' :
+  ( l : Level) {l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) →
   ( A → type-Prop P) → UU (lsuc l ⊔ l1 ⊔ l2)
-universal-property-propositional-truncation' l {A = A} P f =
-  (Q : hProp l) → (A → type-Prop Q) → (type-Prop P → type-Prop Q)
+is-propositional-truncation' l {A = A} P f =
+  (Q : UU-Prop l) → (A → type-Prop Q) → (hom-Prop P Q)
 
-universal-property-propositional-truncation-simplify :
-  { l1 l2 : Level} {A : UU l1} (P : hProp l2)
+is-propositional-truncation-simpl :
+  { l1 l2 : Level} {A : UU l1} (P : UU-Prop l2)
   ( f : A → type-Prop P) →
-  ( (l : Level) → universal-property-propositional-truncation' l P f) →
-  ( (l : Level) → universal-property-propositional-truncation l P f)
-universal-property-propositional-truncation-simplify P f up-P l Q =
+  ( (l : Level) → is-propositional-truncation' l P f) →
+  ( (l : Level) → is-propositional-truncation l P f)
+is-propositional-truncation-simpl P f up-P l Q =
   is-equiv-is-prop
     ( is-prop-Π (λ x → is-prop-type-Prop Q))
     ( is-prop-Π (λ x → is-prop-type-Prop Q))
     ( up-P l Q)
-  
-precomp-Π-Prop :
-  { l1 l2 l3 : Level} {A : UU l1} (P : hProp l2) →
-  ( f : A → type-Prop P) (Q : type-Prop P → hProp l3) →
-  ( g : (p : type-Prop P) → type-Prop (Q p)) → (x : A) → type-Prop (Q (f x))
-precomp-Π-Prop P f Q g x = g (f x)
 
-dependent-universal-property-propositional-truncation :
-  ( l : Level) {l1 l2 : Level} {A : UU l1} (P : hProp l2) →
-  ( A → type-Prop P) → UU (lsuc l ⊔ l1 ⊔ l2)
-dependent-universal-property-propositional-truncation l P f =
-  (Q : type-Prop P → hProp l) → is-equiv (precomp-Π-Prop P f Q)
+-- Example 13.1.3
+
+is-propositional-truncation-const-star :
+  { l1 : Level} (A : UU-pt l1)
+  ( l : Level) → is-propositional-truncation l unit-Prop (const (type-UU-pt A) unit star)
+is-propositional-truncation-const-star A =
+  is-propositional-truncation-simpl
+    ( unit-Prop)
+    ( const (type-UU-pt A) unit star)
+    ( λ l P f → const unit (type-Prop P) (f (pt-UU-pt A)))
+
+-- Example 13.1.4
+
+is-propositional-truncation-id :
+  { l1 : Level} (P : UU-Prop l1) →
+  ( l : Level) → is-propositional-truncation l P id
+is-propositional-truncation-id P l Q =
+  is-equiv-id (hom-Prop P Q)
+
+-- Proposition 13.1.5
+
+abstract
+  is-equiv-is-equiv-precomp-Prop :
+    {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) (f : hom-Prop P Q) →
+    ((l : Level) (R : UU-Prop l) →
+    is-equiv (precomp-Prop Q f R)) → is-equiv f
+  is-equiv-is-equiv-precomp-Prop P Q f is-equiv-precomp-f =
+    is-equiv-is-equiv-precomp-subuniverse id (λ l → is-prop) P Q f
+      is-equiv-precomp-f
+
+triangle-3-for-2-is-ptruncation :
+  {l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) (P' : UU-Prop l3)
+  (f : A → type-Prop P) (f' : A → type-Prop P')
+  (h : hom-Prop P P') (H : (h ∘ f) ~ f') →
+  {l : Level} (Q : UU-Prop l) →
+  ( precomp-Prop P' f' Q) ~
+  ( (precomp-Prop P f Q) ∘ (precomp h (type-Prop Q)))
+triangle-3-for-2-is-ptruncation P P' f f' h H Q g =
+  eq-htpy (λ p → inv (ap g (H p)))
+
+is-equiv-is-ptruncation-is-ptruncation :
+  {l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) (P' : UU-Prop l3)
+  (f : A → type-Prop P) (f' : A → type-Prop P')
+  (h : hom-Prop P P') (H : (h ∘ f) ~ f') →
+  ((l : Level) → is-propositional-truncation l P f) →
+  ((l : Level) → is-propositional-truncation l P' f') →
+  is-equiv h
+is-equiv-is-ptruncation-is-ptruncation P P' f f' h H is-ptr-P is-ptr-P' =
+  is-equiv-is-equiv-precomp-Prop P P' h
+    ( λ l Q →
+      is-equiv-right-factor
+        ( precomp-Prop P' f' Q)
+        ( precomp-Prop P f Q)
+        ( precomp h (type-Prop Q))
+        ( triangle-3-for-2-is-ptruncation P P' f f' h H Q)
+        ( is-ptr-P l Q)
+        ( is-ptr-P' l Q))
 
 {- We introduce the image inclusion of a map. -}
 
@@ -100,4 +156,26 @@ universal-property-image-universal-property-image' l f i q up' C j =
     ( is-prop-hom-slice f j)
     ( up' C j)
   
+-- Section 13.4
 
+is-small :
+  (l : Level) {l1 : Level} (A : UU l1) → UU (lsuc l ⊔ l1)
+is-small l A = Σ (UU l) (λ X → A ≃ X)
+
+is-small-map :
+  (l : Level) {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → UU (lsuc l ⊔ (l1 ⊔ l2))
+is-small-map l {B = B} f = (b : B) → is-small l (fib f b)
+
+is-locally-small :
+  (l : Level) {l1 : Level} (A : UU l1) → UU (lsuc l ⊔ l1)
+is-locally-small l A = (x y : A) → is-small l (Id x y)
+
+is-prop-is-small :
+  (l : Level) {l1 : Level} (A : UU l1) → is-prop (is-small l A)
+is-prop-is-small l A =
+  is-prop-is-contr-if-inh
+    ( λ Xe →
+      is-contr-equiv'
+        ( Σ (UU l) (λ Y → (pr1 Xe) ≃ Y))
+        ( equiv-tot ((λ Y → {!equiv-precomp!}))) {!!})

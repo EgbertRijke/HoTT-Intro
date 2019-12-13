@@ -339,9 +339,9 @@ abstract
       ( isretr-inv-choice-∞ {A = A} {B = B} {C = C})
 
 equiv-choice-∞ :
-  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} (C : (x : A) → B x → UU l3) →
+  { l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : (x : A) → B x → UU l3} →
   Π-total-fam C ≃ type-choice-∞ C
-equiv-choice-∞ C = pair choice-∞ is-equiv-choice-∞
+equiv-choice-∞ = pair choice-∞ is-equiv-choice-∞
 
 abstract
   is-equiv-inv-choice-∞ :
@@ -401,9 +401,9 @@ is-contr-total-Eq-Π-total-fam {A = A} {B} C t =
         Σ (Id (pr1 (t a)) (pr1 t')) (λ p →
           Id (tr (C a) p (pr2 (t a))) (pr2 t'))))
     ( equiv-choice-∞
-      ( λ x t' →
+      {- ( λ x t' →
         Σ ( Id (pr1 (t x)) (pr1 t'))
-          ( λ p → Id (tr (C x) p (pr2 (t x))) (pr2 t'))))
+          ( λ p → Id (tr (C x) p (pr2 (t x))) (pr2 t')))-})
     ( is-contr-Π
       ( λ a →
         is-contr-total-Eq-structure
@@ -547,11 +547,23 @@ abstract
     is-equiv-precomp-is-equiv-precomp-Π f
       ( is-equiv-precomp-Π-is-equiv f is-equiv-f)
 
+equiv-precomp-equiv :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) (C : UU l3) →
+  (B → C) ≃ (A → C)
+equiv-precomp-equiv e C =
+  pair
+    ( precomp (map-equiv e) C)
+    ( is-equiv-precomp-is-equiv (map-equiv e) (is-equiv-map-equiv e) C)
+
 abstract
-  is-equiv-is-equiv-precomp :
-    {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
-    ((l : Level) (C : UU l) → is-equiv (precomp f C)) → is-equiv f
-  is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
+  is-equiv-is-equiv-precomp-subuniverse :
+    { l1 l2 : Level}
+    ( α : Level → Level) (P : (l : Level) → UU l → UU (α l))
+    ( A : Σ (UU l1) (P l1)) (B : Σ (UU l2) (P l2)) (f : pr1 A → pr1 B) →
+    ( (l : Level) (C : Σ (UU l) (P l)) →
+      is-equiv (precomp f (pr1 C))) →
+    is-equiv f
+  is-equiv-is-equiv-precomp-subuniverse α P A B f is-equiv-precomp-f =
     let retr-f = center (is-contr-map-is-equiv (is-equiv-precomp-f _ A) id) in
     is-equiv-has-inverse
       ( pr1 retr-f)
@@ -559,9 +571,22 @@ abstract
         ( is-contr-map-is-equiv (is-equiv-precomp-f _ B) f)
           ( pair
             ( f ∘ (pr1 retr-f))
-            ( ap (λ (g : A → A) → f ∘ g) (pr2 retr-f)))
+            ( ap (λ (g : pr1 A → pr1 A) → f ∘ g) (pr2 retr-f)))
         ( pair id refl))))
       ( htpy-eq (pr2 retr-f))
+
+abstract
+  is-equiv-is-equiv-precomp :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+    ((l : Level) (C : UU l) → is-equiv (precomp f C)) → is-equiv f
+  is-equiv-is-equiv-precomp {A = A} {B = B} f is-equiv-precomp-f =
+    is-equiv-is-equiv-precomp-subuniverse
+      ( const Level Level lzero)
+      ( λ l X → unit)
+      ( pair A star)
+      ( pair B star)
+      ( f)
+      ( λ l C → is-equiv-precomp-f l (pr1 C))
 
 -- Exercises
 
@@ -974,6 +999,29 @@ abstract
   is-prop-is-half-adjoint-equivalence {l1} {l2} {A} {B} f =
     is-prop-is-contr-if-inh (λ is-hae-f →
       let is-equiv-f = is-equiv-is-half-adjoint-equivalence f is-hae-f in
+      is-contr-equiv'
+        ( Σ (sec f)
+          ( λ sf → Σ (((pr1 sf) ∘ f) ~ id)
+            ( λ H → (htpy-right-whisk (pr2 sf) f) ~ (htpy-left-whisk f H))))
+        ( equiv-Σ-assoc (B → A)
+          ( λ g → ((f ∘ g) ~ id))
+          ( λ sf → Σ (((pr1 sf) ∘ f) ~ id)
+            ( λ H → (htpy-right-whisk (pr2 sf) f) ~ (htpy-left-whisk f H))))
+        ( is-contr-Σ
+          ( is-contr-sec-is-equiv is-equiv-f)
+          ( λ sf → is-contr-equiv'
+            ( (x : A) →
+              Σ (Id ((pr1 sf) (f x)) x) (λ p → Id ((pr2 sf) (f x)) (ap f p)))
+            ( equiv-choice-∞)
+            ( is-contr-Π (λ x →
+              is-contr-equiv'
+                ( fib (ap f) ((pr2 sf) (f x)))
+                ( equiv-tot
+                  ( λ p → equiv-inv (ap f p) ((pr2 sf) (f x))))
+                ( is-contr-map-is-equiv
+                  ( is-emb-is-equiv f is-equiv-f ((pr1 sf) (f x)) x)
+                  ( (pr2 sf) (f x))))))))
+{-
       is-contr-is-equiv'
         ( Σ (sec f)
           ( λ sf → Σ (((pr1 sf) ∘ f) ~ id)
@@ -999,6 +1047,7 @@ abstract
                 ( is-contr-map-is-equiv
                   ( is-emb-is-equiv f is-equiv-f ((pr1 sf) (f x)) x)
                   ( (pr2 sf) (f x))))))))
+-}
 
 abstract
   is-equiv-is-half-adjoint-equivalence-is-equiv :
@@ -1875,6 +1924,6 @@ is-contr-total-Eq-Π :
 is-contr-total-Eq-Π {A = A} {B} C is-contr-total-C f =
   is-contr-equiv'
     ( (x : A) → Σ (B x) (C x))
-    ( equiv-choice-∞ C)
+    ( equiv-choice-∞)
     ( is-contr-Π is-contr-total-C)
 
