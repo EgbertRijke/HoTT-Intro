@@ -1,6 +1,6 @@
 \section{Propositional truncations and the image of a map}\label{chap:image}
 
-In this section we will study two closely related concepts: the propositional truncation operation and the \emph{homotopy image} of a map $f:A\to X$.
+In this section we will study two closely related concepts: the propositional truncation operation and the \emph{homotopy image} of a map $f:A\to X$. 
 
 The propositional truncation operation is a universal way of turning type a type $A$ into a proposition $\brck{A}$. Informally, the proposition $\brck{A}$ is the proposition that $A$ is inhabited. More precisely, the propositional truncation of $A$ comes equipped with a map $A\to\brck{A}$ and it is characterized by its universal property, which asserts that any map $A\to P$ into a proposition $P$ extends uniquely to a map $\brck{A}\to P$, as indicated in the diagram
 \begin{equation*}
@@ -9,7 +9,7 @@ The propositional truncation operation is a universal way of turning type a type
     \brck{A} \arrow[r,densely dotted] & P.
   \end{tikzcd}
 \end{equation*}
-Using the propositional truncation operation we can define many important mathematical concepts. We will discuss in this section the definitions of disjunction and existential quantification, surjective maps, connected components, and indeed the image of a map.
+Using the propositional truncation operation we can define many important mathematical concepts. We will discuss in this section surjective maps, connected components, and indeed the image of a map.
 
 The idea of the image of a map $f:A\to X$ is that it is, in a way, the least subtype of $X$ that contains all the values of $f$. More precisely, the image of $f$ is an embedding $i:\im(f)\hookrightarrow X$ that fits in a commuting triangle
 \begin{equation*}
@@ -37,12 +37,25 @@ We should note that the existence of the propositional truncation operation and 
 \subsection{Propositional truncations}\label{sec:propositional-truncation-up}
 
 \begin{defn}
-Let $A$ be a type, and let $f:A\to P$ be a map into a proposition $P$. We say that $f$ satisfies the \define{universal property of propositional truncation of $A$}\index{universal property!of propositional truncation} if for every proposition $Q$, the precomposition map
+Let $A$ be a type, and let $f:A\to P$ be a map into a proposition $P$. We say that $f$ is a \define{propositional truncation of $A$} if for every proposition $Q$, the precomposition map
 \begin{equation*}
 \blank\circ f:(P\to Q)\to (A\to Q)
 \end{equation*}
-is an equivalence.
+is an equivalence. This property of $f$ is also called the \define{universal property of propositional truncation of $A$}\index{universal property!of propositional truncation}
 \end{defn}
+
+In other words, a map $f:A\to P$ into a proposition $P$ is a propositional truncation of $A$ if every map $g:A\to Q$ into a proposition extends uniquely along $f$, as indicated in the diagram
+\begin{equation*}
+  \begin{tikzcd}
+    A \arrow[d,swap,"f"] \arrow[dr,"g"] \\
+    P \arrow[r,densely dotted] & Q.
+  \end{tikzcd}
+\end{equation*}
+Indeed, this unique extension property asserts that the type
+\begin{equation*}
+  \sm{h:P\to Q}h\circ f=g
+\end{equation*}
+is contractible for every $g:A\to Q$. In other words, the unique extension property asserts that the precomposition function $\blank\circ f:(P\to Q)\to (A\to Q)$ is a contractible map, which is the case if and only if it is an equivalence.
 
 \begin{rmk}
   Note that if $Q$ is a proposition, then the type $X\to Q$ is a proposition for any type $X$. Furthermore, recall from \cref{ex:equiv-bi-implication} that the map $(P\to Q)\to (A\to Q)$ is an equivalence as soon as there is a map in the converse direction. Therefore, in order to prove the universal property of the propositional truncation it suffices to show that
@@ -57,7 +70,7 @@ is an equivalence.
   \begin{equation*}
     \const_\ttt: A\to\unit
   \end{equation*}
-  satisfies the universal property of the propositional truncation. To see this, let $Q$ be an arbitrary proposition. It suffices to show that
+  is a propositional truncation of $A$. To see this, let $Q$ be an arbitrary proposition. It suffices to show that
   \begin{equation*}
     (A\to Q)\to (\unit\to Q).
   \end{equation*}
@@ -73,7 +86,7 @@ is an equivalence.
   \begin{equation*}
     \idfunc:A\to A
   \end{equation*}
-  satisfies the universal property of the propositional truncation. To see this, simply note that the precomposittion function with the identity function
+  is a propositional truncation of $A$. To see this, simply note that the precomposittion function with the identity function
   \begin{equation*}
     \blank\circ\idfunc : (A\to Q)\to (A\to Q)
   \end{equation*}
@@ -132,41 +145,40 @@ The universal property of the propositional truncation determines the propositio
 Now that we have shown that propositional truncations are determined uniquely, we will assume that any universe is closed under propositional truncations.
 
 \begin{axiom}
-  Any universe $\UU$ is closed under propositional truncation: for any type $A:\UU$ there is a proposition $\brck{A}:\UU$ equipped with a map $\eta:A\to\brck{A}$ that satisfies the universal property of the propositional truncation.
+  Any universe $\UU$ is closed under propositional truncations: for any type $A:\UU$ there is a proposition $\brck{A}:\UU$ equipped with a map $\eta:A\to\brck{A}$ that satisfies the universal property of the propositional truncation.
 \end{axiom}
 
-Note that, given a family of propositions $P$ over a type $A$, the type $\sm{a:A}P(a)$ isn't necessarily a proposition. Instead, we think of $\sm{a:A}P(a)$ of the \emph{subtype} of $A$ containing the terms that satisfies $P$. Using the propositional truncation we can assert that there \emph{exists} a term in $A$ that satisfies $P$ without requiring one to construct it. 
-
-\begin{defn}
-Let $P:A\to \prop$ be a family of propositions over a type $A$. Then we define
+The propositional truncation is therefore an operation
 \begin{equation*}
-\exists_{(a:A)}P(a)\defeq \brck{\sm{a:A}P(a)}.
+  \brck{\blank}:\UU\to\UU
 \end{equation*}
-\end{defn}
+on the universe. One simple application of the universal property of the propositional truncation is that $\brck{\blank}$ also acts on functions in a functorial way.
 
-Similarly, we can define the disjunction of two propositions $P$ and $Q$ to be the \emph{proposition} $\brck{P+Q}$, which clearly satisfies the universal property of disjunction\footnote{Alternatively, we have shown in \cref{ex:join_propositions} that the join $\join{P}{Q}$ also is a proposition that satisfies the universal property of disjunction.}. In the following table we give an overview of the logical connectives on propositions.
+\begin{prp}
+  There is a map
+  \begin{equation*}
+    \brck{\blank}:(A\to B)\to (\brck{A}\to\brck{B})
+  \end{equation*}
+  for any two types $A$ and $B$, such that
+  \begin{align*}
+    \brck{\idfunc} & \htpy \idfunc \\
+    \brck{g\circ f} & \htpy \brck{g}\circ\brck{f}.
+  \end{align*}
+\end{prp}
 
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-\emph{Logical connective} & \emph{Interpretation in HoTT} & \emph{Proof of being a proposition} \\
-\midrule
-$\top$ & $\unit$ & \cref{eg:prop_contr} \\
-$\bot$ & $\emptyt$ & \cref{eg:prop_contr}\\
-$P\land Q$ & $P\times Q$ & \cref{ex:istrunc_sigma} \\
-$P\lor Q$ & $\brck{P+Q}$ & By definition \\
-$P\to Q$ & $P\to Q$ & \cref{cor:funtype_trunc} \\
-$P\leftrightarrow Q$ & $\eqv{P}{Q}$ \\
-$\neg P$ & $P\to\emptyt$ & \cref{cor:funtype_trunc} \\
-$\forall x.P(x)$ & $\prd{x:A}P(x)$ & \cref{thm:trunc_pi} \\
-$\exists x.P(x)$ & $\brck{\sm{x:A}P(x)}$ & By definition \\
-$\exists! x.P(x)$ & $\iscontr(\sm{x:A}P(x))$ & \cref{ex:isprop_istrunc} \\
-\bottomrule
-\end{tabular}
-\end{center}
+\begin{proof}
+  For any $f:A\to B$, the map $\brck{f}:\brck{A}\to\brck{B}$ is defined to be the unique extension
+  \begin{equation*}
+    \begin{tikzcd}
+      A \arrow[d,swap,"\eta"] \arrow[r,"f"] & B \arrow[d,"\eta"] \\
+      \brck{A} \arrow[r,densely dotted,swap,"\brck{f}"] & \brck{B}.
+    \end{tikzcd}
+  \end{equation*}
+  To see that $\brck{\blank}$ preserves identity maps and compositions, simply note that $\idfunc[\brck{A}]$ is an extension of $\idfunc[A]$, and that $\brck{g}\circ\brck{f}$ is an extension of $g\circ f$. Hence the homotopies are obtained by uniqueness.
+\end{proof}
 
 \subsection{The image of a map}\label{sec:image-construction}
- Note that there is quite a lot of information in this diagram: not only are there the three small commuting triangles; there is also the large commuting triange in the back, and there is a three-dimensional solid filling the space between the four triangles. We make the following definition, in order to express the universal property of the image efficiently.
+ %Note that there is quite a lot of information in this diagram: not only are there the three small commuting triangles; there is also the large commuting triange in the back, and there is a three-dimensional solid filling the space between the four triangles. We make the following definition, in order to express the universal property of the image efficiently.
 
 \begin{defn}
   Let $f:A\to X$ and $g:B\to X$ be maps. A \define{morphism} from $f$ to $g$ over $X$ consists of a map $h:A\to B$ equipped with a homotopy $H:f\htpy g\circ h$ witnessing that the triangle
@@ -246,6 +258,18 @@ with $G:f\htpy m\circ g$, where $m$ is an embedding, the type of quadruples $(h,
   commutes,
 \end{enumerate}
 is contractible. However, the situation is in fact much simpler, because the type $\mathrm{hom}_X(f,m)$ is a proposition whenever $m$ is an embedding.
+\end{rmk}
+
+\begin{rmk}
+  Suppose that the map $f:A\to X$ has a section. Then the identity function
+  \begin{equation*}
+    \idfunc:X\to X
+  \end{equation*}
+  satisfies the universal property of the image of $f$. 
+\end{rmk}
+
+\begin{rmk}
+  Suppose that $f:A\to X$ is already an embedding. Then $f$ itself satisfies the universal property of the image of $f$.
 \end{rmk}
 
 \begin{lem}
@@ -608,19 +632,41 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
 \begin{exercises}
   \exercise Let $A$ be a type and let $P$ be a proposition, and suppose that $P$ is a retract of $A$. Show that the retraction $A\to P$ is a propositional truncation.
   \exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
-  \exercise
+  \exercise Consider two maps $f:A\to P$ and $g:B\to Q$ into propositions $P$ and $Q$. Recall from \cref{ex:istrunc_sigma} that the type $P\times Q$ is also a proposition. Show that if both $f$ and $g$ are propositional truncations then the map $f\times g : A\times B\to P\times Q$ is also a propositional truncation. Conclude that
+  \begin{equation*}
+    \brck{A\times B}\simeq \brck{A}\times\brck{B}.
+  \end{equation*}
+  \exercise Consider two propositions $P$ and $Q$, and define
+  \begin{align*}
+    P\land Q & \defeq P\times Q\\
+    P\vee Q & \defeq \brck{P+Q}.
+  \end{align*}
   \begin{subexenum}
-  \item Show that
+  \item Construct maps $i:P\to P\vee Q$ and $j:Q\to P\vee Q$.
+  \item Prove the universal property of disjunction, i.e., show that for any proposition $R$, the map
+    \begin{equation*}
+      (P\vee Q\to R) \to (P\to R)\land (Q\to R) 
+    \end{equation*}
+    given by $h\mapsto (h\circ i,h\circ j)$ is an equivalence.
+  \end{subexenum}
+  \exercise Consider a family $P$ of propositions over a type $A$, and define
+  \begin{align*}
+    \forall_{(x:A)}P(x) & \defeq \prd{x:A}P(x) \\
+    \exists_{(x:A)}P(x) & \defeq \Brck{\sm{x:A}P(x)}
+  \end{align*}
+  \begin{subexenum}
+  \item Construct a map $i_a : P(a)\to \exists_{(x:A)}P(x)$ for each $a:A$.
+  \item Prove the universal property of the existential quantification, i.e. show that for any proposition $Q$, the map
+    \begin{equation*}
+      \Big(\Big(\exists_{(x:A)}P(x)\Big)\to Q\Big)\to \Big(\forall_{(x:A)}(P(x)\to Q)\Big)
+    \end{equation*}
+    given by $h\mapsto \lam{x}h\circ i_x$, is an equivalence.
+  \end{subexenum}
+  \exercise Show that
     \begin{equation*}
       \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
     \end{equation*}
     for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
-%  \item For any two propositions $P$ and $Q$, define
-%  \begin{equation*}
-%  P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).
-%  \end{equation*}
-%  Show that $P\lor Q\to P\boxplus Q$ and $P\boxplus Q\to\neg(\neg P\land \neg Q)$. In other words, the type $P\boxplus Q$ sits between the disjunction and the double negation translation of the disjunction.
-  \end{subexenum}
 %  \exercise For any $B:A\to\UU$, construct an equivalence
 %  \begin{equation*}
 %    \eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
@@ -630,7 +676,18 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
   \item $f$ is an equivalence.
   \item $f$ is both surjective and an embedding.
   \end{enumerate}
-  \exercise Show that if $f:A\to X$ is an embedding, then $f$ itself satisfies the universal property of the image inclusion of $f$.
+  \exercise Consider a commuting triangle
+  \begin{equation*}
+    \begin{tikzcd}[column sep=tiny]
+      A \arrow[rr,"h"] \arrow[dr,swap,"f"] & & B \arrow[dl,"g"] \\
+      & X
+    \end{tikzcd}
+  \end{equation*}
+  with $H:f\htpy g\circ h$, and assume that $h$ is surjective. Show that the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is surjective.
+  \item The map $g$ is surjective.
+  \end{enumerate}
   \exercise \label{ex:surjective-precomp}Consider a map $f:A\to B$. Show that the following are equivalent:
   \begin{enumerate}
   \item The map $f$ is surjective.
@@ -640,7 +697,7 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
     \end{equation*}
     is an embedding.
   \end{enumerate}
-  Hint: To show that (ii) implies (i), use the assumption with the set $C\jdeq\prop$.
+  Hint: To show that (ii) implies (i), use the assumption with the set $C\jdeq\prop_\UU$, where $\UU$ is a univalent universe containing both $A$ and $B$.
   %\exercise \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
   %\begin{equation*}
   %P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).

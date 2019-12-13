@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 12-function-extensionality where
+module 11-function-extensionality where
 
-import 11-number-theory
-open 11-number-theory public
+import 10-truncation-levels
+open 10-truncation-levels public
 
 -- Section 9.1 Equivalent forms of Function Extensionality.
 

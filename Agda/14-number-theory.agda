@@ -690,9 +690,6 @@ test-twenty-four-ℕ = refl
 
 -- Exercise 10.?
 
-Eq-𝟚-eq : (x y : bool) → Id x y → Eq-𝟚 x y
-Eq-𝟚-eq x .x refl = reflexive-Eq-𝟚 x
-
 abstract
   has-decidable-equality-𝟚 : has-decidable-equality bool
   has-decidable-equality-𝟚 true true = inl refl
@@ -867,3 +864,31 @@ is-twin-prime n = (is-prime n) × (is-prime (succ-ℕ (succ-ℕ n)))
    
 Twin-prime-conjecture : UU lzero
 Twin-prime-conjecture = (n : ℕ) → Σ ℕ (λ p → (is-twin-prime p) × (leq-ℕ n p))
+
+-- Exercise
+
+unit-classical-Prop : classical-Prop lzero
+unit-classical-Prop =
+  pair (pair {!!} {!!}) {!!}
+
+raise-unit-classical-Prop :
+  (l : Level) → classical-Prop l
+raise-unit-classical-Prop l =
+  pair
+    ( pair
+      ( raise l unit)
+      ( is-prop-is-equiv' unit
+        ( map-raise l unit)
+        ( is-equiv-map-raise l unit)
+        ( is-prop-unit)))
+    ( inl (map-raise l unit star))
+
+bool-classical-Prop :
+  (l : Level) → classical-Prop l → bool
+bool-classical-Prop l (pair P (inl x)) = true
+bool-classical-Prop l (pair P (inr x)) = false
+
+classical-Prop-bool :
+  (l : Level) → bool → classical-Prop l
+classical-Prop-bool l true = raise-unit-classical-Prop l
+classical-Prop-bool l false = {!!}

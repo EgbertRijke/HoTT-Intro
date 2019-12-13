@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 13-univalence where
+module 12-univalence where
 
-import 12-function-extensionality
-open 12-function-extensionality public
+import 11-function-extensionality
+open 11-function-extensionality public
 
 -- Section 10.1 Type extensionality
 
@@ -353,6 +353,9 @@ eq-true :
 eq-true true p = refl
 eq-true false p = ind-empty (p refl)
 
+Eq-𝟚-eq : (x y : bool) → Id x y → Eq-𝟚 x y
+Eq-𝟚-eq x .x refl = reflexive-Eq-𝟚 x
+
 eq-false-equiv' :
   (e : bool ≃ bool) → Id (map-equiv e true) true →
   is-decidable (Id (map-equiv e false) false) → Id (map-equiv e false) false
@@ -366,10 +369,12 @@ eq-false-equiv' e p (inr x) =
           ( pair true p)
           ( pair false (eq-true (map-equiv e false) x)))))
 
+{-
 eq-false-equiv :
   (e : bool ≃ bool) → Id (map-equiv e true) true → Id (map-equiv e false) false
 eq-false-equiv e p =
   eq-false-equiv' e p (has-decidable-equality-𝟚 (map-equiv e false) false)
+-}
 
 {-
 eq-true-equiv :
@@ -400,31 +405,3 @@ issec-bool-aut-bool e =
     ( issec-bool-aut-bool' e
       ( has-decidable-equality-𝟚 (map-equiv e true) true))
 -}
-
--- Exercise
-
-unit-classical-Prop : classical-Prop lzero
-unit-classical-Prop =
-  pair (pair {!!} {!!}) {!!}
-
-raise-unit-classical-Prop :
-  (l : Level) → classical-Prop l
-raise-unit-classical-Prop l =
-  pair
-    ( pair
-      ( raise l unit)
-      ( is-prop-is-equiv' unit
-        ( map-raise l unit)
-        ( is-equiv-map-raise l unit)
-        ( is-prop-unit)))
-    ( inl (map-raise l unit star))
-
-bool-classical-Prop :
-  (l : Level) → classical-Prop l → bool
-bool-classical-Prop l (pair P (inl x)) = true
-bool-classical-Prop l (pair P (inr x)) = false
-
-classical-Prop-bool :
-  (l : Level) → bool → classical-Prop l
-classical-Prop-bool l true = raise-unit-classical-Prop l
-classical-Prop-bool l false = {!!}
