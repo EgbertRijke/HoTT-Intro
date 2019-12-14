@@ -201,7 +201,7 @@ Composition of morphisms over $X$ is defined by
 \begin{defn}
 Consider a commuting triangle
 \begin{equation*}
-\begin{tikzcd}[column sep=small]
+\begin{tikzcd}[column sep=tiny]
 A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & I \arrow[dl,"i"] \\
 & X
 \end{tikzcd}
@@ -217,14 +217,14 @@ is an equivalence for every embedding $m:B\to X$.
 \begin{rmk}
   Consider a commuting triangle
 \begin{equation*}
-\begin{tikzcd}[column sep=small]
+\begin{tikzcd}[column sep=tiny]
 A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & I \arrow[dl,"i"] \\
 & X
 \end{tikzcd}
 \end{equation*}
 with $H:f\htpy i\circ q$, where $i$ is an embedding. Then it is not hard to see that the embedding $i$ satisfies the universal property of the image inclusion if and only if for every commuting triangle
 \begin{equation*}
-  \begin{tikzcd}[column sep=small]
+  \begin{tikzcd}[column sep=tiny]
     A \arrow[dr,swap,"f"] \arrow[rr,"g"] & & B \arrow[dl,"m"] \\
     & X
   \end{tikzcd}
@@ -234,7 +234,7 @@ with $G:f\htpy m\circ g$, where $m$ is an embedding, the type of quadruples $(h,
 \item a map $h:I\to B$,
 \item a homotopy $K:i\htpy m\circ h$ witnessing that the triangle
   \begin{equation*}
-    \begin{tikzcd}[column sep=small]
+    \begin{tikzcd}[column sep=tiny]
       I \arrow[rr,"h"] \arrow[dr,swap,"i"] & & B \arrow[dl,"m"] \\
       & X
     \end{tikzcd}
@@ -242,7 +242,7 @@ with $G:f\htpy m\circ g$, where $m$ is an embedding, the type of quadruples $(h,
   commutes,
 \item a homotopy $L:g\htpy h\circ q$ witnessing that the triangle
   \begin{equation*}
-    \begin{tikzcd}[column sep=small]
+    \begin{tikzcd}[column sep=tiny]
       A \arrow[rr,"q"] \arrow[dr,swap,"g"] & & I \arrow[dl,"h"] \\
       & B
     \end{tikzcd}
@@ -288,7 +288,7 @@ For any $f:A\to X$ and any embedding\index{embedding} $m:B\to X$, the type $\mat
 \begin{prp}\label{prp:simplifly-universal-property-image}
   Consider a commuting triangle
   \begin{equation*}
-    \begin{tikzcd}[column sep=small]
+    \begin{tikzcd}[column sep=tiny]
       A \arrow[rr,"q"] \arrow[dr,swap,"f"] & & I \arrow[dl,"i"] \\
       & X
 \end{tikzcd}
@@ -625,16 +625,30 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
   For any map $f:A\to B$ from an essentially small type $A$ into a locally small type $B$, the image of $f$ is again essentially small.
 \end{axiom}
 
-\begin{cor}
-  Consider a $\UU$-small type $A$, and an equivalence relation $R$ over $A$ valued in the $\UU$-small propositions. Then the set quotient $A/R$ is essentially small.
-\end{cor}
+\begin{eg}
+  For any type $A:\UU$, the image of the constant map $\const_A:\unit\to \UU$ is essentially small. This image is called the \define{connected component} of the universe at $A$. To see why, let us calculate
+  \begin{align*} 
+    \im(\const_A) & \jdeq \sm{X:\UU}\Brck{\fib{\const_A}{X}} \\
+                  & \jdeq \sm{X:\UU}\Brck{\sm{t:\unit}A=X} \\
+                  & \simeq \sm{X:\UU}\brck{A=X}.
+  \end{align*}
+  We see that the image of $\const_A:\unit\to\UU$ is the type of all types that are \emph{merely} equal to $A$. In other words, they are equal to $A$ in an unspecified way.
+\end{eg}
+
+\begin{eg}
+  The type $\F$ of all finite types is defined to be the image of the map
+  \begin{equation*}
+    \Fin : \N\to\UU_0
+  \end{equation*}
+  By the replacement axiom, this type is essentially small. 
+\end{eg}
 
 \begin{exercises}
   \exercise Let $A$ be a type and let $P$ be a proposition, and suppose that $P$ is a retract of $A$. Show that the retraction $A\to P$ is a propositional truncation.
-  \exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
+%  \exercise Show that the relation $x,y\mapsto\brck{x=y}$ is an equivalence relation, on any type.
   \exercise Consider two maps $f:A\to P$ and $g:B\to Q$ into propositions $P$ and $Q$. Recall from \cref{ex:istrunc_sigma} that the type $P\times Q$ is also a proposition. Show that if both $f$ and $g$ are propositional truncations then the map $f\times g : A\times B\to P\times Q$ is also a propositional truncation. Conclude that
   \begin{equation*}
-    \brck{A\times B}\simeq \brck{A}\times\brck{B}.
+    \brck{A\times B}\simeq \brck{A}\times\brck{B}. 
   \end{equation*}
   \exercise Consider two propositions $P$ and $Q$, and define
   \begin{align*}
@@ -663,14 +677,25 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
     given by $h\mapsto \lam{x}h\circ i_x$, is an equivalence.
   \end{subexenum}
   \exercise Show that
+  \begin{equation*}
+    \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
+  \end{equation*}
+  for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
+  % \exercise For any $B:A\to\UU$, construct an equivalence
+  % \begin{equation*}
+  %   \eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
+  % \end{equation*}
+  \exercise Consider a map $f:A\to P$ into a proposition $P$. Show that the following are equivalent:
+  \begin{enumerate}
+  \item The map $f$ is a propositional truncation of $A$.
+  \item The map $f$ is surjective.
+  \item For any family $Q$ of propositions over $P$, the precomposition map
     \begin{equation*}
-      \eqv{\brck{A}}{\prd{P:\prop}(A\to P)\to P}
+      \blank\circ f : \Big(\prd{p:P}Q(p)\Big)\to \Big(\prd{x:A}Q(f(x))\Big)
     \end{equation*}
-    for any type $A:\UU$. This is called the \define{impredicative encoding} of the propositional truncation.
-%  \exercise For any $B:A\to\UU$, construct an equivalence
-%  \begin{equation*}
-%    \eqv{\Big(\exists_{(a:A)}\brck{B(a)}\Big)}{\brck{\sm{a:A}B(a)}}
-%  \end{equation*}
+    is an equivalence.
+  \end{enumerate}
+  The last property is the \define{dependent universal property} of the propositional truncation of $A$.
   \exercise Consider a map $f:A\to B$. Show that the following are equivalent:
   \begin{enumerate}
   \item $f$ is an equivalence.
@@ -698,6 +723,37 @@ Recall that in set theory, the replacement axiom asserts that for any family of 
     is an embedding.
   \end{enumerate}
   Hint: To show that (ii) implies (i), use the assumption with the set $C\jdeq\prop_\UU$, where $\UU$ is a univalent universe containing both $A$ and $B$.
+  \exercise Let us say that a type family $B$ over $A$ is \define{univalent} if the map
+  \begin{equation*}
+    (x=y)\to (B(x)\simeq B(y))
+  \end{equation*}
+  is an equivalence, for every $x,y:A$.
+  \begin{subexenum}
+  \item Show that a family $B:A\to\UU$ is univalent if and only if the map $B:A\to\UU$ is an embedding.
+  \item For any family $B:A\to\UU$, show that the type family $\hat{B}:\hat{A}\to\UU$ defined by
+    \begin{align*}
+      \hat{A} & \defeq \im(B) \\
+      \hat{B}(X,p) & \defeq X
+    \end{align*}
+    is univalent.
+  \item For any two families $B:A\to\UU$ and $D:C\to\mathcal{V}$, define the type of \define{cartesian morphisms}
+    \begin{equation*}
+      \carthomFam((A,B),(C,D)) \defeq \sm{f:A\to C}\prd{x:A}B(x)\simeq D(f(x)).
+    \end{equation*}
+    Construct a cartesian morphism
+    \begin{equation*}
+      (\eta,\alpha) : \carthomFam((A,B),(\hat{A},\hat{B})).
+    \end{equation*}
+  \item Show that for any family $B:A\to\UU$ and any \emph{univalent} family $D:C\to\mathcal{V}$, the map
+    \begin{equation*}
+      \carthomFam((\hat{A},\hat{B}),(C,D))\to\carthomFam((A,B),(C,D))
+    \end{equation*}
+    given by
+    \begin{equation*}
+      (f,e)\mapsto (f\circ\eta,\lam{x}e_x\circ \alpha_x)
+    \end{equation*}
+    is an equivalence. This is the \define{universal property} of the univalent completion of $A$.
+  \end{subexenum}
   %\exercise \label{also}(Mart\'in Escard\'o) For any two propositions $P$ and $Q$, define
   %\begin{equation*}
   %P\boxplus Q \defeq ((P\to Q)\to Q)\times ((Q\to P)\to P).

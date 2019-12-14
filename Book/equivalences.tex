@@ -351,7 +351,10 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
   \item Show that for any $b:\bool$, the constant function $\const_b$ is not an equivalence.\index{booleans!const b is not an equivalence@{$\const_b$ is not an equivalence}}
   \end{subexenum}
   \exercise \label{ex:succ_equiv}Show that the successor function on the integers is an equivalence.\index{successor function!on Z@{on $\Z$}!is an equivalence}\index{succ Z@{$\succZ$}!is an equivalence}\index{is an equivalence!succ Z@{$\succZ$}}
-  \exercise \label{ex:comm_prod}Construct a equivalences $\eqv{A+B}{B+A}$ and $\eqv{A\times B}{B\times A}$.\index{coproduct!is commutative}\index{commutativity!of coproducts}
+  \exercise \label{ex:comm_prod}Construct a equivalences\index{coproduct!is commutative}\index{commutativity!of coproducts}
+  \begin{equation*}
+    \eqv{A+B}{B+A}\qquad\text{and}\qquad \eqv{A\times B}{B\times A}.
+  \end{equation*}
   \exercise \label{ex:retr_id} Consider a section-retraction pair
   \begin{equation*}
     \begin{tikzcd}
@@ -359,14 +362,14 @@ Since $\eqpair\pairr{\refl{x},\refl{y}}$ computes to $\refl{(x,y)}$, we may simp
     \end{tikzcd}
   \end{equation*}
   with $H:r\circ i\htpy \idfunc$. Show that $\id{x}{y}$ is a retract of $\id{i(x)}{i(y)}$.\index{retract!identity type}\index{identity type!of retract is retract}
-  \exercise \label{ex:sigma_assoc}\index{Sigma-type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence\index{associativity!of Sigma-types@{of $\Sigma$-types}}
-  \begin{equation*}
-    \assocSigma:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
-  \end{equation*}
-  \exercise \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
-  \begin{equation*}
-    \swapSigma:\eqv{\Big(\sm{x:A}\sm{y:B}C(x,y)\Big)}{\Big(\sm{y:B}\sm{x:A}C(x,y)\Big)}.
-  \end{equation*}
+%  \exercise \label{ex:sigma_assoc}\index{Sigma-type@{$\Sigma$-type}!associativity of}Let $B$ be a family of types over $A$, and let $C$ be a family of types indexed by $x:A,y:B(x)$. Construct an equivalence\index{associativity!of Sigma-types@{of $\Sigma$-types}}
+%  \begin{equation*}
+%    \assocSigma:\eqv{\Big(\sm{p:\sm{x:A}B(x)}C(\proj 1(p),\proj 2(p))\Big)}{\Big(\sm{x:A}\sm{y:B(x)}C(x,y)\Big)}.
+%  \end{equation*}
+%  \exercise \label{ex:sigma_swap}Let $A$ and $B$ be types, and let $C$ be a family over $x:A,y:B$. Construct an equivalence
+%  \begin{equation*}
+%    \swapSigma:\eqv{\Big(\sm{x:A}\sm{y:B}C(x,y)\Big)}{\Big(\sm{y:B}\sm{x:A}C(x,y)\Big)}.
+%  \end{equation*}
   % \item \label{ex:sigma_base_equiv}Consider an equivalence $e:A'\eqv A$ and a type family $B$ over $A$. Show that the map
   %   \begin{equation*}
   %     \lam{(x',y)}(e(x'),y) : \Big(\sm{x':A'}B(e(x'))\Big)\to\Big(\sm{x:A}B(x)\Big)

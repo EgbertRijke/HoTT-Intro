@@ -781,6 +781,11 @@ abstract
       ( is-contr-sec-is-equiv is-equiv-f)
       ( is-contr-retr-is-equiv is-equiv-f))
 
+is-equiv-Prop :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) → UU-Prop (l1 ⊔ l2)
+is-equiv-Prop f =
+  pair (is-equiv f) (is-subtype-is-equiv f)
+
 abstract
   is-emb-map-equiv :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} →
