@@ -15,6 +15,18 @@ hom-Prop :
   { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
 hom-Prop P Q = type-Prop P → type-Prop Q
 
+is-prop-hom-Prop :
+  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → is-prop (hom-Prop P Q)
+is-prop-hom-Prop P Q =
+  is-prop-function-type
+    ( type-Prop P)
+    ( type-Prop Q)
+    ( is-prop-type-Prop Q)
+
+equiv-Prop :
+  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
+equiv-Prop P Q = (type-Prop P) ≃ (type-Prop Q)
+
 precomp-Prop :
   { l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) →
   (A → type-Prop P) → (Q : UU-Prop l3) →
@@ -26,6 +38,57 @@ is-propositional-truncation :
   ( A → type-Prop P) → UU (lsuc l ⊔ l1 ⊔ l2)
 is-propositional-truncation l P f =
   (Q : UU-Prop l) → is-equiv (precomp-Prop P f Q)
+
+universal-property-propositional-truncation :
+  ( l : Level) {l1 l2 : Level} {A : UU l1}
+  (P : UU-Prop l2) (f : A → type-Prop P) → UU (lsuc l ⊔ l1 ⊔ l2)
+universal-property-propositional-truncation l {A = A} P f =
+  (Q : UU-Prop l) (g : A → type-Prop Q) →
+  is-contr (Σ (hom-Prop P Q) (λ h → (h ∘ f) ~  g))
+
+-- Some unnumbered remarks after Definition 13.1.3
+
+universal-property-is-propositional-truncation :
+  (l : Level) {l1 l2 : Level} {A : UU l1}
+  (P : UU-Prop l2) (f : A → type-Prop P) →
+  is-propositional-truncation l P f →
+  universal-property-propositional-truncation l P f
+universal-property-is-propositional-truncation l P f is-ptr-f Q g =
+  is-contr-equiv'
+    ( Σ (hom-Prop P Q) (λ h → Id (h ∘ f) g))
+    ( equiv-tot (λ h → equiv-funext))
+    ( is-contr-map-is-equiv (is-ptr-f Q) g)
+
+map-is-propositional-truncation :
+  {l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
+  ({l : Level} → is-propositional-truncation l P f) →
+  (Q : UU-Prop l3) (g : A → type-Prop Q) → hom-Prop P Q
+map-is-propositional-truncation P f is-ptr-f Q g =
+  pr1
+    ( center
+      ( universal-property-is-propositional-truncation _ P f is-ptr-f Q g))
+
+htpy-is-propositional-truncation :
+  {l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
+  (is-ptr-f : {l : Level} → is-propositional-truncation l P f) →
+  (Q : UU-Prop l3) (g : A → type-Prop Q) →
+  ((map-is-propositional-truncation P f is-ptr-f Q g) ∘ f) ~ g
+htpy-is-propositional-truncation P f is-ptr-f Q g =
+  pr2
+    ( center
+      ( universal-property-is-propositional-truncation _ P f is-ptr-f Q g))
+
+is-propositional-truncation-universal-property :
+  (l : Level) {l1 l2 : Level} {A : UU l1}
+  (P : UU-Prop l2) (f : A → type-Prop P) →
+  universal-property-propositional-truncation l P f →
+  is-propositional-truncation l P f
+is-propositional-truncation-universal-property l P f up-f Q =
+  is-equiv-is-contr-map
+    ( λ g → is-contr-equiv
+      ( Σ (hom-Prop P Q) (λ h → (h ∘ f) ~ g))
+      ( equiv-tot (λ h → equiv-funext))
+      ( up-f Q g))
 
 -- Remark 13.1.2
 
@@ -135,6 +198,99 @@ is-ptruncation-is-equiv-is-ptruncation P P' f f' h H is-ptr-f' is-equiv-h l Q =
     ( triangle-3-for-2-is-ptruncation P P' f f' h H Q)
     ( is-ptr-f' l Q)
     ( is-equiv-precomp-is-equiv h is-equiv-h (type-Prop Q))
+
+-- Corollary 13.1.6
+
+is-uniquely-unique-propositional-truncation :
+  {l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) (P' : UU-Prop l3)
+  (f : A → type-Prop P) (f' : A → type-Prop P') →
+  ({l : Level} → is-propositional-truncation l P f) →
+  ({l : Level} → is-propositional-truncation l P' f') →
+  is-contr (Σ (equiv-Prop P P') (λ e → (map-equiv e ∘ f) ~ f'))
+is-uniquely-unique-propositional-truncation P P' f f' is-ptr-f is-ptr-f' =
+  is-contr-total-Eq-substructure
+    ( universal-property-is-propositional-truncation _ P f is-ptr-f P' f')
+    ( is-subtype-is-equiv)
+    ( map-is-propositional-truncation P f is-ptr-f P' f')
+    ( htpy-is-propositional-truncation P f is-ptr-f P' f')
+    ( is-equiv-is-ptruncation-is-ptruncation  P P' f f'
+      ( map-is-propositional-truncation P f is-ptr-f P' f')
+      ( htpy-is-propositional-truncation P f is-ptr-f P' f')
+      ( λ l → is-ptr-f)
+      ( λ l → is-ptr-f'))
+
+-- Axiom 13.1.8
+
+postulate trunc-Prop : {l : Level} → UU l → UU-Prop l
+
+type-trunc-Prop : {l : Level} → UU l → UU l
+type-trunc-Prop A = pr1 (trunc-Prop A)
+
+is-prop-type-trunc-Prop : {l : Level} (A : UU l) → is-prop (type-trunc-Prop A)
+is-prop-type-trunc-Prop A = pr2 (trunc-Prop A)
+
+postulate unit-trunc-Prop : {l : Level} (A : UU l) → A → type-Prop (trunc-Prop A)
+
+postulate is-propositional-truncation-trunc-Prop : {l1 l2 : Level} (A : UU l1) → is-propositional-truncation l2 (trunc-Prop A) (unit-trunc-Prop A)
+
+universal-property-trunc-Prop : {l1 l2 : Level} (A : UU l1) →
+  universal-property-propositional-truncation l2
+    ( trunc-Prop A)
+    ( unit-trunc-Prop A)
+universal-property-trunc-Prop A =
+  universal-property-is-propositional-truncation _
+    ( trunc-Prop A)
+    ( unit-trunc-Prop A)
+    ( is-propositional-truncation-trunc-Prop A)
+
+-- Proposition 13.1.9
+
+unique-functor-trunc-Prop :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  is-contr
+    ( Σ ( hom-Prop (trunc-Prop A) (trunc-Prop B))
+        ( λ h → (h ∘ (unit-trunc-Prop A)) ~ ((unit-trunc-Prop B) ∘ f)))
+unique-functor-trunc-Prop {l1} {l2} {A} {B} f =
+  universal-property-trunc-Prop A (trunc-Prop B) ((unit-trunc-Prop B) ∘ f)
+
+functor-trunc-Prop :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → hom-Prop (trunc-Prop A) (trunc-Prop B)
+functor-trunc-Prop f =
+  pr1 (center (unique-functor-trunc-Prop f))
+
+htpy-functor-trunc-Prop :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  ( (functor-trunc-Prop f) ∘ (unit-trunc-Prop A)) ~ ((unit-trunc-Prop B) ∘ f)
+htpy-functor-trunc-Prop f =
+  pr2 (center (unique-functor-trunc-Prop f))
+
+htpy-uniqueness-functor-trunc-Prop :
+  { l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  ( h : hom-Prop (trunc-Prop A) (trunc-Prop B)) →
+  ( ( h ∘ (unit-trunc-Prop A)) ~ ((unit-trunc-Prop B) ∘ f)) →
+  (functor-trunc-Prop f) ~ h
+htpy-uniqueness-functor-trunc-Prop f h H =
+  htpy-eq (ap pr1 (contraction (unique-functor-trunc-Prop f) (pair h H)))
+
+id-functor-trunc-Prop :
+  { l1 : Level} {A : UU l1} → functor-trunc-Prop (id {A = A}) ~ id
+id-functor-trunc-Prop {l1} {A} =
+  htpy-uniqueness-functor-trunc-Prop id id refl-htpy
+
+comp-functor-trunc-Prop :
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3}
+  ( g : B → C) (f : A → B) →
+  ( functor-trunc-Prop (g ∘ f)) ~
+  ( (functor-trunc-Prop g) ∘ (functor-trunc-Prop f))
+comp-functor-trunc-Prop g f =
+  htpy-uniqueness-functor-trunc-Prop
+    ( g ∘ f)
+    ( (functor-trunc-Prop g) ∘ (functor-trunc-Prop f))
+    ( ( (functor-trunc-Prop g) ·l (htpy-functor-trunc-Prop f)) ∙h
+      ( ( htpy-functor-trunc-Prop g) ·r f))
+
+-- Section 13.2
 
 {- We introduce the image inclusion of a map. -}
 
