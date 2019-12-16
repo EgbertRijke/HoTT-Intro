@@ -233,7 +233,7 @@ In the following lemma we show that if a family $B$ over $\brck{A}$ comes equipp
 \end{equation*}
 then $B$ must be a family of propositions.
 
-\begin{lem}
+\begin{lem}\label{lem:case-paths-induction-principle-propositional-truncation}
   Let $P$ be a type equipped with a family of paths
   \begin{equation*}
     \alpha : \prd{x,y:P}x=y,
@@ -280,7 +280,25 @@ then $B$ must be a family of propositions.
 \end{thm}
 
 \begin{proof}
-  We will first show that (i) and (ii) are equivalent. 
+  We will first show that (i) and (ii) are equivalent. Of course, the universal property is a special case of the dependent universal property, so the fact that (ii) implies (i) is immediate. We now show that (i) implies (ii). Let $Q$ be a family of propositions over $P$, and consider the following commuting diagram:
+  \begin{equation*}
+    \begin{tikzcd}[column sep=8em]
+      \Big(\sm{h:P\to P}\prd{p:P}Q(h(p))\Big) \arrow[r,"{\tot[\blank\circ f]{\blank\circ f}}"] \arrow[d,swap,"\choice^{-1}"] & \Big(\sm{g:A\to P}\prd{x:A}Q(g(x))\Big) \arrow[d,"\choice^{-1}"] \\
+      \Big(P\to \sm{p:P}Q(p)\Big) \arrow[r,"\blank\circ f"] \arrow[d,swap,"\proj 1\circ\blank"]  & \Big(A \to \sm{p:P}Q(p)\Big) \arrow[d,"\proj 1\circ\blank"] \\
+      \Big(P\to P\Big) \arrow[r,swap,"\blank\circ f"] & \Big(A\to P\Big)
+    \end{tikzcd}
+  \end{equation*}
+  In this diagram the bottom map is an equivalence by the universal property of the propositional truncation of $A$. Note also that the type $\sm{p:P}Q(p)$ is a proposition by \cref{ex:istrunc_sigma}, so it follows that also the middle map is an equivalence. Furthermore, the type theoretic choice maps are equivalences by \cref{thm:choice}, so it also follows that the top map is an equivalence. Now we use \cref{thm:equiv-toto} to conclude that the family of maps
+  \begin{equation*}
+    \blank\circ f: \Big(\prd{p:P}Q(h(p))\Big)\to\Big(\prd{x:A}Q(h(f(x)))\Big)
+  \end{equation*}
+  indexed by $h:P\to P$ is a family of equivalences. The dependent universal property is now just a special case: take $h\jdeq\idfunc$. This completes the proof that (i) is equivalent to (ii).
+
+  It remains to show that (ii) is equivalent to (iii). By \cref{lem:case-paths-induction-principle-propositional-truncation} it follows that the induction principle is equivalent to the property that for each family $Q$ of propositions over $P$, the precomposition map
+  \begin{equation*}
+    \blank\circ f : \Big(\prd{p:P}Q(p)\Big)\to\Big(\prd{x:A}Q(f(x))\Big)
+  \end{equation*}
+  has a section. Since the domain and codomain of this map are propositions by \cref{thm:trunc_pi}, we see that this precomposition map has a section if and only if it is an equivalence.
 \end{proof}
 
 \subsection{The image of a map}\label{sec:image-construction}

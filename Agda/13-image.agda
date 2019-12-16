@@ -290,7 +290,63 @@ comp-functor-trunc-Prop g f =
     ( ( (functor-trunc-Prop g) ·l (htpy-functor-trunc-Prop f)) ∙h
       ( ( htpy-functor-trunc-Prop g) ·r f))
 
--- Section 13.2
+-- Section 13.2 Propositional truncations as higher inductive types
+
+-- Definition 13.2.1
+
+case-paths-induction-principle-propositional-truncation :
+  { l : Level} {l1 l2 : Level} {A : UU l1}
+  ( P : UU-Prop l2) (α : (p q : type-Prop P) → Id p q) (f : A → type-Prop P) →
+  ( B : type-Prop P → UU l) → UU (l ⊔ l2)
+case-paths-induction-principle-propositional-truncation P α f B =
+  (p q : type-Prop P) (x : B p) (y : B q) → Id (tr B (α p q) x) y
+  
+induction-principle-propositional-truncation :
+  (l : Level) {l1 l2 : Level} {A : UU l1}
+  (P : UU-Prop l2) (α : (p q : type-Prop P) → Id p q) (f : A → type-Prop P) →
+  UU (lsuc l ⊔ l1 ⊔ l2)
+induction-principle-propositional-truncation l {l1} {l2} {A} P α f =
+  ( B : type-Prop P → UU l) →
+  ( g : (x : A) → (B (f x))) →
+  ( β : case-paths-induction-principle-propositional-truncation P α f B) →
+  Σ ((p : type-Prop P) → B p) (λ h → (x : A) → Id (h (f x)) (g x))
+
+-- Lemma 13.2.2
+
+is-prop-case-paths-induction-principle-propositional-truncation :
+  { l : Level} {l1 l2 : Level} {A : UU l1}
+  ( P : UU-Prop l2) (α : (p q : type-Prop P) → Id p q) (f : A → type-Prop P) →
+  ( B : type-Prop P → UU l) →
+  case-paths-induction-principle-propositional-truncation P α f B →
+  ( p : type-Prop P) → is-prop (B p)
+is-prop-case-paths-induction-principle-propositional-truncation P α f B β p =
+  is-prop-is-contr-if-inh (λ x → pair (tr B (α p p) x) (β p p x))
+
+case-paths-induction-principle-propositional-truncation-is-prop :
+  { l : Level} {l1 l2 : Level} {A : UU l1}
+  ( P : UU-Prop l2) (α : (p q : type-Prop P) → Id p q) (f : A → type-Prop P) →
+  ( B : type-Prop P → UU l) →
+  ( (p : type-Prop P) → is-prop (B p)) →
+  case-paths-induction-principle-propositional-truncation P α f B
+case-paths-induction-principle-propositional-truncation-is-prop
+  P α f B is-prop-B p q x y =
+  is-prop'-is-prop (is-prop-B q) (tr B (α p q) x) y
+
+-- Definition 13.2.3
+
+dependent-universal-property-propositional-truncation :
+  ( l : Level) {l1 l2 : Level} {A : UU l1}
+  ( P : UU-Prop l2) (f : A → type-Prop P) → UU (lsuc l ⊔ l1 ⊔ l2)
+dependent-universal-property-propositional-truncation l {l1} {l2} {A} P f =
+  ( Q : type-Prop P → UU-Prop l) → is-equiv (precomp-Π f (type-Prop ∘ Q))
+
+-- Theorem 13.2.4
+
+dependent-universal-property-is-propositional-truncation :
+  { l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
+  ( {l : Level} → is-propositional-truncation l P f) →
+  ( {l : Level} → dependent-universal-property-propositional-truncation l P f)
+dependent-universal-property-is-propositional-truncation P f is-ptr-f Q = {!!}
 
 {- We introduce the image inclusion of a map. -}
 
