@@ -179,6 +179,66 @@ toto :
   Σ A C → Σ B D
 toto D f g t = pair (f (pr1 t)) (g (pr1 t) (pr2 t))
 
+{- A special case of toto is the functoriality of the cartesian product. -}
+
+{- We construct the functoriality of cartesian products. -}
+
+functor-prod :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → C) (g : B → D) → (A × B) → (C × D)
+functor-prod f g (pair a b) = pair (f a) (g b)
+
+functor-prod-pr1 :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → C) (g : B → D) → (pr1 ∘ (functor-prod f g)) ~ (f ∘ pr1)
+functor-prod-pr1 f g (pair a b) = refl
+
+functor-prod-pr2 :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  (f : A → C) (g : B → D) → (pr2 ∘ (functor-prod f g)) ~ (g ∘ pr2)
+functor-prod-pr2 f g (pair a b) = refl
+
+{- For our convenience we show that the functorial action of cartesian products
+   preserves identity maps, compositions, homotopies, and equivalences. -}
+
+functor-prod-id :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (functor-prod (id {A = A}) (id {A = B})) ~ id
+functor-prod-id (pair a b) = refl
+
+functor-prod-comp :
+  {l1 l2 l3 l4 l5 l6 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  {E : UU l5} {F : UU l6} (f : A → C) (g : B → D) (h : C → E) (k : D → F) →
+  functor-prod (h ∘ f) (k ∘ g) ~ ((functor-prod h k) ∘ (functor-prod f g))
+functor-prod-comp f g h k (pair a b) = refl
+
+functor-prod-htpy :
+  {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+  {f f' : A → C} (H : f ~ f') {g g' : B → D} (K : g ~ g') →
+  functor-prod f g ~ functor-prod f' g'
+functor-prod-htpy {f = f} {f'} H {g} {g'} K (pair a b) =
+  eq-pair-triv (pair (H a) (K b))
+
+abstract
+  is-equiv-functor-prod :
+    {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
+    (f : A → C) (g : B → D) →
+    is-equiv f → is-equiv g → is-equiv (functor-prod f g)
+  is-equiv-functor-prod f g
+    ( pair (pair sf issec-sf) (pair rf isretr-rf))
+    ( pair (pair sg issec-sg) (pair rg isretr-rg)) =
+    pair
+      ( pair
+        ( functor-prod sf sg)
+        ( ( htpy-inv (functor-prod-comp sf sg f g)) ∙h
+          ( (functor-prod-htpy issec-sf issec-sg) ∙h functor-prod-id)))
+      ( pair
+        ( functor-prod rf rg)
+        ( ( htpy-inv (functor-prod-comp f g rf rg)) ∙h
+          ( (functor-prod-htpy isretr-rf isretr-rg) ∙h functor-prod-id)))
+
+{- triangle -}
+
 triangle-toto :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : A → UU l3}
   (D : B → UU l4) (f : A → B) (g : (x : A) → C x → D (f x)) →

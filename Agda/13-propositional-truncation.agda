@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 13-image where
+module 13-propositional-truncation where
 
 import 12-univalence
 open 12-univalence public
@@ -342,119 +342,162 @@ dependent-universal-property-propositional-truncation l {l1} {l2} {A} P f =
 
 -- Theorem 13.2.4
 
-dependent-universal-property-is-propositional-truncation :
-  { l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
-  ( {l : Level} → is-propositional-truncation l P f) →
-  ( {l : Level} → dependent-universal-property-propositional-truncation l P f)
-dependent-universal-property-is-propositional-truncation P f is-ptr-f Q = {!!}
+abstract
+  dependent-universal-property-is-propositional-truncation :
+    { l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
+    ( {l : Level} → is-propositional-truncation l P f) →
+    ( {l : Level} → dependent-universal-property-propositional-truncation l P f)
+  dependent-universal-property-is-propositional-truncation
+    {l1} {l2} {A} P f is-ptr-f Q =
+    is-fiberwise-equiv-is-equiv-toto-is-equiv-base-map
+      ( λ (g : A → type-Prop P) → (x : A) → type-Prop (Q (g x)))
+      ( precomp f (type-Prop P))
+      ( λ h → precomp-Π f (λ p → type-Prop (Q (h p))))
+      ( is-ptr-f P)
+      ( is-equiv-top-is-equiv-bottom-square
+        ( inv-choice-∞
+          { C = λ (x : type-Prop P) (p : type-Prop P) → type-Prop (Q p)})
+        ( inv-choice-∞
+          { C = λ (x : A) (p : type-Prop P) → type-Prop (Q p)})
+        ( toto
+          ( λ (g : A → type-Prop P) → (x : A) → type-Prop (Q (g x)))
+          ( precomp f (type-Prop P))
+          ( λ h → precomp-Π f (λ p → type-Prop (Q (h p)))))
+        ( precomp f (Σ (type-Prop P) (λ p → type-Prop (Q p))))
+        ( ind-Σ (λ h h' → refl))
+        ( is-equiv-inv-choice-∞)
+        ( is-equiv-inv-choice-∞)
+        ( is-ptr-f (Σ-Prop P Q)))
+      ( id {A = type-Prop P})
 
-{- We introduce the image inclusion of a map. -}
+dependent-universal-property-trunc-Prop :
+  {l l1 : Level} (A : UU l1) →
+  dependent-universal-property-propositional-truncation l
+    ( trunc-Prop A)
+    ( unit-trunc-Prop A)
+dependent-universal-property-trunc-Prop A =
+  dependent-universal-property-is-propositional-truncation
+    ( trunc-Prop A)
+    ( unit-trunc-Prop A)
+    ( is-propositional-truncation-trunc-Prop A)
 
-precomp-emb :
-  { l1 l2 l3 l4 : Level} {X : UU l1} {A : UU l2} (f : A → X)
-  {B : UU l3} ( i : B ↪ X) (q : hom-slice f (map-emb i)) →
-  {C : UU l4} ( j : C ↪ X) (r : hom-slice (map-emb i) (map-emb j)) →
-  hom-slice f (map-emb j)
-precomp-emb f i q j r =
-  pair
-    ( ( map-hom-slice (map-emb i) (map-emb j) r) ∘
-      ( map-hom-slice f (map-emb i) q))
-    ( ( triangle-hom-slice f (map-emb i) q) ∙h
-      ( ( triangle-hom-slice (map-emb i) (map-emb j) r) ·r
-        ( map-hom-slice f (map-emb i) q)))
+abstract
+  is-propositional-truncation-dependent-universal-property :
+    { l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
+    ( {l : Level} →
+      dependent-universal-property-propositional-truncation l P f) →
+    ( {l : Level} → is-propositional-truncation l P f)
+  is-propositional-truncation-dependent-universal-property P f dup-f Q =
+    dup-f (λ p → Q)
 
-is-prop-hom-slice :
-  { l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
-  { B : UU l3} (i : B ↪ X) → is-prop (hom-slice f (map-emb i))
-is-prop-hom-slice {X = X} f i =
-  is-prop-is-equiv
-    ( (x : X) → fib f x → fib (map-emb i) x)
-    ( fiberwise-hom-hom-slice f (map-emb i))
-    ( is-equiv-fiberwise-hom-hom-slice f (map-emb i))
-    ( is-prop-Π
-      ( λ x → is-prop-Π
-        ( λ p → is-prop-map-is-emb (map-emb i) (is-emb-map-emb i) x)))
+abstract
+  induction-principle-dependent-universal-property-propositional-truncation :
+    { l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
+    ( {l : Level} →
+      dependent-universal-property-propositional-truncation l P f) →
+    ( {l : Level} → induction-principle-propositional-truncation l P
+      ( is-prop'-is-prop (is-prop-type-Prop P)) f)
+  induction-principle-dependent-universal-property-propositional-truncation
+    P f dup-f B g α =
+    tot
+      ( λ h → htpy-eq)
+      ( center
+        ( is-contr-map-is-equiv
+          ( dup-f
+            ( λ p →
+              pair
+                ( B p)
+                ( is-prop-case-paths-induction-principle-propositional-truncation
+                  ( P)
+                  ( is-prop'-is-prop (is-prop-type-Prop P))
+                  f B α p)))
+          ( g)))
 
-universal-property-image :
-  ( l : Level) {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
-  { B : UU l3} (i : B ↪ X) (q : hom-slice f (map-emb i)) →
-  UU (lsuc l ⊔ l1 ⊔ l2 ⊔ l3)
-universal-property-image l {X = X} f i q =
-  ( C : UU l) (j : C ↪ X) → is-equiv (precomp-emb f i q j)
+abstract
+  dependent-universal-property-induction-principle-propositional-truncation :
+    { l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P) →
+    ( {l : Level} → induction-principle-propositional-truncation l P
+      ( is-prop'-is-prop (is-prop-type-Prop P)) f) →
+    ( {l : Level} → dependent-universal-property-propositional-truncation l P f)
+  dependent-universal-property-induction-principle-propositional-truncation
+    P f ind-f Q =
+    is-equiv-is-prop
+      ( is-prop-Π (λ p → is-prop-type-Prop (Q p)))
+      ( is-prop-Π (λ a → is-prop-type-Prop (Q (f a))))
+      ( λ g →
+        pr1
+          ( ind-f
+            ( λ p → type-Prop (Q p))
+            ( g)
+            ( case-paths-induction-principle-propositional-truncation-is-prop
+              ( P)
+              ( is-prop'-is-prop (is-prop-type-Prop P))
+              ( f)
+              ( λ p → type-Prop (Q p))
+              ( λ p → is-prop-type-Prop (Q p)))))
 
-universal-property-image' :
-  ( l : Level) {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
-  { B : UU l3} (i : B ↪ X) (q : hom-slice f (map-emb i)) →
-  UU (lsuc l ⊔ l1 ⊔ l2 ⊔ l3)
-universal-property-image' l {X = X} f i q =
-  ( C : UU l) (j : C ↪ X) →
-    hom-slice f (map-emb j) → hom-slice (map-emb i) (map-emb j)
+-- Exercises
 
-universal-property-image-universal-property-image' :
-  ( l : Level) {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
-  { B : UU l3} (i : B ↪ X) (q : hom-slice f (map-emb i)) →
-  universal-property-image' l f i q → universal-property-image l f i q
-universal-property-image-universal-property-image' l f i q up' C j =
+-- Exercise 13.1
+
+is-propositional-truncation-retract :
+  {l l1 l2 : Level} {A : UU l1} (P : UU-Prop l2) →
+  (R : (type-Prop P) retract-of A) →
+  is-propositional-truncation l P (retraction-retract-of R)
+is-propositional-truncation-retract {A = A} P R Q =
   is-equiv-is-prop
-    ( is-prop-hom-slice (map-emb i) j)
-    ( is-prop-hom-slice f j)
-    ( up' C j)
-  
--- Section 13.4
+    ( is-prop-function-type
+      ( type-Prop P)
+      ( type-Prop Q)
+      ( is-prop-type-Prop Q))
+    ( is-prop-function-type
+      ( A)
+      ( type-Prop Q)
+      ( is-prop-type-Prop Q))
+    ( λ g → g ∘ (section-retract-of R))
 
-is-small :
-  (l : Level) {l1 : Level} (A : UU l1) → UU (lsuc l ⊔ l1)
-is-small l A = Σ (UU l) (λ X → A ≃ X)
+-- Exercise 13.2
 
-is-small-map :
-  (l : Level) {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  (A → B) → UU (lsuc l ⊔ (l1 ⊔ l2))
-is-small-map l {B = B} f = (b : B) → is-small l (fib f b)
-
-is-locally-small :
-  (l : Level) {l1 : Level} (A : UU l1) → UU (lsuc l ⊔ l1)
-is-locally-small l A = (x y : A) → is-small l (Id x y)
-
-total-subtype :
-  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) → UU (l1 ⊔ l2)
-total-subtype {A = A} P = Σ A (λ x → pr1 (P x))
-
-equiv-subtype-equiv :
+is-propositional-truncation-prod :
   {l1 l2 l3 l4 : Level}
-  {A : UU l1} {B : UU l2} (e : A ≃ B)
-  (C : A → UU-Prop l3) (D : B → UU-Prop l4) →
-  ((x : A) → (C x) ↔ (D (map-equiv e x))) →
-  total-subtype C ≃ total-subtype D
-equiv-subtype-equiv e C D H =
-  equiv-toto (λ y → type-Prop (D y)) e
-    ( λ x → equiv-iff (C x) (D (map-equiv e x)) (H x))
+  {A : UU l1} (P : UU-Prop l2) (f : A → type-Prop P)
+  {A' : UU l3} (P' : UU-Prop l4) (f' : A' → type-Prop P') →
+  ({l : Level} → is-propositional-truncation l P f) →
+  ({l : Level} → is-propositional-truncation l P' f') →
+  {l : Level} → is-propositional-truncation l (prod-Prop P P') (functor-prod f f')
+is-propositional-truncation-prod P f P' f' is-ptr-f is-ptr-f' Q =
+  is-equiv-top-is-equiv-bottom-square
+    ( ev-pair)
+    ( ev-pair)
+    ( precomp (functor-prod f f') (type-Prop Q))
+    ( λ h a a' → h (f a) (f' a'))
+    ( refl-htpy)
+    ( is-equiv-ev-pair)
+    ( is-equiv-ev-pair)
+    ( is-equiv-comp'
+      ( λ h a a' → h a (f' a'))
+      ( λ h a p' → h (f a) p')
+      ( is-ptr-f (pair (hom-Prop P' Q) (is-prop-hom-Prop P' Q)))
+      ( is-equiv-postcomp-Π
+        ( λ a g a' → g (f' a'))
+        ( λ a → is-ptr-f' Q)))
 
-equiv-comp-equiv' :
-  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} →
-  (A ≃ B) → (C : UU l3) → (B ≃ C) ≃ (A ≃ C)
-equiv-comp-equiv' e C =
-  equiv-subtype-equiv
-    ( equiv-precomp-equiv e C)
-    ( is-equiv-Prop)
-    ( is-equiv-Prop)
-    ( λ g →
-      pair
-        ( is-equiv-comp' g (map-equiv e) (is-equiv-map-equiv e))
-        ( λ is-equiv-eg →
-          is-equiv-left-factor'
-            g (map-equiv e) is-equiv-eg (is-equiv-map-equiv e)))
-
-is-prop-is-small :
-  (l : Level) {l1 : Level} (A : UU l1) → is-prop (is-small l A)
-is-prop-is-small l A =
-  is-prop-is-contr-if-inh
-    ( λ Xe →
-      is-contr-equiv'
-        ( Σ (UU l) (λ Y → (pr1 Xe) ≃ Y))
-        ( equiv-tot ((λ Y → equiv-comp-equiv' (pr2 Xe) Y)))
-        ( is-contr-total-equiv (pr1 Xe)))
-
-is-prop-is-locally-small :
-  (l : Level) {l1 : Level} (A : UU l1) → is-prop (is-locally-small l A)
-is-prop-is-locally-small l A =
-  is-prop-Π (λ x → is-prop-Π (λ y → is-prop-is-small l (Id x y)))
+equiv-prod-trunc-Prop :
+  {l1 l2 : Level} (A : UU l1) (A' : UU l2) →
+  equiv-Prop (trunc-Prop (A × A')) (prod-Prop (trunc-Prop A) (trunc-Prop A'))
+equiv-prod-trunc-Prop A A' =
+  pr1
+    ( center
+      ( is-uniquely-unique-propositional-truncation
+        ( trunc-Prop (A × A'))
+        ( prod-Prop (trunc-Prop A) (trunc-Prop A'))
+        ( unit-trunc-Prop (A × A'))
+        ( functor-prod (unit-trunc-Prop A) (unit-trunc-Prop A'))
+        ( is-propositional-truncation-trunc-Prop (A × A'))
+        ( is-propositional-truncation-prod
+          ( trunc-Prop A)
+          ( unit-trunc-Prop A)
+          ( trunc-Prop A')
+          ( unit-trunc-Prop A')
+          ( is-propositional-truncation-trunc-Prop A)
+          ( is-propositional-truncation-trunc-Prop A'))))

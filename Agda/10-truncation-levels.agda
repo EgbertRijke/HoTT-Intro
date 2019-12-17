@@ -588,10 +588,26 @@ abstract
     is-prop A → is-subtype B → is-prop (Σ A B)
   is-prop-Σ = is-trunc-Σ neg-one-𝕋
 
+Σ-Prop :
+  {l1 l2 : Level} (P : UU-Prop l1) (Q : type-Prop P → UU-Prop l2) →
+  UU-Prop (l1 ⊔ l2)
+Σ-Prop P Q =
+  pair
+    ( Σ (type-Prop P) (λ p → type-Prop (Q p)))
+    ( is-prop-Σ
+      ( is-prop-type-Prop P)
+      ( λ p → is-prop-type-Prop (Q p)))
+
 abstract
   is-prop-prod : {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     is-prop A → is-prop B → is-prop (A × B)
   is-prop-prod = is-trunc-prod neg-one-𝕋
+
+prod-Prop : {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
+prod-Prop P Q =
+  pair
+    ( type-Prop P × type-Prop Q)
+    ( is-prop-prod (is-prop-type-Prop P) (is-prop-type-Prop Q))
 
 abstract
   is-set-Σ : {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →

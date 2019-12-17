@@ -106,6 +106,24 @@ _retract-of_ :
   {i j : Level} → UU i → UU j → UU (i ⊔ j)
 A retract-of B = Σ (A → B) retr
 
+section-retract-of :
+  {i j : Level} {A : UU i} {B : UU j} → A retract-of B → A → B
+section-retract-of = pr1
+
+retr-section-retract-of :
+  {i j : Level} {A : UU i} {B : UU j} (R : A retract-of B) →
+  retr (section-retract-of R)
+retr-section-retract-of = pr2
+
+retraction-retract-of :
+  {i j : Level} {A : UU i} {B : UU j} → (A retract-of B) → B → A
+retraction-retract-of R = pr1 (retr-section-retract-of R)
+
+is-retr-retraction-retract-of :
+  {i j : Level} {A : UU i} {B : UU j} (R : A retract-of B) →
+  ((retraction-retract-of R) ∘ (section-retract-of R)) ~ id
+is-retr-retraction-retract-of R = pr2 (retr-section-retract-of R)
+
 is-equiv :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 is-equiv f = sec f × retr f
