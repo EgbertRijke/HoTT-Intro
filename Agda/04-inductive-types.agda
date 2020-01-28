@@ -31,6 +31,9 @@ ind-empty ()
 ex-falso : {i : Level} {P : empty →  UU i} → ((x : empty) → P x)
 ex-falso = ind-empty
 
+ex-falso' : {i : Level} {A : UU i} → empty → A
+ex-falso' = ex-falso
+
 -- Definition 4.3.2
 
 ¬ : {i : Level} → UU i → UU i

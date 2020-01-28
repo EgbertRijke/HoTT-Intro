@@ -121,6 +121,13 @@ holds. With this assumption it will rarely be necessary to work with more than o
       & \vdash \UU~\type \\
       X:\UU & \vdash \mathcal{T}(X)~\type.
     \end{align*}
+    The universe $\UU^+$ therefore contains the type $\UU$ as well as every type in $\UU$, in the following sense
+    \begin{align*}
+      & \vdash \check{\UU}:\UU^+ & & \vdash \mathcal{T}^+(\check{\UU})\jdeq\UU~\type \\
+      X:\UU & \vdash \check{\mathcal{T}}(X) :\UU^+ & X:\UU & \vdash \mathcal{T}^+(\check{\mathcal{T}}(X))\jdeq \mathcal{T}(X)~\type.
+    \end{align*}
+    In particular, we obtain a function $i:\UU\to\UU^+$ that includes the $\UU$-small types into $\UU^+$.
+    
     Note that since the universe $\UU^+$ contains all the types in $\UU$, it also contains the types $A_1,\ldots,A_n$. To see this, we derive that there is a code for $A_i$ in $\UU^+$.
     \begin{prooftree}
       \AxiomC{$\Gamma_i\vdash\check{A}_i:\UU$}

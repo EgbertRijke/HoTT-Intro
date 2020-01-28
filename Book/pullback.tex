@@ -1082,6 +1082,14 @@ is a pullback square.
   \item The map $f$ is an equivalence.
   \item The map $g$ is an equivalence.
   \end{enumerate}
+  \exercise Show that a map $f:A\to B$ is an equivalence if and only if the square
+  \begin{equation*}
+    \begin{tikzcd}
+      A^B \arrow[r,"f\circ\blank"] \arrow[d,swap,"\blank\circ f"] & B^B \arrow[d,"\blank\circ f"] \\
+      A^A \arrow[r,swap,"f\circ\blank"] & B^A
+    \end{tikzcd}
+  \end{equation*}
+  is a pullback square.
 %\exercise
 %\begin{subexenum}
 %\item Show that \index{equivalence!type of equivalences!as pullback}

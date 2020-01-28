@@ -210,12 +210,30 @@ abstract
     {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
     is-subtype B → is-prop ((x : A) → B x)
   is-prop-Π = is-trunc-Π neg-one-𝕋
-  
+
+Π-Prop :
+  {l1 l2 : Level} (P : UU-Prop l1) →
+  (type-Prop P → UU-Prop l2) → UU-Prop (l1 ⊔ l2)
+Π-Prop P Q =
+  pair
+    ( (p : type-Prop P) → type-Prop (Q p))
+    ( is-prop-Π (λ p → is-prop-type-Prop (Q p)))
+
+abstract
   is-set-Π :
     {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
     ((x : A) → is-set (B x)) → is-set ((x : A) → (B x))
   is-set-Π = is-trunc-Π zero-𝕋
-  
+
+Π-Set :
+  {l1 l2 : Level} (A : UU-Set l1) →
+  (type-Set A → UU-Set l2) → UU-Set (l1 ⊔ l2)
+Π-Set A B =
+  pair
+    ( (x : type-Set A) → type-Set (B x))
+    ( is-set-Π (λ x → is-set-type-Set (B x)))
+
+abstract
   is-trunc-function-type :
     {l1 l2 : Level} (k : 𝕋) (A : UU l1) (B : UU l2) →
     is-trunc k B → is-trunc k (A → B)

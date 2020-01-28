@@ -1,0 +1,20 @@
+\import Algebra.Ring
+\import Paths
+
+\func foo : Nat => 7
+
+\instance intRing : Ring Int
+  | zro => 0
+  | + => {?}
+  | zro-left => {?}
+  | +-assoc => {?}
+  | +-comm => {?}
+  | ide => {?}
+  | * => {?}
+  | ide-left => {?}
+  | ide-right => {?}
+  | *-assoc => {?}
+  | ldistr => {?}
+  | rdistr => {?}
+  | negative => {?}
+  | negative-left => {?}

@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 13-circle where
+module 18-circle where
 
-import 12-univalence
-open 12-univalence public
+import 17-groups
+open 17-groups public
 
 {- Section 11.1 The induction principle of the circle -}
 

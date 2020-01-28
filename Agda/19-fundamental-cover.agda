@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 14-fundamental-cover where
+module 19-fundamental-cover where
 
-import 13-circle
-open 13-circle public
+import 18-circle
+open 18-circle public
 
 {- Section 12.1 Families over the circle -}
 
