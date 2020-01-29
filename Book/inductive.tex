@@ -320,15 +320,17 @@ The projection maps are defined similarly to the projection maps of $\Sigma$-typ
   \item An elimination rule.
   \item Computation rules.
   \end{enumerate}
-\exercise Let $A$ be a type.\label{ex:dne-dec}
-\begin{subexenum}
-\item Show that $A\to\neg\neg A$.
-  \item Show that $\neg\neg\neg A \to \neg A$.
-  \item Show that $(A+\neg A)\to(\neg\neg A\to A)$.
-  \item Show that $\neg\neg(\neg\neg A \to A)$.
-  \item Show that $(A\to \neg\neg B)\to (\neg\neg A \to\neg\neg B)$.
-  \item Show that $\neg\neg(A \to \neg\neg B)\to (A\to\neg\neg B)$.
-  \item Show that $\neg\neg((\neg\neg A)\times(\neg\neg B))\to (\neg\neg A)\times(\neg\neg B)$.
+  \exercise Let $P$ and $Q$ be types. Use the fact that $\neg P$\index{negation} is defined as the type $P\to\emptyt$ of functions from $P$ to the empty type\index{empty type}, to give type theoretic proofs of the following taugologies\index{tautologies} of constructive logic\index{constructive logic}.\label{ex:dne-dec}
+  \begin{subexenum}
+  \item $P\to\neg\neg P$
+  \item $(P\to Q)\to(\neg\neg P\to\neg\neg Q)$
+  \item $(P+\neg P)\to(\neg\neg P\to P)$
+  \item $\neg\neg(P+\neg P)$
+  \item $\neg\neg(\neg\neg P \to P)$
+  \item $(P\to \neg\neg Q)\to (\neg\neg P \to\neg\neg Q)$
+  \item $\neg\neg\neg P \to \neg P$
+  \item $\neg\neg(P \to \neg\neg Q)\to (P\to\neg\neg Q)$
+  \item $\neg\neg((\neg\neg P)\times(\neg\neg Q))\to (\neg\neg P)\times(\neg\neg Q)$
   \end{subexenum}
 \exercise \label{ex:boolean-operation}Define the following operations of Boolean algebra:\index{boolean algebra}\index{booleans!exclusive disjunction}\index{booleans!implication}\index{booleans!if and only if}\index{booleans!Peirce's arrow}\index{booleans!Sheffer stroke}
   \begin{center}
