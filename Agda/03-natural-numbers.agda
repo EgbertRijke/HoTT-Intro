@@ -106,3 +106,48 @@ Fibonacci : ℕ → ℕ
 Fibonacci zero-ℕ = zero-ℕ
 Fibonacci (succ-ℕ zero-ℕ) = one-ℕ
 Fibonacci (succ-ℕ (succ-ℕ n)) = add-ℕ (Fibonacci n) (Fibonacci (succ-ℕ n))
+
+{- The above definition of the Fibonacci sequence uses Agda's rather strong
+   pattern matching definitions. Below, we will give a definition of the 
+   Fibonacci sequence in terms of ind-ℕ. In particular, the following is a
+   solution that can be given in terms of the material in the book. 
+
+   The problem with defining the Fibonacci sequence using ind-ℕ, is that ind-ℕ
+   doesn't give us a way to refer to both (F n) and (F (succ-ℕ n)). So, we have
+   to give a workaround, where we store two values in the Fibonacci sequence
+   at once.
+
+   The basic idea is that we define a sequence of pairs of integers, which will
+   be consecutive Fibonacci numbers. This would be a function of type
+
+   ℕ → ℕ².
+
+   Such a function is easy to give with induction, using the map ℕ² → ℕ² that
+   takes a pair (m,n) to the pair (n,n+m). Starting the iteration with (0,1)
+   we obtain the Fibonacci sequence by taking the first projection.
+
+   However, we haven't defined cartesian products or booleans yet. Therefore
+   we mimic the above idea, using ℕ → ℕ instead of ℕ². -}
+
+shift-one : ℕ → (ℕ → ℕ) → (ℕ → ℕ)
+shift-one n f = ind-ℕ n (λ x y → f x)
+
+shift-two : ℕ → ℕ → (ℕ → ℕ) → (ℕ → ℕ)
+shift-two m n f = shift-one m (shift-one n f)
+
+Fibo-zero-ℕ : ℕ → ℕ
+Fibo-zero-ℕ = shift-two zero-ℕ one-ℕ (const ℕ ℕ zero-ℕ)
+
+Fibo-succ-ℕ : (ℕ → ℕ) → (ℕ → ℕ)
+Fibo-succ-ℕ f =
+  shift-two (f one-ℕ) (add-ℕ (f one-ℕ) (f zero-ℕ)) (λ x → f (succ-ℕ (succ-ℕ x)))
+
+Fibo-function : ℕ → ℕ → ℕ
+Fibo-function =
+  ind-ℕ
+    ( Fibo-zero-ℕ)
+    ( λ n → Fibo-succ-ℕ)
+
+Fibo : ℕ → ℕ
+Fibo k = Fibo-function k zero-ℕ
+
