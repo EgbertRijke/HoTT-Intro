@@ -293,7 +293,12 @@ The asserted judgmental equalities then hold by the computation rules for $\N$.
   \index{binomial coefficient}
   \index{function!binomial coefficient}
   \index{natural numbers!operations on N@{operations on $\N$}!binomial coefficient}
-\exercise Define the \define{Fibonacci sequence} $0,1,1,2,3,5,8,13,\ldots$ as a function $F:\N\to\N$.
+  \exercise Use the induction principle of $\N$ to define the \define{Fibonacci sequence} as a function $F:\N\to\N$ that satisfies the equations
+  \begin{align*}
+    F(\zeroN) & \jdeq \zeroN \\
+    F(\oneN) & \jdeq \oneN \\
+    F(\succN(\succN(n))) & \jdeq F(n)+F(\succN(n)).
+  \end{align*}
   \index{Fibonacci sequence}
   \index{natural numbers!operations on N@{operations on $\N$}!Fibonacci sequence}
 \end{exercises}

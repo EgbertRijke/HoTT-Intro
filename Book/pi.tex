@@ -263,15 +263,28 @@ and
 
 \begin{proof}
 The derivation for the left unit law is
+%\begin{prooftree}
+%\AxiomC{$\Gamma\vdash f:A\to B$}
+%\UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
+%\AxiomC{$\Gamma\vdash B~\type$}
+%\UnaryInfC{$\Gamma,y:B\vdash \idfunc[B](y)\jdeq y:B$}
+%\UnaryInfC{$\Gamma,x:A,y:B\vdash \idfunc[B](y)\jdeq y:B$}
+%\BinaryInfC{$\Gamma,x:A\vdash \idfunc[B](f(x))\jdeq f(x):B$}
+%\UnaryInfC{$\Gamma,x:A\vdash (\idfunc[B]\circ f)(x)\jdeq f(x):B$}
+%\UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:A\to B$}
+%\end{prooftree}
 \begin{prooftree}
-\AxiomC{$\Gamma\vdash f:A\to B$}
-\UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
-\AxiomC{$\Gamma\vdash B~\type$}
-\UnaryInfC{$\Gamma,y:B\vdash \idfunc[B](y)\jdeq y:B$}
-\UnaryInfC{$\Gamma,x:A,y:B\vdash \idfunc[B](y)\jdeq y:B$}
-\BinaryInfC{$\Gamma,x:A\vdash \idfunc[B](f(x))\jdeq f(x):B$}
-\UnaryInfC{$\Gamma,x:A\vdash (\idfunc[B]\circ f)(x)\jdeq f(x):B$}
-\UnaryInfC{$\Gamma\vdash \idfunc[B]\circ f\jdeq f:A\to B$}
+  \AxiomC{$\Gamma\vdash f:A\to B$}
+  \UnaryInfC{$\Gamma,x:A\vdash f(x):B$}
+  \AxiomC{$\Gamma\vdash A~\type$}
+  \AxiomC{$\Gamma\vdash B~\type$}
+  \UnaryInfC{$\Gamma,y:B\vdash\idfunc(y)\jdeq y:B$}
+  \BinaryInfC{$\Gamma,x:A,y:B\vdash\idfunc(y)\jdeq y:B$}
+  \BinaryInfC{$\Gamma,x:A\vdash\idfunc(f(x))\jdeq f(x):B$}
+  \UnaryInfC{$\Gamma\vdash\lam{x}\idfunc(f(x))\jdeq\lam{x}f(x):A\to B$}
+  \AxiomC{$\Gamma\vdash f:A\to B$}
+  \UnaryInfC{$\Gamma\vdash\lam{x}f(x)\jdeq f:A\to B$}
+  \BinaryInfC{$\Gamma\vdash\idfunc\circ f\jdeq f:A\to B$}
 \end{prooftree}
 The right unit law is left as \cref{ex:fun_right_unit}.
 \end{proof}

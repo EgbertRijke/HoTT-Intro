@@ -189,7 +189,7 @@ We can now postulate the \define{substitution rule} as follows:
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash a:A$}
 \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
-\RightLabel{$S_a$}
+\RightLabel{$S$}
 \BinaryInfC{$\Gamma,\Delta[a/x]\vdash \mathcal{J}[a/x]$}
 \end{prooftree}
 In other words, the substitution rule asserts that substitution preserves well-formedness and judgmental equality of types and terms. Furthermore, we postulate that substitution by judgmentally equal terms results in judgmentally equal types
@@ -213,7 +213,7 @@ If we are given a type $A$ in context $\Gamma$, then any judgment made in a long
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
 \AxiomC{$\Gamma,\Delta\vdash \mathcal{J}$}
-\RightLabel{$W_A$}
+\RightLabel{$W$}
 \BinaryInfC{$\Gamma,x:A,\Delta \vdash \mathcal{J}$}
 \end{prooftree}
 This process of expanding the context by a fresh variable of type $A$ is called \define{weakening} (by $A$).
@@ -222,7 +222,7 @@ In the simplest situation where weakening applies, we have two types $A$ and $B$
 \begin{prooftree}
   \AxiomC{$\Gamma\vdash A~\textrm{type}$}
   \AxiomC{$\Gamma\vdash B~\textrm{type}$}
-  \RightLabel{$W_A$}
+  \RightLabel{$W$}
   \BinaryInfC{$\Gamma,x:A\vdash B~\type$}
 \end{prooftree}
 in order to form the type $B$ in context $\Gamma,x:A$. The type $B$ in context $\Gamma,x:A$ is called the \define{constant family}\index{family!constant family}\index{constant family} $B$, or the \define{trivial family}\index{family!trivial family}\index{trivial family} $B$.
@@ -232,7 +232,7 @@ in order to form the type $B$ in context $\Gamma,x:A$. The type $B$ in context $
 If we are given a type $A$ in context $\Gamma$, then we can weaken $A$ by itself to obtain that $A$ is a type in context $\Gamma,x:A$. The \define{variable rule}\index{variable rule}\index{rules!for type dependency!variable rule} now asserts that any hypothetical term $x:A$ in context $\Gamma$ is a well-formed term of type $A$ in context $\Gamma,x:A$.
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash A~\textrm{type}$}
-\RightLabel{$\delta_A$}
+\RightLabel{$\delta$}
 \UnaryInfC{$\Gamma,x:A\vdash x:A$}
 \end{prooftree}
 One of the reasons for including the variable rule is that it provides an \emph{identity function}\index{identity function} on the type $A$ in context $\Gamma$.
@@ -265,13 +265,13 @@ is derivable, where $x'$ is a variable that does not occur in the context $\Gamm
 Indeed, we have the following derivation using substitution, weakening, and the variable rule:
 \begin{prooftree}
   \AxiomC{$\Gamma\vdash A~\type$}
-  \RightLabel{$\delta_A$}
+  \RightLabel{$\delta$}
   \UnaryInfC{$\Gamma,x':A\vdash x':A$}
   \AxiomC{$\Gamma\vdash A~\type$}
   \AxiomC{$\Gamma,x:A,\Delta\vdash \mathcal{J}$}
-  \RightLabel{$W_A$}
+  \RightLabel{$W$}
   \BinaryInfC{$\Gamma,x':A,x:A,\Delta\vdash \mathcal{J}$}
-  \RightLabel{$S_{x'}$}
+  \RightLabel{$S$}
   \BinaryInfC{$\Gamma,x':A,\Delta[x'/x]\vdash \mathcal{J}[x'/x]$}
 \end{prooftree}
 In this derivation it is the application of the weakening rule where we have to check that $x'$ does not occur in the context $\Gamma,x:A,\Delta$.
@@ -298,16 +298,16 @@ Now we can substitute $y$ for $y'$ to obtain the desired judgment $\Gamma,y:B,x:
 %\begin{small}
 \begin{prooftree}
 \AxiomC{$\Gamma\vdash B~\textrm{type}$}
-\RightLabel{$\delta_B$}
+\RightLabel{$\delta$}
 \UnaryInfC{$\Gamma,y:B\vdash y:B$}
-\RightLabel{$W_{W_B(A)}$}
+\RightLabel{$W$} 
 \UnaryInfC{$\Gamma,y:B,x:A\vdash y:B$}
 \AxiomC{$\Gamma,x:A,y:B,\Delta\vdash \mathcal{J}$}
 \RightLabel{$y'/y$}
 \UnaryInfC{$\Gamma,x:A,y':B,\Delta[y'/y]\vdash \mathcal{J}[y'/y]$}
-\RightLabel{$W_B$}
+\RightLabel{$W$}
 \UnaryInfC{$\Gamma,y:B,x:A,y':B,\Delta[y'/y]\vdash \mathcal{J}[y'/y]$}
-\RightLabel{$S_{W_A(y)}$}
+\RightLabel{$S$}
 \BinaryInfC{$\Gamma,y:B,x:A,\Delta\vdash \mathcal{J}$}
 \end{prooftree}
 %\end{small}

@@ -1,6 +1,6 @@
 \section{More inductive types}
 
-Analogous to the type of natural numbers, many types can be specified as inductive types. In this lecture we introduce some further examples of inductive types: the unit type, the empty type, the booleans, coproducts, dependent pair types, and cartesian products. We also introduce the type of integers.
+Analogous to the type of natural numbers, many types can be specified as inductive types. In this section we introduce some further examples of inductive types: the unit type, the empty type, the booleans, coproducts, dependent pair types, and cartesian products. We also introduce the type of integers.
 
 \subsection{The idea of general inductive types}
 
@@ -182,8 +182,8 @@ In the following lemma we derive an induction principle\index{induction principl
     p_{-1} & :P(-1_\Z) \\
     p_{-S} & : \prd{n:\N}P(\inneg(n))\to P(\inneg(\succN(n)))\\
     p_{0} & : P(0_\Z) \\
-    P_{1} & : P(1_\Z) \\
-    P_{S} & : \prd{n:\N}P(\inpos(n))\to P(\inpos(\succN(n))),
+    p_{1} & : P(1_\Z) \\
+    p_{S} & : \prd{n:\N}P(\inpos(n))\to P(\inpos(\succN(n))),
   \end{align*}
   then we can construct a dependent function $f:\prd{k:\Z}P(k)$ for which the following judgmental equalities hold:\index{integers!computation rules}\index{computation rules!of Z@{of $\Z$}}
   \begin{align*}
