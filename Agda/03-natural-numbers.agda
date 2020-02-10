@@ -140,7 +140,7 @@ Fibo-zero-ℕ = shift-two zero-ℕ one-ℕ (const ℕ ℕ zero-ℕ)
 
 Fibo-succ-ℕ : (ℕ → ℕ) → (ℕ → ℕ)
 Fibo-succ-ℕ f =
-  shift-two (f one-ℕ) (add-ℕ (f one-ℕ) (f zero-ℕ)) (λ x → f (succ-ℕ (succ-ℕ x)))
+  shift-two (f one-ℕ) (add-ℕ (f one-ℕ) (f zero-ℕ)) (const ℕ ℕ zero-ℕ)
 
 Fibo-function : ℕ → ℕ → ℕ
 Fibo-function =

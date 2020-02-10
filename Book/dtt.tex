@@ -320,30 +320,30 @@ Now we can substitute $y$ for $y'$ to obtain the desired judgment $\Gamma,y:B,x:
 \AxiomC{$\Gamma\vdash a:A$}
 \BinaryInfC{$\Gamma\vdash a:A'$}
 \end{prooftree}
-\exercise Consider a type $A$ in context $\Gamma$. In this exercise we establish a correspondence between types in context $\Gamma,x:A$, and uniform choices of types $B_a$, where $a$ ranges over terms of $A$ in a uniform way. A similar connection is made for terms.
-  \begin{subexenum}
-  \item We define a \define{uniform family}\index{uniform family} over $A$ to consist of a type
-    \begin{equation*}
-      \Delta,\Gamma\vdash B_a~\type
-    \end{equation*}
-    for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
-    \begin{prooftree}
-      \AxiomC{$\Delta\vdash d:D$}
-      \AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
-      \BinaryInfC{$\Delta,\Gamma\vdash B_a[d/y]\jdeq B_{a[d/y]}~\type$}
-    \end{prooftree}
-    Define a bijection between the set of types in context $\Gamma,x:A$ modulo judgmental equality, and the set of uniform families over $A$ modulo judgmental equality. 
-  \item Consider a type $\Gamma,x:A\vdash B$. We define a \define{uniform term}\index{uniform term} of $B$ over $A$ to consist of a type
-    \begin{equation*}
-      \Delta,\Gamma\vdash b_a:B[a/x]~\type
-    \end{equation*}
-    for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
-    \begin{prooftree}
-      \AxiomC{$\Delta\vdash d:D$}
-      \AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
-      \BinaryInfC{$\Delta,\Gamma\vdash b_a[d/y]\jdeq b_{a[d/y]}:B[a/x][d/y]$}
-    \end{prooftree}
-    Define a bijection between the set of terms of $B$ in context $\Gamma,x:A$ modulo judgmental equality, and the set of uniform terms of $B$ over $A$ modulo judgmental equality. 
-  \end{subexenum}
+%\exercise Consider a type $A$ in context $\Gamma$. In this exercise we establish a correspondence between types in context $\Gamma,x:A$, and uniform choices of types $B_a$, where $a$ ranges over terms of $A$ in a uniform way. A similar connection is made for terms.
+%  \begin{subexenum}
+%  \item We define a \define{uniform family}\index{uniform family} over $A$ to consist of a type
+%    \begin{equation*}
+%      \Delta,\Gamma\vdash B_a~\type
+%    \end{equation*}
+%    for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
+%    \begin{prooftree}
+%      \AxiomC{$\Delta\vdash d:D$}
+%      \AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
+%      \BinaryInfC{$\Delta,\Gamma\vdash B_a[d/y]\jdeq B_{a[d/y]}~\type$}
+%    \end{prooftree}
+%    Define a bijection between the set of types in context $\Gamma,x:A$ modulo judgmental equality, and the set of uniform families over $A$ modulo judgmental equality. 
+%  \item Consider a type $\Gamma,x:A\vdash B$. We define a \define{uniform term}\index{uniform term} of $B$ over $A$ to consist of a type
+%    \begin{equation*}
+%      \Delta,\Gamma\vdash b_a:B[a/x]~\type
+%    \end{equation*}
+%    for every context $\Delta$, and every term $\Delta,\Gamma\vdash a:A$, subject to the condition that one can derive
+%    \begin{prooftree}
+%      \AxiomC{$\Delta\vdash d:D$}
+%      \AxiomC{$\Delta,y:D,\Gamma\vdash a:A$}
+%      \BinaryInfC{$\Delta,\Gamma\vdash b_a[d/y]\jdeq b_{a[d/y]}:B[a/x][d/y]$}
+%    \end{prooftree}
+%    Define a bijection between the set of terms of $B$ in context $\Gamma,x:A$ modulo judgmental equality, and the set of uniform terms of $B$ over $A$ modulo judgmental equality. 
+%  \end{subexenum}
 \end{exercises}
 \index{dependent type theory|)}
