@@ -7,12 +7,14 @@ Dependent type theory is a system of inference rules that can be combined to mak
 \subsection{Judgments and contexts in type theory}\label{sec:judgments}
 \index{judgment|(}
 \index{context|(}
-An \define{inference rule}\index{inference rule|see {rule}} is an expression of the form
+A mathematical argument or construction consists of a sequence of deductive steps, each one using finitely many hypotheses in order to get to the next stage in the proof or construction. Such steps can be represented by \define{inference rules}\index{inference rule|see {rule}}, which are written in the form
 \begin{prooftree}
   \AxiomC{$\mathcal{H}_1$\quad $\mathcal{H}_2$ \quad \dots \quad $\mathcal{H}_n$}
   \UnaryInfC{$\mathcal{C}$}
 \end{prooftree}
-containing above the horizontal line\index{horizontal line|see {inference rule}} a finite list $\mathcal{H}_1$, $\mathcal{H}_2$, \dots, $\mathcal{H}_n$ of \emph{judgments} for the hypotheses\index{inference rule!hypotheses}, and below the horizontal line a single judgment $\mathcal{C}$ for the conclusion\index{inference rule!conclusion}. A very simple example that we will encounter in \cref{ch:pi} when we introduce function types\index{function type}, is the inference rule
+Inference rules containin above the horizontal line\index{horizontal line|see {inference rule}} a finite list $\mathcal{H}_1$, $\mathcal{H}_2$, \dots, $\mathcal{H}_n$ of \emph{judgments} for the hypotheses\index{inference rule!hypotheses}, and below the horizontal line a single judgment $\mathcal{C}$ for the conclusion\index{inference rule!conclusion}. The system of dependent type theory is described by a set of such inference rules.
+
+A straightforward example of an inference rule that we will encounter in \cref{ch:pi} when we introduce function types\index{function type}, is the inference rule
 \begin{prooftree}
   \AxiomC{$\Gamma\vdash a:A$}
   \AxiomC{$\Gamma\vdash f:A\to B$}

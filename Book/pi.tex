@@ -5,7 +5,7 @@
 \index{dependent function type|(}
 A fundamental concept in dependent type theory is that of a dependent function. A dependent function is a function of which the type of the output may depend on the input. They are a generalization of ordinary functions, because an ordinary function $f:A\to B$ is a function of which the output $f(x)$ has type $B$ regardless of the value of $x$.
 
-\subsection{Dependent function types}
+\subsection{The rules for dependent function types}
 Consider a section $b$ of a family $B$ over $A$ in context $\Gamma$, i.e.,
 \begin{equation*}
   \Gamma,x:A\vdash b(x):B(x).
@@ -31,7 +31,7 @@ The \define{$\Pi$-formation rule} tells us how $\Pi$-types are constructed. The 
 \RightLabel{$\Pi$.}
 \UnaryInfC{$\Gamma\vdash \prd{x:A}B(x)~\type$}
 \end{prooftree}
-This rule simply states that in order for the $\Pi$-type $\prd{x:A}B(x)$ to be well-formed in context $\Gamma$, the type $B$ must be a well-formed type in context $\Gamma,x:A$.
+This rule simply states that in order for the type $\prd{x:A}B(x)$ to be well-formed in context $\Gamma$, the type $B$ must be a well-formed type in context $\Gamma,x:A$.
 
 We also require that the the operation of forming dependent function types respects judgmental equality. This is postulated in the \define{congruence rule} for $\Pi$-types:
 \index{rules!for dependent function types!congruence}
