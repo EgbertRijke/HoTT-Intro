@@ -127,3 +127,14 @@ truth-value-CNF f (cons c φ) =
 is-satisfiable-CNF : CNF → UU lzero
 is-satisfiable-CNF φ = Σ (ℕ → bool) (λ f → Id (truth-value-CNF f φ) true)
 
+contains-CNF : (l : Literate) (φ : CNF) → bool
+contains-CNF l nil = false
+contains-CNF l (cons c φ) =
+  disjunction-𝟚 (contains-Clause l c) (contains-CNF l φ)
+
+contains
+
+simplify-CNF : CNF → CNF
+simplify-CNF nil = nil
+simplify-CNF (cons c φ) = cons (simplify-Clause c) (simplify-CNF φ)
+

@@ -165,7 +165,64 @@ A × B = prod A B
 
 -- Exercises
 
+-- Exercise 4.1 (a)
+
+pred-ℤ : ℤ → ℤ
+pred-ℤ (inl x) = inl (succ-ℕ x)
+pred-ℤ (inr (inl star)) = inl zero-ℕ
+pred-ℤ (inr (inr zero-ℕ)) = inr (inl star)
+pred-ℤ (inr (inr (succ-ℕ x))) = inr (inr x)
+
+-- Exercise 4.1 (b)
+
+-- Addition on ℤ
+
+add-ℤ : ℤ → ℤ → ℤ
+add-ℤ (inl zero-ℕ) l = pred-ℤ l
+add-ℤ (inl (succ-ℕ x)) l = pred-ℤ (add-ℤ (inl x) l)
+add-ℤ (inr (inl star)) l = l
+add-ℤ (inr (inr zero-ℕ)) l = succ-ℤ l
+add-ℤ (inr (inr (succ-ℕ x))) l = succ-ℤ (add-ℤ (inr (inr x)) l)
+
+-- The negative of an integer
+
+neg-ℤ : ℤ → ℤ
+neg-ℤ (inl x) = inr (inr x)
+neg-ℤ (inr (inl star)) = inr (inl star)
+neg-ℤ (inr (inr x)) = inl x
+
+-- Exercise 4.1 (c)
+
+-- Multiplication on ℤ
+
+mul-ℤ : ℤ → ℤ → ℤ
+mul-ℤ (inl zero-ℕ) l = neg-ℤ l
+mul-ℤ (inl (succ-ℕ x)) l = add-ℤ (neg-ℤ l) (mul-ℤ (inl x) l)
+mul-ℤ (inr (inl star)) l = zero-ℤ
+mul-ℤ (inr (inr zero-ℕ)) l = l
+mul-ℤ (inr (inr (succ-ℕ x))) l = add-ℤ l (mul-ℤ (inr (inr x)) l)
+
 -- Exercise 4.2
+
+-- Exercise 4.2 (a)
+
+¬¬ : {l : Level} → UU l → UU l
+¬¬ P = ¬ (¬ P)
+
+intro-dn : {l : Level} {P : UU l} → P → ¬¬ P
+intro-dn p f = f p
+
+-- Exercise 4.2 (b)
+
+functor-neg : {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  (P → Q) → (¬ Q → ¬ P)
+functor-neg f nq p = nq (f p)
+
+functor-dn : {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  (P → Q) → (¬¬ P → ¬¬ Q)
+functor-dn f = functor-neg (functor-neg f)
+
+-- Exercise 4.2 (c)
 
 {- In this exercise we were asked to show that (A + ¬A) implies (¬¬A → A). In 
    other words, we get double negation elimination for the types that are 
@@ -175,13 +232,119 @@ is-decidable : {l : Level} (A : UU l) → UU l
 is-decidable A = coprod A (¬ A)
 
 double-negation-elim-is-decidable :
-  {i : Level} (A : UU i) → is-decidable A → (¬ (¬ A) → A)
-double-negation-elim-is-decidable A (inl x) p = x
-double-negation-elim-is-decidable A (inr x) p = ind-empty (p x)
+  {i : Level} (P : UU i) → is-decidable P → (¬¬ P → P)
+double-negation-elim-is-decidable P (inl x) p = x
+double-negation-elim-is-decidable P (inr x) p = ind-empty (p x)
 
-neg-triple-neg : {l : Level} (A : UU l) → (¬ (¬ (¬ A))) → (¬ A)
-neg-triple-neg A f a = f (λ g → g a)
+-- Exercise 4.2 (d)
 
+dn-is-decidable : {l : Level} {P : UU l} → ¬¬ (is-decidable P)
+dn-is-decidable {P = P} f =
+  functor-neg (inr {A = P} {B = ¬ P}) f
+    ( functor-neg (inl {A = P} {B = ¬ P}) f)
+
+-- Exercise 4.2 (e)
+
+dn-linearity-implication :
+  {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  ¬¬ (coprod (P → Q) (Q → P))
+dn-linearity-implication {P = P} {Q = Q} f =
+  ( λ (np : ¬ P) →
+    functor-neg (inl {A = P → Q} {B = Q → P}) f (λ p → ind-empty (np p)))
+    ( λ (p : P) →
+      functor-neg (inr {A = P → Q} {B = Q → P}) f (λ q → p))
+
+-- Exercise 4.2 (f)
+
+dn-dn-elim : {l : Level} {P : UU l} → ¬¬ (¬¬ P → P)
+dn-dn-elim {P = P} f =
+  ( λ (np : ¬ P) → f (λ (nnp : ¬¬ P) → ind-empty {P = λ x → P} (nnp np)))
+    ( λ (p : P) → f (λ (nnp : ¬¬ P) → p))
+
+-- Exercise 4.2 (g)
+
+¬¬¬ : {l : Level} → UU l → UU l
+¬¬¬ P = ¬ (¬ (¬ P))
+
+dn-elim-neg : {l : Level} (P : UU l) → ¬¬¬ P → ¬ P
+dn-elim-neg P f p = f (λ g → g p)
+
+-- Exercise 4.2 (h)
+
+dn-extend :
+  {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  (P → ¬¬ Q) → (¬¬ P → ¬¬ Q)
+dn-extend {P = P} {Q = Q} f = dn-elim-neg (¬ Q) ∘ (functor-dn f)
+
+-- Exercise 4.2 (i)
+
+dn-elim-exp :
+  {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  ¬¬ (P → ¬¬ Q) → (P → ¬¬ Q)
+dn-elim-exp {P = P} {Q = Q} f p =
+  dn-elim-neg (¬ Q) (functor-dn (λ (g : P → ¬¬ Q) → g p) f)
+
+-- Exercise 4.2 (j)
+
+dn-elim-prod :
+  {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  ¬¬ ((¬¬ P) × (¬¬ Q)) → (¬¬ P) × (¬¬ Q)
+dn-elim-prod {P = P} {Q = Q} f =
+  pair
+    ( dn-elim-neg (¬ P) (functor-dn pr1 f))
+    ( dn-elim-neg (¬ Q) (functor-dn pr2 f))
+
+-- Exercise 4.3
+
+-- Exercise 4.3 (a)
+
+data list {l : Level} (A : UU l) : UU l where
+  nil : list A
+  cons : A → list A → list A
+
+in-list : {l : Level} {A : UU l} → A → list A
+in-list a = cons a nil
+
+-- Exercise 4.3 (b)
+
+fold-list :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (b : B) (μ : A → (B → B)) →
+  list A → B
+fold-list b μ nil = b
+fold-list b μ (cons a l) = μ a (fold-list b μ l)
+
+-- Exercise 4.3 (c)
+
+length-list :
+  {l : Level} {A : UU l} → list A → ℕ
+length-list = fold-list zero-ℕ (λ a → succ-ℕ)
+
+-- Exercise 4.3 (d)
+
+sum-list-ℕ :
+  list ℕ → ℕ
+sum-list-ℕ = fold-list zero-ℕ add-ℕ
+
+-- Exercise 4.3 (e)
+
+concat-list :
+  {l : Level} {A : UU l} → list A → (list A → list A)
+concat-list {l} {A} = fold-list id (λ a f → (cons a) ∘ f)
+
+-- Exercise 4.3 (f)
+
+flatten-list :
+  {l : Level} {A : UU l} → list (list A) → list A
+flatten-list = fold-list nil concat-list
+
+-- Exercise 4.3 (g)
+
+reverse-list :
+  {l : Level} {A : UU l} → list A → list A
+reverse-list nil = nil
+reverse-list (cons a l) = concat-list (reverse-list l) (in-list a)
+
+{-
 -- Exercise 4.3
 
 exclusive-disjunction-𝟚 : bool → (bool → bool)
@@ -214,41 +377,6 @@ sheffer-stroke-𝟚 true false = true
 sheffer-stroke-𝟚 false true = true
 sheffer-stroke-𝟚 false false = true
 
--- Exercise 4.4
-
-pred-ℤ : ℤ → ℤ
-pred-ℤ (inl x) = inl (succ-ℕ x)
-pred-ℤ (inr (inl star)) = inl zero-ℕ
-pred-ℤ (inr (inr zero-ℕ)) = inr (inl star)
-pred-ℤ (inr (inr (succ-ℕ x))) = inr (inr x)
-
--- Exercise 4.5
-
--- Addition on ℤ
-
-add-ℤ : ℤ → ℤ → ℤ
-add-ℤ (inl zero-ℕ) l = pred-ℤ l
-add-ℤ (inl (succ-ℕ x)) l = pred-ℤ (add-ℤ (inl x) l)
-add-ℤ (inr (inl star)) l = l
-add-ℤ (inr (inr zero-ℕ)) l = succ-ℤ l
-add-ℤ (inr (inr (succ-ℕ x))) l = succ-ℤ (add-ℤ (inr (inr x)) l)
-
--- The negative of an integer
-
-neg-ℤ : ℤ → ℤ
-neg-ℤ (inl x) = inr (inr x)
-neg-ℤ (inr (inl star)) = inr (inl star)
-neg-ℤ (inr (inr x)) = inl x
-
--- Multiplication on ℤ
-
-mul-ℤ : ℤ → ℤ → ℤ
-mul-ℤ (inl zero-ℕ) l = neg-ℤ l
-mul-ℤ (inl (succ-ℕ x)) l = add-ℤ (neg-ℤ l) (mul-ℤ (inl x) l)
-mul-ℤ (inr (inl star)) l = zero-ℤ
-mul-ℤ (inr (inr zero-ℕ)) l = l
-mul-ℤ (inr (inr (succ-ℕ x))) l = add-ℤ l (mul-ℤ (inr (inr x)) l)
-
 -- Exercise 4.6
 
 Fibonacci-ℤ : ℤ → ℤ
@@ -279,53 +407,4 @@ ind-coprod-unit-unit : {i : Level} {P : coprod unit unit → UU i} →
   P t0 → P t1 → (x : coprod unit unit) → P x
 ind-coprod-unit-unit p0 p1 (inl star) = p0
 ind-coprod-unit-unit p0 p1 (inr star) = p1
-
--- Exercise 4.8
-
--- Exercise 4.8(a)
-
-data list {l : Level} (A : UU l) : UU l where
-  nil : list A
-  cons : A → list A → list A
-
-in-list : {l : Level} {A : UU l} → A → list A
-in-list a = cons a nil
-
--- Exercise 4.8(b)
-
-fold-list :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} (b : B) (μ : A → (B → B)) →
-  list A → B
-fold-list b μ nil = b
-fold-list b μ (cons a l) = μ a (fold-list b μ l)
-
--- Exercise 4.8(c)
-
-length-list :
-  {l : Level} {A : UU l} → list A → ℕ
-length-list = fold-list zero-ℕ (λ a → succ-ℕ)
-
--- Exercise 4.8(d)
-
-sum-list-ℕ :
-  list ℕ → ℕ
-sum-list-ℕ = fold-list zero-ℕ add-ℕ
-
--- Exercise 4.8(e)
-
-concat-list :
-  {l : Level} {A : UU l} → list A → (list A → list A)
-concat-list {l} {A} = fold-list id (λ a f → (cons a) ∘ f)
-
--- Exercise 4.8(f)
-
-flatten-list :
-  {l : Level} {A : UU l} → list (list A) → list A
-flatten-list = fold-list nil concat-list
-
--- Exercise 4.8 (g)
-
-reverse-list :
-  {l : Level} {A : UU l} → list A → list A
-reverse-list nil = nil
-reverse-list (cons a l) = concat-list (reverse-list l) (in-list a)
+-}
