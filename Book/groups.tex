@@ -14,7 +14,7 @@ We introduce the type of groups in two stages: first we introduce the type of \e
   \end{equation*}
   and a homotopy
   \begin{equation*}
-    \assoc_G : \prd{x,y.z:G}\mu_G(\mu_G(x,y),z)=\mu_G(x,\mu_G(y,z)).
+    \assoc_G : \prd{x,y,z:G}\mu_G(\mu_G(x,y),z)=\mu_G(x,\mu_G(y,z)).
   \end{equation*}
   We write $\semigroup$\index{Semi-Group@{$\semigroup$}} for the type of all semi-groups in $\UU$.
 \end{defn}
@@ -106,7 +106,7 @@ The unit of a semi-group is of course unique once it exists. In univalent mathem
 \subsection{Homomorphisms of semi-groups and groups}
 
 \begin{defn}
-  Let $G$ and $H$ be semi-groups. A \define{homomorphism}\define{homomorphism!of semi-groups}\index{semi-group!homomorphism} of semi-groups from $G$ to $H$ is a pair $(f,\mu_f)$ consisting of a function $f:G\to H$ between their underlying types, and a term
+  Let $G$ and $H$ be semi-groups. A \define{homomorphism}\index{homomorphism!of semi-groups}\index{semi-group!homomorphism} of semi-groups from $G$ to $H$ is a pair $(f,\mu_f)$ consisting of a function $f:G\to H$ between their underlying types, and a term
   \begin{equation*}
     \mu_f:\prd{x,y:G} f(\mu_G(x,y))=\mu_H(f(x),f(y))
   \end{equation*}
@@ -329,8 +329,8 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
 \begin{defn}
   Given a pre-category $\mathcal{C}$, a morphism $f:\hom(x,y)$ is said to be an \define{isomorphism}\index{isomorphism!in a pre-category} if there exists a morphism $g:\hom(y,x)$ such that
   \begin{align*}
-    g\circ f & = \idfunc \\
-    f \circ g & \idfunc.
+    g \circ f & = \idfunc \\
+    f \circ g & = \idfunc.
   \end{align*}
   We will write $\iso(x,y)$\index{iso(x,y)@{$\iso(x,y)$}} for the type of all isomorphisms in $\mathcal{C}$ from $x$ to $y$.
 \end{defn}
@@ -375,7 +375,7 @@ In our proof of the fact that isomorphic groups are equal we have made extensive
   \item Consider a pointed type $A$. Show that the concatenation function
     \begin{equation*}
       \concat:\loopspace{A}\to (\loopspace{A}\simeq\loopspace{A})
-x    \end{equation*}
+    \end{equation*}
     is an embedding.\index{concat@{$\concat$}!is an embedding}
   \end{subexenum}
   \exercise Let $f:\hom(G,H)$ be a group homomorphism. Show that $f$ preserves units and inverses, i.e., show that\index{group homomorphism!preserves units and inverses}
@@ -397,15 +397,15 @@ x    \end{equation*}
   \end{equation*}
   commutes. 
   \exercise Construct the category of posets.\index{category!of posets}
-  \exercise Consider the \define{walking isomorphism}, i.e.~the pre-category $\mathcal{I}$ given by
+  \exercise Consider the \define{walking isomorphism}, i.e., the pre-category $\mathcal{I}$ given by
   \begin{equation*}
     \begin{tikzcd}
       0 \arrow[r,bend left=15,"f"] & 1 \arrow[l,bend left=15,"{f^{-1}}"]
     \end{tikzcd}
   \end{equation*}
-  satisfying $f\circ f^{-1}=\idfunc$ and $f^{-1}\circ f=\idfunc$. Show that for any precategory $\mathcal{C}$ the following are equivalent:
+  satisfying $f\circ f^{-1}=\idfunc$ and $f^{-1}\circ f=\idfunc$. Show that for any pre-category $\mathcal{C}$ the following are equivalent:
   \begin{enumerate}
-  \item The precategory $\mathcal{C}$ is Rezk complete.
+  \item The pre-category $\mathcal{C}$ is Rezk complete.
   \item The precomposition function
     \begin{equation*}
       \mathcal{C}\to\mathsf{Fun}(\mathcal{I},\mathcal{C})
