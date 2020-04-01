@@ -1,5 +1,5 @@
 # Introduction to Homotopy Type Theory
-This repository contains a book for a first introduction course to Homotopy Type Theory, accompanied by formalization projects in several proof assistats, closely following the material in the book.
+This repository contains a book for a first introduction course to Homotopy Type Theory, accompanied by formalization projects in several proof assistants, closely following the material in the book.
 
 The [course][1] was taught by Egbert Rijke at Carnegie Mellon University during the spring semester of 2018, and was aimed at advanced undergraduate students and graduate students from the Mathematics, Philosophy, and Computer Science departments.
 
@@ -7,7 +7,7 @@ The [course][1] was taught by Egbert Rijke at Carnegie Mellon University during 
 
 The course consisted of 27 one-hour lectures, in which we covered most of the following topics:
 
-1. Martin-Lof's dependent type theory
+1. Martin-Löf's dependent type theory
     * Dependent type theory
     * Dependent function types
     * The type of natural numbers
@@ -47,7 +47,7 @@ The course consisted of 27 one-hour lectures, in which we covered most of the fo
     * The Blakers-Massey Theorem
     
 ## Formalizations
-This repositories contains formalizations of the first half of the course in several proof assistants: currently Agda and Coq. These formalization project are designed to follow the course notes as closely as possible, and they include solutions to the exercises. From the dual point of view, the course notes form an extensive documentation of the formalization projects, and it is my hope that people will find it helpful to have such a documentation with the formalization.
+This repositories contains formalizations of the first half of the course in several proof assistants: currently Agda and Coq. These formalization projects are designed to follow the course notes as closely as possible, and they include solutions to the exercises. From the dual point of view, the course notes form an extensive documentation of the formalization projects, and it is my hope that people will find it helpful to have such a documentation with the formalization.
 
 Formalization projects of this course in more proof assistants that support homotopy type theory might be added in the future.
 
