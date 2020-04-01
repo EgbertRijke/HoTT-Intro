@@ -170,11 +170,35 @@ preserves-mul-Ring R1 R2 f =
        ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f x)
        ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f y))
 
+is-prop-preserves-mul-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  ( f : hom-Ab (ab-Ring R1) (ab-Ring R2)) →
+  is-prop (preserves-mul-Ring R1 R2 f)
+is-prop-preserves-mul-Ring R1 R2 f =
+  is-prop-Π
+    ( λ x →
+      is-prop-Π
+        ( λ y →
+          is-set-type-Ring R2
+            ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f (mul-Ring R1 x y))
+            ( mul-Ring R2
+              ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f x)
+              ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f y))))
+
 preserves-unit-Ring :
   {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
   hom-Ab (ab-Ring R1) (ab-Ring R2) → UU l2
 preserves-unit-Ring R1 R2 f =
   Id (map-hom-Ab (ab-Ring R1) (ab-Ring R2) f (unit-Ring R1)) (unit-Ring R2)
+
+is-prop-preserves-unit-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  ( f : hom-Ab (ab-Ring R1) (ab-Ring R2)) →
+  is-prop (preserves-unit-Ring R1 R2 f)
+is-prop-preserves-unit-Ring R1 R2 f =
+  is-set-type-Ring R2
+    ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f (unit-Ring R1))
+    ( unit-Ring R2)
 
 hom-Ring :
   {l1 l2 : Level} (R1 : Ring l1) (R : Ring l2) → UU (l1 ⊔ l2)
@@ -211,3 +235,55 @@ preserves-unit-hom-Ring :
   {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
   (f : hom-Ring R1 R2) → preserves-unit-Ring R1 R2 (hom-Ab-hom-Ring R1 R2 f)
 preserves-unit-hom-Ring R1 R2 f = pr2 (pr2 f)
+
+{- We characterize the identity type of ring homomorphisms -}
+
+htpy-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  hom-Ring R1 R2 → hom-Ring R1 R2 → UU (l1 ⊔ l2)
+htpy-hom-Ring R1 R2 f g = map-hom-Ring R1 R2 f ~ map-hom-Ring R1 R2 g
+
+reflexive-htpy-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  (f : hom-Ring R1 R2) → htpy-hom-Ring R1 R2 f f
+reflexive-htpy-hom-Ring R1 R2 f = refl-htpy
+
+htpy-hom-Ring-eq :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  (f g : hom-Ring R1 R2) → Id f g → htpy-hom-Ring R1 R2 f g
+htpy-hom-Ring-eq R1 R2 f .f refl = reflexive-htpy-hom-Ring R1 R2 f
+
+is-contr-total-htpy-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) (f : hom-Ring R1 R2) →
+  is-contr (Σ (hom-Ring R1 R2) (htpy-hom-Ring R1 R2 f))
+is-contr-total-htpy-hom-Ring R1 R2 f =
+  is-contr-total-Eq-substructure
+    ( is-contr-total-htpy-hom-Ab
+      ( ab-Ring R1)
+      ( ab-Ring R2)
+      ( hom-Ab-hom-Ring R1 R2 f))
+    ( λ f →
+      is-prop-prod
+        ( is-prop-preserves-mul-Ring R1 R2 f)
+        ( is-prop-preserves-unit-Ring R1 R2 f))
+    ( hom-Ab-hom-Ring R1 R2 f)
+    ( reflexive-htpy-hom-Ring R1 R2 f)
+    ( pair
+      ( preserves-mul-hom-Ring R1 R2 f)
+      ( preserves-unit-hom-Ring R1 R2 f))
+
+is-equiv-htpy-hom-Ring-eq :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) (f g : hom-Ring R1 R2) →
+  is-equiv (htpy-hom-Ring-eq R1 R2 f g)
+is-equiv-htpy-hom-Ring-eq R1 R2 f =
+  fundamental-theorem-id f
+    ( reflexive-htpy-hom-Ring R1 R2 f)
+    ( is-contr-total-htpy-hom-Ring R1 R2 f)
+    ( htpy-hom-Ring-eq R1 R2 f)
+
+eq-htpy-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) (f g : hom-Ring R1 R2) →
+  htpy-hom-Ring R1 R2 f g → Id f g
+eq-htpy-hom-Ring R1 R2 f g =
+  inv-is-equiv (is-equiv-htpy-hom-Ring-eq R1 R2 f g)
+  
