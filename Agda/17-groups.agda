@@ -67,6 +67,36 @@ is-unital G =
       ( (y : type-Semi-Group G) → Id (mul-Semi-Group G e y) y) ×
       ( (x : type-Semi-Group G) → Id (mul-Semi-Group G x e) x))
 
+Monoid :
+  (l : Level) → UU (lsuc l)
+Monoid l = Σ (Semi-Group l) is-unital
+
+semi-group-Monoid :
+  {l : Level} (M : Monoid l) → Semi-Group l
+semi-group-Monoid M = pr1 M
+
+type-Monoid :
+  {l : Level} (M : Monoid l) → UU l
+type-Monoid M = type-Semi-Group (semi-group-Monoid M)
+
+mul-Monoid :
+  {l : Level} (M : Monoid l) → type-Monoid M → type-Monoid M → type-Monoid M
+mul-Monoid M = mul-Semi-Group (semi-group-Monoid M)
+
+unit-Monoid :
+  {l : Level} (M : Monoid l) → type-Monoid M
+unit-Monoid M = pr1 (pr2 M)
+
+left-unit-law-Monoid :
+  {l : Level} (M : Monoid l) (x : type-Monoid M) →
+  Id (mul-Monoid M (unit-Monoid M) x) x
+left-unit-law-Monoid M = pr1 (pr2 (pr2 M))
+
+right-unit-law-Monoid :
+  {l : Level} (M : Monoid l) (x : type-Monoid M) →
+  Id (mul-Monoid M x (unit-Monoid M)) x
+right-unit-law-Monoid M = pr2 (pr2 (pr2 M))
+
 {- We show that is-unital is a proposition. -}
 
 abstract
