@@ -197,11 +197,23 @@ reflexive-Eq-𝟚 false = star
 
 least-reflexive-Eq-𝟚 : {i : Level}
   (R : bool → bool → UU i) (ρ : (x : bool) → R x x)
-  (x y : bool) → Eq-𝟚 x y → R x y
-least-reflexive-Eq-𝟚 R ρ true true p = ρ true
-least-reflexive-Eq-𝟚 R ρ true false p = ind-empty p
-least-reflexive-Eq-𝟚 R ρ false true p = ind-empty p
-least-reflexive-Eq-𝟚 R ρ false false p = ρ false
+  {x y : bool} → Eq-𝟚 x y → R x y
+least-reflexive-Eq-𝟚 R ρ {true} {true} p = ρ true
+least-reflexive-Eq-𝟚 R ρ {true} {false} p = ind-empty p
+least-reflexive-Eq-𝟚 R ρ {false} {true} p = ind-empty p
+least-reflexive-Eq-𝟚 R ρ {false} {false} p = ρ false
+
+eq-Eq-𝟚 :
+  {x y : bool} → Eq-𝟚 x y → Id x y
+eq-Eq-𝟚 = least-reflexive-Eq-𝟚 Id (λ x → refl)
+
+Eq-eq-𝟚 :
+  {x y : bool} → Id x y → Eq-𝟚 x y
+Eq-eq-𝟚 {x = x} refl = reflexive-Eq-𝟚 x
+
+neq-neg-𝟚 : (b : bool) → ¬ (Id b (neg-𝟚 b))
+neq-neg-𝟚 true = Eq-eq-𝟚
+neq-neg-𝟚 false = Eq-eq-𝟚
 
 -- Exercise 6.6
 

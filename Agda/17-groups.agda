@@ -14,16 +14,16 @@ open 16-sets public
    equality of semi-groups. This will be useful in showing that group 
    isomorphisms are equivalent to identifications of groups. -}
 
-has-associative-mul :
+has-associative-bin-op :
   {l : Level} (X : UU-Set l) → UU l
-has-associative-mul X =
+has-associative-bin-op X =
   Σ ( ( type-Set X) →
       ( ( type-Set X) → (type-Set X))) (λ μ →
     ( x y z : type-Set X) → Id (μ (μ x y) z) (μ x (μ y z)))
 
 Semi-Group :
   (l : Level) → UU (lsuc l)
-Semi-Group l = Σ (UU-Set l) has-associative-mul
+Semi-Group l = Σ (UU-Set l) has-associative-bin-op
 
 {- Bureaucracy of semi-groups. -}
 
@@ -41,7 +41,7 @@ is-set-type-Semi-Group G = pr2 (set-Semi-Group G)
 
 associative-mul-Semi-Group :
   {l : Level} (G : Semi-Group l) →
-  has-associative-mul (set-Semi-Group G)
+  has-associative-bin-op (set-Semi-Group G)
 associative-mul-Semi-Group G = pr2 G
 
 mul-Semi-Group :
@@ -128,7 +128,7 @@ is-set-type-Group :
 is-set-type-Group G = pr2 (set-Group G)
 
 associative-mul-Group :
-  {l : Level} (G : Group l) → has-associative-mul (set-Group G)
+  {l : Level} (G : Group l) → has-associative-bin-op (set-Group G)
 associative-mul-Group G = pr2 (semi-group-Group G)
 
 mul-Group :
@@ -284,7 +284,7 @@ associative-comp-equiv :
 associative-comp-equiv e f g = eq-htpy-equiv refl-htpy
 
 has-associative-mul-aut-Set :
-  {l : Level} (X : UU-Set l) → has-associative-mul (aut-Set X)
+  {l : Level} (X : UU-Set l) → has-associative-bin-op (aut-Set X)
 has-associative-mul-aut-Set X =
   pair
     ( λ e f → f ∘e e)
@@ -520,6 +520,12 @@ eq-htpy-hom-Group :
 eq-htpy-hom-Group G H =
   eq-htpy-hom-Semi-Group (semi-group-Group G) (semi-group-Group H)
 
+is-set-hom-Group :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  is-set (hom-Group G H)
+is-set-hom-Group G H =
+  is-set-hom-Semi-Group (semi-group-Group G) (semi-group-Group H)
+
 {- Next, we construct the identity group homomorphism, and we show that
    compositions of group homomorphisms are again group homomorphisms. -}
 
@@ -708,7 +714,7 @@ total-is-equiv-hom-Semi-Group G H =
 
 preserves-mul' :
   { l1 l2 : Level} (G : Semi-Group l1) (H : UU-Set l2)
-  ( μ-H : has-associative-mul H) →
+  ( μ-H : has-associative-bin-op H) →
   ( e : (type-Semi-Group G) ≃ (type-Set H)) →
   UU (l1 ⊔ l2)
 preserves-mul' G H μ-H e = preserves-mul G (pair H μ-H) (map-equiv e)
@@ -742,13 +748,13 @@ abstract
 
 center-total-preserves-mul-id :
   { l1 : Level} (G : Semi-Group l1) →
-  Σ (has-associative-mul (pr1 G)) (λ μ → preserves-mul G (pair (pr1 G) μ) id)
+  Σ (has-associative-bin-op (pr1 G)) (λ μ → preserves-mul G (pair (pr1 G) μ) id)
 center-total-preserves-mul-id (pair (pair G is-set-G) (pair μ-G assoc-G)) =
   pair (pair μ-G assoc-G) (λ x y → refl)
 
 contraction-total-preserves-mul-id :
   { l1 : Level} (G : Semi-Group l1) →
-  ( t : Σ ( has-associative-mul (pr1 G))
+  ( t : Σ ( has-associative-bin-op (pr1 G))
           ( λ μ → preserves-mul G (pair (pr1 G) μ) id)) →
   Id (center-total-preserves-mul-id G) t
 contraction-total-preserves-mul-id
@@ -769,7 +775,7 @@ contraction-total-preserves-mul-id
 
 is-contr-total-preserves-mul-id :
   { l1 : Level} (G : Semi-Group l1) →
-  is-contr (Σ (has-associative-mul (pr1 G)) (λ μ → preserves-mul G (pair (pr1 G) μ) id))
+  is-contr (Σ (has-associative-bin-op (pr1 G)) (λ μ → preserves-mul G (pair (pr1 G) μ) id))
 is-contr-total-preserves-mul-id G =
   pair
     ( center-total-preserves-mul-id G)

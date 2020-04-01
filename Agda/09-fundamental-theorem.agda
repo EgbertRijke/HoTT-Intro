@@ -336,6 +336,39 @@ abstract
       ( is-equiv-tot-is-fiberwise-equiv H)
       ( is-contr-total-path a)
 
+-- We characterize the identity type of the natural numbers.
+
+center-total-Eq-ℕ :
+  (m : ℕ) → Σ ℕ (Eq-ℕ m)
+center-total-Eq-ℕ m = pair m (refl-Eq-ℕ m)
+
+map-total-Eq-ℕ :
+  (m : ℕ) → Σ ℕ (Eq-ℕ m) → Σ ℕ (Eq-ℕ (succ-ℕ m))
+map-total-Eq-ℕ m (pair n e) = pair (succ-ℕ n) e
+
+contraction-total-Eq-ℕ :
+  (m : ℕ) (x : Σ ℕ (Eq-ℕ m)) → Id (center-total-Eq-ℕ m) x
+contraction-total-Eq-ℕ zero-ℕ (pair zero-ℕ star) = refl
+contraction-total-Eq-ℕ (succ-ℕ m) (pair (succ-ℕ n) e) =
+  ap (map-total-Eq-ℕ m) (contraction-total-Eq-ℕ m (pair n e))
+
+is-contr-total-Eq-ℕ :
+  (m : ℕ) → is-contr (Σ ℕ (Eq-ℕ m))
+is-contr-total-Eq-ℕ m =
+  pair (center-total-Eq-ℕ m) (contraction-total-Eq-ℕ m)
+
+Eq-ℕ-eq : {x y : ℕ} → Id x y → Eq-ℕ x y
+Eq-ℕ-eq {x} {.x} refl = refl-Eq-ℕ x
+
+is-equiv-Eq-ℕ-eq :
+  {m n : ℕ} → is-equiv (Eq-ℕ-eq {m} {n})
+is-equiv-Eq-ℕ-eq {m} {n} =
+  fundamental-theorem-id m
+    ( refl-Eq-ℕ m)
+    ( is-contr-total-Eq-ℕ m)
+    ( λ y → Eq-ℕ-eq {m} {y})
+    ( n)
+
 -- As an application we show that equivalences are embeddings.
 is-emb :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)

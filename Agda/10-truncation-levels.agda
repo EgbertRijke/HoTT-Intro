@@ -671,20 +671,40 @@ abstract
   is-prop-Eq-𝟚 false false = is-prop-unit
 
 abstract
-  eq-Eq-𝟚 : (x y : bool) → Eq-𝟚 x y → Id x y
-  eq-Eq-𝟚 true true star = refl
-  eq-Eq-𝟚 true false ()
-  eq-Eq-𝟚 false true ()
-  eq-Eq-𝟚 false false star = refl
-
-abstract
   is-set-bool : is-set bool
-  is-set-bool = is-set-prop-in-id Eq-𝟚 is-prop-Eq-𝟚 reflexive-Eq-𝟚 eq-Eq-𝟚
+  is-set-bool = is-set-prop-in-id Eq-𝟚 is-prop-Eq-𝟚 reflexive-Eq-𝟚 (λ x y → eq-Eq-𝟚)
 
 set-bool : UU-Set lzero
 set-bool = pair bool is-set-bool
 
 -- Exercise 8.4
+
+abstract
+  is-prop'-exclusive-coprod :
+    {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+    (P → ¬ Q) → is-prop' P → is-prop' Q → is-prop' (coprod P Q)
+  is-prop'-exclusive-coprod
+    {P = P} {Q = Q} f is-prop-P is-prop-Q (inl p) (inl p') =
+    ap inl (is-prop-P p p')
+  is-prop'-exclusive-coprod
+    {P = P} {Q = Q} f is-prop-P is-prop-Q (inl p) (inr q') =
+    ind-empty (f p q')
+  is-prop'-exclusive-coprod
+    {P = P} {Q = Q} f is-prop-P is-prop-Q (inr q) (inl p') =
+    ind-empty (f p' q)
+  is-prop'-exclusive-coprod
+    {P = P} {Q = Q} f is-prop-P is-prop-Q (inr q) (inr q') =
+    ap inr (is-prop-Q q q')
+
+abstract
+  is-prop-exclusive-coprod :
+    {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+    (P → ¬ Q) → is-prop P → is-prop Q → is-prop (coprod P Q)
+  is-prop-exclusive-coprod f is-prop-P is-prop-Q =
+    is-prop-is-prop'
+      ( is-prop'-exclusive-coprod f
+        ( is-prop'-is-prop is-prop-P)
+        ( is-prop'-is-prop is-prop-Q))
 
 abstract
   is-trunc-succ-empty : (k : 𝕋) → is-trunc (succ-𝕋 k) empty
