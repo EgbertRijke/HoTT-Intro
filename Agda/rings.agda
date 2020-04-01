@@ -19,6 +19,8 @@ has-mul-Ab A =
 Ring : (l1 : Level) → UU (lsuc l1)
 Ring l1 = Σ (Ab l1) has-mul-Ab
 
+{- Basic infrastructure of rings -}
+
 ab-Ring : {l1 : Level} → Ring l1 → Ab l1
 ab-Ring R = pr1 R
 
@@ -155,3 +157,57 @@ right-distributive-law-mul-add-Ring :
      ( add-Ring R (mul-Ring R x z) (mul-Ring R y z))
 right-distributive-law-mul-add-Ring R =
   pr2 (pr2 (pr2 (pr2 R)))
+
+{- Ring homomorphisms -}
+
+preserves-mul-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  hom-Ab (ab-Ring R1) (ab-Ring R2) → UU (l1 ⊔ l2)
+preserves-mul-Ring R1 R2 f =
+  (x y : type-Ring R1) →
+  Id ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f (mul-Ring R1 x y))
+     ( mul-Ring R2
+       ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f x)
+       ( map-hom-Ab (ab-Ring R1) (ab-Ring R2) f y))
+
+preserves-unit-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  hom-Ab (ab-Ring R1) (ab-Ring R2) → UU l2
+preserves-unit-Ring R1 R2 f =
+  Id (map-hom-Ab (ab-Ring R1) (ab-Ring R2) f (unit-Ring R1)) (unit-Ring R2)
+
+hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R : Ring l2) → UU (l1 ⊔ l2)
+hom-Ring R1 R2 =
+  Σ ( hom-Ab (ab-Ring R1) (ab-Ring R2))
+    ( λ f → (preserves-mul-Ring R1 R2 f) × (preserves-unit-Ring R1 R2 f))
+
+{- Basic infrastructure for ring homomorphisms. -}
+
+hom-Ab-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  hom-Ring R1 R2 → hom-Ab (ab-Ring R1) (ab-Ring R2)
+hom-Ab-hom-Ring R1 R2 = pr1
+
+map-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  hom-Ring R1 R2 → type-Ring R1 → type-Ring R2
+map-hom-Ring R1 R2 f =
+  map-hom-Ab (ab-Ring R1) (ab-Ring R2) (hom-Ab-hom-Ring R1 R2 f)
+
+preserves-add-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  (f : hom-Ring R1 R2) →
+  preserves-add (ab-Ring R1) (ab-Ring R2) (map-hom-Ring R1 R2 f)
+preserves-add-hom-Ring R1 R2 f =
+  preserves-add-Ab (ab-Ring R1) (ab-Ring R2) (hom-Ab-hom-Ring R1 R2 f)
+
+preserves-mul-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  (f : hom-Ring R1 R2) → preserves-mul-Ring R1 R2 (hom-Ab-hom-Ring R1 R2 f)
+preserves-mul-hom-Ring R1 R2 f = pr1 (pr2 f)
+
+preserves-unit-hom-Ring :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) →
+  (f : hom-Ring R1 R2) → preserves-unit-Ring R1 R2 (hom-Ab-hom-Ring R1 R2 f)
+preserves-unit-hom-Ring R1 R2 f = pr2 (pr2 f)
