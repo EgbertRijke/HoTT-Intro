@@ -470,6 +470,14 @@ abstract
       ( is-equiv-fib-pr1-fib-fam _ x)
       ( is-prop-map-is-emb pr1 is-emb-pr1-B x)
 
+abstract
+  is-trunc-succ-subtype :
+    {i j : Level} (k : 𝕋) {A : UU i} {P : A → UU j} →
+    ((x : A) → is-prop (P x)) →
+    is-trunc (succ-𝕋 k) A → is-trunc (succ-𝕋 k) (Σ A P)
+  is-trunc-succ-subtype k H is-trunc-A =
+    is-trunc-succ-is-emb k pr1 (is-emb-pr1-is-subtype H) is-trunc-A
+
 is-fiberwise-trunc : {l1 l2 l3 : Level} (k : 𝕋)  {A : UU l1} {B : A → UU l2}
   {C : A → UU l3} (f : (x : A) → B x → C x) → UU (l1 ⊔ (l2 ⊔ l3))
 is-fiberwise-trunc k f = (x : _) → is-trunc-map k (f x)
