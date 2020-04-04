@@ -20,15 +20,12 @@ hom-Prop :
 hom-Prop P Q =
   pair
     ( type-hom-Prop P Q)
-    ( is-prop-function-type (type-Prop P) (type-Prop Q) (is-prop-type-Prop Q))
+    ( is-prop-function-type (is-prop-type-Prop Q))
 
 is-prop-type-hom-Prop :
   { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → is-prop (type-hom-Prop P Q)
 is-prop-type-hom-Prop P Q =
-  is-prop-function-type
-    ( type-Prop P)
-    ( type-Prop Q)
-    ( is-prop-type-Prop Q)
+  is-prop-function-type (is-prop-type-Prop Q)
 
 equiv-Prop :
   { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
@@ -464,14 +461,8 @@ is-propositional-truncation-retract :
   is-propositional-truncation l P (retraction-retract-of R)
 is-propositional-truncation-retract {A = A} P R Q =
   is-equiv-is-prop
-    ( is-prop-function-type
-      ( type-Prop P)
-      ( type-Prop Q)
-      ( is-prop-type-Prop Q))
-    ( is-prop-function-type
-      ( A)
-      ( type-Prop Q)
-      ( is-prop-type-Prop Q))
+    ( is-prop-function-type (is-prop-type-Prop Q))
+    ( is-prop-function-type (is-prop-type-Prop Q))
     ( λ g → g ∘ (section-retract-of R))
 
 -- Exercise 13.2

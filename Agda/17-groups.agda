@@ -232,7 +232,7 @@ abstract
         ( λ x →                                             -- ix
           ( inv (left-unit-G (i x))) ∙                      -- = 1·(ix)
           ( ( ap (λ y → μ y (i x)) (inv (left-inv-i' x))) ∙ -- = (i'x·x)·(ix)
-            ( ( assoc-G (i' x) x (i x)) ∙                   -- = (i'x)·(x·i'x)
+            ( ( assoc-G (i' x) x (i x)) ∙                   -- = (i'x)·(x·ix)
               ( ( ap (μ (i' x)) (right-inv-i x)) ∙          -- = (i'x)·1
                 ( right-unit-G (i' x)))))))                 -- = i'x
 
@@ -493,6 +493,12 @@ hom-Monoid M1 M2 =
     ( preserves-unit-hom-Semi-Group M1 M2)
 
 {- We introduce group homomorphisms. -}
+
+preserves-mul-Group :
+  { l1 l2 : Level} (G : Group l1) (H : Group l2) →
+  (type-Group G → type-Group H) → UU (l1 ⊔ l2)
+preserves-mul-Group G H f =
+  preserves-mul (semi-group-Group G) (semi-group-Group H) f
 
 hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) → UU (l1 ⊔ l2)

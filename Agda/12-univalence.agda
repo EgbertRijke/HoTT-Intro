@@ -283,6 +283,10 @@ is-trunc-UU-trunc k i X Y =
       ( univalence (pr1 X) (pr1 Y))
       ( is-trunc-equiv-is-trunc k (pr2 X) (pr2 Y)))
 
+is-set-UU-Prop :
+  (l : Level) → is-set (UU-Prop l)
+is-set-UU-Prop l = is-trunc-UU-trunc (neg-one-𝕋) l
+
 ev-true-false :
   {l : Level} (A : UU l) → (f : bool → A) → A × A
 ev-true-false A f = pair (f true) (f false)

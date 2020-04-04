@@ -44,7 +44,7 @@ case-elim nb (inr b) = ex-falso' (nb b)
 
 is-prop-neg :
   {l : Level} {A : UU l} → is-prop (¬ A)
-is-prop-neg {A = A} = is-prop-function-type A empty is-prop-empty
+is-prop-neg {A = A} = is-prop-function-type is-prop-empty
 
 neg-Prop :
   {l : Level} (A : UU l) → UU-Prop l

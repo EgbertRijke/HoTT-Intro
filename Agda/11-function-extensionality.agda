@@ -235,18 +235,18 @@ abstract
 
 abstract
   is-trunc-function-type :
-    {l1 l2 : Level} (k : 𝕋) (A : UU l1) (B : UU l2) →
+    {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2} →
     is-trunc k B → is-trunc k (A → B)
-  is-trunc-function-type k A B is-trunc-B =
+  is-trunc-function-type k {A} {B} is-trunc-B =
     is-trunc-Π k {B = λ (x : A) → B} (λ x → is-trunc-B)
   
   is-prop-function-type :
-    {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     is-prop B → is-prop (A → B)
   is-prop-function-type = is-trunc-function-type neg-one-𝕋
 
   is-set-function-type :
-    {l1 l2 : Level} (A : UU l1) (B : UU l2) →
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     is-set B → is-set (A → B)
   is-set-function-type = is-trunc-function-type zero-𝕋
 
@@ -958,8 +958,8 @@ abstract
     {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → is-prop (P ↔ Q)
   is-prop-iff P Q =
     is-prop-prod
-      ( is-prop-function-type (pr1 P) (pr1 Q) (pr2 Q))
-      ( is-prop-function-type (pr1 Q) (pr1 P) (pr2 P))
+      ( is-prop-function-type (pr2 Q))
+      ( is-prop-function-type (pr2 P))
 
 abstract
   is-prop-equiv-Prop :
@@ -988,7 +988,7 @@ abstract
   is-contr-endomaps-is-prop :
     {l : Level} (P : UU l) → is-prop P → is-contr (P → P)
   is-contr-endomaps-is-prop P is-prop-P =
-    is-contr-is-prop-inh (is-prop-function-type P P is-prop-P) id
+    is-contr-is-prop-inh (is-prop-function-type is-prop-P) id
 
 -- Exercise 9.6
 
