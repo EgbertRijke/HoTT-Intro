@@ -55,17 +55,17 @@ is-prop-closed-under-inv-subset-Group G P =
   is-prop-Π
     ( λ x → is-prop-function-type (is-prop-type-Prop (P (inv-Group G x))))
 
-is-subgroup :
+is-subgroup-Group :
   {l1 l2 : Level} (G : Group l1) (P : subset-Group l2 G) → UU (l1 ⊔ l2)
-is-subgroup G P =
+is-subgroup-Group G P =
   ( contains-unit-subset-Group G P) ×
   ( ( closed-under-mul-subset-Group G P) ×
     ( closed-under-inv-subset-Group G P))
 
-is-prop-is-subgroup :
+is-prop-is-subgroup-Group :
   {l1 l2 : Level} (G : Group l1) (P : subset-Group l2 G) →
-  is-prop (is-subgroup G P)
-is-prop-is-subgroup G P =
+  is-prop (is-subgroup-Group G P)
+is-prop-is-subgroup-Group G P =
   is-prop-prod
     ( is-prop-contains-unit-subset-Group G P)
     ( is-prop-prod
@@ -76,7 +76,7 @@ is-prop-is-subgroup G P =
 
 Subgroup :
   (l : Level) {l1 : Level} (G : Group l1) → UU ((lsuc l) ⊔ l1)
-Subgroup l G = Σ (type-Group G → UU-Prop l) (is-subgroup G)
+Subgroup l G = Σ (type-Group G → UU-Prop l) (is-subgroup-Group G)
 
 subset-Subgroup :
   {l1 l2 : Level} (G : Group l1) →
@@ -85,7 +85,7 @@ subset-Subgroup G = pr1
 
 is-emb-subset-Subgroup :
   {l1 l2 : Level} (G : Group l1) → is-emb (subset-Subgroup {l2 = l2} G)
-is-emb-subset-Subgroup G = is-emb-pr1-is-subtype (is-prop-is-subgroup G)
+is-emb-subset-Subgroup G = is-emb-pr1-is-subtype (is-prop-is-subgroup-Group G)
 
 type-subset-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
@@ -100,7 +100,7 @@ is-prop-type-subset-Subgroup G P x =
 
 is-subgroup-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
-  is-subgroup G (subset-Subgroup G P)
+  is-subgroup-Group G (subset-Subgroup G P)
 is-subgroup-Subgroup G = pr2
 
 contains-unit-Subgroup :

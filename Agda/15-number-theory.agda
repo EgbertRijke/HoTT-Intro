@@ -1327,6 +1327,7 @@ least-element-non-empty-decidable-subset-ℕ P d (pair zero-ℕ p) =
 least-element-non-empty-decidable-subset-ℕ P d (pair (succ-ℕ n) p) = {!!}
 -}
 
+{-
 zero-Fin :
   (n : ℕ) → Fin (succ-ℕ n)
 zero-Fin zero-ℕ = inr star
@@ -1364,6 +1365,8 @@ idempotent-succ-Fin :
 idempotent-succ-Fin (succ-ℕ zero-ℕ) (inr star) = refl
 idempotent-succ-Fin (succ-ℕ (succ-ℕ n)) (inl x) = {!!}
 idempotent-succ-Fin (succ-ℕ (succ-ℕ n)) (inr x) = {!!}
+
+-}
 
 in-nat-ℤ : ℕ → ℤ
 in-nat-ℤ zero-ℕ = zero-ℤ

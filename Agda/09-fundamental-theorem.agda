@@ -357,9 +357,6 @@ is-contr-total-Eq-ℕ :
 is-contr-total-Eq-ℕ m =
   pair (center-total-Eq-ℕ m) (contraction-total-Eq-ℕ m)
 
-Eq-ℕ-eq : {x y : ℕ} → Id x y → Eq-ℕ x y
-Eq-ℕ-eq {x} {.x} refl = refl-Eq-ℕ x
-
 is-equiv-Eq-ℕ-eq :
   {m n : ℕ} → is-equiv (Eq-ℕ-eq {m} {n})
 is-equiv-Eq-ℕ-eq {m} {n} =

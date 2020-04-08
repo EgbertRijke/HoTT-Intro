@@ -63,6 +63,9 @@ refl-Eq-ℕ : (n : ℕ) → Eq-ℕ n n
 refl-Eq-ℕ zero-ℕ = star
 refl-Eq-ℕ (succ-ℕ n) = refl-Eq-ℕ n
 
+Eq-ℕ-eq : {x y : ℕ} → Id x y → Eq-ℕ x y
+Eq-ℕ-eq {x} {.x} refl = refl-Eq-ℕ x
+
 succ-relation-ℕ :
   {i : Level} (R : ℕ → ℕ → UU i) → ℕ → ℕ → UU i
 succ-relation-ℕ R m n = R (succ-ℕ m) (succ-ℕ n)
@@ -351,6 +354,7 @@ left-law-leq-mul-ℕ k m n H =
     ( commutative-mul-ℕ k m)
     ( commutative-mul-ℕ k n)
     ( right-law-leq-mul-ℕ k m n H)
+-}
 
 -- We show that ℤ is an ordered ring
 
@@ -382,7 +386,9 @@ path-ind-Eq-ℕ R ρ zero-ℕ zero-ℕ star = ρ zero-ℕ
 path-ind-Eq-ℕ R ρ zero-ℕ (succ-ℕ n) ()
 path-ind-Eq-ℕ R ρ (succ-ℕ m) zero-ℕ ()
 path-ind-Eq-ℕ R ρ (succ-ℕ m) (succ-ℕ n) e =
-  path-ind-Eq-ℕ (succ-fam-Eq-ℕ R) (succ-refl-fam-Eq-ℕ R ρ) m n e
+  path-ind-Eq-ℕ
+    ( λ m n e → R (succ-ℕ m) (succ-ℕ n) e)
+    ( λ n → ρ (succ-ℕ n)) m n e
 
 comp-path-ind-Eq-ℕ :
   {i : Level} (R : (m n : ℕ) → Eq-ℕ m n → UU i)
@@ -390,8 +396,10 @@ comp-path-ind-Eq-ℕ :
   ( n : ℕ) → Id (path-ind-Eq-ℕ R ρ n n (refl-Eq-ℕ n)) (ρ n)
 comp-path-ind-Eq-ℕ R ρ zero-ℕ = refl
 comp-path-ind-Eq-ℕ R ρ (succ-ℕ n) =
-  comp-path-ind-Eq-ℕ (succ-fam-Eq-ℕ R) (succ-refl-fam-Eq-ℕ R ρ) n
--}
+  comp-path-ind-Eq-ℕ
+    ( λ m n e → R (succ-ℕ m) (succ-ℕ n) e)
+    ( λ n → ρ (succ-ℕ n)) n
+
 
 {-
 -- Graphs
