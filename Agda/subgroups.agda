@@ -163,53 +163,53 @@ unit-group-Subgroup G P =
 mul-group-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
   ( x y : type-group-Subgroup G P) → type-group-Subgroup G P
-mul-group-Subgroup G P (pair x p) (pair y q) =
-  pair ( mul-Group G x y)
-       ( closed-under-mul-Subgroup G P x y p q)
+mul-group-Subgroup G P x y =
+  pair ( mul-Group G (pr1 x) (pr1 y))
+       ( closed-under-mul-Subgroup G P (pr1 x) (pr1 y) (pr2 x) (pr2 y))
 
 inv-group-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
   type-group-Subgroup G P → type-group-Subgroup G P
-inv-group-Subgroup G P (pair x p) =
-  pair (inv-Group G x) (closed-under-inv-Subgroup G P x p)
+inv-group-Subgroup G P x =
+  pair (inv-Group G (pr1 x)) (closed-under-inv-Subgroup G P (pr1 x) (pr2 x))
 
 is-associative-mul-group-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
   ( x y z : type-group-Subgroup G P) →
   Id (mul-group-Subgroup G P (mul-group-Subgroup G P x y) z)
      (mul-group-Subgroup G P x (mul-group-Subgroup G P y z))
-is-associative-mul-group-Subgroup G P (pair x p) (pair y q) (pair z r) =
-  eq-subgroup-eq-group G P (is-associative-mul-Group G x y z)
+is-associative-mul-group-Subgroup G P x y z =
+  eq-subgroup-eq-group G P (is-associative-mul-Group G (pr1 x) (pr1 y) (pr1 z))
 
 left-unit-law-group-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
   ( x : type-group-Subgroup G P) →
   Id (mul-group-Subgroup G P (unit-group-Subgroup G P) x) x
-left-unit-law-group-Subgroup G P (pair x p) =
-  eq-subgroup-eq-group G P (left-unit-law-Group G x)
+left-unit-law-group-Subgroup G P x =
+  eq-subgroup-eq-group G P (left-unit-law-Group G (pr1 x))
 
 right-unit-law-group-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
   ( x : type-group-Subgroup G P) →
   Id (mul-group-Subgroup G P x (unit-group-Subgroup G P)) x
-right-unit-law-group-Subgroup G P (pair x p) =
-  eq-subgroup-eq-group G P (right-unit-law-Group G x)
+right-unit-law-group-Subgroup G P x =
+  eq-subgroup-eq-group G P (right-unit-law-Group G (pr1 x))
 
 left-inverse-law-group-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
   ( x : type-group-Subgroup G P) →
   Id ( mul-group-Subgroup G P (inv-group-Subgroup G P x) x)
      ( unit-group-Subgroup G P)
-left-inverse-law-group-Subgroup G P (pair x p) =
-  eq-subgroup-eq-group G P (left-inverse-law-Group G x)
+left-inverse-law-group-Subgroup G P x =
+  eq-subgroup-eq-group G P (left-inverse-law-Group G (pr1 x))
 
 right-inverse-law-group-Subgroup :
   {l1 l2 : Level} (G : Group l1) (P : Subgroup l2 G) →
   ( x : type-group-Subgroup G P) →
   Id ( mul-group-Subgroup G P x (inv-group-Subgroup G P x))
      ( unit-group-Subgroup G P)
-right-inverse-law-group-Subgroup G P (pair x p) =
-  eq-subgroup-eq-group G P (right-inverse-law-Group G x)
+right-inverse-law-group-Subgroup G P x =
+  eq-subgroup-eq-group G P (right-inverse-law-Group G (pr1 x))
 
 group-Subgroup :
   {l1 l2 : Level} (G : Group l1) → Subgroup l2 G → Group (l1 ⊔ l2)
