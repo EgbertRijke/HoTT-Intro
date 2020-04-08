@@ -166,6 +166,11 @@ mul-Group :
   type-Group G → type-Group G → type-Group G
 mul-Group G = pr1 (associative-mul-Group G)
 
+mul-Group' :
+  {l : Level} (G : Group l) →
+  type-Group G → type-Group G → type-Group G
+mul-Group' G x y = mul-Group G y x
+
 is-associative-mul-Group :
   {l : Level} (G : Group l) (x y z : type-Group G) →
   Id (mul-Group G (mul-Group G x y) z) (mul-Group G x (mul-Group G y z))
@@ -212,6 +217,36 @@ right-inverse-law-Group :
   {l : Level} (G : Group l) (x : type-Group G) →
   Id (mul-Group G x (inv-Group G x)) (unit-Group G)
 right-inverse-law-Group G = pr2 (pr2 (has-inverses-Group G))
+
+is-equiv-mul-Group :
+  {l : Level} (G : Group l) (x : type-Group G) →
+  is-equiv (mul-Group G x)
+is-equiv-mul-Group G x =
+  is-equiv-has-inverse
+    ( mul-Group G (inv-Group G x))
+    ( λ y →
+      ( inv (is-associative-mul-Group G _ _ _)) ∙
+      ( ( ap (mul-Group' G y) (right-inverse-law-Group G x)) ∙
+        ( left-unit-law-Group G y)))
+    ( λ y →
+      ( inv (is-associative-mul-Group G _ _ _)) ∙
+      ( ( ap (mul-Group' G y) (left-inverse-law-Group G x)) ∙
+        ( left-unit-law-Group G y)))
+
+is-equiv-mul-Group' :
+  {l : Level} (G : Group l) (x : type-Group G) →
+  is-equiv (mul-Group' G x)
+is-equiv-mul-Group' G x =
+  is-equiv-has-inverse
+    ( mul-Group' G (inv-Group G x))
+    ( λ y →
+      ( is-associative-mul-Group G _ _ _) ∙
+      ( ( ap (mul-Group G y) (left-inverse-law-Group G x)) ∙
+        ( right-unit-law-Group G y)))
+    ( λ y →
+      ( is-associative-mul-Group G _ _ _) ∙
+      ( ( ap (mul-Group G y) (right-inverse-law-Group G x)) ∙
+        ( right-unit-law-Group G y)))
 
 {- We show that being a group is a proposition. -}
 

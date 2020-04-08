@@ -847,6 +847,12 @@ abstract
         ( is-emb-g (h x) (h y)))
 
 abstract
+  is-emb-comp' :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (g : B → X) (h : A → B) → is-emb g → is-emb h → is-emb (g ∘ h)
+  is-emb-comp' g h = is-emb-comp (g ∘ h) g h refl-htpy
+
+abstract
   is-emb-right-factor :
     {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
     (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) → is-emb g →

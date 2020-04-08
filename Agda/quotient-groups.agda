@@ -10,18 +10,28 @@ open subgroups public
 left-coset-relation :
   {l1 l2 : Level} (G : Group l1) (H : Subgroup l2 G) →
   (x y : type-Group G) → UU (l1 ⊔ l2)
-left-coset-relation G H x y =
-  Σ ( type-group-Subgroup G H)
-    ( λ z → Id (mul-Group G x (incl-group-Subgroup G H z)) y)
+left-coset-relation G H x =
+  fib ((mul-Group G x) ∘ (incl-group-Subgroup G H))
 
 right-coset-relation :
   {l1 l2 : Level} (G : Group l1) (H : Subgroup l2 G) →
   (x y : type-Group G) → UU (l1 ⊔ l2)
-right-coset-relation G H x y =
-  Σ ( type-group-Subgroup G H)
-    ( λ z → Id (mul-Group G (incl-group-Subgroup G H z) x) y)
+right-coset-relation G H x =
+  fib ((mul-Group' G x) ∘ (incl-group-Subgroup G H))
 
 {- We show that the left coset relation is an equivalence relation -}
+
+is-prop-left-coset-relation :
+  {l1 l2 : Level} (G : Group l1) (H : Subgroup l2 G) →
+  (x y : type-Group G) → is-prop (left-coset-relation G H x y)
+is-prop-left-coset-relation G H x =
+  is-prop-map-is-emb
+    ( (mul-Group G x) ∘ (incl-group-Subgroup G H))
+    ( is-emb-comp'
+      ( mul-Group G x)
+      ( incl-group-Subgroup G H)
+      ( is-emb-is-equiv (mul-Group G x) (is-equiv-mul-Group G x))
+      ( is-emb-incl-group-Subgroup G H))
 
 is-reflexive-left-coset-relation :
   {l1 l2 : Level} (G : Group l1) (H : Subgroup l2 G) →
@@ -55,6 +65,18 @@ is-transitive-left-coset-relation G H x y z (pair h1 p1) (pair h2 p2) =
          ( ( ap (λ t → mul-Group G t (incl-group-Subgroup G H h2)) p1) ∙ p2))
 
 {- We show that the right coset relation is an equivalence relation -}
+
+is-prop-right-coset-relation :
+  {l1 l2 : Level} (G : Group l1) (H : Subgroup l2 G) →
+  (x y : type-Group G) → is-prop (right-coset-relation G H x y)
+is-prop-right-coset-relation G H x =
+  is-prop-map-is-emb
+    ( (mul-Group' G x) ∘ (incl-group-Subgroup G H))
+    ( is-emb-comp'
+      ( mul-Group' G x)
+      ( incl-group-Subgroup G H)
+      ( is-emb-is-equiv (mul-Group' G x) (is-equiv-mul-Group' G x))
+      ( is-emb-incl-group-Subgroup G H))
 
 is-reflexive-right-coset-relation :
   {l1 l2 : Level} (G : Group l1) (H : Subgroup l2 G) →
