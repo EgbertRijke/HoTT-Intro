@@ -1474,6 +1474,62 @@ triangle-hom-slice :
   (f : A → X) (g : B → X) (h : hom-slice f g) →
   f ~ (g ∘ (map-hom-slice f g h))
 triangle-hom-slice f g h = pr2 h
+
+{- We characterize the identity type of hom-slice -}
+
+htpy-hom-slice :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) (h h' : hom-slice f g) → UU _
+htpy-hom-slice f g h h' =
+  Σ ( map-hom-slice f g h ~ map-hom-slice f g h')
+    ( λ K →
+      ( (triangle-hom-slice f g h) ∙h (g ·l K)) ~
+      ( triangle-hom-slice f g h'))
+
+refl-htpy-hom-slice :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) (h : hom-slice f g) →
+  htpy-hom-slice f g h h
+refl-htpy-hom-slice f g h = pair refl-htpy htpy-right-unit
+
+htpy-hom-slice-eq :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) (h h' : hom-slice f g) →
+  Id h h' → htpy-hom-slice f g h h'
+htpy-hom-slice-eq f g h .h refl = refl-htpy-hom-slice f g h
+
+is-contr-total-htpy-hom-slice :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) (h : hom-slice f g) →
+  is-contr (Σ (hom-slice f g) (htpy-hom-slice f g h))
+is-contr-total-htpy-hom-slice f g h =
+  is-contr-total-Eq-structure
+    ( λ h' H' K → ((triangle-hom-slice f g h) ∙h (g ·l K)) ~ H')
+    ( is-contr-total-htpy (map-hom-slice f g h))
+    ( pair (map-hom-slice f g h) refl-htpy)
+    ( is-contr-equiv'
+      ( Σ ( f ~ (g ∘ (map-hom-slice f g h)))
+          ( λ H' → (triangle-hom-slice f g h) ~ H'))
+      ( equiv-tot (equiv-htpy-concat htpy-right-unit))
+      ( is-contr-total-htpy (triangle-hom-slice f g h)))
+
+is-equiv-htpy-hom-slice-eq :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) (h h' : hom-slice f g) →
+  is-equiv (htpy-hom-slice-eq f g h h')
+is-equiv-htpy-hom-slice-eq f g h =
+  fundamental-theorem-id h
+    ( refl-htpy-hom-slice f g h)
+    ( is-contr-total-htpy-hom-slice f g h)
+    ( htpy-hom-slice-eq f g h)
+
+eq-htpy-hom-slice :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) (h h' : hom-slice f g) →
+  htpy-hom-slice f g h h' → Id h h'
+eq-htpy-hom-slice f g h h' = inv-is-equiv (is-equiv-htpy-hom-slice-eq f g h h')
+
+{- Now we relate morphisms in the slice category to fiberwise morphisms -}
   
 fiberwise-hom-hom-slice :
   {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}

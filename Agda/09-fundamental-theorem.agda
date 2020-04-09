@@ -383,6 +383,11 @@ is-emb-map-emb :
   { i j : Level} {A : UU i} {B : UU j} (f : A ↪ B) → is-emb (map-emb f)
 is-emb-map-emb f = pr2 f
 
+eq-emb :
+  {i j : Level} {A : UU i} {B : UU j} (f : A ↪ B) →
+  {x y : A} → Id (map-emb f x) (map-emb f y) → Id x y
+eq-emb f {x} {y} = inv-is-equiv (is-emb-map-emb f x y)
+
 abstract
   is-emb-is-equiv :
     {i j : Level} {A : UU i} {B : UU j} (f : A → B) → is-equiv f → is-emb f
@@ -393,6 +398,15 @@ abstract
         ( equiv-tot (λ y → equiv-inv (f x) (f y)))
         ( is-contr-map-is-equiv is-equiv-f (f x)))
       ( λ y p → ap f p)
+
+emb-equiv :
+  {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (A ↪ B)
+emb-equiv e =
+  pair (map-equiv e) (is-emb-is-equiv (map-equiv e) (is-equiv-map-equiv e))
+
+emb-id :
+  {i : Level} {A : UU i} → (A ↪ A)
+emb-id {i} {A} = emb-equiv (equiv-id A)
 
 equiv-ap :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) (x y : A) →

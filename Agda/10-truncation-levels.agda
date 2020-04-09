@@ -446,6 +446,12 @@ abstract
     is-trunc-map-is-trunc-ap neg-two-𝕋 f
       ( λ x y → is-contr-map-is-equiv (is-emb-f x y))
 
+fib-prop-emb :
+  {i j : Level} {A : UU i} {B : UU j} (f : A ↪ B) → B → UU-Prop (i ⊔ j)
+fib-prop-emb f y =
+  pair ( fib (map-emb f) y)
+       ( is-prop-map-is-emb (map-emb f) (is-emb-map-emb f) y)
+
 abstract
   is-emb-pr1-is-subtype : {i j : Level} {A : UU i} {B : A → UU j} →
     is-subtype B → is-emb (pr1 {B = B})

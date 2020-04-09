@@ -2,8 +2,8 @@
 
 module 15-sets where
 
-import 14-propositional-truncation
-open 14-propositional-truncation public
+import 14-groups
+open 14-groups public
 
 {- Equivalence relations -}
 
@@ -92,7 +92,14 @@ universal-property-set-quotient :
   (l : Level) {l1 l2 l3 : Level} {A : UU l1} (R : Eq-Rel l2 A)
   {B : UU-Set l3} (f : A → type-Set B) (H : identifies-Eq-Rel R f) → UU _
 universal-property-set-quotient l R {B} f H =
-  (X : UU-Set l) → is-equiv (precomp-map-universal-property-Eq-Rel R {B} f H X) 
+  (X : UU-Set l) → is-equiv (precomp-map-universal-property-Eq-Rel R {B} f H X)
+
+{- Effective quotients -}
+
+is-effective-Set-Quotient :
+  {l1 l2 l3 : Level} {A : UU l1} (R : Eq-Rel l2 A) (B : UU-Set l3)
+  (f : A → type-Set B) (H : identifies-Eq-Rel R f) → UU (l1 ⊔ l2)
+is-effective-Set-Quotient R B f H = {!!}
   
 -- Section 13.4
 

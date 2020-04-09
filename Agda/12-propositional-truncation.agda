@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 14-propositional-truncation where
+module 12-propositional-truncation where
 
-import 13-groups
-open 13-groups public
+import 11-function-extensionality
+open 11-function-extensionality public
 
 -- Section 13 Propositional truncations, the image of a map, and the replacement axiom
 
@@ -453,6 +453,25 @@ abstract
 
 {- We introduce the image inclusion of a map. -}
 
+comp-hom-slice :
+  {l1 l2 l3 l4 : Level} {X : UU l1} {A : UU l2} {B : UU l3} {C : UU l4}
+  (f : A → X) (g : B → X) (h : C → X) →
+  hom-slice g h → hom-slice f g → hom-slice f h
+comp-hom-slice f g h j i =
+  pair ( ( map-hom-slice g h j) ∘
+         ( map-hom-slice f g i))
+       ( ( triangle-hom-slice f g i) ∙h
+         ( (triangle-hom-slice g h j) ·r (map-hom-slice f g i)))
+
+id-hom-slice :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) → hom-slice f f
+id-hom-slice f = pair id refl-htpy
+
+is-equiv-hom-slice :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A → X) (g : B → X) → hom-slice f g → UU (l2 ⊔ l3)
+is-equiv-hom-slice f g h = is-equiv (map-hom-slice f g h)
+
 precomp-emb :
   { l1 l2 l3 l4 : Level} {X : UU l1} {A : UU l2} (f : A → X)
   {B : UU l3} ( i : B ↪ X) (q : hom-slice f (map-emb i)) →
@@ -502,6 +521,140 @@ universal-property-image-universal-property-image' l f i q up' C j =
     ( is-prop-hom-slice (map-emb i) j)
     ( is-prop-hom-slice f j)
     ( up' C j)
+
+{- Remark 14.4.4 -}
+
+universal-property-image-has-section :
+  (l : Level) {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  sec f → universal-property-image l f emb-id (pair f refl-htpy)
+universal-property-image-has-section l f (pair g H) =
+  universal-property-image-universal-property-image'
+    l f emb-id (pair f refl-htpy)
+    ( λ B m h → pair ((pr1 h) ∘ g) ( λ x → (inv (H x)) ∙ (pr2 h (g x))))
+
+universal-property-image-is-emb :
+  (l : Level) {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  (H : is-emb f) → universal-property-image l f (pair f H) (pair id refl-htpy)
+universal-property-image-is-emb l f H =
+  universal-property-image-universal-property-image'
+    l f (pair f H) (pair id refl-htpy)
+    ( λ B m h → h)
+
+{- The existence of the image -}
+
+im :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) → UU (l1 ⊔ l2)
+im {X = X} {A} f = Σ X (λ x → type-trunc-Prop (fib f x))
+
+inclusion-im :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) → im f → X
+inclusion-im f = pr1
+
+is-emb-inclusion-im :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  is-emb (inclusion-im f)
+is-emb-inclusion-im f =
+  is-emb-pr1-is-subtype (λ x → is-prop-type-trunc-Prop (fib f x))
+
+emb-im :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) → im f ↪ X
+emb-im f = pair (inclusion-im f) (is-emb-inclusion-im f)
+
+map-im :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) → A → im f
+map-im f a = pair (f a) (unit-trunc-Prop (fib f (f a)) (pair a refl))
+
+triangle-im :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  f ~ (inclusion-im f ∘ map-im f)
+triangle-im f a = refl
+
+hom-slice-im :
+  {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  hom-slice f (inclusion-im f)
+hom-slice-im f = pair (map-im f) (triangle-im f)
+
+fiberwise-map-universal-property-im :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3} (f : A → X) →
+  (m : B ↪ X) (h : hom-slice f (map-emb m)) →
+  (x : X) → type-trunc-Prop (fib f x) → fib (map-emb m) x
+fiberwise-map-universal-property-im f m h x =
+  map-universal-property-trunc-Prop
+    { A = (fib f x)}
+    ( fib-prop-emb m x)
+    ( λ t →
+      pair ( map-hom-slice f (map-emb m) h (pr1 t))
+           ( ( inv (triangle-hom-slice f (map-emb m) h (pr1 t))) ∙
+             ( pr2 t)))
+
+map-universal-property-im :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3} (f : A → X) →
+  (m : B ↪ X) (h : hom-slice f (map-emb m)) → im f → B
+map-universal-property-im f m h (pair x t) =
+  pr1 (fiberwise-map-universal-property-im f m h x t)
+
+triangle-universal-property-im :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3} (f : A → X) →
+  (m : B ↪ X) (h : hom-slice f (map-emb m)) →
+  inclusion-im f ~ ((map-emb m) ∘ (map-universal-property-im f m h))
+triangle-universal-property-im f m h (pair x t) =
+  inv (pr2 (fiberwise-map-universal-property-im f m h x t))
+
+universal-property-im :
+  (l : Level) {l1 l2 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  universal-property-image l f (emb-im f) (hom-slice-im f)
+universal-property-im l f =
+  universal-property-image-universal-property-image'
+    l f (emb-im f) (hom-slice-im f)
+    ( λ B m h →
+      pair ( map-universal-property-im f m h)
+           ( triangle-universal-property-im f m h))
+
+{- The uniqueness of the image -}
+
+is-equiv-hom-slice-emb :
+  {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} {B : UU l3}
+  (f : A ↪ X) (g : B ↪ X) (h : hom-slice (map-emb f) (map-emb g)) →
+  hom-slice (map-emb g) (map-emb f) →
+  is-equiv-hom-slice (map-emb f) (map-emb g) h
+is-equiv-hom-slice-emb f g h i =
+  is-equiv-has-inverse
+    ( map-hom-slice (map-emb g) (map-emb f) i)
+    ( λ y →
+      eq-emb g
+      ( inv
+        ( ( triangle-hom-slice
+            ( map-emb g)
+            ( map-emb f)
+            ( i)
+            ( y)) ∙
+          ( triangle-hom-slice
+            ( map-emb f)
+            ( map-emb g)
+            ( h)
+            ( map-hom-slice (map-emb g) (map-emb f) i y)))))
+    ( λ x →
+      eq-emb f
+      ( inv
+        ( ( triangle-hom-slice (map-emb f) (map-emb g) h x) ∙
+          ( triangle-hom-slice (map-emb g) (map-emb f) i
+            ( map-hom-slice
+              ( map-emb f)
+              ( map-emb g)
+              ( h)
+              ( x))))))
+
+is-equiv-up-image-up-image :
+  {l1 l2 l3 l4 : Level} {X : UU l1} {A : UU l2} (f : A → X)
+  {B : UU l3} (i : B ↪ X) (q : hom-slice f (map-emb i))
+  {B' : UU l4} (i' : B' ↪ X) (q' : hom-slice f (map-emb i'))
+  (h : hom-slice (map-emb i) (map-emb i'))
+  (p : Id (comp-hom-slice f (map-emb i) (map-emb i') h q) q') →
+  ({l : Level} → universal-property-image l f i q) →
+  ({l : Level} → universal-property-image l f i' q') →
+  is-equiv (map-hom-slice (map-emb i) (map-emb i') h)
+is-equiv-up-image-up-image f i q i' q' h p up-i up-i' = {!!}
+
 
 -- Exercises
 
