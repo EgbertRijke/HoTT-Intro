@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 17-groups where
+module 13-groups where
 
-import 16-sets
-open 16-sets public
+import 12-univalence
+open 12-univalence public
 
 -- Section 12.3 Groups in univalent mathematics
 

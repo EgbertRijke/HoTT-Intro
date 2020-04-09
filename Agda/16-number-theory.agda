@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 15-number-theory where
+module 16-number-theory where
 
-import 14-image
-open 14-image public
+import 15-sets
+open 15-sets public
 
 -- Section 10.1 Decidability.
 

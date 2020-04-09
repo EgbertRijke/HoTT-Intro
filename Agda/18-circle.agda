@@ -2,8 +2,8 @@
 
 module 18-circle where
 
-import 17-groups
-open 17-groups public
+import 16-number-theory
+open 16-number-theory public
 
 {- Section 11.1 The induction principle of the circle -}
 

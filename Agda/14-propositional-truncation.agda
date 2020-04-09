@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 13-propositional-truncation where
+module 14-propositional-truncation where
 
-import 12-univalence
-open 12-univalence public
+import 13-groups
+open 13-groups public
 
 -- Section 13 Propositional truncations, the image of a map, and the replacement axiom
 
@@ -450,6 +450,58 @@ abstract
               ( f)
               ( λ p → type-Prop (Q p))
               ( λ p → is-prop-type-Prop (Q p)))))
+
+{- We introduce the image inclusion of a map. -}
+
+precomp-emb :
+  { l1 l2 l3 l4 : Level} {X : UU l1} {A : UU l2} (f : A → X)
+  {B : UU l3} ( i : B ↪ X) (q : hom-slice f (map-emb i)) →
+  {C : UU l4} ( j : C ↪ X) (r : hom-slice (map-emb i) (map-emb j)) →
+  hom-slice f (map-emb j)
+precomp-emb f i q j r =
+  pair
+    ( ( map-hom-slice (map-emb i) (map-emb j) r) ∘
+      ( map-hom-slice f (map-emb i) q))
+    ( ( triangle-hom-slice f (map-emb i) q) ∙h
+      ( ( triangle-hom-slice (map-emb i) (map-emb j) r) ·r
+        ( map-hom-slice f (map-emb i) q)))
+
+is-prop-hom-slice :
+  { l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  { B : UU l3} (i : B ↪ X) → is-prop (hom-slice f (map-emb i))
+is-prop-hom-slice {X = X} f i =
+  is-prop-is-equiv
+    ( (x : X) → fib f x → fib (map-emb i) x)
+    ( fiberwise-hom-hom-slice f (map-emb i))
+    ( is-equiv-fiberwise-hom-hom-slice f (map-emb i))
+    ( is-prop-Π
+      ( λ x → is-prop-Π
+        ( λ p → is-prop-map-is-emb (map-emb i) (is-emb-map-emb i) x)))
+
+universal-property-image :
+  ( l : Level) {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  { B : UU l3} (i : B ↪ X) (q : hom-slice f (map-emb i)) →
+  UU (lsuc l ⊔ l1 ⊔ l2 ⊔ l3)
+universal-property-image l {X = X} f i q =
+  ( C : UU l) (j : C ↪ X) → is-equiv (precomp-emb f i q j)
+
+universal-property-image' :
+  ( l : Level) {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  { B : UU l3} (i : B ↪ X) (q : hom-slice f (map-emb i)) →
+  UU (lsuc l ⊔ l1 ⊔ l2 ⊔ l3)
+universal-property-image' l {X = X} f i q =
+  ( C : UU l) (j : C ↪ X) →
+    hom-slice f (map-emb j) → hom-slice (map-emb i) (map-emb j)
+
+universal-property-image-universal-property-image' :
+  ( l : Level) {l1 l2 l3 : Level} {X : UU l1} {A : UU l2} (f : A → X) →
+  { B : UU l3} (i : B ↪ X) (q : hom-slice f (map-emb i)) →
+  universal-property-image' l f i q → universal-property-image l f i q
+universal-property-image-universal-property-image' l f i q up' C j =
+  is-equiv-is-prop
+    ( is-prop-hom-slice (map-emb i) j)
+    ( is-prop-hom-slice f j)
+    ( up' C j)
 
 -- Exercises
 
