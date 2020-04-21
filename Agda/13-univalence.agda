@@ -227,6 +227,48 @@ funext-univalence :
 funext-univalence {A = A} {B} f =
   FUNEXT-WEAK-FUNEXT (λ A B → weak-funext-univalence) A B f
 
+-- Finite sets
+
+is-finite-Prop :
+  {l : Level} → UU l → UU-Prop l
+is-finite-Prop X = trunc-Prop (Σ ℕ (λ n → Fin n ≃ X))
+
+is-finite :
+  {l : Level} → UU l → UU l
+is-finite X = type-Prop (is-finite-Prop X)
+
+{-
+cardinality-is-finite :
+  {l : Level} (A : UU l) →
+  is-finite A → Σ ℕ (λ n → type-trunc-Prop (Fin n ≃ A))
+cardinality-is-finite A
+-}
+
+is-prop-is-finite :
+  {l : Level} (X : UU l) → is-prop (is-finite X)
+is-prop-is-finite X = is-prop-type-Prop (is-finite-Prop X)
+
+𝔽 : UU (lsuc lzero)
+𝔽 = Σ (UU lzero) is-finite
+
+type-𝔽 : 𝔽 → UU lzero
+type-𝔽 X = pr1 X
+
+is-finite-type-𝔽 : (X : 𝔽) → is-finite (type-𝔽 X)
+is-finite-type-𝔽 X = pr2 X
+
+type-free-symmetric-monoid :
+  {l1 : Level} (A : UU l1) → UU (lsuc lzero ⊔ l1)
+type-free-symmetric-monoid A = Σ 𝔽 (λ X → type-𝔽 X → A)
+
+{-
+μ-free-symmetric-monoid :
+  {l : Level} (A : UU l) →
+  type-free-symmetric-monoid (type-free-symmetric-monoid A) →
+  type-free-symmetric-monoid A
+μ-free-symmetric-monoid A x = {!!}
+-}
+
 -- Exercises
 
 -- Exercise 10.1
@@ -368,7 +410,7 @@ eq-false-equiv' e p (inr x) =
   ind-empty
     ( Eq-𝟚-eq true false
       ( ap pr1
-        ( is-prop-is-contr'
+        ( eq-is-contr
           ( is-contr-map-is-equiv (is-equiv-map-equiv e) true)
           ( pair true p)
           ( pair false (eq-true (map-equiv e false) x)))))

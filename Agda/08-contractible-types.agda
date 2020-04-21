@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module 08-contractible-types where
 
@@ -16,11 +16,16 @@ abstract
     {i : Level} {A : UU i} → is-contr A → A
   center (pair c is-contr-A) = c
   
-  -- We make sure that the contraction is coherent in a straightforward way
+-- We make sure that the contraction is coherent in a straightforward way
+eq-is-contr :
+  {i : Level} {A : UU i} → is-contr A → (x y : A) → Id x y
+eq-is-contr (pair c C) x y = (inv (C x)) ∙ (C y)
+
+abstract
   contraction :
     {i : Level} {A : UU i} (is-contr-A : is-contr A) →
     (const A A (center is-contr-A) ~ id)
-  contraction (pair c C) x = (inv (C c)) ∙ (C x)
+  contraction (pair c C) x = eq-is-contr (pair c C) c x
   
   coh-contraction :
     {i : Level} {A : UU i} (is-contr-A : is-contr A) →
@@ -335,27 +340,18 @@ abstract
 
 -- In this exercise we are asked to show that the identity types of a contractible type are again contractible. In the terminology of Lecture 8: we are showing that contractible types are propositions.
 
+contraction-is-prop-is-contr :
+  {i : Level} {A : UU i} (H : is-contr A) {x y : A} →
+  (p : Id x y) → Id (eq-is-contr H x y) p
+contraction-is-prop-is-contr (pair c C) {x} refl = left-inv (C x)
+
 abstract
   is-prop-is-contr : {i : Level} {A : UU i} → is-contr A →
     (x y : A) → is-contr (Id x y)
-  is-prop-is-contr {i} {A} is-contr-A =
-    sing-ind-is-contr A is-contr-A
-      ( λ x → ((y : A) → is-contr (Id x y)))
-      ( center is-contr-A)
-      ( λ y → pair
-        ( contraction is-contr-A y)
-        ( ind-Id
-          ( center is-contr-A)
-          ( λ z (p : Id (center is-contr-A) z) →
-            Id (contraction is-contr-A z) p)
-          ( coh-contraction is-contr-A)
-          ( y)))
-
-abstract
-  is-prop-is-contr' : {i : Level} {A : UU i} → is-contr A →
-    (x y : A) → Id x y
-  is-prop-is-contr' is-contr-A x y =
-    center (is-prop-is-contr is-contr-A x y)
+  is-prop-is-contr {i} {A} is-contr-A x y =
+    pair
+      ( eq-is-contr is-contr-A x y)
+      ( contraction-is-prop-is-contr is-contr-A)
 
 -- Exercise 6.2
 

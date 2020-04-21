@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module 04-inductive-types where
 
@@ -28,11 +28,8 @@ data empty : UU lzero where
 ind-empty : {i : Level} {P : empty → UU i} → ((x : empty) → P x)
 ind-empty ()
 
-ex-falso : {i : Level} {P : empty →  UU i} → ((x : empty) → P x)
+ex-falso : {i : Level} {A : UU i} → empty → A
 ex-falso = ind-empty
-
-ex-falso' : {i : Level} {A : UU i} → empty → A
-ex-falso' = ex-falso
 
 -- Definition 4.3.2
 

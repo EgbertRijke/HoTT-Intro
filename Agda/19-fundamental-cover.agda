@@ -225,9 +225,9 @@ abstract
     is-equiv-left-is-equiv-right-square
       ( ev-free-loop' l P)
       ( ev-free-loop' l (λ x → raise l2 (P x)))
-      ( postcomp-Π (λ x → map-raise l2 (P x)))
-      ( functor-dependent-free-loops l (λ x → map-raise l2 (P x)))
-      ( square-functor-dependent-free-loops l (λ x → map-raise l2 (P x)))
+      ( postcomp-Π (λ x → map-raise))
+      ( functor-dependent-free-loops l (λ x → map-raise))
+      ( square-functor-dependent-free-loops l (λ x → map-raise))
       ( is-equiv-postcomp-Π _ (λ x → is-equiv-map-raise l2 (P x)))
       ( is-equiv-functor-dependent-free-loops-is-fiberwise-equiv l
         ( λ x → is-equiv-map-raise l2 (P x)))

@@ -2,8 +2,8 @@
 
 module 22-descent where
 
-import 21-cubical-diagrams
-open 21-cubical-diagrams public
+import 22-cubical-diagrams
+open 22-cubical-diagrams public
 
 -- Section 18.1 Five equivalent characterizations of pushouts
 
@@ -71,7 +71,7 @@ reflexive-htpy-dep-cocone :
   htpy-dep-cocone f g c P s s
 reflexive-htpy-dep-cocone f g (pair i (pair j H)) P
   (pair hA (pair hB hS)) =
-  pair htpy-refl (pair htpy-refl htpy-right-unit)
+  pair refl-htpy (pair refl-htpy htpy-right-unit)
 
 htpy-dep-cocone-eq :
   {l1 l2 l3 l4 l5 : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -97,7 +97,7 @@ abstract
           coherence-htpy-dep-cocone f g
             ( pair i (pair j H)) P (pair hA (pair hB hS)) (pair α βγ) K L))
       ( is-contr-total-htpy hA)
-      ( pair hA htpy-refl)
+      ( pair hA refl-htpy)
       ( is-contr-total-Eq-structure
         ( λ β γ L →
           coherence-htpy-dep-cocone f g
@@ -105,10 +105,10 @@ abstract
             ( P)
             ( pair hA (pair hB hS))
             ( pair hA (pair β γ))
-            ( htpy-refl)
+            ( refl-htpy)
             ( L))
         ( is-contr-total-htpy hB)
-        ( pair hB htpy-refl)
+        ( pair hB refl-htpy)
         ( is-contr-is-equiv
           ( Σ ((s : S) → Id (tr P (H s) (hA (f s))) (hB (g s))) (λ γ → hS ~ γ))
           ( tot (htpy-concat (htpy-inv htpy-right-unit)))
@@ -413,7 +413,7 @@ concat-eq-htpy {A = A} {B} {f} H K =
     ( λ g H →
       ( h : (x : A) → B x) (K : g ~ h) →
       Id (eq-htpy (H ∙h K)) ((eq-htpy H) ∙ (eq-htpy K)))
-    ( λ h K → ap (concat' f (eq-htpy K)) (inv (eq-htpy-htpy-refl _))) H _ K
+    ( λ h K → ap (concat' f (eq-htpy K)) (inv (eq-htpy-refl-htpy _))) H _ K
 
 pullback-property-dependent-pullback-property-pushout :
   {l1 l2 l3 l4 : Level} (l : Level) {S : UU l1} {A : UU l2} {B : UU l3}
@@ -426,7 +426,7 @@ pullback-property-dependent-pullback-property-pushout
     ( λ h s → tr (λ x → Y) (H s) (h (f s)))
     ( λ h → eq-htpy (λ s → inv (tr-triv (H s) (h (f s)))))
     ( λ h s → h (g s))
-    ( htpy-refl)
+    ( refl-htpy)
     { c = pair
       ( λ h a → h (i a))
       ( pair (λ h b → h (j b)) (λ h → eq-htpy (h ·l H)))}
@@ -470,11 +470,11 @@ TR-EQ-HTPY-FAM-LIFTS :
 TR-EQ-HTPY-FAM-LIFTS {A = A} P h H =
   tr (fam-lifts A P) (eq-htpy (h ·l H)) ~ (tr-fam-lifts' P h H)
 
-tr-eq-htpy-fam-lifts-htpy-refl :
+tr-eq-htpy-fam-lifts-refl-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4) →
-  (h : B → X) (f : A → B) → TR-EQ-HTPY-FAM-LIFTS P h (htpy-refl' f)
-tr-eq-htpy-fam-lifts-htpy-refl P h f k =
-  ap (λ t → tr (fam-lifts _ P) t k) (eq-htpy-htpy-refl (h ∘ f))
+  (h : B → X) (f : A → B) → TR-EQ-HTPY-FAM-LIFTS P h (refl-htpy' f)
+tr-eq-htpy-fam-lifts-refl-htpy P h f k =
+  ap (λ t → tr (fam-lifts _ P) t k) (eq-htpy-refl-htpy (h ∘ f))
 
 abstract
   tr-eq-htpy-fam-lifts :
@@ -484,17 +484,17 @@ abstract
   tr-eq-htpy-fam-lifts P h {f} =
     ind-htpy f
       ( λ g H → TR-EQ-HTPY-FAM-LIFTS P h H)
-      ( tr-eq-htpy-fam-lifts-htpy-refl P h f)
+      ( tr-eq-htpy-fam-lifts-refl-htpy P h f)
 
   compute-tr-eq-htpy-fam-lifts :
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4) →
     (h : B → X) (f : A → B) →
-    Id  ( tr-eq-htpy-fam-lifts P h (htpy-refl' f))
-        ( tr-eq-htpy-fam-lifts-htpy-refl P h f)
+    Id  ( tr-eq-htpy-fam-lifts P h (refl-htpy' f))
+        ( tr-eq-htpy-fam-lifts-refl-htpy P h f)
   compute-tr-eq-htpy-fam-lifts P h f =
     comp-htpy f
       ( λ g H → TR-EQ-HTPY-FAM-LIFTS P h H)
-      ( tr-eq-htpy-fam-lifts-htpy-refl P h f) 
+      ( tr-eq-htpy-fam-lifts-refl-htpy P h f) 
 
 {- One of the basic operations on lifts is precomposition by an ordinary 
    function. -}
@@ -517,11 +517,11 @@ TRIANGLE-PRECOMPOSE-LIFTS {A = A} {B} {X} P {f} {g} H =
     ( (tr (fam-lifts A P) (eq-htpy (h ·l H))) ∘ (precompose-lifts P f h)) ~
     ( precompose-lifts P g h)
 
-triangle-precompose-lifts-htpy-refl :
+triangle-precompose-lifts-refl-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
-  (P : X → UU l4) (f : A → B) → TRIANGLE-PRECOMPOSE-LIFTS P (htpy-refl' f)
-triangle-precompose-lifts-htpy-refl {A = A} P f h h' =
-  tr-eq-htpy-fam-lifts-htpy-refl P h f (λ a → h' (f a))
+  (P : X → UU l4) (f : A → B) → TRIANGLE-PRECOMPOSE-LIFTS P (refl-htpy' f)
+triangle-precompose-lifts-refl-htpy {A = A} P f h h' =
+  tr-eq-htpy-fam-lifts-refl-htpy P h f (λ a → h' (f a))
 
 abstract
   triangle-precompose-lifts :
@@ -531,18 +531,18 @@ abstract
   triangle-precompose-lifts {A = A} P {f} =
     ind-htpy f
       ( λ g H → TRIANGLE-PRECOMPOSE-LIFTS P H)
-      ( triangle-precompose-lifts-htpy-refl P f)
+      ( triangle-precompose-lifts-refl-htpy P f)
   
   compute-triangle-precompose-lifts :
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
     (P : X → UU l4) (f : A → B) →
     Id
-      ( triangle-precompose-lifts P (htpy-refl' f))
-      ( triangle-precompose-lifts-htpy-refl P f)
+      ( triangle-precompose-lifts P (refl-htpy' f))
+      ( triangle-precompose-lifts-refl-htpy P f)
   compute-triangle-precompose-lifts P f =
     comp-htpy f
       ( λ g H → TRIANGLE-PRECOMPOSE-LIFTS P H)
-      ( triangle-precompose-lifts-htpy-refl P f)
+      ( triangle-precompose-lifts-refl-htpy P f)
 
 {- There is a similar commuting triangle with the computed transport function.
    This time we don't use homotopy induction to construct the homotopy. We
@@ -558,9 +558,9 @@ triangle-precompose-lifts' P H h k = eq-htpy (λ a → apd k (H a))
 compute-triangle-precompose-lifts' :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
   (P : X → UU l4) (f : A → B) → (h : B → X) →
-  ( triangle-precompose-lifts' P (htpy-refl' f) h) ~
-  ( htpy-refl' ( precompose-lifts P f h))
-compute-triangle-precompose-lifts' P f h k = eq-htpy-htpy-refl _
+  ( triangle-precompose-lifts' P (refl-htpy' f) h) ~
+  ( refl-htpy' ( precompose-lifts P f h))
+compute-triangle-precompose-lifts' P f h k = eq-htpy-refl-htpy _
 
 {- There is a coherence between the two commuting triangles. This coherence
    is again constructed by homotopy induction. -}
@@ -574,22 +574,22 @@ COHERENCE-TRIANGLE-PRECOMPOSE-LIFTS {A = A} {B} {X} P {f} {g} H =
     ( ( ( tr-eq-htpy-fam-lifts P h H) ·r (precompose-lifts P f h)) ∙h
       ( triangle-precompose-lifts' P H h))
 
-coherence-triangle-precompose-lifts-htpy-refl :
+coherence-triangle-precompose-lifts-refl-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
-  (f : A → B) → COHERENCE-TRIANGLE-PRECOMPOSE-LIFTS P (htpy-refl' f)
-coherence-triangle-precompose-lifts-htpy-refl P f h =
+  (f : A → B) → COHERENCE-TRIANGLE-PRECOMPOSE-LIFTS P (refl-htpy' f)
+coherence-triangle-precompose-lifts-refl-htpy P f h =
   ( htpy-eq (htpy-eq (compute-triangle-precompose-lifts P f) h)) ∙h
   ( ( ( htpy-inv htpy-right-unit) ∙h
       ( htpy-ap-concat
-        ( λ h' → tr-eq-htpy-fam-lifts-htpy-refl P h f (λ a → h' (f a)))
-        ( htpy-refl)
-        ( triangle-precompose-lifts' P htpy-refl h)
+        ( λ h' → tr-eq-htpy-fam-lifts-refl-htpy P h f (λ a → h' (f a)))
+        ( refl-htpy)
+        ( triangle-precompose-lifts' P refl-htpy h)
         ( htpy-inv (compute-triangle-precompose-lifts' P f h)))) ∙h
     ( htpy-eq
       ( ap
         ( λ t →
           ( t ·r (precompose-lifts P f h)) ∙h
-          ( triangle-precompose-lifts' P htpy-refl h))
+          ( triangle-precompose-lifts' P refl-htpy h))
         ( inv (compute-tr-eq-htpy-fam-lifts P h f)))))
 
 abstract
@@ -599,17 +599,17 @@ abstract
   coherence-triangle-precompose-lifts P {f} =
     ind-htpy f
       ( λ g H → COHERENCE-TRIANGLE-PRECOMPOSE-LIFTS P H)
-      ( coherence-triangle-precompose-lifts-htpy-refl P f)
+      ( coherence-triangle-precompose-lifts-refl-htpy P f)
   
   compute-coherence-triangle-precompose-lifts :
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
     (f : A → B) →
-      Id  ( coherence-triangle-precompose-lifts P (htpy-refl' f))
-        ( coherence-triangle-precompose-lifts-htpy-refl P f)
+      Id  ( coherence-triangle-precompose-lifts P (refl-htpy' f))
+        ( coherence-triangle-precompose-lifts-refl-htpy P f)
   compute-coherence-triangle-precompose-lifts P f =
     comp-htpy f
       ( λ g H → COHERENCE-TRIANGLE-PRECOMPOSE-LIFTS P H)
-      ( coherence-triangle-precompose-lifts-htpy-refl P f)
+      ( coherence-triangle-precompose-lifts-refl-htpy P f)
   
 total-lifts :
   {l1 l2 l3 : Level} (A : UU l1) {X : UU l2} (P : X → UU l3) →
@@ -634,7 +634,7 @@ coherence-square-inv-choice-∞ :
     ( inv-choice-∞ {A = B} {B = λ x → X} {C = λ x y → P y})
     ( inv-choice-∞)
     ( λ h → h ∘ f)
-coherence-square-inv-choice-∞ P f = htpy-refl
+coherence-square-inv-choice-∞ P f = refl-htpy
 
 {- Our goal is now to produce a homotopy between (precompose-total-lifts P f) 
    and (precompose-total-lifts P g) for homotopic maps f and g, and a coherence
@@ -658,8 +658,8 @@ htpy-precompose-total-lifts {A = A} {B} P {f} {g} H =
     ( precompose-lifts P f)
     ( triangle-precompose-lifts P H)
 
-{- We show that when htpy-precompose-total-lifts is applied to htpy-refl, it
-   computes to htpy-refl. -}
+{- We show that when htpy-precompose-total-lifts is applied to refl-htpy, it
+   computes to refl-htpy. -}
 
 tr-id-left-subst :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} {x y : A}
@@ -670,24 +670,24 @@ tr-id-left-subst refl b q = refl
 compute-htpy-precompose-total-lifts :
   { l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
   ( f : A → B) →
-  ( htpy-precompose-total-lifts P (htpy-refl' f)) ~
-  ( htpy-refl' (toto (fam-lifts A P) (λ h → h ∘ f) (precompose-lifts P f)))
+  ( htpy-precompose-total-lifts P (refl-htpy' f)) ~
+  ( refl-htpy' (toto (fam-lifts A P) (λ h → h ∘ f) (precompose-lifts P f)))
 compute-htpy-precompose-total-lifts {A = A} P f (pair h h') =
   let α = λ (t : Id (h ∘ f) (h ∘ f)) → tr (fam-lifts A P) t (λ a → h' (f a))
   in
   ap eq-pair'
     ( eq-pair
-      ( eq-htpy-htpy-refl (h ∘ f))
+      ( eq-htpy-refl-htpy (h ∘ f))
       ( ( tr-id-left-subst
           { f = α}
-          ( eq-htpy-htpy-refl (h ∘ f))
+          ( eq-htpy-refl-htpy (h ∘ f))
           ( λ a → h' (f a))
-          ( triangle-precompose-lifts P htpy-refl h h')) ∙
+          ( triangle-precompose-lifts P refl-htpy h h')) ∙
         ( ( ap
-            ( λ t → inv (ap α (eq-htpy-htpy-refl (λ a → h (f a)))) ∙ t)
+            ( λ t → inv (ap α (eq-htpy-refl-htpy (λ a → h (f a)))) ∙ t)
             ( htpy-eq
               ( htpy-eq (compute-triangle-precompose-lifts P f) h) h')) ∙
-          ( left-inv (triangle-precompose-lifts-htpy-refl P f h h')))))
+          ( left-inv (triangle-precompose-lifts-refl-htpy P f h h')))))
 
 COHERENCE-HTPY-INV-CHOICE-∞ :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
@@ -698,21 +698,21 @@ COHERENCE-HTPY-INV-CHOICE-∞ P {f} {g} H =
   ( ( ( λ h → eq-htpy (h ·l H)) ·r inv-choice-∞) ∙h
     ( coherence-square-inv-choice-∞ P g))
 
-coherence-htpy-inv-choice-∞-htpy-refl :
+coherence-htpy-inv-choice-∞-refl-htpy :
   {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {X : UU l3} (P : X → UU l4)
-  (f : A → B) → COHERENCE-HTPY-INV-CHOICE-∞ P (htpy-refl' f)
-coherence-htpy-inv-choice-∞-htpy-refl {X = X} P f =
+  (f : A → B) → COHERENCE-HTPY-INV-CHOICE-∞ P (refl-htpy' f)
+coherence-htpy-inv-choice-∞-refl-htpy {X = X} P f =
   ( htpy-ap-concat
     ( coherence-square-inv-choice-∞ P f)
-    ( inv-choice-∞ ·l ( htpy-precompose-total-lifts P htpy-refl))
-    ( htpy-refl)
+    ( inv-choice-∞ ·l ( htpy-precompose-total-lifts P refl-htpy))
+    ( refl-htpy)
     ( λ h →
       ap (ap inv-choice-∞) (compute-htpy-precompose-total-lifts P f h))) ∙h
   ( htpy-inv
     ( htpy-ap-concat'
-      ( ( htpy-precomp htpy-refl (Σ X P)) ·r inv-choice-∞)
-      ( htpy-refl)
-      ( htpy-refl)
+      ( ( htpy-precomp refl-htpy (Σ X P)) ·r inv-choice-∞)
+      ( refl-htpy)
+      ( refl-htpy)
       ( λ h → compute-htpy-precomp f (Σ X P) (inv-choice-∞ h))))
 
 abstract
@@ -722,7 +722,7 @@ abstract
   coherence-htpy-inv-choice-∞ P {f} =
     ind-htpy f
       ( λ g H → COHERENCE-HTPY-INV-CHOICE-∞ P H)
-      ( coherence-htpy-inv-choice-∞-htpy-refl P f)
+      ( coherence-htpy-inv-choice-∞-refl-htpy P f)
     
 cone-family-dependent-pullback-property :
   {l1 l2 l3 l4 l : Level} {S : UU l1} {A : UU l2} {B : UU l3} {X : UU l4}
@@ -774,10 +774,10 @@ is-pullback-cone-family-dependent-pullback-property {S = S} {A} {B} {X}
       ( inv-choice-∞)
       ( inv-choice-∞)
       ( htpy-precompose-total-lifts P H)
-      ( htpy-refl)
-      ( htpy-refl)
-      ( htpy-refl)
-      ( htpy-refl)
+      ( refl-htpy)
+      ( refl-htpy)
+      ( refl-htpy)
+      ( refl-htpy)
       ( htpy-precomp H (Σ X P))
       ( coherence-htpy-inv-choice-∞ P H)
       ( is-equiv-inv-choice-∞)
@@ -799,11 +799,11 @@ dependent-pullback-property-pullback-property-pushout
     ( (tr (fam-lifts S P) (eq-htpy (id ·l H))) ∘ (precompose-lifts P f i))
     ( (tr-eq-htpy-fam-lifts P id H) ·r (precompose-lifts P f i))
     ( precompose-lifts P g j)
-    ( htpy-refl)
+    ( refl-htpy)
     ( cone-family-dependent-pullback-property f g c P id)
     { c' = cone-dependent-pullback-property-pushout f g c P}
-    ( pair htpy-refl
-      ( pair htpy-refl
+    ( pair refl-htpy
+      ( pair refl-htpy
         ( htpy-right-unit ∙h (coherence-triangle-precompose-lifts P H id))))
     ( is-pullback-cone-family-dependent-pullback-property f g c pullback-c P id)
 
@@ -865,7 +865,7 @@ reflexive-equiv-Fam-pushout (pair PA (pair PB PS)) =
   pair (λ a → equiv-id (PA a))
     ( pair
       ( λ b → equiv-id (PB b))
-      ( λ s → htpy-refl))
+      ( λ s → refl-htpy))
 
 equiv-Fam-pushout-eq :
   {l1 l2 l3 l : Level} {S : UU l1} {A : UU l2} {B : UU l3}
@@ -1162,9 +1162,9 @@ coherence-cube-flattening-lemma {A = A} {B} {P} {Q} {T} {f = f} {f'} H {g} {g'} 
     ( λ g g' K h → {!ind-htpy g (λ g' K' → (h : Σ B Q → T) →
       Id ( eq-htpy
            ( λ a → eq-htpy
-             ( coherence-bottom-flattening-lemma htpy-refl (λ a → htpy-eq (K' a)) (ev-pair h) a)))
+             ( coherence-bottom-flattening-lemma refl-htpy (λ a → htpy-eq (K' a)) (ev-pair h) a)))
          ( ap ev-pair
-           ( htpy-precomp (htpy-toto Q htpy-refl g (λ a → htpy-eq (K' a))) T h))) ? (λ a → eq-htpy (K a)) h!})
+           ( htpy-precomp (htpy-toto Q refl-htpy g (λ a → htpy-eq (K' a))) T h))) ? (λ a → eq-htpy (K a)) h!})
     H g g' K
   
   
@@ -1202,10 +1202,10 @@ flattening-pushout' f g c P Q e l T =
         ( λ s → map-equiv (pr1 e (f s)))
         ( λ s → htpy-inv (pr2 (pr2 e) s)))
       ( T))
-    htpy-refl
-    htpy-refl
-    htpy-refl
-    htpy-refl
+    refl-htpy
+    refl-htpy
+    refl-htpy
+    refl-htpy
     ( λ h → eq-htpy (λ s → eq-htpy
       ( coherence-bottom-flattening-lemma
         ( pr2 (pr2 c))

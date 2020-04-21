@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module 03-natural-numbers where
 
@@ -79,6 +79,9 @@ max-ℕ (succ-ℕ m) (succ-ℕ n) = succ-ℕ (max-ℕ m n)
 mul-ℕ : ℕ → (ℕ → ℕ)
 mul-ℕ zero-ℕ n = zero-ℕ
 mul-ℕ (succ-ℕ m) n = add-ℕ (mul-ℕ m n) n
+
+mul-ℕ' : ℕ → (ℕ → ℕ)
+mul-ℕ' x y = mul-ℕ y x
 
 -- Exercise 3.3
 

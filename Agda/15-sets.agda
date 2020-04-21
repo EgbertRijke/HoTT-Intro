@@ -98,9 +98,9 @@ universal-property-set-quotient l R {B} f H =
 
 is-effective-Set-Quotient :
   {l1 l2 l3 : Level} {A : UU l1} (R : Eq-Rel l2 A) (B : UU-Set l3)
-  (f : A → type-Set B) (H : identifies-Eq-Rel R f) → UU (l1 ⊔ l2)
-is-effective-Set-Quotient R B f H = {!!}
-  
+  (f : A → type-Set B) (H : identifies-Eq-Rel R f) → UU (l1 ⊔ l2 ⊔ l3)
+is-effective-Set-Quotient {A = A} R B f H = (x y : A) → is-equiv (H x y)
+
 -- Section 13.4
 
 is-small :

@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module 07-equivalences where
 
@@ -806,7 +806,8 @@ abstract
     not-true-is-false (inv (issec true))
 
 -- Exercise 7.6
-  
+
+abstract
   is-equiv-succ-ℤ : is-equiv succ-ℤ
   is-equiv-succ-ℤ =
     is-equiv-has-inverse pred-ℤ right-inverse-pred-ℤ left-inverse-pred-ℤ

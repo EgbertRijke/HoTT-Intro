@@ -585,7 +585,7 @@ abstract
     let retr-f = center (is-contr-map-is-equiv (is-equiv-precomp-f _ A) id) in
     is-equiv-has-inverse
       ( pr1 retr-f)
-      ( htpy-eq (ap pr1 (is-prop-is-contr'
+      ( htpy-eq (ap pr1 (eq-is-contr
         ( is-contr-map-is-equiv (is-equiv-precomp-f _ B) f)
           ( pair
             ( f ∘ (pr1 retr-f))
@@ -724,7 +724,7 @@ abstract
     is-equiv-has-inverse
       ( pr1 sec-f)
       ( htpy-eq (pr2 sec-f))
-      ( htpy-eq (ap pr1 (is-prop-is-contr'
+      ( htpy-eq (ap pr1 (eq-is-contr
         ( is-contr-map-is-equiv (post-comp-equiv-f X) f)
         ( pair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
         ( pair id refl))))
@@ -743,7 +743,7 @@ is-equiv-is-equiv-postcomp'
   is-equiv-has-inverse
     ( pr1 sec-f)
     ( htpy-eq (pr2 sec-f))
-    ( htpy-eq (ap pr1 (is-prop-is-contr'
+    ( htpy-eq (ap pr1 (eq-is-contr
       ( is-contr-map-is-equiv (is-equiv-postcomp-f X) f)
       ( pair ((pr1 sec-f) ∘ f) (ap (λ t → t ∘ f) (pr2 sec-f)))
       ( pair id refl))))
@@ -891,7 +891,7 @@ is-contr-equiv-is-contr is-contr-A is-contr-B =
     ( equiv-is-contr is-contr-A is-contr-B)
     ( λ e → eq-htpy-equiv
       ( λ x →
-        is-prop-is-contr' is-contr-B (center is-contr-B) (map-equiv e x)))
+        eq-is-contr is-contr-B (center is-contr-B) (map-equiv e x)))
 
 is-trunc-is-contr :
   { l : Level} (k : 𝕋) {A : UU l} → is-contr A → is-trunc k A
@@ -982,7 +982,7 @@ abstract
     {l : Level} (P : UU l) → is-contr (P → P) → is-prop P
   is-prop-is-contr-endomaps P H =
     is-prop-is-prop'
-      ( λ x → htpy-eq (is-prop-is-contr' H (const P P x) id))
+      ( λ x → htpy-eq (eq-is-contr H (const P P x) id))
 
 abstract
   is-contr-endomaps-is-prop :
@@ -2006,3 +2006,46 @@ is-contr-total-Eq-Π {A = A} {B} C is-contr-total-C f =
     ( equiv-choice-∞)
     ( is-contr-Π is-contr-total-C)
 
+{- Getting rid of fib in a Π-type -}
+
+map-reduce-Π-fib :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (C : (y : B) (z : fib f y) → UU l3) →
+  ((y : B) (z : fib f y) → C y z) → ((x : A) → C (f x) (pair x refl))
+map-reduce-Π-fib f C h x = h (f x) (pair x refl)
+
+inv-map-reduce-Π-fib :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (C : (y : B) (z : fib f y) → UU l3) →
+  ((x : A) → C (f x) (pair x refl)) → ((y : B) (z : fib f y) → C y z)
+inv-map-reduce-Π-fib f C h .(f x) (pair x refl) = h x
+
+issec-inv-map-reduce-Π-fib :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (C : (y : B) (z : fib f y) → UU l3) →
+  ((map-reduce-Π-fib f C) ∘ (inv-map-reduce-Π-fib f C)) ~ id
+issec-inv-map-reduce-Π-fib f C h = refl
+
+isretr-inv-map-reduce-Π-fib' :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (C : (y : B) (z : fib f y) → UU l3) →
+  (h : (y : B) (z : fib f y) → C y z) (y : B) →
+  (inv-map-reduce-Π-fib f C ((map-reduce-Π-fib f C) h) y) ~ (h y)
+isretr-inv-map-reduce-Π-fib' f C h .(f z) (pair z refl) = refl
+
+isretr-inv-map-reduce-Π-fib :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B)
+  (C : (y : B) (z : fib f y) → UU l3) →
+  ((inv-map-reduce-Π-fib f C) ∘ (map-reduce-Π-fib f C)) ~ id
+isretr-inv-map-reduce-Π-fib f C h =
+  eq-htpy (λ y → eq-htpy (isretr-inv-map-reduce-Π-fib' f C h y))
+
+is-equiv-map-reduce-Π-fib :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
+  (C : (y : B) (z : fib f y) → UU l3) →
+  is-equiv (map-reduce-Π-fib f C)
+is-equiv-map-reduce-Π-fib f C =
+  is-equiv-has-inverse
+    ( inv-map-reduce-Π-fib f C)
+    ( issec-inv-map-reduce-Π-fib f C)
+    ( isretr-inv-map-reduce-Π-fib f C)

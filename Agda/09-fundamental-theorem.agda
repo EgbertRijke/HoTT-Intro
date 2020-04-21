@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module 09-fundamental-theorem where
 
@@ -437,7 +437,7 @@ abstract
   ind-identity-system a b is-contr-AB P p x y =
     tr
       ( fam-Σ P)
-      ( is-prop-is-contr' is-contr-AB (pair a b) (pair x y))
+      ( eq-is-contr is-contr-AB (pair a b) (pair x y))
       ( p)
 
   comp-identity-system :
@@ -448,9 +448,9 @@ abstract
   comp-identity-system a b is-contr-AB P p =
     ap
       ( λ t → tr (fam-Σ P) t p)
-      ( is-prop-is-contr'
+      ( eq-is-contr
         ( is-prop-is-contr is-contr-AB (pair a b) (pair a b))
-        ( is-prop-is-contr' is-contr-AB (pair a b) (pair a b))
+        ( eq-is-contr is-contr-AB (pair a b) (pair a b))
         ( refl))
 
   Ind-identity-system :
@@ -490,25 +490,38 @@ abstract
 
 -- Raising universe levels
 
-postulate Raise : {l1 : Level} (l2 : Level) → (A : UU l1) → Σ (UU (l1 ⊔ l2)) (λ X → A ≃ X)
+data raise (l : Level) {l1 : Level} (A : UU l1) : UU (l1 ⊔ l) where
+  map-raise : A → raise l A
 
-abstract
-  raise :
-    {l1 : Level} (l2 : Level) → UU l1 → UU (l1 ⊔ l2)
-  raise l2 A = pr1 (Raise l2 A)
-  
-  equiv-raise :
-    {l1 : Level} (l2 : Level) (A : UU l1) → A ≃ raise l2 A
-  equiv-raise l2 A = pr2 (Raise l2 A)
-  
-  map-raise :
-    {l1 : Level} (l2 : Level) (A : UU l1) → A → raise l2 A
-  map-raise l2 A = map-equiv (equiv-raise l2 A)
-  
-  is-equiv-map-raise :
-    {l1 : Level} (l2 : Level) (A : UU l1) →
-    is-equiv (map-raise l2 A)
-  is-equiv-map-raise l2 A = is-equiv-map-equiv (equiv-raise l2 A)
+inv-map-raise :
+  {l l1 : Level} {A : UU l1} → raise l A → A
+inv-map-raise (map-raise x) = x
+
+issec-inv-map-raise :
+  {l l1 : Level} {A : UU l1} (x : raise l A) →
+  Id (map-raise (inv-map-raise x)) x
+issec-inv-map-raise (map-raise x) = refl
+
+isretr-inv-map-raise :
+  {l l1 : Level} {A : UU l1} (x : A) →
+  Id (inv-map-raise {l} (map-raise x)) x
+isretr-inv-map-raise x = refl
+
+is-equiv-map-raise :
+  (l : Level) {l1 : Level} (A : UU l1) → is-equiv (map-raise {l} {l1} {A})
+is-equiv-map-raise l A =
+  is-equiv-has-inverse
+    inv-map-raise
+    ( issec-inv-map-raise)
+    ( isretr-inv-map-raise {l})
+
+equiv-raise :
+  (l : Level) {l1 : Level} (A : UU l1) → A ≃ raise l A
+equiv-raise l A = pair map-raise (is-equiv-map-raise l A)
+
+Raise :
+  (l : Level) {l1 : Level} (A : UU l1) → Σ (UU (l1 ⊔ l)) (λ X → A ≃ X)
+Raise l A = pair (raise l A) (equiv-raise l A)
 
 -- Lemmas about coproducts
 
@@ -593,8 +606,8 @@ Eq-coprod {l1} {l2} A B (inr x) (inr y) = raise (l1 ⊔ l2) (Id x y)
 reflexive-Eq-coprod :
   {l1 l2 : Level} (A : UU l1) (B : UU l2) →
   (t : coprod A B) → Eq-coprod A B t t
-reflexive-Eq-coprod {l1} {l2} A B (inl x) = map-raise (l1 ⊔ l2) (Id x x) refl
-reflexive-Eq-coprod {l1} {l2} A B (inr x) = map-raise (l1 ⊔ l2) (Id x x) refl
+reflexive-Eq-coprod {l1} {l2} A B (inl x) = map-raise refl
+reflexive-Eq-coprod {l1} {l2} A B (inr x) = map-raise refl
 
 Eq-coprod-eq :
   {l1 l2 : Level} (A : UU l1) (B : UU l2) →
@@ -1326,3 +1339,61 @@ abstract
     (f : A → B) → is-fiberwise-equiv (fib'-fib f)
   is-equiv-fib'-fib f y =
     is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-inv (f x) y)
+
+-- Equivalent finite sets have the same cardinality
+
+skip-Fin :
+  {n : ℕ} → Fin (succ-ℕ n) → Fin n → Fin (succ-ℕ n)
+skip-Fin {succ-ℕ n} (inl x) (inl y) = inl (skip-Fin x y)
+skip-Fin {succ-ℕ n} (inl x) (inr y) = inr star
+skip-Fin {succ-ℕ n} (inr x) y = inl y
+
+swap-top-two-Fin :
+  {n : ℕ} → Fin (succ-ℕ (succ-ℕ n)) → Fin (succ-ℕ (succ-ℕ n))
+swap-top-two-Fin (inl (inl x)) = inl (inl x)
+swap-top-two-Fin (inl (inr star)) = inr star
+swap-top-two-Fin (inr star) = inl (inr star)
+
+idempotent-top-two-Fin :
+  {n : ℕ} (x : Fin (succ-ℕ (succ-ℕ n))) →
+  Id (swap-top-two-Fin (swap-top-two-Fin x)) x
+idempotent-top-two-Fin (inl (inl x)) = refl
+idempotent-top-two-Fin (inl (inr star)) = refl
+idempotent-top-two-Fin (inr star) = refl
+
+is-equiv-swap-top-two-Fin :
+  {n : ℕ} → is-equiv (swap-top-two-Fin {n})
+is-equiv-swap-top-two-Fin =
+  is-equiv-has-inverse
+    swap-top-two-Fin
+    idempotent-top-two-Fin
+    idempotent-top-two-Fin
+
+{-
+swap-top-Fin :
+  {n : ℕ} → Fin (succ-ℕ n) → Fin (succ-ℕ n) → Fin (succ-ℕ n)
+swap-top-Fin {zero-ℕ} x y = x
+swap-top-Fin {succ-ℕ n} (inl (inl x)) (inl (inl y)) = swap-top-two-Fin (inl (swap-top-Fin (inl x) (inl y)))
+swap-top-Fin {succ-ℕ n} (inl (inr x)) (inl (inl y)) = inl (inl y)
+swap-top-Fin {succ-ℕ n} (inl (inl x)) (inl (inr star)) = inl (inr star)
+swap-top-Fin {succ-ℕ n} (inl (inr x)) (inl (inr star)) = inr star
+swap-top-Fin {succ-ℕ n} (inl x) (inr y) = inl x
+swap-top-Fin {succ-ℕ n} (inr x) y = y
+
+idempotent-swap-top-Fin :
+  {n : ℕ} (x : Fin (succ-ℕ n)) →
+  ((swap-top-Fin x) ∘ (swap-top-Fin x)) ~ id
+idempotent-swap-top-Fin {zero-ℕ} (inr star) (inr star) = refl
+idempotent-swap-top-Fin {succ-ℕ n} (inl x) (inl y) = {!!}
+idempotent-swap-top-Fin {succ-ℕ n} (inl (inl x)) (inr star) = {!!}
+idempotent-swap-top-Fin {succ-ℕ n} (inl (inr star)) (inr star) = refl
+idempotent-swap-top-Fin {succ-ℕ n} (inr x) (inl y) = refl
+idempotent-swap-top-Fin {succ-ℕ n} (inr x) (inr y) = refl
+
+eq-ℕ-equiv-Fin :
+  {m n : ℕ} → (Fin m ≃ Fin n) → Id m n
+eq-ℕ-equiv-Fin {zero-ℕ} {zero-ℕ} e = refl
+eq-ℕ-equiv-Fin {zero-ℕ} {succ-ℕ n} e = ind-empty (inv-map-equiv e (inr star))
+eq-ℕ-equiv-Fin {succ-ℕ m} {zero-ℕ} e = ind-empty (map-equiv e (inr star))
+eq-ℕ-equiv-Fin {succ-ℕ m} {succ-ℕ n} e = {!!}
+-}

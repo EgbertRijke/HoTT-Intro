@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module 06-universes where
 
@@ -314,8 +314,17 @@ le-ℤ (inr (inr (succ-ℕ x))) (inr (inr (succ-ℕ y))) =
 
 -- We show that ℕ is an ordered semi-ring
 
-leq-eq-ℕ : {m m' n n' : ℕ} → Id m m' → Id n n' → leq-ℕ m n → leq-ℕ m' n'
-leq-eq-ℕ refl refl = id
+concatenate-eq-leq-eq-ℕ :
+  {m n m' n' : ℕ} → Id m' m → leq-ℕ m n → Id n n' → leq-ℕ m' n'
+concatenate-eq-leq-eq-ℕ refl H refl = H
+
+concatenate-leq-eq-ℕ :
+  (m : ℕ) {n n' : ℕ} → leq-ℕ m n → Id n n' → leq-ℕ m n'
+concatenate-leq-eq-ℕ m H refl = H
+
+concatenate-eq-leq-ℕ :
+  {m m' : ℕ} (n : ℕ) → Id m' m → leq-ℕ m n → leq-ℕ m' n
+concatenate-eq-leq-ℕ n refl H = H
 
 left-law-leq-add-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (add-ℕ m k) (add-ℕ n k)
 left-law-leq-add-ℕ zero-ℕ m n = id
@@ -323,10 +332,10 @@ left-law-leq-add-ℕ (succ-ℕ k) m n H = left-law-leq-add-ℕ k m n H
 
 right-law-leq-add-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (add-ℕ k m) (add-ℕ k n) 
 right-law-leq-add-ℕ k m n H =
-  leq-eq-ℕ
-    ( commutative-add-ℕ m k)
-    ( commutative-add-ℕ n k)
+  concatenate-eq-leq-eq-ℕ
+    ( commutative-add-ℕ k m)
     ( left-law-leq-add-ℕ k m n H)
+    ( commutative-add-ℕ n k)
 
 preserves-leq-add-ℕ :
   {m m' n n' : ℕ} → leq-ℕ m m' → leq-ℕ n n' → leq-ℕ (add-ℕ m n) (add-ℕ m' n')
@@ -338,9 +347,11 @@ preserves-leq-add-ℕ {m} {m'} {n} {n'} H K =
     ( left-law-leq-add-ℕ n m m' H)
     ( right-law-leq-add-ℕ m' n n' K)
 
+{-
 right-law-leq-mul-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (mul-ℕ k m) (mul-ℕ k n)
 right-law-leq-mul-ℕ zero-ℕ m n H = star
 right-law-leq-mul-ℕ (succ-ℕ k) m n H = {!!}
+-}
 
 {-
   preserves-leq-add-ℕ
@@ -350,7 +361,7 @@ right-law-leq-mul-ℕ (succ-ℕ k) m n H = {!!}
 
 left-law-leq-mul-ℕ : (k m n : ℕ) → leq-ℕ m n → leq-ℕ (mul-ℕ m k) (mul-ℕ n k)
 left-law-leq-mul-ℕ k m n H =
-  leq-eq-ℕ
+  concatenate-eq-leq-eq-ℕ
     ( commutative-mul-ℕ k m)
     ( commutative-mul-ℕ k n)
     ( right-law-leq-mul-ℕ k m n H)

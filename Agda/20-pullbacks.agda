@@ -639,7 +639,7 @@ issec-inv-gap-prod A B (pair a (pair b p)) =
     ( const B unit star)
     refl
     refl
-    ( is-prop-is-contr' (is-prop-is-contr is-contr-unit star star) p refl)
+    ( eq-is-contr (is-prop-is-contr is-contr-unit star star) p refl)
 
 isretr-inv-gap-prod :
   {i j : Level} (A : UU i) (B : UU j) →
@@ -1321,11 +1321,11 @@ issec-fib-fib-functor-coprod-inl : {l1 l2 l1' l2' : Level}
   (f : A' → A) (g : B' → B) (x : A) →
   ( (fib-functor-coprod-inl-fib f g x) ∘
     ( fib-fib-functor-coprod-inl f g x)) ~ id
-issec-fib-fib-functor-coprod-inl f g .(f a') (pair (inl a') refl) =
+issec-fib-fib-functor-coprod-inl {l1} {l2} {l1'} {l2'}
+  f g .(f a') (pair (inl a') refl) =
   eq-pair refl
     ( ap (ap inl)
-      ( isretr-inv-is-equiv
-        ( is-equiv-map-raise _ (Id (f a') (f a'))) refl))
+      ( isretr-inv-map-raise {l = l1'} {A = Id (f a') (f a')} refl))
 issec-fib-fib-functor-coprod-inl f g x (pair (inr b') p) =
   ind-empty
     { P = λ t → Id
@@ -1339,9 +1339,9 @@ isretr-fib-fib-functor-coprod-inl : {l1 l2 l1' l2' : Level}
   (f : A' → A) (g : B' → B) (x : A) →
   ( (fib-fib-functor-coprod-inl f g x) ∘
     ( fib-functor-coprod-inl-fib f g x)) ~ id
-isretr-fib-fib-functor-coprod-inl f g .(f a') (pair a' refl) =
+isretr-fib-fib-functor-coprod-inl {l1} {l2} {l1'} {l2'} f g .(f a') (pair a' refl) =
   eq-pair refl
-    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (f a') (f a'))) refl)
+    ( isretr-inv-map-raise {l = l1'} {A = Id (f a') (f a')} refl)
 
 abstract
   is-equiv-fib-functor-coprod-inl-fib : {l1 l2 l1' l2' : Level}
@@ -1376,11 +1376,10 @@ issec-fib-fib-functor-coprod-inr : {l1 l2 l1' l2' : Level}
   (f : A' → A) (g : B' → B) (y : B) →
   ( (fib-functor-coprod-inr-fib f g y) ∘
     ( fib-fib-functor-coprod-inr f g y)) ~ id
-issec-fib-fib-functor-coprod-inr f g .(g b') (pair (inr b') refl) =
+issec-fib-fib-functor-coprod-inr {l1} {l2} {l1'} {l2'} f g .(g b') (pair (inr b') refl) =
   eq-pair refl
     ( ap (ap inr)
-      ( isretr-inv-is-equiv
-        ( is-equiv-map-raise _ (Id (g b') (g b'))) refl))
+      ( isretr-inv-map-raise {l = l2'} {A = Id (g b') (g b')} refl))
 issec-fib-fib-functor-coprod-inr f g y (pair (inl a') p) =
   ind-empty
     { P = λ t → Id
@@ -1394,9 +1393,9 @@ isretr-fib-fib-functor-coprod-inr : {l1 l2 l1' l2' : Level}
   (f : A' → A) (g : B' → B) (y : B) →
   ( (fib-fib-functor-coprod-inr f g y) ∘
     ( fib-functor-coprod-inr-fib f g y)) ~ id
-isretr-fib-fib-functor-coprod-inr f g .(g b') (pair b' refl) =
+isretr-fib-fib-functor-coprod-inr {l1} {l2} {l1'} {l2'} f g .(g b') (pair b' refl) =
   eq-pair refl
-    ( isretr-inv-is-equiv (is-equiv-map-raise _ (Id (g b') (g b'))) refl)
+    ( isretr-inv-map-raise {l = l2'} {A = Id (g b') (g b')} refl)
 
 abstract
   is-equiv-fib-functor-coprod-inr-fib : {l1 l2 l1' l2' : Level}

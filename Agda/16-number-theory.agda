@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
+{-# OPTIONS --without-K --exact-split #-}
 
 module 16-number-theory where
 
@@ -40,7 +40,7 @@ case-elim :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} →
   ¬ B → coprod A B → A
 case-elim nb (inl a) = a
-case-elim nb (inr b) = ex-falso' (nb b)
+case-elim nb (inr b) = ex-falso (nb b)
 
 is-prop-neg :
   {l : Level} {A : UU l} → is-prop (¬ A)
@@ -66,6 +66,7 @@ simplify-not-all-2-element-types-decidable d X p =
       ( p))
     ( d X p)
 
+{-
 not-all-2-element-types-decidable :
   {l : Level} → ¬ ((X : UU l) (p : type-trunc-Prop (bool ≃ X)) → is-decidable X)
 not-all-2-element-types-decidable d = {!simplify-not-all-2-element-types-decidable d (raise _ bool) ?!}
@@ -74,6 +75,7 @@ not-all-types-decidable :
   {l : Level} → ¬ ((X : UU l) → is-decidable X)
 not-all-types-decidable d =
   not-all-2-element-types-decidable (λ X p → d X)
+-}
 
 {- We say that a type has decidable equality if we can decide whether 
    x = y holds for any x,y:A. -}
@@ -298,10 +300,6 @@ well-ordering-principle-ℕ P d (pair (succ-ℕ n) p) =
 
 -- We first prove some lemmas about inequality.
 
-zero-ℕ-leq-ℕ :
-  (n : ℕ) → leq-ℕ zero-ℕ n
-zero-ℕ-leq-ℕ n = star
-
 is-prop-leq-ℕ :
   (m n : ℕ) → is-prop (leq-ℕ m n)
 is-prop-leq-ℕ zero-ℕ zero-ℕ = is-prop-unit
@@ -417,7 +415,7 @@ cases-htpy-succ-strong-ind-ℕ :
 cases-htpy-succ-strong-ind-ℕ P pS k H m (inl p) q =
   ap (H m) (is-prop'-is-prop (is-prop-leq-ℕ m k) p q)
 cases-htpy-succ-strong-ind-ℕ P pS k H m (inr α) q =
-  ex-falso'
+  ex-falso
     ( neg-succ-leq-ℕ k (leq-eq-left-ℕ α k q))
 
 htpy-succ-strong-ind-ℕ :
@@ -439,7 +437,7 @@ cases-eq-succ-strong-ind-ℕ :
   ( c : coprod (leq-ℕ (succ-ℕ k) k) (Id (succ-ℕ k) (succ-ℕ k))) →
   Id ( (cases-succ-strong-ind-ℕ P pS k H (succ-ℕ k) c))
      ( pS k H)
-cases-eq-succ-strong-ind-ℕ P pS k H (inl p) = ex-falso' (neg-succ-leq-ℕ k p)
+cases-eq-succ-strong-ind-ℕ P pS k H (inl p) = ex-falso (neg-succ-leq-ℕ k p)
 cases-eq-succ-strong-ind-ℕ P pS k H (inr α) =
   ap ( (cases-succ-strong-ind-ℕ P pS k H (succ-ℕ k)) ∘ inr)
      ( is-prop'-is-prop (is-set-ℕ (succ-ℕ k) (succ-ℕ k)) α refl)
@@ -729,12 +727,13 @@ is-prop-le-ℕ (succ-ℕ a) (succ-ℕ b) = is-prop-le-ℕ a b
 is-prop'-le-ℕ : (a b : ℕ) → is-prop' (le-ℕ a b)
 is-prop'-le-ℕ a b = is-prop'-is-prop (is-prop-le-ℕ a b)
 
+{-
 left-lesser-law-gcd-euclid : (a b : ℕ) → (le-ℕ a b) →
   Id (gcd-euclid a b) (gcd-euclid a (subtract-ℕ b a))
 left-lesser-law-gcd-euclid zero-ℕ (succ-ℕ b) H = refl
 left-lesser-law-gcd-euclid (succ-ℕ a) (succ-ℕ b) H =
   ( htpy-eq (comp-succ-gcd-euclid a) (succ-ℕ b)) ∙ {!!}
-
+-}
 
 {-  ( (comp-succ-succ-gcd-euclid a (λ x t → gcd-euclid x) b) ∙
     ( ( {!!} ∙ apd (λ t → (ind-coprod (λ x → ℕ)
@@ -945,6 +944,7 @@ leq-fib-add-ℕ m .(add-ℕ m (succ-ℕ k)) (pair (succ-ℕ k) refl) =
     ( leq-fib-add-ℕ m (add-ℕ m k) (pair k refl))
     ( succ-leq-ℕ (add-ℕ m k))
 
+{-
 fib-add-leq-ℕ :
   (m n : ℕ) → (leq-ℕ m n) → fib (add-ℕ m) n
 fib-add-leq-ℕ zero-ℕ zero-ℕ star = pair zero-ℕ refl
@@ -975,6 +975,7 @@ is-equiv-fib-add-leq-ℕ m n =
     ( is-prop-leq-ℕ m n)
     ( is-prop-map-is-emb _ (is-emb-add-ℕ m) n)
     ( leq-fib-add-ℕ m n)
+-}
 
 is-injective-mul-ℕ :
   (n : ℕ) → (le-ℕ zero-ℕ n) → is-injective is-set-ℕ is-set-ℕ (mul-ℕ n)
@@ -1047,10 +1048,12 @@ order-preserving-succ-ℕ :
   (n n' : ℕ) → (leq-ℕ n n') → (leq-ℕ (succ-ℕ n) (succ-ℕ n'))
 order-preserving-succ-ℕ n n' H = H
 
+{-
 order-preserving-add-ℕ :
   (m n m' n' : ℕ) →
   (leq-ℕ m m') → (leq-ℕ n n') → (leq-ℕ (add-ℕ m n) (add-ℕ m' n'))
 order-preserving-add-ℕ = {!!}
+-}
 
 {-
 order-preserving-add-ℕ zero-ℕ zero-ℕ m' n' Hm Hn = star
@@ -1067,6 +1070,7 @@ le-eq-right-ℕ :
   (m : ℕ) {n n' : ℕ} → Id n n' → le-ℕ m n' → le-ℕ m n
 le-eq-right-ℕ m refl = id
 
+{-
 le-add-ℕ :
   (m n : ℕ) → (leq-ℕ one-ℕ n) → le-ℕ m (add-ℕ m n)
 le-add-ℕ = {!!}
@@ -1083,6 +1087,7 @@ le-mul-self-ℕ (succ-ℕ d) (succ-ℕ n) star star =
     ( succ-ℕ n)
     ( right-successor-law-mul-ℕ (succ-ℕ n) d)
     ( le-add-ℕ (succ-ℕ n) (mul-ℕ (succ-ℕ n) d) {!leq-eq-right-ℕ !})
+-}
 
 leq-multiple-ℕ :
   (n m : ℕ) → (leq-ℕ one-ℕ m) → leq-ℕ n (mul-ℕ n m)
@@ -1122,6 +1127,7 @@ is-minimal-least-larger-multiple-ℕ :
 is-minimal-least-larger-multiple-ℕ d n H =
   pr2 (pr2 (least-factor-least-larger-multiple-ℕ d n H))
 
+{-
 is-decidable-div-is-decidable-eq-least-larger-multiple-ℕ :
   (d n : ℕ) (H : leq-ℕ one-ℕ d) →
   is-decidable (Id (least-larger-multiple-ℕ d n H) n) → is-decidable (div-ℕ d n)
@@ -1142,6 +1148,7 @@ is-decidable-div-ℕ zero-ℕ (succ-ℕ n) =
     Eq-ℕ-eq {-zero-ℕ (succ-ℕ n)-} ((inv (right-zero-law-mul-ℕ (pr1 p))) ∙ (pr2 p)))
 is-decidable-div-ℕ (succ-ℕ d) n =
   is-decidable-div-ℕ' (succ-ℕ d) n (leq-zero-ℕ d)
+-}
 
 -- Operations on decidable bounded subsets of ℕ
 
@@ -1268,11 +1275,6 @@ bounds-fam-ℕ P = Σ ℕ (λ n → is-bounded-fam-ℕ n P)
 is-minimal-ℕ :
   {l : Level} (P : ℕ → UU l) → Σ ℕ P → UU l
 is-minimal-ℕ P (pair n p) = (t : Σ ℕ P) → leq-ℕ n (pr1 t)
-
-eq-zero-leq-zero-ℕ :
-  (n : ℕ) → leq-ℕ n zero-ℕ → Id n zero-ℕ
-eq-zero-leq-zero-ℕ zero-ℕ star = refl
-eq-zero-leq-zero-ℕ (succ-ℕ n) ()
 
 fam-succ-ℕ :
   {l : Level} → (ℕ → UU l) → (ℕ → UU l)
@@ -1411,7 +1413,7 @@ Twin-prime-conjecture = (n : ℕ) → Σ ℕ (λ p → (is-twin-prime p) × (leq
 
 unit-classical-Prop : classical-Prop lzero
 unit-classical-Prop =
-  pair (pair {!!} {!!}) {!!}
+  pair unit-Prop (inl star)
 
 raise-unit-classical-Prop :
   (l : Level) → classical-Prop l
@@ -1420,17 +1422,19 @@ raise-unit-classical-Prop l =
     ( pair
       ( raise l unit)
       ( is-prop-is-equiv' unit
-        ( map-raise l unit)
+        ( map-raise)
         ( is-equiv-map-raise l unit)
         ( is-prop-unit)))
-    ( inl (map-raise l unit star))
+    ( inl (map-raise star))
 
 bool-classical-Prop :
   (l : Level) → classical-Prop l → bool
 bool-classical-Prop l (pair P (inl x)) = true
 bool-classical-Prop l (pair P (inr x)) = false
 
+{-
 classical-Prop-bool :
   (l : Level) → bool → classical-Prop l
 classical-Prop-bool l true = raise-unit-classical-Prop l
 classical-Prop-bool l false = {!!}
+-}

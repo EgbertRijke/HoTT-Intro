@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K --exact-split #-}
+{-# OPTIONS --without-K --exact-split --safe #-}
 
 module 10-truncation-levels where
 
@@ -698,29 +698,29 @@ set-bool = pair bool is-set-bool
 -- Exercise 8.4
 
 abstract
-  is-prop'-exclusive-coprod :
+  is-prop'-coprod :
     {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
     (P → ¬ Q) → is-prop' P → is-prop' Q → is-prop' (coprod P Q)
-  is-prop'-exclusive-coprod
+  is-prop'-coprod
     {P = P} {Q = Q} f is-prop-P is-prop-Q (inl p) (inl p') =
     ap inl (is-prop-P p p')
-  is-prop'-exclusive-coprod
+  is-prop'-coprod
     {P = P} {Q = Q} f is-prop-P is-prop-Q (inl p) (inr q') =
     ind-empty (f p q')
-  is-prop'-exclusive-coprod
+  is-prop'-coprod
     {P = P} {Q = Q} f is-prop-P is-prop-Q (inr q) (inl p') =
     ind-empty (f p' q)
-  is-prop'-exclusive-coprod
+  is-prop'-coprod
     {P = P} {Q = Q} f is-prop-P is-prop-Q (inr q) (inr q') =
     ap inr (is-prop-Q q q')
 
 abstract
-  is-prop-exclusive-coprod :
+  is-prop-coprod :
     {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
     (P → ¬ Q) → is-prop P → is-prop Q → is-prop (coprod P Q)
-  is-prop-exclusive-coprod f is-prop-P is-prop-Q =
+  is-prop-coprod f is-prop-P is-prop-Q =
     is-prop-is-prop'
-      ( is-prop'-exclusive-coprod f
+      ( is-prop'-coprod f
         ( is-prop'-is-prop is-prop-P)
         ( is-prop'-is-prop is-prop-Q))
 
@@ -739,7 +739,7 @@ abstract
       ( is-equiv-Eq-coprod-eq A B (inl x) (inl y))
       ( is-trunc-is-equiv' (succ-𝕋 k)
         ( Id x y)
-        ( map-raise _ (Id x y))
+        ( map-raise {A = Id x y})
         ( is-equiv-map-raise _ (Id x y))
         ( is-trunc-A x y))
   is-trunc-coprod k {A} {B} is-trunc-A is-trunc-B (inl x) (inr y) =
@@ -749,7 +749,7 @@ abstract
       ( is-equiv-Eq-coprod-eq A B (inl x) (inr y))
       ( is-trunc-is-equiv' (succ-𝕋 k)
         ( empty)
-        ( map-raise _ empty)
+        ( map-raise {A = empty})
         ( is-equiv-map-raise _ empty)
         ( is-trunc-succ-empty k))
   is-trunc-coprod k {A} {B} is-trunc-A is-trunc-B (inr x) (inl y) =
@@ -759,7 +759,7 @@ abstract
       ( is-equiv-Eq-coprod-eq A B (inr x) (inl y))
       ( is-trunc-is-equiv' (succ-𝕋 k)
         ( empty)
-        ( map-raise _ empty)
+        ( map-raise {A = empty})
         ( is-equiv-map-raise _ empty)
         ( is-trunc-succ-empty k))
   is-trunc-coprod k {A} {B} is-trunc-A is-trunc-B (inr x) (inr y) =
@@ -769,7 +769,7 @@ abstract
       ( is-equiv-Eq-coprod-eq A B (inr x) (inr y))
       ( is-trunc-is-equiv' (succ-𝕋 k)
         ( Id x y)
-        ( map-raise _ (Id x y))
+        ( map-raise {A = Id x y})
         ( is-equiv-map-raise _ (Id x y))
         ( is-trunc-B x y))
 
