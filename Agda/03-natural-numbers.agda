@@ -5,6 +5,8 @@ module 03-natural-numbers where
 import 02-pi
 open 02-pi public
 
+--------------------------------------------------------------------------------
+
 -- Section 3.1 The formal specification of the type of natural numbers
 
 data ℕ : UU lzero where
@@ -49,6 +51,8 @@ ind-ℕ : {i : Level} {P : ℕ → UU i} → P zero-ℕ → ((n : ℕ) → P n �
 ind-ℕ p0 pS zero-ℕ = p0
 ind-ℕ p0 pS (succ-ℕ n) = pS n (ind-ℕ p0 pS n)
 
+--------------------------------------------------------------------------------
+
 -- Section 3.2 Addition on the natural numbers
 
 -- Definition 3.2.1
@@ -59,6 +63,8 @@ add-ℕ x (succ-ℕ y) = succ-ℕ (add-ℕ x y)
 
 add-ℕ' : ℕ → ℕ → ℕ
 add-ℕ' m n = add-ℕ n m
+
+--------------------------------------------------------------------------------
 
 -- Exercises
 

@@ -241,10 +241,6 @@ abstract
   is-prop-Eq-ℕ (succ-ℕ n) (succ-ℕ m) = is-prop-Eq-ℕ n m
 
 abstract
-  eq-Eq-ℕ : (n m : ℕ) → Eq-ℕ n m → Id n m
-  eq-Eq-ℕ = least-reflexive-Eq-ℕ Id (λ n → refl)
-
-abstract
   is-set-ℕ : is-set ℕ
   is-set-ℕ =
     is-set-prop-in-id

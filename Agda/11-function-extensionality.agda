@@ -45,11 +45,6 @@ abstract
   is-contr-total-htpy-Funext f funext-f =
     fundamental-theorem-id' f refl-htpy (λ g → htpy-eq {g = g}) funext-f
 
-ev-pair :
-  {l1 l2 l3 : Level} {A : UU l1} {B : A → UU l2} {C : Σ A B → UU l3} →
-  ((t : Σ A B) → C t) → (x : A) (y : B x) → C (pair x y)
-ev-pair f x y = f (pair x y)
-
 sec-ev-pair :
   {l1 l2 l3 : Level} (A : UU l1) (B : A → UU l2)
   (C : Σ A B → UU l3) → sec (ev-pair {A = A} {B = B} {C = C})

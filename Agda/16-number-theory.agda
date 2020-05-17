@@ -85,19 +85,6 @@ has-decidable-equality A = (x y : A) → is-decidable (Id x y)
 
 {- The type ℕ is an example of a type with decidable equality. -}
 
-is-injective-succ-ℕ : (x y : ℕ) → Id (succ-ℕ x) (succ-ℕ y) → Id x y
-is-injective-succ-ℕ zero-ℕ zero-ℕ p = refl
-is-injective-succ-ℕ zero-ℕ (succ-ℕ y) p =
-  ind-empty
-    { P = λ t → Id zero-ℕ (succ-ℕ y)}
-    ( Eq-ℕ-eq {-one-ℕ (succ-ℕ (succ-ℕ y))-} p)
-is-injective-succ-ℕ (succ-ℕ x) zero-ℕ p =
-  ind-empty
-    { P = λ t → Id (succ-ℕ x) zero-ℕ}
-    ( Eq-ℕ-eq {-(succ-ℕ (succ-ℕ x)) one-ℕ-} p)
-is-injective-succ-ℕ (succ-ℕ x) (succ-ℕ y) p =
-  ap succ-ℕ (eq-Eq-ℕ x y (Eq-ℕ-eq {-(succ-ℕ (succ-ℕ x)) (succ-ℕ (succ-ℕ y))-} p))
-
 has-decidable-equality-ℕ : has-decidable-equality ℕ
 has-decidable-equality-ℕ zero-ℕ zero-ℕ = inl refl
 has-decidable-equality-ℕ zero-ℕ (succ-ℕ y) = inr (Eq-ℕ-eq {-zero-ℕ (succ-ℕ y)-})
@@ -909,16 +896,11 @@ is-lift-lift-Fin m n f (inr i) H x = {!!}
 {- First we show that mul-ℕ n is an embedding whenever n > 0. In order to do
    this, we have to show that add-ℕ n is injective. -}
 
+{-  FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
 is-injective-add-ℕ' :
-  (n : ℕ) → is-injective is-set-ℕ is-set-ℕ (λ m → add-ℕ m n)
-is-injective-add-ℕ' zero-ℕ k l p = p
-is-injective-add-ℕ' (succ-ℕ n) k l p =
-  is-injective-add-ℕ' n k l (is-injective-succ-ℕ (add-ℕ k n) (add-ℕ l n) p)
-   
-is-injective-add-ℕ :
   (n : ℕ) → is-injective is-set-ℕ is-set-ℕ (add-ℕ n)
-is-injective-add-ℕ n k l p = is-injective-add-ℕ' n k l
-  (((commutative-add-ℕ k n) ∙ p) ∙ (commutative-add-ℕ n l))
+is-injective-add-ℕ' n k l p = is-injective-add-ℕ' n k l
+  (((commutative-add-ℕ n k) ∙ ?) ∙ (commutative-add-ℕ l n))
 
 is-emb-add-ℕ :
   (n : ℕ) → is-emb (add-ℕ n)
@@ -943,6 +925,7 @@ leq-fib-add-ℕ m .(add-ℕ m (succ-ℕ k)) (pair (succ-ℕ k) refl) =
   transitive-leq-ℕ m (add-ℕ m k) (succ-ℕ (add-ℕ m k))
     ( leq-fib-add-ℕ m (add-ℕ m k) (pair k refl))
     ( succ-leq-ℕ (add-ℕ m k))
+-}
 
 {-
 fib-add-leq-ℕ :
@@ -977,40 +960,14 @@ is-equiv-fib-add-leq-ℕ m n =
     ( leq-fib-add-ℕ m n)
 -}
 
-is-injective-mul-ℕ :
-  (n : ℕ) → (le-ℕ zero-ℕ n) → is-injective is-set-ℕ is-set-ℕ (mul-ℕ n)
-is-injective-mul-ℕ (succ-ℕ n) star zero-ℕ zero-ℕ p = refl
-is-injective-mul-ℕ (succ-ℕ n) star zero-ℕ (succ-ℕ l) p =
-  ind-empty
-    ( Eq-ℕ-eq
-      {- ( zero-ℕ)-}
-      {- ( succ-ℕ (add-ℕ (mul-ℕ n (succ-ℕ l)) l))-}
-      ( ( inv (right-zero-law-mul-ℕ n)) ∙
-        ( ( inv (right-unit-law-add-ℕ (mul-ℕ n zero-ℕ))) ∙
-          ( p ∙ (right-successor-law-add-ℕ (mul-ℕ n (succ-ℕ l)) l)))))
-is-injective-mul-ℕ (succ-ℕ n) star (succ-ℕ k) zero-ℕ p =
-  ind-empty
-    ( Eq-ℕ-eq
-      {- ( succ-ℕ (add-ℕ (mul-ℕ n (succ-ℕ k)) k))-}
-      {- ( zero-ℕ)-}
-      ( ( inv (right-successor-law-add-ℕ (mul-ℕ n (succ-ℕ k)) k)) ∙
-        ( p ∙ ( right-zero-law-mul-ℕ (succ-ℕ n)))))
-is-injective-mul-ℕ (succ-ℕ n) star (succ-ℕ k) (succ-ℕ l) p =
-  ap succ-ℕ
-    ( is-injective-mul-ℕ (succ-ℕ n) star k l
-      ( is-injective-add-ℕ (succ-ℕ n)
-        ( mul-ℕ (succ-ℕ n) k)
-        ( mul-ℕ (succ-ℕ n) l)
-        ( ( inv (right-successor-law-mul-ℕ (succ-ℕ n) k) ∙ p) ∙
-          ( right-successor-law-mul-ℕ (succ-ℕ n) l))))
-
 is-emb-mul-ℕ :
-  (n : ℕ) → (le-ℕ zero-ℕ n) → is-emb (mul-ℕ n)
-is-emb-mul-ℕ n le =
+  (n : ℕ) → is-emb (mul-ℕ' (succ-ℕ n))
+is-emb-mul-ℕ n =
   is-emb-is-injective is-set-ℕ is-set-ℕ
-    ( mul-ℕ n)
-    ( is-injective-mul-ℕ n le)
+    ( mul-ℕ' (succ-ℕ n))
+    ( is-injective-mul-ℕ n)
 
+{- FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
 is-emb-mul-ℕ' :
   (n : ℕ) → (le-ℕ zero-ℕ n) → is-emb (λ m → mul-ℕ m n)
 is-emb-mul-ℕ' n t =
@@ -1018,13 +975,15 @@ is-emb-mul-ℕ' n t =
     ( mul-ℕ n)
     ( λ m → mul-ℕ m n)
     ( commutative-mul-ℕ n)
-    ( is-emb-mul-ℕ n t)
+    ( is-emb-mul-ℕ n)
+-}
 
 {- We conclude that the division relation is a property. -}
 
 div-ℕ : ℕ → ℕ → UU lzero
 div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
 
+{-  FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
 is-prop-div-ℕ :
   (m n : ℕ) → (le-ℕ zero-ℕ m) → is-prop (div-ℕ m n)
 is-prop-div-ℕ (succ-ℕ m) n star =
@@ -1032,6 +991,7 @@ is-prop-div-ℕ (succ-ℕ m) n star =
     ( λ z → mul-ℕ z (succ-ℕ m))
     ( is-emb-mul-ℕ' (succ-ℕ m) star)
     n
+-}
 
 {- We now construct the division with remainder. -}
 
@@ -1089,6 +1049,7 @@ le-mul-self-ℕ (succ-ℕ d) (succ-ℕ n) star star =
     ( le-add-ℕ (succ-ℕ n) (mul-ℕ (succ-ℕ n) d) {!leq-eq-right-ℕ !})
 -}
 
+{-
 leq-multiple-ℕ :
   (n m : ℕ) → (leq-ℕ one-ℕ m) → leq-ℕ n (mul-ℕ n m)
 leq-multiple-ℕ n (succ-ℕ m) H =
@@ -1126,6 +1087,7 @@ is-minimal-least-larger-multiple-ℕ :
   leq-ℕ (factor-least-larger-multiple-ℕ d n H) k
 is-minimal-least-larger-multiple-ℕ d n H =
   pr2 (pr2 (least-factor-least-larger-multiple-ℕ d n H))
+-}
 
 {-
 is-decidable-div-is-decidable-eq-least-larger-multiple-ℕ :

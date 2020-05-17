@@ -128,17 +128,6 @@ succ-neg-one-Fin {succ-ℕ n} = refl
 
 -- We also define the predecessor function on finite sets --
 
-{-
-cases-pred-Fin :
-  {n : ℕ} (x : Fin (succ-ℕ n)) →
-  is-decidable (Eq-Fin (succ-ℕ n) x zero-Fin) →
-  Fin (succ-ℕ n)
-cases-pred-Fin {zero-ℕ} x t = neg-one-Fin
-cases-pred-Fin {succ-ℕ n} (inl x) (inl e) = neg-one-Fin
-cases-pred-Fin {succ-ℕ n} (inl x) (inr f) = inl (cases-pred-Fin x (inr f))
-cases-pred-Fin {succ-ℕ n} (inr x) (inr f) = inl neg-one-Fin
--}
-
 pred-Fin : {n : ℕ} → Fin (succ-ℕ n) → Fin (succ-ℕ n)
 pred-Fin {zero-ℕ} x = zero-Fin
 pred-Fin {succ-ℕ n} x with (is-decidable-Eq-Fin (succ-ℕ (succ-ℕ n)) x zero-Fin)
@@ -147,15 +136,6 @@ pred-Fin {succ-ℕ n} (inl x) | inr f = inl (pred-Fin x)
 pred-Fin {succ-ℕ n} (inr x) | inr f = inl neg-one-Fin
 
 -- We show that the predecessor of zero is negative one --
-
-{-
-cases-pred-zero-Fin :
-  {n : ℕ} (x : Fin (succ-ℕ n)) →
-  (e : Eq-Fin (succ-ℕ n) x zero-Fin) →
-  Id (cases-pred-Fin {n} x (inl e)) neg-one-Fin
-cases-pred-zero-Fin {zero-ℕ} x e = refl
-cases-pred-zero-Fin {succ-ℕ n} (inl x) e = refl
--}
 
 pred-zero-Fin :
   {n : ℕ} → Id (pred-Fin {n} zero-Fin) neg-one-Fin
@@ -167,16 +147,6 @@ pred-zero-Fin {succ-ℕ n} | inr f =
 
 -- We compute the predecessor of an element of the form inl that is not zero --
 
-{-
-cases-pred-inl-Fin :
-  {n : ℕ} (x : Fin (succ-ℕ n)) (f : ¬ (Eq-Fin (succ-ℕ n) x zero-Fin)) →
-  Id (cases-pred-Fin (inl x) (inr f)) (inl (cases-pred-Fin x (inr f)))
-cases-pred-inl-Fin {zero-ℕ} (inr star) f =
-  ex-falso (f (refl-Eq-Fin {one-ℕ} zero-Fin))
-cases-pred-inl-Fin {succ-ℕ n} (inl x) f = refl
-cases-pred-inl-Fin {succ-ℕ n} (inr star) f = refl
--}
-
 pred-inl-Fin :
   {n : ℕ} (x : Fin (succ-ℕ n)) (f : ¬ (Eq-Fin (succ-ℕ n) x zero-Fin)) →
   Id (pred-Fin (inl x)) (inl (pred-Fin x))
@@ -185,27 +155,6 @@ pred-inl-Fin {n} x f | inl e = ex-falso (f e)
 pred-inl-Fin {n} x f | inr g = refl
 
 -- We show that the predecessor function is a section of the successor function
-
-{-
-cases-succ-pred-Fin :
-  { n : ℕ} (x : Fin (succ-ℕ n)) →
-  ( d : is-decidable (Eq-Fin (succ-ℕ n) x zero-Fin)) →
-  Id (succ-Fin (cases-pred-Fin x d)) x
-cases-succ-pred-Fin {zero-ℕ} (inr star) d = refl
-cases-succ-pred-Fin {succ-ℕ n} (inl x) (inl e) = inv (eq-Eq-Fin e)
-cases-succ-pred-Fin {succ-ℕ (succ-ℕ n)} (inl (inl (inl x))) (inr f) =
-  ( ap succ-Fin (cases-pred-inl-Fin (inl (inl x)) f)) ∙
-  ( ( ap (succ-Fin ∘ inl) (cases-pred-inl-Fin (inl x) f)) ∙
-    ( ap inl (cases-succ-pred-Fin {succ-ℕ n} (inl (inl x)) (inr f))))
-cases-succ-pred-Fin {succ-ℕ (succ-ℕ n)} (inl (inl (inr x))) (inr f) =
-  ( ap succ-Fin (cases-pred-inl-Fin (inl (inr x)) f)) ∙
-  ( ap inl (cases-succ-pred-Fin {succ-ℕ n} (inl (inr x)) (inr f)))
-cases-succ-pred-Fin {succ-ℕ zero-ℕ} (inl (inr star)) (inr f) =
-  ex-falso (f star)
-cases-succ-pred-Fin {succ-ℕ (succ-ℕ n)} (inl (inr star)) (inr f) =
-  ap succ-Fin (cases-pred-inl-Fin {succ-ℕ n} (inr star) f)
-cases-succ-pred-Fin {succ-ℕ n} (inr star) (inr f) = refl
--}
 
 succ-pred-Fin :
   {n : ℕ} (x : Fin (succ-ℕ n)) → Id (succ-Fin (pred-Fin x)) x
@@ -231,20 +180,6 @@ succ-pred-Fin {succ-ℕ zero-ℕ} (inl (inr x)) | inr f = ex-falso (f star)
 succ-pred-Fin {succ-ℕ (succ-ℕ n)} (inl (inr x)) | inr f =
   ap inl (succ-pred-Fin (inr x))
 succ-pred-Fin {succ-ℕ n} (inr star) | inr f = refl
-
-{-
-succ-pred-Fin :
-  {n : ℕ} (x : Fin (succ-ℕ n)) → Id (succ-Fin (pred-Fin x)) x
-succ-pred-Fin {n} x with (is-decidable-Eq-Fin (succ-ℕ n) x zero-Fin)
-succ-pred-Fin {zero-ℕ} (inr star) | d = refl
-succ-pred-Fin {succ-ℕ n} (inl x) | inl e =
-  ( ( ap (succ-Fin ∘ pred-Fin) {x = inl x} {y = zero-Fin} (eq-Eq-Fin e)) ∙
-    ( ( ap succ-Fin pred-zero-Fin) ∙
-      ( succ-neg-one-Fin))) ∙
-  ( inv {x = inl x} {y = zero-Fin} (eq-Eq-Fin e))
-succ-pred-Fin {succ-ℕ n} (inl x) | inr f = {!!}
-succ-pred-Fin {succ-ℕ n} (inr star) | inr f = refl
--}
 
 -- We show that the predecessor function is a retract of the successor function
 
@@ -318,6 +253,15 @@ successor-law-nat-Fin {succ-ℕ n} (inl (inl x)) star =
   successor-law-nat-Fin (inl x) star
 successor-law-nat-Fin {succ-ℕ n} (inl (inr x)) star = refl
 
+successor-law-nat-Fin' :
+  {n : ℕ} (x : Fin (succ-ℕ n)) (p : ¬ (Eq-Fin (succ-ℕ n) x neg-one-Fin)) →
+  Id (succ-ℕ (nat-Fin x)) (nat-Fin (succ-Fin x))
+successor-law-nat-Fin' {zero-ℕ} (inr star) p = ex-falso (p star)
+successor-law-nat-Fin' {succ-ℕ n} (inl (inl x)) p =
+  successor-law-nat-Fin (inl x) star
+successor-law-nat-Fin' {succ-ℕ n} (inl (inr star)) p = refl
+successor-law-nat-Fin' {succ-ℕ n} (inr star) p = ex-falso (p star)
+
 successor-law-mod-succ-ℕ :
   (n m : ℕ) → le-ℕ m (succ-ℕ n) → Id (mod-succ-ℕ (succ-ℕ n) m) (inl (mod-succ-ℕ n m))
 successor-law-mod-succ-ℕ zero-ℕ zero-ℕ star = refl
@@ -329,129 +273,45 @@ successor-law-mod-succ-ℕ (succ-ℕ n) (succ-ℕ m) p =
     ( ap succ-Fin (ap inl (successor-law-mod-succ-ℕ n m p)))) ∙
   ( ap inl (ap succ-Fin (inv (successor-law-mod-succ-ℕ n m p))))
 
--- We define a distance function on ℕ --
+-- We show some basic properties of the divisibility relation --
 
-dist-ℕ : ℕ → ℕ → ℕ
-dist-ℕ zero-ℕ zero-ℕ = zero-ℕ
-dist-ℕ zero-ℕ (succ-ℕ n) = succ-ℕ n
-dist-ℕ (succ-ℕ m) zero-ℕ = succ-ℕ m
-dist-ℕ (succ-ℕ m) (succ-ℕ n) = dist-ℕ m n
+{- In the following three constructions we show that if any two of the three
+   numbers x, y, and x + y, is divisible by d, then so is the third. -}
 
-dist-ℕ' : ℕ → ℕ → ℕ
-dist-ℕ' m n = dist-ℕ n m
+div-add-ℕ :
+  (d x y : ℕ) → div-ℕ d x → div-ℕ d y → div-ℕ d (add-ℕ x y)
+div-add-ℕ d x y (pair n p) (pair m q) =
+  pair
+    ( add-ℕ n m)
+    ( ( right-distributive-mul-add-ℕ n m d) ∙
+      ( ap-add-ℕ p q))
 
-ap-dist-ℕ :
-  {m n m' n' : ℕ} → Id m m' → Id n n' → Id (dist-ℕ m n) (dist-ℕ m' n')
-ap-dist-ℕ refl refl = refl
-
-{- We show that two natural numbers are equal if and only if their distance is
-   zero. -}
-
-eq-dist-ℕ :
-  (m n : ℕ) → Id zero-ℕ (dist-ℕ m n) → Id m n
-eq-dist-ℕ zero-ℕ zero-ℕ p = refl
-eq-dist-ℕ (succ-ℕ m) (succ-ℕ n) p = ap succ-ℕ (eq-dist-ℕ m n p)
-
-dist-eq-ℕ :
-  (m n : ℕ) → Id m n → Id zero-ℕ (dist-ℕ m n)
-dist-eq-ℕ zero-ℕ .zero-ℕ refl = refl
-dist-eq-ℕ (succ-ℕ m) .(succ-ℕ m) refl = dist-eq-ℕ m m refl
-
--- The distance function is symmetric --
-
-symmetric-dist-ℕ :
-  (m n : ℕ) → Id (dist-ℕ m n) (dist-ℕ n m)
-symmetric-dist-ℕ zero-ℕ zero-ℕ = refl
-symmetric-dist-ℕ zero-ℕ (succ-ℕ n) = refl
-symmetric-dist-ℕ (succ-ℕ m) zero-ℕ = refl
-symmetric-dist-ℕ (succ-ℕ m) (succ-ℕ n) = symmetric-dist-ℕ m n
-
--- We compute the distance from zero --
-
-left-zero-law-dist-ℕ :
-  (n : ℕ) → Id (dist-ℕ zero-ℕ n) n
-left-zero-law-dist-ℕ zero-ℕ = refl
-left-zero-law-dist-ℕ (succ-ℕ n) = refl
-
-right-zero-law-dist-ℕ :
-  (n : ℕ) → Id (dist-ℕ n zero-ℕ) n
-right-zero-law-dist-ℕ zero-ℕ = refl
-right-zero-law-dist-ℕ (succ-ℕ n) = refl
-
--- We prove the triangle inequality --
-
-ap-add-ℕ :
-  {m n m' n' : ℕ} → Id m m' → Id n n' → Id (add-ℕ m n) (add-ℕ m' n')
-ap-add-ℕ refl refl = refl
-
-triangle-inequality-dist-ℕ :
-  (m n k : ℕ) → leq-ℕ (dist-ℕ m n) (add-ℕ (dist-ℕ m k) (dist-ℕ k n))
-triangle-inequality-dist-ℕ zero-ℕ zero-ℕ zero-ℕ = star
-triangle-inequality-dist-ℕ zero-ℕ zero-ℕ (succ-ℕ k) = star
-triangle-inequality-dist-ℕ zero-ℕ (succ-ℕ n) zero-ℕ =
-  tr ( leq-ℕ (succ-ℕ n))
-     ( inv (left-unit-law-add-ℕ (succ-ℕ n)))
-     ( reflexive-leq-ℕ (succ-ℕ n))
-triangle-inequality-dist-ℕ zero-ℕ (succ-ℕ n) (succ-ℕ k) =
-  concatenate-eq-leq-eq-ℕ
-    ( inv (ap succ-ℕ (left-zero-law-dist-ℕ n)))
-    ( triangle-inequality-dist-ℕ zero-ℕ n k)
-    ( ( ap (succ-ℕ ∘ (add-ℕ' (dist-ℕ k n))) (left-zero-law-dist-ℕ k)) ∙
-      ( inv (left-successor-law-add-ℕ k (dist-ℕ k n))))
-triangle-inequality-dist-ℕ (succ-ℕ m) zero-ℕ zero-ℕ = reflexive-leq-ℕ (succ-ℕ m)
-triangle-inequality-dist-ℕ (succ-ℕ m) zero-ℕ (succ-ℕ k) =
-  concatenate-eq-leq-eq-ℕ
-    ( inv (ap succ-ℕ (right-zero-law-dist-ℕ m)))
-    ( triangle-inequality-dist-ℕ m zero-ℕ k)
-    ( ap (succ-ℕ ∘ (add-ℕ (dist-ℕ m k))) (right-zero-law-dist-ℕ k))
-triangle-inequality-dist-ℕ (succ-ℕ m) (succ-ℕ n) zero-ℕ =
-  concatenate-leq-eq-ℕ
+div-left-summand-ℕ :
+  (d x y : ℕ) → div-ℕ d y → div-ℕ d (add-ℕ x y) → div-ℕ d x
+div-left-summand-ℕ zero-ℕ x y (pair m q) (pair n p) =
+  pair zero-ℕ
+    ( ( inv (right-zero-law-mul-ℕ n)) ∙
+      ( p ∙ (ap (add-ℕ x) ((inv q) ∙ (right-zero-law-mul-ℕ m)))))
+div-left-summand-ℕ (succ-ℕ d) x y (pair m q) (pair n p) =
+  pair
     ( dist-ℕ m n)
-    ( transitive-leq-ℕ
-      ( dist-ℕ m n)
-      ( succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))
-      ( succ-ℕ (succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))) 
-      ( transitive-leq-ℕ
-        ( dist-ℕ m n)
-        ( add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n))
-        ( succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))
-        ( triangle-inequality-dist-ℕ m n zero-ℕ)
-        ( succ-leq-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n))))
-      ( succ-leq-ℕ (succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))))
-    ( ( ap (succ-ℕ ∘ succ-ℕ)
-           ( ap-add-ℕ (right-zero-law-dist-ℕ m) (left-zero-law-dist-ℕ n))) ∙
-      ( inv (left-successor-law-add-ℕ m (succ-ℕ n))))
-triangle-inequality-dist-ℕ (succ-ℕ m) (succ-ℕ n) (succ-ℕ k) =
-  triangle-inequality-dist-ℕ m n k
+    ( is-injective-add-ℕ (mul-ℕ m (succ-ℕ d)) (mul-ℕ (dist-ℕ m n) (succ-ℕ d)) x
+      ( ( inv (right-distributive-mul-add-ℕ m (dist-ℕ m n) (succ-ℕ d))) ∙
+        ( ( ap
+            ( mul-ℕ' (succ-ℕ d))
+            ( leq-dist-ℕ m n
+              ( leq-leq-mul-ℕ' m n d
+                ( concatenate-eq-leq-eq-ℕ q
+                  ( leq-add-ℕ' y x)
+                  ( inv p))))) ∙
+          ( p ∙ ((commutative-add-ℕ x y) ∙ (ap (add-ℕ' x) (inv q)))))))
 
-translation-invariant-dist-ℕ :
-  (k m n : ℕ) → Id (dist-ℕ (add-ℕ k m) (add-ℕ k n)) (dist-ℕ m n)
-translation-invariant-dist-ℕ zero-ℕ m n =
-  ap-dist-ℕ (left-unit-law-add-ℕ m) (left-unit-law-add-ℕ n)
-translation-invariant-dist-ℕ (succ-ℕ k)  m n =
-  ( ap-dist-ℕ (left-successor-law-add-ℕ k m) (left-successor-law-add-ℕ k n)) ∙
-  ( translation-invariant-dist-ℕ k m n)
+div-right-summand-ℕ :
+  (d x y : ℕ) → div-ℕ d x → div-ℕ d (add-ℕ x y) → div-ℕ d y
+div-right-summand-ℕ d x y H1 H2 =
+  div-left-summand-ℕ d y x H1 (tr (div-ℕ d) (commutative-add-ℕ x y) H2)
 
-linear-dist-ℕ :
-  (m n k : ℕ) → Id (dist-ℕ (mul-ℕ k m) (mul-ℕ k n)) (mul-ℕ k (dist-ℕ m n))
-linear-dist-ℕ zero-ℕ zero-ℕ zero-ℕ = refl
-linear-dist-ℕ zero-ℕ zero-ℕ (succ-ℕ k) = linear-dist-ℕ zero-ℕ zero-ℕ k
-linear-dist-ℕ zero-ℕ (succ-ℕ n) zero-ℕ = refl
-linear-dist-ℕ zero-ℕ (succ-ℕ n) (succ-ℕ k) =
-  ap (dist-ℕ' (mul-ℕ (succ-ℕ k) (succ-ℕ n))) (right-zero-law-mul-ℕ (succ-ℕ k))
-linear-dist-ℕ (succ-ℕ m) zero-ℕ zero-ℕ = refl
-linear-dist-ℕ (succ-ℕ m) zero-ℕ (succ-ℕ k) =
-  ap (dist-ℕ (mul-ℕ (succ-ℕ k) (succ-ℕ m))) (right-zero-law-mul-ℕ (succ-ℕ k))
-linear-dist-ℕ (succ-ℕ m) (succ-ℕ n) zero-ℕ = refl
-linear-dist-ℕ (succ-ℕ m) (succ-ℕ n) (succ-ℕ k) =
-  ( ap-dist-ℕ
-    ( right-successor-law-mul-ℕ (succ-ℕ k) m)
-    ( right-successor-law-mul-ℕ (succ-ℕ k) n)) ∙
-  ( ( translation-invariant-dist-ℕ
-      ( succ-ℕ k)
-      ( mul-ℕ (succ-ℕ k) m)
-      ( mul-ℕ (succ-ℕ k) n)) ∙
-    ( linear-dist-ℕ m n (succ-ℕ k)))
+-- Some lemmas that will help us showing that cong is an equivalence relation
 
 order-two-elements-ℕ :
   (x y : ℕ) → coprod (leq-ℕ x y) (leq-ℕ y x)
@@ -484,14 +344,6 @@ order-three-elements-ℕ (succ-ℕ x) (succ-ℕ y) zero-ℕ =
   inr (inr (functor-coprod (pair star) (pair star) (order-two-elements-ℕ x y)))
 order-three-elements-ℕ (succ-ℕ x) (succ-ℕ y) (succ-ℕ z) =
   order-three-elements-ℕ x y z
-
-leq-dist-ℕ :
-  (x y : ℕ) → leq-ℕ x y → Id (add-ℕ x (dist-ℕ x y)) y
-leq-dist-ℕ zero-ℕ zero-ℕ H = refl
-leq-dist-ℕ zero-ℕ (succ-ℕ y) star = left-unit-law-add-ℕ (succ-ℕ y)
-leq-dist-ℕ (succ-ℕ x) (succ-ℕ y) H =
-  ( left-successor-law-add-ℕ x (dist-ℕ x y)) ∙
-  ( ap succ-ℕ (leq-dist-ℕ x y H))
 
 triangle-equality-dist-ℕ :
   (x y z : ℕ) → (leq-ℕ x y) × (leq-ℕ y z) →
@@ -549,100 +401,6 @@ is-total-dist-ℕ x y z | inr (inr (inr H)) =
       ( ( commutative-add-ℕ (dist-ℕ y x) (dist-ℕ z y)) ∙
         ( ( triangle-equality-dist-ℕ z y x H) ∙
           ( symmetric-dist-ℕ z x))))
-
--- We prove some lemmas about inequalities --
-
-add-leq-ℕ :
-  (m n : ℕ) → leq-ℕ m (add-ℕ m n)
-add-leq-ℕ m zero-ℕ = reflexive-leq-ℕ m
-add-leq-ℕ m (succ-ℕ n) =
-  transitive-leq-ℕ m (add-ℕ m n) (succ-ℕ (add-ℕ m n))
-    ( add-leq-ℕ m n)
-    ( succ-leq-ℕ (add-ℕ m n))
-
-add-leq-ℕ' :
-  (m n : ℕ) → leq-ℕ m (add-ℕ n m)
-add-leq-ℕ' m n =
-  concatenate-leq-eq-ℕ m (add-leq-ℕ m n) (commutative-add-ℕ m n)
-
-leq-leq-add-ℕ :
-  (m n x : ℕ) → leq-ℕ (add-ℕ m x) (add-ℕ n x) → leq-ℕ m n
-leq-leq-add-ℕ m n zero-ℕ H = H
-leq-leq-add-ℕ m n (succ-ℕ x) H = leq-leq-add-ℕ m n x H
-
-leq-leq-add-ℕ' :
-  (m n x : ℕ) → leq-ℕ (add-ℕ x m) (add-ℕ x n) → leq-ℕ m n
-leq-leq-add-ℕ' m n x H =
-  leq-leq-add-ℕ m n x
-    ( concatenate-eq-leq-eq-ℕ
-      ( commutative-add-ℕ m x)
-      ( H)
-      ( commutative-add-ℕ x n))
-
-leq-leq-mul-ℕ :
-  (m n x : ℕ) → leq-ℕ (mul-ℕ (succ-ℕ x) m) (mul-ℕ (succ-ℕ x) n) → leq-ℕ m n
-leq-leq-mul-ℕ zero-ℕ zero-ℕ x H = star
-leq-leq-mul-ℕ zero-ℕ (succ-ℕ n) x H = star
-leq-leq-mul-ℕ (succ-ℕ m) zero-ℕ x H =
-  ex-falso
-    ( concatenate-leq-eq-ℕ
-      ( mul-ℕ (succ-ℕ x) (succ-ℕ m))
-      ( H)
-      ( right-zero-law-mul-ℕ (succ-ℕ x)))
-leq-leq-mul-ℕ (succ-ℕ m) (succ-ℕ n) x H =
-  leq-leq-mul-ℕ m n x
-    ( leq-leq-add-ℕ' (mul-ℕ (succ-ℕ x) m) (mul-ℕ (succ-ℕ x) n) (succ-ℕ x)
-      ( concatenate-eq-leq-eq-ℕ
-        ( inv (right-successor-law-mul-ℕ (succ-ℕ x) m))
-        ( H)
-        ( right-successor-law-mul-ℕ (succ-ℕ x) n)))
-
-leq-leq-mul-ℕ' :
-  (m n x : ℕ) → leq-ℕ (mul-ℕ m (succ-ℕ x)) (mul-ℕ n (succ-ℕ x)) → leq-ℕ m n
-leq-leq-mul-ℕ' m n x H =
-  leq-leq-mul-ℕ m n x
-    ( concatenate-eq-leq-eq-ℕ
-      ( commutative-mul-ℕ (succ-ℕ x) m)
-      ( H)
-      ( commutative-mul-ℕ n (succ-ℕ x)))
-
--- We show some basic properties of the divisibility relation --
-
-{- In the following three constructions we show that if any two of the three
-   numbers x, y, and x + y, is divisible by d, then so is the third. -}
-
-div-add-ℕ :
-  (d x y : ℕ) → div-ℕ d x → div-ℕ d y → div-ℕ d (add-ℕ x y)
-div-add-ℕ d x y (pair n p) (pair m q) =
-  pair
-    ( add-ℕ n m)
-    ( ( right-distributive-mul-add-ℕ n m d) ∙
-      ( ap-add-ℕ p q))
-
-div-left-summand-ℕ :
-  (d x y : ℕ) → div-ℕ d y → div-ℕ d (add-ℕ x y) → div-ℕ d x
-div-left-summand-ℕ zero-ℕ x y (pair m q) (pair n p) =
-  pair zero-ℕ
-    ( ( inv (right-zero-law-mul-ℕ n)) ∙
-      ( p ∙ (ap (add-ℕ x) ((inv q) ∙ (right-zero-law-mul-ℕ m)))))
-div-left-summand-ℕ (succ-ℕ d) x y (pair m q) (pair n p) =
-  pair
-    ( dist-ℕ m n)
-    ( is-injective-add-ℕ (mul-ℕ m (succ-ℕ d)) (mul-ℕ (dist-ℕ m n) (succ-ℕ d)) x
-      ( ( inv (right-distributive-mul-add-ℕ m (dist-ℕ m n) (succ-ℕ d))) ∙
-        ( ( ap
-            ( mul-ℕ' (succ-ℕ d))
-            ( leq-dist-ℕ m n
-              ( leq-leq-mul-ℕ' m n d
-                ( concatenate-eq-leq-eq-ℕ q
-                  ( add-leq-ℕ' y x)
-                  ( inv p))))) ∙
-          ( p ∙ ((commutative-add-ℕ x y) ∙ (ap (add-ℕ' x) (inv q)))))))
-
-div-right-summand-ℕ :
-  (d x y : ℕ) → div-ℕ d x → div-ℕ d (add-ℕ x y) → div-ℕ d y
-div-right-summand-ℕ d x y H1 H2 =
-  div-left-summand-ℕ d y x H1 (tr (div-ℕ d) (commutative-add-ℕ x y) H2)
 
 -- We define the congruence relation on ℕ --
 
@@ -792,6 +550,12 @@ le-neg-one-Fin {n} (inl x) f = star
 le-neg-one-Fin {n} (inr star) f =
   ex-falso (f (Eq-Fin-eq {n = succ-ℕ n} succ-neg-one-Fin))
 
+neq-neg-one-Fin :
+  {n : ℕ} (x : Fin (succ-ℕ n)) →
+  ¬ (Eq-Fin (succ-ℕ n) (succ-Fin x) zero-Fin) →
+  ¬ (Eq-Fin (succ-ℕ n) x neg-one-Fin)
+neq-neg-one-Fin {n} (inr star) f e = ex-falso (f {!!})
+
 is-remainder-div-mod-succ-ℕ :
   (n x : ℕ) → is-remainder-div-ℕ x (mod-succ-ℕ n x)
 is-remainder-div-mod-succ-ℕ n x with
@@ -827,24 +591,55 @@ is-remainder-div-mod-succ-ℕ (succ-ℕ n) (succ-ℕ x) | inr f =
     ( λ t → cong-ℕ (succ-ℕ (succ-ℕ n)) t (succ-ℕ x))
     { x = succ-ℕ (nat-Fin (mod-succ-ℕ (succ-ℕ n) x))}
     { y = nat-Fin (mod-succ-ℕ (succ-ℕ n) (succ-ℕ x))}
-    ( successor-law-nat-Fin
+    ( successor-law-nat-Fin'
       ( mod-succ-ℕ (succ-ℕ n) x)
-      ( le-neg-one-Fin (mod-succ-ℕ (succ-ℕ n) x) f))
+      ( λ e → f {!!})) --( le-neg-one-Fin (mod-succ-ℕ (succ-ℕ n) x) f))
     ( is-remainder-div-mod-succ-ℕ (succ-ℕ n) x)
 
 -- We define multiplication with remainder
 
 mul-with-remainder-succ-ℕ :
   (n : ℕ) → ℕ × (Fin (succ-ℕ n)) → ℕ
-mul-with-remainder-succ-ℕ n (pair k d) = add-ℕ (mul-ℕ (succ-ℕ n) k) (nat-Fin d)
+mul-with-remainder-succ-ℕ n (pair k d) = add-ℕ (mul-ℕ k (succ-ℕ n)) (nat-Fin d)
 
 -- We define division with remainder
+
+leq-nat-Fin-mod-succ-ℕ :
+  (n x : ℕ) → leq-ℕ (nat-Fin (mod-succ-ℕ n x)) x
+leq-nat-Fin-mod-succ-ℕ zero-ℕ x = star
+leq-nat-Fin-mod-succ-ℕ (succ-ℕ n) zero-ℕ =
+  tr
+   ( λ t → leq-ℕ t zero-ℕ)
+   ( inv (zero-law-nat-Fin {n}))
+   ( reflexive-leq-ℕ zero-ℕ)
+leq-nat-Fin-mod-succ-ℕ (succ-ℕ n) (succ-ℕ x) with
+  is-decidable-Eq-Fin (succ-ℕ (succ-ℕ n)) neg-one-Fin (mod-succ-ℕ (succ-ℕ n) x)
+leq-nat-Fin-mod-succ-ℕ (succ-ℕ n) (succ-ℕ x) | inl p =
+  concatenate-eq-leq-ℕ
+    { zero-ℕ}
+    { nat-Fin (succ-Fin (mod-succ-ℕ (succ-ℕ n) x))}
+    ( succ-ℕ x)
+    ( ( ap
+        ( nat-Fin ∘ succ-Fin)
+        { x = mod-succ-ℕ (succ-ℕ n) x}
+        { y = neg-one-Fin}
+        ( inv (eq-Eq-Fin p))) ∙
+      ( zero-law-nat-Fin {succ-ℕ n}))
+    ( reflexive-leq-ℕ zero-ℕ)
+leq-nat-Fin-mod-succ-ℕ (succ-ℕ n) (succ-ℕ x) | inr f = {!successor-law-nat-Fin!}
 
 division-with-remainder-succ-ℕ :
   (n x : ℕ) → fib (mul-with-remainder-succ-ℕ n) x
 division-with-remainder-succ-ℕ n x with is-remainder-div-mod-succ-ℕ n x
 division-with-remainder-succ-ℕ n x | pair k α =
-  pair (pair k  (mod-succ-ℕ n x)) {!leq-dist-ℕ!}
+  pair
+    ( pair k  (mod-succ-ℕ n x))
+    ( rewrite-left-dist-add-ℕ
+      ( mul-ℕ k (succ-ℕ n))
+      ( nat-Fin (mod-succ-ℕ n x))
+      ( x)
+      {! leq-nat-Fin-mod-succ-ℕ!}
+      ( α))
 
 {- We show that if mod-succ-ℕ n = is mod-succ-ℕ n x, then x and y must be
    congruent modulo succ-ℕ n. -}

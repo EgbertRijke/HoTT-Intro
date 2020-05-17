@@ -1,9 +1,12 @@
+
 {-# OPTIONS --without-K --exact-split --safe #-}
 
 module 05-identity-types where
 
 import 04-inductive-types
 open 04-inductive-types public
+
+--------------------------------------------------------------------------------
 
 -- Section 5.1
 
@@ -23,7 +26,9 @@ ind-Id :
   (B x refl) → (y : A) (p : Id x y) → B y p
 ind-Id x B b y refl = b
 
--- Section 5.2 The groupoid structure of types
+--------------------------------------------------------------------------------
+
+-- Section 5.2 The groupoidal structure of types
 
 -- Definition 5.2.1
 
@@ -70,6 +75,8 @@ right-inv :
   Id (p ∙ (inv p)) refl
 right-inv refl = refl
 
+--------------------------------------------------------------------------------
+
 -- Section 5.3 The action on paths of functions
 
 -- Definition 5.3.1
@@ -105,6 +112,8 @@ ap-inv :
   (p : Id x y) → Id (ap f (inv p)) (inv (ap f p))
 ap-inv f refl = refl
 
+--------------------------------------------------------------------------------
+
 -- Section 5.4 Transport
 
 -- Definition 5.4.1
@@ -130,18 +139,68 @@ refl-path-over :
   path-over B refl y y
 refl-path-over B x y = refl
 
+--------------------------------------------------------------------------------
+
+-- Section 5.5 The uniqueness of refl
+
+uniqueness-refl :
+  {i : Level} {A : UU i} (a : A) (x : A) (p : Id a x) →
+  Id {A = Σ A (Id a)} (pair a refl) (pair x p)
+uniqueness-refl a a refl = refl
+
+--------------------------------------------------------------------------------
+
+-- Section 5.6 The laws of addition on ℕ
+
+-- Proposition 5.6.1
+
+right-unit-law-add-ℕ :
+  (x : ℕ) → Id (add-ℕ x zero-ℕ) x
+right-unit-law-add-ℕ x = refl
+
+left-unit-law-add-ℕ :
+  (x : ℕ) → Id (add-ℕ zero-ℕ x) x
+left-unit-law-add-ℕ zero-ℕ = refl
+left-unit-law-add-ℕ (succ-ℕ x) = ap succ-ℕ (left-unit-law-add-ℕ x)
+
+-- Proposition 5.6.2
+
+left-successor-law-add-ℕ :
+  (x y : ℕ) → Id (add-ℕ (succ-ℕ x) y) (succ-ℕ (add-ℕ x y))
+left-successor-law-add-ℕ x zero-ℕ = refl
+left-successor-law-add-ℕ x (succ-ℕ y) =
+  ap succ-ℕ (left-successor-law-add-ℕ x y)
+                                        
+right-successor-law-add-ℕ :
+  (x y : ℕ) → Id (add-ℕ x (succ-ℕ y)) (succ-ℕ (add-ℕ x y))
+right-successor-law-add-ℕ x y = refl
+
+-- Proposition 5.6.3
+
+associative-add-ℕ :
+  (x y z : ℕ) → Id (add-ℕ (add-ℕ x y) z) (add-ℕ x (add-ℕ y z))
+associative-add-ℕ x y zero-ℕ = refl 
+associative-add-ℕ x y (succ-ℕ z) = ap succ-ℕ (associative-add-ℕ x y z)
+
+-- Proposition 5.6.4
+
+commutative-add-ℕ : (x y : ℕ) → Id (add-ℕ x y) (add-ℕ y x)
+commutative-add-ℕ zero-ℕ y = left-unit-law-add-ℕ y
+commutative-add-ℕ (succ-ℕ x) y =
+  (left-successor-law-add-ℕ x y) ∙ (ap succ-ℕ (commutative-add-ℕ x y))
+
+--------------------------------------------------------------------------------
+
 -- Exercises
 
 -- Exercise 5.1
-
--- Exercise 5.2
 
 distributive-inv-concat :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A}
   (q : Id y z) → Id (inv (p ∙ q)) ((inv q) ∙ (inv p))
 distributive-inv-concat refl refl = refl
 
--- Exercise 5.3
+-- Exercise 5.2
 
 inv-con :
   {i : Level} {A : UU i} {x y : A} (p : Id x y) {z : A} (q : Id y z)
@@ -154,52 +213,30 @@ con-inv :
 con-inv p refl r =
   ( λ α → α ∙ (inv right-unit)) ∘ (concat (inv right-unit) r)
 
--- Exercise 5.4
+-- Exercise 5.3
 
 lift :
   {i j : Level} {A : UU i} {B : A → UU j} {x y : A} (p : Id x y)
   (b : B x) → Id (pair x b) (pair y (tr B p b))
 lift refl b = refl
 
+-- Exercise 5.4
+
+Mac-Lane-pentagon :
+  {i : Level} {A : UU i} {a b c d e : A}
+  (p : Id a b) (q : Id b c) (r : Id c d) (s : Id d e) →
+  let α₁ = (ap (λ t → t ∙ s) (assoc p q r))
+      α₂ = (assoc p (q ∙ r) s)
+      α₃ = (ap (λ t → p ∙ t) (assoc q r s))
+      α₄ = (assoc (p ∙ q) r s)
+      α₅ = (assoc p q (r ∙ s))
+  in
+  Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
+Mac-Lane-pentagon refl refl refl refl = refl
+
 -- Exercise 5.5
 
--- Exercise 5.5(a)
-
-abstract
-  right-unit-law-add-ℕ :
-    (x : ℕ) → Id (add-ℕ x zero-ℕ) x
-  right-unit-law-add-ℕ x = refl
-  
-  left-unit-law-add-ℕ :
-    (x : ℕ) → Id (add-ℕ zero-ℕ x) x
-  left-unit-law-add-ℕ zero-ℕ = refl
-  left-unit-law-add-ℕ (succ-ℕ x) = ap succ-ℕ (left-unit-law-add-ℕ x)
-  
-  left-successor-law-add-ℕ :
-    (x y : ℕ) → Id (add-ℕ (succ-ℕ x) y) (succ-ℕ (add-ℕ x y))
-  left-successor-law-add-ℕ x zero-ℕ = refl
-  left-successor-law-add-ℕ x (succ-ℕ y) =
-    ap succ-ℕ (left-successor-law-add-ℕ x y)
-
-  right-successor-law-add-ℕ :
-    (x y : ℕ) → Id (add-ℕ x (succ-ℕ y)) (succ-ℕ (add-ℕ x y))
-  right-successor-law-add-ℕ x y = refl
-
--- Exercise 5.5(b)
-
-abstract
-  associative-add-ℕ :
-    (x y z : ℕ) → Id (add-ℕ (add-ℕ x y) z) (add-ℕ x (add-ℕ y z))
-  associative-add-ℕ x y zero-ℕ = refl 
-  associative-add-ℕ x y (succ-ℕ z) = ap succ-ℕ (associative-add-ℕ x y z)
-
-abstract
-  commutative-add-ℕ : (x y : ℕ) → Id (add-ℕ x y) (add-ℕ y x)
-  commutative-add-ℕ zero-ℕ y = left-unit-law-add-ℕ y
-  commutative-add-ℕ (succ-ℕ x) y =
-    (left-successor-law-add-ℕ x y) ∙ (ap succ-ℕ (commutative-add-ℕ x y))
-
--- Exercise 5.5(c)
+-- Exercise 5.5 (a)
 
 abstract
   left-zero-law-mul-ℕ :
@@ -236,7 +273,7 @@ abstract
       ( ap succ-ℕ (associative-add-ℕ x (mul-ℕ x y) y))) ∙
     ( inv (left-successor-law-add-ℕ x (add-ℕ (mul-ℕ x y) y)))
 
--- Exercise 5.5(d)
+-- Exercise 5.5 (b)
 
 abstract
   commutative-mul-ℕ :
@@ -247,7 +284,7 @@ abstract
     ( ( ap (add-ℕ y) (commutative-mul-ℕ x y)) ∙
       ( inv (right-successor-law-mul-ℕ y x)))
 
--- Exercise 5.5(e)
+-- Exercise 5.5 (c)
 
 abstract
   left-distributive-mul-add-ℕ :
@@ -272,7 +309,7 @@ abstract
       ( ( ap (λ t → add-ℕ t (mul-ℕ z y)) (commutative-mul-ℕ z x)) ∙ 
         ( ap (λ t → add-ℕ (mul-ℕ x z) t) (commutative-mul-ℕ z y))))
 
--- Exercise 5.5(f)
+-- Exercise 5.5 (d)
 
 abstract
   associative-mul-ℕ :
@@ -283,49 +320,6 @@ abstract
     ( ap (λ t → add-ℕ t (mul-ℕ y z)) (associative-mul-ℕ x y z))
 
 -- Exercise 5.6
-
-Mac-Lane-pentagon :
-  {i : Level} {A : UU i} {a b c d e : A}
-  (p : Id a b) (q : Id b c) (r : Id c d) (s : Id d e) →
-  let α₁ = (ap (λ t → t ∙ s) (assoc p q r))
-      α₂ = (assoc p (q ∙ r) s)
-      α₃ = (ap (λ t → p ∙ t) (assoc q r s))
-      α₄ = (assoc (p ∙ q) r s)
-      α₅ = (assoc p q (r ∙ s))
-  in
-  Id ((α₁ ∙ α₂) ∙ α₃) (α₄ ∙ α₅)
-Mac-Lane-pentagon refl refl refl refl = refl
-
-
-{- The following code is an experiment that shows that constructions in an
-   abstract environment do remember the specific definitions of previous
-   definitions in abstract environments. -}
-   
-abstract
-  abstract-concat :
-    {l : Level} {A : UU l} {x y z : A} → Id x y → Id y z → Id x z
-  abstract-concat refl q = q
-
-  abstract-left-unit-law :
-    {l : Level} {A : UU l} {x y : A} (q : Id x y) → Id (abstract-concat refl q) q
-  abstract-left-unit-law q = refl
-
-{- We just make some random definition to make sure that we are not in the 
-   same abstract envirnoment anymore. -}
-one : ℕ
-one = succ-ℕ zero-ℕ
-
-abstract
-  abstract-right-unit-law :
-    {l : Level} {A : UU l} {x y : A} (p : Id x y) →
-      Id (abstract-concat p refl) p
-  abstract-right-unit-law refl = refl
-  
-  {- The term refl should not be accepted if the definition of abstract-concat
-     were forgotten. A definition that would work under all circumstances is
-     abstract-left-unit refl. -}
-
--- The ring axioms for ℤ
 
 abstract
   left-inverse-pred-ℤ :
@@ -344,8 +338,9 @@ abstract
   right-inverse-pred-ℤ (inr (inr zero-ℕ)) = refl
   right-inverse-pred-ℤ (inr (inr (succ-ℕ x))) = refl
 
-{- Exercise 6.12 (a) simply asks to prove the unit laws. The left unit law 
-   holds by judgmental equality. -}
+-- Exercise 5.7
+
+-- Exercise 5.7 (a)
 
 abstract
   left-unit-law-add-ℤ :
@@ -362,9 +357,7 @@ abstract
   right-unit-law-add-ℤ (inr (inr (succ-ℕ x))) =
     ap succ-ℤ (right-unit-law-add-ℤ (inr (inr x)))
 
-{- Exercise 6.12 (b) asks to show the left and right predecessor and successor 
-   laws. These are helpful to give proofs of associativity and commutativity. 
-   -}
+-- Exercise 5.7 (b)
 
 abstract
   left-predecessor-law-add-ℤ :
@@ -416,10 +409,7 @@ abstract
   right-successor-law-add-ℤ (inr (inr (succ-ℕ x))) y =
     ap succ-ℤ (right-successor-law-add-ℤ (inr (inr x)) y)
 
-{- Exercise 6.12 (c) asks to prove associativity and commutativity. Note that 
-   we avoid an unwieldy amount of cases by only using induction on the first 
-   argument. The resulting proof term is fairly short, and we don't have to 
-   present ℤ as a certain quotient of ℕ × ℕ. -}
+-- Exercise 5.7 (c)
 
 abstract
   associative-add-ℤ :
@@ -464,10 +454,7 @@ abstract
     ( ap succ-ℤ (commutative-add-ℤ (inr (inr x)) y)) ∙ 
     ( inv (right-successor-law-add-ℤ y (inr (inr x))))
 
-{- Exercise 6.12 (d) finally asks to show the inverse laws, completing the 
-   verification of the group laws. Combined with associativity and 
-   commutativity we conclude that (add-ℤ x) and (λ x → add-ℤ x y) are 
-   equivalences, for every x : ℤ and y : ℤ, respectively. -}
+-- Exercise 5.7 (d)
 
 abstract
   left-inverse-law-add-ℤ :
@@ -487,7 +474,35 @@ abstract
   right-inverse-law-add-ℤ x =
     ( commutative-add-ℤ x (neg-ℤ x)) ∙ (left-inverse-law-add-ℤ x)
 
--- Similar for multiplication on ℤ
+-- Exercise 5.8
+
+-- Exercise 5.8 (a)
+
+left-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ zero-ℤ k) zero-ℤ
+left-zero-law-mul-ℤ k = refl
+
+right-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ k zero-ℤ) zero-ℤ
+right-zero-law-mul-ℤ (inl zero-ℕ) = refl
+right-zero-law-mul-ℤ (inl (succ-ℕ n)) =
+  right-zero-law-mul-ℤ (inl n)
+right-zero-law-mul-ℤ (inr (inl star)) = refl
+right-zero-law-mul-ℤ (inr (inr zero-ℕ)) = refl
+right-zero-law-mul-ℤ (inr (inr (succ-ℕ n))) =
+  right-zero-law-mul-ℤ (inr (inr n))
+
+left-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ one-ℤ k) k
+left-unit-law-mul-ℤ k = refl
+
+right-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ k one-ℤ) k
+right-unit-law-mul-ℤ (inl zero-ℕ) = refl
+right-unit-law-mul-ℤ (inl (succ-ℕ n)) =
+  ap (add-ℤ (neg-one-ℤ)) (right-unit-law-mul-ℤ (inl n))
+right-unit-law-mul-ℤ (inr (inl star)) = refl
+right-unit-law-mul-ℤ (inr (inr zero-ℕ)) = refl
+right-unit-law-mul-ℤ (inr (inr (succ-ℕ n))) =
+  ap (add-ℤ one-ℤ) (right-unit-law-mul-ℤ (inr (inr n)))
+
+-- Exercise 5.8 (b)
 
 neg-neg-ℤ : (k : ℤ) → Id (neg-ℤ (neg-ℤ k)) k
 neg-neg-ℤ (inl n) = refl
@@ -538,30 +553,6 @@ distributive-neg-add-ℤ (inr (inr zero-ℕ)) l = inv (pred-neg-ℤ l)
 distributive-neg-add-ℤ (inr (inr (succ-ℕ n))) l =
   ( inv (pred-neg-ℤ (add-ℤ (in-pos n) l))) ∙
   ( ap pred-ℤ (distributive-neg-add-ℤ (inr (inr n)) l))
-
-left-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ zero-ℤ k) zero-ℤ
-left-zero-law-mul-ℤ k = refl
-
-right-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ k zero-ℤ) zero-ℤ
-right-zero-law-mul-ℤ (inl zero-ℕ) = refl
-right-zero-law-mul-ℤ (inl (succ-ℕ n)) =
-  right-zero-law-mul-ℤ (inl n)
-right-zero-law-mul-ℤ (inr (inl star)) = refl
-right-zero-law-mul-ℤ (inr (inr zero-ℕ)) = refl
-right-zero-law-mul-ℤ (inr (inr (succ-ℕ n))) =
-  right-zero-law-mul-ℤ (inr (inr n))
-
-left-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ one-ℤ k) k
-left-unit-law-mul-ℤ k = refl
-
-right-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ k one-ℤ) k
-right-unit-law-mul-ℤ (inl zero-ℕ) = refl
-right-unit-law-mul-ℤ (inl (succ-ℕ n)) =
-  ap (add-ℤ (neg-one-ℤ)) (right-unit-law-mul-ℤ (inl n))
-right-unit-law-mul-ℤ (inr (inl star)) = refl
-right-unit-law-mul-ℤ (inr (inr zero-ℕ)) = refl
-right-unit-law-mul-ℤ (inr (inr (succ-ℕ n))) =
-  ap (add-ℤ one-ℤ) (right-unit-law-mul-ℤ (inr (inr n)))
 
 left-neg-unit-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ neg-one-ℤ k) (neg-ℤ k)
 left-neg-unit-law-mul-ℤ k = refl
@@ -675,6 +666,8 @@ right-predecessor-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
               ( inv (left-predecessor-law-add-ℤ (inl n) l))))) ∙
         ( associative-add-ℤ (inl (succ-ℕ n)) l (mul-ℤ (inr (inr n)) l)))))
 
+-- Exercise 5.8 (c)
+
 right-distributive-mul-add-ℤ :
   (k l m : ℤ) → Id (mul-ℤ (add-ℤ k l) m) (add-ℤ (mul-ℤ k m) (mul-ℤ l m))
 right-distributive-mul-add-ℤ (inl zero-ℕ) l m =
@@ -713,6 +706,8 @@ left-negative-law-mul-ℤ (inr (inr (succ-ℕ n))) l =
   ( ( ap (add-ℤ (neg-ℤ l)) (left-negative-law-mul-ℤ (inr (inr n)) l)) ∙
     ( inv (distributive-neg-add-ℤ l (mul-ℤ (in-pos n) l))))
 
+-- Exercise 5.8 (d)
+
 associative-mul-ℤ :
   (k l m : ℤ) → Id (mul-ℤ (mul-ℤ k l) m) (mul-ℤ k (mul-ℤ l m))
 associative-mul-ℤ (inl zero-ℕ) l m =
@@ -740,3 +735,5 @@ commutative-mul-ℤ (inr (inr zero-ℕ)) l = inv (right-unit-law-mul-ℤ l)
 commutative-mul-ℤ (inr (inr (succ-ℕ n))) l =
   ( ap (add-ℤ l) (commutative-mul-ℤ (inr (inr n)) l)) ∙
   ( inv (right-successor-law-mul-ℤ l (in-pos n)))
+
+--------------------------------------------------------------------------------

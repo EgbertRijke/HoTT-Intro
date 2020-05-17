@@ -993,12 +993,6 @@ abstract
 
 {- We construct the functoriality of coproducts. -}
 
-functor-coprod :
-  {l1 l2 l1' l2' : Level} {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'} →
-  (A → A') → (B → B') → coprod A B → coprod A' B'
-functor-coprod f g (inl x) = inl (f x)
-functor-coprod f g (inr y) = inr (g y)
-
 htpy-functor-coprod :
   {l1 l2 l1' l2' : Level} {A : UU l1} {B : UU l2} {A' : UU l1'} {B' : UU l2'}
   {f f' : A → A'} (H : f ~ f') {g g' : B → B'} (K : g ~ g') →
