@@ -18,6 +18,48 @@ neq-zero-mul-ℤ x y Hx Hy = {!!}
 
 --------------------------------------------------------------------------------
 
+{- We prove some interchange laws and moves on iterated multiplications. -}
+
+interchange-2-3-mul-ℤ :
+  {a b c d : ℤ} →
+  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ a c) (mul-ℤ b d))
+interchange-2-3-mul-ℤ {a} {b} {c} {d} =
+  ( associative-mul-ℤ a b (mul-ℤ c d)) ∙
+  ( ( ap ( mul-ℤ a)
+         ( ( inv (associative-mul-ℤ b c d)) ∙
+           ( ( ap (λ t → mul-ℤ t d) (commutative-mul-ℤ b c)) ∙
+             ( associative-mul-ℤ c b d)))) ∙
+    ( inv (associative-mul-ℤ a c (mul-ℤ b d))))
+
+interchange-1-3-mul-ℤ :
+  {a b c d : ℤ} →
+  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ c b) (mul-ℤ a d))
+interchange-1-3-mul-ℤ {a} {b} {c} {d} =
+  ( ap (λ t → mul-ℤ t (mul-ℤ c d)) (commutative-mul-ℤ a b)) ∙
+  ( ( interchange-2-3-mul-ℤ {b}) ∙
+    ( ap (λ t → mul-ℤ t (mul-ℤ a d)) (commutative-mul-ℤ b c)))
+
+move-four-mul-ℤ :
+  {a b c d : ℤ} →
+  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ a d) (mul-ℤ b c))
+move-four-mul-ℤ {a} {b} {c} {d} =
+   ( associative-mul-ℤ a b (mul-ℤ c d)) ∙
+   ( ( ap ( mul-ℤ a)
+          ( ( inv (associative-mul-ℤ b c d)) ∙
+            ( commutative-mul-ℤ (mul-ℤ b c) d))) ∙
+     ( inv (associative-mul-ℤ a d (mul-ℤ b c))))
+
+move-five-mul-ℤ :
+  {a b c d : ℤ} →
+  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ b c) (mul-ℤ a d))
+move-five-mul-ℤ {a} {b} {c} {d} =
+  ( interchange-2-3-mul-ℤ {a} {b} {c} {d}) ∙
+  ( ( ap (λ t → mul-ℤ t (mul-ℤ b d)) (commutative-mul-ℤ a c)) ∙
+    ( ( interchange-2-3-mul-ℤ {c}) ∙
+      ( ap (λ t → mul-ℤ t (mul-ℤ a d)) (commutative-mul-ℤ c b))))
+
+--------------------------------------------------------------------------------
+
 {- We introduce the type of non-zero integers. -}
 
 ℤ\0 : UU lzero
@@ -48,7 +90,10 @@ is-injective-mul-ℤ-ℤ\0 y x1 x2 = inv-is-equiv (is-emb-mul-ℤ-ℤ\0 y x1 x2)
 ℚ' : UU lzero
 ℚ' = ℤ × ℤ\0
 
-{- We introduce the equivalence relation of fractions. -}
+--------------------------------------------------------------------------------
+
+{- We introduce the equivalence relation on the prerational numbers that will
+   define the rational numbers. -}
 
 equiv-ℚ' : ℚ' → ℚ' → UU lzero
 equiv-ℚ' (pair x1 x2) (pair y1 y2) =
@@ -81,13 +126,64 @@ transitive-equiv-ℚ' (pair x1 x2) (pair y1 y2) (pair z1 z2) p q =
                   ( ap ( λ t → mul-ℤ-ℤ\0 t y2)
                        ( commutative-mul-ℤ (int-ℤ\0 x2) z1)))))))))
 
+--------------------------------------------------------------------------------
+
 {- We define addition on the prerational numbers. -}
 
 add-ℚ' : ℚ' → ℚ' → ℚ'
 add-ℚ' (pair x1 x2) (pair y1 y2) =
   pair (add-ℤ (mul-ℤ-ℤ\0 x1 y2) (mul-ℤ-ℤ\0 y1 x2)) (mul-ℤ\0 x2 y2)
 
+ap-add-ℤ :
+  {a b a' b' : ℤ} →
+  Id a a' → Id b b' → Id (add-ℤ a b) (add-ℤ a' b')
+ap-add-ℤ refl refl = refl
+
+equiv-add-ℚ' :
+  (x y x' y' : ℚ') → equiv-ℚ' x x' → equiv-ℚ' y y' →
+  equiv-ℚ' (add-ℚ' x y) (add-ℚ' x' y')
+equiv-add-ℚ'
+  ( pair x1 (pair x2 Hx))
+  ( pair y1 (pair y2 Hy))
+  ( pair x1' (pair x2' Hx'))
+  ( pair y1' (pair y2' Hy')) e f =
+  ( right-distributive-mul-add-ℤ
+    ( mul-ℤ x1 y2)
+    ( mul-ℤ y1 x2)
+    ( mul-ℤ x2' y2')) ∙
+  ( ( ap-add-ℤ
+      ( ( interchange-2-3-mul-ℤ {x1}) ∙
+        ( ( ap (λ t → mul-ℤ t (mul-ℤ y2 y2')) e) ∙
+          ( move-four-mul-ℤ {x1'})))
+      ( ( move-five-mul-ℤ {y1}) ∙
+        ( ( ap (mul-ℤ (mul-ℤ x2 x2')) f) ∙
+          ( interchange-1-3-mul-ℤ {x2} {x2'} {y1'})))) ∙
+    ( inv
+      ( right-distributive-mul-add-ℤ
+        ( mul-ℤ x1' y2')
+        ( mul-ℤ y1' x2')
+        ( mul-ℤ x2 y2))))
+
+--------------------------------------------------------------------------------
+
 {- We define multiplication on the prerational numbers. -}
 
 mul-ℚ' : ℚ' → ℚ' → ℚ'
 mul-ℚ' (pair x1 x2) (pair y1 y2) = pair (mul-ℤ x1 y1) (mul-ℤ\0 x2 y2)
+
+ap-mul-ℤ :
+  {a b a' b' : ℤ} →
+  Id a a' → Id b b' → Id (mul-ℤ a b) (mul-ℤ a' b')
+ap-mul-ℤ refl refl = refl
+
+equiv-mul-ℚ' :
+  (x y x' y' : ℚ') → equiv-ℚ' x x' → equiv-ℚ' y y' →
+  equiv-ℚ' (mul-ℚ' x y) (mul-ℚ' x' y')
+equiv-mul-ℚ'
+  ( pair x1 (pair x2 Hx))
+  ( pair y1 (pair y2 Hy))
+  ( pair x1' (pair x2' Hx'))
+  ( pair y1' (pair y2' Hy')) e f =
+  ( interchange-2-3-mul-ℤ {x1} {y1} {x2'}) ∙
+  ( ( ap-mul-ℤ e f) ∙
+    ( interchange-2-3-mul-ℤ {x1'}))
