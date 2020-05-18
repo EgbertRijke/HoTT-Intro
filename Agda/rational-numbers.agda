@@ -12,6 +12,60 @@ open 16-number-theory public
 add-ℤ' : ℤ → ℤ → ℤ
 add-ℤ' x y = add-ℤ y x
 
+--------------------------------------------------------------------------------
+
+{- We show that addition from the left and from the right are both equivalences.
+   We conclude that they are both injective maps. -}
+
+is-equiv-add-ℤ :
+  (x : ℤ) → is-equiv (add-ℤ x)
+is-equiv-add-ℤ x =
+  is-equiv-has-inverse
+    ( add-ℤ (neg-ℤ x))
+    ( λ y →
+      ( inv (associative-add-ℤ x (neg-ℤ x) y)) ∙
+      ( ( ap (add-ℤ' y) (right-inverse-law-add-ℤ x)) ∙
+        ( left-unit-law-add-ℤ y)))
+    ( λ y →
+       ( inv (associative-add-ℤ (neg-ℤ x) x y)) ∙
+       ( ( ap (add-ℤ' y) (left-inverse-law-add-ℤ x)) ∙
+         ( left-unit-law-add-ℤ y)))
+
+is-equiv-add-ℤ' :
+  (y : ℤ) → is-equiv (add-ℤ' y)
+is-equiv-add-ℤ' y =
+  is-equiv-has-inverse
+    ( λ x → add-ℤ x (neg-ℤ y))
+    ( λ x →
+      ( associative-add-ℤ x (neg-ℤ y) y) ∙
+      ( ( ap (add-ℤ x) (left-inverse-law-add-ℤ y)) ∙
+        ( right-unit-law-add-ℤ x)))
+    ( λ x →
+       ( associative-add-ℤ x y (neg-ℤ y)) ∙
+       ( ( ap (add-ℤ x) (right-inverse-law-add-ℤ y)) ∙
+         ( right-unit-law-add-ℤ x)))
+
+is-emb-add-ℤ :
+  (x : ℤ) → is-emb (add-ℤ x)
+is-emb-add-ℤ x =
+  is-emb-is-equiv (add-ℤ x) (is-equiv-add-ℤ x)
+
+is-injective-add-ℤ :
+  (x y z : ℤ) → Id (add-ℤ x y) (add-ℤ x z) → Id y z
+is-injective-add-ℤ x y z = inv-is-equiv (is-emb-add-ℤ x y z)
+
+is-emb-add-ℤ' :
+  (y : ℤ) → is-emb (add-ℤ' y)
+is-emb-add-ℤ' y = is-emb-is-equiv (add-ℤ' y) (is-equiv-add-ℤ' y)
+
+is-injective-add-ℤ' :
+  (y x w : ℤ) → Id (add-ℤ x y) (add-ℤ w y) → Id x w
+is-injective-add-ℤ' y x w = inv-is-equiv (is-emb-add-ℤ' y x w)
+
+--------------------------------------------------------------------------------
+
+{- We show that multiplication by a non-zero integer is an embedding. -}
+
 neq-zero-mul-ℤ :
   (x y : ℤ) → ¬ (Id zero-ℤ x) → ¬ (Id zero-ℤ y) → ¬ (Id zero-ℤ (mul-ℤ x y))
 neq-zero-mul-ℤ x y Hx Hy = {!!}
