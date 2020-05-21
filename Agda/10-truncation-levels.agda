@@ -212,12 +212,20 @@ abstract
   is-prop-is-equiv B f E H x y =
     is-contr-is-equiv _ (ap f {x} {y}) (is-emb-is-equiv f E x y) (H (f x) (f y))
 
+is-prop-equiv :
+  {i j : Level} {A : UU i} (B : UU j) (e : A ≃ B) → is-prop B → is-prop A
+is-prop-equiv B (pair f is-equiv-f) = is-prop-is-equiv B f is-equiv-f
+
 abstract
   is-prop-is-equiv' :
     {i j : Level} (A : UU i) {B : UU j} (f : A → B) (E : is-equiv f) →
     is-prop A → is-prop B
   is-prop-is-equiv' A f E H =
     is-prop-is-equiv _ (inv-is-equiv E) (is-equiv-inv-is-equiv E) H
+
+is-prop-equiv' :
+  {i j : Level} (A : UU i) {B : UU j} (e : A ≃ B) → is-prop A → is-prop B
+is-prop-equiv' A (pair f is-equiv-f) = is-prop-is-equiv' A f is-equiv-f
 
 abstract
   is-set-prop-in-id :
@@ -793,6 +801,9 @@ abstract
 set-ℤ : UU-Set lzero
 set-ℤ = pair ℤ is-set-ℤ
 
+ℤ-Set : UU-Set lzero
+ℤ-Set = pair ℤ is-set-ℤ
+
 is-set-empty : is-set empty
 is-set-empty ()
 
@@ -990,3 +1001,20 @@ abstract
     (f : A → B) → is-trunc-map k f → is-trunc-map (succ-𝕋 k) f
   is-trunc-map-succ-is-trunc-map k f is-trunc-f b =
     is-trunc-succ-is-trunc k (fib f b) (is-trunc-f b)
+
+--------------------------------------------------------------------------------
+
+{- We show that if f : A → B is an embedding, then the induced map
+   Σ A (C ∘ f) → Σ A C is also an embedding. -}
+
+is-emb-Σ-map-base-map :
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
+  is-emb f → is-emb (Σ-map-base-map f C)
+is-emb-Σ-map-base-map f C is-emb-f =
+  is-emb-is-prop-map
+    ( Σ-map-base-map f C)
+    ( λ x →
+      is-prop-equiv'
+        ( fib f (pr1 x))
+        ( equiv-fib-Σ-map-base-map-fib f C x)
+        ( is-prop-map-is-emb f is-emb-f (pr1 x)))

@@ -1,4 +1,3 @@
-
 {-# OPTIONS --without-K --exact-split --safe #-}
 
 module 05-identity-types where
@@ -476,6 +475,11 @@ abstract
 
 -- Exercise 5.8
 
+ap-add-ℤ :
+  {a b a' b' : ℤ} →
+  Id a a' → Id b b' → Id (add-ℤ a b) (add-ℤ a' b')
+ap-add-ℤ refl refl = refl
+
 -- Exercise 5.8 (a)
 
 left-zero-law-mul-ℤ : (k : ℤ) → Id (mul-ℤ zero-ℤ k) zero-ℤ
@@ -735,5 +739,12 @@ commutative-mul-ℤ (inr (inr zero-ℕ)) l = inv (right-unit-law-mul-ℤ l)
 commutative-mul-ℤ (inr (inr (succ-ℕ n))) l =
   ( ap (add-ℤ l) (commutative-mul-ℤ (inr (inr n)) l)) ∙
   ( inv (right-successor-law-mul-ℤ l (in-pos n)))
+
+left-distributive-mul-add-ℤ :
+  (m k l : ℤ) → Id (mul-ℤ m (add-ℤ k l)) (add-ℤ (mul-ℤ m k) (mul-ℤ m l))
+left-distributive-mul-add-ℤ m k l =
+  commutative-mul-ℤ m (add-ℤ k l) ∙
+    ( ( right-distributive-mul-add-ℤ k l m) ∙
+      ( ap-add-ℤ (commutative-mul-ℤ k m) (commutative-mul-ℤ l m)))
 
 --------------------------------------------------------------------------------

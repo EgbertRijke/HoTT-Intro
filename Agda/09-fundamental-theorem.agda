@@ -5,6 +5,8 @@ module 09-fundamental-theorem where
 import 08-contractible-types
 open 08-contractible-types public
 
+--------------------------------------------------------------------------------
+
 -- Section 8.1 Families of equivalences
 
 {- Any family of maps induces a map on the total spaces. -}
@@ -152,6 +154,13 @@ abstract
       ( issec-fib-fib-Σ-map-base-map f C t)
       ( isretr-fib-fib-Σ-map-base-map f C t)
 
+equiv-fib-Σ-map-base-map-fib :
+  { l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (f : A → B) (C : B → UU l3) →
+  ( t : Σ B C) → (fib f (pr1 t)) ≃ (fib (Σ-map-base-map f C) t)
+equiv-fib-Σ-map-base-map-fib f C t =
+  pair ( fib-Σ-map-base-map-fib f C t)
+       ( is-equiv-fib-Σ-map-base-map-fib f C t)
+
 abstract
   is-contr-map-Σ-map-base-map :
     {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} (C : B → UU l3) (f : A → B) →
@@ -289,6 +298,8 @@ abstract
         ( triangle-toto D f g)
         ( is-equiv-Σ-map-base-map D f is-equiv-f)
         ( is-equiv-toto-fg))
+
+--------------------------------------------------------------------------------
 
 -- Section 8.2 The fundamental theorem
 
@@ -485,6 +496,8 @@ abstract
     (f : (x : A) → Id a x → B x) → (x : A) → is-equiv (f x)
   fundamental-theorem-id-IND-identity-system a b ind f =
     fundamental-theorem-id a b (is-contr-total-space-IND-identity-system a b ind) f
+
+--------------------------------------------------------------------------------
 
 -- Section 7.4 Disjointness of coproducts
 
@@ -806,6 +819,8 @@ compute-eq-coprod-inr-inr y y' =
   pair
     ( map-compute-eq-coprod-inr-inr y y')
     ( is-equiv-map-compute-eq-coprod-inr-inr y y')
+
+--------------------------------------------------------------------------------
 
 -- Exercises
 

@@ -2,115 +2,8 @@
 
 module rational-numbers where
 
-import 16-number-theory
-open 16-number-theory public
-
---------------------------------------------------------------------------------
-
-{- We prove some basic arithmetic properties of the integers. -}
-
-add-ℤ' : ℤ → ℤ → ℤ
-add-ℤ' x y = add-ℤ y x
-
---------------------------------------------------------------------------------
-
-{- We show that addition from the left and from the right are both equivalences.
-   We conclude that they are both injective maps. -}
-
-is-equiv-add-ℤ :
-  (x : ℤ) → is-equiv (add-ℤ x)
-is-equiv-add-ℤ x =
-  is-equiv-has-inverse
-    ( add-ℤ (neg-ℤ x))
-    ( λ y →
-      ( inv (associative-add-ℤ x (neg-ℤ x) y)) ∙
-      ( ( ap (add-ℤ' y) (right-inverse-law-add-ℤ x)) ∙
-        ( left-unit-law-add-ℤ y)))
-    ( λ y →
-       ( inv (associative-add-ℤ (neg-ℤ x) x y)) ∙
-       ( ( ap (add-ℤ' y) (left-inverse-law-add-ℤ x)) ∙
-         ( left-unit-law-add-ℤ y)))
-
-is-equiv-add-ℤ' :
-  (y : ℤ) → is-equiv (add-ℤ' y)
-is-equiv-add-ℤ' y =
-  is-equiv-has-inverse
-    ( λ x → add-ℤ x (neg-ℤ y))
-    ( λ x →
-      ( associative-add-ℤ x (neg-ℤ y) y) ∙
-      ( ( ap (add-ℤ x) (left-inverse-law-add-ℤ y)) ∙
-        ( right-unit-law-add-ℤ x)))
-    ( λ x →
-       ( associative-add-ℤ x y (neg-ℤ y)) ∙
-       ( ( ap (add-ℤ x) (right-inverse-law-add-ℤ y)) ∙
-         ( right-unit-law-add-ℤ x)))
-
-is-emb-add-ℤ :
-  (x : ℤ) → is-emb (add-ℤ x)
-is-emb-add-ℤ x =
-  is-emb-is-equiv (add-ℤ x) (is-equiv-add-ℤ x)
-
-is-injective-add-ℤ :
-  (x y z : ℤ) → Id (add-ℤ x y) (add-ℤ x z) → Id y z
-is-injective-add-ℤ x y z = inv-is-equiv (is-emb-add-ℤ x y z)
-
-is-emb-add-ℤ' :
-  (y : ℤ) → is-emb (add-ℤ' y)
-is-emb-add-ℤ' y = is-emb-is-equiv (add-ℤ' y) (is-equiv-add-ℤ' y)
-
-is-injective-add-ℤ' :
-  (y x w : ℤ) → Id (add-ℤ x y) (add-ℤ w y) → Id x w
-is-injective-add-ℤ' y x w = inv-is-equiv (is-emb-add-ℤ' y x w)
-
---------------------------------------------------------------------------------
-
-{- We show that multiplication by a non-zero integer is an embedding. -}
-
-neq-zero-mul-ℤ :
-  (x y : ℤ) → ¬ (Id zero-ℤ x) → ¬ (Id zero-ℤ y) → ¬ (Id zero-ℤ (mul-ℤ x y))
-neq-zero-mul-ℤ x y Hx Hy = {!!}
-
---------------------------------------------------------------------------------
-
-{- We prove some interchange laws and moves on iterated multiplications. -}
-
-interchange-2-3-mul-ℤ :
-  {a b c d : ℤ} →
-  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ a c) (mul-ℤ b d))
-interchange-2-3-mul-ℤ {a} {b} {c} {d} =
-  ( associative-mul-ℤ a b (mul-ℤ c d)) ∙
-  ( ( ap ( mul-ℤ a)
-         ( ( inv (associative-mul-ℤ b c d)) ∙
-           ( ( ap (λ t → mul-ℤ t d) (commutative-mul-ℤ b c)) ∙
-             ( associative-mul-ℤ c b d)))) ∙
-    ( inv (associative-mul-ℤ a c (mul-ℤ b d))))
-
-interchange-1-3-mul-ℤ :
-  {a b c d : ℤ} →
-  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ c b) (mul-ℤ a d))
-interchange-1-3-mul-ℤ {a} {b} {c} {d} =
-  ( ap (λ t → mul-ℤ t (mul-ℤ c d)) (commutative-mul-ℤ a b)) ∙
-  ( ( interchange-2-3-mul-ℤ {b}) ∙
-    ( ap (λ t → mul-ℤ t (mul-ℤ a d)) (commutative-mul-ℤ b c)))
-
-move-four-mul-ℤ :
-  {a b c d : ℤ} →
-  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ a d) (mul-ℤ b c))
-move-four-mul-ℤ {a} {b} {c} {d} =
-   ( associative-mul-ℤ a b (mul-ℤ c d)) ∙
-   ( ( ap ( mul-ℤ a)
-          ( ( inv (associative-mul-ℤ b c d)) ∙
-            ( commutative-mul-ℤ (mul-ℤ b c) d))) ∙
-     ( inv (associative-mul-ℤ a d (mul-ℤ b c))))
-
-move-five-mul-ℤ :
-  {a b c d : ℤ} →
-  Id (mul-ℤ (mul-ℤ a b) (mul-ℤ c d)) (mul-ℤ (mul-ℤ b c) (mul-ℤ a d))
-move-five-mul-ℤ {a} {b} {c} {d} =
-  ( interchange-2-3-mul-ℤ {a} {b} {c} {d}) ∙
-  ( ( ap (λ t → mul-ℤ t (mul-ℤ b d)) (commutative-mul-ℤ a c)) ∙
-    ( ( interchange-2-3-mul-ℤ {c}) ∙
-      ( ap (λ t → mul-ℤ t (mul-ℤ a d)) (commutative-mul-ℤ c b))))
+import integers
+open integers public
 
 --------------------------------------------------------------------------------
 
@@ -187,11 +80,6 @@ transitive-equiv-ℚ' (pair x1 x2) (pair y1 y2) (pair z1 z2) p q =
 add-ℚ' : ℚ' → ℚ' → ℚ'
 add-ℚ' (pair x1 x2) (pair y1 y2) =
   pair (add-ℤ (mul-ℤ-ℤ\0 x1 y2) (mul-ℤ-ℤ\0 y1 x2)) (mul-ℤ\0 x2 y2)
-
-ap-add-ℤ :
-  {a b a' b' : ℤ} →
-  Id a a' → Id b b' → Id (add-ℤ a b) (add-ℤ a' b')
-ap-add-ℤ refl refl = refl
 
 equiv-add-ℚ' :
   (x y x' y' : ℚ') → equiv-ℚ' x x' → equiv-ℚ' y y' →

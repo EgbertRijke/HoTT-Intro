@@ -5,6 +5,8 @@ module 14-groups where
 import 13-univalence
 open 13-univalence public
 
+--------------------------------------------------------------------------------
+
 -- Section 12.3 Groups in univalent mathematics
 
 {- We first introduce semi-groups, and then groups. We do this because the
@@ -24,6 +26,8 @@ has-associative-bin-op X =
 Semi-Group :
   (l : Level) → UU (lsuc l)
 Semi-Group l = Σ (UU-Set l) has-associative-bin-op
+
+--------------------------------------------------------------------------------
 
 {- Bureaucracy of semi-groups. -}
 
@@ -55,6 +59,8 @@ is-associative-mul-Semi-Group :
   Id ( mul-Semi-Group G (mul-Semi-Group G x y) z)
      ( mul-Semi-Group G x (mul-Semi-Group G y z))
 is-associative-mul-Semi-Group G = pr2 (associative-mul-Semi-Group G)
+
+--------------------------------------------------------------------------------
 
 {- The property that a semi-group is a monoid is just that the semi-group 
    possesses a unit that satisfies the left and right unit laws. -}
@@ -97,6 +103,8 @@ right-unit-law-Monoid :
   Id (mul-Monoid M x (unit-Monoid M)) x
 right-unit-law-Monoid M = pr2 (pr2 (pr2 M))
 
+--------------------------------------------------------------------------------
+
 {- We show that is-unital is a proposition. -}
 
 abstract
@@ -115,6 +123,8 @@ abstract
   is-prop-is-unital :
     {l : Level} (G : Semi-Group l) → is-prop (is-unital G)
   is-prop-is-unital G = is-prop-is-prop' (is-prop-is-unital' G)
+
+--------------------------------------------------------------------------------
 
 {- The property that a monoid is a group is just the property that the monoid
    that every element is invertible, i.e., it comes equipped with an inverse
@@ -138,6 +148,8 @@ is-group G =
 Group :
   (l : Level) → UU (lsuc l)
 Group l = Σ (Semi-Group l) is-group
+
+--------------------------------------------------------------------------------
 
 {- Some bureaucracy of Groups. -}
 
@@ -248,6 +260,8 @@ is-equiv-mul-Group' G x =
       ( ( ap (mul-Group G y) (right-inverse-law-Group G x)) ∙
         ( right-unit-law-Group G y)))
 
+--------------------------------------------------------------------------------
+
 {- We show that being a group is a proposition. -}
 
 abstract
@@ -279,6 +293,8 @@ abstract
       ( is-prop-is-unital G)
       ( λ e → is-prop-is-prop' (is-prop-is-group' G e))
 
+--------------------------------------------------------------------------------
+
 {- We give two examples of groups. The first is the group ℤ of integers. The
    second is the loop space of a pointed 1-type.  -}
 
@@ -294,6 +310,8 @@ group-ℤ =
     ( pair
       ( pair zero-ℤ (pair left-unit-law-add-ℤ right-unit-law-add-ℤ))
       ( pair neg-ℤ (pair left-inverse-law-add-ℤ right-inverse-law-add-ℤ)))
+
+--------------------------------------------------------------------------------
 
 {- The loop space of a 1-type as a group. -}
 
@@ -335,6 +353,8 @@ group-loop-space-1-type :
   {l : Level} (A : 1-type l) (a : pr1 A) → Group l
 group-loop-space-1-type (pair A is-1-type-A) a =
   group-loop-space A a (is-1-type-A a a)
+
+--------------------------------------------------------------------------------
 
 {- We introduce the automorphism group on a set X. -}
 
@@ -408,6 +428,8 @@ aut-Group X =
     ( aut-Semi-Group X)
     ( pair (is-unital-aut-Semi-Group X) (is-group-aut-Semi-Group' X))
 
+--------------------------------------------------------------------------------
+
 {- Now we introduce homomorphisms of semi-groups. Group homomorphisms are just
    homomorphisms between their underlying semi-groups. -}
 
@@ -434,6 +456,8 @@ hom-Semi-Group G H =
   Σ ( type-Semi-Group G → type-Semi-Group H)
     ( preserves-mul G H)
 
+--------------------------------------------------------------------------------
+
 {- Bureaucracy of homomorphisms of semi-groups. -}
 
 map-hom-Semi-Group :
@@ -447,6 +471,8 @@ preserves-mul-hom-Semi-Group :
   ( f : hom-Semi-Group G H) →
   preserves-mul G H (map-hom-Semi-Group G H f)
 preserves-mul-hom-Semi-Group G H f = pr2 f
+
+--------------------------------------------------------------------------------
 
 {- We characterize the identity type of the semi-group homomorphisms. -}
 
@@ -495,6 +521,8 @@ eq-htpy-hom-Semi-Group :
 eq-htpy-hom-Semi-Group G H {f} {g} =
   inv-is-equiv (is-equiv-htpy-hom-Semi-Group-eq G H f g)
 
+--------------------------------------------------------------------------------
+
 {- We show that the type of semi-group homomorphisms between two semi-groups is
    a set. -}
 
@@ -507,6 +535,8 @@ is-set-hom-Semi-Group G H (pair f μ-f) (pair g μ-g) =
     ( htpy-hom-Semi-Group-eq G H (pair f μ-f) (pair g μ-g))
     ( is-equiv-htpy-hom-Semi-Group-eq G H (pair f μ-f) (pair g μ-g))
     ( is-prop-Π (λ x → is-set-type-Semi-Group H (f x) (g x)))
+
+--------------------------------------------------------------------------------
 
 {- We introduce monoid homomorphisms. -}
 
@@ -527,6 +557,8 @@ hom-Monoid M1 M2 =
   Σ ( hom-Semi-Group (semi-group-Monoid M1) (semi-group-Monoid M2))
     ( preserves-unit-hom-Semi-Group M1 M2)
 
+--------------------------------------------------------------------------------
+
 {- We introduce group homomorphisms. -}
 
 preserves-mul-Group :
@@ -542,13 +574,15 @@ hom-Group G H =
     ( semi-group-Group G)
     ( semi-group-Group H)
 
+--------------------------------------------------------------------------------
+
 {- Bureaucracy of group homomorphisms. -}
 
 map-hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
   ( hom-Group G H) →
   ( type-Group G) → (type-Group H)
-map-hom-Group G H f = pr1 f
+map-hom-Group G H = pr1
 
 preserves-mul-hom-Group :
   { l1 l2 : Level} (G : Group l1) (H : Group l2) →
@@ -557,7 +591,9 @@ preserves-mul-hom-Group :
     ( semi-group-Group G)
     ( semi-group-Group H)
     ( map-hom-Group G H f)
-preserves-mul-hom-Group G H f = pr2 f
+preserves-mul-hom-Group G H = pr2
+
+--------------------------------------------------------------------------------
 
 {- We characterize the identity type of the group homomorphisms. -}
 
@@ -616,6 +652,8 @@ is-set-hom-Group :
 is-set-hom-Group G H =
   is-set-hom-Semi-Group (semi-group-Group G) (semi-group-Group H)
 
+--------------------------------------------------------------------------------
+
 {- Next, we construct the identity group homomorphism, and we show that
    compositions of group homomorphisms are again group homomorphisms. -}
 
@@ -666,6 +704,8 @@ comp-Group G H K =
     ( semi-group-Group H)
     ( semi-group-Group K)
 
+--------------------------------------------------------------------------------
+
 {- Next, we prove the that the laws for a category hold for group homomorphisms,
    i.e., we show that composition is associative and satisfies the left and
    right unit laws. Before we show that these laws hold, we will characterize
@@ -701,6 +741,8 @@ right-unit-law-Semi-Group
   (pair (pair G is-set-G) (pair μ-G assoc-G)) H (pair f μ-f) =
   eq-htpy-hom-Semi-Group
     ( pair (pair G is-set-G) (pair μ-G assoc-G)) H refl-htpy
+
+--------------------------------------------------------------------------------
 
 {- Now we introduce the notion of group isomorphism. Finally, we will show that
    isomorphic groups are equal. -}
@@ -968,6 +1010,8 @@ eq-iso-Semi-Group :
   { l1 : Level} (G H : Semi-Group l1) → iso-Semi-Group G H → Id G H
 eq-iso-Semi-Group G H = inv-is-equiv (is-equiv-iso-eq-Semi-Group G H)
 
+--------------------------------------------------------------------------------
+
 {- Finally we show that isomorphic groups are equal. -}
 
 is-iso-hom-Group :
@@ -1045,6 +1089,8 @@ is-equiv-iso-eq-Group G =
 eq-iso-Group :
   { l1 : Level} (G H : Group l1) → iso-Group G H → Id G H
 eq-iso-Group G H = inv-is-equiv (is-equiv-iso-eq-Group G H)
+
+--------------------------------------------------------------------------------
 
 -- Categories
 
@@ -1159,7 +1205,11 @@ id-Precat (pair A (pair hom (pair (pair μ assoc-μ) t))) {x} =
   pr1 (is-unital-Precat {!!}) x
 -}
 
+--------------------------------------------------------------------------------
+
 -- Exercises
+
+--------------------------------------------------------------------------------
 
 -- Exercise
 
@@ -1248,10 +1298,5 @@ preserves-all-hom-Group G H f =
       ( preserves-unit-group-hom G H f)
       ( preserves-inverses-group-hom G H f))
 
--- Exercise
+--------------------------------------------------------------------------------
 
-{-
-hom-mul-Group :
-  {l : Level} (G : Group l) →
-  hom-Group G Aut
--}
