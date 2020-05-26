@@ -34,6 +34,13 @@ is-decidable-le-ℕ zero-ℕ (succ-ℕ n) = inl star
 is-decidable-le-ℕ (succ-ℕ m) zero-ℕ = inr id
 is-decidable-le-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-le-ℕ m n
 
+{- We show that if A is a proposition, then so is is-decidable A. -}
+
+is-prop-is-decidable :
+  {l : Level} {A : UU l} → is-prop A → is-prop (is-decidable A)
+is-prop-is-decidable is-prop-A =
+  is-prop-coprod intro-dn is-prop-A is-prop-neg
+
 {- Not every type is decidable. -}
 
 case-elim :
@@ -41,10 +48,6 @@ case-elim :
   ¬ B → coprod A B → A
 case-elim nb (inl a) = a
 case-elim nb (inr b) = ex-falso (nb b)
-
-is-prop-neg :
-  {l : Level} {A : UU l} → is-prop (¬ A)
-is-prop-neg {A = A} = is-prop-function-type is-prop-empty
 
 neg-Prop :
   {l : Level} (A : UU l) → UU-Prop l
@@ -979,9 +982,6 @@ is-emb-mul-ℕ' n t =
 -}
 
 {- We conclude that the division relation is a property. -}
-
-div-ℕ : ℕ → ℕ → UU lzero
-div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
 
 {-  FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
 is-prop-div-ℕ :

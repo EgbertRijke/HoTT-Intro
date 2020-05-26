@@ -1355,6 +1355,7 @@ abstract
   is-equiv-fib'-fib f y =
     is-equiv-tot-is-fiberwise-equiv (λ x → is-equiv-inv (f x) y)
 
+{-
 -- Equivalent finite sets have the same cardinality
 
 skip-Fin :
@@ -1411,4 +1412,5 @@ eq-ℕ-equiv-Fin {zero-ℕ} {zero-ℕ} e = refl
 eq-ℕ-equiv-Fin {zero-ℕ} {succ-ℕ n} e = ind-empty (inv-map-equiv e (inr star))
 eq-ℕ-equiv-Fin {succ-ℕ m} {zero-ℕ} e = ind-empty (map-equiv e (inr star))
 eq-ℕ-equiv-Fin {succ-ℕ m} {succ-ℕ n} e = {!!}
+-}
 -}

@@ -245,6 +245,11 @@ abstract
     is-set B → is-set (A → B)
   is-set-function-type = is-trunc-function-type zero-𝕋
 
+is-prop-neg :
+  {l : Level} {A : UU l} → is-prop (¬ A)
+is-prop-neg {A = A} = is-prop-function-type is-prop-empty
+
+
 {- The type theoretic principle of choice is the assertion that Π distributes
    over Σ. In other words, there is an equivalence
 

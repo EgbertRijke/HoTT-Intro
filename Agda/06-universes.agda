@@ -156,12 +156,16 @@ leq-zero-ℕ :
   (n : ℕ) → leq-ℕ zero-ℕ n
 leq-zero-ℕ n = star
 
+eq-leq-zero-ℕ :
+  (x : ℕ) → leq-ℕ x zero-ℕ → Id zero-ℕ x
+eq-leq-zero-ℕ zero-ℕ star = refl
+
 succ-leq-ℕ : (n : ℕ) → leq-ℕ n (succ-ℕ n)
 succ-leq-ℕ zero-ℕ = star
 succ-leq-ℕ (succ-ℕ n) = succ-leq-ℕ n
 
 concatenate-eq-leq-eq-ℕ :
-  {m n m' n' : ℕ} → Id m' m → leq-ℕ m n → Id n n' → leq-ℕ m' n'
+  {x1 x2 x3 x4 : ℕ} → Id x1 x2 → leq-ℕ x2 x3 → Id x3 x4 → leq-ℕ x1 x4
 concatenate-eq-leq-eq-ℕ refl H refl = H
 
 concatenate-leq-eq-ℕ :
@@ -713,12 +717,6 @@ leq-leq-mul-ℕ' m n x H =
       ( H)
       ( commutative-mul-ℕ n (succ-ℕ x)))
 
---------------------------------------------------------------------------------
-
-Fin : ℕ → UU lzero
-Fin zero-ℕ = empty
-Fin (succ-ℕ n) = coprod (Fin n) unit
-
 {-
 succ-relation-ℕ :
   {i : Level} (R : ℕ → ℕ → UU i) → ℕ → ℕ → UU i
@@ -770,6 +768,7 @@ anti-symmetric-le-ℕ : (m n : ℕ) → le-ℕ m n → le-ℕ n m → Id m n
 anti-symmetric-le-ℕ (succ-ℕ m) (succ-ℕ n) p q =
   ap succ-ℕ (anti-symmetric-le-ℕ m n p q)
 
+{-
 --------------------------------------------------------------------------------
 
 data Fin-Tree : UU lzero where
@@ -817,3 +816,4 @@ pick-list zero-ℕ nil = inr star
 pick-list zero-ℕ (cons a x) = inl a
 pick-list (succ-ℕ n) nil = inr star
 pick-list (succ-ℕ n) (cons a x) = pick-list n x
+-}
