@@ -188,6 +188,10 @@ transitive-leq-ℕ zero-ℕ m l p q = star
 transitive-leq-ℕ (succ-ℕ n) (succ-ℕ m) (succ-ℕ l) p q =
   transitive-leq-ℕ n m l p q
 
+preserves-leq-succ-ℕ :
+  (m n : ℕ) → leq-ℕ m n → leq-ℕ m (succ-ℕ n)
+preserves-leq-succ-ℕ m n p = transitive-leq-ℕ m n (succ-ℕ n) p (succ-leq-ℕ n)
+
 anti-symmetric-leq-ℕ : (m n : ℕ) → leq-ℕ m n → leq-ℕ n m → Id m n
 anti-symmetric-leq-ℕ zero-ℕ zero-ℕ p q = refl
 anti-symmetric-leq-ℕ (succ-ℕ m) (succ-ℕ n) p q =
@@ -295,8 +299,7 @@ leq-right-leq-max-ℕ (succ-ℕ k) (succ-ℕ m) (succ-ℕ n) H =
 -- We define a distance function on ℕ --
 
 dist-ℕ : ℕ → ℕ → ℕ
-dist-ℕ zero-ℕ zero-ℕ = zero-ℕ
-dist-ℕ zero-ℕ (succ-ℕ n) = succ-ℕ n
+dist-ℕ zero-ℕ n = n
 dist-ℕ (succ-ℕ m) zero-ℕ = succ-ℕ m
 dist-ℕ (succ-ℕ m) (succ-ℕ n) = dist-ℕ m n
 
