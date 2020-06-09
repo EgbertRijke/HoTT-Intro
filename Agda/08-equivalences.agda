@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split --safe #-}
 
-module 07-equivalences where
+module 08-equivalences where
 
-import 06-universes
-open 06-universes public
+import 07-finite-sets
+open 07-finite-sets public
 
 -- Section 7.1 Homotopies
 
