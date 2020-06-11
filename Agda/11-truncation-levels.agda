@@ -30,6 +30,9 @@ abstract
   is-prop-empty : is-prop empty
   is-prop-empty ()
 
+empty-Prop : UU-Prop lzero
+empty-Prop = pair empty is-prop-empty
+
 abstract
   is-prop-unit : is-prop unit
   is-prop-unit = is-prop-is-contr is-contr-unit

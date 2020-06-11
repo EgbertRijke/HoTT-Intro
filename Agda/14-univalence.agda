@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split --allow-unsolved-metas #-}
 
-module 13-univalence where
+module 14-univalence where
 
-import 12-propositional-truncation
-open 12-propositional-truncation public
+import 13-propositional-truncation
+open 13-propositional-truncation public
 
 -- Section 10.1 Type extensionality
 

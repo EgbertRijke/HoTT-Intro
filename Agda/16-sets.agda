@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 15-sets where
+module 16-sets where
 
-import 14-groups
-open 14-groups public
+import 15-groups
+open 15-groups public
 
 {- Equivalence relations -}
 

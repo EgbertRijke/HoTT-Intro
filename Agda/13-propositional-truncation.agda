@@ -789,6 +789,35 @@ dependent-universal-property-surj-is-surjective f is-surj-f P =
     ( is-equiv-map-reduce-Π-fib f ( λ y z → type-Prop (P y)))
 -}
 
+--------------------------------------------------------------------------------
+
+{- Cantor's diagonal argument -}
+
+map-cantor :
+  {l1 l2 : Level} (X : UU l1) (f : X → (X → UU-Prop l2)) → (X → UU-Prop l2)
+map-cantor X f x = neg-Prop (f x x)
+
+iff-eq :
+  {l1 : Level} {P Q : UU-Prop l1} → Id P Q → P ↔ Q
+iff-eq refl = pair id id
+
+no-fixed-points-neg-Prop :
+  {l1 : Level} (P : UU-Prop l1) → ¬ (P ↔ neg-Prop P)
+no-fixed-points-neg-Prop P = no-fixed-points-neg (type-Prop P)
+
+not-in-image-map-cantor :
+  {l1 l2 : Level} (X : UU l1) (f : X → (X → UU-Prop l2)) →
+  ( t : fib f (map-cantor X f)) → empty
+not-in-image-map-cantor X f (pair x α) =
+  no-fixed-points-neg-Prop (f x x) (iff-eq (htpy-eq α x))
+
+cantor : {l1 l2 : Level} (X : UU l1) (f : X → (X → UU-Prop l2)) →
+  ¬ (is-surjective f)
+cantor X f H =
+  ( map-universal-property-trunc-Prop empty-Prop
+    ( not-in-image-map-cantor X f)
+    ( H (map-cantor X f)))
+
 -- Exercises
 
 -- Exercise 13.1

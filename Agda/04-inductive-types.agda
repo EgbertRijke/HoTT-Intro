@@ -262,46 +262,39 @@ mul-ℤ (inr (inr (succ-ℕ x))) l = add-ℤ l (mul-ℤ (inr (inr x)) l)
 
 -- Exercise 4.2 (a)
 
+no-fixed-points-neg :
+  {l1 : Level} (A : UU l1) → ¬ ((A → ¬ A) × (¬ A → A))
+no-fixed-points-neg A (pair f g) =
+  ( λ (h : ¬ A) → h (g h)) (λ (a : A) → f a a)
+
+-- Exercise 4.2 (b)
+
 intro-dn : {l : Level} {P : UU l} → P → ¬¬ P
 intro-dn p f = f p
 
--- Exercise 4.2 (b)
+-- Exercise 4.2 (c)
 
 functor-dn : {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
   (P → Q) → (¬¬ P → ¬¬ Q)
 functor-dn f = functor-neg (functor-neg f)
 
--- Exercise 4.2 (c)
+-- Exercise 4.2 (d)
 
 {- In this exercise we were asked to show that (A + ¬A) implies (¬¬A → A). In 
    other words, we get double negation elimination for the types that are 
    decidable. -}
 
-is-decidable : {l : Level} (A : UU l) → UU l
-is-decidable A = coprod A (¬ A)
-
 double-negation-elim-is-decidable :
-  {i : Level} (P : UU i) → is-decidable P → (¬¬ P → P)
+  {i : Level} (P : UU i) → coprod P (¬ P) → (¬¬ P → P)
 double-negation-elim-is-decidable P (inl x) p = x
 double-negation-elim-is-decidable P (inr x) p = ind-empty (p x)
 
--- Exercise 4.2 (d)
+-- Exercise 4.2 (e)
 
-dn-is-decidable : {l : Level} {P : UU l} → ¬¬ (is-decidable P)
+dn-is-decidable : {l : Level} {P : UU l} → ¬¬ (coprod P (¬ P))
 dn-is-decidable {P = P} f =
   functor-neg (inr {A = P} {B = ¬ P}) f
     ( functor-neg (inl {A = P} {B = ¬ P}) f)
-
--- Exercise 4.2 (e)
-
-dn-linearity-implication :
-  {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
-  ¬¬ (coprod (P → Q) (Q → P))
-dn-linearity-implication {P = P} {Q = Q} f =
-  ( λ (np : ¬ P) →
-    functor-neg (inl {A = P → Q} {B = Q → P}) f (λ p → ind-empty (np p)))
-    ( λ (p : P) →
-      functor-neg (inr {A = P → Q} {B = Q → P}) f (λ q → p))
 
 -- Exercise 4.2 (f)
 
@@ -312,17 +305,37 @@ dn-dn-elim {P = P} f =
 
 -- Exercise 4.2 (g)
 
+tautology-4-2-f :
+  {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  ¬¬ (((P → Q) → P) → P)
+tautology-4-2-f {P = P} {Q} f =
+  ( λ (np : ¬ P) → f (λ h → h (λ p → ex-falso (np p))))
+  ( λ (p : P) → f (λ h → p))
+
+-- Exercise 4.2 (h)
+
+dn-linearity-implication :
+  {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
+  ¬¬ (coprod (P → Q) (Q → P))
+dn-linearity-implication {P = P} {Q = Q} f =
+  ( λ (np : ¬ P) →
+    functor-neg (inl {A = P → Q} {B = Q → P}) f (λ p → ind-empty (np p)))
+    ( λ (p : P) →
+      functor-neg (inr {A = P → Q} {B = Q → P}) f (λ q → p))
+
+-- Exercise 4.2 (i)
+
 dn-elim-neg : {l : Level} (P : UU l) → ¬¬¬ P → ¬ P
 dn-elim-neg P f p = f (λ g → g p)
 
--- Exercise 4.2 (h)
+-- Exercise 4.2 (j)
 
 dn-extend :
   {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
   (P → ¬¬ Q) → (¬¬ P → ¬¬ Q)
 dn-extend {P = P} {Q = Q} f = dn-elim-neg (¬ Q) ∘ (functor-dn f)
 
--- Exercise 4.2 (i)
+-- Exercise 4.2 (k)
 
 dn-elim-exp :
   {l1 l2 : Level} {P : UU l1} {Q : UU l2} →
@@ -330,7 +343,7 @@ dn-elim-exp :
 dn-elim-exp {P = P} {Q = Q} f p =
   dn-elim-neg (¬ Q) (functor-dn (λ (g : P → ¬¬ Q) → g p) f)
 
--- Exercise 4.2 (j)
+-- Exercise 4.2 (l)
 
 dn-elim-prod :
   {l1 l2 : Level} {P : UU l1} {Q : UU l2} →

@@ -249,6 +249,14 @@ is-prop-neg :
   {l : Level} {A : UU l} → is-prop (¬ A)
 is-prop-neg {A = A} = is-prop-function-type is-prop-empty
 
+neg-Prop :
+  {l1 : Level} → UU-Prop l1 → UU-Prop l1
+neg-Prop P = pair (¬ (type-Prop P)) is-prop-neg
+
+dn-Prop :
+  {l : Level} (A : UU l) → UU-Prop l
+dn-Prop A = pair (¬¬ A) is-prop-neg
+
 
 {- The type theoretic principle of choice is the assertion that Π distributes
    over Σ. In other words, there is an equivalence

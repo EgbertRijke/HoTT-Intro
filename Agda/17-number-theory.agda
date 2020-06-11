@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 16-number-theory where
+module 17-number-theory where
 
-import 15-sets
-open 15-sets public
+import 16-sets
+open 16-sets public
 
 -- Section 10.1 Decidability.
 
@@ -12,13 +12,6 @@ open 15-sets public
 classical-Prop :
   (l : Level) → UU (lsuc l)
 classical-Prop l = Σ (UU-Prop l) (λ P → is-decidable (pr1 P))
-
-is-decidable-Eq-ℕ :
-  (m n : ℕ) → is-decidable (Eq-ℕ m n)
-is-decidable-Eq-ℕ zero-ℕ zero-ℕ = inl star
-is-decidable-Eq-ℕ zero-ℕ (succ-ℕ n) = inr id
-is-decidable-Eq-ℕ (succ-ℕ m) zero-ℕ = inr id
-is-decidable-Eq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-Eq-ℕ m n
 
 is-decidable-leq-ℕ :
   (m n : ℕ) → is-decidable (leq-ℕ m n)
@@ -49,14 +42,6 @@ case-elim :
 case-elim nb (inl a) = a
 case-elim nb (inr b) = ex-falso (nb b)
 
-neg-Prop :
-  {l : Level} (A : UU l) → UU-Prop l
-neg-Prop A = pair (¬ A) is-prop-neg
-
-dn-Prop :
-  {l : Level} (A : UU l) → UU-Prop l
-dn-Prop A = pair (¬¬ A) is-prop-neg
-
 simplify-not-all-2-element-types-decidable :
   {l : Level} →
   ((X : UU l) (p : type-trunc-Prop (bool ≃ X)) → is-decidable X) →
@@ -79,24 +64,6 @@ not-all-types-decidable :
 not-all-types-decidable d =
   not-all-2-element-types-decidable (λ X p → d X)
 -}
-
-{- We say that a type has decidable equality if we can decide whether 
-   x = y holds for any x,y:A. -}
-   
-has-decidable-equality : {l : Level} (A : UU l) → UU l
-has-decidable-equality A = (x y : A) → is-decidable (Id x y)
-
-{- The type ℕ is an example of a type with decidable equality. -}
-
-has-decidable-equality-ℕ : has-decidable-equality ℕ
-has-decidable-equality-ℕ zero-ℕ zero-ℕ = inl refl
-has-decidable-equality-ℕ zero-ℕ (succ-ℕ y) = inr (Eq-ℕ-eq {-zero-ℕ (succ-ℕ y)-})
-has-decidable-equality-ℕ (succ-ℕ x) zero-ℕ = inr (Eq-ℕ-eq {-(succ-ℕ x) zero-ℕ-})
-has-decidable-equality-ℕ (succ-ℕ x) (succ-ℕ y) =
-  functor-coprod
-    ( ap succ-ℕ)
-    ( λ (f : ¬ (Id x y)) p → f (is-injective-succ-ℕ x y p))
-    ( has-decidable-equality-ℕ x y)
 
 {- Types with decidable equality are closed under coproducts. -}
 
@@ -125,7 +92,7 @@ has-decidable-equality-coprod dec-A dec-B (inr x) (inr y) =
     ( ap inr)
     ( λ f p → f (inv-is-equiv (is-emb-inr _ _ x y) p))
     ( dec-B x y)
-
+    
 {- Decidable equality of Fin n. -}
 
 has-decidable-equality-empty : has-decidable-equality empty

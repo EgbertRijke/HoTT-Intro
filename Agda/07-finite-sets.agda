@@ -9,6 +9,8 @@ open 06-universes public
 
 {- Section 7.1 The finite types -}
 
+{- Definition 7.1.1 -}
+
 {- We introduce the finite types as a family indexed by ℕ. -}
 
 Fin : ℕ → UU lzero
@@ -19,12 +21,16 @@ inl-Fin :
   (k : ℕ) → Fin k → Fin (succ-ℕ k)
 inl-Fin k = inl
 
+neg-one-Fin : {k : ℕ} → Fin (succ-ℕ k)
+neg-one-Fin {k} = inr star
+
+{- Definition 7.1.4 -}
+
 zero-Fin : {k : ℕ} → Fin (succ-ℕ k)
 zero-Fin {zero-ℕ} = inr star
 zero-Fin {succ-ℕ k} = inl zero-Fin
 
-neg-one-Fin : {k : ℕ} → Fin (succ-ℕ k)
-neg-one-Fin {k} = inr star
+{- Definition 7.1.5 -}
 
 succ-Fin : {k : ℕ} → Fin k → Fin k
 succ-Fin {succ-ℕ zero-ℕ} x = x
@@ -38,6 +44,8 @@ succ-neg-one-Fin : {k : ℕ} → Id (succ-Fin (neg-one-Fin {k})) zero-Fin
 succ-neg-one-Fin {zero-ℕ} = refl
 succ-neg-one-Fin {succ-ℕ k} = refl
 
+{- Definition 7.1.6 -}
+
 {- The modulo function -}
 
 mod-succ-ℕ : (k : ℕ) → ℕ → Fin (succ-ℕ k)
@@ -50,6 +58,16 @@ mod-two-ℕ = mod-succ-ℕ one-ℕ
 
 mod-three-ℕ : ℕ → Fin three-ℕ
 mod-three-ℕ = mod-succ-ℕ two-ℕ
+
+-- We show that mod-succ-ℕ is a periodic function with period succ-ℕ n --
+
+{- Definition 7.1.7 -}
+
+is-periodic-ℕ :
+  (k : ℕ) {l : Level} {A : UU l} (f : ℕ → A) → UU l
+is-periodic-ℕ k f = (x : ℕ) → Id (f x) (f (add-ℕ k x))
+
+{- Lemma 7.1.8 -}
 
 {- Our first goal is to show that mod-succ-ℕ is a periodic function. We will
    first prove some intermediate lemmas. -}
@@ -65,6 +83,8 @@ successor-law-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) p =
     ( ap succ-Fin (ap inl (successor-law-mod-succ-ℕ k x p)))) ∙
   ( ap inl (ap succ-Fin (inv (successor-law-mod-succ-ℕ k x p))))
 
+{- Corollary 7.1.9 -}
+
 neg-one-law-mod-succ-ℕ :
   (k : ℕ) → Id (mod-succ-ℕ k k) neg-one-Fin
 neg-one-law-mod-succ-ℕ zero-ℕ = refl
@@ -73,17 +93,13 @@ neg-one-law-mod-succ-ℕ (succ-ℕ k) =
     ( ( successor-law-mod-succ-ℕ k k (reflexive-leq-ℕ k)) ∙
       ( ap inl (neg-one-law-mod-succ-ℕ k)))
 
--- We show that mod-succ-ℕ is a periodic function with period succ-ℕ n --
-
-is-periodic-ℕ :
-  (k : ℕ) {l : Level} {A : UU l} (f : ℕ → A) → UU l
-is-periodic-ℕ k f = (x : ℕ) → Id (f x) (f (add-ℕ k x))
-
 base-case-is-periodic-mod-succ-ℕ :
   (k : ℕ) → Id (mod-succ-ℕ k (succ-ℕ k)) zero-Fin
 base-case-is-periodic-mod-succ-ℕ zero-ℕ = refl
 base-case-is-periodic-mod-succ-ℕ (succ-ℕ k) =
   ap succ-Fin (neg-one-law-mod-succ-ℕ (succ-ℕ k))
+
+{- Proposition 7.1.10 -}
 
 is-periodic-mod-succ-ℕ :
   (k : ℕ) → is-periodic-ℕ (succ-ℕ k) (mod-succ-ℕ k)
@@ -97,6 +113,52 @@ is-periodic-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) =
 
 {- Section 7.2 Decidability -}
 
+{- Definition 7.2.1 -}
+
+is-decidable : {l : Level} (A : UU l) → UU l
+is-decidable A = coprod A (¬ A)
+
+{- Example 7.2.2 -}
+
+is-decidable-unit : is-decidable unit
+is-decidable-unit = inl star
+
+is-decidable-empty : is-decidable empty
+is-decidable-empty = inr id
+
+{- Definition 7.2.3 -}
+
+{- We say that a type has decidable equality if we can decide whether 
+   x = y holds for any x, y : A. -}
+   
+has-decidable-equality : {l : Level} (A : UU l) → UU l
+has-decidable-equality A = (x y : A) → is-decidable (Id x y)
+
+{- Lemma 7.2.5 -}
+
+is-decidable-iff :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → (B → A) → is-decidable A → is-decidable B
+is-decidable-iff f g =
+  functor-coprod f (functor-neg g)
+
+{- Proposition 7.2.6 -}
+
+{- The type ℕ is an example of a type with decidable equality. -}
+
+is-decidable-Eq-ℕ :
+  (m n : ℕ) → is-decidable (Eq-ℕ m n)
+is-decidable-Eq-ℕ zero-ℕ zero-ℕ = inl star
+is-decidable-Eq-ℕ zero-ℕ (succ-ℕ n) = inr id
+is-decidable-Eq-ℕ (succ-ℕ m) zero-ℕ = inr id
+is-decidable-Eq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-Eq-ℕ m n
+
+has-decidable-equality-ℕ : has-decidable-equality ℕ
+has-decidable-equality-ℕ x y =
+  is-decidable-iff (eq-Eq-ℕ x y) Eq-ℕ-eq (is-decidable-Eq-ℕ x y)
+
+{- Definition 7.2.7 -}
+
 {- Observational equality on finite sets -}
 
 Eq-Fin : (k : ℕ) → Fin k → Fin k → UU lzero
@@ -104,6 +166,8 @@ Eq-Fin (succ-ℕ k) (inl x) (inl y) = Eq-Fin k x y
 Eq-Fin (succ-ℕ k) (inl x) (inr y) = empty
 Eq-Fin (succ-ℕ k) (inr x) (inl y) = empty
 Eq-Fin (succ-ℕ k) (inr x) (inr y) = unit
+
+{- Proposition 7.2.8 -}
 
 refl-Eq-Fin : {k : ℕ} (x : Fin k) → Eq-Fin k x x
 refl-Eq-Fin {succ-ℕ k} (inl x) = refl-Eq-Fin x
@@ -117,7 +181,7 @@ eq-Eq-Fin :
 eq-Eq-Fin {succ-ℕ k} {inl x} {inl y} e = ap inl (eq-Eq-Fin e)
 eq-Eq-Fin {succ-ℕ k} {inr star} {inr star} star = refl
 
---------------------------------------------------------------------------------
+{- Proposition 7.2.9 -}
 
 {- We show that Fin k has decidable equality, for each n : ℕ. -}
 
@@ -133,7 +197,7 @@ is-decidable-eq-Fin :
 is-decidable-eq-Fin k x y =
   functor-coprod eq-Eq-Fin (functor-neg Eq-Fin-eq) (is-decidable-Eq-Fin k x y)
 
---------------------------------------------------------------------------------
+{- Proposition 7.2.10 -}
 
 {- The inclusion function Fin k → Fin (succ-ℕ k) is injective. -}
 
@@ -141,9 +205,7 @@ is-injective-inl-Fin :
   {k : ℕ} {x y : Fin k} → Id (inl-Fin k x) (inl-Fin k y) → Id x y
 is-injective-inl-Fin p = eq-Eq-Fin (Eq-Fin-eq p)
 
---------------------------------------------------------------------------------
-
-{- The successor function Fin k → Fin k is injective. -}
+{- Lemma 7.2.11 -}
 
 neq-zero-succ-Fin :
   {k : ℕ} {x : Fin k} → ¬ (Id (succ-Fin (inl-Fin k x)) zero-Fin)
@@ -151,6 +213,10 @@ neq-zero-succ-Fin {succ-ℕ k} {inl x} p =
   neq-zero-succ-Fin (is-injective-inl-Fin p)
 neq-zero-succ-Fin {succ-ℕ k} {inr star} p =
   Eq-Fin-eq {succ-ℕ (succ-ℕ k)} {inr star} {zero-Fin} p
+
+{- Proposition 7.2.12 -}
+
+{- The successor function Fin k → Fin k is injective. -}
 
 is-injective-succ-Fin :
   {k : ℕ} {x y : Fin k} → Id (succ-Fin x) (succ-Fin y) → Id x y
@@ -1034,3 +1100,5 @@ right-distributive-mul-add-Fin {k} x y z =
   ( commutative-mul-Fin (add-Fin x y) z) ∙
   ( ( left-distributive-mul-add-Fin z x y) ∙
     ( ap-add-Fin (commutative-mul-Fin z x) (commutative-mul-Fin z y)))
+
+--------------------------------------------------------------------------------

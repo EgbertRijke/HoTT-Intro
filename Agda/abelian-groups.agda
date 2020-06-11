@@ -2,8 +2,8 @@
 
 module abelian-groups where
 
-import 16-number-theory
-open 16-number-theory public
+import 17-number-theory
+open 17-number-theory public
 
 is-abelian-Group :
   {l : Level} (G : Group l) → UU l

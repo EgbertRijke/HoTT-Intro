@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K --exact-split #-}
 
-module 14-groups where
+module 15-groups where
 
-import 13-univalence
-open 13-univalence public
+import 14-univalence
+open 14-univalence public
 
 --------------------------------------------------------------------------------
 
@@ -85,9 +85,19 @@ type-Monoid :
   {l : Level} (M : Monoid l) → UU l
 type-Monoid M = type-Semi-Group (semi-group-Monoid M)
 
+is-set-type-Monoid :
+  {l : Level} (M : Monoid l) → is-set (type-Monoid M)
+is-set-type-Monoid M = is-set-type-Semi-Group (semi-group-Monoid M)
+
 mul-Monoid :
   {l : Level} (M : Monoid l) → type-Monoid M → type-Monoid M → type-Monoid M
 mul-Monoid M = mul-Semi-Group (semi-group-Monoid M)
+
+is-associative-mul-Monoid :
+  {l : Level} (M : Monoid l) (x y z : type-Monoid M) →
+  Id (mul-Monoid M (mul-Monoid M x y) z) (mul-Monoid M x (mul-Monoid M y z))
+is-associative-mul-Monoid M =
+  is-associative-mul-Semi-Group (semi-group-Monoid M)
 
 unit-Monoid :
   {l : Level} (M : Monoid l) → type-Monoid M
@@ -123,6 +133,39 @@ abstract
   is-prop-is-unital :
     {l : Level} (G : Semi-Group l) → is-prop (is-unital G)
   is-prop-is-unital G = is-prop-is-prop' (is-prop-is-unital' G)
+
+--------------------------------------------------------------------------------
+
+{- We introduce invertible elements of a monoid -}
+
+is-invertible-Monoid :
+  {l : Level} (M : Monoid l) → type-Monoid M → UU l
+is-invertible-Monoid M x =
+  Σ ( type-Monoid M)
+    ( λ y →
+      Id (mul-Monoid M y x) (unit-Monoid M) ×
+      Id (mul-Monoid M x y) (unit-Monoid M))
+
+is-prop-is-invertible-Monoid' :
+  {l : Level} (M : Monoid l) (x : type-Monoid M) →
+  is-prop' (is-invertible-Monoid M x)
+is-prop-is-invertible-Monoid' M x (pair y (pair p q)) (pair y' (pair p' q')) =
+  eq-subtype
+    ( ( λ z →
+      is-prop-prod
+        ( is-set-type-Monoid M (mul-Monoid M z x) (unit-Monoid M))
+        ( is-set-type-Monoid M (mul-Monoid M x z) (unit-Monoid M))))
+    ( ( inv (left-unit-law-Monoid M y)) ∙
+      ( ( inv (ap (λ z → mul-Monoid M z y) p')) ∙
+        ( ( is-associative-mul-Monoid M y' x y) ∙
+          ( ( ap (mul-Monoid M y') q) ∙
+            ( right-unit-law-Monoid M y')))))
+
+is-prop-is-invertible-Monoid :
+  {l : Level} (M : Monoid l) (x : type-Monoid M) →
+  is-prop (is-invertible-Monoid M x)
+is-prop-is-invertible-Monoid M x =
+  is-prop-is-prop' (is-prop-is-invertible-Monoid' M x)
 
 --------------------------------------------------------------------------------
 
