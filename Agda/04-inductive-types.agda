@@ -234,6 +234,9 @@ add-ℤ (inr (inl star)) l = l
 add-ℤ (inr (inr zero-ℕ)) l = succ-ℤ l
 add-ℤ (inr (inr (succ-ℕ x))) l = succ-ℤ (add-ℤ (inr (inr x)) l)
 
+add-ℤ' : ℤ → ℤ → ℤ
+add-ℤ' x y = add-ℤ y x
+
 -- The negative of an integer
 
 neg-ℤ : ℤ → ℤ
@@ -251,6 +254,9 @@ mul-ℤ (inl (succ-ℕ x)) l = add-ℤ (neg-ℤ l) (mul-ℤ (inl x) l)
 mul-ℤ (inr (inl star)) l = zero-ℤ
 mul-ℤ (inr (inr zero-ℕ)) l = l
 mul-ℤ (inr (inr (succ-ℕ x))) l = add-ℤ l (mul-ℤ (inr (inr x)) l)
+
+mul-ℤ' : ℤ → ℤ → ℤ
+mul-ℤ' x y = mul-ℤ y x
 
 -- Exercise 4.2
 

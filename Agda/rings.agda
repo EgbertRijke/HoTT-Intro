@@ -299,6 +299,14 @@ is-equiv-htpy-hom-Ring-eq R1 R2 f =
     ( is-contr-total-htpy-hom-Ring R1 R2 f)
     ( htpy-hom-Ring-eq R1 R2 f)
 
+equiv-htpy-hom-Ring-eq :
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) (f g : hom-Ring R1 R2) →
+  Id f g ≃ htpy-hom-Ring R1 R2 f g
+equiv-htpy-hom-Ring-eq R1 R2 f g =
+  pair
+    ( htpy-hom-Ring-eq R1 R2 f g)
+    ( is-equiv-htpy-hom-Ring-eq R1 R2 f g)
+
 eq-htpy-hom-Ring :
   {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) (f g : hom-Ring R1 R2) →
   htpy-hom-Ring R1 R2 f g → Id f g

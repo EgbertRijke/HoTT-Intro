@@ -149,6 +149,14 @@ is-equiv-Eq-total-subtype-eq is-subtype-B p =
     ( is-contr-total-Eq-total-subtype is-subtype-B p)
     ( Eq-total-subtype-eq is-subtype-B p)
 
+equiv-Eq-total-subtype-eq :
+  {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (is-subtype-B : is-subtype B) →
+  (p p' : Σ A B) → (Id p p') ≃ (Eq-total-subtype is-subtype-B p p')
+equiv-Eq-total-subtype-eq is-subtype-B p p' =
+  pair
+    ( Eq-total-subtype-eq is-subtype-B p p')
+    ( is-equiv-Eq-total-subtype-eq is-subtype-B p p')
+
 eq-subtype :
   {l1 l2 : Level} {A : UU l1} {B : A → UU l2} (is-subtype-B : is-subtype B) →
   {p p' : Σ A B} → Eq-total-subtype is-subtype-B p p' → Id p p'
@@ -173,9 +181,9 @@ is-set-type-Set :
   {l : Level} (X : UU-Set l) → is-set (type-Set X)
 is-set-type-Set X = pr2 X
 
-hom-Set :
+type-hom-Set :
   {l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU (l1 ⊔ l2)
-hom-Set A B = type-Set A → type-Set B
+type-hom-Set A B = type-Set A → type-Set B
 
 axiom-K :
   {i : Level} → UU i → UU i

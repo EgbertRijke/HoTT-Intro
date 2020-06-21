@@ -236,12 +236,31 @@ is-injective-succ-Fin {succ-ℕ (succ-ℕ k)} {inr star} {inr star} p = refl
 
 {- We define the predecessor function on finite sets. -}
 
-pred-Fin : {k : ℕ} → Fin (succ-ℕ k) → Fin (succ-ℕ k)
-pred-Fin {zero-ℕ} x = zero-Fin
-pred-Fin {succ-ℕ k} x with (is-decidable-Eq-Fin (succ-ℕ (succ-ℕ k)) x zero-Fin)
-pred-Fin {succ-ℕ k} (inl x) | inl e = neg-one-Fin
-pred-Fin {succ-ℕ k} (inl x) | inr f = inl (pred-Fin x)
-pred-Fin {succ-ℕ k} (inr x) | inr f = inl neg-one-Fin
+{- We define the predecessor function with manual with-abstraction, to give a
+   bit more flexibility. -}
+
+cases-pred-Fin :
+  {k : ℕ} (x : Fin (succ-ℕ k))
+  (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) → Fin (succ-ℕ k)
+cases-pred-Fin {zero-ℕ} (inr star) d = zero-Fin
+cases-pred-Fin {succ-ℕ k} (inl x) (inl e) = neg-one-Fin
+cases-pred-Fin {succ-ℕ k} (inl x) (inr f) =
+  inl (cases-pred-Fin {k} x (inr f))
+cases-pred-Fin {succ-ℕ k} (inr star) (inr f) = inl neg-one-Fin
+
+pred-Fin : {k : ℕ} → Fin k → Fin k
+pred-Fin {succ-ℕ k} x =
+  cases-pred-Fin {k} x (is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin)
+
+{- Alternatively, the predecessor can be defined with with-abstraction, but it
+   turns out that this definition leads to complications. -}
+
+pred-Fin' : {k : ℕ} → Fin (succ-ℕ k) → Fin (succ-ℕ k)
+pred-Fin' {zero-ℕ} x = zero-Fin
+pred-Fin' {succ-ℕ k} x with is-decidable-Eq-Fin (succ-ℕ (succ-ℕ k)) x zero-Fin
+pred-Fin' {succ-ℕ k} (inl x) | inl e = neg-one-Fin
+pred-Fin' {succ-ℕ k} (inl x) | inr f = inl (pred-Fin' x)
+pred-Fin' {succ-ℕ k} (inr x) | inr f = inl neg-one-Fin
 
 --------------------------------------------------------------------------------
 
@@ -898,16 +917,36 @@ right-inverse-law-add-Fin x =
 
 {- Exercises -}
 
-
 -- We show that the predecessor of zero is negative one --
 
 pred-zero-Fin :
-  {k : ℕ} → Id (pred-Fin {k} zero-Fin) neg-one-Fin
-pred-zero-Fin {zero-ℕ} = refl
-pred-zero-Fin {succ-ℕ k} with is-decidable-Eq-Fin (succ-ℕ k) zero-Fin zero-Fin
+  {k : ℕ} → Id (pred-Fin {succ-ℕ k} zero-Fin) neg-one-Fin
+pred-zero-Fin {k} with is-decidable-Eq-Fin (succ-ℕ k) zero-Fin zero-Fin
+pred-zero-Fin {zero-ℕ} | d = refl
 pred-zero-Fin {succ-ℕ k} | inl e = refl
 pred-zero-Fin {succ-ℕ k} | inr f =
   ex-falso (f (refl-Eq-Fin {succ-ℕ k} zero-Fin))
+
+-- We show that the predecessor function is a section of the successor function
+  
+cases-succ-pred-Fin :
+  {k : ℕ} (x : Fin (succ-ℕ k))
+  (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) →
+  Id (succ-Fin (cases-pred-Fin x d)) x
+cases-succ-pred-Fin {zero-ℕ} (inr star) d = refl
+cases-succ-pred-Fin {succ-ℕ k} (inl x) (inl e) =
+  succ-neg-one-Fin ∙ inv (eq-Eq-Fin e)
+cases-succ-pred-Fin {succ-ℕ zero-ℕ} (inl (inr x)) (inr f) =
+  ex-falso (f star)
+cases-succ-pred-Fin {succ-ℕ (succ-ℕ k)} (inl (inl x)) (inr f) =
+  ap inl (cases-succ-pred-Fin (inl x) (inr f))
+cases-succ-pred-Fin {succ-ℕ (succ-ℕ k)} (inl (inr star)) (inr f) = refl
+cases-succ-pred-Fin {succ-ℕ k} (inr star) (inr f) = refl
+
+succ-pred-Fin :
+  {k : ℕ} (x : Fin k) → Id (succ-Fin (pred-Fin x)) x
+succ-pred-Fin {succ-ℕ k} x =
+  cases-succ-pred-Fin x (is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin)
 
 -- We compute the predecessor of an element of the form inl that is not zero --
 
@@ -915,37 +954,10 @@ pred-inl-Fin :
   {k : ℕ} (x : Fin (succ-ℕ k)) (f : ¬ (Eq-Fin (succ-ℕ k) x zero-Fin)) →
   Id (pred-Fin (inl x)) (inl (pred-Fin x))
 pred-inl-Fin {k} x f with is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin
-pred-inl-Fin {k} x f | inl e = ex-falso (f e)
-pred-inl-Fin {k} x f | inr g = refl
+... | inl e = ex-falso (f e)
+... | inr f' = refl
 
--- We show that the predecessor function is a section of the successor function
-
-succ-pred-Fin :
-  {k : ℕ} (x : Fin (succ-ℕ k)) → Id (succ-Fin (pred-Fin x)) x
-succ-pred-Fin {k} x with (is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin)
-succ-pred-Fin {zero-ℕ} (inr star) | d = refl
-succ-pred-Fin {succ-ℕ k} (inl x) | inl e =
-  ( ( ap (succ-Fin ∘ pred-Fin) {x = inl x} {y = zero-Fin} (eq-Eq-Fin e)) ∙
-    ( ( ap succ-Fin pred-zero-Fin) ∙
-      ( succ-neg-one-Fin))) ∙
-  ( inv {x = inl x} {y = zero-Fin} (eq-Eq-Fin e))
-succ-pred-Fin {succ-ℕ (succ-ℕ k)} (inl (inl (inl x))) | inr f =
-  ( ap succ-Fin (pred-inl-Fin (inl (inl x)) f)) ∙
-  ( ( ap (succ-Fin ∘ inl) (pred-inl-Fin (inl x) f)) ∙
-    ( ( ap inl
-        ( ( ap succ-Fin (inv (pred-inl-Fin (inl x) f))) ∙
-          ( succ-pred-Fin (inl (inl x)))))))
-succ-pred-Fin {succ-ℕ (succ-ℕ zero-ℕ)} (inl (inl (inr star))) | inr f =
-  ex-falso (f star)
-succ-pred-Fin {succ-ℕ (succ-ℕ (succ-ℕ k))} (inl (inl (inr star))) | inr f =
-  ( ap succ-Fin (pred-inl-Fin (inl (inr star)) f)) ∙
-  ( ap inl (succ-pred-Fin (inl (inr star))))
-succ-pred-Fin {succ-ℕ zero-ℕ} (inl (inr x)) | inr f = ex-falso (f star)
-succ-pred-Fin {succ-ℕ (succ-ℕ k)} (inl (inr x)) | inr f =
-  ap inl (succ-pred-Fin (inr x))
-succ-pred-Fin {succ-ℕ k} (inr star) | inr f = refl
-
--- We show that the predecessor function is a retract of the successor function
+-- We show that the predecessor of the successor of x is x.
 
 nEq-zero-succ-Fin :
   {k : ℕ} (x : Fin (succ-ℕ k)) →
@@ -964,9 +976,6 @@ pred-succ-Fin {succ-ℕ (succ-ℕ k)} (inl (inl (inl x))) =
 pred-succ-Fin {succ-ℕ (succ-ℕ k)} (inl (inl (inr star))) = refl
 pred-succ-Fin {succ-ℕ (succ-ℕ k)} (inl (inr star)) = refl
 pred-succ-Fin {succ-ℕ (succ-ℕ k)} (inr star) = pred-zero-Fin
-
-{- In the terminology of the next chapter, we conclude that the successor 
-   function is an equivalence. -}
 
 --------------------------------------------------------------------------------
 

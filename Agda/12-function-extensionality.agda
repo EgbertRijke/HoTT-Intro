@@ -245,6 +245,16 @@ abstract
     is-set B → is-set (A → B)
   is-set-function-type = is-trunc-function-type zero-𝕋
 
+implication-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
+implication-Prop P Q =
+  pair (type-Prop P → type-Prop Q) (is-prop-function-type (is-prop-type-Prop Q))
+
+hom-Set :
+  {l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU-Set (l1 ⊔ l2)
+hom-Set A B =
+  pair (type-hom-Set A B) (is-set-function-type (is-set-type-Set B))
+
 is-prop-neg :
   {l : Level} {A : UU l} → is-prop (¬ A)
 is-prop-neg {A = A} = is-prop-function-type is-prop-empty
@@ -426,10 +436,7 @@ is-contr-total-Eq-Π-total-fam {A = A} {B} C t =
       Σ (Σ (B a) (C a)) (λ t' →
         Σ (Id (pr1 (t a)) (pr1 t')) (λ p →
           Id (tr (C a) p (pr2 (t a))) (pr2 t'))))
-    ( equiv-choice-∞
-      {- ( λ x t' →
-        Σ ( Id (pr1 (t x)) (pr1 t'))
-          ( λ p → Id (tr (C x) p (pr2 (t x))) (pr2 t')))-})
+    ( equiv-choice-∞)
     ( is-contr-Π
       ( λ a →
         is-contr-total-Eq-structure
@@ -766,6 +773,14 @@ abstract
       ( λ g → eq-htpy (htpy-right-whisk (issec-inv-is-equiv is-equiv-f) g))
       ( λ h → eq-htpy (htpy-right-whisk (isretr-inv-is-equiv is-equiv-f) h))
 
+equiv-postcomp :
+  {l1 l2 l3 : Level} {X : UU l1} {Y : UU l2} (A : UU l3) →
+  (X ≃ Y) → (A → X) ≃ (A → Y)
+equiv-postcomp A e =
+  pair
+    ( postcomp A (map-equiv e))
+    ( is-equiv-postcomp-is-equiv (map-equiv e) (is-equiv-map-equiv e) A)
+
 -- Exercise 9.4
 
 is-contr-sec-is-equiv :
@@ -1052,33 +1067,6 @@ abstract
                 ( is-contr-map-is-equiv
                   ( is-emb-is-equiv f is-equiv-f ((pr1 sf) (f x)) x)
                   ( (pr2 sf) (f x))))))))
-{-
-      is-contr-is-equiv'
-        ( Σ (sec f)
-          ( λ sf → Σ (((pr1 sf) ∘ f) ~ id)
-            ( λ H → (htpy-right-whisk (pr2 sf) f) ~ (htpy-left-whisk f H))))
-        ( Σ-assoc (B → A)
-          ( λ g → ((f ∘ g) ~ id))
-          ( λ sf → Σ (((pr1 sf) ∘ f) ~ id)
-            ( λ H → (htpy-right-whisk (pr2 sf) f) ~ (htpy-left-whisk f H))))
-        ( is-equiv-Σ-assoc _ _ _)
-        ( is-contr-Σ
-          ( is-contr-sec-is-equiv is-equiv-f)
-          ( λ sf → is-contr-is-equiv'
-            ( (x : A) →
-              Σ (Id ((pr1 sf) (f x)) x) (λ p → Id ((pr2 sf) (f x)) (ap f p)))
-            ( choice-∞)
-            ( is-equiv-choice-∞)
-            ( is-contr-Π (λ x →
-              is-contr-is-equiv'
-                ( fib (ap f) ((pr2 sf) (f x)))
-                ( tot (λ p → inv))
-                ( is-equiv-tot-is-fiberwise-equiv
-                  ( λ p → is-equiv-inv (ap f p) ((pr2 sf) (f x))))
-                ( is-contr-map-is-equiv
-                  ( is-emb-is-equiv f is-equiv-f ((pr1 sf) (f x)) x)
-                  ( (pr2 sf) (f x))))))))
--}
 
 abstract
   is-equiv-is-half-adjoint-equivalence-is-equiv :

@@ -5,15 +5,23 @@ module 08-equivalences where
 import 07-finite-sets
 open 07-finite-sets public
 
--- Section 7.1 Homotopies
+--------------------------------------------------------------------------------
 
--- Definition 7.1.1
+-- Section 8.1 Homotopies
+
+-- Definition 8.1.2
 
 _~_ :
   {i j : Level} {A : UU i} {B : A → UU j} (f g : (x : A) → B x) → UU (i ⊔ j)
 f ~ g = (x : _) → Id (f x) (g x)
 
--- Definition 7.1.2
+-- Example 8.1.3
+
+neg-neg-𝟚 : (neg-𝟚 ∘ neg-𝟚) ~ id
+neg-neg-𝟚 true = refl
+neg-neg-𝟚 false = refl
+
+-- Definition 8.1.5
 
 refl-htpy :
   {i j : Level} {A : UU i} {B : A → UU j} {f : (x : A) → B x} → f ~ f
@@ -48,11 +56,17 @@ htpy-concat' :
   (g ~ h) → (f ~ g) → (f ~ h)
 htpy-concat' f K H = H ∙h K
 
+-- Proposition 8.1.6
+
+-- Proposition 8.1.6 (i)
+
 htpy-assoc :
   {i j : Level} {A : UU i} {B : A → UU j} {f g h k : (x : A) → B x} →
   (H : f ~ g) → (K : g ~ h) → (L : h ~ k) →
   ((H ∙h K) ∙h L) ~ (H ∙h (K ∙h L))
 htpy-assoc H K L x = assoc (H x) (K x) (L x)
+
+-- Proposition 8.1.6 (ii)
 
 htpy-left-unit :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
@@ -64,6 +78,8 @@ htpy-right-unit :
   {H : f ~ g} → (H ∙h refl-htpy) ~ H
 htpy-right-unit x = right-unit
 
+-- Proposition 8.1.6 (iii)
+
 htpy-left-inv :
   {i j : Level} {A : UU i} {B : A → UU j} {f g : (x : A) → B x}
   (H : f ~ g) → ((htpy-inv H) ∙h H) ~ refl-htpy
@@ -74,7 +90,9 @@ htpy-right-inv :
   (H : f ~ g) → (H ∙h (htpy-inv H)) ~ refl-htpy
 htpy-right-inv H x = right-inv (H x)
 
--- Definition 7.1.3
+-- Definition 8.1.7
+
+-- Definition 8.1.7 (i)
 
 htpy-left-whisk :
   {i j k : Level} {A : UU i} {B : UU j} {C : UU k}
@@ -83,6 +101,8 @@ htpy-left-whisk h H x = ap h (H x)
 
 _·l_ = htpy-left-whisk
 
+-- Definition 8.1.7 (ii)
+
 htpy-right-whisk :
   {i j k : Level} {A : UU i} {B : UU j} {C : UU k}
   {g h : B → C} (H : g ~ h) (f : A → B) → ((g ∘ f) ~ (h ∘ f))
@@ -90,13 +110,19 @@ htpy-right-whisk H f x = H (f x)
 
 _·r_ = htpy-right-whisk
 
--- Section 7.2 Bi-invertible maps
+--------------------------------------------------------------------------------
 
--- Definition 7.2.1
+-- Section 8.2 Bi-invertible maps
+
+-- Definition 8.2.1
+
+-- Definition 8.2.1 (i)
 
 sec :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 sec {i} {j} {A} {B} f = Σ (B → A) (λ g → (f ∘ g) ~ id)
+
+-- Definition 8.2.1 (ii)
 
 retr :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
@@ -124,6 +150,8 @@ is-retr-retraction-retract-of :
   ((retraction-retract-of R) ∘ (section-retract-of R)) ~ id
 is-retr-retraction-retract-of R = pr2 (retr-section-retract-of R)
 
+-- Definition 8.2.1 (ii)
+
 is-equiv :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 is-equiv f = sec f × retr f
@@ -140,12 +168,119 @@ is-equiv-map-equiv :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (map-equiv e)
 is-equiv-map-equiv e = pr2 e
 
--- Remark 7.2.2
+-- Example 8.2.3
+
+is-equiv-id :
+  {i : Level} (A : UU i) → is-equiv (id {i} {A})
+is-equiv-id A = pair (pair id refl-htpy) (pair id refl-htpy)
+
+equiv-id :
+  {i : Level} (A : UU i) → A ≃ A
+equiv-id A = pair id (is-equiv-id A)
+
+-- Example 8.2.4
+
+abstract
+  is-equiv-neg-𝟚 : is-equiv neg-𝟚
+  is-equiv-neg-𝟚 =
+    pair (pair neg-𝟚 neg-neg-𝟚) (pair neg-𝟚 neg-neg-𝟚)
+
+equiv-neg-𝟚 : bool ≃ bool
+equiv-neg-𝟚 = pair neg-𝟚 is-equiv-neg-𝟚
+
+-- Example 8.2.5
+
+-- We show that succ-ℤ is an equivalence
+
+abstract
+  is-equiv-succ-ℤ : is-equiv succ-ℤ
+  is-equiv-succ-ℤ =
+    pair (pair pred-ℤ right-inverse-pred-ℤ) (pair pred-ℤ left-inverse-pred-ℤ)
+
+equiv-succ-ℤ : ℤ ≃ ℤ
+equiv-succ-ℤ = pair succ-ℤ is-equiv-succ-ℤ
+
+-- We show that pred-ℤ is an equivalence
+
+abstract
+  is-equiv-pred-ℤ : is-equiv pred-ℤ
+  is-equiv-pred-ℤ =
+    pair (pair succ-ℤ left-inverse-pred-ℤ) (pair succ-ℤ right-inverse-pred-ℤ)
+
+equiv-pred-ℤ : ℤ ≃ ℤ
+equiv-pred-ℤ = pair pred-ℤ is-equiv-pred-ℤ
+
+-- We show that add-ℤ x is an equivalence
+
+abstract
+  is-equiv-add-ℤ : (x : ℤ) → is-equiv (add-ℤ x)
+  is-equiv-add-ℤ x =
+    pair
+      ( pair
+        ( add-ℤ (neg-ℤ x))
+        ( λ y →
+          ( inv (associative-add-ℤ x (neg-ℤ x) y)) ∙
+          ( ( ap (add-ℤ' y) (right-inverse-law-add-ℤ x)) ∙
+            ( left-unit-law-add-ℤ y))))
+      ( pair
+        ( add-ℤ (neg-ℤ x))
+        ( λ y →
+          ( inv (associative-add-ℤ (neg-ℤ x) x y)) ∙
+          ( ( ap (add-ℤ' y) (left-inverse-law-add-ℤ x)) ∙
+            ( left-unit-law-add-ℤ y))))
+
+equiv-add-ℤ : ℤ → (ℤ ≃ ℤ)
+equiv-add-ℤ x = pair (add-ℤ x) (is-equiv-add-ℤ x)
+
+-- We show that add-ℤ' y is an equivalence
+
+abstract
+  is-equiv-add-ℤ' : (y : ℤ) → is-equiv (add-ℤ' y)
+  is-equiv-add-ℤ' y =
+    pair
+      ( pair
+        ( add-ℤ' (neg-ℤ y))
+        ( λ x →
+          ( associative-add-ℤ x (neg-ℤ y) y) ∙
+          ( ( ap (add-ℤ x) (left-inverse-law-add-ℤ y)) ∙
+            ( right-unit-law-add-ℤ x))))
+      ( pair
+        ( add-ℤ' (neg-ℤ y))
+        ( λ x →
+          ( associative-add-ℤ x y (neg-ℤ y)) ∙
+          ( ( ap (add-ℤ x) (right-inverse-law-add-ℤ y)) ∙
+            ( right-unit-law-add-ℤ x))))
+
+equiv-add-ℤ' : ℤ → (ℤ ≃ ℤ)
+equiv-add-ℤ' y = pair (add-ℤ' y) (is-equiv-add-ℤ' y)
+
+-- We show that neg-ℤ is an equivalence
+
+abstract
+  is-equiv-neg-ℤ : is-equiv neg-ℤ
+  is-equiv-neg-ℤ = pair (pair neg-ℤ neg-neg-ℤ) (pair neg-ℤ neg-neg-ℤ)
+
+equiv-neg-ℤ : ℤ ≃ ℤ
+equiv-neg-ℤ = pair neg-ℤ is-equiv-neg-ℤ
+
+-- We show that succ-Fin k is an equivalence
+
+-- We show that pred-Fin k is an equivalence
+
+-- We show that add-Fin k x is an equivalence
+
+-- We show that add-Fin' k y is an equivalence
+
+-- We show that neg-Fin k is an equivalence
+
+-- Remark 8.2.6
 
 has-inverse :
   {i j : Level} {A : UU i} {B : UU j} (f : A → B) → UU (i ⊔ j)
 has-inverse {i} {j} {A} {B} f =
   Σ (B → A) (λ g → ((f ∘ g) ~ id) × ((g ∘ f) ~ id))
+
+-- Proposition 8.2.7
 
 is-equiv-has-inverse' :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} →
@@ -158,9 +293,7 @@ is-equiv-has-inverse :
 is-equiv-has-inverse g H K =
   is-equiv-has-inverse' (pair g (pair H K))
 
--- Lemma 7.2.3
-
-{- We now show that if f is an equivalence, then it has an inverse. -}
+-- Corollary 8.2.8
 
 htpy-section-retraction :
   { i j : Level} {A : UU i} {B : UU j} {f : A → B}
@@ -175,8 +308,6 @@ has-inverse-is-equiv :
 has-inverse-is-equiv {i} {j} {A} {B} {f} (pair (pair g G) (pair h H)) =
   let is-equiv-f = pair (pair g G) (pair h H) in
   pair g (pair G (((htpy-section-retraction is-equiv-f) ·r f) ∙h H))
-
--- Corollary 7.2.4
 
 inv-is-equiv :
   {i j : Level} {A : UU i} {B : UU j} {f : A → B} → is-equiv f → B → A
@@ -213,55 +344,28 @@ inv-equiv :
   {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B ≃ A)
 inv-equiv e = pair (inv-map-equiv e) (is-equiv-inv-map-equiv e)
 
--- Remark 7.2.5
+-- Section 8.3 The identity type of a Σ-type
 
-is-equiv-id :
-  {i : Level} (A : UU i) → is-equiv (id {i} {A})
-is-equiv-id A = pair (pair id refl-htpy) (pair id refl-htpy)
-
-equiv-id :
-  {i : Level} (A : UU i) → A ≃ A
-equiv-id A = pair id (is-equiv-id A)
-
--- Example 7.2.6
-
-inv-Π-swap :
-  {i j k : Level} {A : UU i} {B : UU j} (C : A → B → UU k) →
-  ((y : B) (x : A) → C x y) → ((x : A) (y : B) → C x y)
-inv-Π-swap C g x y = g y x
-
-abstract
-  is-equiv-Π-swap :
-    {i j k : Level} {A : UU i} {B : UU j} (C : A → B → UU k) →
-    is-equiv (Π-swap {i} {j} {k} {A} {B} {C})
-  is-equiv-Π-swap C =
-    is-equiv-has-inverse
-      ( inv-Π-swap C)
-      ( refl-htpy)
-      ( refl-htpy)
-
--- Section 7.3 The identity type of a Σ-type
-
--- Definition 7.3.1
+-- Definition 8.3.1
 
 Eq-Σ :
   {i j : Level} {A : UU i} {B : A → UU j} (s t : Σ A B) → UU (i ⊔ j)
 Eq-Σ {B = B} s t = Σ (Id (pr1 s) (pr1 t)) (λ α → Id (tr B α (pr2 s)) (pr2 t))
 
--- Lemma 7.3.2
+-- Lemma 8.3.2
 
 reflexive-Eq-Σ :
   {i j : Level} {A : UU i} {B : A → UU j} (s : Σ A B) → Eq-Σ s s
 reflexive-Eq-Σ (pair a b) = pair refl refl
 
--- Definition 7.3.3
+-- Definition 8.3.3
 
 pair-eq :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
   (Id s t) → Eq-Σ s t
 pair-eq {s = s} refl = reflexive-Eq-Σ s
 
--- Theorem 7.3.4
+-- Theorem 8.3.4
 
 eq-pair :
   {i j : Level} {A : UU i} {B : A → UU j} {s t : Σ A B} →
@@ -367,7 +471,7 @@ abstract
 
 -- Exercises
 
--- Exercise 7.1
+-- Exercise 8.1
 
 {- We show that inv is an equivalence. -}
 
@@ -487,7 +591,194 @@ equiv-tr :
   (p : Id x y) → (B x) ≃ (B y)
 equiv-tr B p = pair (tr B p) (is-equiv-tr B p)
 
--- Exercise 7.2
+-- Exercise 8.2
+
+abstract
+  not-equiv-const :
+    (b : bool) → ¬ (is-equiv (const bool bool b))
+  not-equiv-const true (pair (pair s issec) (pair r isretr)) =
+    neq-false-true-𝟚 (inv (issec false))
+  not-equiv-const false (pair (pair s issec) (pair r isretr)) =
+    neq-false-true-𝟚 (issec true)
+
+-- Exercise 8.3
+
+-- Exercise 8.3(a)
+
+abstract
+  is-equiv-htpy :
+    {i j : Level} {A : UU i} {B : UU j} {f : A → B} (g : A → B) →
+    f ~ g → is-equiv g → is-equiv f
+  is-equiv-htpy g H (pair (pair gs issec) (pair gr isretr)) =
+    pair
+      ( pair gs ((H ·r gs) ∙h issec))
+      ( pair gr ((gr ·l H) ∙h isretr))
+
+abstract
+  is-equiv-htpy' :
+    {i j : Level} {A : UU i} {B : UU j} (f : A → B) {g : A → B} →
+    f ~ g → is-equiv f → is-equiv g
+  is-equiv-htpy' f H = is-equiv-htpy f (htpy-inv H)
+
+-- Exercise 8.3(b)
+
+htpy-inv-is-equiv :
+  {i j : Level} {A : UU i} {B : UU j} {f f' : A → B} (H : f ~ f') →
+  (is-equiv-f : is-equiv f) (is-equiv-f' : is-equiv f') →
+  (inv-is-equiv is-equiv-f) ~ (inv-is-equiv is-equiv-f')
+htpy-inv-is-equiv H is-equiv-f is-equiv-f' b =
+  ( inv (isretr-inv-is-equiv is-equiv-f' (inv-is-equiv is-equiv-f b))) ∙
+  ( ap (inv-is-equiv is-equiv-f')
+    ( ( inv (H (inv-is-equiv is-equiv-f b))) ∙
+      ( issec-inv-is-equiv is-equiv-f b)))
+
+-- Exercise 8.4
+
+-- Exercise 8.4(a)
+
+{- Exercise 8.4 (a) asks to show that, given a commuting triangle f ~ g ∘ h and
+   a section s of h, we get a new commuting triangle g ~ f ∘ s. Moreover, under
+   the same assumptions it follows that f has a section if and only if g has a 
+   section. -}
+
+triangle-section :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (S : sec h) →
+  g ~ (f ∘ (pr1 S))
+triangle-section f g h H (pair s issec) =
+  htpy-inv (( H ·r s) ∙h (g ·l issec))
+
+section-comp :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+  sec h → sec f → sec g
+section-comp f g h H sec-h sec-f =
+  pair (h ∘ (pr1 sec-f)) ((htpy-inv (H ·r (pr1 sec-f))) ∙h (pr2 sec-f))
+
+section-comp' :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+  sec h → sec g → sec f
+section-comp' f g h H sec-h sec-g =
+  pair
+    ( (pr1 sec-h) ∘ (pr1 sec-g))
+    ( ( H ·r ((pr1 sec-h) ∘ (pr1 sec-g))) ∙h
+      ( ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))) ∙h ((pr2 sec-g))))
+
+-- Exercise 8.4(b)
+
+{- Exercise 8.4 (b) is dual to exercise 8.4 (a). It asks to show that, given a 
+   commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting
+   triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f
+   has a retraction if and only if h has a retraction. -}
+
+triangle-retraction :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (R : retr g) →
+  h ~ ((pr1 R) ∘ f)
+triangle-retraction f g h H (pair r isretr) =
+  htpy-inv (( r ·l H) ∙h (isretr ·r h))
+
+retraction-comp :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+  retr g → retr f → retr h
+retraction-comp f g h H retr-g retr-f =
+  pair
+    ( (pr1 retr-f) ∘ g)
+    ( (htpy-inv ((pr1 retr-f) ·l H)) ∙h (pr2 retr-f))
+
+retraction-comp' :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+  retr g → retr h → retr f
+retraction-comp' f g h H retr-g retr-h =
+  pair
+    ( (pr1 retr-h) ∘ (pr1 retr-g))
+    ( ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H) ∙h
+      ( ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)) ∙h (pr2 retr-h)))
+
+-- Exercise 8.4(c)
+
+{- In Exercise 8.4 (c) we use the constructions of parts (a) and (b) to derive 
+   the 3-for-2 property of equivalences. -}
+
+abstract
+  is-equiv-comp :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+    is-equiv h → is-equiv g → is-equiv f
+  is-equiv-comp f g h H (pair sec-h retr-h) (pair sec-g retr-g) =
+    pair
+      ( section-comp' f g h H sec-h sec-g)
+      ( retraction-comp' f g h H retr-g retr-h)
+
+abstract
+  is-equiv-comp' :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
+    is-equiv h → is-equiv g → is-equiv (g ∘ h)
+  is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h refl-htpy
+
+equiv-comp :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
+  (B ≃ X) → (A ≃ B) → (A ≃ X)
+equiv-comp g h =
+  pair ((pr1 g) ∘ (pr1 h)) (is-equiv-comp' (pr1 g) (pr1 h) (pr2 h) (pr2 g))
+
+_∘e_ :
+  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
+  (B ≃ X) → (A ≃ B) → (A ≃ X)
+_∘e_ = equiv-comp
+
+abstract
+  is-equiv-left-factor :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+    is-equiv f → is-equiv h → is-equiv g
+  is-equiv-left-factor f g h H
+    ( pair sec-f retr-f)
+    ( pair (pair sh sh-issec) retr-h) =
+    pair
+      ( section-comp f g h H (pair sh sh-issec) sec-f)
+      ( retraction-comp' g f sh
+        ( triangle-section f g h H (pair sh sh-issec))
+        ( retr-f)
+        ( pair h sh-issec))
+
+abstract
+  is-equiv-left-factor' :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
+    is-equiv (g ∘ h) → is-equiv h → is-equiv g
+  is-equiv-left-factor' g h =
+    is-equiv-left-factor (g ∘ h) g h refl-htpy
+
+abstract
+  is-equiv-right-factor :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
+    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
+    is-equiv g → is-equiv f → is-equiv h
+  is-equiv-right-factor f g h H
+    ( pair sec-g (pair rg rg-isretr))
+    ( pair sec-f retr-f) =
+    pair
+      ( section-comp' h rg f
+        ( triangle-retraction f g h H (pair rg rg-isretr))
+        ( sec-f)
+        ( pair g rg-isretr))
+      ( retraction-comp f g h H (pair rg rg-isretr) retr-f)
+
+abstract
+  is-equiv-right-factor' :
+    {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) → 
+    is-equiv g → is-equiv (g ∘ h) → is-equiv h
+  is-equiv-right-factor' g h =
+    is-equiv-right-factor (g ∘ h) g h refl-htpy
+
+-- Exercise 8.5
+
+-- Exercise 8.5 (a)
+
+-- Exercise 8.5 (b)
 
 {- We prove the left unit law for coproducts. -}
 
@@ -596,224 +887,13 @@ right-zero-law-prod :
 right-zero-law-prod X =
   pair pr2 (is-equiv-pr2-prod-empty X)
 
--- Exercise 7.3
-
--- Exercise 7.3(a)
-
-abstract
-  is-equiv-htpy :
-    {i j : Level} {A : UU i} {B : UU j} {f : A → B} (g : A → B) →
-    f ~ g → is-equiv g → is-equiv f
-  is-equiv-htpy g H (pair (pair gs issec) (pair gr isretr)) =
-    pair
-      ( pair gs ((H ·r gs) ∙h issec))
-      ( pair gr ((gr ·l H) ∙h isretr))
-
-abstract
-  is-equiv-htpy' :
-    {i j : Level} {A : UU i} {B : UU j} (f : A → B) {g : A → B} →
-    f ~ g → is-equiv f → is-equiv g
-  is-equiv-htpy' f H = is-equiv-htpy f (htpy-inv H)
-
--- Exercise 7.3(b)
-
-htpy-inv-is-equiv :
-  {i j : Level} {A : UU i} {B : UU j} {f f' : A → B} (H : f ~ f') →
-  (is-equiv-f : is-equiv f) (is-equiv-f' : is-equiv f') →
-  (inv-is-equiv is-equiv-f) ~ (inv-is-equiv is-equiv-f')
-htpy-inv-is-equiv H is-equiv-f is-equiv-f' b =
-  ( inv (isretr-inv-is-equiv is-equiv-f' (inv-is-equiv is-equiv-f b))) ∙
-  ( ap (inv-is-equiv is-equiv-f')
-    ( ( inv (H (inv-is-equiv is-equiv-f b))) ∙
-      ( issec-inv-is-equiv is-equiv-f b)))
-
--- Exercise 7.4
-
--- Exercise 7.4(a)
-
-{- Exercise 7.4 (a) asks to show that, given a commuting triangle f ~ g ∘ h and
-   a section s of h, we get a new commuting triangle g ~ f ∘ s. Moreover, under
-   the same assumptions it follows that f has a section if and only if g has a 
-   section. -}
-
-triangle-section :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (S : sec h) →
-  g ~ (f ∘ (pr1 S))
-triangle-section f g h H (pair s issec) =
-  htpy-inv (( H ·r s) ∙h (g ·l issec))
-
-section-comp :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-  sec h → sec f → sec g
-section-comp f g h H sec-h sec-f =
-  pair (h ∘ (pr1 sec-f)) ((htpy-inv (H ·r (pr1 sec-f))) ∙h (pr2 sec-f))
-
-section-comp' :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-  sec h → sec g → sec f
-section-comp' f g h H sec-h sec-g =
-  pair
-    ( (pr1 sec-h) ∘ (pr1 sec-g))
-    ( ( H ·r ((pr1 sec-h) ∘ (pr1 sec-g))) ∙h
-      ( ( g ·l ((pr2 sec-h) ·r (pr1 sec-g))) ∙h ((pr2 sec-g))))
-
--- Exercise 7.4(b)
-
-{- Exercise 7.4 (b) is dual to exercise 5.5 (a). It asks to show that, given a 
-   commuting triangle f ~ g ∘ h and a retraction r of g, we get a new commuting
-   triangle h ~ r ∘ f. Moreover, under these assumptions it also follows that f
-   has a retraction if and only if h has a retraction. -}
-
-triangle-retraction :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) (R : retr g) →
-  h ~ ((pr1 R) ∘ f)
-triangle-retraction f g h H (pair r isretr) =
-  htpy-inv (( r ·l H) ∙h (isretr ·r h))
-
-retraction-comp :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-  retr g → retr f → retr h
-retraction-comp f g h H retr-g retr-f =
-  pair
-    ( (pr1 retr-f) ∘ g)
-    ( (htpy-inv ((pr1 retr-f) ·l H)) ∙h (pr2 retr-f))
-
-retraction-comp' :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-  (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-  retr g → retr h → retr f
-retraction-comp' f g h H retr-g retr-h =
-  pair
-    ( (pr1 retr-h) ∘ (pr1 retr-g))
-    ( ( ((pr1 retr-h) ∘ (pr1 retr-g)) ·l H) ∙h
-      ( ((pr1 retr-h) ·l ((pr2 retr-g) ·r h)) ∙h (pr2 retr-h)))
-
--- Exercise 7.4(c)
-
-{- In Exercise 7.4 (c) we use the constructions of parts (a) and (b) to derive 
-   the 3-for-2 property of equivalences. -}
-
-abstract
-  is-equiv-comp :
-    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-    is-equiv h → is-equiv g → is-equiv f
-  is-equiv-comp f g h H (pair sec-h retr-h) (pair sec-g retr-g) =
-    pair
-      ( section-comp' f g h H sec-h sec-g)
-      ( retraction-comp' f g h H retr-g retr-h)
-
-abstract
-  is-equiv-comp' :
-    {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
-    is-equiv h → is-equiv g → is-equiv (g ∘ h)
-  is-equiv-comp' g h = is-equiv-comp (g ∘ h) g h refl-htpy
-
-equiv-comp :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
-  (B ≃ X) → (A ≃ B) → (A ≃ X)
-equiv-comp g h =
-  pair ((pr1 g) ∘ (pr1 h)) (is-equiv-comp' (pr1 g) (pr1 h) (pr2 h) (pr2 g))
-
-_∘e_ :
-  {i j k : Level} {A : UU i} {B : UU j} {X : UU k} →
-  (B ≃ X) → (A ≃ B) → (A ≃ X)
-_∘e_ = equiv-comp
-
-abstract
-  is-equiv-left-factor :
-    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-    is-equiv f → is-equiv h → is-equiv g
-  is-equiv-left-factor f g h H
-    ( pair sec-f retr-f)
-    ( pair (pair sh sh-issec) retr-h) =
-    pair
-      ( section-comp f g h H (pair sh sh-issec) sec-f)
-      ( retraction-comp' g f sh
-        ( triangle-section f g h H (pair sh sh-issec))
-        ( retr-f)
-        ( pair h sh-issec))
-
-abstract
-  is-equiv-left-factor' :
-    {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) →
-    is-equiv (g ∘ h) → is-equiv h → is-equiv g
-  is-equiv-left-factor' g h =
-    is-equiv-left-factor (g ∘ h) g h refl-htpy
-
-abstract
-  is-equiv-right-factor :
-    {i j k : Level} {A : UU i} {B : UU j} {X : UU k}
-    (f : A → X) (g : B → X) (h : A → B) (H : f ~ (g ∘ h)) →
-    is-equiv g → is-equiv f → is-equiv h
-  is-equiv-right-factor f g h H
-    ( pair sec-g (pair rg rg-isretr))
-    ( pair sec-f retr-f) =
-    pair
-      ( section-comp' h rg f
-        ( triangle-retraction f g h H (pair rg rg-isretr))
-        ( sec-f)
-        ( pair g rg-isretr))
-      ( retraction-comp f g h H (pair rg rg-isretr) retr-f)
-
-abstract
-  is-equiv-right-factor' :
-    {i j k : Level} {A : UU i} {B : UU j} {X : UU k} (g : B → X) (h : A → B) → 
-    is-equiv g → is-equiv (g ∘ h) → is-equiv h
-  is-equiv-right-factor' g h =
-    is-equiv-right-factor (g ∘ h) g h refl-htpy
-
 -- Exercise 7.5
 
 -- Exercise 7.5(a)
 
-{- In this exercise we show that the negation function on the booleans is an 
-   equivalence. Moreover, we show that any constant function on the booleans is
-   not an equivalence. -}
-
-neg-neg-𝟚 : (neg-𝟚 ∘ neg-𝟚) ~ id
-neg-neg-𝟚 true = refl
-neg-neg-𝟚 false = refl
-
-abstract
-  is-equiv-neg-𝟚 : is-equiv neg-𝟚
-  is-equiv-neg-𝟚 = is-equiv-has-inverse neg-𝟚 neg-neg-𝟚 neg-neg-𝟚
-
-equiv-neg-𝟚 : bool ≃ bool
-equiv-neg-𝟚 = pair neg-𝟚 is-equiv-neg-𝟚
-
--- Exercise 7.5(b)
-
-abstract
-  not-true-is-false : ¬ (Id true false)
-  not-true-is-false p =
-    tr (Eq-𝟚 true) p (reflexive-Eq-𝟚 true) 
-
 -- Exercise 7.5(c)
 
-abstract
-  not-equiv-const :
-    (b : bool) → ¬ (is-equiv (const bool bool b))
-  not-equiv-const true (pair (pair s issec) (pair r isretr)) =
-    not-true-is-false (issec false)
-  not-equiv-const false (pair (pair s issec) (pair r isretr)) =
-    not-true-is-false (inv (issec true))
-
 -- Exercise 7.6
-
-abstract
-  is-equiv-succ-ℤ : is-equiv succ-ℤ
-  is-equiv-succ-ℤ =
-    is-equiv-has-inverse pred-ℤ right-inverse-pred-ℤ left-inverse-pred-ℤ
-  
-equiv-succ-ℤ : ℤ ≃ ℤ
-equiv-succ-ℤ = pair succ-ℤ is-equiv-succ-ℤ
 
 -- Exercise 7.7
 

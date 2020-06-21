@@ -21,10 +21,10 @@ is-prop-is-invertible-Ring R =
 {- We introduce homomorphism that invert specific elements -}
 
 inverts-element-hom-Ring :
-  {l1 l2 : Level} (R : Ring l1) (S : Ring l2) (x : type-Ring R) →
-  (f : hom-Ring R S) → UU l2
-inverts-element-hom-Ring R S x f =
-  is-invertible-Ring S (map-hom-Ring R S f x)
+  {l1 l2 : Level} (R1 : Ring l1) (R2 : Ring l2) (x : type-Ring R1) →
+  (f : hom-Ring R1 R2) → UU l2
+inverts-element-hom-Ring R1 R2 x f =
+  is-invertible-Ring R2 (map-hom-Ring R1 R2 f x)
 
 is-prop-inverts-element-hom-Ring :
   {l1 l2 : Level} (R : Ring l1) (S : Ring l2) (x : type-Ring R)
@@ -107,8 +107,56 @@ unique-extension-universal-property-localization-Ring :
 unique-extension-universal-property-localization-Ring R S T x f H up-f h K =
   is-contr-equiv'
     ( fib (precomp-universal-property-localization-Ring R S T x f H) (pair h K))
-    ( equiv-tot ( λ g → {!!}))
+    ( equiv-tot ( λ g →
+      ( equiv-htpy-hom-Ring-eq R T (comp-hom-Ring R S T g f) h) ∘e
+      ( equiv-Eq-total-subtype-eq
+        ( is-prop-inverts-element-hom-Ring R T x)
+        ( precomp-universal-property-localization-Ring R S T x f H g)
+        ( pair h K))))
     ( is-contr-map-is-equiv (up-f T) (pair h K))
+
+center-unique-extension-universal-property-localization-Ring :
+  {l1 l2 l3 : Level} (R : Ring l1) (S : Ring l2) (T : Ring l3) (x : type-Ring R)
+  (f : hom-Ring R S) (H : inverts-element-hom-Ring R S x f) →
+  universal-property-localization-Ring l3 R S x f H →
+  (h : hom-Ring R T) (K : inverts-element-hom-Ring R T x h) →
+  Σ (hom-Ring S T) (λ g → htpy-hom-Ring R T (comp-hom-Ring R S T g f) h)
+center-unique-extension-universal-property-localization-Ring R S T x f H up-f h K =
+  center
+    ( unique-extension-universal-property-localization-Ring
+      R S T x f H up-f h K)
+
+map-universal-property-localization-Ring :
+  {l1 l2 l3 : Level} (R : Ring l1) (S : Ring l2) (T : Ring l3) (x : type-Ring R)
+  (f : hom-Ring R S) (H : inverts-element-hom-Ring R S x f) →
+  universal-property-localization-Ring l3 R S x f H →
+  (h : hom-Ring R T) (K : inverts-element-hom-Ring R T x h) → hom-Ring S T
+map-universal-property-localization-Ring R S T x f H up-f h K =
+  pr1 ( center-unique-extension-universal-property-localization-Ring
+        R S T x f H up-f h K)
+
+htpy-universal-property-localization-Ring :
+  {l1 l2 l3 : Level} (R : Ring l1) (S : Ring l2) (T : Ring l3) (x : type-Ring R)
+  (f : hom-Ring R S) (H : inverts-element-hom-Ring R S x f) →
+  (up-f : universal-property-localization-Ring l3 R S x f H) →
+  (h : hom-Ring R T) (K : inverts-element-hom-Ring R T x h) →
+  htpy-hom-Ring R T (comp-hom-Ring R S T (map-universal-property-localization-Ring R S T x f H up-f h K) f) h
+htpy-universal-property-localization-Ring R S T x f H up-f h K =
+  pr2 ( center-unique-extension-universal-property-localization-Ring
+        R S T x f H up-f h K)
+
+{- We show that the type of localizations of a ring R at an element x is
+   contractible. -}
+
+is-equiv-up-localization-up-localization-Ring :
+  {l1 l2 l3 : Level} (R : Ring l1) (S : Ring l2) (T : Ring l3) (x : type-Ring R)
+  (f : hom-Ring R S) (inverts-f : inverts-element-hom-Ring R S x f) →
+  (g : hom-Ring R T) (inverts-g : inverts-element-hom-Ring R T x g) →
+  (h : hom-Ring S T) (H : htpy-hom-Ring R T (comp-hom-Ring R S T h f) g) →
+  ({l : Level} → universal-property-localization-Ring l R S x f inverts-f) →
+  ({l : Level} → universal-property-localization-Ring l R T x g inverts-g) →
+  is-iso-hom-Ring S T h
+is-equiv-up-localization-up-localization-Ring R S T x f inverts-f g inverts-g h H up-f up-g = {!is-iso-is-equiv-hom-Ring!}
 
 --------------------------------------------------------------------------------
 
