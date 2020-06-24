@@ -262,6 +262,23 @@ pred-Fin' {succ-ℕ k} (inl x) | inl e = neg-one-Fin
 pred-Fin' {succ-ℕ k} (inl x) | inr f = inl (pred-Fin' x)
 pred-Fin' {succ-ℕ k} (inr x) | inr f = inl neg-one-Fin
 
+skip-neg-two-Fin :
+  {k : ℕ} → Fin (succ-ℕ k) → Fin (succ-ℕ (succ-ℕ k))
+skip-neg-two-Fin {k} (inl x) = inl (inl x)
+skip-neg-two-Fin {k} (inr x) = inr x
+
+cases-pred-Fin-2 :
+  {k : ℕ} (x : Fin (succ-ℕ k))
+  (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) → Fin (succ-ℕ k)
+cases-pred-Fin-2 {zero-ℕ} x d = neg-one-Fin
+cases-pred-Fin-2 {succ-ℕ k} (inl x) = skip-neg-two-Fin ∘ cases-pred-Fin-2 x
+cases-pred-Fin-2 {succ-ℕ k} (inr x) d = inl neg-one-Fin
+
+pred-Fin-2 : {k : ℕ} → Fin k → Fin k
+pred-Fin-2 {succ-ℕ zero-ℕ} x = zero-Fin
+pred-Fin-2 {succ-ℕ (succ-ℕ k)} (inl x) = skip-neg-two-Fin (pred-Fin x)
+pred-Fin-2 {succ-ℕ (succ-ℕ k)} (inr x) = inl neg-one-Fin
+
 --------------------------------------------------------------------------------
 
 {- Section 7.4 The congruence relations modulo k -}
@@ -933,15 +950,18 @@ cases-succ-pred-Fin :
   {k : ℕ} (x : Fin (succ-ℕ k))
   (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) →
   Id (succ-Fin (cases-pred-Fin x d)) x
-cases-succ-pred-Fin {zero-ℕ} (inr star) d = refl
+cases-succ-pred-Fin {zero-ℕ} (inr star) d =
+  refl
 cases-succ-pred-Fin {succ-ℕ k} (inl x) (inl e) =
   succ-neg-one-Fin ∙ inv (eq-Eq-Fin e)
 cases-succ-pred-Fin {succ-ℕ zero-ℕ} (inl (inr x)) (inr f) =
   ex-falso (f star)
 cases-succ-pred-Fin {succ-ℕ (succ-ℕ k)} (inl (inl x)) (inr f) =
   ap inl (cases-succ-pred-Fin (inl x) (inr f))
-cases-succ-pred-Fin {succ-ℕ (succ-ℕ k)} (inl (inr star)) (inr f) = refl
-cases-succ-pred-Fin {succ-ℕ k} (inr star) (inr f) = refl
+cases-succ-pred-Fin {succ-ℕ (succ-ℕ k)} (inl (inr star)) (inr f) =
+  refl
+cases-succ-pred-Fin {succ-ℕ k} (inr star) (inr f) =
+  refl
 
 succ-pred-Fin :
   {k : ℕ} (x : Fin k) → Id (succ-Fin (pred-Fin x)) x
@@ -1111,3 +1131,255 @@ right-distributive-mul-add-Fin {k} x y z =
     ( ap-add-Fin (commutative-mul-Fin z x) (commutative-mul-Fin z y)))
 
 --------------------------------------------------------------------------------
+
+{-
+-- We introduce the absolute value of an integer. --
+
+abs-ℤ : ℤ → ℕ
+abs-ℤ (inl x) = succ-ℕ x
+abs-ℤ (inr (inl star)) = zero-ℕ
+abs-ℤ (inr (inr x)) = succ-ℕ x
+
+int-abs-ℤ : ℤ → ℤ
+int-abs-ℤ = int-ℕ ∘ abs-ℤ
+
+eq-abs-ℤ : (x : ℤ) → Id zero-ℕ (abs-ℤ x) → Id zero-ℤ x
+eq-abs-ℤ (inl x) p = ex-falso (Peano-8 x p)
+eq-abs-ℤ (inr (inl star)) p = refl
+eq-abs-ℤ (inr (inr x)) p = ex-falso (Peano-8 x p)
+
+abs-eq-ℤ : (x : ℤ) → Id zero-ℤ x → Id zero-ℕ (abs-ℤ x)
+abs-eq-ℤ .zero-ℤ refl = refl
+
+negatives-add-ℤ :
+  (x y : ℕ) → Id (add-ℤ (in-neg x) (in-neg y)) (in-neg (succ-ℕ (add-ℕ x y)))
+negatives-add-ℤ zero-ℕ y = ap (inl ∘ succ-ℕ) (inv (left-unit-law-add-ℕ y))
+negatives-add-ℤ (succ-ℕ x) y =
+  ( ap pred-ℤ (negatives-add-ℤ x y)) ∙
+  ( ap (inl ∘ succ-ℕ) (inv (left-successor-law-add-ℕ x y)))
+
+subadditive-abs-ℤ :
+  (x y : ℤ) → leq-ℕ (abs-ℤ (add-ℤ x y)) (add-ℕ (abs-ℤ x) (abs-ℤ y))
+subadditive-abs-ℤ (inl x) (inl y) =
+  leq-eq-ℕ
+    ( abs-ℤ (add-ℤ (inl x) (inl y)))
+    ( add-ℕ (succ-ℕ x) (succ-ℕ y))
+    ( ( ap abs-ℤ (negatives-add-ℤ x y)) ∙
+      ( ap succ-ℕ (inv (left-successor-law-add-ℕ x y))))
+subadditive-abs-ℤ (inl x) (inr (inl star)) =
+  leq-eq-ℕ
+    ( abs-ℤ (add-ℤ (inl x) zero-ℤ))
+    ( add-ℕ (succ-ℕ x) zero-ℕ)
+    ( ap abs-ℤ (right-unit-law-add-ℤ (inl x)))
+subadditive-abs-ℤ (inl zero-ℕ) (inr (inr zero-ℕ)) = star
+subadditive-abs-ℤ (inl zero-ℕ) (inr (inr (succ-ℕ y))) =
+  concatenate-leq-eq-ℕ
+    ( succ-ℕ y)
+    ( preserves-leq-succ-ℕ (succ-ℕ y) (succ-ℕ (succ-ℕ y)) (succ-leq-ℕ y))
+    ( inv
+      ( ( left-successor-law-add-ℕ zero-ℕ (succ-ℕ (succ-ℕ y))) ∙
+        ( ap succ-ℕ (left-unit-law-add-ℕ (succ-ℕ (succ-ℕ y))))))
+subadditive-abs-ℤ (inl (succ-ℕ x)) (inr (inr zero-ℕ)) = {!!}
+subadditive-abs-ℤ (inl (succ-ℕ x)) (inr (inr (succ-ℕ y))) = {!!}
+subadditive-abs-ℤ (inr x) (inl y) = {!!}
+subadditive-abs-ℤ (inr x) (inr y) = {!!}
+
+--------------------------------------------------------------------------------
+
+dist-ℤ : ℤ → ℤ → ℕ
+dist-ℤ (inl x) (inl y) = dist-ℕ x y
+dist-ℤ (inl x) (inr (inl star)) = succ-ℕ x
+dist-ℤ (inl x) (inr (inr y)) = succ-ℕ (succ-ℕ (add-ℕ x y))
+dist-ℤ (inr (inl star)) (inl y) = succ-ℕ y
+dist-ℤ (inr (inr x)) (inl y) = succ-ℕ (succ-ℕ (add-ℕ x y))
+dist-ℤ (inr (inl star)) (inr (inl star)) = zero-ℕ
+dist-ℤ (inr (inl star)) (inr (inr y)) = succ-ℕ y
+dist-ℤ (inr (inr x)) (inr (inl star)) = succ-ℕ x
+dist-ℤ (inr (inr x)) (inr (inr y)) = dist-ℕ x y
+
+dist-ℤ' : ℤ → ℤ → ℕ
+dist-ℤ' x y = dist-ℤ y x
+
+ap-dist-ℤ :
+  {x y x' y' : ℤ} → Id x x' → Id y y' → Id (dist-ℤ x y) (dist-ℤ x' y')
+ap-dist-ℤ refl refl = refl
+
+eq-dist-ℤ :
+  (x y : ℤ) → Id zero-ℕ (dist-ℤ x y) → Id x y
+eq-dist-ℤ (inl x) (inl y) p = ap inl (eq-dist-ℕ x y p)
+eq-dist-ℤ (inl x) (inr (inl star)) p = ex-falso (Peano-8 x p)
+eq-dist-ℤ (inr (inl star)) (inl y) p = ex-falso (Peano-8 y p)
+eq-dist-ℤ (inr (inl star)) (inr (inl star)) p = refl
+eq-dist-ℤ (inr (inl star)) (inr (inr y)) p = ex-falso (Peano-8 y p)
+eq-dist-ℤ (inr (inr x)) (inr (inl star)) p = ex-falso (Peano-8 x p)
+eq-dist-ℤ (inr (inr x)) (inr (inr y)) p = ap (inr ∘ inr) (eq-dist-ℕ x y p)
+
+dist-eq-ℤ' :
+  (x : ℤ) → Id zero-ℕ (dist-ℤ x x)
+dist-eq-ℤ' (inl x) = dist-eq-ℕ' x
+dist-eq-ℤ' (inr (inl star)) = refl
+dist-eq-ℤ' (inr (inr x)) = dist-eq-ℕ' x
+
+dist-eq-ℤ :
+  (x y : ℤ) → Id x y → Id zero-ℕ (dist-ℤ x y)
+dist-eq-ℤ x .x refl = dist-eq-ℤ' x
+
+{- The distance function on ℤ is symmetric. -}
+
+symmetric-dist-ℤ :
+  (x y : ℤ) → Id (dist-ℤ x y) (dist-ℤ y x)
+symmetric-dist-ℤ (inl x) (inl y) = symmetric-dist-ℕ x y
+symmetric-dist-ℤ (inl x) (inr (inl star)) = refl
+symmetric-dist-ℤ (inl x) (inr (inr y)) =
+  ap (succ-ℕ ∘ succ-ℕ) (commutative-add-ℕ x y)
+symmetric-dist-ℤ (inr (inl star)) (inl y) = refl
+symmetric-dist-ℤ (inr (inr x)) (inl y) =
+  ap (succ-ℕ ∘ succ-ℕ) (commutative-add-ℕ x y)
+symmetric-dist-ℤ (inr (inl star)) (inr (inl star)) = refl
+symmetric-dist-ℤ (inr (inl star)) (inr (inr y)) = refl
+symmetric-dist-ℤ (inr (inr x)) (inr (inl star)) = refl
+symmetric-dist-ℤ (inr (inr x)) (inr (inr y)) = symmetric-dist-ℕ x y
+
+-- We compute the distance from zero --
+
+left-zero-law-dist-ℤ :
+  (x : ℤ) → Id (dist-ℤ zero-ℤ x) (abs-ℤ x)
+left-zero-law-dist-ℤ (inl x) = refl
+left-zero-law-dist-ℤ (inr (inl star)) = refl
+left-zero-law-dist-ℤ (inr (inr x)) = refl
+
+right-zero-law-dist-ℤ :
+  (x : ℤ) → Id (dist-ℤ x zero-ℤ) (abs-ℤ x)
+right-zero-law-dist-ℤ (inl x) = refl
+right-zero-law-dist-ℤ (inr (inl star)) = refl
+right-zero-law-dist-ℤ (inr (inr x)) = refl
+
+-- We prove the triangle inequality --
+
+triangle-inequality-dist-ℤ :
+  (x y z : ℤ) → leq-ℕ (dist-ℤ x y) (add-ℕ (dist-ℤ x z) (dist-ℤ z y))
+triangle-inequality-dist-ℤ (inl x) (inl y) (inl z) =
+  triangle-inequality-dist-ℕ x y z
+triangle-inequality-dist-ℤ (inl x) (inl y) (inr (inl star)) =
+  triangle-inequality-dist-ℕ (succ-ℕ x) (succ-ℕ y) zero-ℕ
+triangle-inequality-dist-ℤ (inl x) (inl y) (inr (inr z)) = {!!}
+triangle-inequality-dist-ℤ (inl x) (inr y) (inl z) = {!!}
+triangle-inequality-dist-ℤ (inl x) (inr y) (inr z) = {!!}
+triangle-inequality-dist-ℤ (inr x) (inl y) (inl z) = {!!}
+triangle-inequality-dist-ℤ (inr x) (inl y) (inr z) = {!!}
+triangle-inequality-dist-ℤ (inr x) (inr y) (inl z) = {!!}
+triangle-inequality-dist-ℤ (inr x) (inr y) (inr z) = {!!}
+
+{-
+
+triangle-inequality-dist-ℕ :
+  (m n k : ℕ) → leq-ℕ (dist-ℕ m n) (add-ℕ (dist-ℕ m k) (dist-ℕ k n))
+triangle-inequality-dist-ℕ zero-ℕ zero-ℕ zero-ℕ = star
+triangle-inequality-dist-ℕ zero-ℕ zero-ℕ (succ-ℕ k) = star
+triangle-inequality-dist-ℕ zero-ℕ (succ-ℕ n) zero-ℕ =
+  tr ( leq-ℕ (succ-ℕ n))
+     ( inv (left-unit-law-add-ℕ (succ-ℕ n)))
+     ( reflexive-leq-ℕ (succ-ℕ n))
+triangle-inequality-dist-ℕ zero-ℕ (succ-ℕ n) (succ-ℕ k) =
+  concatenate-eq-leq-eq-ℕ
+    ( inv (ap succ-ℕ (left-zero-law-dist-ℕ n)))
+    ( triangle-inequality-dist-ℕ zero-ℕ n k)
+    ( ( ap (succ-ℕ ∘ (add-ℕ' (dist-ℕ k n))) (left-zero-law-dist-ℕ k)) ∙
+      ( inv (left-successor-law-add-ℕ k (dist-ℕ k n))))
+triangle-inequality-dist-ℕ (succ-ℕ m) zero-ℕ zero-ℕ = reflexive-leq-ℕ (succ-ℕ m)
+triangle-inequality-dist-ℕ (succ-ℕ m) zero-ℕ (succ-ℕ k) =
+  concatenate-eq-leq-eq-ℕ
+    ( inv (ap succ-ℕ (right-zero-law-dist-ℕ m)))
+    ( triangle-inequality-dist-ℕ m zero-ℕ k)
+    ( ap (succ-ℕ ∘ (add-ℕ (dist-ℕ m k))) (right-zero-law-dist-ℕ k))
+triangle-inequality-dist-ℕ (succ-ℕ m) (succ-ℕ n) zero-ℕ =
+  concatenate-leq-eq-ℕ
+    ( dist-ℕ m n)
+    ( transitive-leq-ℕ
+      ( dist-ℕ m n)
+      ( succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))
+      ( succ-ℕ (succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))) 
+      ( transitive-leq-ℕ
+        ( dist-ℕ m n)
+        ( add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n))
+        ( succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))
+        ( triangle-inequality-dist-ℕ m n zero-ℕ)
+        ( succ-leq-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n))))
+      ( succ-leq-ℕ (succ-ℕ (add-ℕ (dist-ℕ m zero-ℕ) (dist-ℕ zero-ℕ n)))))
+    ( ( ap (succ-ℕ ∘ succ-ℕ)
+           ( ap-add-ℕ (right-zero-law-dist-ℕ m) (left-zero-law-dist-ℕ n))) ∙
+      ( inv (left-successor-law-add-ℕ m (succ-ℕ n))))
+triangle-inequality-dist-ℕ (succ-ℕ m) (succ-ℕ n) (succ-ℕ k) =
+  triangle-inequality-dist-ℕ m n k
+
+-- We show that dist-ℕ x y is a solution to a simple equation.
+
+leq-dist-ℕ :
+  (x y : ℕ) → leq-ℕ x y → Id (add-ℕ x (dist-ℕ x y)) y
+leq-dist-ℕ zero-ℕ zero-ℕ H = refl
+leq-dist-ℕ zero-ℕ (succ-ℕ y) star = left-unit-law-add-ℕ (succ-ℕ y)
+leq-dist-ℕ (succ-ℕ x) (succ-ℕ y) H =
+  ( left-successor-law-add-ℕ x (dist-ℕ x y)) ∙
+  ( ap succ-ℕ (leq-dist-ℕ x y H))
+
+rewrite-left-add-dist-ℕ :
+  (x y z : ℕ) → Id (add-ℕ x y) z → Id x (dist-ℕ y z)
+rewrite-left-add-dist-ℕ zero-ℕ zero-ℕ .zero-ℕ refl = refl
+rewrite-left-add-dist-ℕ zero-ℕ (succ-ℕ y) .(succ-ℕ (add-ℕ zero-ℕ y)) refl =
+  ( dist-eq-ℕ' y) ∙
+  ( inv (ap (dist-ℕ (succ-ℕ y)) (left-unit-law-add-ℕ (succ-ℕ y))))
+rewrite-left-add-dist-ℕ (succ-ℕ x) zero-ℕ .(succ-ℕ x) refl = refl
+rewrite-left-add-dist-ℕ
+  (succ-ℕ x) (succ-ℕ y) .(succ-ℕ (add-ℕ (succ-ℕ x) y)) refl =
+  rewrite-left-add-dist-ℕ (succ-ℕ x) y (add-ℕ (succ-ℕ x) y) refl
+
+rewrite-left-dist-add-ℕ :
+  (x y z : ℕ) → leq-ℕ y z → Id x (dist-ℕ y z) → Id (add-ℕ x y) z
+rewrite-left-dist-add-ℕ .(dist-ℕ y z) y z H refl =
+  ( commutative-add-ℕ (dist-ℕ y z) y) ∙
+  ( leq-dist-ℕ y z H)
+
+rewrite-right-add-dist-ℕ :
+  (x y z : ℕ) → Id (add-ℕ x y) z → Id y (dist-ℕ x z)
+rewrite-right-add-dist-ℕ x y z p =
+  rewrite-left-add-dist-ℕ y x z (commutative-add-ℕ y x ∙ p)
+
+rewrite-right-dist-add-ℕ :
+  (x y z : ℕ) → leq-ℕ x z → Id y (dist-ℕ x z) → Id (add-ℕ x y) z
+rewrite-right-dist-add-ℕ x .(dist-ℕ x z) z H refl =
+  leq-dist-ℕ x z H
+
+-- We show that dist-ℕ is translation invariant
+
+translation-invariant-dist-ℕ :
+  (k m n : ℕ) → Id (dist-ℕ (add-ℕ k m) (add-ℕ k n)) (dist-ℕ m n)
+translation-invariant-dist-ℕ zero-ℕ m n =
+  ap-dist-ℕ (left-unit-law-add-ℕ m) (left-unit-law-add-ℕ n)
+translation-invariant-dist-ℕ (succ-ℕ k)  m n =
+  ( ap-dist-ℕ (left-successor-law-add-ℕ k m) (left-successor-law-add-ℕ k n)) ∙
+  ( translation-invariant-dist-ℕ k m n)
+
+-- We show that dist-ℕ is linear with respect to scalar multiplication
+
+linear-dist-ℕ :
+  (m n k : ℕ) → Id (dist-ℕ (mul-ℕ k m) (mul-ℕ k n)) (mul-ℕ k (dist-ℕ m n))
+linear-dist-ℕ zero-ℕ zero-ℕ zero-ℕ = refl
+linear-dist-ℕ zero-ℕ zero-ℕ (succ-ℕ k) = linear-dist-ℕ zero-ℕ zero-ℕ k
+linear-dist-ℕ zero-ℕ (succ-ℕ n) zero-ℕ = refl
+linear-dist-ℕ zero-ℕ (succ-ℕ n) (succ-ℕ k) =
+  ap (dist-ℕ' (mul-ℕ (succ-ℕ k) (succ-ℕ n))) (right-zero-law-mul-ℕ (succ-ℕ k))
+linear-dist-ℕ (succ-ℕ m) zero-ℕ zero-ℕ = refl
+linear-dist-ℕ (succ-ℕ m) zero-ℕ (succ-ℕ k) =
+  ap (dist-ℕ (mul-ℕ (succ-ℕ k) (succ-ℕ m))) (right-zero-law-mul-ℕ (succ-ℕ k))
+linear-dist-ℕ (succ-ℕ m) (succ-ℕ n) zero-ℕ = refl
+linear-dist-ℕ (succ-ℕ m) (succ-ℕ n) (succ-ℕ k) =
+  ( ap-dist-ℕ
+    ( right-successor-law-mul-ℕ (succ-ℕ k) m)
+    ( right-successor-law-mul-ℕ (succ-ℕ k) n)) ∙
+  ( ( translation-invariant-dist-ℕ
+      ( succ-ℕ k)
+      ( mul-ℕ (succ-ℕ k) m)
+      ( mul-ℕ (succ-ℕ k) n)) ∙
+    ( linear-dist-ℕ m n (succ-ℕ k)))
+-}
+-}

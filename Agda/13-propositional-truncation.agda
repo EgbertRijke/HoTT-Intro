@@ -7,6 +7,8 @@ open 12-function-extensionality public
 
 -- Section 13 Propositional truncations, the image of a map, and the replacement axiom
 
+--------------------------------------------------------------------------------
+
 -- Section 13.1 Propositional truncations
 
 -- Definition 13.1.1
@@ -115,6 +117,8 @@ is-propositional-truncation-simpl P f up-P l Q =
 
 -- Example 13.1.3
 
+--------------------------------------------------------------------------------
+
 -- Section 6.3 Pointed types
 
 -- Definition 6.3.1
@@ -148,6 +152,8 @@ A →* B =
 iterated-loop-space : {i : Level} → ℕ → UU-pt i → UU-pt i
 iterated-loop-space zero-ℕ A = A
 iterated-loop-space (succ-ℕ n) A = Ω (iterated-loop-space n A)
+
+--------------------------------------------------------------------------------
 
 is-propositional-truncation-const-star :
   { l1 : Level} (A : UU-pt l1)
@@ -259,13 +265,12 @@ is-uniquely-unique-propositional-truncation P P' f f' is-ptr-f is-ptr-f' =
 
 -- Axiom 13.1.8
 
-postulate trunc-Prop : {l : Level} → UU l → UU-Prop l
+postulate type-trunc-Prop : {l : Level} → UU l → UU l
 
-type-trunc-Prop : {l : Level} → UU l → UU l
-type-trunc-Prop A = pr1 (trunc-Prop A)
+postulate is-prop-type-trunc-Prop : {l : Level} (A : UU l) → is-prop (type-trunc-Prop A)
 
-is-prop-type-trunc-Prop : {l : Level} (A : UU l) → is-prop (type-trunc-Prop A)
-is-prop-type-trunc-Prop A = pr2 (trunc-Prop A)
+trunc-Prop : {l : Level} → UU l → UU-Prop l
+trunc-Prop A = pair (type-trunc-Prop A) (is-prop-type-trunc-Prop A)
 
 postulate unit-trunc-Prop : {l : Level} (A : UU l) → A → type-Prop (trunc-Prop A)
 
@@ -338,6 +343,8 @@ comp-functor-trunc-Prop g f =
     ( (functor-trunc-Prop g) ∘ (functor-trunc-Prop f))
     ( ( (functor-trunc-Prop g) ·l (htpy-functor-trunc-Prop f)) ∙h
       ( ( htpy-functor-trunc-Prop g) ·r f))
+
+--------------------------------------------------------------------------------
 
 -- Section 13.2 Propositional truncations as higher inductive types
 
@@ -484,6 +491,8 @@ abstract
               ( f)
               ( λ p → type-Prop (Q p))
               ( λ p → is-prop-type-Prop (Q p)))))
+
+--------------------------------------------------------------------------------
 
 {- We introduce the image inclusion of a map. -}
 
@@ -736,6 +745,24 @@ up-image-is-equiv-up-image f i q i' q' h p up-i' is-equiv-h {l} =
         ( inv-is-equiv (up-i' C j) r)
         ( h))
 
+--------------------------------------------------------------------------------
+
+{- Existential quantification -}
+
+exists-Prop :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) → UU-Prop (l1 ⊔ l2)
+exists-Prop {l1} {l2} {A} P = trunc-Prop (Σ A (λ x → type-Prop (P x)))
+
+exists :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) → UU (l1 ⊔ l2)
+exists P = type-Prop (exists-Prop P)
+
+is-prop-exists :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) → is-prop (exists P)
+is-prop-exists P = is-prop-type-Prop (exists-Prop P)
+
+--------------------------------------------------------------------------------
+
 {- Surjective maps -}
 
 is-surjective :
@@ -818,6 +845,8 @@ cantor X f H =
     ( not-in-image-map-cantor X f)
     ( H (map-cantor X f)))
 
+--------------------------------------------------------------------------------
+
 -- Exercises
 
 -- Exercise 13.1
@@ -884,9 +913,17 @@ equiv-prod-trunc-Prop A A' =
 
 conj-Prop = prod-Prop
 
+type-conj-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU (l1 ⊔ l2)
+type-conj-Prop P Q = type-Prop (conj-Prop P Q)
+
 disj-Prop :
   {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
 disj-Prop P Q = trunc-Prop (coprod (type-Prop P) (type-Prop Q))
+
+type-disj-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU (l1 ⊔ l2)
+type-disj-Prop P Q = type-Prop (disj-Prop P Q)
 
 inl-disj-Prop :
   {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) →
@@ -936,3 +973,200 @@ impredicative-trunc-Prop {l} A =
   (P : UU-Prop l) → (A → type-Prop P) → type-Prop P
 -}
 
+--------------------------------------------------------------------------------
+
+-- Exercise 13.10
+
+-- The impredicative encoding of the propositional truncation --
+
+impredicative-trunc-Prop :
+  {l : Level} → UU l → UU-Prop (lsuc l)
+impredicative-trunc-Prop {l} A =
+  Π-Prop
+    ( UU-Prop l)
+    ( λ Q → function-Prop (A → type-Prop Q) Q)
+
+type-impredicative-trunc-Prop :
+  {l : Level} → UU l → UU (lsuc l)
+type-impredicative-trunc-Prop {l} A =
+  type-Prop (impredicative-trunc-Prop A)
+
+map-impredicative-trunc-Prop :
+  {l : Level} (A : UU l) →
+  type-trunc-Prop A → type-impredicative-trunc-Prop A
+map-impredicative-trunc-Prop {l} A =
+  map-universal-property-trunc-Prop
+    ( impredicative-trunc-Prop A)
+    ( λ x Q f → f x)
+
+inv-map-impredicative-trunc-Prop :
+  {l : Level} (A : UU l) →
+  type-impredicative-trunc-Prop A → type-trunc-Prop A
+inv-map-impredicative-trunc-Prop A H =
+  H (trunc-Prop A) (unit-trunc-Prop A)
+
+equiv-impredicative-trunc-Prop :
+  {l : Level} (A : UU l) →
+  type-trunc-Prop A ≃ type-impredicative-trunc-Prop A
+equiv-impredicative-trunc-Prop A =
+  equiv-iff
+    ( trunc-Prop A)
+    ( impredicative-trunc-Prop A)
+    ( pair
+      ( map-impredicative-trunc-Prop A)
+      ( inv-map-impredicative-trunc-Prop A))
+
+-- The impredicative encoding of conjunction --
+
+impredicative-conj-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (lsuc (l1 ⊔ l2))
+impredicative-conj-Prop {l1} {l2} P1 P2 =
+  Π-Prop
+    ( UU-Prop (l1 ⊔ l2))
+    ( λ Q → function-Prop (type-Prop P1 → (type-Prop P2 → type-Prop Q)) Q)
+
+type-impredicative-conj-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU (lsuc (l1 ⊔ l2))
+type-impredicative-conj-Prop P1 P2 =
+  type-Prop (impredicative-conj-Prop P1 P2)
+
+map-impredicative-conj-Prop :
+  {l1 l2 : Level} (P1 : UU-Prop l1) (P2 : UU-Prop l2) →
+  type-conj-Prop P1 P2 → type-impredicative-conj-Prop P1 P2
+map-impredicative-conj-Prop {l1} {l2} P1 P2 (pair p1 p2) Q f =
+  f p1 p2
+
+inv-map-impredicative-conj-Prop :
+  {l1 l2 : Level} (P1 : UU-Prop l1) (P2 : UU-Prop l2) →
+  type-impredicative-conj-Prop P1 P2 → type-conj-Prop P1 P2
+inv-map-impredicative-conj-Prop P1 P2 H =
+  H (conj-Prop P1 P2) (λ p1 p2 → pair p1 p2)
+
+equiv-impredicative-conj-Prop :
+  {l1 l2 : Level} (P1 : UU-Prop l1) (P2 : UU-Prop l2) →
+  type-conj-Prop P1 P2 ≃ type-impredicative-conj-Prop P1 P2
+equiv-impredicative-conj-Prop P1 P2 =
+  equiv-iff
+    ( conj-Prop P1 P2)
+    ( impredicative-conj-Prop P1 P2)
+    ( pair
+      ( map-impredicative-conj-Prop P1 P2)
+      ( inv-map-impredicative-conj-Prop P1 P2))
+
+-- The impredicative encoding of disjunction --
+
+impredicative-disj-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (lsuc (l1 ⊔ l2))
+impredicative-disj-Prop {l1} {l2} P1 P2 =
+  Π-Prop
+    ( UU-Prop (l1 ⊔ l2))
+    ( λ Q →
+      function-Prop
+        ( type-implication-Prop P1 Q)
+        ( function-Prop (type-implication-Prop P2 Q) Q))
+
+type-impredicative-disj-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU (lsuc (l1 ⊔ l2))
+type-impredicative-disj-Prop P1 P2 =
+  type-Prop (impredicative-disj-Prop P1 P2)
+
+map-impredicative-disj-Prop :
+  {l1 l2 : Level} (P1 : UU-Prop l1) (P2 : UU-Prop l2) →
+  type-disj-Prop P1 P2 → type-impredicative-disj-Prop P1 P2
+map-impredicative-disj-Prop {l1} {l2} P1 P2 =
+  map-universal-property-trunc-Prop
+    ( impredicative-disj-Prop P1 P2)
+    ( ind-coprod
+      ( λ x → type-impredicative-disj-Prop P1 P2)
+      ( λ x Q f1 f2 → f1 x)
+      ( λ y Q f1 f2 → f2 y))
+  
+inv-map-impredicative-disj-Prop :
+  {l1 l2 : Level} (P1 : UU-Prop l1) (P2 : UU-Prop l2) →
+  type-impredicative-disj-Prop P1 P2 → type-disj-Prop P1 P2
+inv-map-impredicative-disj-Prop P1 P2 H =
+  H (disj-Prop P1 P2) (inl-disj-Prop P1 P2) (inr-disj-Prop P1 P2)
+
+equiv-impredicative-disj-Prop :
+  {l1 l2 : Level} (P1 : UU-Prop l1) (P2 : UU-Prop l2) →
+  type-disj-Prop P1 P2 ≃ type-impredicative-disj-Prop P1 P2
+equiv-impredicative-disj-Prop P1 P2 =
+  equiv-iff
+    ( disj-Prop P1 P2)
+    ( impredicative-disj-Prop P1 P2)
+    ( pair
+      ( map-impredicative-disj-Prop P1 P2)
+      ( inv-map-impredicative-disj-Prop P1 P2))
+
+-- The impredicative encoding of negation --
+
+impredicative-neg-Prop :
+  {l : Level} → UU l → UU-Prop (lsuc l)
+impredicative-neg-Prop {l} A =
+  Π-Prop (UU-Prop l) (λ Q → function-Prop A Q)
+
+type-impredicative-neg-Prop :
+  {l : Level} → UU l → UU (lsuc l)
+type-impredicative-neg-Prop A =
+  type-Prop (impredicative-neg-Prop A)
+
+map-impredicative-neg-Prop :
+  {l : Level} (A : UU l) →
+  ¬ A → type-impredicative-neg-Prop A
+map-impredicative-neg-Prop A f Q a = ex-falso (f a)
+
+inv-map-impredicative-neg-Prop :
+  {l : Level} (A : UU l) →
+  type-impredicative-neg-Prop A → ¬ A
+inv-map-impredicative-neg-Prop A H a = H (neg-Prop' A) a a
+
+equiv-impredicative-neg-Prop :
+  {l : Level} (A : UU l) →
+  ¬ A ≃ type-impredicative-neg-Prop A
+equiv-impredicative-neg-Prop A =
+  equiv-iff
+    ( neg-Prop' A)
+    ( impredicative-neg-Prop A)
+    ( pair
+      ( map-impredicative-neg-Prop A)
+      ( inv-map-impredicative-neg-Prop A))
+
+-- The impredicative encoding of existential quantification --
+
+impredicative-exists-Prop :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) → UU-Prop (lsuc (l1 ⊔ l2))
+impredicative-exists-Prop {l1} {l2} {A} P =
+  Π-Prop
+    ( UU-Prop (l1 ⊔ l2))
+    ( λ Q → function-Prop ((x : A) → type-Prop (P x) → type-Prop Q) Q)
+
+type-impredicative-exists-Prop :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) → UU (lsuc (l1 ⊔ l2))
+type-impredicative-exists-Prop P =
+  type-Prop (impredicative-exists-Prop P)
+
+map-impredicative-exists-Prop :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) →
+  exists P → type-impredicative-exists-Prop P
+map-impredicative-exists-Prop {l1} {l2} {A} P =
+  map-universal-property-trunc-Prop
+    ( impredicative-exists-Prop P)
+    ( ind-Σ (λ x y Q h → h x y))
+
+inv-map-impredicative-exists-Prop :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) →
+  type-impredicative-exists-Prop P → exists P
+inv-map-impredicative-exists-Prop {A = A} P H =
+  H ( exists-Prop P)
+    ( λ x y → unit-trunc-Prop (Σ A (λ x → type-Prop (P x))) (pair x y))
+
+equiv-impredicative-exists-Prop :
+  {l1 l2 : Level} {A : UU l1} (P : A → UU-Prop l2) →
+  exists P ≃ type-impredicative-exists-Prop P
+equiv-impredicative-exists-Prop P =
+  equiv-iff
+    ( exists-Prop P)
+    ( impredicative-exists-Prop P)
+    ( pair
+      ( map-impredicative-exists-Prop P)
+      ( inv-map-impredicative-exists-Prop P))

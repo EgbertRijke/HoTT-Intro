@@ -187,6 +187,12 @@ one-ℤ = inr (inr zero-ℕ)
 in-pos : ℕ → ℤ
 in-pos n = inr (inr n)
 
+-- Inclusion of the natural numbers
+
+int-ℕ : ℕ → ℤ
+int-ℕ zero-ℕ = zero-ℤ
+int-ℕ (succ-ℕ n) = in-pos n
+
 -- Proposition 4.7.2
 
 ind-ℤ :

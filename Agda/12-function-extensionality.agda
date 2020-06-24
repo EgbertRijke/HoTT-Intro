@@ -207,12 +207,12 @@ abstract
   is-prop-Π = is-trunc-Π neg-one-𝕋
 
 Π-Prop :
-  {l1 l2 : Level} (P : UU-Prop l1) →
-  (type-Prop P → UU-Prop l2) → UU-Prop (l1 ⊔ l2)
-Π-Prop P Q =
+  {l1 l2 : Level} (A : UU l1) →
+  (A → UU-Prop l2) → UU-Prop (l1 ⊔ l2)
+Π-Prop A P =
   pair
-    ( (p : type-Prop P) → type-Prop (Q p))
-    ( is-prop-Π (λ p → is-prop-type-Prop (Q p)))
+    ( (x : A) → type-Prop (P x))
+    ( is-prop-Π (λ x → is-prop-type-Prop (P x)))
 
 abstract
   is-set-Π :
@@ -234,21 +234,36 @@ abstract
     is-trunc k B → is-trunc k (A → B)
   is-trunc-function-type k {A} {B} is-trunc-B =
     is-trunc-Π k {B = λ (x : A) → B} (λ x → is-trunc-B)
-  
+
+abstract
   is-prop-function-type :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     is-prop B → is-prop (A → B)
   is-prop-function-type = is-trunc-function-type neg-one-𝕋
 
+abstract
   is-set-function-type :
     {l1 l2 : Level} {A : UU l1} {B : UU l2} →
     is-set B → is-set (A → B)
   is-set-function-type = is-trunc-function-type zero-𝕋
 
+function-Prop :
+  {l1 l2 : Level} → UU l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
+function-Prop A P =
+  pair (A → type-Prop P) (is-prop-function-type (is-prop-type-Prop P))
+
+type-function-Prop :
+  {l1 l2 : Level} → UU l1 → UU-Prop l2 → UU (l1 ⊔ l2)
+type-function-Prop A P = type-Prop (function-Prop A P)
+
 implication-Prop :
   {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
 implication-Prop P Q =
   pair (type-Prop P → type-Prop Q) (is-prop-function-type (is-prop-type-Prop Q))
+
+type-implication-Prop :
+  {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU (l1 ⊔ l2)
+type-implication-Prop P Q = type-Prop (implication-Prop P Q)
 
 hom-Set :
   {l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU-Set (l1 ⊔ l2)
@@ -259,13 +274,17 @@ is-prop-neg :
   {l : Level} {A : UU l} → is-prop (¬ A)
 is-prop-neg {A = A} = is-prop-function-type is-prop-empty
 
+neg-Prop' :
+  {l1 : Level} → UU l1 → UU-Prop l1
+neg-Prop' A = pair (¬ A) is-prop-neg
+
 neg-Prop :
   {l1 : Level} → UU-Prop l1 → UU-Prop l1
-neg-Prop P = pair (¬ (type-Prop P)) is-prop-neg
+neg-Prop P = neg-Prop' (type-Prop P)
 
 dn-Prop :
   {l : Level} (A : UU l) → UU-Prop l
-dn-Prop A = pair (¬¬ A) is-prop-neg
+dn-Prop A = neg-Prop' (¬ A)
 
 
 {- The type theoretic principle of choice is the assertion that Π distributes

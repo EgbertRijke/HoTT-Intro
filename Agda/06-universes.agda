@@ -178,9 +178,12 @@ concatenate-eq-leq-ℕ n refl H = H
 
 -- Exercise 6.3 (b)
 
-reflexive-leq-ℕ : (n : ℕ) → n ≤ n
+reflexive-leq-ℕ : (n : ℕ) → leq-ℕ n n
 reflexive-leq-ℕ zero-ℕ = star
 reflexive-leq-ℕ (succ-ℕ n) = reflexive-leq-ℕ n
+
+leq-eq-ℕ : (m n : ℕ) → Id m n → leq-ℕ m n
+leq-eq-ℕ m .m refl = reflexive-leq-ℕ m
 
 transitive-leq-ℕ :
   (n m l : ℕ) → (n ≤ m) → (m ≤ l) → (n ≤ l)
