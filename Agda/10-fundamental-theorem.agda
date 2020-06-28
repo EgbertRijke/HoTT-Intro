@@ -849,9 +849,9 @@ abstract
     {l1 l2 l3 l4 : Level} {A : UU l1} {B : UU l2} {C : UU l3} {D : UU l4}
     (f : A → B) (g : C → D) (h : A → C) (i : B → D) (H : (i ∘ f) ~ (g ∘ h)) →
     is-equiv i → is-equiv f → is-equiv g → is-equiv h
-  is-equiv-top-is-equiv-left-square f g h i H Ei Ef Eg =
-    is-equiv-right-factor (i ∘ f) g h H Eg
-      ( is-equiv-comp (i ∘ f) i f refl-htpy Ef Ei)
+  is-equiv-top-is-equiv-left-square f g h i H is-equiv-i is-equiv-f is-equiv-g =
+    is-equiv-right-factor (i ∘ f) g h H is-equiv-g
+      ( is-equiv-comp' i f is-equiv-f is-equiv-i)
 
 abstract
   is-emb-htpy :

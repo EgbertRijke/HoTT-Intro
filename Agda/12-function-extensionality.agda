@@ -1201,11 +1201,9 @@ abstract
   uniqueness-coprod {Y = Y} i j H =
     is-equiv-is-equiv-precomp
       ( ind-coprod _ i j)
-      ( λ l X → is-equiv-right-factor
-        ( λ (s : Y → X) → pair (s ∘ i) (s ∘ j))
+      ( λ l X → is-equiv-right-factor'
         ( ev-inl-inr (λ t → X))
         ( precomp (ind-coprod (λ t → Y) i j) X)
-        ( λ s → refl)
         ( universal-property-coprod X)
         ( H _ X))
 
@@ -1227,7 +1225,9 @@ abstract
         ( Y))
       ( universal-property-coprod Y)
 
--- Exercise 9.10
+-- Exercise 12.10
+
+-- Exercise 12.10 (a)
 
 ev-star :
   {l : Level} (P : unit → UU l) → ((x : unit) → P x) → P star
@@ -1259,36 +1259,73 @@ equiv-ev-star' :
   {l : Level} (Y : UU l) → (unit → Y) ≃ Y
 equiv-ev-star' Y = pair (ev-star' Y) (universal-property-unit Y)
 
+-- Exercise 12.10 (b)
+
+pt : {l1 : Level} {X : UU l1} (x : X) → unit → X
+pt x y = x
+
 abstract
-  is-equiv-ind-unit-universal-property-unit :
+  is-equiv-pt-is-contr :
+    {l1 : Level} {X : UU l1} (x : X) →
+    is-contr X → is-equiv (pt x)
+  is-equiv-pt-is-contr x is-contr-X =
+    is-equiv-is-contr (pt x) is-contr-unit is-contr-X
+
+abstract
+  is-equiv-pt-universal-property-unit :
     {l1 : Level} (X : UU l1) (x : X) →
     ((l2 : Level) (Y : UU l2) → is-equiv (λ (f : X → Y) → f x)) →
-    is-equiv (ind-unit {P = λ t → X} x)
-  is-equiv-ind-unit-universal-property-unit X x H =
+    is-equiv (pt x)
+  is-equiv-pt-universal-property-unit X x H =
     is-equiv-is-equiv-precomp
-      ( ind-unit x)
-      ( λ l Y → is-equiv-right-factor
-        ( λ f → f x)
-        ( ev-star (λ t → Y))
-        ( precomp (ind-unit x) Y)
-        ( λ f → refl)
+      ( pt x)
+      ( λ l Y → is-equiv-right-factor'
+        ( ev-star' Y)
+        ( precomp (pt x) Y)
         ( universal-property-unit Y)
         ( H _ Y))
 
 abstract
-  universal-property-unit-is-equiv-ind-unit :
-    {l1 : Level} (X : UU l1) (x : X) →
-    is-equiv (ind-unit {P = λ t → X} x) →
-    ((l2 : Level) (Y : UU l2) → is-equiv (λ (f : X → Y) → f x))
-  universal-property-unit-is-equiv-ind-unit X x is-equiv-ind-unit l2 Y =
+  universal-property-unit-is-equiv-pt :
+    {l1 : Level} {X : UU l1} (x : X) →
+    is-equiv (pt x) →
+    ({l2 : Level} (Y : UU l2) → is-equiv (λ (f : X → Y) → f x))
+  universal-property-unit-is-equiv-pt x is-equiv-pt Y =
     is-equiv-comp
       ( λ f → f x)
-      ( ev-star (λ t → Y))
-      ( precomp (ind-unit x) Y)
+      ( ev-star' Y)
+      ( precomp (pt x) Y)
       ( λ f → refl)
-      ( is-equiv-precomp-is-equiv (ind-unit x) is-equiv-ind-unit Y)
+      ( is-equiv-precomp-is-equiv (pt x) is-equiv-pt Y)
       ( universal-property-unit Y)
-  
+
+abstract
+  universal-property-unit-is-contr :
+    {l1 : Level} {X : UU l1} (x : X) →
+    is-contr X →
+    ({l2 : Level} (Y : UU l2) → is-equiv (λ (f : X → Y) → f x))
+  universal-property-unit-is-contr x is-contr-X =
+    universal-property-unit-is-equiv-pt x
+      ( is-equiv-pt-is-contr x is-contr-X)
+
+abstract
+  is-equiv-diagonal-is-equiv-pt :
+    {l1 : Level} {X : UU l1} (x : X) →
+    is-equiv (pt x) →
+    ({l2 : Level} (Y : UU l2) → is-equiv (λ y → const X Y y))
+  is-equiv-diagonal-is-equiv-pt {X = X} x is-equiv-pt Y =
+    is-equiv-is-section-is-equiv
+      ( universal-property-unit-is-equiv-pt x is-equiv-pt Y)
+      ( refl-htpy)
+
+abstract
+  is-equiv-diagonal-is-contr :
+    {l1 : Level} {X : UU l1} (x : X) →
+    is-contr X →
+    ({l2 : Level} (Y : UU l2) → is-equiv (λ y → const X Y y))
+  is-equiv-diagonal-is-contr x is-contr-X =
+    is-equiv-diagonal-is-equiv-pt x (is-equiv-pt-is-contr x is-contr-X) 
+    
 -- Exercise 9.11
 
 Eq-sec :

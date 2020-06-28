@@ -774,6 +774,20 @@ abstract
   is-equiv-right-factor' g h =
     is-equiv-right-factor (g ∘ h) g h refl-htpy
 
+abstract
+  is-equiv-is-section-is-equiv :
+    {i j : Level} {A : UU i} {B : UU j} {f : A → B} {g : B → A} →
+    is-equiv f → (f ∘ g) ~ id → is-equiv g
+  is-equiv-is-section-is-equiv {B = B} {f = f} {g = g} is-equiv-f H =
+    is-equiv-right-factor id f g (htpy-inv H) is-equiv-f (is-equiv-id B)
+
+abstract
+  is-equiv-is-retraction-is-equiv :
+    {i j : Level} {A : UU i} {B : UU j} {f : A → B} {g : B → A} →
+    is-equiv f  → (g ∘ f) ~ id → is-equiv g
+  is-equiv-is-retraction-is-equiv {A = A} {f = f} {g = g} is-equiv-f H =
+    is-equiv-left-factor id g f (htpy-inv H) (is-equiv-id A) is-equiv-f
+    
 -- Exercise 8.5
 
 -- Exercise 8.5 (a)

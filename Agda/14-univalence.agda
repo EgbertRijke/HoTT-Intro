@@ -415,6 +415,29 @@ eq-false-equiv' e p (inr x) =
           ( pair true p)
           ( pair false (eq-true (map-equiv e false) x)))))
 
+-- Exercise 14.11
+
+square-htpy-eq :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {C : UU l3} (f : A → B) →
+  ( g h : B → C) →
+  ( (λ (p : (y : B) → Id (g y) (h y)) (x : A) → p (f x)) ∘ htpy-eq) ~
+  ( htpy-eq ∘ (ap (precomp f C)))
+square-htpy-eq f g .g refl = refl
+
+is-emb-precomp-is-surjective :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {f : A → B} →
+  is-surjective f → (C : UU-Set l3) → is-emb (precomp f (type-Set C))
+is-emb-precomp-is-surjective {f = f} is-surj-f C g h =
+  is-equiv-top-is-equiv-bottom-square
+    ( htpy-eq)
+    ( htpy-eq)
+    ( ap (precomp f (type-Set C)))
+    ( λ p a → p (f a))
+    ( square-htpy-eq f g h)
+    ( funext g h)
+    ( funext (g ∘ f) (h ∘ f))
+    {!!}
+
 {-
 eq-false-equiv :
   (e : bool ≃ bool) → Id (map-equiv e true) true → Id (map-equiv e false) false

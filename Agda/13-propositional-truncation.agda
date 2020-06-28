@@ -765,9 +765,13 @@ is-prop-exists P = is-prop-type-Prop (exists-Prop P)
 
 {- Surjective maps -}
 
+-- Definition 13.5.1
+
 is-surjective :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} → (A → B) → UU (l1 ⊔ l2)
 is-surjective {B = B} f = (y : B) → type-trunc-Prop (fib f y)
+
+-- Proposition 13.5.3
 
 dependent-universal-property-surj :
   (l : Level) {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
@@ -794,7 +798,6 @@ square-dependent-universal-property-surj :
       ( λ h y → const (type-trunc-Prop (fib f y)) (type-Prop (P y)) (h y))))
 square-dependent-universal-property-surj f P = refl-htpy
 
-{-
 dependent-universal-property-surj-is-surjective :
   {l1 l2 : Level} {A : UU l1} {B : UU l2} (f : A → B) →
   is-surjective f →
@@ -809,12 +812,20 @@ dependent-universal-property-surj-is-surjective f is-surj-f P =
       ( λ h y → const (type-trunc-Prop (fib f y)) (type-Prop (P y)) (h y))
       ( is-equiv-postcomp-Π
         ( λ y p z → p)
-        {!!})
+        ( λ y →
+          is-equiv-diagonal-is-contr
+            ( is-surj-f y)
+            ( is-contr-is-prop-inh
+              ( is-prop-type-trunc-Prop (fib f y))
+              ( is-surj-f y))
+            ( type-Prop (P y))))
       ( is-equiv-postcomp-Π
         ( λ b g → g ∘ (unit-trunc-Prop (fib f b)))
         ( λ b → is-propositional-truncation-trunc-Prop (fib f b) (P b))))
     ( is-equiv-map-reduce-Π-fib f ( λ y z → type-Prop (P y)))
--}
+
+-- Theorem 13.5.5
+
 
 --------------------------------------------------------------------------------
 
@@ -964,16 +975,27 @@ is-equiv-ev-disj-Prop P Q R =
     ( is-prop-type-Prop (conj-Prop (hom-Prop P R) (hom-Prop Q R)))
     ( inv-ev-disj-Prop P Q R)
 
--- Exercise 13.5
+-- Exercise 13.9
 
-{-
-impredicative-trunc-Prop :
-  {l : Level} → UU l → UU-Prop (lsuc l)
-impredicative-trunc-Prop {l} A =
-  (P : UU-Prop l) → (A → type-Prop P) → type-Prop P
--}
+map-dn-trunc-Prop :
+  {l : Level} (A : UU l) → ¬¬ (type-trunc-Prop A) → ¬¬ A
+map-dn-trunc-Prop A =
+  dn-extend (map-universal-property-trunc-Prop (dn-Prop A) intro-dn)
 
---------------------------------------------------------------------------------
+inv-map-dn-trunc-Prop :
+  {l : Level} (A : UU l) → ¬¬ A → ¬¬ (type-trunc-Prop A)
+inv-map-dn-trunc-Prop A =
+  dn-extend (λ a → intro-dn (unit-trunc-Prop A a))
+
+equiv-dn-trunc-Prop :
+  {l : Level} (A : UU l) → ¬¬ (type-trunc-Prop A) ≃ ¬¬ A
+equiv-dn-trunc-Prop A =
+  equiv-iff
+    ( dn-Prop (type-trunc-Prop A))
+    ( dn-Prop A)
+    ( pair
+      ( map-dn-trunc-Prop A)
+      ( inv-map-dn-trunc-Prop A))
 
 -- Exercise 13.10
 
@@ -1170,3 +1192,72 @@ equiv-impredicative-exists-Prop P =
     ( pair
       ( map-impredicative-exists-Prop P)
       ( inv-map-impredicative-exists-Prop P))
+
+-- The impredicative encoding of the based identity type of a set
+
+impredicative-based-id-Prop :
+  {l : Level} (A : UU-Set l) (a x : type-Set A) → UU-Prop (lsuc l)
+impredicative-based-id-Prop {l} A a x =
+  Π-Prop (type-Set A → UU-Prop l) (λ Q → hom-Prop (Q a) (Q x))
+
+type-impredicative-based-id-Prop :
+  {l : Level} (A : UU-Set l) (a x : type-Set A) → UU (lsuc l)
+type-impredicative-based-id-Prop A a x =
+  type-Prop (impredicative-based-id-Prop A a x)
+
+map-impredicative-based-id-Prop :
+  {l : Level} (A : UU-Set l) (a x : type-Set A) →
+  Id a x → type-impredicative-based-id-Prop A a x
+map-impredicative-based-id-Prop A a .a refl Q p = p
+
+inv-map-impredicative-based-id-Prop :
+  {l : Level} (A : UU-Set l) (a x : type-Set A) →
+  type-impredicative-based-id-Prop A a x → Id a x
+inv-map-impredicative-based-id-Prop A a x H =
+  H (λ x → pair (Id a x) (is-set-type-Set A a x)) refl
+
+equiv-impredicative-based-id-Prop :
+  {l : Level} (A : UU-Set l) (a x : type-Set A) →
+  Id a x ≃ type-impredicative-based-id-Prop A a x
+equiv-impredicative-based-id-Prop A a x =
+  equiv-iff
+    ( pair (Id a x) (is-set-type-Set A a x))
+    ( impredicative-based-id-Prop A a x)
+    ( pair
+      ( map-impredicative-based-id-Prop A a x)
+      ( inv-map-impredicative-based-id-Prop A a x))
+
+-- The impredicative encoding of Martin-Löf's identity type
+
+impredicative-id-Prop :
+  {l : Level} (A : UU-Set l) (x y : type-Set A) → UU-Prop (lsuc l)
+impredicative-id-Prop {l} A x y =
+  Π-Prop (type-Set A → type-Set A → UU-Prop l)
+    (λ Q → function-Prop ((a : type-Set A) → type-Prop (Q a a)) (Q x y))
+
+type-impredicative-id-Prop :
+  {l : Level} (A : UU-Set l) (x y : type-Set A) → UU (lsuc l)
+type-impredicative-id-Prop A x y =
+  type-Prop (impredicative-id-Prop A x y)
+
+map-impredicative-id-Prop :
+  {l : Level} (A : UU-Set l) (x y : type-Set A) →
+  Id x y → type-impredicative-id-Prop A x y
+map-impredicative-id-Prop A x .x refl Q r = r x
+
+inv-map-impredicative-id-Prop :
+  {l : Level} (A : UU-Set l ) (x y : type-Set A) →
+  type-impredicative-id-Prop A x y → Id x y
+inv-map-impredicative-id-Prop A x y H =
+  H (λ a b → pair (Id a b) (is-set-type-Set A a b)) (λ a → refl)
+
+equiv-impredicative-id-Prop :
+  {l : Level} (A : UU-Set l) (x y : type-Set A) →
+  Id x y ≃ type-impredicative-id-Prop A x y
+equiv-impredicative-id-Prop A x y =
+  equiv-iff
+    ( pair (Id x y) (is-set-type-Set A x y))
+    ( impredicative-id-Prop A x y)
+    ( pair
+      ( map-impredicative-id-Prop A x y)
+      ( inv-map-impredicative-id-Prop A x y))
