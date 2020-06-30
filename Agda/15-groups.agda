@@ -383,19 +383,19 @@ group-loop-space A a is-set-Ω =
       ( pair inv (pair left-inv right-inv)))
 
 set-loop-space-1-type :
-  {l : Level} (A : 1-type l) (a : pr1 A) → UU-Set l
-set-loop-space-1-type (pair A is-1-type-A) a =
-  set-loop-space A a (is-1-type-A a a)
+  {l : Level} (A : UU-1-Type l) (a : type-1-Type A) → UU-Set l
+set-loop-space-1-type A a =
+  set-loop-space (type-1-Type A) a (is-1-type-type-1-Type A a a)
 
 semi-group-loop-space-1-type :
-  {l : Level} (A : 1-type l) (a : pr1 A) → Semi-Group l
-semi-group-loop-space-1-type (pair A is-1-type-A) a =
-  semi-group-loop-space A a (is-1-type-A a a)
+  {l : Level} (A : UU-1-Type l) (a : type-1-Type A) → Semi-Group l
+semi-group-loop-space-1-type A a =
+  semi-group-loop-space (type-1-Type A) a (is-1-type-type-1-Type A a a)
 
 group-loop-space-1-type :
-  {l : Level} (A : 1-type l) (a : pr1 A) → Group l
-group-loop-space-1-type (pair A is-1-type-A) a =
-  group-loop-space A a (is-1-type-A a a)
+  {l : Level} (A : UU-1-Type l) (a : type-1-Type A) → Group l
+group-loop-space-1-type A a =
+  group-loop-space (type-1-Type A) a (is-1-type-type-1-Type A a a)
 
 --------------------------------------------------------------------------------
 
@@ -1342,4 +1342,3 @@ preserves-all-hom-Group G H f =
       ( preserves-inverses-group-hom G H f))
 
 --------------------------------------------------------------------------------
-

@@ -335,6 +335,16 @@ inv-map-equiv :
   {i j : Level} {A : UU i} {B : UU j} → (A ≃ B) → (B → A)
 inv-map-equiv e = inv-is-equiv (is-equiv-map-equiv e)
 
+issec-inv-map-equiv :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) →
+  ((map-equiv e) ∘ (inv-map-equiv e)) ~ id
+issec-inv-map-equiv e = issec-inv-is-equiv (is-equiv-map-equiv e)
+
+isretr-inv-map-equiv :
+  {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) →
+  ((inv-map-equiv e) ∘ (map-equiv e)) ~ id
+isretr-inv-map-equiv e = isretr-inv-is-equiv (is-equiv-map-equiv e)
+
 is-equiv-inv-map-equiv :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) → is-equiv (inv-map-equiv e)
 is-equiv-inv-map-equiv e =

@@ -833,14 +833,65 @@ abstract
 
 -- Exercise 7.2
 
-path-adjointness-equiv :
+eq-transpose-equiv :
   {i j : Level} {A : UU i} {B : UU j} (e : A ≃ B) (x : A) (y : B) →
   (Id (map-equiv e x) y) ≃ (Id x (inv-map-equiv e y))
-path-adjointness-equiv e x y =
+eq-transpose-equiv e x y =
   ( inv-equiv (equiv-ap e x (inv-map-equiv e y))) ∘e
   ( equiv-concat'
     ( map-equiv e x)
-    ( inv (issec-inv-is-equiv (is-equiv-map-equiv e) y)))
+    ( inv (issec-inv-map-equiv e y)))
+
+map-eq-transpose-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) {x : A} {y : B} →
+  Id (map-equiv e x) y → Id x (inv-map-equiv e y)
+map-eq-transpose-equiv e {x} {y} = map-equiv (eq-transpose-equiv e x y)
+
+triangle-eq-transpose-equiv :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) {x : A} {y : B}
+  (p : Id (map-equiv e x) y) →
+  Id ( ( ap (map-equiv e) (map-eq-transpose-equiv e p)) ∙
+       ( issec-inv-map-equiv e y))
+     ( p)
+triangle-eq-transpose-equiv e {x} {y} p =
+  ( ap ( concat' (map-equiv e x) (issec-inv-map-equiv e y))
+       ( issec-inv-map-equiv
+         ( equiv-ap e x (inv-map-equiv e y))
+         ( p ∙ inv (issec-inv-map-equiv e y)))) ∙
+  ( ( assoc p (inv (issec-inv-map-equiv e y)) (issec-inv-map-equiv e y)) ∙
+    ( ( ap (concat p y) (left-inv (issec-inv-map-equiv e y))) ∙ right-unit))
+
+map-eq-transpose-equiv' :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) {a : A} {b : B} →
+  Id b (map-equiv e a) → Id (inv-map-equiv e b) a
+map-eq-transpose-equiv' e p = inv (map-eq-transpose-equiv e (inv p))
+
+triangle-eq-transpose-equiv' :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} (e : A ≃ B) {x : A} {y : B} →
+  (p : Id y (map-equiv e x)) →
+  Id ( (issec-inv-map-equiv e y) ∙ p)
+     ( ap (map-equiv e) (map-eq-transpose-equiv' e p))
+triangle-eq-transpose-equiv' e {x} {y} p =
+  inv-map-equiv
+    ( equiv-ap
+      ( equiv-inv (map-equiv e (inv-map-equiv e y)) (map-equiv e x))
+      ( (issec-inv-map-equiv e y) ∙ p)
+      ( ap (map-equiv e) (map-eq-transpose-equiv' e p)))
+    ( ( distributive-inv-concat (issec-inv-map-equiv e y) p) ∙
+      ( ( inv
+          ( con-inv
+            ( ap (map-equiv e) (inv (map-eq-transpose-equiv' e p)))
+            ( issec-inv-map-equiv e y)
+            ( inv p)
+            ( ( ap ( concat' (map-equiv e x) (issec-inv-map-equiv e y))
+                   ( ap ( ap (map-equiv e))
+                        ( inv-inv
+                          ( inv-map-equiv
+                            ( equiv-ap e x (inv-map-equiv e y))
+                            ( ( inv p) ∙
+                              ( inv (issec-inv-map-equiv e y))))))) ∙
+              ( triangle-eq-transpose-equiv e (inv p))))) ∙
+        ( ap-inv (map-equiv e) (map-eq-transpose-equiv' e p))))
 
 -- Exercise 7.3
 

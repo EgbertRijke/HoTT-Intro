@@ -268,8 +268,8 @@ abstract
       refl-Eq-ℕ
       eq-Eq-ℕ
 
-set-ℕ : UU-Set lzero
-set-ℕ = pair ℕ is-set-ℕ
+ℕ-Set : UU-Set lzero
+ℕ-Set = pair ℕ is-set-ℕ
 
 -- Section 8.3 General truncation levels
 
@@ -304,24 +304,79 @@ is-trunc : {i : Level} (k : 𝕋) → UU i → UU i
 is-trunc neg-two-𝕋 A = is-contr A
 is-trunc (succ-𝕋 k) A = (x y : A) → is-trunc k (Id x y)
 
-1-type : (l : Level) → UU (lsuc l)
-1-type l = Σ (UU l) (is-trunc one-𝕋)
+-- We introduce some notation for the special case of 1-types --
 
-_Truncated-Type_ : 𝕋 → (l : Level) → UU (lsuc l)
-k Truncated-Type l = Σ (UU l) (is-trunc k)
+is-1-type : {l : Level} → UU l → UU l
+is-1-type = is-trunc one-𝕋
+
+UU-1-Type : (l : Level) → UU (lsuc l)
+UU-1-Type l = Σ (UU l) is-1-type
+
+type-1-Type :
+  {l : Level} → UU-1-Type l → UU l
+type-1-Type = pr1
+
+is-1-type-type-1-Type :
+  {l : Level} (A : UU-1-Type l) → is-1-type (type-1-Type A)
+is-1-type-type-1-Type = pr2
+
+-- We introduce some notation for the special case of 2-types --
+
+is-2-type : {l : Level} → UU l → UU l
+is-2-type = is-trunc (succ-𝕋 one-𝕋)
+
+UU-2-Type : (l : Level) → UU (lsuc l)
+UU-2-Type l = Σ (UU l) is-2-type
+
+type-2-Type :
+  {l : Level} → UU-2-Type l → UU l
+type-2-Type = pr1
+
+is-2-type-type-2-Type :
+  {l : Level} (A : UU-2-Type l) → is-2-type (type-2-Type A)
+is-2-type-type-2-Type = pr2
+
+-- We introduce some notation for the universe of k-truncated types --
+
+UU-Truncated-Type : 𝕋 → (l : Level) → UU (lsuc l)
+UU-Truncated-Type k l = Σ (UU l) (is-trunc k)
+
+type-Truncated-Type :
+  (k : 𝕋) {l : Level} → UU-Truncated-Type k l → UU l
+type-Truncated-Type k = pr1
+
+is-trunc-type-Truncated-Type :
+  (k : 𝕋) {l : Level} (A : UU-Truncated-Type k l) →
+  is-trunc k (type-Truncated-Type k A)
+is-trunc-type-Truncated-Type k = pr2
+
+-- We show that if a type is k-truncated, then it is (k+1)-truncated. --
 
 abstract
   is-trunc-succ-is-trunc :
-    {i : Level} (k : 𝕋) (A : UU i) →
+    (k : 𝕋) {i : Level} {A : UU i} →
     is-trunc k A → is-trunc (succ-𝕋 k) A
-  is-trunc-succ-is-trunc neg-two-𝕋 A H = is-prop-is-contr H
-  is-trunc-succ-is-trunc (succ-𝕋 k) A H x y =
-    is-trunc-succ-is-trunc k (Id x y) (H x y)
+  is-trunc-succ-is-trunc neg-two-𝕋 H =
+    is-prop-is-contr H
+  is-trunc-succ-is-trunc (succ-𝕋 k) H x y =
+    is-trunc-succ-is-trunc k (H x y)
 
-truncated-type-succ-𝕋 :
-  (l : Level) (k : 𝕋) → k Truncated-Type l → (succ-𝕋 k) Truncated-Type l
-truncated-type-succ-𝕋 l k (pair A is-trunc-A) =
-  pair A (is-trunc-succ-is-trunc k A is-trunc-A)
+truncated-type-succ-Truncated-Type :
+  (k : 𝕋) {l : Level} → UU-Truncated-Type k l → UU-Truncated-Type (succ-𝕋 k) l
+truncated-type-succ-Truncated-Type k A =
+  pair
+    ( type-Truncated-Type k A)
+    ( is-trunc-succ-is-trunc k (is-trunc-type-Truncated-Type k A))
+
+set-Prop :
+  {l : Level} → UU-Prop l → UU-Set l
+set-Prop P = truncated-type-succ-Truncated-Type neg-one-𝕋 P
+
+1-type-Set :
+  {l : Level} → UU-Set l → UU-1-Type l
+1-type-Set A = truncated-type-succ-Truncated-Type zero-𝕋 A
+
+-- We show that k-truncated types are closed under equivalences --
 
 abstract
   is-trunc-is-equiv :
@@ -381,6 +436,8 @@ abstract
     is-set A → is-set B
   is-set-equiv' = is-trunc-equiv' zero-𝕋
 
+-- We show that if A embeds into a (k+1)-type B, then A is a (k+1)-type. --
+
 abstract
   is-trunc-succ-is-emb : {i j : Level} (k : 𝕋) {A : UU i} {B : UU j}
     (f : A → B) → is-emb f → is-trunc (succ-𝕋 k) B → is-trunc (succ-𝕋 k) A
@@ -407,7 +464,7 @@ abstract
       ( H x)
 
 trunc-pr1 :
-  {i j : Level} (k : 𝕋) {A : UU i} (B : A → k Truncated-Type j) →
+  {i j : Level} (k : 𝕋) {A : UU i} (B : A → UU-Truncated-Type k j) →
   trunc-map k (Σ A (λ x → pr1 (B x))) A
 trunc-pr1 k B =
   pair pr1 (is-trunc-pr1-is-trunc-fam k (λ x → pr1 (B x)) (λ x → pr2 (B x)))
@@ -671,7 +728,7 @@ abstract
     is-trunc k A → (x y : A) → is-trunc k (Id x y)
   is-trunc-Id neg-two-𝕋 is-trunc-A = is-prop-is-contr is-trunc-A
   is-trunc-Id (succ-𝕋 k) is-trunc-A x y =
-    is-trunc-succ-is-trunc k (Id x y) (is-trunc-A x y)
+    is-trunc-succ-is-trunc k {A = Id x y} (is-trunc-A x y)
 
 -- Exercise 8.2 (c)
 
@@ -800,7 +857,7 @@ set-coprod (pair A is-set-A) (pair B is-set-B) =
 
 abstract
   is-set-unit : is-set unit
-  is-set-unit = is-trunc-succ-is-trunc neg-one-𝕋 unit is-prop-unit
+  is-set-unit = is-trunc-succ-is-trunc neg-one-𝕋 is-prop-unit
 
 set-unit : UU-Set lzero
 set-unit = pair unit is-set-unit
@@ -1011,7 +1068,7 @@ abstract
     {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : UU l2}
     (f : A → B) → is-trunc-map k f → is-trunc-map (succ-𝕋 k) f
   is-trunc-map-succ-is-trunc-map k f is-trunc-f b =
-    is-trunc-succ-is-trunc k (fib f b) (is-trunc-f b)
+    is-trunc-succ-is-trunc k (is-trunc-f b)
 
 --------------------------------------------------------------------------------
 

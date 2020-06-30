@@ -84,7 +84,7 @@ identifies-Eq-Rel {A = A} R f =
 precomp-map-universal-property-Eq-Rel :
   {l l1 l2 l3 : Level} {A : UU l1} (R : Eq-Rel l2 A)
   {B : UU-Set l3} (f : A → type-Set B) (H : identifies-Eq-Rel R f) →
-  (X : UU-Set l) → (hom-Set B X) → Σ (A → type-Set X) (identifies-Eq-Rel R)
+  (X : UU-Set l) → (type-hom-Set B X) → Σ (A → type-Set X) (identifies-Eq-Rel R)
 precomp-map-universal-property-Eq-Rel R f H X g =
   pair (g ∘ f) (λ x y r → ap g (H x y r))
 

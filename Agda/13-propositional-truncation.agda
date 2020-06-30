@@ -1193,7 +1193,7 @@ equiv-impredicative-exists-Prop P =
       ( map-impredicative-exists-Prop P)
       ( inv-map-impredicative-exists-Prop P))
 
--- The impredicative encoding of the based identity type of a set
+-- The impredicative encoding of the based identity type of a set --
 
 impredicative-based-id-Prop :
   {l : Level} (A : UU-Set l) (a x : type-Set A) → UU-Prop (lsuc l)
@@ -1227,7 +1227,7 @@ equiv-impredicative-based-id-Prop A a x =
       ( map-impredicative-based-id-Prop A a x)
       ( inv-map-impredicative-based-id-Prop A a x))
 
--- The impredicative encoding of Martin-Löf's identity type
+-- The impredicative encoding of Martin-Löf's identity type of a set --
 
 impredicative-id-Prop :
   {l : Level} (A : UU-Set l) (x y : type-Set A) → UU-Prop (lsuc l)
@@ -1261,3 +1261,5 @@ equiv-impredicative-id-Prop A x y =
     ( pair
       ( map-impredicative-id-Prop A x y)
       ( inv-map-impredicative-id-Prop A x y))
+
+-- The impredicative encoding of the based identity type of a 1-type --
