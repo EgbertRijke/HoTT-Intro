@@ -31,15 +31,15 @@ As usual, the sequential colimit is characterized by its universal property.
 \item A \define{(sequential) cocone} on a type sequence $\mathcal{A}$ with vertex $B$ consists of
 \begin{align*}
 h & : \prd{n:\N} A_n\to B \\
-H & : \prd{n:\N} f_n\htpy f_{n+1}\circ H_n.
+H & : \prd{n:\N} h_n\htpy h_{n+1}\circ f_n.
 \end{align*}
-We write $\mathsf{cocone}(B)$ for the type of cones with vertex $X$.
-\item Given a cone $(h,H)$ with vertex $B$ on a type sequence $\mathcal{A}$ we define the map
+We write $\mathsf{cocone}(B)$ for the type of cocones with vertex $B$.
+\item Given a cocone $(h,H)$ with vertex $B$ on a type sequence $\mathcal{A}$ we define the map
 \begin{equation*}
-\mathsf{cocone\usc{}map}(h,H) : (B\to C)\to \mathsf{cocone}(B)
+\mathsf{cocone\usc{}map}(h,H) : (B\to C)\to \mathsf{cocone}(C)
 \end{equation*}
-given by $f\mapsto (f\circ h,\lam{n}{x}\mathsf{ap}_f(H_n(x)))$. 
-\item We say that a cone $(h,H)$ with vertex $B$ is \define{colimiting} if $\mathsf{cocone\usc{}map}(h,H)$ is an equivalence for any type $C$. 
+given by $f\mapsto (\lam{n}f\circ h_n,\lam{n}{x}\mathsf{ap}_f(H_n(x)))$.
+\item We say that a cocone $(h,H)$ with vertex $B$ is \define{colimiting} if $\mathsf{cocone\usc{}map}(h,H)$ is an equivalence for any type $C$.
 \end{enumerate}
 \end{defn}
 
