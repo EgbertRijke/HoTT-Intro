@@ -181,10 +181,6 @@ is-set-type-Set :
   {l : Level} (X : UU-Set l) → is-set (type-Set X)
 is-set-type-Set X = pr2 X
 
-type-hom-Set :
-  {l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU (l1 ⊔ l2)
-type-hom-Set A B = type-Set A → type-Set B
-
 axiom-K :
   {i : Level} → UU i → UU i
 axiom-K A = (x : A) (p : Id x x) → Id refl p

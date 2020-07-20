@@ -188,6 +188,28 @@ commutative-add-ℕ zero-ℕ y = left-unit-law-add-ℕ y
 commutative-add-ℕ (succ-ℕ x) y =
   (left-successor-law-add-ℕ x y) ∙ (ap succ-ℕ (commutative-add-ℕ x y))
 
+-- We add some easy consequences that are mainly of bureaucratic nature
+
+left-one-law-add-ℕ :
+  (x : ℕ) → Id (add-ℕ one-ℕ x) (succ-ℕ x)
+left-one-law-add-ℕ x =
+  ( left-successor-law-add-ℕ zero-ℕ x) ∙
+  ( ap succ-ℕ (left-unit-law-add-ℕ x))
+
+right-one-law-add-ℕ :
+  (x : ℕ) → Id (add-ℕ x one-ℕ) (succ-ℕ x)
+right-one-law-add-ℕ x = refl
+
+left-two-law-add-ℕ :
+  (x : ℕ) → Id (add-ℕ two-ℕ x) (succ-ℕ (succ-ℕ x))
+left-two-law-add-ℕ x =
+  ( left-successor-law-add-ℕ one-ℕ x) ∙
+  ( ap succ-ℕ (left-one-law-add-ℕ x))
+
+right-two-law-add-ℕ :
+  (x : ℕ) → Id (add-ℕ x two-ℕ) (succ-ℕ (succ-ℕ x))
+right-two-law-add-ℕ x = refl
+
 --------------------------------------------------------------------------------
 
 -- Exercises
@@ -317,6 +339,20 @@ abstract
   associative-mul-ℕ (succ-ℕ x) y z =
     ( right-distributive-mul-add-ℕ (mul-ℕ x y) y z) ∙ 
     ( ap (add-ℕ' (mul-ℕ y z)) (associative-mul-ℕ x y z))
+
+-- We add some convenient corollaries
+
+left-two-law-mul-ℕ :
+  (x : ℕ) → Id (mul-ℕ two-ℕ x) (add-ℕ x x)
+left-two-law-mul-ℕ x =
+  ( left-successor-law-mul-ℕ one-ℕ x) ∙
+  ( ap (add-ℕ' x) (left-unit-law-mul-ℕ x))
+
+right-two-law-mul-ℕ :
+  (x : ℕ) → Id (mul-ℕ x two-ℕ) (add-ℕ x x)
+right-two-law-mul-ℕ x =
+  ( right-successor-law-mul-ℕ x one-ℕ) ∙
+  ( ap (add-ℕ x) (right-unit-law-mul-ℕ x))
 
 -- Exercise 5.6
 
@@ -748,3 +784,54 @@ left-distributive-mul-add-ℤ m k l =
       ( ap-add-ℤ (commutative-mul-ℤ k m) (commutative-mul-ℤ l m)))
 
 --------------------------------------------------------------------------------
+
+negatives-add-ℤ :
+  (x y : ℕ) → Id (add-ℤ (in-neg x) (in-neg y)) (in-neg (succ-ℕ (add-ℕ x y)))
+negatives-add-ℤ zero-ℕ y = ap (inl ∘ succ-ℕ) (inv (left-unit-law-add-ℕ y))
+negatives-add-ℤ (succ-ℕ x) y =
+  ( ap pred-ℤ (negatives-add-ℤ x y)) ∙
+  ( ap (inl ∘ succ-ℕ) (inv (left-successor-law-add-ℕ x y)))
+
+add-one-left-ℤ :
+  (x : ℤ) → Id (add-ℤ one-ℤ x) (succ-ℤ x)
+add-one-left-ℤ x = refl
+
+add-one-right-ℤ :
+  (x : ℤ) → Id (add-ℤ x one-ℤ) (succ-ℤ x)
+add-one-right-ℤ x = commutative-add-ℤ x one-ℤ
+
+add-neg-one-left-ℤ :
+  (x : ℤ) → Id (add-ℤ neg-one-ℤ x) (pred-ℤ x)
+add-neg-one-left-ℤ x = refl
+
+add-neg-one-right-ℤ :
+  (x : ℤ) → Id (add-ℤ x neg-one-ℤ) (pred-ℤ x)
+add-neg-one-right-ℤ x = commutative-add-ℤ x neg-one-ℤ
+
+--------------------------------------------------------------------------------
+
+comp-even-div-two-ℕ :
+  (n : ℕ) → Id (div-two-ℕ (mul-ℕ two-ℕ n)) n
+comp-even-div-two-ℕ zero-ℕ = refl
+comp-even-div-two-ℕ (succ-ℕ n) =
+  ( ap div-two-ℕ (right-successor-law-mul-ℕ two-ℕ n)) ∙
+  ( ( ap div-two-ℕ (left-two-law-add-ℕ (mul-ℕ two-ℕ n))) ∙
+    ( ap succ-ℕ (comp-even-div-two-ℕ n)))
+
+comp-odd-div-two-ℕ :
+  (n : ℕ) → Id (div-two-ℕ (succ-ℕ (mul-ℕ two-ℕ n))) n
+comp-odd-div-two-ℕ zero-ℕ = refl
+comp-odd-div-two-ℕ (succ-ℕ n) =
+   ( ap ( div-two-ℕ ∘ succ-ℕ)
+        ( ( right-successor-law-mul-ℕ two-ℕ n) ∙
+          ( left-two-law-add-ℕ (mul-ℕ two-ℕ n)))) ∙
+   ( ap succ-ℕ (comp-odd-div-two-ℕ n))
+
+{-
+comp-triangular-number :
+  (n : ℕ) → Id (triangular-number n) (div-two-ℕ (mul-ℕ n (succ-ℕ n)))
+comp-triangular-number zero-ℕ = refl
+comp-triangular-number (succ-ℕ n) =
+  inv (comp-even-div-two-ℕ (triangular-number (succ-ℕ n))) ∙
+  ap div-two-ℕ {!!}
+-}

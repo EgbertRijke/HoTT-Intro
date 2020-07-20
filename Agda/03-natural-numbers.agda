@@ -13,7 +13,7 @@ data ℕ : UU lzero where
   zero-ℕ : ℕ
   succ-ℕ : ℕ → ℕ
 
-{- We define the numbers one-ℕ to ten-ℕ -}
+{- We define the numbers one-ℕ to twenty-ℕ -}
 
 one-ℕ : ℕ
 one-ℕ = succ-ℕ zero-ℕ
@@ -45,6 +45,36 @@ nine-ℕ = succ-ℕ eight-ℕ
 ten-ℕ : ℕ
 ten-ℕ = succ-ℕ nine-ℕ
 
+eleven-ℕ : ℕ
+eleven-ℕ = succ-ℕ ten-ℕ
+
+twelve-ℕ : ℕ
+twelve-ℕ = succ-ℕ eleven-ℕ
+
+thirteen-ℕ : ℕ
+thirteen-ℕ = succ-ℕ twelve-ℕ
+
+fourteen-ℕ : ℕ
+fourteen-ℕ = succ-ℕ thirteen-ℕ
+
+fifteen-ℕ : ℕ
+fifteen-ℕ = succ-ℕ fourteen-ℕ
+
+sixteen-ℕ : ℕ
+sixteen-ℕ = succ-ℕ fifteen-ℕ
+
+seventeen-ℕ : ℕ
+seventeen-ℕ = succ-ℕ sixteen-ℕ
+
+eighteen-ℕ : ℕ
+eighteen-ℕ = succ-ℕ seventeen-ℕ
+
+nineteen-ℕ : ℕ
+nineteen-ℕ = succ-ℕ eighteen-ℕ
+
+twenty-ℕ : ℕ
+twenty-ℕ = succ-ℕ nineteen-ℕ
+
 -- Remark 3.1.2
 
 ind-ℕ : {i : Level} {P : ℕ → UU i} → P zero-ℕ → ((n : ℕ) → P n → P(succ-ℕ n)) → ((n : ℕ) → P n)
@@ -70,6 +100,19 @@ add-ℕ' m n = add-ℕ n m
 
 -- Exercise 3.1
 
+mul-ℕ : ℕ → (ℕ → ℕ)
+mul-ℕ zero-ℕ n = zero-ℕ
+mul-ℕ (succ-ℕ m) n = add-ℕ (mul-ℕ m n) n
+
+mul-ℕ' : ℕ → (ℕ → ℕ)
+mul-ℕ' x y = mul-ℕ y x
+
+pow-ℕ : ℕ → (ℕ → ℕ)
+pow-ℕ m zero-ℕ = one-ℕ
+pow-ℕ m (succ-ℕ n) = mul-ℕ m (pow-ℕ m n)
+
+-- Exercise 3.2
+
 min-ℕ : ℕ → (ℕ → ℕ)
 min-ℕ zero-ℕ n = zero-ℕ
 min-ℕ (succ-ℕ m) zero-ℕ = zero-ℕ
@@ -80,28 +123,17 @@ max-ℕ zero-ℕ n = n
 max-ℕ (succ-ℕ m) zero-ℕ = succ-ℕ m
 max-ℕ (succ-ℕ m) (succ-ℕ n) = succ-ℕ (max-ℕ m n)
 
--- Exercise 3.2
-
-mul-ℕ : ℕ → (ℕ → ℕ)
-mul-ℕ zero-ℕ n = zero-ℕ
-mul-ℕ (succ-ℕ m) n = add-ℕ (mul-ℕ m n) n
-
-mul-ℕ' : ℕ → (ℕ → ℕ)
-mul-ℕ' x y = mul-ℕ y x
-
 -- Exercise 3.3
 
-pow-ℕ : ℕ → (ℕ → ℕ)
-pow-ℕ m zero-ℕ = one-ℕ
-pow-ℕ m (succ-ℕ n) = mul-ℕ m (pow-ℕ m n)
-
--- Exercise 3.4
+triangular-number : ℕ → ℕ
+triangular-number zero-ℕ = zero-ℕ
+triangular-number (succ-ℕ n) = add-ℕ (triangular-number n) (succ-ℕ n)
 
 factorial : ℕ → ℕ
 factorial zero-ℕ = one-ℕ
-factorial (succ-ℕ m) = mul-ℕ (succ-ℕ m) (factorial m)
+factorial (succ-ℕ m) = mul-ℕ (factorial m) (succ-ℕ m)
 
--- Exercise 3.5
+-- Exercise 3.4
 
 _choose_ : ℕ → ℕ → ℕ
 zero-ℕ choose zero-ℕ = one-ℕ
@@ -109,7 +141,8 @@ zero-ℕ choose succ-ℕ k = zero-ℕ
 (succ-ℕ n) choose zero-ℕ = one-ℕ
 (succ-ℕ n) choose (succ-ℕ k) = add-ℕ (n choose k) (n choose (succ-ℕ k))
 
--- Exercise 3.6
+
+-- Exercise 3.5
 
 Fibonacci : ℕ → ℕ
 Fibonacci zero-ℕ = zero-ℕ
@@ -160,3 +193,22 @@ Fibo-function =
 Fibo : ℕ → ℕ
 Fibo k = Fibo-function k zero-ℕ
 
+-- Exercise 3.6
+
+div-two-ℕ : ℕ → ℕ
+div-two-ℕ zero-ℕ = zero-ℕ
+div-two-ℕ (succ-ℕ zero-ℕ) = zero-ℕ
+div-two-ℕ (succ-ℕ (succ-ℕ n)) = succ-ℕ (div-two-ℕ n)
+
+div-two-zero-ℕ : ℕ → ℕ
+div-two-zero-ℕ = const ℕ ℕ zero-ℕ
+
+div-two-succ-ℕ : (ℕ → ℕ) → (ℕ → ℕ)
+div-two-succ-ℕ f =
+  shift-two (f one-ℕ) (succ-ℕ (f zero-ℕ)) (const ℕ ℕ zero-ℕ)
+
+div-two-function : ℕ → ℕ → ℕ
+div-two-function = ind-ℕ div-two-zero-ℕ (λ n → div-two-succ-ℕ)
+
+div-two-ℕ' : ℕ → ℕ
+div-two-ℕ' n = div-two-function n zero-ℕ

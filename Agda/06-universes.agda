@@ -467,6 +467,97 @@ linear-dist-ℕ (succ-ℕ m) (succ-ℕ n) (succ-ℕ k) =
       ( mul-ℕ (succ-ℕ k) n)) ∙
     ( linear-dist-ℕ m n (succ-ℕ k)))
 
+--------------------------------------------------------------------------------
+
+-- Exercise 6.5
+
+-- We introduce the absolute value of an integer. --
+
+abs-ℤ : ℤ → ℕ
+abs-ℤ (inl x) = succ-ℕ x
+abs-ℤ (inr (inl star)) = zero-ℕ
+abs-ℤ (inr (inr x)) = succ-ℕ x
+
+int-abs-ℤ : ℤ → ℤ
+int-abs-ℤ = int-ℕ ∘ abs-ℤ
+
+eq-abs-ℤ : (x : ℤ) → Id zero-ℕ (abs-ℤ x) → Id zero-ℤ x
+eq-abs-ℤ (inl x) p = ex-falso (Peano-8 x p)
+eq-abs-ℤ (inr (inl star)) p = refl
+eq-abs-ℤ (inr (inr x)) p = ex-falso (Peano-8 x p)
+
+abs-eq-ℤ : (x : ℤ) → Id zero-ℤ x → Id zero-ℕ (abs-ℤ x)
+abs-eq-ℤ .zero-ℤ refl = refl
+
+predecessor-law-abs-ℤ :
+  (x : ℤ) → leq-ℕ (abs-ℤ (pred-ℤ x)) (succ-ℕ (abs-ℤ x))
+predecessor-law-abs-ℤ (inl x) =
+  reflexive-leq-ℕ (succ-ℕ x)
+predecessor-law-abs-ℤ (inr (inl star)) =
+  reflexive-leq-ℕ zero-ℕ
+predecessor-law-abs-ℤ (inr (inr zero-ℕ)) =
+  star
+predecessor-law-abs-ℤ (inr (inr (succ-ℕ x))) =
+  preserves-leq-succ-ℕ x (succ-ℕ x) (succ-leq-ℕ x)
+
+successor-law-abs-ℤ :
+  (x : ℤ) → leq-ℕ (abs-ℤ (succ-ℤ x)) (succ-ℕ (abs-ℤ x))
+successor-law-abs-ℤ (inl zero-ℕ) =
+  star
+successor-law-abs-ℤ (inl (succ-ℕ x)) =
+  preserves-leq-succ-ℕ x (succ-ℕ x) (succ-leq-ℕ x)
+successor-law-abs-ℤ (inr (inl star)) =
+  reflexive-leq-ℕ zero-ℕ
+successor-law-abs-ℤ (inr (inr x)) =
+  reflexive-leq-ℕ (succ-ℕ x)
+
+subadditive-abs-ℤ :
+  (x y : ℤ) → leq-ℕ (abs-ℤ (add-ℤ x y)) (add-ℕ (abs-ℤ x) (abs-ℤ y))
+subadditive-abs-ℤ x (inl zero-ℕ) =
+  concatenate-eq-leq-eq-ℕ
+    ( ap abs-ℤ (add-neg-one-right-ℤ x))
+    ( predecessor-law-abs-ℤ x)
+    ( refl)
+subadditive-abs-ℤ x (inl (succ-ℕ y)) =
+  concatenate-eq-leq-eq-ℕ
+    ( ap abs-ℤ (right-predecessor-law-add-ℤ x (inl y)))
+    ( transitive-leq-ℕ
+      ( abs-ℤ (pred-ℤ (add-ℤ x (inl y))))
+      ( succ-ℕ (abs-ℤ (add-ℤ x (inl y))))
+      ( add-ℕ (abs-ℤ x) (succ-ℕ (succ-ℕ y)))
+      ( predecessor-law-abs-ℤ (add-ℤ x (inl y)))
+      ( subadditive-abs-ℤ x (inl y)))
+    ( refl)
+subadditive-abs-ℤ x (inr (inl star)) =
+  concatenate-eq-leq-eq-ℕ
+    ( ap abs-ℤ (right-unit-law-add-ℤ x))
+    ( reflexive-leq-ℕ (abs-ℤ x))
+    ( refl)
+subadditive-abs-ℤ x (inr (inr zero-ℕ)) =
+  concatenate-eq-leq-eq-ℕ
+    ( ap abs-ℤ (add-one-right-ℤ x))
+    ( successor-law-abs-ℤ x)
+    ( refl)
+subadditive-abs-ℤ x (inr (inr (succ-ℕ y))) =
+  concatenate-eq-leq-eq-ℕ
+    ( ap abs-ℤ (right-successor-law-add-ℤ x (inr (inr y))))
+    ( transitive-leq-ℕ
+      ( abs-ℤ (succ-ℤ (add-ℤ x (inr (inr y)))))
+      ( succ-ℕ (abs-ℤ (add-ℤ x (inr (inr y)))))
+      ( succ-ℕ (add-ℕ (abs-ℤ x) (succ-ℕ y)))
+      ( successor-law-abs-ℤ (add-ℤ x (inr (inr y))))
+      ( subadditive-abs-ℤ x (inr (inr y))))
+    ( refl)
+
+negative-law-abs-ℤ :
+  (x : ℤ) → Id (abs-ℤ (neg-ℤ x)) (abs-ℤ x)
+negative-law-abs-ℤ (inl x) = refl
+negative-law-abs-ℤ (inr (inl star)) = refl
+negative-law-abs-ℤ (inr (inr x)) = refl
+
+--------------------------------------------------------------------------------
+
+
 -- Exercise 6.6
 
 {- In this exercise we were asked to define the relations ≤ and < on the 

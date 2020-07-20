@@ -191,7 +191,8 @@ abstract
     {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
     ((x : A) → is-contr (B x)) → is-contr ((x : A) → B x)
   is-contr-Π {A = A} {B = B} = WEAK-FUNEXT-FUNEXT (λ X Y → funext) A B
-  
+
+abstract
   is-trunc-Π :
     {l1 l2 : Level} (k : 𝕋) {A : UU l1} {B : A → UU l2} →
     ((x : A) → is-trunc k (B x)) → is-trunc k ((x : A) → B x)
@@ -200,19 +201,12 @@ abstract
     is-trunc-is-equiv k (f ~ g) htpy-eq
       ( funext f g)
       ( is-trunc-Π k (λ x → is-trunc-B x (f x) (g x)))
-  
+
+abstract
   is-prop-Π :
     {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
     is-subtype B → is-prop ((x : A) → B x)
   is-prop-Π = is-trunc-Π neg-one-𝕋
-
-Π-Prop :
-  {l1 l2 : Level} (A : UU l1) →
-  (A → UU-Prop l2) → UU-Prop (l1 ⊔ l2)
-Π-Prop A P =
-  pair
-    ( (x : A) → type-Prop (P x))
-    ( is-prop-Π (λ x → is-prop-type-Prop (P x)))
 
 abstract
   is-set-Π :
@@ -220,13 +214,11 @@ abstract
     ((x : A) → is-set (B x)) → is-set ((x : A) → (B x))
   is-set-Π = is-trunc-Π zero-𝕋
 
-Π-Set :
-  {l1 l2 : Level} (A : UU-Set l1) →
-  (type-Set A → UU-Set l2) → UU-Set (l1 ⊔ l2)
-Π-Set A B =
-  pair
-    ( (x : type-Set A) → type-Set (B x))
-    ( is-set-Π (λ x → is-set-type-Set (B x)))
+abstract
+  is-1-type-Π :
+    {l1 l2 : Level} {A : UU l1} {B : A → UU l2} →
+    ((x : A) → is-1-type (B x)) → is-1-type ((x : A) → B x)
+  is-1-type-Π = is-trunc-Π one-𝕋
 
 abstract
   is-trunc-function-type :
@@ -247,28 +239,78 @@ abstract
     is-set B → is-set (A → B)
   is-set-function-type = is-trunc-function-type zero-𝕋
 
-function-Prop :
-  {l1 l2 : Level} → UU l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
-function-Prop A P =
-  pair (A → type-Prop P) (is-prop-function-type (is-prop-type-Prop P))
+abstract
+  is-1-type-function-type :
+    {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+    is-1-type B → is-1-type (A → B)
+  is-1-type-function-type = is-trunc-function-type one-𝕋
+
+--------------------------------------------------------------------------------
+
+{- We now do some bureaucracy, ensuring that propositions, sets, and 1-types
+   are closed under Π and exponents. All of these will be used implicitly in
+   the text. -}
+
+-- We define dependent products on propositions --
+
+type-Π-Prop :
+  {l1 l2 : Level} (A : UU l1) (P : A → UU-Prop l2) → UU (l1 ⊔ l2)
+type-Π-Prop A P = (x : A) → type-Prop (P x)
+
+is-prop-type-Π-Prop :
+  {l1 l2 : Level} (A : UU l1) (P : A → UU-Prop l2) → is-prop (type-Π-Prop A P)
+is-prop-type-Π-Prop A P = is-prop-Π (λ x → is-prop-type-Prop (P x))
+
+Π-Prop :
+  {l1 l2 : Level} (A : UU l1) →
+  (A → UU-Prop l2) → UU-Prop (l1 ⊔ l2)
+Π-Prop A P =
+  pair (type-Π-Prop A P) (is-prop-type-Π-Prop A P)
+
+-- A special case for dependent products on propositions is exponents --
 
 type-function-Prop :
   {l1 l2 : Level} → UU l1 → UU-Prop l2 → UU (l1 ⊔ l2)
-type-function-Prop A P = type-Prop (function-Prop A P)
+type-function-Prop A P = A → type-Prop P
+
+is-prop-type-function-Prop :
+  {l1 l2 : Level} (A : UU l1) (P : UU-Prop l2) →
+  is-prop (type-function-Prop A P)
+is-prop-type-function-Prop A P =
+  is-prop-function-type (is-prop-type-Prop P)
+
+function-Prop :
+  {l1 l2 : Level} → UU l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
+function-Prop A P =
+  pair (type-function-Prop A P) (is-prop-type-function-Prop A P)
+
+-- We also define the hom-type of propositions --
+
+type-hom-Prop :
+  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
+type-hom-Prop P Q = type-function-Prop (type-Prop P) Q
+
+is-prop-type-hom-Prop :
+  {l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) →
+  is-prop (type-hom-Prop P Q)
+is-prop-type-hom-Prop P Q = is-prop-type-function-Prop (type-Prop P) Q
+
+hom-Prop :
+  { l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
+hom-Prop P Q =
+  pair
+    ( type-hom-Prop P Q)
+    ( is-prop-type-hom-Prop P Q)
 
 implication-Prop :
   {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
-implication-Prop P Q =
-  pair (type-Prop P → type-Prop Q) (is-prop-function-type (is-prop-type-Prop Q))
+implication-Prop P Q = hom-Prop P Q
 
 type-implication-Prop :
   {l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU (l1 ⊔ l2)
-type-implication-Prop P Q = type-Prop (implication-Prop P Q)
+type-implication-Prop P Q = type-hom-Prop P Q
 
-hom-Set :
-  {l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU-Set (l1 ⊔ l2)
-hom-Set A B =
-  pair (type-hom-Set A B) (is-set-function-type (is-set-type-Set B))
+-- Negation is a special case of function-Prop and hom-Prop
 
 is-prop-neg :
   {l : Level} {A : UU l} → is-prop (¬ A)
@@ -282,10 +324,183 @@ neg-Prop :
   {l1 : Level} → UU-Prop l1 → UU-Prop l1
 neg-Prop P = neg-Prop' (type-Prop P)
 
-dn-Prop :
-  {l : Level} (A : UU l) → UU-Prop l
-dn-Prop A = neg-Prop' (¬ A)
+-- Double negation is a special case of negation
 
+dn-Prop' :
+  {l : Level} (A : UU l) → UU-Prop l
+dn-Prop' A = neg-Prop' (¬ A)
+
+dn-Prop :
+  {l : Level} (P : UU-Prop l) → UU-Prop l
+dn-Prop P = dn-Prop' (type-Prop P)
+
+-- We define dependent products on sets by an arbitrary indexing type
+
+type-Π-Set' :
+  {l1 l2 : Level} (A : UU l1) (B : A → UU-Set l2) → UU (l1 ⊔ l2)
+type-Π-Set' A B = (x : A) → type-Set (B x)
+
+is-set-type-Π-Set' :
+  {l1 l2 : Level} (A : UU l1) (B : A → UU-Set l2) → is-set (type-Π-Set' A B)
+is-set-type-Π-Set' A B =
+  is-set-Π (λ x → is-set-type-Set (B x))
+
+Π-Set' :
+  {l1 l2 : Level} (A : UU l1) (B : A → UU-Set l2) → UU-Set (l1 ⊔ l2)
+Π-Set' A B = pair (type-Π-Set' A B) (is-set-type-Π-Set' A B)
+
+-- We define dependent products on sets --
+
+type-Π-Set :
+  {l1 l2 : Level} (A : UU-Set l1) (B : type-Set A → UU-Set l2) → UU (l1 ⊔ l2)
+type-Π-Set A B = type-Π-Set' (type-Set A) B
+
+is-set-type-Π-Set :
+  {l1 l2 : Level} (A : UU-Set l1) (B : type-Set A → UU-Set l2) →
+  is-set (type-Π-Set A B)
+is-set-type-Π-Set A B =
+  is-set-type-Π-Set' (type-Set A) B
+
+Π-Set :
+  {l1 l2 : Level} (A : UU-Set l1) →
+  (type-Set A → UU-Set l2) → UU-Set (l1 ⊔ l2)
+Π-Set A B =
+  pair (type-Π-Set A B) (is-set-type-Π-Set A B)
+
+-- We define the type of morphisms between sets --
+
+type-hom-Set :
+  {l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU (l1 ⊔ l2)
+type-hom-Set A B = type-Set A → type-Set B
+
+is-set-type-hom-Set :
+  {l1 l2 : Level} (A : UU-Set l1) (B : UU-Set l2) →
+  is-set (type-hom-Set A B)
+is-set-type-hom-Set A B = is-set-function-type (is-set-type-Set B)
+
+hom-Set :
+  {l1 l2 : Level} → UU-Set l1 → UU-Set l2 → UU-Set (l1 ⊔ l2)
+hom-Set A B =
+  pair (type-hom-Set A B) (is-set-type-hom-Set A B)
+
+-- We define the dependent product of 1-types indexed by an arbitrary type
+
+type-Π-1-Type' :
+  {l1 l2 : Level} (A : UU l1) (B : A → UU-1-Type l2) → UU (l1 ⊔ l2)
+type-Π-1-Type' A B = (x : A) → type-1-Type (B x)
+
+is-1-type-type-Π-1-Type' :
+  {l1 l2 : Level} (A : UU l1) (B : A → UU-1-Type l2) →
+  is-1-type (type-Π-1-Type' A B)
+is-1-type-type-Π-1-Type' A B =
+  is-1-type-Π (λ x → is-1-type-type-1-Type (B x))
+
+Π-1-Type' :
+  {l1 l2 : Level} (A : UU l1) (B : A → UU-1-Type l2) → UU-1-Type (l1 ⊔ l2)
+Π-1-Type' A B =
+  pair (type-Π-1-Type' A B) (is-1-type-type-Π-1-Type' A B)
+
+-- We define the dependent product of 1-types
+
+type-Π-1-Type :
+  {l1 l2 : Level} (A : UU-1-Type l1) (B : type-1-Type A → UU-1-Type l2) →
+  UU (l1 ⊔ l2)
+type-Π-1-Type A B = type-Π-1-Type' (type-1-Type A) B
+
+is-1-type-type-Π-1-Type :
+  {l1 l2 : Level} (A : UU-1-Type l1) (B : type-1-Type A → UU-1-Type l2) →
+  is-1-type (type-Π-1-Type A B)
+is-1-type-type-Π-1-Type A B =
+  is-1-type-type-Π-1-Type' (type-1-Type A) B
+
+Π-1-Type :
+  {l1 l2 : Level} (A : UU-1-Type l1) (B : type-1-Type A → UU-1-Type l2) →
+  UU-1-Type (l1 ⊔ l2)
+Π-1-Type A B =
+  pair (type-Π-1-Type A B) (is-1-type-type-Π-1-Type A B)
+
+-- We define the type of morphisms between 1-types
+
+type-hom-1-Type :
+  {l1 l2 : Level} (A : UU-1-Type l1) (B : UU-1-Type l2) → UU (l1 ⊔ l2)
+type-hom-1-Type A B = type-1-Type A → type-1-Type B
+
+is-1-type-type-hom-1-Type :
+  {l1 l2 : Level} (A : UU-1-Type l1) (B : UU-1-Type l2) →
+  is-1-type (type-hom-1-Type A B)
+is-1-type-type-hom-1-Type A B =
+  is-1-type-function-type (is-1-type-type-1-Type B)
+
+hom-1-Type :
+  {l1 l2 : Level} (A : UU-1-Type l1) (B : UU-1-Type l2) → UU-1-Type (l1 ⊔ l2)
+hom-1-Type A B =
+  pair (type-hom-1-Type A B) (is-1-type-type-hom-1-Type A B)
+
+{- We define the dependent product of truncated types indexed by an arbitrary
+   type. -}
+
+type-Π-Truncated-Type' :
+  (k : 𝕋) {l1 l2 : Level} (A : UU l1) (B : A → UU-Truncated-Type k l2) →
+  UU (l1 ⊔ l2)
+type-Π-Truncated-Type' k A B = (x : A) → type-Truncated-Type k (B x)
+
+is-trunc-type-Π-Truncated-Type' :
+  (k : 𝕋) {l1 l2 : Level} (A : UU l1) (B : A → UU-Truncated-Type k l2) →
+  is-trunc k (type-Π-Truncated-Type' k A B)
+is-trunc-type-Π-Truncated-Type' k A B =
+  is-trunc-Π k (λ x → is-trunc-type-Truncated-Type k (B x))
+
+Π-Truncated-Type' :
+  (k : 𝕋) {l1 l2 : Level} (A : UU l1) (B : A → UU-Truncated-Type k l2) →
+  UU-Truncated-Type k (l1 ⊔ l2)
+Π-Truncated-Type' k A B =
+  pair (type-Π-Truncated-Type' k A B) (is-trunc-type-Π-Truncated-Type' k A B)
+
+-- We define the dependent product of truncated types
+
+type-Π-Truncated-Type :
+  (k : 𝕋) {l1 l2 : Level} (A : UU-Truncated-Type k l1)
+  (B : type-Truncated-Type k A → UU-Truncated-Type k l2) →
+  UU (l1 ⊔ l2)
+type-Π-Truncated-Type k A B =
+  type-Π-Truncated-Type' k (type-Truncated-Type k A) B
+
+is-trunc-type-Π-Truncated-Type :
+  (k : 𝕋) {l1 l2 : Level} (A : UU-Truncated-Type k l1)
+  (B : type-Truncated-Type k A → UU-Truncated-Type k l2) →
+  is-trunc k (type-Π-Truncated-Type k A B)
+is-trunc-type-Π-Truncated-Type k A B =
+  is-trunc-type-Π-Truncated-Type' k (type-Truncated-Type k A) B
+
+Π-Truncated-Type :
+  (k : 𝕋) {l1 l2 : Level} (A : UU-Truncated-Type k l1)
+  (B : type-Truncated-Type k A → UU-Truncated-Type k l2) →
+  UU-Truncated-Type k (l1 ⊔ l2)
+Π-Truncated-Type k A B =
+  Π-Truncated-Type' k (type-Truncated-Type k A) B
+
+-- We define the type of morphisms between truncated types
+
+type-hom-Truncated-Type :
+  (k : 𝕋) {l1 l2 : Level} (A : UU-Truncated-Type k l1)
+  (B : UU-Truncated-Type k l2) → UU (l1 ⊔ l2)
+type-hom-Truncated-Type k A B =
+  type-Truncated-Type k A → type-Truncated-Type k B
+
+is-trunc-type-hom-Truncated-Type :
+  (k : 𝕋) {l1 l2 : Level} (A : UU-Truncated-Type k l1)
+  (B : UU-Truncated-Type k l2) →
+  is-trunc k (type-hom-Truncated-Type k A B)
+is-trunc-type-hom-Truncated-Type k A B =
+  is-trunc-function-type k (is-trunc-type-Truncated-Type k B)
+
+hom-Truncated-Type :
+  (k : 𝕋) {l1 l2 : Level} (A : UU-Truncated-Type k l1)
+  (B : UU-Truncated-Type k l2) → UU-Truncated-Type k (l1 ⊔ l2)
+hom-Truncated-Type k A B =
+  pair (type-hom-Truncated-Type k A B) (is-trunc-type-hom-Truncated-Type k A B)
+
+--------------------------------------------------------------------------------
 
 {- The type theoretic principle of choice is the assertion that Π distributes
    over Σ. In other words, there is an equivalence
@@ -1002,6 +1217,10 @@ abstract
     is-prop-prod
       ( is-prop-function-type (pr2 Q))
       ( is-prop-function-type (pr2 P))
+
+equiv-Prop :
+  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
+equiv-Prop P Q = (type-Prop P) ≃ (type-Prop Q)
 
 abstract
   is-prop-equiv-Prop :

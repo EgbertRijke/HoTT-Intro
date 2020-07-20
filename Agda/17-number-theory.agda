@@ -49,7 +49,7 @@ simplify-not-all-2-element-types-decidable :
 simplify-not-all-2-element-types-decidable d X p =
   case-elim
     ( map-universal-property-trunc-Prop
-      ( dn-Prop X)
+      ( dn-Prop' X)
       ( λ e → intro-dn (map-equiv e true))
       ( p))
     ( d X p)

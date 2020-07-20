@@ -13,26 +13,6 @@ open 12-function-extensionality public
 
 -- Definition 13.1.1
 
-type-hom-Prop :
-  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
-type-hom-Prop P Q = type-Prop P → type-Prop Q
-
-hom-Prop :
-  { l1 l2 : Level} → UU-Prop l1 → UU-Prop l2 → UU-Prop (l1 ⊔ l2)
-hom-Prop P Q =
-  pair
-    ( type-hom-Prop P Q)
-    ( is-prop-function-type (is-prop-type-Prop Q))
-
-is-prop-type-hom-Prop :
-  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → is-prop (type-hom-Prop P Q)
-is-prop-type-hom-Prop P Q =
-  is-prop-function-type (is-prop-type-Prop Q)
-
-equiv-Prop :
-  { l1 l2 : Level} (P : UU-Prop l1) (Q : UU-Prop l2) → UU (l1 ⊔ l2)
-equiv-Prop P Q = (type-Prop P) ≃ (type-Prop Q)
-
 precomp-Prop :
   { l1 l2 l3 : Level} {A : UU l1} (P : UU-Prop l2) →
   (A → type-Prop P) → (Q : UU-Prop l3) →
@@ -826,6 +806,11 @@ dependent-universal-property-surj-is-surjective f is-surj-f P =
 
 -- Theorem 13.5.5
 
+{-
+is-surjective-universal-property-image :
+  {l1 l2 l3 : Level} {A : UU l1} {B : UU l2} {X : UU l3}
+  (f : A → X)
+-}
 
 --------------------------------------------------------------------------------
 
@@ -980,7 +965,7 @@ is-equiv-ev-disj-Prop P Q R =
 map-dn-trunc-Prop :
   {l : Level} (A : UU l) → ¬¬ (type-trunc-Prop A) → ¬¬ A
 map-dn-trunc-Prop A =
-  dn-extend (map-universal-property-trunc-Prop (dn-Prop A) intro-dn)
+  dn-extend (map-universal-property-trunc-Prop (dn-Prop' A) intro-dn)
 
 inv-map-dn-trunc-Prop :
   {l : Level} (A : UU l) → ¬¬ A → ¬¬ (type-trunc-Prop A)
@@ -991,8 +976,8 @@ equiv-dn-trunc-Prop :
   {l : Level} (A : UU l) → ¬¬ (type-trunc-Prop A) ≃ ¬¬ A
 equiv-dn-trunc-Prop A =
   equiv-iff
-    ( dn-Prop (type-trunc-Prop A))
-    ( dn-Prop A)
+    ( dn-Prop (trunc-Prop A))
+    ( dn-Prop' A)
     ( pair
       ( map-dn-trunc-Prop A)
       ( inv-map-dn-trunc-Prop A))
