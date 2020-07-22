@@ -158,10 +158,23 @@ cong-ℕ :
   ℕ → ℕ → ℕ → UU lzero
 cong-ℕ k x y = div-ℕ k (dist-ℕ x y)
 
-eq-cong-eq-ℕ :
+_≡_mod_ : ℕ → ℕ → ℕ → UU lzero
+x ≡ y mod k = cong-ℕ k x y
+
+concatenate-eq-cong-eq-ℕ :
   (k : ℕ) {x1 x2 x3 x4 : ℕ} →
   Id x1 x2 → cong-ℕ k x2 x3 → Id x3 x4 → cong-ℕ k x1 x4
-eq-cong-eq-ℕ k refl H refl = H
+concatenate-eq-cong-eq-ℕ k refl H refl = H
+
+concatenate-eq-cong-ℕ :
+  (k : ℕ) {x1 x2 x3 : ℕ} →
+  Id x1 x2 → cong-ℕ k x2 x3 → cong-ℕ k x1 x3
+concatenate-eq-cong-ℕ k refl H = H
+
+concatenate-cong-eq-ℕ :
+  (k : ℕ) {x1 x2 x3 : ℕ} →
+  cong-ℕ k x1 x2 → Id x2 x3 → cong-ℕ k x1 x3
+concatenate-cong-eq-ℕ k H refl = H
 
 reflexive-cong-ℕ :
   (k x : ℕ) → cong-ℕ k x x
@@ -194,11 +207,11 @@ concatenate-cong-eq-cong-ℕ :
 concatenate-cong-eq-cong-ℕ {k} {x} {y} {.y} {z} H refl K =
   transitive-cong-ℕ k x y z H K
   
-eq-cong-eq-cong-eq-ℕ :
+concatenate-eq-cong-eq-cong-eq-ℕ :
   (k : ℕ) {x1 x2 x3 x4 x5 x6 : ℕ} →
   Id x1 x2 → cong-ℕ k x2 x3 → Id x3 x4 →
   cong-ℕ k x4 x5 → Id x5 x6 → cong-ℕ k x1 x6
-eq-cong-eq-cong-eq-ℕ k {x} {.x} {y} {.y} {z} {.z} refl H refl K refl =
+concatenate-eq-cong-eq-cong-eq-ℕ k {x} {.x} {y} {.y} {z} {.z} refl H refl K refl =
   transitive-cong-ℕ k x y z H K
 
 --------------------------------------------------------------------------------
@@ -237,7 +250,7 @@ translation-invariant-cong-ℕ k x y z (pair d p) =
 translation-invariant-cong-ℕ' :
   (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (add-ℕ x z) (add-ℕ y z)
 translation-invariant-cong-ℕ' k x y z H =
-  eq-cong-eq-ℕ k
+  concatenate-eq-cong-eq-ℕ k
     ( commutative-add-ℕ x z)
     ( translation-invariant-cong-ℕ k x y z H)
     ( commutative-add-ℕ z y)
@@ -563,6 +576,17 @@ zero-law-nat-Fin {succ-ℕ k} = zero-law-nat-Fin {k}
 
 {- We show that nat-Fin x ≤ k. -}
 
+strict-upper-bound-nat-Fin : {k : ℕ} (x : Fin k) → le-ℕ (nat-Fin x) k
+strict-upper-bound-nat-Fin {succ-ℕ k} (inl x) =
+  transitive-le-ℕ
+    ( nat-Fin x)
+    ( k)
+    ( succ-ℕ k)
+    ( strict-upper-bound-nat-Fin x)
+    ( succ-le-ℕ k)
+strict-upper-bound-nat-Fin {succ-ℕ k} (inr star) =
+  succ-le-ℕ k
+
 upper-bound-nat-Fin : {k : ℕ} (x : Fin (succ-ℕ k)) → leq-ℕ (nat-Fin x) k
 upper-bound-nat-Fin {zero-ℕ} (inr star) = star
 upper-bound-nat-Fin {succ-ℕ k} (inl x) =
@@ -617,12 +641,14 @@ cong-nat-mod-succ-ℕ zero-ℕ zero-ℕ | d =
 cong-nat-mod-succ-ℕ zero-ℕ (succ-ℕ x) | d =
   div-one-ℕ (dist-ℕ (nat-Fin (mod-succ-ℕ zero-ℕ (succ-ℕ x))) (succ-ℕ x))
 cong-nat-mod-succ-ℕ (succ-ℕ k) zero-ℕ | d =
-  eq-cong-eq-ℕ (succ-ℕ (succ-ℕ k))
-    ( zero-law-nat-Fin {succ-ℕ k})
-    ( reflexive-cong-ℕ (succ-ℕ (succ-ℕ k)) zero-ℕ)
-    ( refl)
+  cong-identification-ℕ
+    ( succ-ℕ (succ-ℕ k))
+    -- { zero-ℕ}
+    -- { dist-ℕ (nat-Fin {succ-ℕ (succ-ℕ k)} zero-Fin) zero-ℕ}
+    ( ( inv (zero-law-nat-Fin {succ-ℕ k})) ∙
+      ( inv (right-zero-law-dist-ℕ (nat-Fin {succ-ℕ (succ-ℕ k)} zero-Fin))))
 cong-nat-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) | inl p =
-  eq-cong-eq-cong-eq-ℕ
+  concatenate-eq-cong-eq-cong-eq-ℕ
     ( succ-ℕ (succ-ℕ k))
     ( ap nat-Fin {x = mod-succ-ℕ (succ-ℕ k) (succ-ℕ x)} p ∙
       zero-law-nat-Fin {succ-ℕ k})
@@ -643,7 +669,7 @@ cong-nat-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) | inl p =
       ( cong-nat-mod-succ-ℕ (succ-ℕ k) x))
     ( refl)
 cong-nat-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) | inr f =
-  eq-cong-eq-ℕ
+  concatenate-eq-cong-ℕ
     ( succ-ℕ (succ-ℕ k))
     ( nat-succ-Fin
       ( mod-succ-ℕ (succ-ℕ k) x)
@@ -657,7 +683,6 @@ cong-nat-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) | inr f =
       ( nat-Fin (mod-succ-ℕ (succ-ℕ k) x))
       ( x)
       ( cong-nat-mod-succ-ℕ (succ-ℕ k) x))
-    ( refl)
 
 --------------------------------------------------------------------------------
 
@@ -762,7 +787,7 @@ scalar-invariant-cong-ℕ k x y z (pair d p) =
 scalar-invariant-cong-ℕ' :
   (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (mul-ℕ x z) (mul-ℕ y z)
 scalar-invariant-cong-ℕ' k x y z H =
-  eq-cong-eq-ℕ k
+  concatenate-eq-cong-eq-ℕ k
     ( commutative-mul-ℕ x z)
     ( scalar-invariant-cong-ℕ k x y z H)
     ( commutative-mul-ℕ z y)
