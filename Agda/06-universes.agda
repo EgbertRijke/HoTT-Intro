@@ -397,6 +397,8 @@ triangle-inequality-dist-ℕ (succ-ℕ m) (succ-ℕ n) zero-ℕ =
 triangle-inequality-dist-ℕ (succ-ℕ m) (succ-ℕ n) (succ-ℕ k) =
   triangle-inequality-dist-ℕ m n k
 
+-- Exercise 6.5 (c)
+
 -- We show that dist-ℕ x y is a solution to a simple equation.
 
 leq-dist-ℕ :
@@ -406,6 +408,20 @@ leq-dist-ℕ zero-ℕ (succ-ℕ y) star = left-unit-law-add-ℕ (succ-ℕ y)
 leq-dist-ℕ (succ-ℕ x) (succ-ℕ y) H =
   ( left-successor-law-add-ℕ x (dist-ℕ x y)) ∙
   ( ap succ-ℕ (leq-dist-ℕ x y H))
+
+-- If three elements are ordered linearly, then their distances add up.
+
+triangle-equality-dist-ℕ :
+  (x y z : ℕ) → (leq-ℕ x y) → (leq-ℕ y z) →
+  Id (add-ℕ (dist-ℕ x y) (dist-ℕ y z)) (dist-ℕ x z)
+triangle-equality-dist-ℕ zero-ℕ zero-ℕ zero-ℕ H1 H2 = refl
+triangle-equality-dist-ℕ zero-ℕ zero-ℕ (succ-ℕ z) star star =
+  ap succ-ℕ (left-unit-law-add-ℕ z)
+triangle-equality-dist-ℕ zero-ℕ (succ-ℕ y) (succ-ℕ z) star H2 =
+  left-successor-law-add-ℕ y (dist-ℕ y z) ∙
+  ap succ-ℕ (leq-dist-ℕ y z H2)
+triangle-equality-dist-ℕ (succ-ℕ x) (succ-ℕ y) (succ-ℕ z) H1 H2 =
+  triangle-equality-dist-ℕ x y z H1 H2
 
 rewrite-left-add-dist-ℕ :
   (x y z : ℕ) → Id (add-ℕ x y) z → Id x (dist-ℕ y z)
@@ -467,6 +483,17 @@ linear-dist-ℕ (succ-ℕ m) (succ-ℕ n) (succ-ℕ k) =
       ( mul-ℕ (succ-ℕ k) n)) ∙
     ( linear-dist-ℕ m n (succ-ℕ k)))
 
+-- We give an upper bound for the distantce between two numbers.
+
+upper-bound-dist-ℕ :
+  (b x y : ℕ) → leq-ℕ x b → leq-ℕ y b → leq-ℕ (dist-ℕ x y) b
+upper-bound-dist-ℕ zero-ℕ zero-ℕ zero-ℕ H K = star
+upper-bound-dist-ℕ (succ-ℕ b) zero-ℕ zero-ℕ H K = star
+upper-bound-dist-ℕ (succ-ℕ b) zero-ℕ (succ-ℕ y) H K = K
+upper-bound-dist-ℕ (succ-ℕ b) (succ-ℕ x) zero-ℕ H K = H
+upper-bound-dist-ℕ (succ-ℕ b) (succ-ℕ x) (succ-ℕ y) H K =
+  preserves-leq-succ-ℕ (dist-ℕ x y) b (upper-bound-dist-ℕ b x y H K)
+  
 --------------------------------------------------------------------------------
 
 -- Exercise 6.5

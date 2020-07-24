@@ -7,14 +7,16 @@ open 06-universes public
 
 --------------------------------------------------------------------------------
 
-{- Section 7.4 The congruence relations modulo k -}
+{- Section 7.1 The congruence relations -}
+
+{- Definition 7.1.1 -}
 
 -- We introduce the divisibility relation. --
 
 div-ℕ : ℕ → ℕ → UU lzero
 div-ℕ m n = Σ ℕ (λ k → Id (mul-ℕ k m) n)
 
--- We show some basic properties of the divisibility relation --
+{- Proposition 7.1.2 -}
 
 {- In the following three constructions we show that if any two of the three
    numbers x, y, and x + y, is divisible by d, then so is the third. -}
@@ -56,16 +58,56 @@ div-right-summand-ℕ :
 div-right-summand-ℕ d x y H1 H2 =
   div-left-summand-ℕ d y x H1 (tr (div-ℕ d) (commutative-add-ℕ x y) H2)
 
---------------------------------------------------------------------------------
+{- Definition 7.1.3 -}
 
--- Some lemmas that will help us showing that cong is an equivalence relation
+{- We define the congruence relation on ℕ and we do some bureaucracy that will
+   help us in calculations involving the congruence relations. -}
 
-order-two-elements-ℕ :
-  (x y : ℕ) → coprod (leq-ℕ x y) (leq-ℕ y x)
-order-two-elements-ℕ zero-ℕ zero-ℕ = inl star
-order-two-elements-ℕ zero-ℕ (succ-ℕ y) = inl star
-order-two-elements-ℕ (succ-ℕ x) zero-ℕ = inr star
-order-two-elements-ℕ (succ-ℕ x) (succ-ℕ y) = order-two-elements-ℕ x y
+cong-ℕ :
+  ℕ → ℕ → ℕ → UU lzero
+cong-ℕ k x y = div-ℕ k (dist-ℕ x y)
+
+_≡_mod_ : ℕ → ℕ → ℕ → UU lzero
+x ≡ y mod k = cong-ℕ k x y
+
+concatenate-eq-cong-eq-ℕ :
+  (k : ℕ) {x1 x2 x3 x4 : ℕ} →
+  Id x1 x2 → cong-ℕ k x2 x3 → Id x3 x4 → cong-ℕ k x1 x4
+concatenate-eq-cong-eq-ℕ k refl H refl = H
+
+concatenate-eq-cong-ℕ :
+  (k : ℕ) {x1 x2 x3 : ℕ} →
+  Id x1 x2 → cong-ℕ k x2 x3 → cong-ℕ k x1 x3
+concatenate-eq-cong-ℕ k refl H = H
+
+concatenate-cong-eq-ℕ :
+  (k : ℕ) {x1 x2 x3 : ℕ} →
+  cong-ℕ k x1 x2 → Id x2 x3 → cong-ℕ k x1 x3
+concatenate-cong-eq-ℕ k H refl = H
+
+{- Proposition 7.1.4 -}
+
+-- We show that cong-ℕ is an equivalence relation.
+
+reflexive-cong-ℕ :
+  (k x : ℕ) → cong-ℕ k x x
+reflexive-cong-ℕ k x =
+  pair zero-ℕ ((left-zero-law-mul-ℕ (succ-ℕ k)) ∙ (dist-eq-ℕ x x refl))
+
+cong-identification-ℕ :
+  (k : ℕ) {x y : ℕ} → Id x y → cong-ℕ k x y
+cong-identification-ℕ k {x} refl = reflexive-cong-ℕ k x
+
+symmetric-cong-ℕ :
+  (k x y : ℕ) → cong-ℕ k x y → cong-ℕ k y x
+symmetric-cong-ℕ k x y (pair d p) =
+  pair d (p ∙ (symmetric-dist-ℕ x y))
+
+{- Before we show that cong-ℕ is transitive, we give some lemmas that will help 
+   us showing that cong is an equivalence relation. They are basically 
+   bureaucracy, manipulating already known facts. -}
+
+-- Three elements can be ordered in 6 possible ways
 
 cases-order-three-elements-ℕ :
   (x y z : ℕ) → UU lzero
@@ -82,27 +124,18 @@ order-three-elements-ℕ zero-ℕ zero-ℕ zero-ℕ = inl (inl (pair star star))
 order-three-elements-ℕ zero-ℕ zero-ℕ (succ-ℕ z) = inl (inl (pair star star))
 order-three-elements-ℕ zero-ℕ (succ-ℕ y) zero-ℕ = inl (inr (pair star star))
 order-three-elements-ℕ zero-ℕ (succ-ℕ y) (succ-ℕ z) =
-  inl (functor-coprod (pair star) (pair star) (order-two-elements-ℕ y z))
+  inl (functor-coprod (pair star) (pair star) (decide-leq-ℕ y z))
 order-three-elements-ℕ (succ-ℕ x) zero-ℕ zero-ℕ =
   inr (inl (inl (pair star star)))
 order-three-elements-ℕ (succ-ℕ x) zero-ℕ (succ-ℕ z) =
-  inr (inl (functor-coprod (pair star) (pair star) (order-two-elements-ℕ z x)))
+  inr (inl (functor-coprod (pair star) (pair star) (decide-leq-ℕ z x)))
 order-three-elements-ℕ (succ-ℕ x) (succ-ℕ y) zero-ℕ =
-  inr (inr (functor-coprod (pair star) (pair star) (order-two-elements-ℕ x y)))
+  inr (inr (functor-coprod (pair star) (pair star) (decide-leq-ℕ x y)))
 order-three-elements-ℕ (succ-ℕ x) (succ-ℕ y) (succ-ℕ z) =
   order-three-elements-ℕ x y z
 
-triangle-equality-dist-ℕ :
-  (x y z : ℕ) → (leq-ℕ x y) → (leq-ℕ y z) →
-  Id (add-ℕ (dist-ℕ x y) (dist-ℕ y z)) (dist-ℕ x z)
-triangle-equality-dist-ℕ zero-ℕ zero-ℕ zero-ℕ H1 H2 = refl
-triangle-equality-dist-ℕ zero-ℕ zero-ℕ (succ-ℕ z) star star =
-  ap succ-ℕ (left-unit-law-add-ℕ z)
-triangle-equality-dist-ℕ zero-ℕ (succ-ℕ y) (succ-ℕ z) star H2 =
-  left-successor-law-add-ℕ y (dist-ℕ y z) ∙
-  ap succ-ℕ (leq-dist-ℕ y z H2)
-triangle-equality-dist-ℕ (succ-ℕ x) (succ-ℕ y) (succ-ℕ z) H1 H2 =
-  triangle-equality-dist-ℕ x y z H1 H2
+{- We show that the distances of any three elements always add up, when they
+   are added up in the right way :) -} 
 
 cases-dist-ℕ :
   (x y z : ℕ) → UU lzero
@@ -149,46 +182,7 @@ is-total-dist-ℕ x y z | inr (inr (inr (pair H1 H2))) =
         ( ( triangle-equality-dist-ℕ z y x H1 H2) ∙
           ( symmetric-dist-ℕ z x))))
 
---------------------------------------------------------------------------------
-
-{- We define the congruence relation on ℕ and show that it is an equivalence
-   relation on ℕ. -}
-
-cong-ℕ :
-  ℕ → ℕ → ℕ → UU lzero
-cong-ℕ k x y = div-ℕ k (dist-ℕ x y)
-
-_≡_mod_ : ℕ → ℕ → ℕ → UU lzero
-x ≡ y mod k = cong-ℕ k x y
-
-concatenate-eq-cong-eq-ℕ :
-  (k : ℕ) {x1 x2 x3 x4 : ℕ} →
-  Id x1 x2 → cong-ℕ k x2 x3 → Id x3 x4 → cong-ℕ k x1 x4
-concatenate-eq-cong-eq-ℕ k refl H refl = H
-
-concatenate-eq-cong-ℕ :
-  (k : ℕ) {x1 x2 x3 : ℕ} →
-  Id x1 x2 → cong-ℕ k x2 x3 → cong-ℕ k x1 x3
-concatenate-eq-cong-ℕ k refl H = H
-
-concatenate-cong-eq-ℕ :
-  (k : ℕ) {x1 x2 x3 : ℕ} →
-  cong-ℕ k x1 x2 → Id x2 x3 → cong-ℕ k x1 x3
-concatenate-cong-eq-ℕ k H refl = H
-
-reflexive-cong-ℕ :
-  (k x : ℕ) → cong-ℕ k x x
-reflexive-cong-ℕ k x =
-  pair zero-ℕ ((left-zero-law-mul-ℕ (succ-ℕ k)) ∙ (dist-eq-ℕ x x refl))
-
-cong-identification-ℕ :
-  (k : ℕ) {x y : ℕ} → Id x y → cong-ℕ k x y
-cong-identification-ℕ k {x} refl = reflexive-cong-ℕ k x
-
-symmetric-cong-ℕ :
-  (k x y : ℕ) → cong-ℕ k x y → cong-ℕ k y x
-symmetric-cong-ℕ k x y (pair d p) =
-  pair d (p ∙ (symmetric-dist-ℕ x y))
+-- Finally, we show that cong-ℕ is transitive.
 
 transitive-cong-ℕ :
   (k x y z : ℕ) →
@@ -214,14 +208,7 @@ concatenate-eq-cong-eq-cong-eq-ℕ :
 concatenate-eq-cong-eq-cong-eq-ℕ k {x} {.x} {y} {.y} {z} {.z} refl H refl K refl =
   transitive-cong-ℕ k x y z H K
 
---------------------------------------------------------------------------------
-
--- We show that cong-ℕ zero-ℕ is the discrete equivalence relation --
-
-is-discrete-cong-zero-ℕ :
-  (x y : ℕ) → cong-ℕ zero-ℕ x y → Id x y
-is-discrete-cong-zero-ℕ x y (pair k p) =
-  eq-dist-ℕ x y ((inv (right-zero-law-mul-ℕ k)) ∙ p)
+{- Remark 7.1.6 (this is also Exercise 7.2) -}
 
 -- We show that cong-ℕ one-ℕ is the indiscrete equivalence relation --
 
@@ -233,6 +220,21 @@ is-indiscrete-cong-one-ℕ :
   (x y : ℕ) → cong-ℕ one-ℕ x y
 is-indiscrete-cong-one-ℕ x y = div-one-ℕ (dist-ℕ x y)
 
+-- We show that the congruence relation modulo 0 is discrete
+
+div-zero-ℕ :
+  (k : ℕ) → div-ℕ k zero-ℕ
+div-zero-ℕ k = pair zero-ℕ (left-zero-law-mul-ℕ k)
+
+is-discrete-cong-zero-ℕ :
+  (x y : ℕ) → cong-ℕ zero-ℕ x y → Id x y
+is-discrete-cong-zero-ℕ x y (pair k p) =
+  eq-dist-ℕ x y ((inv (right-zero-law-mul-ℕ k)) ∙ p)
+
+-- We show that d | 1 if and only if d = 1.
+
+-- We show that 0 | x if and only if x = 0.
+
 -- We show that zero-ℕ is congruent to n modulo n.
 
 cong-zero-ℕ :
@@ -240,40 +242,18 @@ cong-zero-ℕ :
 cong-zero-ℕ k =
   pair one-ℕ ((left-unit-law-mul-ℕ k) ∙ (inv (right-zero-law-dist-ℕ k)))
 
--- We show that congruence is translation invariant --
-
-translation-invariant-cong-ℕ :
-  (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (add-ℕ z x) (add-ℕ z y)
-translation-invariant-cong-ℕ k x y z (pair d p) =
-  pair d (p ∙ inv (translation-invariant-dist-ℕ z x y))
-
-translation-invariant-cong-ℕ' :
-  (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (add-ℕ x z) (add-ℕ y z)
-translation-invariant-cong-ℕ' k x y z H =
-  concatenate-eq-cong-eq-ℕ k
-    ( commutative-add-ℕ x z)
-    ( translation-invariant-cong-ℕ k x y z H)
-    ( commutative-add-ℕ z y)
-
-step-invariant-cong-ℕ :
-  (k x y : ℕ) → cong-ℕ k x y → cong-ℕ k (succ-ℕ x) (succ-ℕ y)
-step-invariant-cong-ℕ k x y = translation-invariant-cong-ℕ' k x y one-ℕ
-
-cong-add-ℕ :
-  (k : ℕ) {x x' y y' : ℕ} →
-  cong-ℕ k x x' → cong-ℕ k y y' → cong-ℕ k (add-ℕ x y) (add-ℕ x' y')
-cong-add-ℕ k {x} {x'} {y} {y'} Hx Hy =
-  transitive-cong-ℕ k (add-ℕ x y) (add-ℕ x' y) (add-ℕ x' y')
-    ( translation-invariant-cong-ℕ' k x x' y Hx)
-    ( translation-invariant-cong-ℕ k y y' x' Hy)
+cong-zero-ℕ' :
+  (k : ℕ) → cong-ℕ k zero-ℕ k
+cong-zero-ℕ' k =
+  symmetric-cong-ℕ k k zero-ℕ (cong-zero-ℕ k)
 
 --------------------------------------------------------------------------------
 
-{- Section 7.1 The finite types -}
+{- Section 7.2 The finite types -}
 
-{- Definition 7.1.1 -}
+{- Definition 7.2.1 -}
 
-{- We introduce the finite types as a family indexed by ℕ. -}
+-- We introduce the finite types as a family indexed by ℕ.
 
 Fin : ℕ → UU lzero
 Fin zero-ℕ = empty
@@ -286,48 +266,101 @@ inl-Fin k = inl
 neg-one-Fin : {k : ℕ} → Fin (succ-ℕ k)
 neg-one-Fin {k} = inr star
 
-{- Definition 7.1.4 -}
+{- Definition 7.2.4 -}
+
+-- We define the inclusion of Fin k into ℕ.
+
+nat-Fin : {k : ℕ} → Fin k → ℕ
+nat-Fin {succ-ℕ k} (inl x) = nat-Fin x
+nat-Fin {succ-ℕ k} (inr x) = k
+
+{- Lemma 7.2.5 -}
+
+-- We show that nat-Fin is bounded
+
+strict-upper-bound-nat-Fin : {k : ℕ} (x : Fin k) → le-ℕ (nat-Fin x) k
+strict-upper-bound-nat-Fin {succ-ℕ k} (inl x) =
+  transitive-le-ℕ
+    ( nat-Fin x)
+    ( k)
+    ( succ-ℕ k)
+    ( strict-upper-bound-nat-Fin x)
+    ( succ-le-ℕ k)
+strict-upper-bound-nat-Fin {succ-ℕ k} (inr star) =
+  succ-le-ℕ k
+
+-- We also give a non-strict upper bound for convenience
+
+upper-bound-nat-Fin : {k : ℕ} (x : Fin (succ-ℕ k)) → leq-ℕ (nat-Fin x) k
+upper-bound-nat-Fin {zero-ℕ} (inr star) = star
+upper-bound-nat-Fin {succ-ℕ k} (inl x) =
+  preserves-leq-succ-ℕ (nat-Fin x) k (upper-bound-nat-Fin x)
+upper-bound-nat-Fin {succ-ℕ k} (inr star) = reflexive-leq-ℕ (succ-ℕ k)
+
+{- Proposition 7.2.6 -}
+
+-- We show that nat-Fin is an injective function
+
+neq-le-ℕ : {x y : ℕ} → le-ℕ x y → ¬ (Id x y)
+neq-le-ℕ {zero-ℕ} {succ-ℕ y} H = Peano-8 y
+neq-le-ℕ {succ-ℕ x} {succ-ℕ y} H p = neq-le-ℕ H (is-injective-succ-ℕ x y p)
+
+is-injective-nat-Fin : {k : ℕ} {x y : Fin k} →
+  Id (nat-Fin x) (nat-Fin y) → Id x y
+is-injective-nat-Fin {succ-ℕ k} {inl x} {inl y} p =
+  ap inl (is-injective-nat-Fin p)
+is-injective-nat-Fin {succ-ℕ k} {inl x} {inr star} p =
+  ex-falso (neq-le-ℕ (strict-upper-bound-nat-Fin x) p)
+is-injective-nat-Fin {succ-ℕ k} {inr star} {inl y} p =
+  ex-falso (neq-le-ℕ (strict-upper-bound-nat-Fin y) (inv p))
+is-injective-nat-Fin {succ-ℕ k} {inr star} {inr star} p =
+  refl
+
+{- Definition 7.2.7 -}
+
+-- We define the zero element of Fin k.
 
 zero-Fin : {k : ℕ} → Fin (succ-ℕ k)
 zero-Fin {zero-ℕ} = inr star
 zero-Fin {succ-ℕ k} = inl zero-Fin
 
-{- Definition 7.1.5 -}
-
--- We define the successor function on finite sets.
+-- We define a function skip-zero-Fin in order to define succ-Fin.
 
 skip-zero-Fin : {k : ℕ} → Fin k → Fin (succ-ℕ k)
 skip-zero-Fin {succ-ℕ k} (inl x) = inl (skip-zero-Fin x)
 skip-zero-Fin {succ-ℕ k} (inr star) = inr star
 
+-- We define the successor function on Fin k.
+
 succ-Fin : {k : ℕ} → Fin k → Fin k
 succ-Fin {succ-ℕ k} (inl x) = skip-zero-Fin x
 succ-Fin {succ-ℕ k} (inr star) = zero-Fin
 
--- We define the predecessor function on finite sets.
+{- Definition 7.2.8 -}
 
-{- The definition of pred-Fin is set up in such a way that we only have to
-   do induction once, in its construction. Agda can of course easily handle
-   more deeply nested pattern matching. However, written proofs that require 
-   repeated induction tend to be messy. -}
+-- We define the negative two element of Fin k.
 
 neg-two-Fin :
   {k : ℕ} → Fin (succ-ℕ k)
 neg-two-Fin {zero-ℕ} = inr star
 neg-two-Fin {succ-ℕ k} = inl (inr star)
 
+-- We define a function skip-neg-two-Fin in order to define pred-Fin.
+
 skip-neg-two-Fin :
   {k : ℕ} → Fin k → Fin (succ-ℕ k)
 skip-neg-two-Fin {succ-ℕ k} (inl x) = inl (inl x)
 skip-neg-two-Fin {succ-ℕ k} (inr x) = neg-one-Fin {succ-ℕ k}
 
+-- We define the predecessor function on Fin k.
+
 pred-Fin : {k : ℕ} → Fin k → Fin k
 pred-Fin {succ-ℕ k} (inl x) = skip-neg-two-Fin (pred-Fin x)
 pred-Fin {succ-ℕ k} (inr x) = neg-two-Fin
 
-{- Definition 7.1.6 -}
+{- Definition 7.2.9 -}
 
-{- The modulo function -}
+-- We define the modulo function
 
 mod-succ-ℕ : (k : ℕ) → ℕ → Fin (succ-ℕ k)
 mod-succ-ℕ k zero-ℕ = zero-Fin
@@ -339,18 +372,7 @@ mod-two-ℕ = mod-succ-ℕ one-ℕ
 mod-three-ℕ : ℕ → Fin three-ℕ
 mod-three-ℕ = mod-succ-ℕ two-ℕ
 
--- We show that mod-succ-ℕ is a periodic function with period succ-ℕ n --
-
-{- Definition 7.1.7 -}
-
-is-periodic-ℕ :
-  (k : ℕ) {l : Level} {A : UU l} (f : ℕ → A) → UU l
-is-periodic-ℕ k f = (x : ℕ) → Id (f x) (f (add-ℕ x k))
-
-{- Lemma 7.1.8 -}
-
-{- Our first goal is to show that mod-succ-ℕ is a periodic function. We will
-   first prove some intermediate lemmas. -}
+{- Lemma 7.2.10 -}
 
 successor-law-mod-succ-ℕ :
   (k x : ℕ) → leq-ℕ x k →
@@ -363,7 +385,7 @@ successor-law-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) p =
     ( ap succ-Fin (ap inl (successor-law-mod-succ-ℕ k x p)))) ∙
   ( ap inl (ap succ-Fin (inv (successor-law-mod-succ-ℕ k x p))))
 
-{- Corollary 7.1.9 -}
+{- Corollary 7.2.11 -}
 
 neg-one-law-mod-succ-ℕ :
   (k : ℕ) → Id (mod-succ-ℕ k k) neg-one-Fin
@@ -379,221 +401,9 @@ base-case-is-periodic-mod-succ-ℕ zero-ℕ = refl
 base-case-is-periodic-mod-succ-ℕ (succ-ℕ k) =
   ap succ-Fin (neg-one-law-mod-succ-ℕ (succ-ℕ k))
 
-{- Proposition 7.1.10 -}
+{- Theorem 7.2.12 -}
 
-is-periodic-mod-succ-ℕ :
-  (k : ℕ) → is-periodic-ℕ (succ-ℕ k) (mod-succ-ℕ k)
-is-periodic-mod-succ-ℕ k zero-ℕ =
-  inv ( ( ap (mod-succ-ℕ k) (left-unit-law-add-ℕ (succ-ℕ k))) ∙
-        ( base-case-is-periodic-mod-succ-ℕ k))
-is-periodic-mod-succ-ℕ k (succ-ℕ x) =
-  ( ap succ-Fin (is-periodic-mod-succ-ℕ k x)) ∙
-  ( inv (ap (mod-succ-ℕ k) (left-successor-law-add-ℕ x (succ-ℕ k))))
-
---------------------------------------------------------------------------------
-
-{- Section 7.2 Decidability -}
-
-{- Definition 7.2.1 -}
-
-is-decidable : {l : Level} (A : UU l) → UU l
-is-decidable A = coprod A (¬ A)
-
-{- Example 7.2.2 -}
-
-is-decidable-unit : is-decidable unit
-is-decidable-unit = inl star
-
-is-decidable-empty : is-decidable empty
-is-decidable-empty = inr id
-
-{- Definition 7.2.3 -}
-
-{- We say that a type has decidable equality if we can decide whether 
-   x = y holds for any x, y : A. -}
-   
-has-decidable-equality : {l : Level} (A : UU l) → UU l
-has-decidable-equality A = (x y : A) → is-decidable (Id x y)
-
-{- Lemma 7.2.5 -}
-
-is-decidable-iff :
-  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
-  (A → B) → (B → A) → is-decidable A → is-decidable B
-is-decidable-iff f g =
-  functor-coprod f (functor-neg g)
-
-{- Proposition 7.2.6 -}
-
-{- The type ℕ is an example of a type with decidable equality. -}
-
-is-decidable-Eq-ℕ :
-  (m n : ℕ) → is-decidable (Eq-ℕ m n)
-is-decidable-Eq-ℕ zero-ℕ zero-ℕ = inl star
-is-decidable-Eq-ℕ zero-ℕ (succ-ℕ n) = inr id
-is-decidable-Eq-ℕ (succ-ℕ m) zero-ℕ = inr id
-is-decidable-Eq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-Eq-ℕ m n
-
-has-decidable-equality-ℕ : has-decidable-equality ℕ
-has-decidable-equality-ℕ x y =
-  is-decidable-iff (eq-Eq-ℕ x y) Eq-ℕ-eq (is-decidable-Eq-ℕ x y)
-
-{- Definition 7.2.7 -}
-
-{- Observational equality on finite sets -}
-
-Eq-Fin : (k : ℕ) → Fin k → Fin k → UU lzero
-Eq-Fin (succ-ℕ k) (inl x) (inl y) = Eq-Fin k x y
-Eq-Fin (succ-ℕ k) (inl x) (inr y) = empty
-Eq-Fin (succ-ℕ k) (inr x) (inl y) = empty
-Eq-Fin (succ-ℕ k) (inr x) (inr y) = unit
-
-{- Proposition 7.2.8 -}
-
-refl-Eq-Fin : {k : ℕ} (x : Fin k) → Eq-Fin k x x
-refl-Eq-Fin {succ-ℕ k} (inl x) = refl-Eq-Fin x
-refl-Eq-Fin {succ-ℕ k} (inr x) = star
-
-Eq-Fin-eq : {k : ℕ} {x y : Fin k} → Id x y → Eq-Fin k x y
-Eq-Fin-eq {k} refl = refl-Eq-Fin {k} _
-
-eq-Eq-Fin :
-  {k : ℕ} {x y : Fin k} → Eq-Fin k x y → Id x y
-eq-Eq-Fin {succ-ℕ k} {inl x} {inl y} e = ap inl (eq-Eq-Fin e)
-eq-Eq-Fin {succ-ℕ k} {inr star} {inr star} star = refl
-
-{- Proposition 7.2.9 -}
-
-{- We show that Fin k has decidable equality, for each n : ℕ. -}
-
-is-decidable-Eq-Fin :
-  (k : ℕ) (x y : Fin k) → is-decidable (Eq-Fin k x y)
-is-decidable-Eq-Fin (succ-ℕ k) (inl x) (inl y) = is-decidable-Eq-Fin k x y
-is-decidable-Eq-Fin (succ-ℕ k) (inl x) (inr y) = inr id
-is-decidable-Eq-Fin (succ-ℕ k) (inr x) (inl y) = inr id
-is-decidable-Eq-Fin (succ-ℕ k) (inr x) (inr y) = inl star
-
-is-decidable-eq-Fin :
-  (k : ℕ) (x y : Fin k) → is-decidable (Id x y)
-is-decidable-eq-Fin k x y =
-  functor-coprod eq-Eq-Fin (functor-neg Eq-Fin-eq) (is-decidable-Eq-Fin k x y)
-
-{- Proposition 7.2.10 -}
-
-{- The inclusion function Fin k → Fin (succ-ℕ k) is injective. -}
-
-is-injective-inl-Fin :
-  {k : ℕ} {x y : Fin k} → Id (inl-Fin k x) (inl-Fin k y) → Id x y
-is-injective-inl-Fin p = eq-Eq-Fin (Eq-Fin-eq p)
-
-{- Lemma 7.2.11 -}
-
-neq-zero-succ-Fin :
-  {k : ℕ} {x : Fin k} → ¬ (Id (succ-Fin (inl-Fin k x)) zero-Fin)
-neq-zero-succ-Fin {succ-ℕ k} {inl x} p =
-  neq-zero-succ-Fin (is-injective-inl-Fin p)
-neq-zero-succ-Fin {succ-ℕ k} {inr star} p =
-  Eq-Fin-eq {succ-ℕ (succ-ℕ k)} {inr star} {zero-Fin} p
-
-{- Proposition 7.2.12 -}
-
-{- The successor function Fin k → Fin k is injective. -}
-
-is-injective-skip-zero-Fin :
-  {k : ℕ} {x y : Fin k} → Id (skip-zero-Fin x) (skip-zero-Fin y) → Id x y
-is-injective-skip-zero-Fin {succ-ℕ k} {inl x} {inl y} p =
-  ap inl (is-injective-skip-zero-Fin (is-injective-inl-Fin p))
-is-injective-skip-zero-Fin {succ-ℕ k} {inl x} {inr star} p =
-  ex-falso (Eq-Fin-eq p)
-is-injective-skip-zero-Fin {succ-ℕ k} {inr star} {inl y} p =
-  ex-falso (Eq-Fin-eq p)
-is-injective-skip-zero-Fin {succ-ℕ k} {inr star} {inr star} p = refl
-
-is-injective-succ-Fin :
-  {k : ℕ} {x y : Fin k} → Id (succ-Fin x) (succ-Fin y) → Id x y
-is-injective-succ-Fin {succ-ℕ k} {inl x} {inl y} p =
-  ap inl (is-injective-skip-zero-Fin {k} {x} {y} p)
-is-injective-succ-Fin {succ-ℕ k} {inl x} {inr star} p =
-  ex-falso (neq-zero-succ-Fin {succ-ℕ k} {inl x} (ap inl p))
-is-injective-succ-Fin {succ-ℕ k} {inr star} {inl y} p =
-  ex-falso (neq-zero-succ-Fin {succ-ℕ k} {inl y} (ap inl (inv p)))
-is-injective-succ-Fin {succ-ℕ k} {inr star} {inr star} p = refl
-
---------------------------------------------------------------------------------
-
-{- Section 7.3 Definitions by case analysis -}
-
-{- We define an alternative definition of the predecessor function with manual 
-   with-abstraction. -}
-
-cases-pred-Fin-2 :
-  {k : ℕ} (x : Fin (succ-ℕ k))
-  (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) → Fin (succ-ℕ k)
-cases-pred-Fin-2 {zero-ℕ} (inr star) d = zero-Fin
-cases-pred-Fin-2 {succ-ℕ k} (inl x) (inl e) = neg-one-Fin
-cases-pred-Fin-2 {succ-ℕ k} (inl x) (inr f) =
-  inl (cases-pred-Fin-2 {k} x (inr f))
-cases-pred-Fin-2 {succ-ℕ k} (inr star) (inr f) = inl neg-one-Fin
-
-pred-Fin-2 : {k : ℕ} → Fin k → Fin k
-pred-Fin-2 {succ-ℕ k} x =
-  cases-pred-Fin-2 {k} x (is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin)
-
---------------------------------------------------------------------------------
-
--- We show that mod-succ-ℕ sends congruent elements to equal elements --
-
-zero-class-mod-succ-ℕ :
-  (k x : ℕ) (d : div-ℕ (succ-ℕ k) x) → Id (mod-succ-ℕ k x) zero-Fin
-zero-class-mod-succ-ℕ k .zero-ℕ (pair zero-ℕ refl) = refl
-zero-class-mod-succ-ℕ k x (pair (succ-ℕ d) p) = 
-  ( inv (ap (mod-succ-ℕ k) p)) ∙
-  ( ( inv ( is-periodic-mod-succ-ℕ k (mul-ℕ d (succ-ℕ k)))) ∙
-    ( zero-class-mod-succ-ℕ k (mul-ℕ d (succ-ℕ k)) (pair d refl)))
-
-eq-cong-ℕ :
-  (k x y : ℕ) → cong-ℕ (succ-ℕ k) x y → Id (mod-succ-ℕ k x) (mod-succ-ℕ k y)
-eq-cong-ℕ k zero-ℕ zero-ℕ H = refl
-eq-cong-ℕ k zero-ℕ (succ-ℕ y) H =
-  inv (zero-class-mod-succ-ℕ k (succ-ℕ y) H)
-eq-cong-ℕ k (succ-ℕ x) zero-ℕ H =
-  zero-class-mod-succ-ℕ k (succ-ℕ x) H
-eq-cong-ℕ k (succ-ℕ x) (succ-ℕ y) H =
-  ap succ-Fin (eq-cong-ℕ k x y H)
-
---------------------------------------------------------------------------------
-
-{- We define the inclusion of Fin k into ℕ. -}
-
-nat-Fin : {k : ℕ} → Fin k → ℕ
-nat-Fin {succ-ℕ k} (inl x) = nat-Fin x
-nat-Fin {succ-ℕ k} (inr x) = k
-
-zero-law-nat-Fin :
-  {k : ℕ} → Id (nat-Fin (zero-Fin {k})) zero-ℕ
-zero-law-nat-Fin {zero-ℕ} = refl 
-zero-law-nat-Fin {succ-ℕ k} = zero-law-nat-Fin {k}
-
-{- We show that nat-Fin x ≤ k. -}
-
-strict-upper-bound-nat-Fin : {k : ℕ} (x : Fin k) → le-ℕ (nat-Fin x) k
-strict-upper-bound-nat-Fin {succ-ℕ k} (inl x) =
-  transitive-le-ℕ
-    ( nat-Fin x)
-    ( k)
-    ( succ-ℕ k)
-    ( strict-upper-bound-nat-Fin x)
-    ( succ-le-ℕ k)
-strict-upper-bound-nat-Fin {succ-ℕ k} (inr star) =
-  succ-le-ℕ k
-
-upper-bound-nat-Fin : {k : ℕ} (x : Fin (succ-ℕ k)) → leq-ℕ (nat-Fin x) k
-upper-bound-nat-Fin {zero-ℕ} (inr star) = star
-upper-bound-nat-Fin {succ-ℕ k} (inl x) =
-  preserves-leq-succ-ℕ (nat-Fin x) k (upper-bound-nat-Fin x)
-upper-bound-nat-Fin {succ-ℕ k} (inr star) = reflexive-leq-ℕ (succ-ℕ k)
-
-{- Now we show that Fin (succ-ℕ k) is a retract of ℕ -}
+-- Now we show that Fin (succ-ℕ k) is a retract of ℕ
 
 issec-nat-Fin : (k : ℕ) (x : Fin (succ-ℕ k)) → Id (mod-succ-ℕ k (nat-Fin x)) x
 issec-nat-Fin zero-ℕ (inr star) = refl
@@ -602,115 +412,59 @@ issec-nat-Fin (succ-ℕ k) (inl x) =
   ( ap inl (issec-nat-Fin k x))
 issec-nat-Fin (succ-ℕ k) (inr star) = neg-one-law-mod-succ-ℕ (succ-ℕ k)
 
--- We show that nat-Fin is an injective function --
+--------------------------------------------------------------------------------
 
-neq-leq-ℕ : {m n : ℕ} → leq-ℕ m n → ¬ (Id m (succ-ℕ n))
-neq-leq-ℕ {zero-ℕ} {n} p q = Eq-ℕ-eq q
-neq-leq-ℕ {succ-ℕ m} {succ-ℕ n} p q =
-  neq-leq-ℕ p (is-injective-succ-ℕ m (succ-ℕ n) q)
+{- Section 7.3 The effectiveness theorem of modular arithmetic -}
 
-is-injective-nat-Fin : {k : ℕ} {x y : Fin (succ-ℕ k)} →
-  Id (nat-Fin x) (nat-Fin y) → Id x y
-is-injective-nat-Fin {zero-ℕ} {inr star} {inr star} p = refl
-is-injective-nat-Fin {succ-ℕ k} {inl x} {inl y} p =
-  ap inl (is-injective-nat-Fin p)
-is-injective-nat-Fin {succ-ℕ k} {inl x} {inr star} p =
-  ex-falso (neq-leq-ℕ (upper-bound-nat-Fin x) p)
-is-injective-nat-Fin {succ-ℕ k} {inr star} {inl y} p =
-  ex-falso (neq-leq-ℕ (upper-bound-nat-Fin y) (inv p))
-is-injective-nat-Fin {succ-ℕ k} {inr star} {inr star} p = refl
+{- Lemma 7.3.1 -}
 
--- We show that nat-Fin commutes with the successor for x ≠ neg-one-Fin --
+-- We prove three things to help calculating with nat-Fin.
 
-nat-succ-Fin :
-  {k : ℕ} (x : Fin (succ-ℕ k)) (p : ¬ (Eq-Fin (succ-ℕ k) x neg-one-Fin)) →
-  Id (nat-Fin (succ-Fin x)) (succ-ℕ (nat-Fin x))
-nat-succ-Fin {k} (inr star) p = ex-falso (p star)
-nat-succ-Fin {succ-ℕ k} (inl (inr star)) p = refl
-nat-succ-Fin {succ-ℕ k} (inl (inl x)) p =
-  nat-succ-Fin (inl x) id
+nat-zero-Fin :
+  {k : ℕ} → Id (nat-Fin (zero-Fin {k})) zero-ℕ
+nat-zero-Fin {zero-ℕ} = refl 
+nat-zero-Fin {succ-ℕ k} = nat-zero-Fin {k}
+
+nat-skip-zero-Fin :
+  {k : ℕ} (x : Fin k) → Id (nat-Fin (skip-zero-Fin x)) (succ-ℕ (nat-Fin x))
+nat-skip-zero-Fin {succ-ℕ k} (inl x) = nat-skip-zero-Fin x
+nat-skip-zero-Fin {succ-ℕ k} (inr star) = refl
+
+cong-nat-succ-Fin :
+  (k : ℕ) (x : Fin k) → cong-ℕ k (nat-Fin (succ-Fin x)) (succ-ℕ (nat-Fin x))
+cong-nat-succ-Fin (succ-ℕ k) (inl x) =
+  cong-identification-ℕ
+    ( succ-ℕ k)
+    { nat-Fin (succ-Fin (inl x))}
+    { succ-ℕ (nat-Fin x)}
+    ( nat-skip-zero-Fin x)
+cong-nat-succ-Fin (succ-ℕ k) (inr star) =
+  concatenate-eq-cong-ℕ
+    ( succ-ℕ k)
+    { nat-Fin {succ-ℕ k} zero-Fin}
+    { zero-ℕ}
+    { succ-ℕ k}
+    ( nat-zero-Fin {k})
+    ( cong-zero-ℕ' (succ-ℕ k))
+
+{- Corollary 7.3.2 -}
 
 -- We show that (nat-Fin (mod-succ-ℕ n x)) is congruent to x modulo n+1. --
 
 cong-nat-mod-succ-ℕ :
   (k x : ℕ) → cong-ℕ (succ-ℕ k) (nat-Fin (mod-succ-ℕ k x)) x
-cong-nat-mod-succ-ℕ k x with
-  is-decidable-eq-Fin (succ-ℕ k) (mod-succ-ℕ k x) zero-Fin
-cong-nat-mod-succ-ℕ zero-ℕ zero-ℕ | d =
-  pair zero-ℕ refl
-cong-nat-mod-succ-ℕ zero-ℕ (succ-ℕ x) | d =
-  div-one-ℕ (dist-ℕ (nat-Fin (mod-succ-ℕ zero-ℕ (succ-ℕ x))) (succ-ℕ x))
-cong-nat-mod-succ-ℕ (succ-ℕ k) zero-ℕ | d =
-  cong-identification-ℕ
-    ( succ-ℕ (succ-ℕ k))
-    -- { zero-ℕ}
-    -- { dist-ℕ (nat-Fin {succ-ℕ (succ-ℕ k)} zero-Fin) zero-ℕ}
-    ( ( inv (zero-law-nat-Fin {succ-ℕ k})) ∙
-      ( inv (right-zero-law-dist-ℕ (nat-Fin {succ-ℕ (succ-ℕ k)} zero-Fin))))
-cong-nat-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) | inl p =
-  concatenate-eq-cong-eq-cong-eq-ℕ
-    ( succ-ℕ (succ-ℕ k))
-    ( ap nat-Fin {x = mod-succ-ℕ (succ-ℕ k) (succ-ℕ x)} p ∙
-      zero-law-nat-Fin {succ-ℕ k})
-    ( symmetric-cong-ℕ
-      ( succ-ℕ (succ-ℕ k))
-      ( zero-ℕ)
-      ( succ-ℕ (succ-ℕ k))
-      ( cong-zero-ℕ (succ-ℕ (succ-ℕ k))))
-    ( ap
-      ( succ-ℕ ∘ nat-Fin)
-      { x = neg-one-Fin}
-      { y = mod-succ-ℕ (succ-ℕ k) x}
-      ( is-injective-succ-Fin (inv p)))
-    ( step-invariant-cong-ℕ
-      ( succ-ℕ (succ-ℕ k))
-      ( nat-Fin (mod-succ-ℕ (succ-ℕ k) x))
-      ( x)
-      ( cong-nat-mod-succ-ℕ (succ-ℕ k) x))
-    ( refl)
-cong-nat-mod-succ-ℕ (succ-ℕ k) (succ-ℕ x) | inr f =
-  concatenate-eq-cong-ℕ
-    ( succ-ℕ (succ-ℕ k))
-    ( nat-succ-Fin
-      ( mod-succ-ℕ (succ-ℕ k) x)
-      ( (f ∘ ap succ-Fin) ∘
-        ( eq-Eq-Fin
-          { succ-ℕ (succ-ℕ k)}
-          { x = mod-succ-ℕ (succ-ℕ k) x}
-          { y = neg-one-Fin})))
-    ( step-invariant-cong-ℕ
-      ( succ-ℕ (succ-ℕ k))
-      ( nat-Fin (mod-succ-ℕ (succ-ℕ k) x))
-      ( x)
-      ( cong-nat-mod-succ-ℕ (succ-ℕ k) x))
+cong-nat-mod-succ-ℕ k zero-ℕ =
+  cong-identification-ℕ (succ-ℕ k) (nat-zero-Fin {k})
+cong-nat-mod-succ-ℕ k (succ-ℕ x) =
+  transitive-cong-ℕ
+    ( succ-ℕ k)
+    ( nat-Fin (mod-succ-ℕ k (succ-ℕ x)))
+    ( succ-ℕ (nat-Fin (mod-succ-ℕ k x)))
+    ( succ-ℕ x)
+    ( cong-nat-succ-Fin (succ-ℕ k) (mod-succ-ℕ k x) )
+    ( cong-nat-mod-succ-ℕ k x)
 
---------------------------------------------------------------------------------
-
-{- We show that if mod-succ-ℕ n = is mod-succ-ℕ n x, then x and y must be
-   congruent modulo succ-ℕ n. -}
-
-cong-eq-ℕ :
-  (k x y : ℕ) → Id (mod-succ-ℕ k x) (mod-succ-ℕ k y) → cong-ℕ (succ-ℕ k) x y
-cong-eq-ℕ k x y p =
-  concatenate-cong-eq-cong-ℕ {succ-ℕ k} {x}
-    ( symmetric-cong-ℕ (succ-ℕ k) (nat-Fin (mod-succ-ℕ k x)) x
-      ( cong-nat-mod-succ-ℕ k x))
-    ( ap nat-Fin p)
-    ( cong-nat-mod-succ-ℕ k y)
-
---------------------------------------------------------------------------------
-
-{- We show that if x and y are congruent modulo (succ-ℕ n), then we will have
-   an identification mod-succ-ℕ n x = mod-succ-ℕ n y. -}
-
-upper-bound-dist-ℕ :
-  (b x y : ℕ) → leq-ℕ x b → leq-ℕ y b → leq-ℕ (dist-ℕ x y) b
-upper-bound-dist-ℕ zero-ℕ zero-ℕ zero-ℕ H K = star
-upper-bound-dist-ℕ (succ-ℕ b) zero-ℕ zero-ℕ H K = star
-upper-bound-dist-ℕ (succ-ℕ b) zero-ℕ (succ-ℕ y) H K = K
-upper-bound-dist-ℕ (succ-ℕ b) (succ-ℕ x) zero-ℕ H K = H
-upper-bound-dist-ℕ (succ-ℕ b) (succ-ℕ x) (succ-ℕ y) H K =
-  preserves-leq-succ-ℕ (dist-ℕ x y) b (upper-bound-dist-ℕ b x y H K)
+{- Proposition 7.3.4 -}
 
 contradiction-leq-ℕ :
   (x y : ℕ) → leq-ℕ x y → leq-ℕ (succ-ℕ y) x → empty
@@ -731,6 +485,20 @@ eq-zero-div-ℕ d (succ-ℕ x) H (pair (succ-ℕ k) p) =
         ( leq-add-ℕ' d (mul-ℕ k (succ-ℕ d)))
         ( p)) H)
 
+{- Theorem 7.3.5 -}
+
+{- We show that if mod-succ-ℕ k x = mod-succ-ℕ k y, then x and y must be
+   congruent modulo succ-ℕ n. This is the forward direction of the theorm. -}
+
+cong-eq-ℕ :
+  (k x y : ℕ) → Id (mod-succ-ℕ k x) (mod-succ-ℕ k y) → cong-ℕ (succ-ℕ k) x y
+cong-eq-ℕ k x y p =
+  concatenate-cong-eq-cong-ℕ {succ-ℕ k} {x}
+    ( symmetric-cong-ℕ (succ-ℕ k) (nat-Fin (mod-succ-ℕ k x)) x
+      ( cong-nat-mod-succ-ℕ k x))
+    ( ap nat-Fin p)
+    ( cong-nat-mod-succ-ℕ k y)
+
 eq-cong-nat-Fin :
   (k : ℕ) (x y : Fin k) → cong-ℕ k (nat-Fin x) (nat-Fin y) → Id x y
 eq-cong-nat-Fin (succ-ℕ k) x y H =
@@ -748,9 +516,9 @@ eq-cong-nat-Fin (succ-ℕ k) x y H =
             ( upper-bound-nat-Fin y))
           ( H))))
 
-eq-mod-succ-ℕ :
+eq-cong-ℕ :
   (k x y : ℕ) → cong-ℕ (succ-ℕ k) x y → Id (mod-succ-ℕ k x) (mod-succ-ℕ k y)
-eq-mod-succ-ℕ k x y H =
+eq-cong-ℕ k x y H =
   eq-cong-nat-Fin
     ( succ-ℕ k)
     ( mod-succ-ℕ k x)
@@ -765,32 +533,72 @@ eq-mod-succ-ℕ k x y H =
         ( symmetric-cong-ℕ (succ-ℕ k) (nat-Fin (mod-succ-ℕ k y)) y
           ( cong-nat-mod-succ-ℕ k y))))
 
-{- This completes the proof that 
-
-   (mod-succ-ℕ n x = mod-succ-ℕ n y) ↔ (cong-ℕ (succ-ℕ n) x y). -}
-
 --------------------------------------------------------------------------------
 
-{- Section 7.7 Modular arithmetic -}
+{- Section 7.4 The cyclic group structure on the finite types -}
 
--- We show that congruence is invariant under scalar multiplication --
+{- Definition 7.4.1 -}
 
-scalar-invariant-cong-ℕ :
-  (k x y z : ℕ) → cong-ℕ k x y →  cong-ℕ k (mul-ℕ z x) (mul-ℕ z y)
-scalar-invariant-cong-ℕ k x y z (pair d p) =
-  pair
-    ( mul-ℕ z d)
-    ( ( associative-mul-ℕ z d k) ∙
-      ( ( ap (mul-ℕ z) p) ∙
-        ( inv (linear-dist-ℕ x y z))))
+-- Addition on finite sets --
 
-scalar-invariant-cong-ℕ' :
-  (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (mul-ℕ x z) (mul-ℕ y z)
-scalar-invariant-cong-ℕ' k x y z H =
+add-Fin : {k : ℕ} → Fin k → Fin k → Fin k
+add-Fin {succ-ℕ k} x y = mod-succ-ℕ k (add-ℕ (nat-Fin x) (nat-Fin y))
+
+add-Fin' : {k : ℕ} → Fin k → Fin k → Fin k
+add-Fin' x y = add-Fin y x
+
+-- We define an action on paths of add-Fin on the two arguments at once.
+
+ap-add-Fin :
+  {k : ℕ} {x y x' y' : Fin k} →
+  Id x x' → Id y y' → Id (add-Fin x y) (add-Fin x' y')
+ap-add-Fin refl refl = refl
+
+-- The negative of an element of Fin k --
+
+neg-Fin :
+  {k : ℕ} → Fin k → Fin k
+neg-Fin {succ-ℕ k} x =
+  mod-succ-ℕ k (dist-ℕ (nat-Fin x) (succ-ℕ k))
+
+{- Remark 7.4.2 -}
+
+cong-nat-zero-Fin :
+  {k : ℕ} → cong-ℕ (succ-ℕ k) (nat-Fin (zero-Fin {k})) zero-ℕ
+cong-nat-zero-Fin {k} = cong-nat-mod-succ-ℕ k zero-ℕ
+
+cong-add-Fin :
+  {k : ℕ} (x y : Fin k) →
+  cong-ℕ k (nat-Fin (add-Fin x y)) (add-ℕ (nat-Fin x) (nat-Fin y))
+cong-add-Fin {succ-ℕ k} x y =
+  cong-nat-mod-succ-ℕ k (add-ℕ (nat-Fin x) (nat-Fin y))
+
+cong-neg-Fin :
+  {k : ℕ} (x : Fin k) →
+  cong-ℕ k (nat-Fin (neg-Fin x)) (dist-ℕ (nat-Fin x) k)
+cong-neg-Fin {succ-ℕ k} x = 
+  cong-nat-mod-succ-ℕ k (dist-ℕ (nat-Fin x) (succ-ℕ k))
+
+{- Proposition 7.4.3 -}
+
+-- We show that congruence is translation invariant --
+
+translation-invariant-cong-ℕ :
+  (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (add-ℕ z x) (add-ℕ z y)
+translation-invariant-cong-ℕ k x y z (pair d p) =
+  pair d (p ∙ inv (translation-invariant-dist-ℕ z x y))
+
+translation-invariant-cong-ℕ' :
+  (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (add-ℕ x z) (add-ℕ y z)
+translation-invariant-cong-ℕ' k x y z H =
   concatenate-eq-cong-eq-ℕ k
-    ( commutative-mul-ℕ x z)
-    ( scalar-invariant-cong-ℕ k x y z H)
-    ( commutative-mul-ℕ z y)
+    ( commutative-add-ℕ x z)
+    ( translation-invariant-cong-ℕ k x y z H)
+    ( commutative-add-ℕ z y)
+
+step-invariant-cong-ℕ :
+  (k x y : ℕ) → cong-ℕ k x y → cong-ℕ k (succ-ℕ x) (succ-ℕ y)
+step-invariant-cong-ℕ k x y = translation-invariant-cong-ℕ' k x y one-ℕ
 
 -- We show that addition respects the congruence relation --
 
@@ -802,40 +610,13 @@ congruence-add-ℕ k {x} {y} {x'} {y'} H K =
     ( translation-invariant-cong-ℕ k y y' x K)
     ( translation-invariant-cong-ℕ' k x x' y' H)
 
--- We show that multiplication respects the congruence relation --
+{- Theorem 7.4.4 -}
 
-congruence-mul-ℕ :
-  (k : ℕ) {x y x' y' : ℕ} →
-  cong-ℕ  k x x' → cong-ℕ k y y' → cong-ℕ k (mul-ℕ x y) (mul-ℕ x' y')
-congruence-mul-ℕ k {x} {y} {x'} {y'} H K =
-  transitive-cong-ℕ k (mul-ℕ x y) (mul-ℕ x y') (mul-ℕ x' y')
-    ( scalar-invariant-cong-ℕ k y y' x K)
-    ( scalar-invariant-cong-ℕ' k x x' y' H)
+-- We show that addition is commutative --
 
---------------------------------------------------------------------------------
-
--- Now we start defining the finite cyclic groups ℤ/n.
-
--- Addition on finite sets --
-
-add-Fin : {k : ℕ} → Fin k → Fin k → Fin k
-add-Fin {succ-ℕ k} x y = mod-succ-ℕ k (add-ℕ (nat-Fin x) (nat-Fin y))
-
-add-Fin' : {k : ℕ} → Fin k → Fin k → Fin k
-add-Fin' x y = add-Fin y x
-
-ap-add-Fin :
-  {k : ℕ} {x y x' y' : Fin k} →
-  Id x x' → Id y y' → Id (add-Fin x y) (add-Fin x' y')
-ap-add-Fin refl refl = refl
-
-cong-add-Fin :
-  {k : ℕ} (x y : Fin k) →
-  cong-ℕ k (nat-Fin (add-Fin x y)) (add-ℕ (nat-Fin x) (nat-Fin y))
-cong-add-Fin {succ-ℕ k} x y =
-  cong-nat-mod-succ-ℕ k (add-ℕ (nat-Fin x) (nat-Fin y))
-
---------------------------------------------------------------------------------
+commutative-add-Fin : {k : ℕ} (x y : Fin k) → Id (add-Fin x y) (add-Fin y x)
+commutative-add-Fin {succ-ℕ k} x y =
+  ap (mod-succ-ℕ k) (commutative-add-ℕ (nat-Fin x) (nat-Fin y))
 
 -- We show that addition is associative --
 
@@ -873,21 +654,7 @@ associative-add-Fin {succ-ℕ k} x y z =
           ( add-ℕ (nat-Fin y) (nat-Fin z))
           ( cong-add-Fin y z))))
 
---------------------------------------------------------------------------------
-
--- addition is commutative --
-
-commutative-add-Fin : {k : ℕ} (x y : Fin k) → Id (add-Fin x y) (add-Fin y x)
-commutative-add-Fin {succ-ℕ k} x y =
-  ap (mod-succ-ℕ k) (commutative-add-ℕ (nat-Fin x) (nat-Fin y))
-
---------------------------------------------------------------------------------
-
--- We prove the unit laws for add-Fin --
-
-nat-zero-Fin :
-  {k : ℕ} → cong-ℕ (succ-ℕ k) (nat-Fin (zero-Fin {k})) zero-ℕ
-nat-zero-Fin {k} = cong-nat-mod-succ-ℕ k zero-ℕ
+-- We show that addition satisfies the right unit law --
 
 right-unit-law-add-Fin :
   {k : ℕ} (x : Fin (succ-ℕ k)) → Id (add-Fin x zero-Fin) x
@@ -902,7 +669,7 @@ right-unit-law-add-Fin {k} x =
       { x' = nat-Fin x}
       { y' = zero-ℕ}
       ( reflexive-cong-ℕ (succ-ℕ k) (nat-Fin {succ-ℕ k} x))
-      ( nat-zero-Fin {k}))) ∙
+      ( cong-nat-zero-Fin {k}))) ∙
   ( issec-nat-Fin k x)
 
 left-unit-law-add-Fin :
@@ -911,20 +678,7 @@ left-unit-law-add-Fin {k} x =
   ( commutative-add-Fin zero-Fin x) ∙
   ( right-unit-law-add-Fin x)
 
---------------------------------------------------------------------------------
-
--- We define the negative of x : Fin (succ-ℕ k) --
-
-neg-Fin :
-  {k : ℕ} → Fin k → Fin k
-neg-Fin {succ-ℕ k} x =
-  mod-succ-ℕ k (dist-ℕ (nat-Fin x) (succ-ℕ k))
-
-cong-neg-Fin :
-  {k : ℕ} (x : Fin k) →
-  cong-ℕ k (nat-Fin (neg-Fin x)) (dist-ℕ (nat-Fin x) k)
-cong-neg-Fin {succ-ℕ k} x = 
-  cong-nat-mod-succ-ℕ k (dist-ℕ (nat-Fin x) (succ-ℕ k))
+-- We show that addition satisfies the left inverse law --
 
 left-inverse-law-add-Fin :
   {k : ℕ} (x : Fin (succ-ℕ k)) → Id (add-Fin (neg-Fin x) x) zero-Fin
@@ -964,10 +718,21 @@ right-inverse-law-add-Fin x =
 
 {- Exercises -}
 
--- Exercise 7.1
+{- Exercise 7.1 -}
 
-{- We give a first solution of this exercise using the definition of pred-Fin
-   that doesn't use with-abstraction. -}
+-- See Proposition 7.1.2
+
+{- Exercise 7.2 -}
+
+{- Exercise 7.3 -}
+
+{- Exercise 7.4 -}
+
+{- Exercise 7.5 -}
+
+{- Exercise 7.6 -}
+
+{- Exercise 7.7 -}
 
 pred-zero-Fin :
   {k : ℕ} → Id (pred-Fin {succ-ℕ k} zero-Fin) neg-one-Fin
@@ -996,67 +761,9 @@ pred-succ-Fin {succ-ℕ (succ-ℕ k)} (inl (inl x)) =
 pred-succ-Fin {succ-ℕ (succ-ℕ k)} (inl (inr star)) = refl
 pred-succ-Fin {succ-ℕ (succ-ℕ k)} (inr star) = pred-zero-Fin
 
-{- We give a solution to the exercise for the alternative definition of the
-   predecessor function, using with-abstraction. -}
+{- Exercise 7.8 -}
 
-pred-zero-Fin-2 :
-  {k : ℕ} → Id (pred-Fin-2 {succ-ℕ k} zero-Fin) neg-one-Fin
-pred-zero-Fin-2 {k} with is-decidable-Eq-Fin (succ-ℕ k) zero-Fin zero-Fin
-pred-zero-Fin-2 {zero-ℕ} | d = refl
-pred-zero-Fin-2 {succ-ℕ k} | inl e = refl
-pred-zero-Fin-2 {succ-ℕ k} | inr f =
-  ex-falso (f (refl-Eq-Fin {succ-ℕ k} zero-Fin))
-  
-cases-succ-pred-Fin-2 :
-  {k : ℕ} (x : Fin (succ-ℕ k))
-  (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) →
-  Id (succ-Fin (cases-pred-Fin-2 x d)) x
-cases-succ-pred-Fin-2 {zero-ℕ} (inr star) d =
-  refl
-cases-succ-pred-Fin-2 {succ-ℕ k} (inl x) (inl e) =
-  inv (eq-Eq-Fin e)
-cases-succ-pred-Fin-2 {succ-ℕ zero-ℕ} (inl (inr x)) (inr f) =
-  ex-falso (f star)
-cases-succ-pred-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inl x)) (inr f) =
-  ap inl (cases-succ-pred-Fin-2 (inl x) (inr f))
-cases-succ-pred-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inr star)) (inr f) =
-  refl
-cases-succ-pred-Fin-2 {succ-ℕ k} (inr star) (inr f) =
-  refl
-
-succ-pred-Fin-2 :
-  {k : ℕ} (x : Fin k) → Id (succ-Fin (pred-Fin-2 x)) x
-succ-pred-Fin-2 {succ-ℕ k} x =
-  cases-succ-pred-Fin-2 x (is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin)
-
-pred-inl-Fin-2 :
-  {k : ℕ} (x : Fin (succ-ℕ k)) (f : ¬ (Eq-Fin (succ-ℕ k) x zero-Fin)) →
-  Id (pred-Fin-2 (inl x)) (inl (pred-Fin-2 x))
-pred-inl-Fin-2 {k} x f with is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin
-... | inl e = ex-falso (f e)
-... | inr f' = refl
-
-nEq-zero-succ-Fin :
-  {k : ℕ} (x : Fin (succ-ℕ k)) →
-  ¬ (Eq-Fin (succ-ℕ (succ-ℕ k)) (succ-Fin (inl x)) zero-Fin)
-nEq-zero-succ-Fin {succ-ℕ k} (inl (inl x)) e = nEq-zero-succ-Fin (inl x) e
-nEq-zero-succ-Fin {succ-ℕ k} (inl (inr star)) ()
-nEq-zero-succ-Fin {succ-ℕ k} (inr star) ()
-
-pred-succ-Fin-2 :
-  {k : ℕ} (x : Fin (succ-ℕ k)) → Id (pred-Fin-2 (succ-Fin x)) x
-pred-succ-Fin-2 {zero-ℕ} (inr star) = refl
-pred-succ-Fin-2 {succ-ℕ zero-ℕ} (inl (inr star)) = refl
-pred-succ-Fin-2 {succ-ℕ zero-ℕ} (inr star) = refl
-pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inl (inl x))) =
-  ( pred-inl-Fin-2 (inl (succ-Fin (inl x))) (nEq-zero-succ-Fin (inl x))) ∙
-  ( ( ap inl (pred-inl-Fin-2 (succ-Fin (inl x)) (nEq-zero-succ-Fin (inl x)))) ∙
-    ( ap (inl ∘ inl) (pred-succ-Fin-2 (inl x))))
-pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inl (inr star))) = refl
-pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inr star)) = refl
-pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inr star) = pred-zero-Fin-2
-
---------------------------------------------------------------------------------
+{- Exercise 7.9 -}
 
 reverse-Fin : {k : ℕ} → Fin k → Fin k
 reverse-Fin {succ-ℕ k} (inl x) = skip-zero-Fin (reverse-Fin x)
@@ -1085,7 +792,36 @@ reverse-reverse-Fin {succ-ℕ k} (inl x) =
   ( ap inl (reverse-reverse-Fin x))
 reverse-reverse-Fin {succ-ℕ k} (inr star) = reverse-zero-Fin
 
---------------------------------------------------------------------------------
+{- Exercise 7.10 -}
+
+-- We show that congruence is invariant under scalar multiplication --
+
+scalar-invariant-cong-ℕ :
+  (k x y z : ℕ) → cong-ℕ k x y →  cong-ℕ k (mul-ℕ z x) (mul-ℕ z y)
+scalar-invariant-cong-ℕ k x y z (pair d p) =
+  pair
+    ( mul-ℕ z d)
+    ( ( associative-mul-ℕ z d k) ∙
+      ( ( ap (mul-ℕ z) p) ∙
+        ( inv (linear-dist-ℕ x y z))))
+
+scalar-invariant-cong-ℕ' :
+  (k x y z : ℕ) → cong-ℕ k x y → cong-ℕ k (mul-ℕ x z) (mul-ℕ y z)
+scalar-invariant-cong-ℕ' k x y z H =
+  concatenate-eq-cong-eq-ℕ k
+    ( commutative-mul-ℕ x z)
+    ( scalar-invariant-cong-ℕ k x y z H)
+    ( commutative-mul-ℕ z y)
+
+-- We show that multiplication respects the congruence relation --
+
+congruence-mul-ℕ :
+  (k : ℕ) {x y x' y' : ℕ} →
+  cong-ℕ  k x x' → cong-ℕ k y y' → cong-ℕ k (mul-ℕ x y) (mul-ℕ x' y')
+congruence-mul-ℕ k {x} {y} {x'} {y'} H K =
+  transitive-cong-ℕ k (mul-ℕ x y) (mul-ℕ x y') (mul-ℕ x' y')
+    ( scalar-invariant-cong-ℕ k y y' x K)
+    ( scalar-invariant-cong-ℕ' k x x' y' H)
 
 {- We define the multiplication on the types Fin k. -}
 
@@ -1171,8 +907,6 @@ right-unit-law-mul-Fin x =
   ( commutative-mul-Fin x one-Fin) ∙
   ( left-unit-law-mul-Fin x)
 
---------------------------------------------------------------------------------
-
 left-distributive-mul-add-Fin :
   {k : ℕ} (x y z : Fin k) →
   Id (mul-Fin x (add-Fin y z)) (add-Fin (mul-Fin x y) (mul-Fin x z))
@@ -1218,6 +952,249 @@ right-distributive-mul-add-Fin {k} x y z =
   ( ( left-distributive-mul-add-Fin z x y) ∙
     ( ap-add-Fin (commutative-mul-Fin z x) (commutative-mul-Fin z y)))
 
+{- Exercise 7.11 -}
+
+{- Exercise 7.12 -}
+
+-- We introduce the observational equality on finite sets.
+
+Eq-Fin : (k : ℕ) → Fin k → Fin k → UU lzero
+Eq-Fin (succ-ℕ k) (inl x) (inl y) = Eq-Fin k x y
+Eq-Fin (succ-ℕ k) (inl x) (inr y) = empty
+Eq-Fin (succ-ℕ k) (inr x) (inl y) = empty
+Eq-Fin (succ-ℕ k) (inr x) (inr y) = unit
+
+-- Exercise 7.12 (a)
+
+refl-Eq-Fin : {k : ℕ} (x : Fin k) → Eq-Fin k x x
+refl-Eq-Fin {succ-ℕ k} (inl x) = refl-Eq-Fin x
+refl-Eq-Fin {succ-ℕ k} (inr x) = star
+
+Eq-Fin-eq : {k : ℕ} {x y : Fin k} → Id x y → Eq-Fin k x y
+Eq-Fin-eq {k} refl = refl-Eq-Fin {k} _
+
+eq-Eq-Fin :
+  {k : ℕ} {x y : Fin k} → Eq-Fin k x y → Id x y
+eq-Eq-Fin {succ-ℕ k} {inl x} {inl y} e = ap inl (eq-Eq-Fin e)
+eq-Eq-Fin {succ-ℕ k} {inr star} {inr star} star = refl
+
+-- Exercise 7.12 (b)
+
+is-injective-inl-Fin :
+  {k : ℕ} {x y : Fin k} → Id (inl-Fin k x) (inl-Fin k y) → Id x y
+is-injective-inl-Fin p = eq-Eq-Fin (Eq-Fin-eq p)
+
+-- Exercise 7.12 (c)
+
+neq-zero-succ-Fin :
+  {k : ℕ} {x : Fin k} → ¬ (Id (succ-Fin (inl-Fin k x)) zero-Fin)
+neq-zero-succ-Fin {succ-ℕ k} {inl x} p =
+  neq-zero-succ-Fin (is-injective-inl-Fin p)
+neq-zero-succ-Fin {succ-ℕ k} {inr star} p =
+  Eq-Fin-eq {succ-ℕ (succ-ℕ k)} {inr star} {zero-Fin} p
+
+-- Exercise 7.12 (d)
+
+is-injective-skip-zero-Fin :
+  {k : ℕ} {x y : Fin k} → Id (skip-zero-Fin x) (skip-zero-Fin y) → Id x y
+is-injective-skip-zero-Fin {succ-ℕ k} {inl x} {inl y} p =
+  ap inl (is-injective-skip-zero-Fin (is-injective-inl-Fin p))
+is-injective-skip-zero-Fin {succ-ℕ k} {inl x} {inr star} p =
+  ex-falso (Eq-Fin-eq p)
+is-injective-skip-zero-Fin {succ-ℕ k} {inr star} {inl y} p =
+  ex-falso (Eq-Fin-eq p)
+is-injective-skip-zero-Fin {succ-ℕ k} {inr star} {inr star} p = refl
+
+is-injective-succ-Fin :
+  {k : ℕ} {x y : Fin k} → Id (succ-Fin x) (succ-Fin y) → Id x y
+is-injective-succ-Fin {succ-ℕ k} {inl x} {inl y} p =
+  ap inl (is-injective-skip-zero-Fin {k} {x} {y} p)
+is-injective-succ-Fin {succ-ℕ k} {inl x} {inr star} p =
+  ex-falso (neq-zero-succ-Fin {succ-ℕ k} {inl x} (ap inl p))
+is-injective-succ-Fin {succ-ℕ k} {inr star} {inl y} p =
+  ex-falso (neq-zero-succ-Fin {succ-ℕ k} {inl y} (ap inl (inv p)))
+is-injective-succ-Fin {succ-ℕ k} {inr star} {inr star} p = refl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+{- Section 7.2 Decidability -}
+
+{- Definition 7.2.1 -}
+
+is-decidable : {l : Level} (A : UU l) → UU l
+is-decidable A = coprod A (¬ A)
+
+{- Example 7.2.2 -}
+
+is-decidable-unit : is-decidable unit
+is-decidable-unit = inl star
+
+is-decidable-empty : is-decidable empty
+is-decidable-empty = inr id
+
+{- Definition 7.2.3 -}
+
+{- We say that a type has decidable equality if we can decide whether 
+   x = y holds for any x, y : A. -}
+   
+has-decidable-equality : {l : Level} (A : UU l) → UU l
+has-decidable-equality A = (x y : A) → is-decidable (Id x y)
+
+{- Lemma 7.2.5 -}
+
+is-decidable-iff :
+  {l1 l2 : Level} {A : UU l1} {B : UU l2} →
+  (A → B) → (B → A) → is-decidable A → is-decidable B
+is-decidable-iff f g =
+  functor-coprod f (functor-neg g)
+
+{- Proposition 7.2.6 -}
+
+{- The type ℕ is an example of a type with decidable equality. -}
+
+is-decidable-Eq-ℕ :
+  (m n : ℕ) → is-decidable (Eq-ℕ m n)
+is-decidable-Eq-ℕ zero-ℕ zero-ℕ = inl star
+is-decidable-Eq-ℕ zero-ℕ (succ-ℕ n) = inr id
+is-decidable-Eq-ℕ (succ-ℕ m) zero-ℕ = inr id
+is-decidable-Eq-ℕ (succ-ℕ m) (succ-ℕ n) = is-decidable-Eq-ℕ m n
+
+has-decidable-equality-ℕ : has-decidable-equality ℕ
+has-decidable-equality-ℕ x y =
+  is-decidable-iff (eq-Eq-ℕ x y) Eq-ℕ-eq (is-decidable-Eq-ℕ x y)
+
+{- Proposition 7.2.9 -}
+
+{- We show that Fin k has decidable equality, for each n : ℕ. -}
+
+is-decidable-Eq-Fin :
+  (k : ℕ) (x y : Fin k) → is-decidable (Eq-Fin k x y)
+is-decidable-Eq-Fin (succ-ℕ k) (inl x) (inl y) = is-decidable-Eq-Fin k x y
+is-decidable-Eq-Fin (succ-ℕ k) (inl x) (inr y) = inr id
+is-decidable-Eq-Fin (succ-ℕ k) (inr x) (inl y) = inr id
+is-decidable-Eq-Fin (succ-ℕ k) (inr x) (inr y) = inl star
+
+is-decidable-eq-Fin :
+  (k : ℕ) (x y : Fin k) → is-decidable (Id x y)
+is-decidable-eq-Fin k x y =
+  functor-coprod eq-Eq-Fin (functor-neg Eq-Fin-eq) (is-decidable-Eq-Fin k x y)
+
+{- Section 7.3 Definitions by case analysis -}
+
+{- We define an alternative definition of the predecessor function with manual 
+   with-abstraction. -}
+
+cases-pred-Fin-2 :
+  {k : ℕ} (x : Fin (succ-ℕ k))
+  (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) → Fin (succ-ℕ k)
+cases-pred-Fin-2 {zero-ℕ} (inr star) d = zero-Fin
+cases-pred-Fin-2 {succ-ℕ k} (inl x) (inl e) = neg-one-Fin
+cases-pred-Fin-2 {succ-ℕ k} (inl x) (inr f) =
+  inl (cases-pred-Fin-2 {k} x (inr f))
+cases-pred-Fin-2 {succ-ℕ k} (inr star) (inr f) = inl neg-one-Fin
+
+pred-Fin-2 : {k : ℕ} → Fin k → Fin k
+pred-Fin-2 {succ-ℕ k} x =
+  cases-pred-Fin-2 {k} x (is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin)
+
+{- We give a solution to the exercise for the alternative definition of the
+   predecessor function, using with-abstraction. -}
+
+pred-zero-Fin-2 :
+  {k : ℕ} → Id (pred-Fin-2 {succ-ℕ k} zero-Fin) neg-one-Fin
+pred-zero-Fin-2 {k} with is-decidable-Eq-Fin (succ-ℕ k) zero-Fin zero-Fin
+pred-zero-Fin-2 {zero-ℕ} | d = refl
+pred-zero-Fin-2 {succ-ℕ k} | inl e = refl
+pred-zero-Fin-2 {succ-ℕ k} | inr f =
+  ex-falso (f (refl-Eq-Fin {succ-ℕ k} zero-Fin))
+  
+cases-succ-pred-Fin-2 :
+  {k : ℕ} (x : Fin (succ-ℕ k))
+  (d : is-decidable (Eq-Fin (succ-ℕ k) x zero-Fin)) →
+  Id (succ-Fin (cases-pred-Fin-2 x d)) x
+cases-succ-pred-Fin-2 {zero-ℕ} (inr star) d =
+  refl
+cases-succ-pred-Fin-2 {succ-ℕ k} (inl x) (inl e) =
+  inv (eq-Eq-Fin e)
+cases-succ-pred-Fin-2 {succ-ℕ zero-ℕ} (inl (inr x)) (inr f) =
+  ex-falso (f star)
+cases-succ-pred-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inl x)) (inr f) =
+  ap inl (cases-succ-pred-Fin-2 (inl x) (inr f))
+cases-succ-pred-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inr star)) (inr f) =
+  refl
+cases-succ-pred-Fin-2 {succ-ℕ k} (inr star) (inr f) =
+  refl
+
+succ-pred-Fin-2 :
+  {k : ℕ} (x : Fin k) → Id (succ-Fin (pred-Fin-2 x)) x
+succ-pred-Fin-2 {succ-ℕ k} x =
+  cases-succ-pred-Fin-2 x (is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin)
+
+pred-inl-Fin-2 :
+  {k : ℕ} (x : Fin (succ-ℕ k)) (f : ¬ (Eq-Fin (succ-ℕ k) x zero-Fin)) →
+  Id (pred-Fin-2 (inl x)) (inl (pred-Fin-2 x))
+pred-inl-Fin-2 {k} x f with is-decidable-Eq-Fin (succ-ℕ k) x zero-Fin
+... | inl e = ex-falso (f e)
+... | inr f' = refl
+
+nEq-zero-succ-Fin :
+  {k : ℕ} (x : Fin (succ-ℕ k)) →
+  ¬ (Eq-Fin (succ-ℕ (succ-ℕ k)) (succ-Fin (inl x)) zero-Fin)
+nEq-zero-succ-Fin {succ-ℕ k} (inl (inl x)) e = nEq-zero-succ-Fin (inl x) e
+nEq-zero-succ-Fin {succ-ℕ k} (inl (inr star)) ()
+nEq-zero-succ-Fin {succ-ℕ k} (inr star) ()
+
+pred-succ-Fin-2 :
+  {k : ℕ} (x : Fin (succ-ℕ k)) → Id (pred-Fin-2 (succ-Fin x)) x
+pred-succ-Fin-2 {zero-ℕ} (inr star) = refl
+pred-succ-Fin-2 {succ-ℕ zero-ℕ} (inl (inr star)) = refl
+pred-succ-Fin-2 {succ-ℕ zero-ℕ} (inr star) = refl
+pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inl (inl x))) =
+  ( pred-inl-Fin-2 (inl (succ-Fin (inl x))) (nEq-zero-succ-Fin (inl x))) ∙
+  ( ( ap inl (pred-inl-Fin-2 (succ-Fin (inl x)) (nEq-zero-succ-Fin (inl x)))) ∙
+    ( ap (inl ∘ inl) (pred-succ-Fin-2 (inl x))))
+pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inl (inr star))) = refl
+pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inl (inr star)) = refl
+pred-succ-Fin-2 {succ-ℕ (succ-ℕ k)} (inr star) = pred-zero-Fin-2
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
 dist-ℤ : ℤ → ℤ → ℕ
